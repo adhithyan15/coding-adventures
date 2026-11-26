@@ -25,13 +25,16 @@ Build/test tools such as Busted and LuaRocks run in a CLI with captured output.
 
 ## Current selection
 
-**DS-H-PY: checked Python heap, independent histories and paired construction
-benchmark.** DS-H-GO merged as PR [#20121](https://github.com/adhithyan15/coding-adventures/pull/20121)
-at `4ad9ec27f4fc00bffb34ee83817f5c84bb8dd399`. Python already has reusable
-min/max heap and Floyd-heapify implementations, plus the shared benchmark and
-statistics packages. The current selection strengthens the heap API and tests
-and adds a paired construction driver. The public profile is
-[DT04c](DT04c-python-heap-validation.md).
+**DS-GRAPH-WEIGHTS-PY: Python shortest-path weight preconditions.** The Python
+heap item merged as PR [#20126](https://github.com/adhithyan15/coding-adventures/pull/20126)
+at `1db91bb7c989448425fc246f71050452b357bb05`. A bounded audit at
+`4ad9ec27f4fc00bffb34ee83817f5c84bb8dd399` found that a reachable negative
+undirected edge could keep Dijkstra relaxing while the target was disconnected.
+The selected repair preserves Python Graph's current storage of negative and
+non-finite numeric weights, preserves finite-negative MST behavior, and makes
+`shortest_path` validate every node adjacency before shortcuts or traversal.
+This is a Python profile exception to the shared portable rule; it does not
+change other language ports.
 
 Each lane below is a separate future work item and ready PR. Reconsider the
 order after each merge; a correctness failure in the active item takes priority.
@@ -95,7 +98,11 @@ Audit existing packages before adding replacements. Each structure includes:
 | MB-WIN-C | P0 CI | The C PowerShell install check previously stopped on expected native stderr before checking its exit code. The coordinator reports the harness repair and real Windows BUILD run complete; confirm the result is present on the current PR head. |
 | MB-PLAN | P1 validation | A new downstream consumer can be orphaned from planner discovery even while a named BUILD passes. Structures added an explicit exclusion for the consumer whose coverage is supplied by named BUILD fixtures; the full planner passed with the fixture present. Keep its recorded reason and fixture evidence together if the registry changes. |
 | MB-COVER | P2 evidence | Refresh coverage for changed workload-reader sources; retain historical source hashes until remeasurement. |
-| DS-GRAPH-WEIGHTS | P1 audit | A bounded audit on pinned main `4ad9ec27` reproduced an undirected `A-B=-1` edge plus disconnected `C`: `shortest_path(A, C)` exceeded the 1-second child timeout; the `+1` control returned `[]`. This demonstrates a liveness risk for that input, not a universal nontermination proof. After DS-H-PY, review the graph API and Dijkstra preconditions. Do not ban negative weights globally: MST algorithms can accept them. Evidence is retained in `outputs/data-structures/graph-negative-weight-audit.json`. |
+| DS-GRAPH-WEIGHTS-PY | P1 correctness | Python validation is implemented after spec-first commits `23ae623b`, `046c3720` and `3266951c`; it rejects negative/non-finite/too-large-to-convert weights before same-node, missing-endpoint, or search paths, including disconnected edges and self-loops. The bounded simple-path oracle enumerates 729 four-node edge assignments per representation and compares minimum path costs for 1,458 graph/query cases; package acceptance is 145 tests with 96.56% coverage in the full verbose test run and 96.30% in the separate JSON-coverage run on Windows. Await independent review before PR. The pre-fix audit remains at `outputs/data-structures/graph-negative-weight-audit.json`; source-pinned after-fix child-process evidence is `outputs/data-structures/graph-negative-weight-audit-after-fix-ae2ed75.json`. |
+| DS-GRAPH-ZERO-MATRIX | P2 representation | The adjacency matrix uses zero to mean no edge, so it cannot represent a zero-weight edge while the adjacency list can. This repair tests the list behavior and documents the parity gap; do not claim both representations support all nonnegative weights. |
+| DS-GRAPH-EDGES-SELFLOOP | P2 representation | Matrix `Graph.edges()` omits diagonal self-loops although `neighbors_weighted()` exposes them. `shortest_path` now validates via neighbor views, but the public edge-enumeration parity issue remains separate. |
+| DS-GRAPH-PATH-SUM-RANGE | P2 numeric | Finite weights can still sum to binary64 infinity; shortest-path result behavior for path-sum overflow is not changed or proven by this item. Define and test that numeric policy separately. |
+| DS-GRAPH-LANGUAGE-PARITY | P2 profile | DT00 now names the Python compatibility exception to the portable finite/nonnegative domain. Audit each language's actual Graph/MST behavior before harmonizing domains; this Python-only change does not establish cross-language parity. |
 | DS-PUBLISH | P1 per lane | Inventory package manifests, dependency/version policy, registry availability and installed consumers; publication is separate from source presence and PR merge. |
 | DS-TRACE | P2 dependency | Define truthful operation/state/work-count traces for interactive GitHub Pages, then ship one accessible heap visualization. |
 | DS-CACHE | P2 experiment | Compare representation, branching and working-set choices using controlled equivalent work; do not infer exact cache sizes or PMU events from timing alone. |

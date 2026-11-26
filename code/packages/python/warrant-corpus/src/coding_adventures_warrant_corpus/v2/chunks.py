@@ -42,6 +42,7 @@ Two obligations this module is built to be tested for
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Iterator
 from dataclasses import dataclass
 from itertools import islice
@@ -441,6 +442,23 @@ def _assemble_suite(
     )
 
 
+def _is_reference_body(body: object, subject: object, expected: object) -> bool:
+    """Section 4.3: a ``reference`` suite means ``subject == pure``.
+
+    The body is the ``eq`` node over the oracle's two sides, in either order.
+    Sides are compared as canonical JSON text so that ``true`` and ``1`` (equal
+    in Python, different in JSON) are not confused.
+    """
+
+    def text(node: object) -> str:
+        return json.dumps(node, sort_keys=True, separators=(",", ":"))
+
+    if type(body) is not list or len(body) != 3 or body[0] != "eq":
+        return False
+    sides = (text(body[1]), text(body[2]))
+    return sides in ((text(subject), text(expected)), (text(expected), text(subject)))
+
+
 def _compile_oracle(
     row: dict, program: Program, scope: dict[str, Ty], body: Compiled, result_ty: Ty
 ) -> Compiled | None:
@@ -463,6 +481,10 @@ def _compile_oracle(
     }:
         raise _corpus_error(
             "the oracle entry is neither a bare predicate nor a full reference"
+        )
+    if not _is_reference_body(row["body"], oracle["subject"], oracle["expected"]):
+        raise _corpus_error(
+            "a reference suite's body must be eq(subject, expected), in either order"
         )
     subject = program.compile(oracle["subject"], scope, role="body")
     expected = program.compile(oracle["expected"], scope, role="expected")
