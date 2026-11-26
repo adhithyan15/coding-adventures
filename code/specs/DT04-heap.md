@@ -16,17 +16,21 @@ element in O(log n) time. This makes it the ideal backing store for a
 
 ### The Insight That Makes Heaps Fast
 
-Because a heap is always a complete binary tree, it can be stored as a flat
-array with zero pointers. The parent-child relationship is entirely determined
-by index arithmetic. This means:
+Because a heap is always a complete binary tree, it can be represented by a
+flat array without per-node pointers. The parent-child relationship is
+determined by index arithmetic. A flat array may improve locality for some
+runtimes and workloads; representation alone does not establish a cache or
+performance outcome. This means:
 
 - Push: append to end of array, sift up — O(log n)
 - Pop:  swap root with last element, remove last, sift down — O(log n)
 - Peek: read array[0] — O(1)
 - Build from n elements: O(n) — not O(n log n) — see Floyd's algorithm below
 
-No dynamic memory allocation for nodes. No pointer chasing. The data lives in
-one contiguous block, which is cache-friendly.
+The conceptual array representation needs no per-node links. Whether an
+implementation uses one contiguous allocation, avoids pointer chasing, or
+improves cache behavior depends on the language runtime and representation;
+measure those properties for a defined implementation and workload.
 
 ### Everyday Analogies
 
@@ -280,8 +284,9 @@ most of the work is done at the bottom levels where nodes only sift 1-2 position
 and there are few nodes near the top (where sifting is expensive).
 
 Contrast with building by repeated insertion: each of the n insertions costs
-O(log n) in the worst case → O(n log n) total. Floyd's algorithm is twice as
-fast in practice.
+O(log n) in the worst case → O(n log n) total. These are algorithmic bounds;
+an observed runtime ratio depends on implementation, workload, allocation,
+garbage collection, caches, and measurement noise.
 
 ### Heap Sort
 
@@ -646,7 +651,13 @@ for _ in range(100):
     assert heap_sort(arr) == sorted(arr)
 ```
 
-### Floyd's Algorithm Is O(n) — Verify Empirically
+### Floyd's Algorithm: Optional Runtime Experiment
+
+The asymptotic O(n) bound follows from the height-weighted work argument above,
+not from timings. The following experiment can illustrate a particular
+implementation and machine. Allocation, garbage collection, caches, and
+measurement noise affect its results; it has no pass threshold and cannot
+establish an asymptotic bound.
 
 ```python
 import time
@@ -657,7 +668,7 @@ for n in sizes:
     heapify(arr)
     t1 = time.perf_counter()
     print(f"n={n}: {t1-t0:.4f}s")
-# Expect roughly linear growth, not n-log-n growth
+# Record observations only; do not infer a complexity proof from this output.
 ```
 
 ### Edge Cases
@@ -682,8 +693,9 @@ for n in sizes:
 - **Merge (meld)** — merge two heaps into one. Binary heaps can't do this
   efficiently; leftist heaps and skew heaps support O(log n) merge.
 - **k-ary heap** — instead of 2 children per node, use k children. With k=4 or
-  k=8, sift-up is faster (fewer comparisons) but sift-down is slower (more
-  comparisons). Cache-friendly for large k.
+  k=8, sift-up uses fewer levels while sift-down considers more children per
+  level. The practical tradeoff, including cache behavior, is a representation
+  and runtime hypothesis to measure for a defined workload.
 - **Soft heap** — allows elements to be "corrupted" (given artificially larger
   keys) in exchange for O(1) amortized insert. Used in the best deterministic
   MST algorithm (Chazelle 2000).
@@ -737,9 +749,11 @@ representation bound, not an allocation promise. Do not preallocate the
 configured capacity.
 
 A comparator is required; do not silently use the legacy permissive default.
-It must be callable, deterministic, side-effect-free, non-reentrant, and define
-a strict weak order for values held together. Priority fields must not change
-while queued. At runtime, accept comparator results only when `typeof result`
+It must be callable and deterministic, must not re-enter or mutate the queue,
+and must define a strict weak order for values held together. It may update
+observational counters; other comparator side effects are external and are not
+rolled back if the comparator throws. Priority fields must not change while
+queued. At runtime, accept comparator results only when `typeof result`
 is `"number"` and the result is not `NaN`; use its sign. Finite fractions and
 positive or negative infinity are valid results, and either signed zero means
 equivalent priority. Comparator lawfulness is a caller obligation that tests
@@ -752,8 +766,8 @@ validate their results before mutating queue storage; propagate the original
 thrown value. Stage the insertion or removal path using `O(log n)` temporary
 indexes, then apply it after all comparisons succeed. This guarantee assumes
 the comparator contract above.
-Reentrant mutation, external comparator side effects, caller mutation of
-queued priorities, and physical allocation failure are outside it. Construction
+Reentrant mutation, caller mutation of queued priorities, and physical
+allocation failure are outside it. Construction
 does not expose a partially built queue if comparison fails.
 
 ### Iterable construction and complexity
