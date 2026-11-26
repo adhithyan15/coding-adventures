@@ -769,6 +769,7 @@ func TestPbtV1CorpusSelectsTheJavaEngine(t *testing.T) {
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
 		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "perl/test-bootstrap", Language: "perl"},
 		{Name: "ruby/test_bootstrap", Language: "ruby"},
 		{Name: "lua/test_bootstrap", Language: "lua"},
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
@@ -783,7 +784,7 @@ func TestPbtV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -810,6 +811,7 @@ func TestPbtV1CorpusSelectsTheCSharpEngine(t *testing.T) {
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
 		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "perl/test-bootstrap", Language: "perl"},
 		{Name: "ruby/test_bootstrap", Language: "ruby"},
 		{Name: "lua/test_bootstrap", Language: "lua"},
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
@@ -824,7 +826,7 @@ func TestPbtV1CorpusSelectsTheCSharpEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1035,6 +1037,7 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
 		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "perl/test-bootstrap", Language: "perl"},
 		{Name: "ruby/test_bootstrap", Language: "ruby"},
 		{Name: "lua/test_bootstrap", Language: "lua"},
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
@@ -1049,7 +1052,7 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1066,6 +1069,45 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 	// A change to the Go package's own tests is not a corpus change.
 	if got, err := repositoryInputConsumersForChange([]string{"code/packages/go/test-bootstrap/pbt/corpus_test.go"}, packages, "all"); err != nil || len(got) != 0 {
 		t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
+	}
+}
+
+func TestPbtV1CorpusSelectsThePerlEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "perl/test-bootstrap", Language: "perl"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "perl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"perl/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("perl filter: got %v, want %v", got, want)
+	}
+	// The generated TFV beside the JSON is part of the corpus directory.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.tfv"}, packages, "perl"); err != nil || !got["perl/test-bootstrap"] {
+		t.Fatalf("cases.tfv must select the Perl engine too: %v %v", got, err)
+	}
+	// With the Perl engine package missing the change must fail closed.
+	without := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, without, "perl"); err == nil {
+		t.Fatal("a corpus change with the Perl engine package missing must fail closed")
+	}
+	// A neighbouring fixture directory is not this corpus.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v10/cases.json"}, packages, "perl"); err != nil || len(got) != 0 {
+		t.Fatalf("pbt-v10 must not select the Perl engine: %v %v", got, err)
+	}
+	// Editing the package's own sources is not a corpus change.
+	if got, err := repositoryInputConsumersForChange([]string{"code/packages/perl/test-bootstrap/t/08-corpus.t"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Fatalf("package-local edits must not select the Perl engine through the corpus row: %v %v", got, err)
 	}
 }
 
