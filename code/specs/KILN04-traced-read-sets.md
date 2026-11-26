@@ -6292,7 +6292,8 @@ build-tool exports once, decodes the shards, recomputes every key through
 `legacy.Traced` (never trusting a shard's), calls `Merge`, and writes the
 ledger only when the run is not void. It is a thin adapter on purpose: every
 decision it could make is one `recmerge` already makes. The CI job around it
-(`kiln-record.yml`, stage 4 PR 3b) is still to come, so nothing calls it yet. The design review found these
+(`kiln-record.yml`, stage 4 PR 3b, section 7.2) is planned, and lands with a Go-only
+selector (section 7.2). The design review found these
 gaps in the text above; each decision below replaces it.
 
 **G1. An unknown write set voids the run.** §7's rules are cross-shard
@@ -6478,6 +6479,69 @@ an untracked file it did not make: an untracked observation (M5, M9, M2).
 A writer with an unknown write set: M1. Writes outside the repository
 reach no other action (`$HOME`, `TMPDIR`, `/tmp` and `/run` are per-step
 tmpfs, the `ro_roots` are read-only).
+
+### 7.2 The record workflow (stage 4 PR 3b), planned
+
+The CI job around `record-merge` is `.github/workflows/kiln-record.yml`. It is **not
+in the tree yet**: it lands with the Go-only selector (order below). This section
+records the decisions and the design it will follow. It is the recording half of the
+**shadow plan**: the workflow runs the recording shards on `ubuntu-26.04` with exec
+heads sealed on, joins them in one merge job and keeps the ledger in the GitHub
+Actions cache; a later workflow reads the ledger on pull requests and only *reports*
+which Go steps would have been skipped. No job outcome changes and nothing is reused.
+
+**Decisions of the project owner (binding):**
+
+1. **The stored record is the existing ledger only**: the pass records
+   (`internal/ledger/record.go`) and the names-only manifests (section 8). Names and
+   hashes. No file content, output, log, command line or environment value is stored,
+   and nothing is added to the format for the shadow phase.
+2. **The shard files are not the ledger.** `binding.json`, `host-facts.json`,
+   `inventory.json` and `records.jsonl` can carry runner host paths in reason strings.
+   They travel to the merge job as Actions artifacts with `retention-days: 1` and
+   nothing from them is copied into the ledger, the job summary or a log line beyond
+   what `kiln record-merge` already prints. The job summary holds counts only.
+3. **The ledger lives in the Actions cache for the shadow phase.** Only the merge
+   job saves it, only on a `push` or `workflow_dispatch` whose ref is the default
+   branch of `adhithyan15/coding-adventures`, never on a pull request, never from
+   `pull_request_target`, never from a fork. The write needs both the workflow's
+   `if:` and `kiln record-merge --scope shared`, which reuses `host.GitHub.Trusted()`
+   (KILN00 section 10.2) and exits 3 otherwise.
+4. **Before any result is reused, the ledger moves to a rollback-proof store.** That
+   move, and the first reuse, need the project owner's explicit approval.
+
+**Cache design.** Keys are `kiln-ledger-v1-<run id>-<attempt>`, saved only by a merge
+that exited 0 and added entries; every run restores the newest entry with the prefix
+`kiln-ledger-v1-` and the merge appends one segment. Eviction (about 7 days unused, or
+the repository's cache size cap) only loses hits. Runs are serialised by a concurrency
+group (`cancel-in-progress: false`) so two merges never restore the same entry. A
+shard that fails prepare, collect, the census or the exec-head hard criteria
+(`census_not_clean.py --strict-exec-head`) uploads nothing; a run with a missing shard
+is void and merges nothing; a void verdict (exit 4) writes nothing and saves nothing.
+
+**Findings that shape the plan.**
+
+- **No Go-only selector exists.** `prepare`'s plan is every package (`-language all`),
+  `record-merge` demands one raw record per package of every shard and refuses a steps
+  export that names a package no shard runs, and the build tool's `-language` does not
+  narrow an emitted plan in force mode (a local `-force -language go -shard-count 4`
+  plan held all 5893 packages of 23 languages).
+- **`record-merge` does not apply the high-water mark.** `ledger.MergeOptions.HighWater`
+  is used only by `ledger.MergeWithOptions`, which no command calls; `record-merge`
+  appends a segment. Applying the mark, pruning (`record-merge` never prunes) and a
+  durable, rollback-proof store are all needed before any real reuse.
+- **The 64 MiB cliff is shadow-only.** The merge job will drop a restored ledger over
+  64 MiB (or not shaped like a ledger) and start empty. That loses hits, never
+  soundness, and is acceptable only while nothing is reused.
+
+**Order of work.**
+
+1. PR A: the build tool emits a language-filtered plan.
+2. PR B: the Kiln selector: `prepare --language`, an omitempty `Binding.Language`, and
+   `record-merge` reads the selection from the shard bindings and ignores steps outside
+   it.
+3. The workflow, dispatch-only.
+4. The `push` trigger.
 
 ## 8. The manifest store
 

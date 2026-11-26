@@ -80,13 +80,14 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | `patterns` | S10t-2 and S11b: the ten `match` patterns (six of A.1, four data patterns of A.2), the usefulness check over `Result`, `Option`, `Bool`, tuples, records and variants, the corpus errors (code `ir`) |
 | `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (evaluated since S10c-2, on the width `Ir::Fixed::at` records), and `ir::levels`, the tag part of `requires` (R9) |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
+| `corpus_check` | CV2-F17: the document check that `Int` is named in no record or variant field, op signature or binder (VER04r 2.1, `W0701`); `generate` runs it after lowering and before costing, as the oracle's `derive` does; the lowering still accepts `Int` |
 | `analysis` | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
 | `arith` | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
 | `cost` | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
 | `view` | the "parity view" of a lowered document, compared with the oracle (`oracle_view` for `ir.core`, `oracle_view_v1` for the S10 dump with `requires`) |
 | `value`, `eval` | S3b: the `ir.core` evaluator (own implementation over this crate's IR): exact `Nat`/`Int` in the 2^127 window, wrapping fixed-width arithmetic counted as `wraps`, short-circuit `and`/`or`/`implies`/`if`, `MAX_IR_VALUE` checked before allocation, and `trace`, the pure-trace walk behind `expected_calls` and `wraps` |
 | `domains` | S3b: descriptor JSON, labels and sizes over the S2 `resolve_binders`/`Domain` API (S10c-2: `nat_shift`, `fx_edge`, the `demoted` paths; refuses only a list of byte strings); the consumer-side `descriptor_size`; value and encoding caches |
-| `stream` | S3b: the 2.4 value encoders, the context prefix, the v1/v2 header, `warrant-chunks-v1` framing, FNV-1a-64, the slim base set |
+| `stream` | S3b: the 2.4 value encoders (a `Nat`, unsigned or signed value outside its type is `W0701`, `a value is outside the range of <type> (VER04r 2.3)`, the oracle's sentence since CV2-F17), the context prefix, the v1/v2 header, `warrant-chunks-v1` framing, FNV-1a-64, the slim base set |
 | `suite` | S3b: one suite: product enumeration (`unrank_product`, last binder fastest), admission evaluated once per prefix tuple, chunks, counts, suite and v1 whole-suite digests, slim set |
 | `enumerate` | S3b: a whole document at `full` depth, the total-work bounds, the v0 divergence guard rule 2, and the enumeration parity view |
 | `faults` | S3c: the fault IR (`pre`/`post`/`replace`, `Expr::Core` or `Expr::Data` for a level not implemented), the registry of the portable names instantiated by signature, the stand-in rule and the witness search (`ClaimState`: witnessed, blind, unproven, deferred) |

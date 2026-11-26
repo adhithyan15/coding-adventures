@@ -36,3 +36,34 @@ From this module directory, run the fuzz target manually with:
 ```sh
 go test -run=^$ -fuzz=FuzzShortestPathWeightPreconditions -fuzztime=5s -parallel=1 .
 ```
+
+## Concurrent use
+
+`Graph` is a single-owner type and is not safe for concurrent access. For
+shared use, `ConcurrentGraph` owns the graph behind one mutex. Each operation
+is atomic on its own, and `Snapshot` makes a detached read-only view for
+multi-step queries and iteration:
+
+```go
+shared := graph.NewConcurrentGraph(graph.AdjacencyList)
+if err := shared.AddEdge("London", "Paris", 300); err != nil {
+    panic(err)
+}
+
+snapshot := shared.Snapshot()
+path, err := snapshot.ShortestPath("London", "Paris")
+if err != nil {
+    panic(err)
+}
+fmt.Println(path) // [London Paris]
+```
+
+Concurrent property values must be immutable scalars (`string`, `bool`, numeric
+scalars, or `nil`). Property maps are copied on input and output. A snapshot
+does not change after the shared graph is modified; each edge iterator has its
+own cursor.
+
+Create concurrent graphs with `NewConcurrentGraph`; its zero value is not
+usable. Copying an initialized `ConcurrentGraph` shares the same graph and
+mutex. Copying an `EdgeIterator` forks its cursor at the current position;
+concurrent advancement of one iterator handle is not safe.
