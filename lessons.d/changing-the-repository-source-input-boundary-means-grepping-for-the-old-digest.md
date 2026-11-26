@@ -50,7 +50,7 @@ What to do instead:
 5. Run `python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'`
    and `python3 code/scripts/build_tool_conformance.py validate-corpus`.
 
-## Recurrence: #20138 (typescript/nand-flash)
+**Recurrence: #20138 (typescript/nand-flash).**
 
 PR #20138 added `code/packages/typescript/nand-flash` (with a `tsconfig.json`
 extending `../tsconfig.base.json`) and again did not add the root to the
@@ -62,7 +62,7 @@ count bumps). This time a TypeScript package broke main; the sibling
 have added the root: before pushing any new TypeScript package, run the single
 corpus test above and follow this lesson's steps in the same PR.
 
-## Resolution: `sync-boundary` generates all of it, and CI checks it on the adding PR
+**Resolution: `sync-boundary` generates all of it, and CI checks it on the adding PR.**
 
 This was fixed by hand at least four times (#19903, #20109, #20124, #20143)
 because the corpus test only ran on PRs that the build-tool CI gate selected,
