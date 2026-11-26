@@ -127,3 +127,20 @@ race-enabled stress runs pass, the normal Go graph package checks pass, and
 the public API has no path to the backing graph or storage. If a representation
 cannot meet the same snapshot or metadata contract, record the reason and stop
 before silently weakening the contract.
+
+## Supplemental bounded SAT history check
+
+A packaging-independent SAT check was run against the final wrapper source
+(blob `656ab648499c7baf21852ea546a453dd693b68fe`) and SAT solver source
+(blob `8bb3e2509d17697b32ae49624300c27d98263525`). It modeled 36 actual
+three-, four-, and five-operation histories, requiring a sequential
+linearization that respects real-time ordering, and replayed each satisfying
+witness against the sequential model. Each history also had an impossible
+observation control checked as unsatisfiable. The run reported 72 solver calls,
+2 distinct observed `HasEdge`/snapshot outcomes, and 25 overlapping operation
+pairs; Go 1.26.1 `go test -race -count=1 -v ./...` and `go vet ./...` passed
+in the scratch module.
+
+This supplemental scratch evidence is not part of CI and is not an E5 claim,
+a proof for all histories, or a race-freedom proof. The tracked wrapper fuzz
+and race-enabled tests remain the package validation gates.
