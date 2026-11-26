@@ -74,6 +74,23 @@ export function compileFault(program: Program, raw: unknown, op: OpSig): Compile
     refuse("requires is a list of levels this document defines");
   }
 
+  // The row's shape, whole, before any level is read (R126: a malformed row is a schema break, never a vector).
+  const rewrites: { slot: number; expr: unknown }[] = [];
+  if (kind === "pre") {
+    const list = row["rewrites"];
+    if (!Array.isArray(list) || list.length < 1) return refuse("rewrites is a non-empty list");
+    const seen = new Set<string>();
+    for (const rewrite of list as unknown[]) {
+      if (typeof rewrite !== "object" || rewrite === null || Array.isArray(rewrite)) return refuse("a rewrite is an object");
+      const entry = rewrite as Record<string, unknown>;
+      if (Object.keys(entry).length !== 2 || typeof entry["param"] !== "string" || !Object.hasOwn(entry, "expr")) return refuse("each rewrite carries exactly param and expr");
+      const slot = op.params.findIndex((p) => p.name === entry["param"]);
+      if (slot < 0 || seen.has(entry["param"])) return refuse("a rewrite names a parameter once");
+      seen.add(entry["param"]);
+      rewrites.push({ slot, expr: entry["expr"] });
+    }
+  }
+
   // Levels first: the row's declared levels, the op's parameter and result types, then (below) its expressions.
   const levels = new Set<string>(requires as string[]);
   op.params.forEach((p) => typeLevels(p.ty, levels));
@@ -89,22 +106,23 @@ export function compileFault(program: Program, raw: unknown, op: OpSig): Compile
   if (lacking !== undefined) throw new KitError("level-missing", "the fault reaches a level this lane lacks", { level: lacking });
   const withResult: Param[] = [...params, { name: "result", ty: ret }];
 
+  // Every step runs over every expression of the row before the next step starts (R119 (c); section 11's order):
+  // `level-missing` of what the expressions reach (an unknown tag has no level), then the three codes, then `subject-forbidden`, then the typing.
+  const stages = (items: readonly { ir: unknown; vars: readonly Param[] }[]): void => {
+    for (const item of items) program.checkReach(item.ir, item.vars);
+    for (const item of items) program.scanTags(item.ir, "fault-reach");
+    for (const item of items) program.scanTags(item.ir, "fault");
+  };
+
   if (kind === "pre") {
-    const list = row["rewrites"];
-    if (!Array.isArray(list) || list.length < 1) return refuse("rewrites is a non-empty list");
     const compiled: { slot: number; run: Compiled["run"] }[] = [];
-    const seen = new Set<string>();
-    for (const rewrite of list as unknown[]) {
-      if (typeof rewrite !== "object" || rewrite === null || Array.isArray(rewrite)) return refuse("a rewrite is an object");
-      const entry = rewrite as Record<string, unknown>;
-      if (Object.keys(entry).length !== 2 || typeof entry["param"] !== "string") return refuse("each rewrite carries exactly param and expr");
-      const slot = params.findIndex((p) => p.name === entry["param"]);
-      if (slot < 0 || seen.has(entry["param"])) return refuse("a rewrite names a parameter once");
-      seen.add(entry["param"]);
-      const typed = program.compileExpr(entry["expr"], params, "fault");
-      if (unify(typed.ty, (params[slot] as Param).ty) === null) throw new KitError("ill-typed", "a rewrite shares no type with the parameter it replaces");
-      compiled.push({ slot, run: typed.run });
-    }
+    const slots = rewrites.map((entry) => entry.slot);
+    stages(rewrites.map((entry) => ({ ir: entry.expr, vars: params })));
+    rewrites.forEach((entry) => {
+      const typed = program.compileExpr(entry.expr, params, "fault");
+      if (unify(typed.ty, (params[entry.slot] as Param).ty) === null) throw new KitError("ill-typed", "a rewrite shares no type with the parameter it replaces");
+      compiled.push({ slot: slots[compiled.length] as number, run: typed.run });
+    });
     return {
       kind,
       fault: row["fault"],
@@ -121,6 +139,7 @@ export function compileFault(program: Program, raw: unknown, op: OpSig): Compile
     };
   }
 
+  stages([{ ir: row["expr"], vars: withResult }]);
   const typed = program.compileExpr(row["expr"], withResult, "fault");
   if (unify(typed.ty, ret) === null) throw new KitError("ill-typed", "the expression shares no type with the op's result");
   return {

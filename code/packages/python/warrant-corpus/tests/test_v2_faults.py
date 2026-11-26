@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pytest
 
-from coding_adventures_warrant_corpus.v2.errors import Refusal
+from coding_adventures_warrant_corpus.v2.errors import KitError, Refusal
 from coding_adventures_warrant_corpus.v2.faults import apply_fault, compile_fault
 
 OP = {"params": [["a", "U8"], ["b", "U8"]], "ret": "U8", "requires": ["ir.core"]}
@@ -168,9 +168,11 @@ def refusal(fault, levels=CORE, op=OP):
     return caught.value.code
 
 
-def test_a_row_that_is_not_a_fault_is_ill_typed():
-    assert refusal("fault") == "ill-typed"
-    assert refusal({"kind": "mystery"}) == "ill-typed"
+def test_a_row_that_is_not_a_fault_is_a_kit_error():
+    # R126: a break of the case's own schema is no outcome.
+    for row in ("fault", {"kind": "mystery"}):
+        with pytest.raises(KitError):
+            compile_fault(row, OP, TYPES, CORE)
 
 
 def test_a_fault_that_needs_a_missing_level_is_level_missing_by_requires_or_by_tag():

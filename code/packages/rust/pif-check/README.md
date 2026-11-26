@@ -82,6 +82,44 @@ continues over it. Digests print as 64 lowercase hex digits.
 * **`--withdrawn-logic n,n,...`** is gate configuration passed to the reader (R-VER-1); an empty
   list withdraws none.
 * Control files and store entries must be regular files (no symbolic links, FIFOs, devices).
+## Goals and the canonical term encoding (PIF-003b)
+
+A claim file binds a claim id to a theorem (`goal "<id>" <theorem> sha256:<hex>`). The kernel
+checked the proof; the gate decides whether the theorem's *statement* is the signed one.
+
+| Module | Role |
+|---|---|
+| `cte` | The canonical term encoding of VER32 3.6 in two forms. The **binding CTE** (binder names and info erased, levels syntactic, 1 MiB cap) is computed **from the kernel store**; the **display CTE** keeps names. `Dterm` holds a term as a tree, built and emitted with explicit stacks (no recursion on attacker-controlled depth), with a strict parser for the display form |
+| `goals` | G4/G5: recompute each goal digest from the theorem's type and compare it with the record's (a hint); the **goals list** (one line per claim: claim id, one space, display CTE, LF) parsed and checked with `erase(display) = binding`; sign-off goal digests; the **goal-signing aggregate** (PIF-020); R-GOL-4 again from the stored goal term |
+
+The worked example's goal digest, recomputed from the kernel store, is
+`bf1fa0a0d828b019965f46efa44ff2627bf54a59558a1bc2959b52c161f74676`, the value in VER32 4.6.
+
+### Pinned byte layout
+
+VER32 gives the CTE grammar and says STRING and NAT are "written exactly as in PIF (4.1)".
+This crate writes a NAT in decimal with no leading zero, and a STRING in double quotes with
+printable ASCII 0x21 to 0x7E as itself except `"` and `\` (`\"`, `\\`) and every other
+character (space, controls, non-ASCII) as `\u{h}` in lowercase hex without leading zeros. The
+parser accepts exactly those spellings, so a name has one encoding. A numeric name component
+prints as digits (`<"A",3>`), a string component `"3"` as `<"A","3">`.
+
+### Goals list and aggregate
+
+```text
+gates.and_comm Pd(<"a">,C<"Bool">[],Pd(<"b">,C<"Bool">[],A(A(A(C<"Eq">[s(z)],...
+```
+
+The aggregate is `SHA-256` over the lines `claim-id goal-digest base-environment-digest`
+(digests as 64 lowercase hex digits), each ended by LF, sorted bytewise. VER32 does not fix
+the terminator or the digest spelling; this is the choice made here. `pif-check --goals
+<file>` adds the list; the report prints each claim's `goal_digest` and `goals_sha256`.
+
+### Sign-off comparison and limits (security review)
+
+`goals_sha256` is always printed (the aggregate the gate computed); `goals_sha256_verified` is
+true only when a sign-off supplied an aggregate to compare with. A goals list may have at most
+100,000 lines, and claim lookups use hash maps, so a hostile list cannot make the gate quadratic.
 
 ## Running
 

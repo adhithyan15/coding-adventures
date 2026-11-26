@@ -1,0 +1,5 @@
+# No runtime dependencies: core Perl only (Scalar::Util, B, Math::BigInt, Encode,
+# Config).  The tests use Test::More, also core; it is listed so the file says so.
+on 'test' => sub {
+    requires 'Test::More';
+};

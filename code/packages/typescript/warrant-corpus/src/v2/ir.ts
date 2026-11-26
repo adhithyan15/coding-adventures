@@ -87,7 +87,11 @@ export const COST_CEILING = 65_536;
 export const MAX_IR_VALUE = 65_536;
 
 /** Where an expression stands: a body may call the subject; the others may not. */
-export type Role = "body" | "admit" | "fault" | "model" | "pure";
+/**
+ * Where an expression stands.  `fault-reach` is a fault expression read with `subject_op` allowed: a fault row reads the
+ * three codes and the levels of every expression before it reads `subject-forbidden` (R119 (c)).
+ */
+export type Role = "body" | "admit" | "fault" | "fault-reach" | "model" | "pure";
 
 /** A parameter or binder: a name and its type. */
 export interface Param {
@@ -238,12 +242,13 @@ function scanExpr(
   }
   if (tag === "var" || tag === "err") return;
   if (tag === "subject_op") {
-    if (role !== "body") fail("subject-forbidden", "a subject_op may not stand here");
+    if (role !== "body" && role !== "fault-reach") fail("subject-forbidden", "a subject_op may not stand here");
     if (typeof ir[1] === "string") info.ops.add(ir[1]);
   }
   if (tag === "model_call") {
     const name = ir[1];
-    if (typeof name !== "string") return fail("ill-typed", "a model_call names a model");
+    // R119 (a): in a fault case (no models at all) every `model_call`, a bare one included, calls a model that is missing.
+    if (typeof name !== "string") return (role === "fault" || role === "fault-reach") && order.size === 0 ? fail("model-order", "a fault case has no models to call") : fail("ill-typed", "a model_call names a model");
     const position = order.get(name);
     if (position === undefined || position >= callerIndex) fail("model-order", "a model_call must name an earlier model of model_order");
     info.models.add(name);
@@ -270,6 +275,41 @@ function scanExpr(
     if (!Array.isArray(child)) continue;
     if (isNodeArray(child)) scanExpr(child, depth + 1, role, callerIndex, order, info);
     else for (const item of child) if (Array.isArray(item)) scanExpr(item, depth + 1, role, callerIndex, order, info);
+  }
+}
+
+/**
+ * The levels of every tag that belongs to a defined level, read without refusing anything (R119 (c) step 2): an unknown
+ * tag has no level and is skipped, a node that is not a node, a nesting past 64 and a missing model are left to the
+ * steps that report them.  The walk stops at a nesting of 200, far past the limit that step 3 reports.
+ */
+function reachExpr(ir: unknown, depth: number, order: ReadonlyMap<string, number>, info: ScanInfo): void {
+  if (depth > 200 || !isNodeArray(ir)) return;
+  const tag = ir[0] as string;
+  const level = levelOfTag(tag);
+  if (level !== undefined) info.levels.add(level);
+  if (tag === "lit") {
+    const body = ir[1];
+    if (typeof body === "object" && body !== null && !Array.isArray(body)) {
+      const written = (body as Record<string, unknown>)["type"];
+      if (typeof written === "string") info.litTypes.push(written);
+    }
+    return;
+  }
+  if (tag === "var" || tag === "err") return;
+  if (tag === "subject_op" && typeof ir[1] === "string") info.ops.add(ir[1]);
+  if (tag === "model_call" && typeof ir[1] === "string" && order.has(ir[1])) info.models.add(ir[1]);
+  if (tag === "match") {
+    reachExpr(ir[1], depth + 1, order, info);
+    if (Array.isArray(ir[2])) for (const arm of ir[2]) if (Array.isArray(arm) && arm.length === 2) reachExpr(arm[1], depth + 1, order, info);
+    return;
+  }
+  const start = tag === "subject_op" || tag === "model_call" ? 2 : 1;
+  for (let i = start; i < ir.length; i += 1) {
+    const child = ir[i];
+    if (!Array.isArray(child)) continue;
+    if (isNodeArray(child)) reachExpr(child, depth + 1, order, info);
+    else for (const item of child) reachExpr(item, depth + 1, order, info);
   }
 }
 
@@ -483,6 +523,18 @@ export class Program {
    */
   scanTags(ir: unknown, role: Role): void {
     scanExpr(ir, 1, role, Number.POSITIVE_INFINITY, this.order, newInfo());
+  }
+
+  /**
+   * The `level-missing` check alone, over one expression (its tags, the models and ops it reaches, and the types of `vars`).
+   * A fault row runs it over every expression of the row before it types any (R119 (c)).  It reads the tree with
+   * an unknown tag skipped (it has no level) and nothing refused but a level.
+   */
+  checkReach(ir: unknown, vars: readonly Param[]): void {
+    const scan = newInfo();
+    reachExpr(ir, 1, this.order, scan);
+    const missing = this.missingLevel(scan, vars.map((v) => v.ty));
+    if (missing !== undefined) throw new KitError("level-missing", "the expression reaches a construct of a level this lane lacks", { level: missing });
   }
 
   /**
