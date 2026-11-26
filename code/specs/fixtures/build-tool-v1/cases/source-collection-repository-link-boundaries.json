@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "rust",
       "package_root": "code/packages/rust/commonmark",
-      "boundary_sha256": "71d31b0f04fb2ef30463a9f10bffd95585107b3bd32b345b5250b2b85c2090d8",
+      "boundary_sha256": "07de6d0f3a3e3ee571af7300cfbcf5247c670f7190162d0c604ca86ac327e1bf",
       "candidates": [
         {"path": "code/packages/rust/.cargo/config.toml", "kind": "symlink", "tracked": true},
         {"path": "code/packages/rust/Cargo.toml", "kind": "reparse_point", "tracked": true},
