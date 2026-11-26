@@ -135,10 +135,11 @@ repository-supported toolchain, plus an installed consumer. Report exact
 commands, tool versions, test/history counts, and package/extraction results.
 At the source pin used for this profile, the repository's blocking Miri job
 selects `lang-runtime-core` and `dynval-runtime`, while the separate deep job
-also selects `twig-vm`; none is a dependency of this heap change. The item
-touches no unsafe code and no selected Miri package, so the scoped Miri rule
-does not request a new heap Miri run. Do not claim Miri evidence for this
-profile.
+also selects `twig-vm`. A `cargo tree --prefix none -e normal,dev` check for
+each selected package shows no dependency on the changed heap or its Rust
+reverse consumers (`huffman-tree` and `in-memory-data-store-engine`). The item
+touches no unsafe code or selected Miri package, so the scoped Miri rule does
+not request a new heap Miri run. Do not claim Miri evidence for this profile.
 
 ## Teaching notes
 
