@@ -1079,6 +1079,24 @@ fn write_corpus(c: &CorpusV2) -> std::path::PathBuf {
     dir
 }
 
+/// A path the oracle can compare with `--repo-root`: canonical, and without Windows' verbatim prefix.
+///
+/// On Windows `canonicalize` returns `\\?\D:\a\...`, while Python's `Path.resolve()` of a path that was
+/// written `D:\a\...\..\..` returns `D:\a\...`.  Passing one of each makes the oracle's "is the `.warrant`
+/// inside the repository root" check fail (`relative_to` sees two different drives), so every path the test
+/// hands the oracle goes through this one function.  On Linux and macOS there is no prefix and it is a plain
+/// `canonicalize`.  A path that does not exist (no oracle tree beside the crate) is returned as written, so
+/// the test still reaches its "skipped" branch.
+fn plain(path: &std::path::Path) -> std::path::PathBuf {
+    let Ok(canon) = path.canonicalize() else {
+        return path.to_path_buf();
+    };
+    match canon.to_str().and_then(|s| s.strip_prefix(r"\\?\")) {
+        Some(rest) => std::path::PathBuf::from(rest),
+        None => canon,
+    }
+}
+
 /// The independent oracle's `verify-v2` accepts the corpus this generator writes from the `data-eval-v1`
 /// document: every digest, chunk line, descriptor, example (JSON and TFV) and control row of 68 suites and
 /// 1,839,544 cases is re-derived by the second implementation and agrees.  The test needs `python3` and the
@@ -1105,11 +1123,11 @@ fn the_oracles_verify_v2_accepts_a_generator_written_corpus() {
         .args(["-m", "coding_adventures_warrant_oracle", "verify-v2"])
         .arg(&dir)
         .arg("--warrant")
-        .arg(fixture.join("data_eval_v1.warrant"))
+        .arg(plain(&fixture.join("data_eval_v1.warrant")))
         .arg("--profile")
-        .arg(fixture.join("data_eval_v1.profile"))
+        .arg(plain(&fixture.join("data_eval_v1.profile")))
         .arg("--repo-root")
-        .arg(root.canonicalize().expect("root"))
+        .arg(plain(&root))
         .output();
     let _ = std::fs::remove_dir_all(&dir);
     match ran {
