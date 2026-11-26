@@ -4,6 +4,10 @@
 
 - Add `code/programs/rust/vos-model-sat` to `rust-root-workspace-manifest-cross-consumers`. Its BUILD references the Rust workspace manifest even though the program also has its own Cargo manifest. The repository-source boundary now has 27 entries, 42 input registrations, 514 scopes, and 535 authorizations; `sync-boundary` regenerated the projections, count and digest pins, and corpus snapshots.
 
+## Unreleased - Add nand-flash to TypeScript workspace boundary
+
+- Add `code/packages/typescript/nand-flash` to `typescript-workspace-configuration` because its package `tsconfig.json` extends the shared base. The boundary has 27 entries, 42 input registrations, 513 scopes, and 534 authorizations (digest `cb6fb486...`); all `boundary_sha256` pins in the corpus and Go/Python digest assertions were refreshed.
+
 ## Unreleased - Sync Rust library-rule boundary for pif-prelude
 
 - Add `code/packages/rust/pif-prelude` (PR #20078) to `starlark-rust-library-rule-consumers`. The boundary has 27 entries, 42 input registrations, 512 scopes, and 533 authorizations (digest `807a951c...`); all `boundary_sha256` pins in the corpus were updated.
