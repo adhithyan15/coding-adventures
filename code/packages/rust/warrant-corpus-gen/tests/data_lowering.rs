@@ -543,41 +543,33 @@ fn a_call_to_an_op_whose_signature_names_a_list_is_ir_list_wherever_it_is_declar
     assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.list")), "{e}");
 }
 
-// ---- generate stays a fail-closed stub for a document that needs ir.data (R37) -------------------------------
+// ---- since S11c-2 `analyse` and `generate` accept a document that needs ir.data (R37 lifted) -----------------
 
 #[test]
-fn analyse_refuses_a_document_that_declares_or_needs_ir_data_naming_the_first_item() {
+fn analyse_accepts_a_document_that_declares_or_needs_ir_data_since_s11c_2() {
     use coding_adventures_warrant_corpus_gen::{analyse, profile::Profile};
-    // a declared type first
+    // a declared type, an op, a model, a claim and an example that need the level: S11b refused each of them
+    // (naming the first), S11c-2 evaluates them and removes the guard
     let src = doc_ops(" v1", &OPS, DECLS);
-    let e = with_file(&src, |f| analyse(f, &Profile::default()).unwrap_err());
-    assert_eq!((e.code, e.level, e.at.as_str()), (code::LEVEL, Some("ir.data"), "Point"), "{e}");
-    // no declared type: the first unit that needs the level (an op, then a model, a claim, an example)
+    with_file(&src, |f| assert!(analyse(f, &Profile::default()).is_ok()));
     let src = doc_ops(
         " v1",
         &["op f(a: Bytes, b: Bytes) -> Bool", "op o(a: Bytes, b: Bytes) -> Option<U8>"],
         "",
     );
-    let e = with_file(&src, |f| analyse(f, &Profile::default()).unwrap_err());
-    assert_eq!(e.at, "o", "{e}");
+    with_file(&src, |f| assert!(analyse(f, &Profile::default()).is_ok()));
     let src = doc_ops(" v1", &OPS, "  model sm(a: U8) -> Option<U8> = Some(a)\n");
-    let e = with_file(&src, |f| analyse(f, &Profile::default()).unwrap_err());
-    assert_eq!(e.at, "sm", "{e}");
+    with_file(&src, |f| assert!(analyse(f, &Profile::default()).is_ok()));
     let src = doc_ops(
         " v1",
         &OPS,
         "  claim cm:\n    forall o: Option<U8>. f(b\"\", b\"\") == (o == o)\n",
     );
-    let e = with_file(&src, |f| analyse(f, &Profile::default()).unwrap_err());
-    assert_eq!(e.at, "cm", "{e}");
+    with_file(&src, |f| assert!(analyse(f, &Profile::default()).is_ok()));
     let src = doc_ops(
         " v1",
         &OPS,
         "  example ex:\n    f(b\"\", b\"\") == (Some(1u8) == Some(1u8))\n",
     );
-    let e = with_file(&src, |f| analyse(f, &Profile::default()).unwrap_err());
-    assert_eq!(e.at, "ex", "{e}");
-    // and a document that needs none is not refused by the guard
-    let src = doc_ops(" v1", &OPS, "  model fine(a: U8) -> U8 = unwrap_or(checked_add(a, a), 0u8)\n");
     with_file(&src, |f| assert!(analyse(f, &Profile::default()).is_ok()));
 }

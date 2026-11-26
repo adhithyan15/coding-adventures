@@ -233,7 +233,12 @@ function runDomain(c: Case): Case {
   try {
     // The domain checker is lenient about a type's depth: a descriptor that is too deep is a `descriptor` refusal, not a `type` one.
     const ty = parseType(String(c["type"]), { maxDepth: 64, code: "descriptor" });
-    const domain = buildDomain(c["descriptor"], ty, EMPTY_TABLE, false);
+    // R44, R72: an optional `types` table.  When present it is read as section 2.2 says (a bad table is `descriptor`) and an
+    // `errs` list must equal the declared cases, order included; absent means `{}` and the list is checked by itself.
+    const typesPresent = c["types"] !== undefined;
+    const table = typesPresent ? readTypeTable(c["types"], "descriptor") : EMPTY_TABLE;
+    if (typesPresent) checkNames(ty, table, "descriptor");
+    const domain = buildDomain(c["descriptor"], ty, table, typesPresent);
     let low: number;
     let high: number;
     if (c["index"] !== undefined) {

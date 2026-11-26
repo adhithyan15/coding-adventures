@@ -76,8 +76,8 @@ use coding_adventures_warrant_grammar::parser::{Declaration, Expression, Warrant
 use crate::error::{code, Beyond, GenError};
 use crate::json::Json;
 use crate::lower::LoweredSuite;
-use crate::stream::encode;
-use crate::types::Ty;
+use crate::stream::encode_in;
+use crate::types::{Decls, Ty};
 use crate::value::Value;
 
 /// A domain of at most this many values is materialised once.
@@ -128,6 +128,7 @@ pub struct BinderDomain {
     pub label: Label,
     values: Option<Vec<Value>>,
     encoded: Option<Vec<Vec<u8>>>,
+    decls: Decls,
 }
 
 impl BinderDomain {
@@ -140,6 +141,20 @@ impl BinderDomain {
     /// `u64`; `limit` past 16 descriptor levels; `W0701` if a value does not fit the
     /// declared type (a domain and a type that disagree).
     pub fn new(name: &str, ty: &Ty, domain: Domain) -> Result<BinderDomain, GenError> {
+        BinderDomain::new_in(&Decls::default(), name, ty, domain)
+    }
+
+    /// [`BinderDomain::new`] for a document that declares records and variants (`decls`).
+    ///
+    /// # Errors
+    ///
+    /// As [`BinderDomain::new`].
+    pub fn new_in(
+        decls: &Decls,
+        name: &str,
+        ty: &Ty,
+        domain: Domain,
+    ) -> Result<BinderDomain, GenError> {
         let (descriptor, label, size) = describe(&domain, 1).map_err(|e| e.at(name))?;
         let (values, encoded) = if size <= MAX_CACHED_VALUES {
             let mut vs = Vec::with_capacity(size as usize);
@@ -147,7 +162,7 @@ impl BinderDomain {
             for ev in domain.iter() {
                 let v = Value::from_eval(&ev).map_err(|e| e.at(name))?;
                 let mut buf = Vec::new();
-                encode(ty, &v, &mut buf).map_err(|e| e.at(name))?;
+                encode_in(decls, ty, &v, &mut buf).map_err(|e| e.at(name))?;
                 vs.push(v);
                 es.push(buf);
             }
@@ -164,6 +179,7 @@ impl BinderDomain {
             label,
             values,
             encoded,
+            decls: decls.clone(),
         })
     }
 
@@ -198,7 +214,7 @@ impl BinderDomain {
             return Ok(());
         }
         let v = self.value(i)?;
-        encode(&self.ty, &v, out).map_err(|e| e.at(&self.name))
+        encode_in(&self.decls, &self.ty, &v, out).map_err(|e| e.at(&self.name))
     }
 
     /// Swap two cached values (and encodings): the seeded-wrong "reordered enumeration"
@@ -339,11 +355,66 @@ pub fn describe(d: &Domain, depth: usize) -> Result<(Json, Label, u64), GenError
                 size,
             )
         }
-        Domain::Data { .. } | Domain::Opt(_) | Domain::List(_) => {
+        // `ir.data` (S11c-2): an `Option` is `{"d":"option","of":D}` (its label that of D); a record is the
+        // `tuple` of its fields; a variant is `{"d":"variant","ctors":[[name,[D..]],..]}` (the weakest label
+        // of every field of every constructor, `full` when no constructor has a field).
+        Domain::Opt(inner) => {
+            let (j, label, _) = describe(inner, depth + 1)?;
+            (
+                Json::obj([
+                    ("d", Json::str("option")),
+                    ("of", j),
+                    ("size", Json::Int(size)),
+                ]),
+                label,
+                size,
+            )
+        }
+        Domain::Data { ctors, record, .. } => {
+            let mut label = Label::Full;
+            let mut described: Vec<(&str, Vec<Json>)> = Vec::with_capacity(ctors.len());
+            for (name, fields) in ctors {
+                let mut parts = Vec::with_capacity(fields.len());
+                for f in fields {
+                    let (j, l, _) = describe(f, depth + 1)?;
+                    label = weakest(label, l);
+                    parts.push(j);
+                }
+                described.push((name.as_str(), parts));
+            }
+            if *record {
+                let (_, parts) = described.pop().unwrap_or_default();
+                (
+                    Json::obj([
+                        ("d", Json::str("tuple")),
+                        ("of", Json::arr(parts)),
+                        ("size", Json::Int(size)),
+                    ]),
+                    label,
+                    size,
+                )
+            } else {
+                (
+                    Json::obj([
+                        ("d", Json::str("variant")),
+                        (
+                            "ctors",
+                            Json::arr(described.into_iter().map(|(n, parts)| {
+                                Json::arr([Json::str(n), Json::arr(parts)])
+                            })),
+                        ),
+                        ("size", Json::Int(size)),
+                    ]),
+                    label,
+                    size,
+                )
+            }
+        }
+        Domain::List(_) => {
             return Err(GenError::level(
-                Beyond::IrData,
+                Beyond::IrList,
                 "",
-                "a record, variant, option or list binder needs ir.data",
+                "a list binder is the reserved level ir.list",
             ));
         }
         // `Domain` is non-exhaustive: a kind this generator has not heard of is refused,
@@ -680,6 +751,22 @@ pub fn resolve_claim(
     suite: &LoweredSuite,
     budget: u64,
 ) -> Result<SuiteDomains, GenError> {
+    resolve_claim_in(file, env, suite, budget, &Decls::default())
+}
+
+/// [`resolve_claim`] for a document that declares records and variants (`decls`: the stream encodings
+/// of their values need the field types).
+///
+/// # Errors
+///
+/// As [`resolve_claim`].
+pub fn resolve_claim_in(
+    file: &WarrantFile<'_>,
+    env: &DomainEnv<'_>,
+    suite: &LoweredSuite,
+    budget: u64,
+    decls: &Decls,
+) -> Result<SuiteDomains, GenError> {
     let at = |e: GenError| e.at(&suite.claim);
     let (params, body, span) = claim_parts(file, &suite.claim).ok_or_else(|| {
         GenError::new(
@@ -715,7 +802,7 @@ pub fn resolve_claim(
     let mut binders = Vec::with_capacity(owned.len());
     for ((name, ty), d) in suite.binders.iter().zip(resolved.domains) {
         // Name the claim, not the binder: every refusal of a suite is attributed the same way.
-        binders.push(BinderDomain::new(name, ty, d).map_err(|mut e| {
+        binders.push(BinderDomain::new_in(decls, name, ty, d).map_err(|mut e| {
             e.at = suite.claim.clone();
             e
         })?);
@@ -758,6 +845,26 @@ pub fn demotion_path(domains: &[&Domain], d: &coding_adventures_warrant_grammar:
             Domain::List(inner) => {
                 out.push_str(".elem");
                 cur = inner;
+            }
+            // a record is its fields like a tuple (`.k`); a variant names the constructor first (`.Done.1`):
+            // the S2 resolver records `[ctor, k]` for a variant and `[k]` for a record (VER04r 5.3 [D54])
+            Domain::Data { ctors, record, .. } => {
+                let fields = if *record {
+                    ctors.first().map(|(_, f)| f)
+                } else {
+                    let Some(name) = path.next() else { break };
+                    out.push('.');
+                    out.push_str(name);
+                    ctors.iter().find(|(c, _)| c == name).map(|(_, f)| f)
+                };
+                let Some(fields) = fields else { break };
+                let Some(k) = path.next() else { break };
+                out.push('.');
+                out.push_str(k);
+                match k.parse::<usize>().ok().and_then(|k| fields.get(k)) {
+                    Some(next) => cur = next,
+                    None => break,
+                }
             }
             Domain::Tuple(parts) => {
                 let Some(k) = path.next() else { break };
@@ -968,14 +1075,15 @@ mod tests {
             r#"{"d":"tuple","of":[{"d":"bool","size":2},{"d":"bytes_n","n":2,"size":16}],"size":32}"#
         );
         assert_eq!((label, size), (Label::Sample, 32));
-        // a composite that is not a tuple is still ir.data, also inside a tuple
-        for dom in [
-            Domain::Tuple(vec![Domain::Bool, Domain::Opt(Box::new(Domain::Bool))]),
-            Domain::Opt(Box::new(Domain::Bool)),
-            Domain::List(Box::new(Domain::Bool)),
-        ] {
-            assert_eq!(describe(&dom, 1).unwrap_err().level, Some("ir.data"));
-        }
+        // ir.data (S11c-2): an Option is described (also inside a tuple); a list is the reserved ir.list
+        let opt = Domain::Tuple(vec![Domain::Bool, Domain::Opt(Box::new(Domain::Bool))]);
+        let (json, label, size) = describe(&opt, 1).unwrap();
+        assert_eq!((label, size), (Label::Full, 6));
+        assert!(json.render().unwrap().contains(r#""d": "option""#));
+        assert_eq!(
+            describe(&Domain::List(Box::new(Domain::Bool)), 1).unwrap_err().level,
+            Some("ir.list")
+        );
         // 17 nested results
         let mut deep = Domain::Bool;
         for _ in 0..16 {
