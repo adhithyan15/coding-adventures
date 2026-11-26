@@ -5,7 +5,7 @@
 mod common;
 
 use common::*;
-use pif_check::cli::{read_text, run};
+use pif_check::cli::run;
 use pif_check::control::{parse_allow, parse_signoff, Role};
 use pif_check::{CheckError, Digest};
 
@@ -292,6 +292,9 @@ fn finding_7_withdrawn_logic_versions_reach_the_reader() {
 #[cfg(unix)]
 #[test]
 fn finding_8_control_files_must_be_regular_files() {
+    // Imported here: this test is Unix-only, so a top-level import is
+    // unused (and a `-D warnings` error) on Windows.
+    use pif_check::cli::read_text;
     let t = Tmp::new();
     // A FIFO would block an open forever: refused without opening.
     let fifo = t.path("fifo");
