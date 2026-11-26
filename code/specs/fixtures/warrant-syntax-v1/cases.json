@@ -471,6 +471,37 @@
       "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example good:\n    true\ngarbage\n",
       "accept": false,
       "witnesses": []
+    },
+    {
+      "id": "declarations/profile-algorithm-header",
+      "feature": "declarations",
+      "source": "warrant m v1 profile algorithm\n  model f(a: Int) -> Int = a\n",
+      "accept": true,
+      "witnesses": [
+        "profile_clause=profile algorithm",
+        "model_declaration=model f ( a : Int ) -> Int = a"
+      ]
+    },
+    {
+      "id": "declarations/profile-without-name",
+      "feature": "declarations",
+      "source": "warrant m v1 profile\n  model f(a: Int) -> Int = a\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "declarations/profile-twice",
+      "feature": "declarations",
+      "source": "warrant m v1 profile algorithm profile algorithm\n  model f(a: Int) -> Int = a\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "declarations/profile-before-version",
+      "feature": "declarations",
+      "source": "warrant m profile algorithm v1\n  model f(a: Int) -> Int = a\n",
+      "accept": false,
+      "witnesses": []
     }
   ]
 }

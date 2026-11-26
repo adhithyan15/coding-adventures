@@ -461,3 +461,44 @@ document into a Rust test target containing, for every `example` and `claim`,
 the L0 case, a bounded-exhaustive suite, a property suite, a fuzz suite and
 sabotage controls. The oracle is the *translated claim body*. See
 `examples/gen_evidence.rs` and [VER04h](../../../specs/VER04h-warrant-derived-evidence.md).
+
+## `profile algorithm` and `realizes` (VER33 section 4, ADL-001a)
+
+```text
+warrant logic_gates_model v1 profile algorithm   -- header: a profile needs v1
+```
+
+`WarrantFile::profile` is `Profile::Pure` (no clause, every existing document) or
+`Profile::Algorithm`.  In the algorithm profile the guarded parser refuses, in
+source order and at the offending word:
+
+| Code | Refused |
+|---|---|
+| `W0801` | a bad `profile` clause (unknown name, missing name, twice, or on a v0 document) |
+| `W0802` | `measure` (the `rec ... measure` form is named as `measure`); ADL-001b admits it later |
+| `W0803` | `rec while loop for until repeat goto` (`fold` over `range` is admitted) |
+| `W0804` | `F32` `F64` |
+| `W0805` | `inout fresh vectors ensures driver mut mutable state effect io` |
+
+`check_warrant` re-checks `W0804`/`W0805` over the AST (so a hand-built AST cannot
+sidestep the parser).  A pure document is never scanned.
+
+A realization is data in `evidence.bindings` (schema and validation only; nothing
+consumes it yet):
+
+```text
+op nand_gate export=nand_gate faults=always_true realizes=logic_gates_model.nand_gate embedding=int-by-value
+panic nand_gate a must be 0 or 1
+panic nand_gate b must be 0 or 1
+```
+
+`parse_evidence_bindings` fills `EvidenceBindingFile::realizations` and refuses an
+unknown embedding (the closed set `EMBEDDINGS` is `int-by-value`,
+`bytes-identity`), `realizes` without `embedding`, a `panic` line without
+`realizes`, and every bad template (`W0806`/`W0807`: empty, wildcard, duplicate,
+more than 16, compiler-generated).  `validate_realizations(op_module, realizations,
+&[ModelModule { module, profile }])` then refuses a missing model module or
+function, a model file not in `profile algorithm`, and an arity or type mismatch
+between the op and the model function under the chosen embedding.  The corpus is
+`code/specs/fixtures/warrant-profile-algorithm-v1/`, driven by
+`tests/profile_algorithm.rs`.

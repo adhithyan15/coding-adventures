@@ -1,0 +1,3 @@
+-- expect: W0801
+warrant m v1 profile pure
+  model f(a: Int) -> Int = a
