@@ -44,6 +44,20 @@ def many(count, make):
     return [make(n) for n in range(count)]
 
 
+def unused_member(text, *, variant=False):
+    """A table with declared ``E`` and ``Q`` and an unused row ``U`` holding ``text``."""
+    row = (
+        {"kind": "variant", "ctors": [["A", [text]], ["B", []]]}
+        if variant
+        else {"kind": "record", "fields": [["a", text]]}
+    )
+    return {
+        "E": ERR,
+        "Q": {"kind": "record", "fields": [["q", "U8"]]},
+        "U": row,
+    }
+
+
 BAD_TABLES = {
     "error with no case": {"E": {"kind": "error", "cases": []}},
     "error with 65 cases": {
@@ -125,6 +139,33 @@ BAD_TABLES = {
         "P": {"kind": "record", "fields": [["a", "U8 U8"]]}
     },
     "row that is not an object": {"X": 7},
+    # Every member type is parsed eagerly (section 14: the table is read whole), so
+    # a defective member of a record that nothing reaches is a defect of the table.
+    **{
+        f"unused member {label}": unused_member(text)
+        for label, text in {
+            "17 wrappers deep": "List<" * 17 + "U8" + ">" * 17,
+            "Int": "Int",
+            "Option<Int>": "Option<Int>",
+            "unclosed": "List<U8",
+            "a 1-tuple": "(U8)",
+            "a 9-tuple": "(" + ",".join(["U8"] * 9) + ")",
+            "empty": "",
+            "Result with no error": "Result<U8>",
+            "Result with three arguments": "Result<U8,U8,E>",
+            "Result with a record as its error": "Result<U8,Q>",
+            "Bytes<4097>": "Bytes<4097>",
+            "a named width": "Bytes<N>",
+            "a spaced type": "Option< U8>",
+        }.items()
+    },
+    "unused constructor component Int": unused_member("Int", variant=True),
+    "unused constructor component Option<Int>": unused_member(
+        "Option<Int>", variant=True
+    ),
+    "unused constructor component Result<U8>": unused_member(
+        "Result<U8>", variant=True
+    ),
     # R117: an error type is not the type of a field.
     "field of an error type": {
         "E": ERR,

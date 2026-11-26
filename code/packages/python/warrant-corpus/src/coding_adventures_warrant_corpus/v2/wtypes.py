@@ -26,7 +26,7 @@ half and :func:`unify` fills it in from whatever the node meets.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -406,6 +406,40 @@ def check_types_table(types: object, code: str) -> None:
     _check_references(types, refuse)
 
 
+def _name_positions(tokens: list[str]) -> Iterator[tuple[str, bool]]:
+    """Each name of a type text, with whether it stands where ``Result`` puts its error.
+
+    A name is in the error slot when it follows the ``,`` of an enclosing
+    ``Result<`` (not of a tuple).  The tracker keeps its own stack of open
+    brackets, so it is linear and never recurses.
+    """
+    enclosing: list[str] = []  # the open brackets: "R" for Result, "N" for the rest
+    for place, token in enumerate(tokens):
+        previous = tokens[place - 1] if place else ""
+        if token == "(":
+            enclosing.append("N")
+        elif token == "<":
+            enclosing.append("R" if previous == "Result" else "N")
+        elif token in (">", ")") and enclosing:
+            enclosing.pop()
+        if _is_word(token):
+            yield token, previous == "," and bool(enclosing) and enclosing[-1] == "R"
+
+
+def names_misplaced_error_type(text: object, types: dict) -> bool:
+    """Does ``text`` use a declared error type outside a ``Result`` error? (R117)"""
+    if not isinstance(text, str):
+        return False
+    try:
+        tokens = _cut_into_tokens(text)
+    except Refusal:
+        return False
+    return any(
+        not slot and _declared_kind(types, name) == "error"
+        for name, slot in _name_positions(tokens)
+    )
+
+
 def _field_types(row: dict) -> list[str]:
     """The type texts a record's fields or a variant's constructors hold."""
     if row["kind"] == "record":
@@ -439,25 +473,25 @@ def _check_references(types: dict, refuse: Callable[[str], Refusal]) -> None:
                 raise refuse(
                     "a field type has a character outside the type syntax"
                 ) from error
-            enclosing: list[str] = []  # the open brackets: "R" Result, "N" other
-            for place, token in enumerate(tokens):
-                previous = tokens[place - 1] if place else ""
-                if token == "(":
-                    enclosing.append("N")
-                elif token == "<":
-                    enclosing.append("R" if previous == "Result" else "N")
-                elif token in (">", ")") and enclosing:
-                    enclosing.pop()
-                if not _is_word(token) or token in BUILTIN_TYPE_NAMES:
+            for token, error_slot in _name_positions(tokens):
+                if token in BUILTIN_TYPE_NAMES:
                     continue
                 if token not in types:
                     raise refuse("a field type names a type the table does not declare")
                 if types[token]["kind"] != "error":
                     targets.append(token)
-                elif previous != "," or not enclosing or enclosing[-1] != "R":
+                elif not error_slot:
                     # R117: an error type is the second argument of `Result`
                     # and nothing else.
                     raise refuse("a field type is an error type, which has no values")
+            try:
+                # Every member type is read, eagerly, by the lane's own parser
+                # (rule 1's depth limit, the grammar of section 2.1, `Int` and
+                # named widths refused): a defective member of a row nothing
+                # reaches is a defect of the table (section 14: read whole).
+                parse_type(text, types)
+            except Refusal as error:
+                raise refuse(f"a member type is not a type: {error.message}") from error
         edges[name] = targets
     # Depth-first search, iterative: 1 = on the current path, 2 = finished.
     state: dict[str, int] = {}

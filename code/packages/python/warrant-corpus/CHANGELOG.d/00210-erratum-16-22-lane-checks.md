@@ -21,5 +21,6 @@ is regenerated, because the runner digest moves with the source. No dependency a
   names an error type anywhere but the second argument of `Result` (alone, or under `Option`, a tuple or `List`), with
   the code of the context. The type readers (`parse_type`) already refused a bare error name; tests pin it for an op,
   a model, a binder and a `v2-value` type.
+- **Eager member parse (follow-up).** `check_types_table` also parses every field and constructor component with `parse_type` (table as context), so an unused row with an over-deep, `Int`, unclosed, 1-tuple or 9-tuple, malformed `Result`, record-as-error, over-wide or named-width member is refused whole with the context's code. An `env` entry naming an error type is `ill-typed` in `v2-ir` (was a `KitError`); an `Int` env entry stays a `KitError`.
 - Tests: `tests/test_v2_erratum_16_22.py`; `tests/test_v2_lane_checks.py` now expects `ill-typed` for a fault case's bad
   table and holds the R117 tables.

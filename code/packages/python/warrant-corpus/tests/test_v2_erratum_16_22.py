@@ -504,6 +504,13 @@ def test_every_context_refuses_an_error_typed_value():
         case(["lit", True], types=types, models=models, model_order=["m"]), STANDARD
     )
     assert got == {"error": "ill-typed"}
+    # an env entry (R117 b/c: the code of the context, not a kit error)
+    for text in ("E", "Option<E>", "(U8,E)"):
+        got = outcome_ir(
+            case(["lit", True], types=types, env=[["x", {"type": text, "value": 1}]]),
+            STANDARD,
+        )
+        assert got == {"error": "ill-typed"}, text
     # a corpus: a binder, an op, a model
     corpus, row = bare([("b", "U8", LEAF)], types=types)
     row = copy.deepcopy(row)
@@ -524,3 +531,13 @@ def test_a_fault_over_an_error_typed_field_is_ill_typed():
 def test_the_shared_op_table_still_builds():
     # a sanity check that the helpers these tests lean on are the real ones
     assert OPS["f"]["ret"] == "U8" and BUMP["bump"]["ret"] == "U8"
+
+
+def test_names_misplaced_error_type_reads_only_what_is_a_type_text():
+    from coding_adventures_warrant_corpus.v2.wtypes import names_misplaced_error_type
+
+    types = {"E": ERR}
+    assert names_misplaced_error_type("Option<E>", types)
+    assert not names_misplaced_error_type("Result<U8,E>", types)
+    assert not names_misplaced_error_type("U8 U8", types)
+    assert not names_misplaced_error_type(7, types)
