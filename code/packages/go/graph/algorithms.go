@@ -197,7 +197,7 @@ func ShortestPath(g *Graph, start, end string) ([]string, error) {
 	dist := make(map[string]float64, g.Size())
 	prev := make(map[string]string, g.Size())
 	for _, node := range g.Nodes() {
-		dist[node] = 1e308
+		dist[node] = math.Inf(1)
 	}
 	dist[start] = 0
 
@@ -228,7 +228,7 @@ func ShortestPath(g *Graph, start, end string) ([]string, error) {
 		}
 	}
 
-	if dist[end] == 1e308 {
+	if math.IsInf(dist[end], 1) {
 		return []string{}, nil
 	}
 

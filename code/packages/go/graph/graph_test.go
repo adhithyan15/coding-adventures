@@ -239,6 +239,21 @@ func TestShortestPathWeightValidationPreservesMutationAndMSTSemantics(t *testing
 	}
 }
 
+func TestShortestPathSupportsFiniteDistancesAboveFormerSentinel(t *testing.T) {
+	for _, repr := range representations() {
+		g := New(repr)
+		g.AddEdge("A", "B", 1.2e308)
+
+		path, err := ShortestPath(g, "A", "B")
+		if err != nil {
+			t.Fatalf("ShortestPath with a large finite distance failed for repr=%s: %v", repr, err)
+		}
+		if !reflect.DeepEqual(path, []string{"A", "B"}) {
+			t.Fatalf("ShortestPath with a large finite distance = %#v, want [A B] for repr=%s", path, repr)
+		}
+	}
+}
+
 func TestComponentsAndCycleDetection(t *testing.T) {
 	for _, repr := range representations() {
 		g := New(repr)
