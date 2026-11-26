@@ -141,9 +141,8 @@ var (
 	// (VER06j, scans it line by line), lua/test_bootstrap's test_fuzz_vectors.lua
 	// (VER06p) and elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it
 	// the same way; so does cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k),
-	// through the C++ API.
-	// the same way, and so does swift/test-bootstrap's
-	// FuzzReferenceVectorsTests (VER06l).
+	// through the C++ API, and swift/test-bootstrap's FuzzReferenceVectorsTests
+	// (VER06l) reads it too.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
