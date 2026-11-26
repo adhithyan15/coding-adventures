@@ -5,7 +5,7 @@
 DT00B specifies an opt-in, concurrency-safe wrapper for the Go DT00 undirected
 graph package. The existing `*Graph` remains a single-owner, unsynchronized
 type. The wrapper owns one `*Graph` exclusively and serializes access with one
-`sync.RWMutex`; callers never receive that backing pointer or any of its maps,
+`sync.Mutex`; callers never receive that backing pointer or any of its maps,
 slices, rows, or property bags.
 
 This work starts only after DS-GRAPH-WEIGHTS-GO (#20141) merges. Its weight
@@ -38,16 +38,21 @@ that accepts a `GraphRepr`. The surface is intentionally limited to:
 - an edge iterator created from a snapshot, with a cursor owned by that
   iterator.
 
-The exact Go names and error return shapes must follow the sequential package
-after #20141 lands. A wrapper method must not return a pointer to the owned
-`Graph`, a backing map/slice, or a live iterator. A snapshot is a detached
-point-in-time value and remains unchanged after later wrapper mutations. An
-atomic method combining a check and mutation is added only if a concrete caller
-needs that operation; separate `HasEdge` and `RemoveEdge` calls may interleave.
+Use `NewConcurrentGraph`, `ConcurrentGraph`, `GraphSnapshot`, and
+`EdgeIterator` as the public names. Wrapper mutation methods mirror the
+sequential graph methods; mutators that accept property values return an error
+when a value is not in the concurrent scalar profile. These checks happen
+before any graph mutation. A wrapper method must not return a pointer to the
+owned `Graph`, a backing map/slice, or a live iterator. A snapshot is a detached
+point-in-time value and remains unchanged after later wrapper mutations. Its
+queries include the sequential graph's read operations and the existing
+shortest-path and minimum-spanning-tree algorithms. An atomic method combining
+a check and mutation is added only if a concrete caller needs that operation;
+separate `HasEdge` and `RemoveEdge` calls may interleave.
 
 ### Snapshot and property ownership
 
-Snapshot construction holds the read lock while copying all graph structure
+Snapshot construction holds the mutex while copying all graph structure
 and metadata, then releases the lock before any query, iteration, or callback
 work. It copies the node collection, adjacency maps or matrix rows, graph,
 node, and edge property maps, and all representation indexes. Copying costs
@@ -63,14 +68,15 @@ copies the map containers and preserves these immutable scalar values by
 value. The concurrent API does not promise safety for pointers, maps, slices,
 or other reference-bearing property values. Such values are outside the
 concurrent profile; they must not be accepted by the wrapper or be used in
-concurrent calls. Wrapper setters and property-bag inputs must not retain a
-caller-owned map. Read APIs and snapshots must return independent map
-containers. Tests cover all portable scalar types and prove that modifying a
-returned map cannot modify wrapper state.
+concurrent calls. Callers must not mutate an input property map until its
+method returns; after return, the wrapper retains no alias to that map.
+Read APIs and snapshots must return independent map containers. Tests cover
+the portable scalar categories and prove that modifying an input or returned
+map cannot modify wrapper state.
 
 ### Locking discipline
 
-Mutations use the write lock. Single-value or scalar reads use the read lock.
+Mutations and single-value or scalar reads use the mutex.
 Methods that return collections either copy them under the read lock or use a
 snapshot; they never return internal storage. Multi-step algorithms and
 iterators operate only on a snapshot after lock release. The mutex is not
