@@ -995,6 +995,11 @@ fails the backstop. It requires, in order:
    while it was read is an error; 8 workers hash in parallel;
 5. an error lists at most 16 paths and says how many more there were.
 
+The deadline regression test must use an already-expired zero-duration budget,
+not a tiny positive duration: expiration of a positive timer depends on host
+timer resolution and scheduling. This is a test technique only; the production
+budget remains 20 minutes.
+
 Smudge filters, `ident`, `autocrlf` and LFS pointers are caught by their
 effect on the bytes. On Windows there are no executable bits and no
 `O_NOFOLLOW`; the check compares bytes and symlinks only, and the recorder
@@ -2165,6 +2170,14 @@ and `kiln:recorder` is unchanged. `step_netns` is true only when strace was star
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
 step's own `execve` is in the trace (a refused sandbox has none).
+
+The sidecar privacy test must inspect the complete serialized sidecar and
+reject duplicate JSON members before decoding. It may ignore marker-like text
+only inside valid lowercase SHA-256 values in the schema's digest fields;
+unknown fields and malformed digest values are not exempt. Include positive
+digest-collision controls and negative controls for secret text, PID text and
+serialized strace stderr so the check neither misses leaked diagnostics nor
+misclassifies an opaque digest.
 
 **P15. `survivor` and `state-preloaded` (stage 4 PR 2b-2c-4).** Two header `void`
 tokens that the merge already knew (M3, M4) and nothing wrote until now.
