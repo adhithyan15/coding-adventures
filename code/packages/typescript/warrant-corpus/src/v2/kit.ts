@@ -298,7 +298,7 @@ function runFault(c: Case, runnerLevels: ReadonlySet<string>): Case {
     // The case's own `levels` field, cut down to what this runner implements (as `runIr` does): `[]` leaves nothing.
     const levels = new Set((c["levels"] as string[]).filter((level) => runnerLevels.has(level)));
     const fault = c["fault"] as Record<string, unknown>;
-    const program = new Program({ types: c["types"], ops: {}, models: {}, modelOrder: [], levels, structuralCode: "corpus" });
+    const program = new Program({ types: c["types"], ops: {}, models: {}, modelOrder: [], levels, structuralCode: "ill-typed" });
     const op = readOp(String(fault["op"]), c["op"]);
     const compiled = compileFault(program, fault, op);
     // The wrapper has no call site and no widths: a named width is left unstated, so args and result decode as plain Bytes.
