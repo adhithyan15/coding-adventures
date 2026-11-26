@@ -234,7 +234,12 @@ def walk(root: object) -> Iterator[tuple[list, int]]:
         pending.extend((child, depth + 1) for child in reversed(operands(item)))  # type: ignore[arg-type]
 
 
-def scan_tags(root: object, role: str, models: Collection[str] | None = None) -> None:
+def scan_tags(
+    root: object,
+    role: str,
+    models: Collection[str] | None = None,
+    subjects: bool = True,
+) -> None:
     """The checks that read tag names alone, for one top-level expression.
 
     In the order :meth:`Program.scan` uses: ``depth`` (a path of more than
@@ -244,7 +249,9 @@ def scan_tags(root: object, role: str, models: Collection[str] | None = None) ->
     than ``"body"``): R119 (c) puts the three codes before it wherever they
     stand.  No level is consulted, so a suite can run this
     over each expression it holds before it is recorded as needing a level the
-    runner lacks (R107 d, R69 c tier 2).
+    runner lacks (R107 d, R69 c tier 2).  With ``subjects=False`` the
+    ``subject-forbidden`` pass is left to the caller, which runs it over every
+    expression of a row after this one has read them all (R119 c).
     """
     nodes = []
     for node, depth in walk(root):
@@ -261,6 +268,8 @@ def scan_tags(root: object, role: str, models: Collection[str] | None = None) ->
                 raise Refusal(
                     "model-order", "a model_call names a model that does not exist"
                 )
+    if not subjects:  # the caller runs the subject pass itself, after other rows
+        return
     for node in nodes:
         if node[0] == "subject_op" and role != "body":
             raise Refusal(

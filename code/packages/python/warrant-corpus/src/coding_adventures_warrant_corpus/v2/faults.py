@@ -40,7 +40,16 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from .errors import KitError, Refusal
-from .ir import IMPLEMENTED_LEVELS, Compiled, Program, check_requires, evaluate
+from .ir import (
+    IMPLEMENTED_LEVELS,
+    Compiled,
+    Program,
+    check_requires,
+    evaluate,
+    scan_tags,
+    tag_level,
+    walk,
+)
 from .semantics import STANDARD, Semantics
 from .values import decode_value, value_to_json
 from .wtypes import Ty, check_types_table, unify
@@ -182,6 +191,31 @@ def _may_replace(produced: Ty, wanted: Ty) -> bool:
     return unify(produced, wanted) is not None
 
 
+def _static_order(exprs: list[object], available: frozenset[str]) -> None:
+    """Orders 2 to 4 of R119 (c), over **every** expression of the row.
+
+    ``level-missing`` for a tag whose level the runner lacks (a tag of no level
+    is not a level question), then ``depth``, ``unknown-tag`` and ``model-order``
+    (a fault case has no models, so every ``model_call`` is one), then
+    ``subject-forbidden``.  Each step reads all the expressions before the next
+    begins, so one rewrite's ``subject_op`` never hides another rewrite's static
+    code.  The row's ``requires`` is checked by the caller, before this.
+    """
+    for expr in exprs:
+        for node, _depth in walk(expr):
+            level = tag_level(node[0])
+            if level is not None and level not in available:
+                raise Refusal("level-missing", str(node[0]))
+    for expr in exprs:
+        scan_tags(expr, "body", models=(), subjects=False)
+    for expr in exprs:
+        for node, _depth in walk(expr):
+            if node[0] == "subject_op":
+                raise Refusal(
+                    "subject-forbidden", "a fault expression calls no subject"
+                )
+
+
 def compile_fault(
     fault: object,
     op_row: object,
@@ -221,10 +255,9 @@ def compile_fault(
         raise Refusal("ill-typed", "an op with a parameter named result")
     if row["kind"] == "pre":
         rows = _check_rewrite_rows(row["rewrites"], scope)
-        # Steps 3 and 4 for every rewrite before any rewrite is compiled, so a
+        # Orders 2 to 4 for every rewrite before any rewrite is compiled, so a
         # typing defect in one never hides a static code in another.
-        for _param, expr in rows:
-            program.scan(expr, owner=None, role="fault")
+        _static_order([expr for _param, expr in rows], available)
         rewrites = [
             (param, program.compile(expr, scope, role="fault")) for param, expr in rows
         ]
@@ -235,6 +268,7 @@ def compile_fault(
                 raise Refusal("ill-typed", f"the rewrite of {param} has the wrong type")
         return CompiledFault("pre", params, ret, types, sem, rewrites, None)
     scope["result"] = ret
+    _static_order([row["expr"]], available)
     expr = program.compile(row["expr"], scope, role="fault")
     if not _may_replace(expr.ty, ret):
         raise Refusal(

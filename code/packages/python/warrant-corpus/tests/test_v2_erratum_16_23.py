@@ -250,3 +250,69 @@ def test_a_malformed_row_is_read_before_the_table_and_the_op_row():
 def test_a_defined_but_missing_level_is_still_an_outcome():
     got = outcome_fault(fault_case(fault=fault_row(requires=["ir.fixed"])), STANDARD)
     assert got == {"error": "level-missing"}
+
+
+# ---------------------------------------------------------------------------
+# Review follow-up: the order holds across the rewrites of a `pre` row, and
+# `level-missing` precedes the three codes for the expressions too.
+# ---------------------------------------------------------------------------
+PRE_OP = {"params": [["a", "U8"], ["b", "U8"]], "ret": "U8", "requires": ["ir.core"]}
+
+
+def pre_code(first, second, requires=("ir.core",), **edits):
+    row = {
+        "fault": "f",
+        "op": "bump",
+        "kind": "pre",
+        "rewrites": [
+            {"param": "a", "expr": first},
+            {"param": "b", "expr": second},
+        ],
+        "requires": list(requires),
+    }
+    got = outcome_fault(
+        fault_case(fault=row, op=PRE_OP, args=["1", "2"], **edits), STANDARD
+    )
+    return got["error"]
+
+
+@pytest.mark.parametrize(
+    ("bad", "static"),
+    [
+        (["bogus"], "unknown-tag"),
+        (deep(64), "depth"),
+        (["model_call", "m", []], "model-order"),
+    ],
+)
+def test_a_later_rewrites_static_code_beats_an_earlier_rewrites_subject(bad, static):
+    assert pre_code(SUBJECT, bad) == static
+    assert pre_code(bad, SUBJECT) == static
+
+
+def test_subject_forbidden_in_one_rewrite_is_still_subject_forbidden():
+    assert pre_code(["var", "a"], SUBJECT) == "subject-forbidden"
+    assert pre_code(SUBJECT, ["var", "a"]) == "subject-forbidden"
+
+
+@pytest.mark.parametrize("bad", [["bogus"], deep(64), ["model_call", "m", []]])
+def test_level_missing_by_tag_beats_the_three_codes(bad):
+    # requires [] passes the row's own check; the expression's tags decide.
+    assert code(both(["lit", True], bad), requires=(), levels=[]) == "level-missing"
+    assert pre_code(bad, ["lit", True], requires=(), levels=[]) == "level-missing"
+    assert pre_code(["lit", True], bad, requires=(), levels=[]) == "level-missing"
+    # a known tag of a missing level in one place, the bad tag in another
+    fixed = ["bit_not", ["var", "a"]]
+    assert code(both(bad, fixed)) == "level-missing"
+
+
+@pytest.mark.parametrize("bad", [["bogus"], deep(64)])
+def test_the_three_codes_stand_when_no_level_is_missing(bad):
+    assert code(bad, requires=()) in {"unknown-tag", "depth"}
+
+
+@pytest.mark.parametrize(
+    "entry", [["x"], ["x", {"type": "U8", "value": "1"}, 3], "ab", [5, {}], None, 7]
+)
+def test_an_env_entry_that_is_not_a_pair_is_a_kit_error(entry):
+    with pytest.raises(KitError):
+        ir_error(env=[entry])
