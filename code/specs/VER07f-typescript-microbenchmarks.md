@@ -47,3 +47,14 @@ including ties and confidence cutoffs. Generated property tests use fixed seeds
 and bounded local generators. Collector tests inject a clock and check warmup,
 calibration, balanced order, checksum validation, errors, and report replay.
 The array command checks its known checksum without a timing threshold.
+
+## Repository compiler inventory
+
+Both VER07c and VER07f TypeScript packages are standalone emitting projects
+with explicit `src` and `dist` roots, so together they add two projects and two
+isolated emitters to the repository's exact TypeScript portability census. The
+microbenchmark's shipped CLI and collector under `src` use Node APIs, so it
+also adds one Node API/provider project; its tests are outside the compiler's
+`rootDir`. Each package contributes one compiler lock. The repository
+portability test owns the exact aggregate totals and must be updated when the
+tracked TypeScript project set changes.
