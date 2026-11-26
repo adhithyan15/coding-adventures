@@ -1403,15 +1403,17 @@ jobs:
           fi
           echo "go test exit codes: restarted-spawn=$rc1 signals-and-dying=$rc2"
           # The log is rebuilt unescaped from test output, so a printed line that
-          # starts with `::` would be a workflow command: carriage returns go and
-          # a leading `::` gets a space in front of it.
-          grep -E '^(--- FAIL|FAIL|ok|PASS)|D50 on the real kernel' "$log" | tail -n 80 | tr -d '\r' | sed 's/^::/ ::/'
+          # starts with `::` would be a workflow command.  The runner trims leading
+          # whitespace before it looks for `::`, so a space in front is no defence:
+          # carriage returns go and EVERY printed line gets a fixed visible `| `
+          # prefix, so none can start with `::` even after trimming.
+          grep -E '^(--- FAIL|FAIL|ok|PASS)|D50 on the real kernel' "$log" | tail -n 80 | tr -d '\r' | sed 's/^/| /'
           if [ "$rc" -ne 0 ]; then
             # Every failed iteration, in full: with -count=N the same test fails
             # in one run of N, and a log tail loses exactly that run's message.
             python3 "$report" --failures "$json1"
             python3 "$report" --failures "$json2"
-            tail -n 40 "$log" | tr -d '\r' | sed 's/^::/ ::/'
+            tail -n 40 "$log" | tr -d '\r' | sed 's/^/| /'
           fi
           # strace has a known race on a dying thread (PTRACE_LISTEN, EIO); the
           # sandbox tests re-run a step that hit exactly that, and each test logs

@@ -161,6 +161,8 @@ def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
             event = json.loads(line)
         except json.JSONDecodeError:
             continue
+        if not isinstance(event, dict):
+            continue
         test = event.get("Test")
         if not test:
             continue

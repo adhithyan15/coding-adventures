@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import re
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -585,9 +586,20 @@ class CiWiring(unittest.TestCase):
 
     def test_repeat_step_neutralises_and_warns(self) -> None:
         body = self.job().split("      - name: Repeat the restart and signal real-strace tests\n", 1)[1].split("\n      - name:", 1)[0]
-        self.assertIn("sed 's/^::/ ::/'", body)
+        # Behavioural: run the exact filter text from the step on hostile lines.
+        filters = re.findall(r"\| (tr -d '\\r' \| sed 's/\^/\| /')$", body, re.M)
+        self.assertEqual(len(filters), 2, filters)
+        hostile = "::error::x\n  ::error::x\n\t::add-mask::y\nx\r::error::z\n"
+        for command in filters:
+            out = subprocess.run(["bash", "-c", command], input=hostile, capture_output=True, text=True, check=True).stdout
+            self.assertEqual(len(out.splitlines()), 4, out)
+            self.assertFalse([ln for ln in out.splitlines() if re.match(r"^\s*::", ln)], out)
         self.assertIn('[ "$listen_retries" -gt 5 ]', body)
         self.assertIn("::warning::strace's PTRACE_LISTEN race", body)
+
+    def test_failing_output_ignores_stray_json_values(self) -> None:
+        lines = ["0\n", "null\n", json.dumps({"Action": "output", "Test": "T", "Output": "x\n"}), json.dumps({"Action": "fail", "Test": "T"})]
+        self.assertEqual(mod.failing_output(lines), {"T": ["  x"]})
 
     def test_plain_text_rebuilds_the_verbose_log(self) -> None:
         lines = [
