@@ -1,16 +1,19 @@
 package main
 
-// plan_language.go: the language-filtered build plan (-language L -emit-plan).
+// plan_language.go: the prerequisite-closed single-language build plan
+// (-plan-closed-language L -emit-plan).
 //
-// # The problem
+// # Why a new flag and not -language
 //
-// A build plan is the artifact a CI "detect" job hands to its build jobs (and
-// that Kiln's recorder hashes). Before this file existed, -emit-plan ignored
-// -language when deciding WHICH packages go into the plan: the flag only
-// influenced the per-language toolchain flags.  `-language go -shard-count 4`
-// therefore produced shards over every package of every language.
+// -language L with -emit-plan keeps its established meaning (it only steers
+// the affected-root selectors and toolchain flags; the emitted plan still
+// holds every package so a TypeScript plan retains the Rust providers its
+// consumers hash against -- see game_input_frame_plan_test.go).  Narrowing the
+// emitted plan is a different request, so it is a different, opt-in flag.
+// It is valid only with -emit-plan.  Without the flag nothing here runs, and
+// the plan is byte-for-byte what it was.
 //
-// # What the filter did with cross-language prerequisites, before
+// # What the filter does with cross-language prerequisites in existing modes (unchanged)
 //
 //   - Normal builds (no -emit-plan): packages is narrowed to language L AFTER
 //     the dependency graph is resolved over every package.  The executor only
@@ -25,9 +28,9 @@ package main
 //   - Plan consumption (-plan-file -language L): shard closure first, then the
 //     language narrowing, i.e. the same silent drop as normal builds.
 //
-// # The new semantics (plan emission only)
+// # The semantics of -plan-closed-language L
 //
-// With -language L (L != "all") the plan contains exactly the packages of
+// With -plan-closed-language L the plan contains exactly the packages of
 // language L that are PREREQUISITE-CLOSED within L: a package is selected iff
 // every transitive prerequisite of it is also of language L.  A package with
 // any foreign (non-L) transitive prerequisite is LEFT OUT -- not selected, and
@@ -86,7 +89,11 @@ func selectPrerequisiteClosedLanguage(
 		if err != nil {
 			return languagePlanSelection{}, err
 		}
-		for name := range foreignTaint(graph, packages, language) {
+		tainted, err := foreignTaint(graph, packages, language)
+		if err != nil {
+			return languagePlanSelection{}, err
+		}
+		for name := range tainted {
 			excluded[name] = true
 		}
 	}
@@ -106,9 +113,16 @@ func selectPrerequisiteClosedLanguage(
 	return result, nil
 }
 
+// successorGraph is the part of the dependency graph the taint walk needs;
+// an interface so a test can inject a failing graph.
+type successorGraph interface {
+	Nodes() []string
+	Successors(node string) ([]string, error)
+}
+
 // foreignTaint returns every graph node that is, or transitively depends on,
 // a node whose language is not `language`.
-func foreignTaint(graph *directedgraph.Graph, packages []discovery.Package, language string) map[string]bool {
+func foreignTaint(graph successorGraph, packages []discovery.Package, language string) (map[string]bool, error) {
 	languageOf := make(map[string]string, len(packages))
 	for _, pkg := range packages {
 		languageOf[pkg.Name] = pkg.Language
@@ -126,7 +140,7 @@ func foreignTaint(graph *directedgraph.Graph, packages []discovery.Package, lang
 		queue = queue[1:]
 		dependents, err := graph.Successors(node)
 		if err != nil {
-			continue
+			return nil, err
 		}
 		for _, dependent := range dependents {
 			if !tainted[dependent] {
@@ -135,7 +149,7 @@ func foreignTaint(graph *directedgraph.Graph, packages []discovery.Package, lang
 			}
 		}
 	}
-	return tainted
+	return tainted, nil
 }
 
 // platformGraphResolver is the production graphForPlatform: the same

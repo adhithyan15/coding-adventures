@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"flag"
 	"os"
 	"path/filepath"
@@ -114,7 +115,7 @@ func containsName(list []string, s string) bool {
 
 func TestLanguagePlanSelectsOnlyPrerequisiteClosedGoPackages(t *testing.T) {
 	root := languagePlanFixture(t)
-	bp := readPlanBytes(t, emitLanguagePlan(t, root, "-language", "go", "-shard-count", "2"))
+	bp := readPlanBytes(t, emitLanguagePlan(t, root, "-plan-closed-language", "go", "-shard-count", "2"))
 
 	want := []string{"go/base", "go/leaf", "go/mid"}
 	if got := planNames(bp); !reflect.DeepEqual(got, want) {
@@ -158,9 +159,9 @@ func TestLanguagePlanSelectsOnlyPrerequisiteClosedGoPackages(t *testing.T) {
 
 func TestLanguagePlanIsDeterministic(t *testing.T) {
 	root := languagePlanFixture(t)
-	first := emitLanguagePlan(t, root, "-language", "go", "-shard-count", "3")
+	first := emitLanguagePlan(t, root, "-plan-closed-language", "go", "-shard-count", "3")
 	for i := 0; i < 3; i++ {
-		again := emitLanguagePlan(t, root, "-language", "go", "-shard-count", "3")
+		again := emitLanguagePlan(t, root, "-plan-closed-language", "go", "-shard-count", "3")
 		if !bytes.Equal(first, again) {
 			t.Fatal("same inputs produced different plan bytes")
 		}
@@ -171,6 +172,10 @@ func TestLanguageAllPlanIsUnchangedAndKeepsEveryPackage(t *testing.T) {
 	root := languagePlanFixture(t)
 	implicit := emitLanguagePlan(t, root, "-shard-count", "3")
 	explicit := emitLanguagePlan(t, root, "-language", "all", "-shard-count", "3")
+	// -language go alone must still emit every package (origin/main behaviour).
+	if filtered := planNames(readPlanBytes(t, emitLanguagePlan(t, root, "-language", "go", "-shard-count", "3"))); len(filtered) != 7 {
+		t.Fatalf("-language go with -emit-plan must not narrow the plan, got %v", filtered)
+	}
 	if !bytes.Equal(implicit, explicit) {
 		t.Fatal("-language all differs from the default plan")
 	}
@@ -189,7 +194,7 @@ func TestLanguagePlanWeightsBalanceOverSelectedPackagesOnly(t *testing.T) {
 	if err := os.WriteFile(weights, []byte(body), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	bp := readPlanBytes(t, emitLanguagePlan(t, root, "-language", "go", "-shard-count", "2", "-shard-weights", weights))
+	bp := readPlanBytes(t, emitLanguagePlan(t, root, "-plan-closed-language", "go", "-shard-count", "2", "-shard-weights", weights))
 	total := 0
 	for _, shard := range bp.Shards {
 		total += shard.EstimatedCost
@@ -250,5 +255,47 @@ func TestSelectPrerequisiteClosedLanguageFailsClosedOnUnknownNode(t *testing.T) 
 	got, _ := selectPrerequisiteClosedLanguage(pkgs, "go", []string{"linux"}, fakeGraphFor(edges, []string{"go/a"}))
 	if len(got.Selected) != 0 || !reflect.DeepEqual(got.Excluded, []string{"go/a"}) {
 		t.Fatalf("unknown prerequisite must exclude: %v / %v", got.Selected, got.Excluded)
+	}
+}
+
+// failingSuccessors is a graph whose Successors lookup fails for one node.
+type failingSuccessors struct{ nodes []string }
+
+func (g failingSuccessors) Nodes() []string { return g.nodes }
+func (g failingSuccessors) Successors(string) ([]string, error) {
+	return nil, errors.New("injected successor failure")
+}
+
+func TestForeignTaintReturnsSuccessorErrors(t *testing.T) {
+	pkgs := []discovery.Package{{Name: "py/x", Language: "python"}, {Name: "go/a", Language: "go"}}
+	if _, err := foreignTaint(failingSuccessors{nodes: []string{"py/x", "go/a"}}, pkgs, "go"); err == nil {
+		t.Fatal("a Successors error must fail the plan, not be skipped")
+	}
+}
+
+func runExpectingFailure(t *testing.T, args ...string) int {
+	t.Helper()
+	originalArgs, originalFlags, originalStderr, originalStdout := os.Args, flag.CommandLine, os.Stderr, os.Stdout
+	devnull, err := os.OpenFile(os.DevNull, os.O_WRONLY, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	flag.CommandLine = flag.NewFlagSet("build-tool-test", flag.ContinueOnError)
+	os.Args = append([]string{"build-tool"}, args...)
+	os.Stderr, os.Stdout = devnull, devnull
+	code := run()
+	os.Args, flag.CommandLine, os.Stderr, os.Stdout = originalArgs, originalFlags, originalStderr, originalStdout
+	devnull.Close()
+	return code
+}
+
+func TestPlanClosedLanguageIsRejectedOutsideEmitPlan(t *testing.T) {
+	root := languagePlanFixture(t)
+	if code := runExpectingFailure(t, "-root", root, "-force", "-dry-run", "-plan-closed-language", "go"); code != 1 {
+		t.Fatalf("without -emit-plan: exit %d, want 1", code)
+	}
+	planPath := filepath.Join(t.TempDir(), "p.json")
+	if code := runExpectingFailure(t, "-root", root, "-force", "-emit-plan", planPath, "-plan-closed-language", "all"); code != 1 {
+		t.Fatalf("with all: exit %d, want 1", code)
 	}
 }

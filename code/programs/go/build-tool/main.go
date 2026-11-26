@@ -1108,6 +1108,11 @@ func withDevDependents(closure map[string]bool, triggers resolver.TestTriggers) 
 	return union
 }
 
+// planClosedLanguage is -plan-closed-language for the current run ("" = off).
+// A package-level variable, like shardWeights, so emitBuildPlan's many callers
+// keep their signature.
+var planClosedLanguage string
+
 // planPlatforms are the runner platforms a build plan carries state for.
 var planPlatforms = []string{"linux", "darwin", "windows"}
 
@@ -1263,6 +1268,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
 	emitPlan := flag.String("emit-plan", "", "Write build plan JSON to this path (used by CI detect job)")
+	closedLanguage := flag.String("plan-closed-language", "", "With -emit-plan only: emit just the packages of this language whose transitive prerequisites are all of this language (see plan_language.go); -language keeps its meaning")
 	planFile := flag.String("plan-file", "", "Read build plan JSON, skip discovery/resolution/diff (used by CI build job)")
 	shardCount := flag.Int("shard-count", 0, "Split emitted build plans into this many CI shards")
 	shardIndex := flag.Int("shard-index", -1, "Run only the selected shard from a build plan")
@@ -1350,6 +1356,21 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			fmt.Fprintf(os.Stderr, "Error: -emit-kiln-steps: %v\n", rerr)
 			return 1
 		}
+	}
+
+	// -plan-closed-language is an opt-in selection of what -emit-plan writes.
+	// Anywhere else it would silently do nothing, so refuse it loudly.
+	planClosedLanguage = ""
+	if *closedLanguage != "" {
+		if *emitPlan == "" {
+			fmt.Fprintln(os.Stderr, "Error: -plan-closed-language is only valid with -emit-plan.")
+			return 1
+		}
+		if *closedLanguage == "all" {
+			fmt.Fprintln(os.Stderr, "Error: -plan-closed-language needs one concrete language; omit it to emit the whole plan.")
+			return 1
+		}
+		planClosedLanguage = *closedLanguage
 	}
 
 	// -emit-kiln-graph describes the whole repository, not a diff or a
@@ -2210,15 +2231,21 @@ func emitBuildPlanAgainst(
 	gateAffected := affectedSet
 	allPackages := packages
 	var selectedNames map[string]bool
-	if language != "all" {
+	// Toolchain flags follow the closed language when one is requested, so a
+	// Go-closed plan asks only for Go; otherwise -language, as always.
+	neededLanguage := language
+	if planClosedLanguage != "" {
+		neededLanguage = planClosedLanguage
+	}
+	if closed := planClosedLanguage; closed != "" {
 		selection, err := selectPrerequisiteClosedLanguage(
-			packages, language, planPlatforms, platformGraphResolver(known))
+			packages, closed, planPlatforms, platformGraphResolver(known))
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error resolving %s language plan: %v\n", language, err)
+			fmt.Fprintf(os.Stderr, "Error resolving %s closed-language plan: %v\n", closed, err)
 			return 1
 		}
-		fmt.Printf("Language plan %s: %d packages selected, %d excluded for a non-%s prerequisite\n",
-			language, len(selection.Selected), len(selection.Excluded), language)
+		fmt.Printf("Closed-language plan %s: %d packages selected, %d excluded for a non-%s prerequisite\n",
+			closed, len(selection.Selected), len(selection.Excluded), closed)
 		packages = selection.Selected
 		selectedNames = make(map[string]bool, len(packages))
 		for _, pkg := range packages {
@@ -2324,7 +2351,7 @@ func emitBuildPlanAgainst(
 			platformAffected,
 			force,
 			ciToolchains,
-			language,
+			neededLanguage,
 		) {
 			if needed {
 				platformLanguages[language] = true
@@ -2333,7 +2360,7 @@ func emitBuildPlanAgainst(
 	}
 
 	// Compute languages needed as the union across runner platforms.
-	languagesNeeded := computePlanLanguagesNeeded(packages, affectedSet, force, ciToolchains, language)
+	languagesNeeded := computePlanLanguagesNeeded(packages, affectedSet, force, ciToolchains, neededLanguage)
 	for language := range platformLanguages {
 		languagesNeeded[language] = true
 	}

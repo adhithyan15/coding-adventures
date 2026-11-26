@@ -262,7 +262,8 @@ On Windows, use the compiled `.exe`:
 | `-force` | false | Rebuild everything regardless of cache |
 | `-dry-run` | false | Show what would build without executing |
 | `-jobs` | NumCPU | Maximum parallel build jobs |
-| `-language` | all | Filter to any canonical discovery bucket, or `all`. With `-emit-plan`, a non-`all` value emits only the prerequisite-closed packages of that language (a package with a prerequisite of another language is left out, not pulled in); see `plan_language.go` |
+| `-language` | all | Filter to any canonical discovery bucket, or `all` |
+| `-plan-closed-language` | (none) | Only with `-emit-plan`: emit just the packages of this language whose transitive prerequisites are all of this language (a package with a foreign prerequisite is left out, not pulled in; `all` is refused). `-language` keeps its meaning; see `plan_language.go` |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 | `-validate-build-files` | true | Validate BUILD dependency metadata, established-lane package-root coverage, crate coverage, tracked artifacts, BUILD-front invocations, and negative-control checker users declaring Python |
