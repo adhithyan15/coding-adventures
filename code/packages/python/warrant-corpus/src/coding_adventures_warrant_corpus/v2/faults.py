@@ -40,10 +40,10 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from .errors import Refusal
-from .ir import IMPLEMENTED_LEVELS, Compiled, Program, evaluate
+from .ir import IMPLEMENTED_LEVELS, Compiled, Program, check_requires, evaluate
 from .semantics import STANDARD, Semantics
 from .values import decode_value, value_to_json
-from .wtypes import Ty, unify
+from .wtypes import Ty, check_types_table, unify
 
 KINDS = ("pre", "post", "replace")
 
@@ -121,6 +121,8 @@ def _check_fault_shape(fault: object) -> dict:
     requires = fault["requires"]
     if type(requires) is not list or not all(type(level) is str for level in requires):
         raise _ill_formed("requires is a list of level names")
+    # An undefined level name is a corpus error, never `level-missing` (4.2 rule 7).
+    check_requires(requires, "corpus", "a fault's requires")
     return fault
 
 
@@ -178,6 +180,7 @@ def compile_fault(
     of what they replace, is ``ill-typed`` (F6).
     """
     row = _check_fault_shape(fault)
+    check_types_table(types, "corpus")  # section 2.2, again by every consumer
     available = frozenset(levels) & IMPLEMENTED_LEVELS
     if not set(row["requires"]) <= available:
         raise Refusal("level-missing", "the fault needs a level this runner lacks")

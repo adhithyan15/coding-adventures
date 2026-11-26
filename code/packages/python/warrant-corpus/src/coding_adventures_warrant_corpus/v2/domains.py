@@ -53,7 +53,7 @@ from functools import lru_cache
 
 from .errors import Refusal
 from .semantics import STANDARD, Semantics
-from .wtypes import BYTES, FIXED, NAT, Ty, parse_type
+from .wtypes import BYTES, FIXED, NAT, Ty, check_types_table, parse_type
 
 MAX_DESCRIPTOR_DEPTH = 16
 MAX_NAT_COUNT = 4096
@@ -432,6 +432,8 @@ def descriptor_for(
     ``descriptor`` too: the descriptor is the thing being validated.
     """
     try:
+        if types:
+            check_types_table(types, "descriptor")  # section 2.2, every consumer
         ty = parse_type(type_text, types or None)
     except Refusal as error:
         raise _refuse(f"not a binder type: {error.message}") from error
