@@ -3,6 +3,10 @@
 version = 4
 
 [[package]]
+name = "coding-adventures-heap"
+version = "0.1.0"
+
+[[package]]
 name = "compute-ir"
 version = "0.3.0"
 dependencies = [
@@ -52,14 +56,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "heap"
-version = "0.1.0"
-
-[[package]]
 name = "huffman-tree"
 version = "0.1.0"
 dependencies = [
- "heap",
+ "coding-adventures-heap",
 ]
 
 [[package]]
