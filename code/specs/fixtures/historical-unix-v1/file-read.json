@@ -1,0 +1,32 @@
+[
+  {
+    "command": "cat /hello",
+    "output": "Hello, Unix!\n",
+    "events": [
+      {"call":"open","path":"/hello","inode":2,"fd":0,"offset":0},
+      {"call":"read","fd":0,"inode":2,"offset":0,"bytes":8,"nextOffset":8},
+      {"call":"read","fd":0,"inode":2,"offset":8,"bytes":5,"nextOffset":13},
+      {"call":"read","fd":0,"inode":2,"offset":13,"bytes":0,"nextOffset":13},
+      {"call":"close","fd":0}
+    ]
+  },
+  {
+    "command":"cat /empty",
+    "output":"",
+    "events":[
+      {"call":"open","path":"/empty","inode":3,"fd":0,"offset":0},
+      {"call":"read","fd":0,"inode":3,"offset":0,"bytes":0,"nextOffset":0},
+      {"call":"close","fd":0}
+    ]
+  },
+  {
+    "command":"ls /etc",
+    "output":"notes\n",
+    "events":[{"call":"list","path":"/etc","inode":4,"names":["notes"]}]
+  },
+  {
+    "command":"cat /missing",
+    "output":"error: ENOENT\n",
+    "events":[{"call":"open","path":"/missing","error":"ENOENT"}]
+  }
+]

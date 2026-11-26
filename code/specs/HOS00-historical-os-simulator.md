@@ -34,7 +34,7 @@ The shell maps `ls` to a teaching directory-list request, not a historical
 - The kernel sequences filesystem and descriptor operations. Its entry points
   for the demo are open, read, close and list. The shell translates command
   text into operations. The browser only renders results and supplies inputs.
-- The portable fixture format is JSON. A case supplies a shell command and
+- The portable fixture format is JSON under `fixtures/historical-unix-v1/`. A case supplies a shell command and
   expected ordered syscall events and console output. No host time, files, or
   randomness influence the simulated transitions.
 
@@ -44,6 +44,14 @@ Run or step through `cat /hello`, `ls /`, or any supported command against a
 small built-in image. The initial image includes a nested directory and an
 empty file. A browser visitor can see a descriptor's allocation, byte offset,
 EOF, and close. A reset returns to a fresh image and descriptor table.
+
+## Hosted ports
+
+The TypeScript browser and the Python and Ruby command-line ports use the
+same image and JSON syscall schema. The hosted ports can emit one JSON object
+containing `output` and `events` for a command. Shell words are separated
+by ASCII whitespace. Replay the same fixtures in each implementation, and
+keep command parsing, kernel dispatch, and component transitions separate.
 
 ## Evidence
 
