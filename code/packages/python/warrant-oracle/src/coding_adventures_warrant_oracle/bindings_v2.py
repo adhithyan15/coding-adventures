@@ -162,7 +162,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from .conformance import KitError, Row, finish_case, render
+from .conformance import KitError, Refused, Row, check_type_table, finish_case, render
 
 CATEGORY = "v2-binding"
 
@@ -412,6 +412,13 @@ def read_corpus(corpus: object) -> Corpus:
                 raise BindingKitError(f"variant {tname}: ctors is a non-empty list")
         else:
             raise BindingKitError(f"type {tname}: kind is error, record or variant")
+    # R113 (VER04r 16.22): R108 and R117 reach ``corpus.types``, with the code of a corpus.  ``v2-binding`` has no such
+    # code (its closed set is ``BindingInvalid`` and the 39 reasons of R85 (d), none of them a table defect), so a case
+    # with a bad table breaks its own schema: a kit error, never a vector.
+    try:
+        check_type_table(types, "corpus")
+    except Refused as exc:
+        raise BindingKitError(f"corpus.types: {exc.why}") from exc
     sigs: dict = {}
     for oname, row in ops.items():
         if not isinstance(row, dict) or "params" not in row or "ret" not in row:

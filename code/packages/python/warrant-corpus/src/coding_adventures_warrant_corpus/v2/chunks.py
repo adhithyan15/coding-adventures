@@ -403,6 +403,19 @@ def _assemble_suite(
     scan_tags(row.get("body"), "body", known)
     scan_tags(sides[1] if sides else None, "expected", known)
     scan_tags(sides[0] if sides else None, "body", known)
+    # R116: the program reads every model whole, so it is built before any
+    # binder's descriptor: a descriptor of a level the lane lacks (`list`) is
+    # `level-missing` at once, and must not hide a defect of a model (an unknown
+    # tag is `corpus` wherever the model stands, R69 d).
+    program = Program(
+        types=types,
+        ops=corpus["ops"],
+        models=corpus["models"],
+        model_order=corpus["model_order"],
+        levels=levels,
+        max_ir_cost=max_cost,
+        sem=sem,
+    )
     names, tys, descs, product = _read_binders(row, types, sem)
     if product > MAX_SUITE_PRODUCT:
         raise _corpus_error(
@@ -420,15 +433,6 @@ def _assemble_suite(
     if row["kind"] != "exhaustive":
         raise _corpus_error("the only kind of suite is the exhaustive one")
 
-    program = Program(
-        types=types,
-        ops=corpus["ops"],
-        models=corpus["models"],
-        model_order=corpus["model_order"],
-        levels=levels,
-        max_ir_cost=max_cost,
-        sem=sem,
-    )
     scope = dict(zip(names, tys, strict=True))
     result_ty = parse_type(row["result_type"], types)
     program.need_levels(type_level(result_ty, types), "the result type")

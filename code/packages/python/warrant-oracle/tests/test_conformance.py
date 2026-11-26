@@ -717,8 +717,8 @@ def test_derive_fault_table_errors():
     with pytest.raises(C.KitError):
         C.derive_fault(fault_case(post, args=[]))
     bad = {"fault": "b", "op": "echo", "kind": "post", "requires": ["ir.core"], "expr": ["not", ["var", "a"]]}
-    with pytest.raises(C.KitError):  # the expression does not type
-        C.derive_fault(fault_case(bad))
+    # the expression does not type: [D74], R110 ``ill-typed`` (it was a kit error before 16.22)
+    assert C.derive_fault(fault_case(bad)) == {"error": "ill-typed"}
     with pytest.raises(C.Refused):  # a result that is not a value of the op's type
         C.derive_fault(fault_case(post, result="zz"))
 
