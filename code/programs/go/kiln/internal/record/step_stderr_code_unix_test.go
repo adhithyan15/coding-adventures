@@ -28,7 +28,7 @@ func TestStepRecordsAStraceStderrCode(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !strings.Contains(string(raw), `"strace_stderr_code":"`+c.code+`"`) || strings.Contains(string(raw), "secret") || strings.Contains(string(raw), "4242") {
+		if !strings.Contains(string(raw), `"strace_stderr_code":"`+c.code+`"`) || hasRawStraceStderrMarker(string(raw)) {
 			t.Fatalf("sidecar text: %s", raw)
 		}
 	}

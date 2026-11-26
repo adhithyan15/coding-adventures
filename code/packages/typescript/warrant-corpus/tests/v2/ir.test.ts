@@ -393,7 +393,8 @@ describe("levels by reach: the three tiers of [D64] and R69", () => {
   it("types a model_call against the model's parameters and flows Nat to Int, Bytes<N> to Bytes", () => {
     const p = program({ models: { wide: { params: [["a", "Nat"]], body: ["var", "a"] }, ok2: { params: [["a", "Bytes"]], body: ["len", ["var", "a"]] } } });
     expect(evaluate(["model_call", "wide", [NAT(3)]], [], p).value).toBe(3n);
-    expect(outcome(() => program({ models: { wide: { params: [["a", "Int"]], body: ["var", "a"] } } }))).toBe("ill-typed");
+    // [D75]: a model row is a signature, so an `Int` parameter is accepted (it was `ill-typed` before section 16.22).
+    expect(outcome(() => program({ models: { wide: { params: [["a", "Int"]], body: ["var", "a"] } } }))).toBe("ok");
     expect(evaluate(["model_call", "ok2", [BYTES("0102")]], [], p).value).toBe(2n);
     expect(outcome(() => evaluate(["model_call", "wide", [U8(3)]], [], p))).toBe("ill-typed");
     expect(outcome(() => evaluate(["model_call", "wide", []], [], p))).toBe("ill-typed");
