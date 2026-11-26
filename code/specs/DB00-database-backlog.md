@@ -34,8 +34,8 @@ open PRs, and any discoveries from implementation or review. Prioritize fixes
 that protect admitted guarantees first, then missing evidence, then dependencies
 blocking the next smallest learning feature. Assign one bounded item at a time
 to a Luna implementation agent and keep the number of active agents small.
-Commit the spec first, review the implementation and evidence, and run the
-repository's security review for the exact head before pushing. Monitor the
+Commit the spec first and review database correctness and evidence at the
+exact head before pushing. Monitor the
 required PR checks, resolve failures and conflicts, arm auto-merge for the
 reviewed head when checks are healthy, and confirm the exact head merged. When
 CI is backlogged, continue preparing one bounded item at a time on local
