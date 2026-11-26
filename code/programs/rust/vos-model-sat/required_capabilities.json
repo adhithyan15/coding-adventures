@@ -4,6 +4,18 @@
   "package": "rust/vos-model-sat",
   "capabilities": [
     {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the contract crate's vos.toml and warrant/lemmas.sat (bounded, regular files only, never a symlink); the rest goes through vos-link's loader."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "gen writes exactly warrant/lemmas.sat (refusing a symlink); check --emit-drat writes the .cnf and .drat of each obligation into the directory the caller names (no `..`, never over a symlink)."
+    },
+    {
       "category": "env",
       "action": "read",
       "target": "*",
@@ -13,7 +25,7 @@
       "category": "stdout",
       "action": "write",
       "target": "*",
-      "justification": "Prints the cross-check report to standard output and a no-verdict reason to standard error."
+      "justification": "Prints the cross-check, gen and check reports to standard output and a no-verdict reason to standard error."
     },
     {
       "category": "proc",
