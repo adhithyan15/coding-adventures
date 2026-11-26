@@ -43,6 +43,13 @@ parameter (argument order) is reported, named by the public function's own
 parameter: `nandOr 1 2` is `Left (InvalidBit "b" 2)`, never an inner wire name.
 Breaking change in 0.3.0: previously errors were `String`.
 
+## Hardening notes
+
+- Every list input is snapshotted through `takeChecked` before any other work: at most cap+1 cells are walked, so infinite or huge lists are rejected with `InvalidShape` instead of hanging. `validateBits` accepts at most 65536 elements.
+- Results are fully evaluated for any total input. A bottom element supplied by the caller is the caller's own bottom (`evaluate (muxN [0, undefined] [0])` throws).
+- Parameter names in `InvalidBit` are truncated to 64 characters and control characters become `?`.
+- `-Werror` is enforced by `BUILD`, not the `.cabal` file.
+
 ## Testing
 
 `cabal test` (hspec).

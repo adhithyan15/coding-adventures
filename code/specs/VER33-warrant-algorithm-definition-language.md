@@ -1607,3 +1607,18 @@ document's own four requests to VER32.
 
 **Not applied, and why.** Nothing in VER34 13.1 addressed to VER33 was left out. G7 needed no
 edit because the text already says it. G15 is a recorded judgment, not a decision.
+
+### Follow-up / G-M1 registration 2026-11-25
+
+**Status: ADL-006a and ADL-006b are drafted, proposed, pending owner signature.** Nothing in
+sections 1 to 14 above is edited; this is the review-record note.
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| J1 | **ADL-006b drafted** as VER31 section 13.4 to 13.6: the section 6.2 cap on lane packages lifts per claim, by computation through the claim's own signed goal and the ordinary ladder (finding 12; `proved` stays unreachable for any lane until VER11a Q3 is decided for it); the A-rung is computed by the gate, never declared, printed beside the VER31 rung, and **A2 is never rendered as a package-level word containing "proved"** (1.5, Q7); the model-theorem category and link status come from VER32 Q8 and PIF-020 (13.3 there). Marked "proposed, pending owner signature" | 1.5, 9.2, 13; backlog ADL-006b | VER31 13.4, 13.5 |
+| J2 | **Resolved: VER31 cites CVM-170b for `solver-attested`, it does not copy it**, as the ADL-006b row says. VER31 13.6 carries a non-normative summary, and asks CVM-170b to read its `pif:sha256:` clause "as defined in VER31 13.2" so the scheme has one owner | VER34 6.6, 6.7; CVM-170b | VER31 13.6 |
+| J3 | **ADL-006a drafted** as data (VER13 section 10; `catalogue-v2.proposed.json`, `buckets-v2.proposed.json`): the ids 9.1 marks *new* that G-M1 opens or relies on are registered with a proposed bucket and closing route. The scheme `<pkg>.model.faithful` is instantiated as `gates.model.faithful` (VER32 9.2 pins the spelling), so **`logic_gates.model.faithful` is not registered**. `tcb.vcgen.claim-faithful` and `adl.wir-abi.faithful` are registered now although A1 and A3 open them, because ADL-006a and PIF-016a name them. Not registered here (G-M2 and later): `wir.semantics.lean-faithful`, `wir.typing.checker-guarantees`, `src.<lane>.lean-semantics.faithful`, `src.<lane>.subset-conformance`, `<lane>.backend.code-link`, `tcb.<lane>-toolchain.trusted`, `<pkg>.model.code-link` beyond the gates'; `tcb.bitblast.encoding-correct`, `tcb.symexec.engine-correct` and `tcb.drat.checker-correct` are already in the catalogue | 9.1; backlog ADL-006a | VER13 section 10 |
+| J4 | **G-M1 status (implemented, PRs pending).** Model file, 89-line goals list and claim file produced; 89 goals kernel-checked with empty footprints through `pif-check` with a **test-fixture** sign-off; vectors 1021/1021. G-M1's signature conditions are not yet met: ADL-005b/c and ADL-008a/b still gate it. Also remaining: the owner's signatures and the push queue | backlog G-M1 | warrant-adl shard |
+
+**Not applied, and why.** No bucket moved and no VER31 rule is in force before the owner signs
+VER31 section 13. ADL-006c1 to c3 (the gate code) wait for that signature.

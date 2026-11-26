@@ -1,14 +1,22 @@
 # vos-capacity-full: the CI recording of the VOS capacity probe's full tier
-# (VOS30 sections 9.2, 9.3, 9.12.1 and 9.12.2; backlog item VOS-028c3c-3a).
+# (VOS30 sections 9.2, 9.3, 9.12.1 and 9.12.2; backlog items VOS-028c3c-3a and
+# VOS-028c3c-3b-2).
 #
 # WHAT THIS DOES
-#   One dispatch, mode `record`, regenerates the whole full-tier results file on
-#   GitHub-hosted ubuntu-24.04 runners, because no Unix host is available to the
-#   owner (VOS-D121).  The picture:
+#   Two modes, both on GitHub-hosted ubuntu-24.04 runners, because no Unix host
+#   is available to the owner (VOS-D121).  `record` (dispatch only) regenerates
+#   the whole full-tier results file.  `verify` (dispatch, or the weekly
+#   schedule) re-runs every row at the checkout and compares it with the
+#   COMMITTED file (VOS30 9.12.1, "Verify at the checkout").  The picture:
 #
 #       gate --> build --> record-shard x64 --> record-join
-#                  \                                  |
-#                   `---- one binary, one digest ----'   (any failure --> report)
+#                  |
+#                  `-----> verify-shard x64 --> verify-triage --> verify-retry
+#                                                     |             (dynamic)
+#                          verify-verdict <-- verify-fan-in <------------'
+#
+#       report: after everything, when any job failed or was cancelled, or a
+#       retry rescued a shard.  One binary, one digest, throughout a run.
 #
 #   * build        compiles the probe ONCE (`cargo build --locked --release`, clean
 #                  target dir under $RUNNER_TEMP, no cache) and publishes its
@@ -25,11 +33,25 @@
 #   * report       opens or comments on one tracking issue when anything failed.
 #                  It is the only job with `issues: write`.
 #
-# WHAT IS IN PART b (VOS-028c3c-3b), NOT HERE
-#   The verify path (verify-shard, triage, retry, fan-in, verdict), the Actions-API
-#   gate and the `schedule` triggers.  They merge AFTER the recording, because the
-#   committed results file records no tree ids, so a scheduled verify before then
-#   would be red.  In this part `gate` only copies the dispatch input.
+# THE VERIFY PATH (VOS-028c3c-3b-2)
+#   * verify-shard   64 legs, the record shard's checkout, workspace path and
+#                    digest recheck, then `check --full --at-checkout --shard K/64`
+#                    against the committed file in its own checkout.  Exit 0, or
+#                    exit 1 with a re-run file, uploads the file and an `exit-code`
+#                    file and SUCCEEDS; exit 2, or exit 1 with no file, FAILS.
+#   * verify-triage  requires all 64 results, validates every exit code as `0` or
+#                    `1`, and outputs the JSON list of shards that exited 1.
+#   * verify-retry   a separate job (one shard's bound is 285 minutes, two would
+#                    not fit 330): a matrix over that list, once each.
+#   * verify-fan-in  its OWN checkout supplies the committed file; the artifact
+#                    set must be exactly the binary, 64 shards and the listed
+#                    retries (a retry replaces its shard's file); `join` with all
+#                    five --expect-* flags; `decision-diff --recorded <checkout
+#                    file> --rerun <joined> --expect-shards 64`.
+#   * verify-verdict fails unless the fan-in succeeded: the definition of green.
+#   There is NO gate, no baseline and no Actions-API lookup (owner decision
+#   "Weekly only", 2026-11-24): `schedule` runs one verify a week, off ci.yml's
+#   slots, and `workflow_dispatch` runs either mode on demand.
 #
 # THE DISCARD RULE (VOS30 section 9.12.1)
 #   A recording is discarded ONLY for an infrastructure failure, never for row
@@ -41,7 +63,8 @@
 # OPERATOR RULES
 #   * Do not dispatch `record` while another run of this workflow is in flight:
 #     GitHub keeps only the newest PENDING run per concurrency group, so a queued
-#     dispatch can be cancelled by a later one.  Log a cancelled dispatch by hand.
+#     dispatch can be cancelled by a later one (the weekly tick included).  Log a
+#     cancelled dispatch by hand.
 #   * Never use "Re-run failed jobs": it changes the run attempt, the exact-set
 #     check of record-join refuses it, and a re-run counts as a new record run.
 #   * Commit B is made by hand: download the `vos-capacity-joined-*` artifact,
@@ -55,9 +78,10 @@
 #     so the Actions run list includes such runs; otherwise: do not sign.
 #
 # SECURITY SHAPE (VOS30 section 9.12.2)
-#   Triggers: workflow_dispatch only.  Top-level `permissions: contents: read`;
-#   every job states its own.  No secrets, no push, no `continue-on-error`, no
-#   actions/cache.  Every action is pinned by full commit SHA.  No expression
+#   Triggers: workflow_dispatch and one weekly schedule; never a pull_request,
+#   pull_request_target or workflow_run trigger.  Top-level `permissions:
+#   contents: read`; every job states its own.  No secrets, no push, no
+#   `continue-on-error`, no `actions: read`, no actions/cache.  Every action is pinned by full commit SHA.  No expression
 #   appears inside a `run:` block: everything reaches a script through the
 #   step's `env:`, so no value an author controls is ever parsed as shell.
 #   The runner context is used only in step-level `with:` and `env:` keys; a
@@ -69,11 +93,17 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "record: regenerate the full-tier results file (part a has no other mode)"
+        description: "record: regenerate the full-tier results file; verify: re-run every row at this checkout and compare with the committed file"
         type: choice
         required: true
-        default: record
-        options: [record]
+        default: verify
+        options: [record, verify]
+  # One verify a week, unconditionally (owner decision "Weekly only",
+  # 2026-11-24).  01:41 UTC on Sunday is off ci.yml's slots (00:00 daily and
+  # 06, 12 and 18:00).  A schedule run can only ever be a verify: the gate
+  # below sets the mode from the event.
+  schedule:
+    - cron: "41 1 * * 0"
 
 permissions:
   contents: read
@@ -84,8 +114,9 @@ concurrency:
 
 jobs:
   # ── gate ────────────────────────────────────────────────────────────────
-  # Part a: only turns the dispatch input into the `mode` output.  Part b adds
-  # the fail-closed Actions-API gate for scheduled runs here.
+  # Turns the event into the `mode` output: `schedule` is always a verify, a
+  # dispatch takes its input, anything else is refused.  Record mode therefore
+  # cannot come from `schedule`.  There is no Actions-API gate (VOS-D141).
   gate:
     name: gate
     runs-on: ubuntu-24.04
@@ -96,7 +127,7 @@ jobs:
       run: ${{ steps.mode.outputs.run }}
       mode: ${{ steps.mode.outputs.mode }}
     steps:
-      - name: Take the mode from the dispatch input
+      - name: Take the mode from the event
         id: mode
         timeout-minutes: 5
         env:
@@ -116,12 +147,23 @@ jobs:
               exit 1
               ;;
           esac
-          if [ "$INPUT_MODE" != "record" ]; then
-            echo "unsupported mode: part a of this workflow only records" >&2
-            exit 1
-          fi
+          case "$GITHUB_EVENT_NAME" in
+            schedule)
+              mode=verify
+              ;;
+            workflow_dispatch)
+              case "$INPUT_MODE" in
+                record | verify) mode="$INPUT_MODE" ;;
+                *) echo "unsupported mode: the choices are record and verify" >&2; exit 1 ;;
+              esac
+              ;;
+            *)
+              echo "unsupported event: only schedule and workflow_dispatch run this workflow" >&2
+              exit 1
+              ;;
+          esac
           echo "run=true" >> "$GITHUB_OUTPUT"
-          echo "mode=record" >> "$GITHUB_OUTPUT"
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
 
   # ── build ───────────────────────────────────────────────────────────────
   # One binary per workflow run.  Full history (`fetch-depth: 0`) keeps the
@@ -144,6 +186,13 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+
+      # The probe records the commit it was built from: it must be the run's.
+      - name: Assert the checkout is the run's commit
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
 
       - name: Install the pinned Rust toolchain
         timeout-minutes: 10
@@ -231,6 +280,7 @@ jobs:
           test -n "$BUILD_WORKSPACE"
           test "$GITHUB_WORKSPACE" = "$BUILD_WORKSPACE"
           test -x /usr/bin/time
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
 
       - name: Download the binary
         timeout-minutes: 15
@@ -410,15 +460,498 @@ jobs:
             *) echo "structural finding (exit $rc): DISCARD this recording (VOS30 9.12.1, class 1)" >&2; exit 1 ;;
           esac
 
+  # ── verify-shard ────────────────────────────────────────────────────────
+  # The same 64 legs as record-shard, but each runs `check --full --at-checkout`
+  # against the COMMITTED results file in its own checkout (VOS30 9.12.1,
+  # "Verify at the checkout").  Timeouts are the record shard's: 330 for the job,
+  # 320 for the probe step, above the 285-minute absolute bound of one shard.
+  #
+  # Exit 0, or exit 1 with a re-run file, is a SUCCESSFUL job: a difference is a
+  # finding for the retry and the fan-in to judge, not an infrastructure failure.
+  # Exit 2 (structural, usage) or exit 1 with no file fails the job, and nothing
+  # retries it.  The exit code travels in an `exit-code` file beside the re-run
+  # file, because a successful job otherwise hides it.
+  verify-shard:
+    name: verify-shard ${{ matrix.k }}
+    needs: [gate, build]
+    if: needs.gate.outputs.mode == 'verify' && github.repository == 'adhithyan15/coding-adventures' && startsWith(github.ref, 'refs/heads/')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        k: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63]
+    steps:
+      # The same commit at the same path as the build job (CARGO_MANIFEST_DIR is
+      # compiled into the binary, and the tree ids are read with git under it).
+      - name: Check out the run's commit
+        timeout-minutes: 10
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install the pinned Rust toolchain
+        timeout-minutes: 10
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # toolchain pinned by the input below (1.100.0)
+        with:
+          toolchain: "1.100.0"
+
+      - name: Assert the workspace path equals the build job's
+        timeout-minutes: 5
+        env:
+          BUILD_WORKSPACE: ${{ needs.build.outputs.workspace }}
+        run: |
+          set -euo pipefail
+          test -n "$BUILD_WORKSPACE"
+          test "$GITHUB_WORKSPACE" = "$BUILD_WORKSPACE"
+          test -x /usr/bin/time
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+
+      - name: Download the binary
+        timeout-minutes: 15
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: vos-capacity-probe-binary
+          path: ${{ runner.temp }}/vos-bin
+
+      - name: Recheck the binary's digest
+        timeout-minutes: 5
+        env:
+          BUILD_SHA256: ${{ needs.build.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          bin="$RUNNER_TEMP/vos-bin/vos-capacity-probe"
+          chmod +x "$bin"
+          sum="$(sha256sum "$bin" | cut -d' ' -f1)"
+          if [ "$sum" != "$BUILD_SHA256" ]; then
+            echo "binary digest $sum differs from the build job's $BUILD_SHA256" >&2
+            exit 1
+          fi
+
+      # `check` writes its --rerun-out file BEFORE it gives a verdict, so exit 1
+      # normally leaves one; exit 1 with no file means it refused before any
+      # re-run (a plan-coverage or dirty-tree refusal) and the job must fail.
+      - name: Verify this shard at the checkout
+        timeout-minutes: 320
+        env:
+          SHARD_K: ${{ matrix.k }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          exe="$RUNNER_TEMP/vos-bin/vos-capacity-probe"
+          out="$RUNNER_TEMP/shard-out"
+          mkdir -p "$out"
+          rc=0
+          "$exe" check --full --at-checkout --shard "$SHARD_K/64" \
+            --rerun-out "$out/rerun.json" \
+            --run-id "$RUN_ID" --run-attempt "$RUN_ATTEMPT" \
+            --exe "$exe" --jobs 2 \
+            "$GITHUB_WORKSPACE/code/specs/data/vos30-capacity-results.json" || rc=$?
+          case "$rc" in
+            0 | 1) ;;
+            *) echo "check exited $rc (structural or usage): this shard fails, no retry" >&2; exit 1 ;;
+          esac
+          if [ ! -s "$out/rerun.json" ]; then
+            echo "check exited $rc without a re-run file: this shard fails, no retry" >&2
+            exit 1
+          fi
+          printf '%s\n' "$rc" > "$out/exit-code"
+
+      - name: Upload this shard's re-run file and exit code
+        timeout-minutes: 15
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: verify-shard-${{ matrix.k }}-of-64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/shard-out/rerun.json
+            ${{ runner.temp }}/shard-out/exit-code
+          if-no-files-found: error
+          retention-days: 5
+
+  # ── verify-triage ───────────────────────────────────────────────────────
+  # Decides which shards get their one retry.  `!cancelled()` so it still runs
+  # when a shard job failed (it then fails on the missing artifact, which makes
+  # the verdict red); `mode == 'verify'` so a record run skips it.  Everything it
+  # reads comes from artifacts, which are DATA: each exit code is validated as a
+  # lone `0` or `1` before any use, and the only thing it outputs is a JSON list
+  # of integers it built itself.
+  verify-triage:
+    name: verify-triage
+    needs: [gate, verify-shard]
+    if: ${{ !cancelled() && needs.gate.outputs.mode == 'verify' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    outputs:
+      retry: ${{ steps.triage.outputs.retry }}
+    steps:
+      - name: Download every artifact of this run
+        timeout-minutes: 15
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: ${{ runner.temp }}/artifacts
+
+      - name: Require all 64 results and list the shards to retry
+        id: triage
+        timeout-minutes: 5
+        env:
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/artifacts"
+          {
+            echo "vos-capacity-probe-binary"
+            for k in $(seq 0 63); do
+              echo "verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}"
+            done
+          } | LC_ALL=C sort > "$RUNNER_TEMP/expected.txt"
+          find "$dir" -mindepth 1 -maxdepth 1 -printf '%f\n' | LC_ALL=C sort > "$RUNNER_TEMP/found.txt"
+          if ! diff "$RUNNER_TEMP/expected.txt" "$RUNNER_TEMP/found.txt"; then
+            echo "the downloaded artifact set is not exactly the 64 shards plus the binary (< missing, > extra)" >&2
+            exit 1
+          fi
+          retry=""
+          for k in $(seq 0 63); do
+            shard="$dir/verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}"
+            test -f "$shard/rerun.json"
+            test -f "$shard/exit-code"
+            size="$(wc -c < "$shard/exit-code")"
+            if [ "$size" -lt 1 ] || [ "$size" -gt 2 ]; then
+              echo "shard $k: the exit-code file has an unexpected size" >&2
+              exit 1
+            fi
+            v="$(tr -d '\n' < "$shard/exit-code")"
+            case "$v" in
+              0) ;;
+              1) retry="${retry:+$retry,}$k" ;;
+              *) echo "shard $k: the exit-code file is neither 0 nor 1" >&2; exit 1 ;;
+            esac
+          done
+          echo "retry=[$retry]" >> "$GITHUB_OUTPUT"
+
+  # ── verify-retry ────────────────────────────────────────────────────────
+  # The one retry of VOS30 9.12.1, a separate job because one shard's absolute
+  # bound is 285 minutes and two attempts would not fit 330.  The matrix is the
+  # triage's list; an empty list skips the job.  A retry that ends like a failed
+  # shard (exit 2, or exit 1 with no file) fails this job; a retry that merely
+  # differs again is judged by the fan-in.
+  verify-retry:
+    name: verify-retry ${{ matrix.k }}
+    needs: [gate, build, verify-triage]
+    if: needs.gate.outputs.mode == 'verify' && needs.verify-triage.outputs.retry != '[]' && github.repository == 'adhithyan15/coding-adventures' && startsWith(github.ref, 'refs/heads/')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        k: ${{ fromJSON(needs.verify-triage.outputs.retry) }}
+    steps:
+      - name: Check out the run's commit
+        timeout-minutes: 10
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install the pinned Rust toolchain
+        timeout-minutes: 10
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # toolchain pinned by the input below (1.100.0)
+        with:
+          toolchain: "1.100.0"
+
+      - name: Assert the workspace path equals the build job's
+        timeout-minutes: 5
+        env:
+          BUILD_WORKSPACE: ${{ needs.build.outputs.workspace }}
+        run: |
+          set -euo pipefail
+          test -n "$BUILD_WORKSPACE"
+          test "$GITHUB_WORKSPACE" = "$BUILD_WORKSPACE"
+          test -x /usr/bin/time
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+
+      - name: Download the binary
+        timeout-minutes: 15
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: vos-capacity-probe-binary
+          path: ${{ runner.temp }}/vos-bin
+
+      - name: Recheck the binary's digest
+        timeout-minutes: 5
+        env:
+          BUILD_SHA256: ${{ needs.build.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          bin="$RUNNER_TEMP/vos-bin/vos-capacity-probe"
+          chmod +x "$bin"
+          sum="$(sha256sum "$bin" | cut -d' ' -f1)"
+          if [ "$sum" != "$BUILD_SHA256" ]; then
+            echo "binary digest $sum differs from the build job's $BUILD_SHA256" >&2
+            exit 1
+          fi
+
+      - name: Verify this shard again, once
+        timeout-minutes: 320
+        env:
+          SHARD_K: ${{ matrix.k }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          exe="$RUNNER_TEMP/vos-bin/vos-capacity-probe"
+          out="$RUNNER_TEMP/shard-out"
+          mkdir -p "$out"
+          rc=0
+          "$exe" check --full --at-checkout --shard "$SHARD_K/64" \
+            --rerun-out "$out/rerun.json" \
+            --run-id "$RUN_ID" --run-attempt "$RUN_ATTEMPT" \
+            --exe "$exe" --jobs 2 \
+            "$GITHUB_WORKSPACE/code/specs/data/vos30-capacity-results.json" || rc=$?
+          case "$rc" in
+            0 | 1) ;;
+            *) echo "check exited $rc (structural or usage): this retry fails" >&2; exit 1 ;;
+          esac
+          if [ ! -s "$out/rerun.json" ]; then
+            echo "check exited $rc without a re-run file: this retry fails" >&2
+            exit 1
+          fi
+          printf '%s\n' "$rc" > "$out/exit-code"
+
+      - name: Upload this retry's re-run file and exit code
+        timeout-minutes: 15
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: verify-shard-${{ matrix.k }}-of-64-${{ github.run_id }}-${{ github.run_attempt }}-retry
+          path: |
+            ${{ runner.temp }}/shard-out/rerun.json
+            ${{ runner.temp }}/shard-out/exit-code
+          if-no-files-found: error
+          retention-days: 5
+
+  # ── verify-fan-in ───────────────────────────────────────────────────────
+  # Joins the shards and compares the result with the committed file.  It has
+  # its OWN checkout of the run's commit: `decision-diff --recorded` reads the
+  # committed results file from there and never from an artifact, so the digest
+  # that `verifies_sha256` is checked against is trusted (VOS-D144 a).  It runs
+  # when the triage succeeded and the retry either succeeded or was skipped.
+  verify-fan-in:
+    name: verify-fan-in
+    needs: [gate, build, verify-shard, verify-triage, verify-retry]
+    if: ${{ !cancelled() && needs.gate.outputs.mode == 'verify' && needs.build.result == 'success' && needs.verify-shard.result == 'success' && needs.verify-triage.result == 'success' && (needs.verify-retry.result == 'success' || needs.verify-retry.result == 'skipped') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    outputs:
+      flakes: ${{ steps.flakes.outputs.flakes }}
+    steps:
+      - name: Check out the run's commit
+        timeout-minutes: 10
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The committed file is the recording being verified: it must be the run's
+      # own commit's file, untouched.
+      - name: Assert the checkout is the run's commit and the file is untouched
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -f code/specs/data/vos30-capacity-results.json
+          test -z "$(git status --porcelain -- code/specs/data/vos30-capacity-results.json)"
+
+      - name: Download every artifact of this run
+        timeout-minutes: 15
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: ${{ runner.temp }}/artifacts
+
+      # The expected set: the binary, the 64 shard artifacts and EXACTLY the
+      # retries the triage listed.  The list is re-validated here (it crossed a
+      # job output) before it names anything.
+      - name: Require exactly the expected artifacts
+        timeout-minutes: 5
+        env:
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          RETRY_LIST: ${{ needs.verify-triage.outputs.retry }}
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/artifacts"
+          printf '%s' "$RETRY_LIST" | jq -e 'type == "array" and (unique == .) and all(.[]; type == "number" and . >= 0 and . < 64 and . == floor)' > /dev/null
+          printf '%s' "$RETRY_LIST" | jq -r '.[]' > "$RUNNER_TEMP/retry.txt"
+          {
+            echo "vos-capacity-probe-binary"
+            for k in $(seq 0 63); do
+              echo "verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}"
+            done
+            while read -r k; do
+              echo "verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}-retry"
+            done < "$RUNNER_TEMP/retry.txt"
+          } | LC_ALL=C sort > "$RUNNER_TEMP/expected.txt"
+          find "$dir" -mindepth 1 -maxdepth 1 -printf '%f\n' | LC_ALL=C sort > "$RUNNER_TEMP/found.txt"
+          if ! diff "$RUNNER_TEMP/expected.txt" "$RUNNER_TEMP/found.txt"; then
+            echo "the downloaded artifact set is not exactly the expected one (< missing, > extra)" >&2
+            exit 1
+          fi
+          test -f "$dir/vos-capacity-probe-binary/vos-capacity-probe"
+          for k in $(seq 0 63); do
+            test -f "$dir/verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}/rerun.json"
+          done
+          while read -r k; do
+            test -f "$dir/verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}-retry/rerun.json"
+            test -f "$dir/verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}-retry/exit-code"
+          done < "$RUNNER_TEMP/retry.txt"
+
+      - name: Recheck the binary's digest
+        timeout-minutes: 5
+        env:
+          BUILD_SHA256: ${{ needs.build.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          bin="$RUNNER_TEMP/artifacts/vos-capacity-probe-binary/vos-capacity-probe"
+          chmod +x "$bin"
+          sum="$(sha256sum "$bin" | cut -d' ' -f1)"
+          if [ "$sum" != "$BUILD_SHA256" ]; then
+            echo "binary digest $sum differs from the build job's $BUILD_SHA256" >&2
+            exit 1
+          fi
+
+      # A retry that exited 0 rescued its shard: a flake, logged by index only.
+      # The exit codes are artifact data, so each is validated as `0` or `1`.
+      - name: List the flakes
+        id: flakes
+        timeout-minutes: 5
+        env:
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/artifacts"
+          flakes=""
+          while read -r k; do
+            v="$(tr -d '\n' < "$dir/verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}-retry/exit-code")"
+            case "$v" in
+              0) flakes="${flakes:+$flakes,}$k" ;;
+              1) ;;
+              *) echo "retry $k: the exit-code file is neither 0 nor 1" >&2; exit 1 ;;
+            esac
+          done < "$RUNNER_TEMP/retry.txt"
+          echo "flakes=$flakes" >> "$GITHUB_OUTPUT"
+
+      # A retried shard's `-retry` file replaces its first file: `join` takes one
+      # file per shard and refuses a duplicate.
+      - name: Join the shards
+        timeout-minutes: 10
+        env:
+          BUILD_SHA256: ${{ needs.build.outputs.sha256 }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/artifacts"
+          exe="$dir/vos-capacity-probe-binary/vos-capacity-probe"
+          files=()
+          for k in $(seq 0 63); do
+            if grep -qx "$k" "$RUNNER_TEMP/retry.txt"; then
+              files+=("$dir/verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}-retry/rerun.json")
+            else
+              files+=("$dir/verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}/rerun.json")
+            fi
+          done
+          "$exe" join --out "$RUNNER_TEMP/verify-joined.json" \
+            --expect-binary-sha256 "$BUILD_SHA256" \
+            --expect-run-id "$RUN_ID" \
+            --expect-run-attempt "$RUN_ATTEMPT" \
+            --expect-shards 64 \
+            --expect-jobs 2 \
+            "${files[@]}"
+
+      - name: Print the joined verify file's digest
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          sum="$(sha256sum "$RUNNER_TEMP/verify-joined.json" | cut -d' ' -f1)"
+          {
+            echo "joined verify file sha256 (the verify digest that sign checks): $sum"
+            echo "commit: $GITHUB_SHA"
+            echo "ref: $GITHUB_REF"
+            echo "run id: $GITHUB_RUN_ID"
+            echo "run attempt: $GITHUB_RUN_ATTEMPT"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Before decision-diff on purpose, as record-join uploads before validate:
+      # a red verify keeps its file so the differences can be read.  The verdict
+      # is verify-verdict's, never the existence of this artifact.
+      - name: Upload the joined verify file
+        timeout-minutes: 15
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: vos-capacity-verify-joined-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verify-joined.json
+          if-no-files-found: error
+          retention-days: 90
+
+      # The verdict comes from DATA: every row under the 9.12.1 classes, and the
+      # decision, the re-plan decision and K.  --recorded is the checkout's file.
+      - name: Compare with the committed results file
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          exe="$RUNNER_TEMP/artifacts/vos-capacity-probe-binary/vos-capacity-probe"
+          "$exe" decision-diff \
+            --recorded "$GITHUB_WORKSPACE/code/specs/data/vos30-capacity-results.json" \
+            --rerun "$RUNNER_TEMP/verify-joined.json" \
+            --expect-shards 64
+
+  # ── verify-verdict ──────────────────────────────────────────────────────
+  # The definition of "green" for a verify (VOS30 8.5, 9.12.2 item 5): it fails
+  # unless verify-fan-in succeeded, and it runs after any outcome of the jobs
+  # before it (a skipped or failed fan-in must not leave the run looking green).
+  verify-verdict:
+    name: verify-verdict
+    needs: [gate, verify-fan-in]
+    if: always() && needs.gate.outputs.mode == 'verify'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Fail unless the fan-in succeeded
+        timeout-minutes: 5
+        env:
+          FAN_IN_RESULT: ${{ needs.verify-fan-in.result }}
+        run: |
+          set -euo pipefail
+          if [ "$FAN_IN_RESULT" != "success" ]; then
+            echo "verify is red: verify-fan-in concluded $FAN_IN_RESULT" >&2
+            exit 1
+          fi
+          echo "verify is green: every row reproduces at this checkout"
+
   # ── report ──────────────────────────────────────────────────────────────
   # No checkout; `gh` only.  Title and body are fixed strings plus the run id,
-  # the run URL, the mode and the job results, never row values, branch names
-  # or commit messages.  A label is not used: the token may not be able to
-  # create one.
+  # the run URL, the mode, the job results and shard INDEX lists (matched
+  # against a digits-and-commas pattern before use), never row values, branch
+  # names or commit messages.  A label is not used: the token may not be able
+  # to create one.  Two issues: a failed or cancelled run, and the flake log
+  # of 9.12.1 (a green verify in which a retry rescued a shard).
   report:
     name: report
-    needs: [gate, build, record-shard, record-join]
-    if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
+    needs: [gate, build, record-shard, record-join, verify-shard, verify-triage, verify-retry, verify-fan-in, verify-verdict]
+    if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || needs.verify-fan-in.outputs.flakes != '')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -436,22 +969,63 @@ jobs:
           RESULT_BUILD: ${{ needs.build.result }}
           RESULT_SHARD: ${{ needs.record-shard.result }}
           RESULT_JOIN: ${{ needs.record-join.result }}
+          RESULT_VERIFY_SHARD: ${{ needs.verify-shard.result }}
+          RESULT_TRIAGE: ${{ needs.verify-triage.result }}
+          RESULT_RETRY: ${{ needs.verify-retry.result }}
+          RESULT_FAN_IN: ${{ needs.verify-fan-in.result }}
+          RESULT_VERDICT: ${{ needs.verify-verdict.result }}
+          RETRIED: ${{ needs.verify-triage.outputs.retry }}
+          FLAKES: ${{ needs.verify-fan-in.outputs.flakes }}
         run: |
           set -euo pipefail
-          export TITLE="vos-capacity-full: a run failed"
-          body="$(printf '%s\n' \
-            "Run id: $RUN_ID" \
-            "Run: $RUN_URL" \
-            "Mode: ${MODE:-unknown}" \
-            "Results: gate=$RESULT_GATE build=$RESULT_BUILD record-shard=$RESULT_SHARD record-join=$RESULT_JOIN")"
-          if [ "${MODE:-}" = "record" ]; then
-            body="$body"$'\n'"Record mode: log this run as discarded under VOS30 9.12.1 BEFORE any re-dispatch, and do not open its row artifacts, unless validate exited 1 (a row finding: the joined file is kept and blocks commit B)."
+          # Post BODY on the open issue titled TITLE (by exact title, opened by the
+          # bot), or open one.  TITLE is exported because the jq filter reads it.
+          post() {
+            export TITLE="$1"
+            number="$(gh api --paginate "repos/$GH_REPO/issues?state=open&per_page=100" \
+              --jq '.[] | select(.pull_request == null and .user.login == "github-actions[bot]" and .title == env.TITLE) | .number' \
+              | sed -n 1p)"
+            if [ -n "$number" ]; then
+              gh issue comment "$number" --body "$2"
+            else
+              gh issue create --title "$TITLE" --body "$2"
+            fi
+          }
+          # A shard index list is a value that crossed a job output: use it only
+          # if it is digits and commas, else say it is unavailable.
+          retried="unavailable"
+          if printf '%s' "${RETRIED:-[]}" | grep -Eq '^\[([0-9]+(,[0-9]+)*)?\]$'; then
+            retried="${RETRIED:-[]}"
           fi
-          number="$(gh api --paginate "repos/$GH_REPO/issues?state=open&per_page=100" \
-            --jq '.[] | select(.pull_request == null and .user.login == "github-actions[bot]" and .title == env.TITLE) | .number' \
-            | sed -n 1p)"
-          if [ -n "$number" ]; then
-            gh issue comment "$number" --body "$body"
-          else
-            gh issue create --title "$TITLE" --body "$body"
+          flakes="unavailable"
+          if printf '%s' "${FLAKES:-}" | grep -Eq '^([0-9]+(,[0-9]+)*)?$'; then
+            flakes="${FLAKES:-}"
+          fi
+          failed=false
+          for r in "$RESULT_GATE" "$RESULT_BUILD" "$RESULT_SHARD" "$RESULT_JOIN" \
+            "$RESULT_VERIFY_SHARD" "$RESULT_TRIAGE" "$RESULT_RETRY" "$RESULT_FAN_IN" "$RESULT_VERDICT"; do
+            case "$r" in
+              failure | cancelled) failed=true ;;
+            esac
+          done
+          if [ "$failed" = "true" ]; then
+            body="$(printf '%s\n' \
+              "Run id: $RUN_ID" \
+              "Run: $RUN_URL" \
+              "Mode: ${MODE:-unknown}" \
+              "Results: gate=$RESULT_GATE build=$RESULT_BUILD record-shard=$RESULT_SHARD record-join=$RESULT_JOIN verify-shard=$RESULT_VERIFY_SHARD verify-triage=$RESULT_TRIAGE verify-retry=$RESULT_RETRY verify-fan-in=$RESULT_FAN_IN verify-verdict=$RESULT_VERDICT")"
+            if [ "${MODE:-}" = "record" ]; then
+              body="$body"$'\n'"Record mode: log this run as discarded under VOS30 9.12.1 BEFORE any re-dispatch, and do not open its row artifacts, unless validate exited 1 (a row finding: the joined file is kept and blocks commit B)."
+            fi
+            if [ "${MODE:-}" = "verify" ]; then
+              body="$body"$'\n'"Verify mode: shards retried once (indices): $retried"$'\n'"Shards rescued by their retry (indices): $flakes"$'\n'"A red verify means the edit is fixed or the file is wholesale re-recorded; rows and recorded ids are never edited (VOS30 9.12.1)."
+            fi
+            post "vos-capacity-full: a run failed" "$body"
+          fi
+          if [ -n "${FLAKES:-}" ]; then
+            body="$(printf '%s\n' \
+              "Run id: $RUN_ID" \
+              "Run: $RUN_URL" \
+              "Verify shards that failed once and passed on their retry (indices): $flakes")"
+            post "vos-capacity-full: verify flakes" "$body"
           fi

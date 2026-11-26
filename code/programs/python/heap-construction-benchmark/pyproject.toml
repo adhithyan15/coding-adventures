@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-heap-construction-benchmark"
+version = "0.1.0"
+description = "Paired Python benchmark for repeated and Floyd heap construction"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = [
+  "coding-adventures-heap>=0.2.0",
+  "coding-adventures-microbenchmark>=0.1.0",
+  "coding-adventures-rank-statistics>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[project.scripts]
+heap-construction-benchmark = "heap_construction_benchmark.driver:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/heap_construction_benchmark"]
+
+[tool.uv.sources]
+coding-adventures-heap = { path = "../../../packages/python/heap", editable = true }
+coding-adventures-microbenchmark = { path = "../../../packages/python/microbenchmark", editable = true }
+coding-adventures-rank-statistics = { path = "../../../packages/python/rank-statistics", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=heap_construction_benchmark --cov-report=term-missing --cov-fail-under=80"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["microbenchmark", "microbenchmark.*"]
+ignore_missing_imports = true

@@ -1604,3 +1604,14 @@ Changes to VER34 itself are only status notes and the owner decisions.
 | H6 | **New finding, for CVM-025**: the rule "no proof-side file declares a constant occurring in a signed goal" is enforced by the reader class `ProofSide` (VER32 5.3, R-GOL-4), not by a gate-only check; until PIF-002b lands the rule has no enforcement, so no VER34 claim file may be signed | VER32 follow-up F18 | CVM-025 |
 
 **Not applied, and why.** Nothing in VER34 was left unapplied. No new owner question.
+
+### Follow-up / G-M1 registration 2026-11-25
+
+**Status: a note only; no VER34 rule changes.** VER31 section 13.6 (proposed, pending owner
+signature) **cites** CVM-170b for the `solver-attested` kind and does not copy its text, as the
+ADL-006b row says, so CVM-170b still owns that text. Two requests follow for CVM-170b:
+
+| # | Request | Source | Where |
+|---|---|---|---|
+| K1 | Read the clause "`pif:sha256:` accepted" as "as defined in VER31 13.2": PIF-020 defines what the certificate is (file digest, both environment digests, kernel crate version and commit, sign-off digest), CVM-170b says when the DRAT route may claim `bounded(k)` and refuses `solver-attested` as a certificate | VER31 13.2, 13.6; VER32 8.3 | CVM-170b |
+| K2 | `tcb.vcgen.claim-faithful` is registered as a proposal (bucket (c)) alongside the G-M1 ids, while `tcb.drat.checker-correct`, `tcb.bitblast.encoding-correct` and `tcb.symexec.engine-correct` are already in the catalogue; the per-scheme rule of VER31 13.2 does not add the three solver ids to a `pif:` claim whose proof uses no solver, which agrees with 6.5 | VER33 9.1; VER31 13.2 | 6.5 |

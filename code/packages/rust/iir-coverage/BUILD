@@ -1,1 +1,1 @@
-cargo test -p iir-coverage -- --nocapture
+cargo test --locked -p iir-coverage -- --nocapture

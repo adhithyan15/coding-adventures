@@ -1,1 +1,1 @@
-cargo test -p data-frame -- --nocapture
+cargo test --locked -p data-frame -- --nocapture

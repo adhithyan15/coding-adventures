@@ -1,1 +1,1 @@
-cargo test -p wasm-types -- --nocapture
+cargo test --locked -p wasm-types -- --nocapture

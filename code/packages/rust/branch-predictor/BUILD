@@ -1,1 +1,1 @@
-cargo test -p branch-predictor -- --nocapture
+cargo test --locked -p branch-predictor -- --nocapture

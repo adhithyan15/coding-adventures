@@ -1,5 +1,5 @@
 package = "coding-adventures-logic-gates"
-version = "0.5.0-1"
+version = "0.6.0-1"
 source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
@@ -17,5 +17,7 @@ build = {
         ["coding_adventures.logic_gates"] = "src/coding_adventures/logic_gates/init.lua",
         ["coding_adventures.logic_gates.gates"] = "src/coding_adventures/logic_gates/gates.lua",
         ["coding_adventures.logic_gates.sequential"] = "src/coding_adventures/logic_gates/sequential.lua",
+        ["coding_adventures.logic_gates.internal"] = "src/coding_adventures/logic_gates/internal.lua",
+        ["coding_adventures.logic_gates.sequential_impl"] = "src/coding_adventures/logic_gates/sequential_impl.lua",
     },
 }

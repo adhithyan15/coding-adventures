@@ -1,1 +1,1 @@
-cargo test -p smart-home-registry -- --nocapture
+cargo test --locked -p smart-home-registry -- --nocapture

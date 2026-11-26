@@ -3424,6 +3424,62 @@ verify path, the gate and the schedule, VOS-028c3c-3b) follows the recording
 (VOS-028c3c), because the committed results file records no tree ids and every
 scheduled verify before then would be red.
 
+**As built (VOS-028c3c-3b-2): `.github/workflows/vos-capacity-full.yml`, part b, the verify path.**
+Triggers are exactly `workflow_dispatch` (input `mode`, a choice of `record` or `verify`, default
+`verify`) and `schedule` with ONE cron, `41 1 * * 0` (Sundays 01:41 UTC, off `ci.yml`'s slots), which
+runs a verify unconditionally. There is no gate beyond the existing one, no baseline, no key, no
+Actions-API lookup and no `actions: read` (owner decision "Weekly only", 2026-11-24). The jobs, each
+with `contents: read` only (the failure job has `issues: write` and nothing else), a
+`timeout-minutes` on the job and on every step, and every action pinned by SHA:
+
+* `gate` sets `mode` to `verify` on `schedule`, to the input on `workflow_dispatch`, and fails on any
+  other event or any other mode; record mode can never come from `schedule`. It still refuses
+  another repository and a non-branch ref.
+* `build` is shared with record and unchanged.
+* `verify-shard` (64 legs, `max-parallel: 8`, `fail-fast: false`, job timeout 330 and the probe step 320
+  minutes, as for the record shard) checks out the same commit at the same workspace path, rechecks
+  the binary's digest, and runs `check --full --at-checkout --shard K/64 --rerun-out F --run-id I
+  --run-attempt A --exe BINARY --jobs 2 FILE` against the committed results file in ITS checkout.
+  Exit 0, or exit 1 with a non-empty re-run file: it uploads the file and an `exit-code` file
+  (`verify-shard-K-of-64-<run_id>-<run_attempt>`) and the job succeeds, because a difference is a
+  finding that the retry and the fan-in judge. Exit 2, or exit 1 with no re-run file: the job fails
+  and nothing retries it (a structural finding or an infrastructure failure, 9.12.1).
+* `verify-triage` (`!cancelled()` and `mode == 'verify'`) downloads every artifact of the run, requires
+  exactly the 64 shard artifacts and the binary, validates each `exit-code` strictly (one `0` or `1`
+  and a newline at most; it is data from an artifact, so it is never expanded as shell) and outputs
+  the JSON list of the K whose exit code is 1.
+* `verify-retry` is a dynamic matrix over that list, skipped when it is empty. It repeats the
+  shard's checkout, workspace and digest steps and runs the same command once, uploading
+  `...-retry`. It is a separate job (9.12.1), so a retry never shares a timeout with a first
+  attempt. A retry that fails like a shard (exit 2, or exit 1 with no file) fails the job.
+* `verify-fan-in` has its OWN checkout of the run's commit, asserts `HEAD` is `GITHUB_SHA` and the
+  committed results file is unmodified, downloads everything, and requires the artifact set to be
+  exactly the binary, the 64 shard artifacts and the retries the triage listed. A retried shard's
+  `-retry` file replaces its first file. It runs `join` with all five `--expect-*` flags, uploads the
+  joined verify file (90 days) and writes its SHA-256, the commit, the ref and the run id to the
+  step summary, then runs `decision-diff --recorded <the committed file in its checkout> --rerun
+  <joined> --expect-shards 64`. The upload precedes `decision-diff` on purpose, as
+  `record-join` uploads before `validate`: a red verify keeps its file so the differences can be
+  read, and `sign` refuses any file that is not clean. It outputs the indices of the shards whose
+  retry exited 0 (the flakes).
+* `verify-verdict` (`always()` and `mode == 'verify'`) fails unless `verify-fan-in` concluded
+  `success`; it is the definition of "green" for a verify (8.5). There is no `continue-on-error`
+  anywhere, so a shard that fails, a retry that fails, a missing artifact and a difference all end
+  in a red verdict.
+* `report` now also covers verify. Its text is fixed strings, the run id, the run URL, the mode, the
+  job results and shard INDEX lists only (re-checked against a digit-and-comma pattern before use),
+  never row values or author-controlled text. A failed or cancelled run comments on the "a run
+  failed" issue; a green run whose retry rescued a shard comments on a separate "verify flakes"
+  issue (the flake log of 9.12.1).
+
+**How 3b-2 is proven (owner decision, 2026-11-25).** Asked how, the owner answered "Skip branch run; verify on main (Recommended)". There is no pre-merge branch dispatch: each verify costs about 30 to 60 runner-hours, a branch verify never moves the standing of the decision (9.12.2 item 5), and the main verify is needed for VOS-028c3d anyway. 3b-2 merges after CI and the security review; the first verify is then dispatched on main, which both proves the workflow and is the evidence VOS-028c3d signs. A workflow bug that run exposes gets a fix PR and a re-dispatch on main.
+
+**Closure of VOS-D144 (a).** `decision-diff --recorded` is the committed results file read from the
+`verify-fan-in` job's own checkout of the run's commit, never from an artifact, so the digest that
+`verifies_sha256` is checked against is the committed file's and not something the verify file
+asserts about itself; no `--expect-recorded-sha256` flag is needed. The verify shards likewise
+read the committed file from their own checkouts, at the commit the run named.
+
 #### 9.12.2 Workflow and provenance security (pre-registered; implemented in VOS-028c3c-2 and VOS-028c3c-3)
 
 **Status: requirements, from the security review of VOS-028c3c-1 (VOS-D125).** The probe

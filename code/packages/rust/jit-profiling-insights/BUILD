@@ -1,2 +1,2 @@
-cargo build -p jit-profiling-insights
-cargo test -p jit-profiling-insights
+cargo build --locked -p jit-profiling-insights
+cargo test --locked -p jit-profiling-insights
