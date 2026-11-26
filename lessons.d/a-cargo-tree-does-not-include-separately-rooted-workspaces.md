@@ -1,8 +1,8 @@
 ---
-category: Cargo & dependency graphs
+category: Rust
 ---
 
-# Cargo tree does not include separately rooted workspaces
+# A Cargo tree does not include separately rooted workspaces
 
 I checked the Rust root workspace's reverse-dependency tree and missed the
 standalone `code/packages/wasm/heap` crate because it has its own `[workspace]`.

@@ -1,5 +1,5 @@
 ---
-category: Tooling & workflow
+category: Repo policy / workflow reminders
 ---
 
 # PowerShell cleanup must stop after a failed backup verification
