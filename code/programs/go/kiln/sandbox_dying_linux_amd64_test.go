@@ -39,6 +39,7 @@ package main
 // asserted.
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -215,6 +216,14 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 			shape = "a resumed half whose result is unavailable or unfinished"
 		case dyingShapeBadErrno.MatchString(text) && nextOwnLineIsExit(lines, r.refusal.Line, dyingShapeBadErrno.FindStringSubmatch(text)[1]):
 			shape = "a resumed half with an unnamed errno, then the pid's exit"
+		case bareOpenatUnknownResume.MatchString(text):
+			terminalLine := laterBareOpenatExit(raw, r.refusal)
+			if terminalLine == 0 {
+				pid, _ := strconv.Atoi(bareOpenatUnknownResume.FindStringSubmatch(text)[1])
+				t.Fatalf("refused as %s at line %d: bare resumed openat result has no unambiguous later same-pid terminal exit\n--- refusal and terminal candidate ---\n%s",
+					r.refusal.Reason, r.refusal.Line, dyingRefusalDiagnostic(raw, r.refusal.Line, pid))
+			}
+			shape = fmt.Sprintf("bare resumed openat result, later same-pid terminal exit at line %d", terminalLine)
 		default:
 			t.Fatalf("refused as %s at line %d, which is not a dying shape: %s\n%s", r.refusal.Reason, r.refusal.Line, text, r.tail(30))
 		}
