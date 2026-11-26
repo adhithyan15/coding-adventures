@@ -107,10 +107,10 @@ export function compileFault(program: Program, raw: unknown, op: OpSig): Compile
   const withResult: Param[] = [...params, { name: "result", ty: ret }];
 
   // Every step runs over every expression of the row before the next step starts (R119 (c); section 11's order):
-  // the three codes, then `level-missing` of what the expressions reach, then `subject-forbidden`, then the typing.
+  // `level-missing` of what the expressions reach (an unknown tag has no level), then the three codes, then `subject-forbidden`, then the typing.
   const stages = (items: readonly { ir: unknown; vars: readonly Param[] }[]): void => {
-    for (const item of items) program.scanTags(item.ir, "fault-reach");
     for (const item of items) program.checkReach(item.ir, item.vars);
+    for (const item of items) program.scanTags(item.ir, "fault-reach");
     for (const item of items) program.scanTags(item.ir, "fault");
   };
 

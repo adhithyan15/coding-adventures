@@ -278,6 +278,41 @@ function scanExpr(
   }
 }
 
+/**
+ * The levels of every tag that belongs to a defined level, read without refusing anything (R119 (c) step 2): an unknown
+ * tag has no level and is skipped, a node that is not a node, a nesting past 64 and a missing model are left to the
+ * steps that report them.  The walk stops at a nesting of 200, far past the limit that step 3 reports.
+ */
+function reachExpr(ir: unknown, depth: number, order: ReadonlyMap<string, number>, info: ScanInfo): void {
+  if (depth > 200 || !isNodeArray(ir)) return;
+  const tag = ir[0] as string;
+  const level = levelOfTag(tag);
+  if (level !== undefined) info.levels.add(level);
+  if (tag === "lit") {
+    const body = ir[1];
+    if (typeof body === "object" && body !== null && !Array.isArray(body)) {
+      const written = (body as Record<string, unknown>)["type"];
+      if (typeof written === "string") info.litTypes.push(written);
+    }
+    return;
+  }
+  if (tag === "var" || tag === "err") return;
+  if (tag === "subject_op" && typeof ir[1] === "string") info.ops.add(ir[1]);
+  if (tag === "model_call" && typeof ir[1] === "string" && order.has(ir[1])) info.models.add(ir[1]);
+  if (tag === "match") {
+    reachExpr(ir[1], depth + 1, order, info);
+    if (Array.isArray(ir[2])) for (const arm of ir[2]) if (Array.isArray(arm) && arm.length === 2) reachExpr(arm[1], depth + 1, order, info);
+    return;
+  }
+  const start = tag === "subject_op" || tag === "model_call" ? 2 : 1;
+  for (let i = start; i < ir.length; i += 1) {
+    const child = ir[i];
+    if (!Array.isArray(child)) continue;
+    if (isNodeArray(child)) reachExpr(child, depth + 1, order, info);
+    else for (const item of child) reachExpr(item, depth + 1, order, info);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // The program: ops, models, and what they reach
 // ---------------------------------------------------------------------------
@@ -493,11 +528,11 @@ export class Program {
   /**
    * The `level-missing` check alone, over one expression (its tags, the models and ops it reaches, and the types of `vars`).
    * A fault row runs it over every expression of the row before it types any (R119 (c)).  It reads the tree with
-   * `subject_op` allowed, so a subject call cannot hide a level.
+   * an unknown tag skipped (it has no level) and nothing refused but a level.
    */
   checkReach(ir: unknown, vars: readonly Param[]): void {
     const scan = newInfo();
-    scanExpr(ir, 1, "fault-reach", Number.POSITIVE_INFINITY, this.order, scan);
+    reachExpr(ir, 1, this.order, scan);
     const missing = this.missingLevel(scan, vars.map((v) => v.ty));
     if (missing !== undefined) throw new KitError("level-missing", "the expression reaches a construct of a level this lane lacks", { level: missing });
   }

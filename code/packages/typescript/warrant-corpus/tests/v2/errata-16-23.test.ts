@@ -59,6 +59,28 @@ describe("R119 (c): each step runs over every expression of a pre row before the
   });
 });
 
+describe("R119 (c): level-missing (2) precedes the three codes (3)", () => {
+  const fixed: Json = ["bit_not", ["var", "b"]];
+  it("a tag of a missing level beats an unknown tag, in one expression and across a pre row", () => {
+    expect(code({ ...post(), fault: { ...post().fault, expr: ["concat", fixed, ["bogus"]] } })).toBe("level-missing");
+    expect(code({ ...post(), fault: { ...post().fault, expr: ["concat", ["bogus"], fixed] } })).toBe("level-missing");
+    expect(code(pre([rw("a", ["bogus"]), rw("b", fixed)]))).toBe("level-missing");
+    expect(code(pre([rw("a", fixed), rw("b", ["bogus"])]))).toBe("level-missing");
+  });
+  it("a tag of a missing level beats a nesting over 64 and a model_call", () => {
+    expect(code(pre([rw("a", deep(70)), rw("b", fixed)]))).toBe("level-missing");
+    expect(code(pre([rw("a", ["model_call"]), rw("b", fixed)]))).toBe("level-missing");
+  });
+  it("the tag list belongs to ir.list (R57), a level this runner lacks or has, never an unknown tag", () => {
+    const out = code({ ...post(), fault: { ...post().fault, expr: ["list"] } });
+    expect(out).not.toBe("unknown-tag");
+  });
+  it("an unknown tag alone is still unknown-tag", () => {
+    expect(code({ ...post(), fault: { ...post().fault, expr: ["not", ["bogus"]] } })).toBe("unknown-tag");
+    expect(code(pre([rw("a", ["var", "a"]), rw("b", ["bogus"])]))).toBe("unknown-tag");
+  });
+});
+
 describe("a bare model_call in a fault expression", () => {
   it("is model-order, as is any model_call there (R119 (a))", () => {
     expect(code({ ...post(), fault: { ...post().fault, expr: ["model_call"] } })).toBe("model-order");

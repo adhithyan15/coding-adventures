@@ -3,8 +3,9 @@
 - **R119 (c), `pre` rewrites.** `compileFault` compiled the rewrites one at a
   time, so a typing defect or a `subject_op` in an earlier rewrite hid
   `unknown-tag`, `depth` or `model-order` in a later one. Each step now runs over
-  every expression of the row before the next starts: the three codes, then the
-  levels the expressions reach, then `subject-forbidden`, then the typing. New
+  every expression of the row before the next starts: `level-missing` of the tags
+  the expressions reach (an unknown tag has no level and is skipped; `list` is
+  `ir.list`), then the three codes, then `subject-forbidden`, then the typing. New
   `Program.checkReach` and the `fault-reach` role (a fault expression read with
   `subject_op` allowed) carry the first two steps.
 - **R119 (a), bare `["model_call"]`.** In a fault case (no models) a `model_call`
