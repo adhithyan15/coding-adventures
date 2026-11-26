@@ -4,16 +4,15 @@ category: Testing & coverage
 
 # Privacy tests must inspect leaked payloads instead of arbitrary PID digits
 
-An stderr privacy test rejected the serialized sidecar whenever it contained
-the digits of the fake strace PID. A valid opaque SHA-256 binding identifier
-also contained those digits, so the test failed even though stderr stayed out
-of the sidecar.
+An stderr privacy test rejected a serialized sidecar whenever it contained the
+fake strace PID digits. A valid opaque SHA-256 binding ID also contained those
+digits, so the test failed even though stderr stayed out of the sidecar.
 
-Reject duplicate JSON members before decoding into a map; compare names after
-escape decoding so two spellings of the same key cannot overwrite a leak with a
-safe value. Preserve whole-sidecar checks for secret and fixture-PID text,
-excluding only valid SHA-256 values in the schema's actual digest fields.
-Include valid digest collisions in every such field as positive controls, plus
-top-level/nested duplicate keys, partial-secret, PID-string, numeric-PID,
-escaped-payload, and raw-stderr negative controls. Unknown fields and malformed
-digest values do not receive the exemption.
+Reject duplicate JSON members before decoding into a map, comparing names
+after escape decoding so an unsafe value cannot be replaced by a safe alias.
+Keep whole-sidecar checks for secrets, PID text and raw stderr, exempting only
+valid SHA-256 values in the schema's digest fields. Include valid digest
+collisions as positive controls, along with top-level and nested duplicates,
+escaped payloads, unknown fields and malformed digest values. Check partial
+secrets and PID text in string and numeric form as negative controls. Unknown
+fields and malformed digest values do not receive the exemption.
