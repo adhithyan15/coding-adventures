@@ -120,7 +120,7 @@
     ]
   },
   "governed_trees": {
-    "code/packages/ocaml/logic-gates": "c1c556bcb4de6ff0e43dac6fb25af10f159a325034cb98af2e769b94294148c1",
+    "code/packages/ocaml/logic-gates": "81c86b2fc4fab3f768e456da9ed319f7cc97134951225075cc7888256cdd5342",
     "code/packages/ocaml/graph": "83e2b6f93e2aeb03cc6ad513dfdbb2cde02be5637a776a93c6423cc5bbee8eb1",
     "code/packages/ocaml/directed-graph": "7112a53a488e8b58797c2a8618ae255cc6279f46e768132e6493912ea6793c06",
     "code/packages/ocaml/state-machine": "a0cbeb9713a9cd497306ddcb61de5dec646acbf2314c1ac9319cb898bafa6a3c",
