@@ -148,6 +148,101 @@ type MergeReport struct {
 	// PlanPackages is the number of actions the regenerated plan assigns, so a
 	// reader can tell an empty run from a refused one.
 	PlanPackages int
+	// Language is the recording selection the shards' bindings sealed ("" is
+	// every language).
+	Language string
+	// ForeignDropped counts the actions that lost their record because they
+	// observed an absent or untracked path inside a package the selection left
+	// out (recmerge.ForeignRead). A count, never a path.
+	ForeignDropped int
+}
+
+// expectedFor is everything the merge regenerates from its own exports (D10),
+// including the recording selection (KILN04 7.3).
+//
+// The selection is read from the shards' bindings and from nowhere else: not a
+// flag (a flag could disagree with what the shards recorded) and not a shard's
+// package list (a shard could claim any set). The lowest-indexed shard's
+// binding names it; recmerge voids every shard whose own binding differs from
+// it (B3), so if the bindings are not unanimous the run is void whichever one
+// is read here. The shards' records play no part in this function at all.
+//
+// Under a selection the steps export stays WHOLE (like the graph it describes
+// the repository, not the run), so it names packages the plan does not run:
+// those are ignored. With every language recorded such an entry is still a
+// broken input and is refused, exactly as before.
+//
+// The unselected ("foreign") set is OUR graph minus OUR plan. A plan package of
+// another language means the plan was not built with the selection the bindings
+// seal (a shard claiming `go` over an all-language plan, say), which recmerge
+// voids.
+func expectedFor(graph *legacy.Graph, steps *legacy.Steps, part *Partition, shards []*recfmt.Shard, graphSHA, stepsSHA string) (recmerge.Expected, error) {
+	exp := recmerge.Expected{
+		GraphSHA256: graphSHA,
+		StepsSHA256: stepsSHA,
+		Plan:        append([]recfmt.ShardPlan(nil), part.Shards...),
+		Steps:       map[string]string{},
+		Language:    selectionOf(shards),
+	}
+	// B6: the steps the merge's own tree runs, per package rel_path. A steps
+	// entry's "package" field IS the graph's rel_path (legacy.Steps.Lines is
+	// looked up that way), so no name -> path mapping is involved; the plan is
+	// consulted only to refuse an export that names something no shard runs,
+	// which is a broken input rather than a void run -- nothing a shard could
+	// have caused.
+	run := map[string]bool{}
+	for _, sh := range part.Shards {
+		for _, rel := range sh.Packages {
+			run[rel] = true
+		}
+	}
+	seen := map[string]bool{}
+	for _, p := range steps.Packages {
+		if err := key.ValidatePath(p.Package); err != nil {
+			return exp, fmt.Errorf("steps export names %q, which is not a path: %v", printable(p.Package), err)
+		}
+		if seen[p.Package] {
+			return exp, fmt.Errorf("steps export names %q twice", printable(p.Package))
+		}
+		seen[p.Package] = true
+		if !run[p.Package] {
+			if exp.Language != "" {
+				continue
+			}
+			return exp, fmt.Errorf("steps export names %q, which no shard of the plan runs", printable(p.Package))
+		}
+		exp.Steps[p.Package] = recfmt.StepsDigest(p.Steps)
+	}
+	if exp.Language != "" {
+		for _, p := range graph.Packages {
+			switch {
+			case !run[p.RelPath]:
+				exp.Foreign = append(exp.Foreign, p.RelPath)
+			case p.Language != exp.Language:
+				exp.PlanOutsideSelection++
+			}
+		}
+		sort.Strings(exp.Foreign)
+	}
+	return exp, nil
+}
+
+// selectionOf is the language selection the shards' bindings seal: the lowest
+// shard index's (ties by binding id), "" when there are no shards. It is only
+// the value the merge ACTS on; unanimity is enforced by recmerge, which voids
+// any shard whose binding differs from it.
+func selectionOf(shards []*recfmt.Shard) string {
+	var first *recfmt.Shard
+	for _, s := range shards {
+		if first == nil || s.ArtifactIndex < first.ArtifactIndex ||
+			s.ArtifactIndex == first.ArtifactIndex && s.BindingID < first.BindingID {
+			first = s
+		}
+	}
+	if first == nil {
+		return ""
+	}
+	return first.Binding.Language
 }
 
 // ReasonCount is one row of the report's reason histogram.
@@ -233,45 +328,22 @@ func Merge(o MergeOptions) (*MergeReport, error) {
 	if err != nil {
 		return nil, err
 	}
-	exp := recmerge.Expected{
-		GraphSHA256: sum256(graphData),
-		StepsSHA256: sum256(stepsData),
-		Plan:        append([]recfmt.ShardPlan(nil), part.Shards...),
-		Steps:       map[string]string{},
-	}
-	// B6: the steps the merge's own tree runs, per package rel_path. A steps
-	// entry's "package" field IS the graph's rel_path (legacy.Steps.Lines is
-	// looked up that way), so no name -> path mapping is involved; the plan is
-	// consulted only to refuse an export that names something no shard runs,
-	// which is a broken input rather than a void run -- nothing a shard could
-	// have caused.
-	run := map[string]bool{}
-	for _, sh := range part.Shards {
-		for _, rel := range sh.Packages {
-			run[rel] = true
-		}
-	}
-	for _, p := range steps.Packages {
-		if err := key.ValidatePath(p.Package); err != nil {
-			return nil, fmt.Errorf("steps export names %q, which is not a path: %v", printable(p.Package), err)
-		}
-		if !run[p.Package] {
-			return nil, fmt.Errorf("steps export names %q, which no shard of the plan runs", printable(p.Package))
-		}
-		if _, dup := exp.Steps[p.Package]; dup {
-			return nil, fmt.Errorf("steps export names %q twice", printable(p.Package))
-		}
-		exp.Steps[p.Package] = recfmt.StepsDigest(p.Steps)
-	}
-	for _, sh := range part.Shards {
-		rep.PlanPackages += len(sh.Assigned)
-	}
-
 	// The shards. Every one is decoded from the exact bytes read here, so the
 	// binding check in recmerge compares against what was really uploaded.
+	// They are decoded BEFORE the expectations are built because the language
+	// selection, which decides how an unplanned steps entry is treated and which
+	// packages are foreign, lives in their bindings.
 	shards, err := decodeShards(o.Shards)
 	if err != nil {
 		return nil, err
+	}
+	exp, err := expectedFor(graph, steps, part, shards, sum256(graphData), sum256(stepsData))
+	if err != nil {
+		return nil, err
+	}
+	rep.Language = exp.Language
+	for _, sh := range part.Shards {
+		rep.PlanPackages += len(sh.Assigned)
 	}
 
 	// The keys, from OUR tree. Never from a shard.
@@ -307,6 +379,14 @@ func Merge(o MergeOptions) (*MergeReport, error) {
 		}
 	}
 	rep.Reasons = countReasons(rep.Verdict.Outcomes)
+	for _, oc := range rep.Verdict.Outcomes {
+		for _, r := range oc.Reasons {
+			if r == recmerge.ForeignRead {
+				rep.ForeignDropped++
+				break
+			}
+		}
+	}
 
 	// All or nothing (section 7, rule 3). A void run writes nothing: not the
 	// manifests it managed to validate, not the passes.

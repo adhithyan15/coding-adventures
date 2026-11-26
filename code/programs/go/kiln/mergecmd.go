@@ -230,6 +230,12 @@ func writeMergeReport(w io.Writer, rep *record.MergeReport, dryRun bool) {
 			fmt.Fprintf(w, "  shard %d void: %s\n", i, strings.Join(rep.Verdict.ShardVoid[i], "; "))
 		}
 	}
+	if rep.Language != "" {
+		// The selection came from the shards' bindings. The drop count is a
+		// number, never a path: the observed paths are not printed.
+		fmt.Fprintf(w, "language selection %s: %d action(s) lost their record for reading an unselected package's untracked or absent paths\n",
+			rep.Language, rep.ForeignDropped)
+	}
 	fmt.Fprintf(w, "recordable %d of %d action(s)\n", rep.Recordable, rep.Actions)
 	if len(rep.Reasons) > 0 {
 		fmt.Fprintln(w, "reasons:")

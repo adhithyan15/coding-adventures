@@ -149,6 +149,23 @@ func TestWriteMergeReportIsExplicitAboutVoid(t *testing.T) {
 	}
 }
 
+// Under a language selection the report says which one the shards sealed and
+// how many actions lost their record to the foreign-package rule: a count, no
+// path. Under the default there is no such line.
+func TestWriteMergeReportCountsForeignDrops(t *testing.T) {
+	rep := &record.MergeReport{Revision: "abc", Language: "go", ForeignDropped: 7, Verdict: recmerge.Result{Emitted: true}}
+	var b bytes.Buffer
+	writeMergeReport(&b, rep, true)
+	if !strings.Contains(b.String(), "language selection go: 7 action(s)") {
+		t.Fatalf("report: %s", b.String())
+	}
+	b.Reset()
+	writeMergeReport(&b, &record.MergeReport{Revision: "abc", Verdict: recmerge.Result{Emitted: true}}, true)
+	if strings.Contains(b.String(), "language selection") {
+		t.Fatalf("the default report mentions a selection: %s", b.String())
+	}
+}
+
 // An emitted dry run says it wrote nothing.
 func TestWriteMergeReportSaysDryRunWroteNothing(t *testing.T) {
 	rep := &record.MergeReport{Revision: "abc", Manifests: 4, Passes: 4, Verdict: recmerge.Result{Emitted: true}}

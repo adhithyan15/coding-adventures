@@ -6575,10 +6575,69 @@ is void and merges nothing; a void verdict (exit 4) writes nothing and saves not
 
 1. PR A: the build tool emits a language-filtered plan.
 2. PR B: the Kiln selector: `prepare --language`, an omitempty `Binding.Language`, and
-   `record-merge` reads the selection from the shard bindings and ignores steps outside
+   `record-merge --language` declares the selection (section 7.3) and ignores steps outside
    it.
 3. The workflow, dispatch-only.
 4. The `push` trigger.
+
+### 7.3 The recording selection (`--language`)
+
+A recording may cover one language instead of the whole repository. That makes
+a Go-only run possible without a Rust, Python or Node toolchain on the runner.
+
+**Selection.** `kiln record prepare --language <name|all>` (default `all`). A
+name passes the build tool `-plan-closed-language <name>` INSTEAD of
+`-language all` (never both): the plan holds only the packages of that
+language whose every transitive prerequisite and test-trigger input is also of
+that language (`build-tool/plan_language.go`). For `all` the arguments are
+exactly what they always were. The graph and steps exports stay whole
+(`-emit-kiln-graph` forces every language): they describe the repository, not
+the run.
+
+**Sealing.** The binding gains `language`, `omitempty`. The default selection
+leaves the key out, so a default binding keeps its exact bytes and therefore
+its exact binding id (a test reproduces the pre-field encoding and compares).
+`"all"` is not a legal value: one selection, one spelling, one id. The
+selection is sealed beside the plan hash it already seals. No recorder version
+bump: no action's verdict changes, and the accept set for the default run is
+unchanged.
+
+**Where the merge reads it.** `record.Merge` takes the selection ONLY from the
+shards' bindings (`expectedFor`, `selectionOf`): never from a flag, never from
+a shard's package list or records. The binding of the lowest shard index names
+it; `recmerge` (B3) voids any shard whose own binding differs, so shards that
+disagree (`go` and `all`) cannot both pass. The plan the merge reads (`--plan`,
+produced by the CI job at the base revision with the same selection) is
+checked by the existing partition-hash comparison; in addition, with a
+selection, every plan package must be of that language in the merge's own graph
+(`Expected.PlanOutsideSelection`), else the run is void.
+
+With a selection, a steps entry for a package the plan does not run is ignored
+(the export is whole); with `all` it is still a broken input.
+
+**Foreign absences (M16).** With a selection, an action can read where an
+unselected ("foreign") package's build outputs would be, with no declared edge.
+In a selected run those outputs are absent, and the merge checks absences only
+against writes of actions in the run, so nothing would contradict the probe.
+The set of foreign packages is the merge's own graph minus its own plan
+(`Expected.Foreign`), never a shard's claim. Any ABSENT or UNTRACKED
+observation inside a foreign package's directory costs that action its record:
+`recmerge` adds the fixed reason `foreign-package-read`, so the action gets no
+manifest and no pass. It is the action's own reason, not an order dependence,
+so it does not void the run. The path is judged by its NEAREST enclosing graph
+package (a selected package nested under a foreign directory owns its own
+paths; an ancestor of a foreign directory, or a path sharing only a spelling
+prefix with one, is not inside it). Reading a foreign package's TRACKED
+sources is an ordinary manifest entry and is unaffected. The merge report
+counts the dropped actions (a number, no paths).
+
+An untracked observation must also be explained by the inventory or another
+action's write (M2), which makes the action order dependent (M9); so an
+unexplained one voids the run by the existing rules, and the foreign reason is
+then belt and braces.
+
+`record collect` and the census are per-shard and read the sealed list of the
+shard's own actions; neither assumes every language, so they needed no change.
 
 ## 8. The manifest store
 
