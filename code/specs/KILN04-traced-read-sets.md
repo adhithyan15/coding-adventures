@@ -5271,10 +5271,10 @@ from the text above, the text is not changed and the departure is listed here:
      only when the shard ran with exec heads, four hard criteria: no `exechead-*` unclean reason on any
      step, no supervisor kill, no `exechead-*` parse reason (and no `exechead-seal` void), and no
      `exechead-kernel` sub-code when the kernel series is on the trusted table (7.0).
-  3. The census workflow's `workflow_dispatch` takes `exec_head` (default false). When true, every
+  3. The census workflow's `workflow_dispatch` takes `exec_head` (default true since 2026-11-25; it was false). When true, every
      shard's summary opens with a line saying the run is an exec-head run and NOT PR8 evidence,
      `prepare` gets `--exec-head`, and a broken criterion fails the shard (`--strict-exec-head`:
-     the soft passes of a fresh run stay annotations). The scheduled run sets nothing and is unchanged.
+     the soft passes of a fresh run stay annotations). The default flipped to true because census runs A' (45443745064/45443753967), B (45466205573/45466210497) and the classification pair (45557016876/45557181111) were all clean on the hard criteria. The scheduled run is forced to `exec_head=false` in the validate step, so the weekly PR8 evidence is unchanged.
 - *Step 6 vacuity counters (census run A found a hole in items 2-3).* Run A sealed exec heads on shards
   that held only Rust actions; a fresh HOME has no cargo, so every action failed in 0.1 s and no step
   exec'd a binary under the step tmpfs. Every sub-code was 0, `go_emittable` was 0, and the strict checker

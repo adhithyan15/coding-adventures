@@ -1,1 +1,1 @@
-cargo check
+cargo check --locked

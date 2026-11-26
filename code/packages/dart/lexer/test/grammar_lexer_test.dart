@@ -244,7 +244,8 @@ FOO = /\\bfoo/
         grammarTokenize('foo', grammar).map((t) => t.type).toList(),
         ['FOO', 'EOF'],
       );
-      expect(() => grammarTokenize('xfoo', grammar), throwsA(isA<LexerError>()));
+      expect(
+          () => grammarTokenize('xfoo', grammar), throwsA(isA<LexerError>()));
     });
   });
 
@@ -299,16 +300,34 @@ y = 2
       final tokens = grammarTokenize(source, indentationGrammar);
       final types = tokens.map((t) => t.type).toList();
       expect(types, [
-        'NAME', 'NAME', 'LPAREN', 'RPAREN', 'COLON', 'NEWLINE',
-        'INDENT', 'NAME', 'INT', 'COLON', 'NEWLINE',
-        'INDENT', 'NAME', 'EQUALS', 'INT', 'NEWLINE',
-        'DEDENT', 'DEDENT',
-        'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'NAME',
+        'NAME',
+        'LPAREN',
+        'RPAREN',
+        'COLON',
+        'NEWLINE',
+        'INDENT',
+        'NAME',
+        'INT',
+        'COLON',
+        'NEWLINE',
+        'INDENT',
+        'NAME',
+        'EQUALS',
+        'INT',
+        'NEWLINE',
+        'DEDENT',
+        'DEDENT',
+        'NAME',
+        'EQUALS',
+        'INT',
+        'NEWLINE',
         'EOF',
       ]);
     });
 
-    test('skips blank and comment-only lines without emitting indent/dedent', () {
+    test('skips blank and comment-only lines without emitting indent/dedent',
+        () {
       const source = '''
 x = 1
 
@@ -318,8 +337,14 @@ y = 2
       final tokens = grammarTokenize(source, indentationGrammar);
       final types = tokens.map((t) => t.type).toList();
       expect(types, [
-        'NAME', 'EQUALS', 'INT', 'NEWLINE',
-        'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'NAME',
+        'EQUALS',
+        'INT',
+        'NEWLINE',
+        'NAME',
+        'EQUALS',
+        'INT',
+        'NEWLINE',
         'EOF',
       ]);
     });
@@ -334,29 +359,82 @@ items = [
       final tokens = grammarTokenize(source, indentationGrammar);
       final types = tokens.map((t) => t.type).toList();
       expect(types, [
-        'NAME', 'EQUALS', 'LBRACK',
-        'INT', 'COMMA',
-        'INT', 'COMMA',
-        'RBRACK', 'NEWLINE',
+        'NAME',
+        'EQUALS',
+        'LBRACK',
+        'INT',
+        'COMMA',
+        'INT',
+        'COMMA',
+        'RBRACK',
+        'NEWLINE',
         'EOF',
       ]);
     });
 
-    test('flushes trailing NEWLINE and DEDENTs at EOF when trailing newline is missing', () {
+    test(
+        'flushes trailing NEWLINE and DEDENTs at EOF when trailing newline is missing',
+        () {
       const source = 'if 1:\n    x = 1';
       final tokens = grammarTokenize(source, indentationGrammar);
       final types = tokens.map((t) => t.type).toList();
       expect(types, [
-        'NAME', 'INT', 'COLON', 'NEWLINE',
-        'INDENT', 'NAME', 'EQUALS', 'INT', 'NEWLINE',
-        'DEDENT', 'EOF',
+        'NAME',
+        'INT',
+        'COLON',
+        'NEWLINE',
+        'INDENT',
+        'NAME',
+        'EQUALS',
+        'INT',
+        'NEWLINE',
+        'DEDENT',
+        'EOF',
       ]);
     });
 
     test('handles empty input and whitespace-only input', () {
-      expect(grammarTokenize('', indentationGrammar).map((t) => t.type).toList(), ['EOF']);
-      expect(grammarTokenize('   \n  \n', indentationGrammar).map((t) => t.type).toList(), ['EOF']);
-      expect(grammarTokenize('# comment\n', indentationGrammar).map((t) => t.type).toList(), ['EOF']);
+      expect(
+          grammarTokenize('', indentationGrammar).map((t) => t.type).toList(),
+          ['EOF']);
+      expect(
+          grammarTokenize('   \n  \n', indentationGrammar)
+              .map((t) => t.type)
+              .toList(),
+          ['EOF']);
+      expect(
+          grammarTokenize('# comment\n', indentationGrammar)
+              .map((t) => t.type)
+              .toList(),
+          ['EOF']);
+    });
+
+    test('skips inter-token whitespace without a WHITESPACE skip', () {
+      // The reference's built-in whitespace rule applies always in
+      // indentation mode; grammars without a whitespace skip (every
+      // python*.tokens) rely on it. Mid-line tabs and carriage
+      // returns are skipped too — only indentation-position tabs
+      // are an error.
+      final noWhitespaceSkip = parseTokenGrammar('''
+mode: indentation
+NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+INT = /[0-9]+/
+EQUALS = "="
+skip:
+  COMMENT = /#[^\\n]*/
+''');
+      final tokens = grammarTokenize('x = 1\r\ny\t=\t2\n', noWhitespaceSkip);
+      expect(tokens.map((t) => t.type).toList(), [
+        'NAME',
+        'EQUALS',
+        'INT',
+        'NEWLINE',
+        'NAME',
+        'EQUALS',
+        'INT',
+        'NEWLINE',
+        'EOF',
+      ]);
     });
 
     test('rejects tab character in leading indentation', () {
@@ -391,7 +469,9 @@ if 1:
       );
     });
 
-    test('does not treat bracket characters inside string literals as delimiters', () {
+    test(
+        'does not treat bracket characters inside string literals as delimiters',
+        () {
       const source = '''
 x = "("
 y = 1
@@ -399,8 +479,14 @@ y = 1
       final tokens = grammarTokenize(source, indentationGrammar);
       final types = tokens.map((t) => t.type).toList();
       expect(types, [
-        'NAME', 'EQUALS', 'STRING', 'NEWLINE',
-        'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'NAME',
+        'EQUALS',
+        'STRING',
+        'NEWLINE',
+        'NAME',
+        'EQUALS',
+        'INT',
+        'NEWLINE',
         'EOF',
       ]);
       expect(tokens[2].value, '(');

@@ -1,1 +1,1 @@
-cargo test -p coverage-hdl -- --nocapture
+cargo test --locked -p coverage-hdl -- --nocapture

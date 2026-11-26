@@ -1,1 +1,1 @@
-cargo test -p hash-set -- --nocapture
+cargo test --locked -p hash-set -- --nocapture
