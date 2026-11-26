@@ -446,13 +446,13 @@ class CorpusTests(unittest.TestCase):
             {
                 "boundary_count": 27,
                 "input_count": 42,
-                "scope_count": 514,
-                "authorization_count": 535,
+                "scope_count": 515,
+                "authorization_count": 536,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "5aa8fa782fb098ea5840266aaaff7241c1d2cbd1510e0576ee09e6cb192f2992",
+            "07de6d0f3a3e3ee571af7300cfbcf5247c670f7190162d0c604ca86ac327e1bf",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         dart_hash_map = by_id["dart-hash-map-v1-corpus-input"]
@@ -4238,10 +4238,8 @@ class PureDomainValidationTests(unittest.TestCase):
                 "CARGO_MANIFEST_TABLE_UNSUPPORTED",
             ),
             (
-                (
-                    "target.'cfg(unix)' = { dev-dependencies = { "
-                    "compiler = { path = '../compiler' } } }\n"
-                ),
+                "target.'cfg(unix)' = { dev-dependencies = { "
+                "compiler = { path = '../compiler' } } }\n",
                 "CARGO_MANIFEST_TABLE_UNSUPPORTED",
             ),
             (

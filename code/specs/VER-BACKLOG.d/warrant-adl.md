@@ -88,8 +88,8 @@ encoding, `outcome`, `Refines`/`Equiv`, certificate format, trap identity; ADL-0
 | P1 / ADL-021 | **`adl.wir-abi` file**: total `outcome`, `enc` as a partial function, reason tags from `panic_messages`; signed (`adl.wir-abi.faithful`) | after ADL-020, PIF-019 |
 | P1 / ADL-022 | **`Refines`/`Equiv` goal templates with witnesses**; `Dom(h)` read from source parameter types | after ADL-021 |
 | P2 / ADL-023 | **Certificate format and checker glue** | after ADL-022 |
-| P1 / ADL-032 | **Lane-independent whole-unit, export-map and build-profile framework** (VER33a) | after ADL-030 |
-| P1 / ADL-033 | **Rust subset additions for `logic-gates`**: `&str` parameter, format-string `assert!`, `and_n(&[u8])` walled off or admitted; export map for the crate | after ADL-032, VER25a |
+| P1 / ADL-032 | **Lane-independent whole-unit, export-map and build-profile framework** (VER33a) | after ADL-030. **Note (ADL-001a security review):** the lifter confirms every `panic_messages` template against a literal panic message in the lane source (the long-term form of VER33 R5; the schema's anchor rule and denylist are only a backstop) |
+| P1 / ADL-033 | **Rust subset additions for `logic-gates`**: `&str` parameter, format-string `assert!`, `and_n(&[u8])` walled off or admitted; export map for the crate. **Note (ADL-001a security review):** the format-string `assert!` messages are the templates the binding lists; the lifter checks each against the literal in source | after ADL-032, VER25a |
 | P1 / G-M2 | VER32's Rust gates lifted at WIR level (A3-WIR); scope per VER32 Q2, **decided: option D** (all 11 gates, after G-M2-D); `Dom(h)` is `u8` from source | after G-M1, ADL-022, ADL-033, PIF-019 |
 
 ## M6. Generated code (A4)

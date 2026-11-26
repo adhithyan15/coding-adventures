@@ -1,0 +1,3 @@
+-- expect: ok
+warrant m v1 profile algorithm
+  model f(a: Int) -> Int = a
