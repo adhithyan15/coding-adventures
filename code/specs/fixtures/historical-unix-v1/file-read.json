@@ -28,5 +28,10 @@
     "command":"cat /missing",
     "output":"error: ENOENT\n",
     "events":[{"call":"open","path":"/missing","error":"ENOENT"}]
-  }
+  },
+  {"command":"ls //etc/../", "output":"hello\nempty\netc\n", "events":[{"call":"list", "path":"//etc/../", "inode":1, "names":["hello", "empty", "etc"]}]},
+  {"command":"cat /hello/..", "output":"error: ENOTDIR\n", "events":[{"call":"open", "path":"/hello/..", "error":"ENOTDIR"}]},
+  {"command":"cat /etc", "output":"error: EISDIR\n", "events":[{"call":"open", "path":"/etc", "error":"EISDIR"}]},
+  {"command":"cat", "output":"usage: cat PATH or ls [PATH]\n", "events":[]},
+  {"command":" \t", "output":"", "events":[]}
 ]
