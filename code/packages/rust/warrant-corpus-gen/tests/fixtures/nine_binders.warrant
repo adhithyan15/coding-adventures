@@ -1,0 +1,58 @@
+warrant nine_binders v1
+  -- A document whose only claim has NINE binders: a claim has at most 8 (VER04r 5.3, 16.18 R75), so every
+  -- tool refuses it, in generation and in --check.  Used by the generator's refusal tests (fixed_lowering.rs,
+  -- check_cli.rs) now that arithmetic.warrant, their former refused document, has been split (VER04r D76).
+  model all9(a0: Bool, a1: Bool, a2: Bool, a3: Bool, a4: Bool, a5: Bool, a6: Bool, a7: Bool, a8: Bool) -> Bool = a0 and a1 and a2 and a3 and a4 and a5 and a6 and a7 and a8
+  op op_all9(a0: Bool, a1: Bool, a2: Bool, a3: Bool, a4: Bool, a5: Bool, a6: Bool, a7: Bool, a8: Bool) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels op_all9:
+    a0 public
+    a1 public
+    a2 public
+    a3 public
+    a4 public
+    a5 public
+    a6 public
+    a7 public
+    a8 public
+
+  input op_all9.a0:
+    hostile
+    ensures no_panic, terminates
+  input op_all9.a1:
+    hostile
+    ensures no_panic, terminates
+  input op_all9.a2:
+    hostile
+    ensures no_panic, terminates
+  input op_all9.a3:
+    hostile
+    ensures no_panic, terminates
+  input op_all9.a4:
+    hostile
+    ensures no_panic, terminates
+  input op_all9.a5:
+    hostile
+    ensures no_panic, terminates
+  input op_all9.a6:
+    hostile
+    ensures no_panic, terminates
+  input op_all9.a7:
+    hostile
+    ensures no_panic, terminates
+  input op_all9.a8:
+    hostile
+    ensures no_panic, terminates
+
+  bound op_all9:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  claim nine_binders_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, a4: Bool, a5: Bool, a6: Bool, a7: Bool, a8: Bool. op_all9(a0, a1, a2, a3, a4, a5, a6, a7, a8) == all9(a0, a1, a2, a3, a4, a5, a6, a7, a8)
