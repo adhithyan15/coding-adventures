@@ -138,7 +138,8 @@ var (
 	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
 	// FuzzReferenceVectorsTests (VER06h), ruby/test_bootstrap's
 	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
-	// (VER06j, scans it line by line) read it the same way; so does
+	// (VER06j, scans it line by line) and elixir/test_bootstrap's
+	// fuzz_corpus_test.exs (VER06n) read it the same way; so does
 	// cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k), through the C++ API.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
@@ -223,17 +224,21 @@ var (
 	// go/test-bootstrap's pbt/corpus_test.go reads the same file (VER05d), and so
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
-	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h) and
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
+	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
 	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
-	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i).
+	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i) and
+	// elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
 	// go/test-bootstrap's fuzz/corpus_test.go read cases.json from the
 	// repository root, so an edit selects those packages; so do
 	// java/test-bootstrap, kotlin/test-bootstrap, csharp/test-bootstrap and
-	// c/test-bootstrap (test_fuzz_corpus.c, VER06j) and cpp/test-bootstrap
-	// (test_fuzz_corpus.cpp, VER06k).
+	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), cpp/test-bootstrap
+	// (test_fuzz_corpus.cpp, VER06k), ruby/test_bootstrap (VER06i) and
+	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n).
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
@@ -1325,6 +1330,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "fsharp/test-bootstrap",
+		language: "fsharp",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
 		name:     "c/test-bootstrap",
 		language: "c",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1381,6 +1393,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "lua/test_bootstrap",
+		language: "lua",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "ruby/test_bootstrap",
 		language: "ruby",
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
@@ -1390,6 +1416,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "ruby/test_bootstrap",
 		language: "ruby",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "elixir/test_bootstrap",
+		language: "elixir",
 		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
 		matches:  isGoFuzzReferenceVectors,
 		paths:    goFuzzReferenceVectorPaths,

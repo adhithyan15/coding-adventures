@@ -14,12 +14,14 @@
 //!   Bytes  Bytes<N>          20, u32-LE length, the bytes
 //!   Ok(v)  Err(E.CASE)       50 plus the inner value  /  51, u32-LE length, UTF-8 case name
 //!   (v1, .., vn)             64, u32-LE component count, the components (`ir.tuple`)
+//!   Option<T>                40 (none) / 41 plus the inner value                  (`ir.data`)
+//!   record                   64, u32-LE field count, the fields (like a tuple)    (`ir.data`)
+//!   variant                  65, u32 length + UTF-8 constructor, u32 field count, the fields
 //! ```
 //!
 //! A tuple *value* carries the `64` tag and its count because nested composites must be
 //! self-delimiting or two different values could serialise to the same bytes; a top-level binder
-//! list is a plain concatenation of the binders' values.  (`List`, `Option`, records and variants,
-//! `30 40/41 65`, belong to `ir.data`.)
+//! list is a plain concatenation of the binders' values.  (`List`, `30`, is the reserved `ir.list`.)
 //!
 //! ## Framing
 //!
@@ -56,7 +58,7 @@
 use coding_adventures_sha256::sha256_hex;
 
 use crate::error::{code, GenError};
-use crate::types::{Ty, Width};
+use crate::types::{Decls, Ty, Width};
 use crate::value::Value;
 
 /// `warrant-stream-v1\0`.
@@ -110,21 +112,20 @@ pub fn put_field(out: &mut Vec<u8>, text: &str) -> Result<(), GenError> {
     Ok(())
 }
 
-/// Is `ty` in the v1 type set `{Bool, U8, U64, Nat, Bytes, Bytes<N>, Result<v1,E>}`?
-/// (`List` and `Option` are in the set too but are `ir.data`; a tuple is not in it, so a suite
-/// with a tuple anywhere in its types has the `warrant-stream-v2` header.)
+/// Is `ty` in the v1 type set `{Bool, U8, U64, Nat, Bytes, Bytes<N>, Option<v1>, Result<v1,E>}`?
+/// (`List` is in the set too but is the reserved `ir.list`; a tuple, a record and a variant are
+/// not in it, so a suite with one anywhere in its types has the `warrant-stream-v2` header, and
+/// `Option<U8>` keeps `warrant-stream-v1`.)
 pub fn in_v1_set(ty: &Ty) -> bool {
     use coding_adventures_warrant_grammar::fixed::FixedTy;
     match ty {
         Ty::Bool | Ty::Nat | Ty::Bytes(_) => true,
         Ty::Fixed(t) => matches!(t, FixedTy::U8 | FixedTy::U64),
-        Ty::Result(ok, _) => in_v1_set(ok),
+        Ty::Result(ok, _) | Ty::Option(ok) => in_v1_set(ok),
         Ty::Tuple(_) => false,
-        // `Int` never appears in a value (VER04r 2.1).  `Option`, a record and a variant are values of
-        // `ir.data`, which no suite emits before S11c-2 (`Option<U8>` is in the v1 set of section 1.2
-        // and a record is not; the stream encoding of both is S11c-2's), and a list is the reserved
-        // `ir.list`.
-        Ty::Int | Ty::Option(_) | Ty::Named(_) | Ty::List(_) => false,
+        // `Int` never appears in a value (VER04r 2.1); a record and a variant are v2 types; a list is
+        // the reserved `ir.list`.
+        Ty::Int | Ty::Named(_) | Ty::List(_) => false,
     }
 }
 
@@ -158,30 +159,61 @@ pub fn context_prefix(
     Ok(out)
 }
 
-/// Encode `v`, a value of type `ty`, onto `out`.
+/// Encode `v`, a value of type `ty`, onto `out`, for a type that names no record or variant (every
+/// type of `ir.core`, `ir.tuple`, `ir.fixed` and `Option`).  [`encode_in`] is the general form.
+///
+/// # Errors
+///
+/// As [`encode_in`].
+pub fn encode(ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
+    encode_in(&Decls::default(), ty, v, out)
+}
+
+/// Encode `v`, a value of type `ty`, onto `out`; `decls` are the document's records and variants.
 ///
 /// # Errors
 ///
 /// `W0701` for a value that does not fit its declared type: a `Nat` or unsigned value past
 /// `2^64-1` or negative (a `Nat` *value* is in `0..=2^64-1`, VER04r 2.3), a signed value
-/// outside `i64`, an `Int` anywhere (VER04r 2.1), or a value of the wrong shape.
-pub fn encode(ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
+/// outside `i64`, a value outside a fixed-width type's own range (all three say ``a value is outside the
+/// range of <type> (VER04r 2.3)``, the oracle's sentence), an `Int` anywhere (VER04r 2.1), or a value of
+/// the wrong shape.
+pub fn encode_in(decls: &Decls, ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
     let bad = |what: &str| GenError::new(code::W0701, "", format!("a stream value {what}"));
+    // The oracle's sentence (`stream.make_encoder`, VER04r 2.3), so a refusal reads alike in both tools.
+    let out_of_range = || {
+        GenError::new(
+            code::W0701,
+            "",
+            format!("a value is outside the range of {} (VER04r 2.3)", ty.name()),
+        )
+    };
     match (ty, v) {
+        // VER04r 2.1: `Int` is model-internal, so a value of it has no stream form (checked first, whatever
+        // the value, as the oracle's `make_encoder` does).
+        (Ty::Int, _) => {
+            return Err(GenError::new(
+                code::W0701,
+                "",
+                "an `Int` value has no stream encoding (VER04r 2.1)",
+            ))
+        }
         (Ty::Bool, Value::Bool(b)) => out.push(u8::from(*b)),
         (Ty::Nat | Ty::Fixed(_), Value::Int(i)) => {
+            // A `Nat` or unsigned value is `0..=2^64-1` (the row is 8 bytes wide), a signed one `i64`, and a
+            // fixed-width type its own range: an exact `Int` result such as `a - 1` can leave all of them.
             if let Some(t) = ty.fixed() {
                 if *i < t.min() || *i > t.max() {
-                    return Err(bad("is outside the range of its fixed-width type"));
+                    return Err(out_of_range());
                 }
             }
             let signed = ty.fixed().is_some_and(|t| t.signed());
             if signed {
-                let n = i64::try_from(*i).map_err(|_| bad("does not fit its signed type"))?;
+                let n = i64::try_from(*i).map_err(|_| out_of_range())?;
                 out.push(0x11);
                 out.extend_from_slice(&n.to_le_bytes());
             } else {
-                let n = u64::try_from(*i).map_err(|_| bad("is outside 0..=2^64-1"))?;
+                let n = u64::try_from(*i).map_err(|_| out_of_range())?;
                 out.push(0x10);
                 out.extend_from_slice(&n.to_le_bytes());
             }
@@ -198,7 +230,7 @@ pub fn encode(ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
         }
         (Ty::Result(ok, _), Value::Ok(inner)) => {
             out.push(0x50);
-            encode(ok, inner, out)?;
+            encode_in(decls, ok, inner, out)?;
         }
         (Ty::Result(..), Value::Err(case)) => {
             out.push(0x51);
@@ -208,10 +240,32 @@ pub fn encode(ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
             out.push(0x64);
             put_u32(out, items.len())?;
             for (t, v) in parts.iter().zip(items) {
-                encode(t, v, out)?;
+                encode_in(decls, t, v, out)?;
             }
         }
-        (Ty::Int, _) => return Err(bad("may not have type Int (VER04r 2.1)")),
+        (Ty::Option(_), Value::Opt(None)) => out.push(0x40),
+        (Ty::Option(inner), Value::Opt(Some(v))) => {
+            out.push(0x41);
+            encode_in(decls, inner, v, out)?;
+        }
+        (Ty::Named(name), Value::Con(ctor, items)) => {
+            let fields = decls
+                .fields(name, ctor)
+                .filter(|f| f.len() == items.len())
+                .ok_or_else(|| bad("names a constructor its type does not declare"))?;
+            if decls.is_record(name) {
+                // a record is encoded like a tuple of its fields
+                out.push(0x64);
+                put_u32(out, items.len())?;
+            } else {
+                out.push(0x65);
+                put_field(out, ctor)?;
+                put_u32(out, items.len())?;
+            }
+            for (t, v) in fields.iter().zip(items) {
+                encode_in(decls, t, v, out)?;
+            }
+        }
         _ => return Err(bad("does not have its declared shape")),
     }
     Ok(())

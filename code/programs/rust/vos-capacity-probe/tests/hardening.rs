@@ -789,20 +789,28 @@ mod unix_children {
     /// slack, and a child the bound kills is NOT verified, which fails the check.
     #[test]
     fn a_sampled_child_that_outlives_the_budget_is_killed_and_not_counted_as_verified() {
-        // D1 k=4 t=4 takes about two seconds and is in the cheap class.
+        // D1 t=8 k=2 is in the cheap class and takes about two seconds: its FASTEST seed in the
+        // CI recording is 1.98 s of solve plus check (seeds 1.98 to 2.26 s), ten times the 200 ms
+        // budget below, so the first child is killed on any host that is not ten times faster.  (It was D1 t=4 k=4 until VOS-D143 re-derived the cheap table from the
+        // CI recording, where that group's slowest seed is over the 3 s line.)
         let rows: Vec<Row> = committed()
             .rows
             .into_iter()
-            .filter(|r| r.experiment == "D1" && r.knob.int("t") == 4 && r.knob.int("k") == 4)
+            .filter(|r| r.experiment == "D1" && r.knob.int("t") == 8 && r.knob.int("k") == 2)
             .collect();
         assert_eq!(rows.len(), 5);
+        assert!(vos_capacity_probe::cost::is_cheap(
+            "D1",
+            "monolithic",
+            &rows[0].knob.key()
+        ));
         let f = small_file(rows.clone());
         let t0 = Instant::now();
         let rep = vos_capacity_probe::spot::spot_check_in(
             &f,
             std::path::Path::new(EXE),
             5,
-            Duration::from_secs(1),
+            Duration::from_millis(200),
             Duration::ZERO,
         );
         assert!(t0.elapsed() < Duration::from_secs(30), "{:?}", t0.elapsed());

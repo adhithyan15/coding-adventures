@@ -27,15 +27,23 @@ slice S3). It reads a `.warrant` specification and will write the language-neutr
 > and costed, `match` works on any scrutinee, `requires` follow the tag, the pattern and the type
 > (R9, R29), and the generator reproduces the oracle's `data-forms-v1` lowering dump **byte for byte,
 > including the conditional `types` object**, and refuses its 121 documents with the generator code of
-> each row (see "`ir.data` (S11b)"). `generate` stays a **fail-closed stub** for a document that needs
-> `ir.data` until S11c-2.
+> each row (see "`ir.data` (S11b)").
+>
+> **S11c-2** (`ir.data`, generator half of the evaluation): the four tags and the data patterns are
+> **evaluated**, the stream writes `40`/`41` for an `Option`, `64` for a record and `65` for a variant, TFV
+> writes `L0`/`L1 x`/`L2 S<ctor> L<k> ..` (and refuses a 65th container, R99), the `variant`, `option` and `tuple`
+> (record) descriptors are described with their demotion paths [D54], the corpus carries `types` rows, the two data
+> faults `field-zero` and the record, `Option` and variant payloads of `missing-error` are instantiated, **every fault
+> row is typed** (R67, R94, R96 to R98), the generator's `ir.data` gate is open (`SHIPPED_GATE` holds `ir.data`) and
+> `generate` accepts a document that needs it. It reproduces all six dumps of the oracle's `data-eval-v1` **byte for
+> byte** (see "`ir.data` evaluation (S11c-2)").
 >
 > **S10c-2** (`ir.fixed`, generator half): the 35 built-ins are **evaluated**, the domains of D21,
 > D25 and D26 are described (`nat_shift`, the signed and the 16-bit `fx_edge`), the `ir.fixed` fault
 > templates are evaluable, and `generate` emits `ir.fixed` documents. The generator reproduces the
 > five dumps of the oracle's `fixed-eval-v1` (lowering, evaluation, faults, values, domains) byte for
 > byte (see "`ir.fixed` evaluation (S10c-2)"). The **fault gate was opened by the flip (S10c, 0.6.0)**:
-> `SHIPPED_GATE` is `ir.core`, `ir.fixed` and `ir.tuple`, so a control that needs `ir.fixed` or `ir.tuple` has a
+> `SHIPPED_GATE` was `ir.core`, `ir.fixed` and `ir.tuple` (and holds `ir.data` since S11c-2), so a control that needs `ir.fixed` or `ir.tuple` has a
 > witness chunk, and the ct-compare `eq_u64/ignore-high-bit` control is live.
 
 ## How it fits
@@ -72,13 +80,14 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | `patterns` | S10t-2 and S11b: the ten `match` patterns (six of A.1, four data patterns of A.2), the usefulness check over `Result`, `Option`, `Bool`, tuples, records and variants, the corpus errors (code `ir`) |
 | `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (evaluated since S10c-2, on the width `Ir::Fixed::at` records), and `ir::levels`, the tag part of `requires` (R9) |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
+| `corpus_check` | CV2-F17: the document check that `Int` is named in no record or variant field, op signature or binder (VER04r 2.1, `W0701`); `generate` runs it after lowering and before costing, as the oracle's `derive` does; the lowering still accepts `Int` |
 | `analysis` | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
 | `arith` | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
 | `cost` | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
 | `view` | the "parity view" of a lowered document, compared with the oracle (`oracle_view` for `ir.core`, `oracle_view_v1` for the S10 dump with `requires`) |
 | `value`, `eval` | S3b: the `ir.core` evaluator (own implementation over this crate's IR): exact `Nat`/`Int` in the 2^127 window, wrapping fixed-width arithmetic counted as `wraps`, short-circuit `and`/`or`/`implies`/`if`, `MAX_IR_VALUE` checked before allocation, and `trace`, the pure-trace walk behind `expected_calls` and `wraps` |
 | `domains` | S3b: descriptor JSON, labels and sizes over the S2 `resolve_binders`/`Domain` API (S10c-2: `nat_shift`, `fx_edge`, the `demoted` paths; refuses only a list of byte strings); the consumer-side `descriptor_size`; value and encoding caches |
-| `stream` | S3b: the 2.4 value encoders, the context prefix, the v1/v2 header, `warrant-chunks-v1` framing, FNV-1a-64, the slim base set |
+| `stream` | S3b: the 2.4 value encoders (a `Nat`, unsigned or signed value outside its type is `W0701`, `a value is outside the range of <type> (VER04r 2.3)`, the oracle's sentence since CV2-F17), the context prefix, the v1/v2 header, `warrant-chunks-v1` framing, FNV-1a-64, the slim base set |
 | `suite` | S3b: one suite: product enumeration (`unrank_product`, last binder fastest), admission evaluated once per prefix tuple, chunks, counts, suite and v1 whole-suite digests, slim set |
 | `enumerate` | S3b: a whole document at `full` depth, the total-work bounds, the v0 divergence guard rule 2, and the enumeration parity view |
 | `faults` | S3c: the fault IR (`pre`/`post`/`replace`, `Expr::Core` or `Expr::Data` for a level not implemented), the registry of the portable names instantiated by signature, the stand-in rule and the witness search (`ClaimState`: witnessed, blind, unproven, deferred) |
@@ -295,8 +304,8 @@ no adopter is blocked by a cost it would simply declare), as of S11b:
 | **total** | **364** | **335** | `W0701` 18, `inout` 9, `err-value` 2 |
 
 The table is pinned per adopter in `tests/census.rs` (the generator's `PINS` and the oracle's `ORACLE_PINS`).
-**Since S11b the census counts what lowers**: `ok` is no longer "`generate` can emit it", because `generate` still
-refuses `ir.data` (R37, until S11c-2); a test pins that arithmetic lowers whole and `generate` refuses it.
+**Since S11b the census counts what lowers**: `ok` is no longer "`generate` can emit it" (S11c-2 evaluates `ir.data`;
+arithmetic still does not generate whole, for its nine-binder claim, VER04r 5.3).
 History of the totals: before S10b `ir.data` 154,
 `ir.fixed` 101, `inout` 9, `W0701` 2; S10b `ir.data` 79, `ir.fixed` 99, `ir.tuple` 71, `W0701` 8 (89
 emittable); S10t-2 (`ir.tuple` lowers) `ir.data` 100, `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 (105
@@ -332,9 +341,8 @@ A construct no level of this tool implements refuses the **whole document**, nam
 `ir.list` (a list type, a list literal, `slice to_list to_bytes replicate`, R27, R28), `ir.seq` (`fold map all any
 count range`), the feature names `fixed-cast` (`fixed<N>(b)`) and `err-value` (an arm that uses the error value an
 `Err(e)` pattern bound, [D55]), and the features `inout`, `ensures`, `vectors`, `assume` rows. Nothing is skipped and
-nothing is written. `ir.fixed`, `ir.tuple` and, since S11b, `ir.data` are **lowered**; the name `ir.data` is the one
-refusal of `generate` and of the evaluator that remains until S11c-2 (R37): a document that declares a record or a
-variant, or in which any unit needs the level, is refused whole, naming the first such item.
+nothing is written. `ir.fixed`, `ir.tuple` and `ir.data` are **lowered and evaluated** (`ir.data` since S11c-2, which
+removed the guard S11b kept: R37).
 `census` reports, per operation, model, claim and example, what would block it, without failing the document.
 
 ## `ir.data` (S11b)
@@ -626,6 +634,7 @@ doctest and the integration tests:
 | `fixed_parity`, `fixed_lowering` | S10b: the lowering dump of `fixed-forms-v1`, the refusals, `requires` and cost of the built-ins |
 | `fixed_eval_parity` | S10c-2: the five dumps of `fixed-eval-v1` (lowering, evaluation, faults under both gates, values, domains) byte for byte, the shift-count rule, the demotions, negative controls |
 | `tuple_parity`, `tuple_forms` | S10t-2: the four dumps of `tuple-forms-v1`, the tuple forms one rule at a time; S11b: the width in the type (R51) |
+| `data_eval_parity` | S11c-2: the six dumps of `data-eval-v1` byte for byte (evaluation, both fault gates, values with the consumer's reading of 23 refused JSON forms, domains with the demotion paths, refusals with the `typing` rows), negative controls |
 | `data_parity`, `data_lowering` | S11b: the lowering dump of `data-forms-v1` byte for byte (with its conditional `types` object), its 121 refused documents with the generator code of each row, `generate` fail-closed, negative controls; each `ir.data` rule once, small |
 | `limits` | the resolver, planner and total-work refusals; the evaluator at the real bounds (64 model frames) on a default test thread; pure subject-argument failures refused at generation |
 | `oracle_parity`, `lowering`, `fail_closed` | S3a: lowering parity, ct-compare against the v1 corpus, one test per refused construct, `generate` refusals |

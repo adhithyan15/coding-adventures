@@ -255,13 +255,16 @@ fn leak(s: &str) -> &'static str {
     }
 }
 
-// ---- generate stays a fail-closed stub for a document that needs ir.data (R37) ------------------------
+// ---- since S11c-2 `generate` no longer refuses ir.data (R37 lifted) ---------------------------------------
 
 #[test]
-fn generate_refuses_the_data_forms_document_naming_ir_data() {
-    // S11b lowers, types and costs the level; the evaluator, the stream and the TFV writer are S11c-2
+fn generate_no_longer_refuses_the_data_forms_document_naming_ir_data() {
+    // S11b lowered, typed and costed the level and kept `generate` fail-closed; S11c-2 evaluates it.  The
+    // data-forms document is a *lowering* fixture: since CV2-F17 (VER04r 2.1) `generate` refuses it as a document,
+    // before costing or enumerating anything, because its ops take and return `Int` (the oracle's `derive` says
+    // the same; before F17 the refusal was the resolver's, at the first claim it could not enumerate).
     use coding_adventures_warrant_corpus_gen::{generate, GenInput};
-    let e = with_file(WARRANT, |f| {
+    let r = with_file(WARRANT, |f| {
         generate(&GenInput {
             file: f,
             spec_path: "data_forms_v1.warrant",
@@ -269,10 +272,11 @@ fn generate_refuses_the_data_forms_document_naming_ir_data() {
             profile_bytes: b"",
             binding_faults: None,
         })
-        .expect_err("refused")
     });
-    assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "{e}");
-    assert!(e.message.contains("S11c-2"), "{e}");
+    // pinned: the refusal is the document-level `Int` check (W0701, no `at`), not a level
+    let e = r.expect_err("the lowering fixture is not a generation fixture");
+    assert_eq!((e.code, e.level, e.at.as_str()), (code::W0701, None, ""), "{e}");
+    assert_eq!(e.message, "`Int` is model-internal and may not be an op signature of a corpus (VER04r 2.1)");
 }
 
 // ---- negative controls ---------------------------------------------------------------------------------

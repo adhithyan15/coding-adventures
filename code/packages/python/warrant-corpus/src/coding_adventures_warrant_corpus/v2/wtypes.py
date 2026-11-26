@@ -13,8 +13,9 @@ inverse, so ``str(parse_type(text))`` is the canonical spelling.
 
 ``Int`` is the mathematical integer of VER04 section 3.  It exists **inside the
 IR only**: the type of ``Nat - Nat`` and of a ``lit`` node that says
-``"type": "Int"``.  A value, a binder or a signature may not have it, which is
-what the ``allow_int`` switch below is for.
+``"type": "Int"``.  A value, a binder, a field or an op signature may not have
+it; a *model parameter* may ([D75], R111), also under ``Option``, ``Result``,
+a tuple or ``List``.  That is what the ``allow_int`` switch below is for.
 
 Two of the shapes here are only half-known while an IR tree is being typed
 bottom-up.  A bare ``ok(e)`` has no error type yet and a bare ``err("CASE")`` no
@@ -25,6 +26,7 @@ half and :func:`unify` fills it in from whatever the node meets.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -300,6 +302,216 @@ def parse_type(
     if reader.at != len(reader.tokens):
         raise Refusal("type", "text follows the end of the type")
     return ty
+
+
+# ---------------------------------------------------------------------------
+# The ``types`` table itself (section 2.2): limits every consumer enforces
+# ---------------------------------------------------------------------------
+# "Rules, all enforced at generation and again by every consumer."  The table is
+# a hostile input like any other part of a corpus, so before a name in it is
+# looked up (by ``parse_type``, a codec or a descriptor) the table as a whole is
+# held to the rules.  The *code* of the refusal belongs to the context that is
+# reading the table -- ``type`` for a ``v2-value`` case, ``corpus`` for a
+# ``v2-chunk`` case or a corpus part, ``descriptor`` for a ``v2-domain`` case --
+# so the checker takes it as an argument.
+MAX_ERROR_CASES = 64  # rule 2: one to 64 cases
+MAX_RECORD_FIELDS = 32  # rule 3: one to 32 fields
+MIN_VARIANT_CTORS = 2  # rule 3: a one-constructor sum is a record
+MAX_VARIANT_CTORS = 64
+MAX_CTOR_FIELDS = 8  # rule 3: a constructor has zero to 8 fields
+
+# The reserved built-ins a declared name may not take (section 2.2, R58): the
+# names of the type grammar.  A table row called ``U8`` would otherwise be
+# unreachable (the grammar reads ``U8`` as the integer) or, worse, ambiguous.
+BUILTIN_TYPE_NAMES = frozenset(
+    {"Bool", "Nat", "Int", "Bytes", "List", "Option", "Result", *FIXED}
+)
+
+_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
+
+
+def _is_name(value: object) -> bool:
+    return type(value) is str and _NAME.match(value) is not None
+
+
+def check_types_table(types: object, code: str) -> None:
+    """Refuse, with ``code``, a ``types`` table that breaks a rule of section 2.2.
+
+    Checked, for every row: the name is not a reserved built-in; an ``error``
+    type has 1 to 64 cases, each a name of the grammar of rule 4, all different
+    (cases are compared by name, rule 2); a ``record`` has 1 to 32 fields; a
+    ``variant`` has 2 to 64 constructors; a constructor has 0 to 8 fields; field
+    and constructor names match ``[A-Za-z_][A-Za-z0-9_]*`` (rule 4) and a
+    constructor is not a built-in either.  A row that is not one of those three
+    kinds, or whose lists are not lists of the right shape, is refused too: it
+    cannot be counted.
+
+    R117: a field or constructor component may not *be* an error type.  An error
+    name occurs only as the second argument of ``Result``; as a field type, alone
+    or under ``Option``, a tuple or ``List``, it names no value.
+
+    The table is walked once, with no recursion, so its size costs time
+    proportional to itself and nothing more.
+    """
+
+    def refuse(why: str) -> Refusal:
+        return Refusal(code, f"the types table breaks section 2.2: {why}")
+
+    if type(types) is not dict:
+        raise refuse("it is an object")
+    for name, row in types.items():
+        if not _is_name(name) or name in BUILTIN_TYPE_NAMES:
+            raise refuse("a declared type name is a built-in or not a name")
+        if type(row) is not dict:
+            raise refuse("a row is an object")
+        kind = row.get("kind")
+        if kind == "error":
+            cases = row.get("cases")
+            if type(cases) is not list or not 1 <= len(cases) <= MAX_ERROR_CASES:
+                raise refuse("an error type has one to 64 cases")
+            if not all(_is_name(c) for c in cases) or len(set(cases)) != len(cases):
+                raise refuse("the cases of an error type are different names")
+        elif kind == "record":
+            fields = row.get("fields")
+            if type(fields) is not list or not 1 <= len(fields) <= MAX_RECORD_FIELDS:
+                raise refuse("a record has one to 32 fields")
+            for entry in fields:
+                if type(entry) is not list or len(entry) != 2 or not _is_name(entry[0]):
+                    raise refuse("a field is a [name, type] pair with a legal name")
+                if type(entry[1]) is not str:
+                    raise refuse("a field type is text")
+            if len({entry[0] for entry in fields}) != len(fields):
+                raise refuse("a record repeats a field name")  # R108
+        elif kind == "variant":
+            ctors = row.get("ctors")
+            if (
+                type(ctors) is not list
+                or not MIN_VARIANT_CTORS <= len(ctors) <= MAX_VARIANT_CTORS
+            ):
+                raise refuse("a variant has two to 64 constructors")
+            for entry in ctors:
+                if type(entry) is not list or len(entry) != 2:
+                    raise refuse("a constructor is a [name, [types]] pair")
+                ctor, payload = entry
+                if not _is_name(ctor) or ctor in BUILTIN_TYPE_NAMES:
+                    raise refuse("a constructor name is a built-in or not a name")
+                if type(payload) is not list or len(payload) > MAX_CTOR_FIELDS:
+                    raise refuse("a constructor has zero to 8 fields")
+                if not all(type(t) is str for t in payload):
+                    raise refuse("a constructor field type is text")
+            if len({entry[0] for entry in ctors}) != len(ctors):
+                raise refuse("a variant repeats a constructor name")  # R108
+        else:
+            raise refuse("a row is an error, a record or a variant")
+    _check_references(types, refuse)
+
+
+def _name_positions(tokens: list[str]) -> Iterator[tuple[str, bool]]:
+    """Each name of a type text, with whether it stands where ``Result`` puts its error.
+
+    A name is in the error slot when it follows the ``,`` of an enclosing
+    ``Result<`` (not of a tuple).  The tracker keeps its own stack of open
+    brackets, so it is linear and never recurses.
+    """
+    enclosing: list[str] = []  # the open brackets: "R" for Result, "N" for the rest
+    for place, token in enumerate(tokens):
+        previous = tokens[place - 1] if place else ""
+        if token == "(":
+            enclosing.append("N")
+        elif token == "<":
+            enclosing.append("R" if previous == "Result" else "N")
+        elif token in (">", ")") and enclosing:
+            enclosing.pop()
+        if _is_word(token):
+            yield token, previous == "," and bool(enclosing) and enclosing[-1] == "R"
+
+
+def names_misplaced_error_type(text: object, types: dict) -> bool:
+    """Does ``text`` use a declared error type outside a ``Result`` error? (R117)"""
+    if not isinstance(text, str):
+        return False
+    try:
+        tokens = _cut_into_tokens(text)
+    except Refusal:
+        return False
+    return any(
+        not slot and _declared_kind(types, name) == "error"
+        for name, slot in _name_positions(tokens)
+    )
+
+
+def _field_types(row: dict) -> list[str]:
+    """The type texts a record's fields or a variant's constructors hold."""
+    if row["kind"] == "record":
+        return [entry[1] for entry in row["fields"]]
+    if row["kind"] == "variant":
+        return [text for entry in row["ctors"] for text in entry[1]]
+    return []
+
+
+def _check_references(types: dict, refuse: Callable[[str], Refusal]) -> None:
+    """R108: every name a field type uses is declared, and no type contains itself.
+
+    The shape of every row is already known to be right.  A field type is read
+    only as tokens: each name in it that is not a built-in of the grammar must
+    be a row of the table (``Option<Ghost>`` names ``Ghost``, and so does the
+    error name of a ``Result``).  The names then form a graph -- an edge from
+    a record or variant to each declared record or variant its fields mention,
+    *through* ``Option``, ``Result``, ``List`` and tuples alike -- and a cycle in
+    it is a type that contains itself, directly or through a chain (rule 1).
+    The cycle search keeps its own stack, so a long chain costs time and no
+    Python recursion: a table that contains itself is a hostile input and must
+    be refused, never walked.
+    """
+    edges: dict[str, list[str]] = {}
+    for name, row in types.items():
+        targets: list[str] = []
+        for text in _field_types(row):
+            try:
+                tokens = _cut_into_tokens(text)
+            except Refusal as error:
+                raise refuse(
+                    "a field type has a character outside the type syntax"
+                ) from error
+            for token, error_slot in _name_positions(tokens):
+                if token in BUILTIN_TYPE_NAMES:
+                    continue
+                if token not in types:
+                    raise refuse("a field type names a type the table does not declare")
+                if types[token]["kind"] != "error":
+                    targets.append(token)
+                elif not error_slot:
+                    # R117: an error type is the second argument of `Result`
+                    # and nothing else.
+                    raise refuse("a field type is an error type, which has no values")
+            try:
+                # Every member type is read, eagerly, by the lane's own parser
+                # (rule 1's depth limit, the grammar of section 2.1, `Int` and
+                # named widths refused): a defective member of a row nothing
+                # reaches is a defect of the table (section 14: read whole).
+                parse_type(text, types)
+            except Refusal as error:
+                raise refuse(f"a member type is not a type: {error.message}") from error
+        edges[name] = targets
+    # Depth-first search, iterative: 1 = on the current path, 2 = finished.
+    state: dict[str, int] = {}
+    for start in edges:
+        if start in state:
+            continue
+        state[start] = 1
+        stack = [(start, iter(edges[start]))]
+        while stack:
+            node, successors = stack[-1]
+            for follow in successors:
+                if state.get(follow) == 1:
+                    raise refuse("a record or variant contains itself")
+                if follow not in state:
+                    state[follow] = 1
+                    stack.append((follow, iter(edges[follow])))
+                    break
+            else:
+                state[node] = 2
+                stack.pop()
 
 
 def forget_widths(ty: Ty) -> Ty:

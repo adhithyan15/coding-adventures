@@ -225,6 +225,20 @@ function inV1TypeSet(ty: Ty): boolean {
   }
 }
 
+/** A Windows reserved device name (such a file cannot be created on Windows, section 5.5). */
+const DEVICE = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
+
+/**
+ * Section 5.5: a claim any of whose dot-separated file-name segments is a Windows reserved device name (`nul`,
+ * `con/post`, `x/com1`) is a `corpus` refusal.  Here and not only in the file-name function, so that a suite row loaded
+ * without the corpus reader is refused as well.
+ */
+export function checkClaimDevice(claim: string): void {
+  if (`${claim.replaceAll("/", ".")}.txt`.split(".").some((segment) => DEVICE.test(segment))) {
+    throw new KitError("corpus", "a claim is a Windows reserved device name");
+  }
+}
+
 /**
  * Validate a suite row against the corpus part and compile it.
  *
@@ -283,6 +297,7 @@ function loadSuiteUnchecked(part: CorpusPart, raw: unknown): Suite {
   const id = text("id");
   const claim = text("claim");
   if (!CLAIM.test(claim)) refuse("corpus", "claim is one or two names joined by /");
+  checkClaimDevice(claim);
   if (row["kind"] !== "exhaustive") refuse("corpus", "kind is exhaustive");
 
   // Binders: 0..=8, each [name, {type, domain}].
