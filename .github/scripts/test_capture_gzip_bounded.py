@@ -66,6 +66,8 @@ class BoundedGzipCliTests(unittest.TestCase):
                 str(report),
                 "--max-raw-bytes",
                 str(raw_cap),
+                "--max-compressed-bytes",
+                "262144",
                 "--expected-runs",
                 "5",
             ],
@@ -102,6 +104,9 @@ class BoundedGzipCliTests(unittest.TestCase):
             self.assertTrue(report["valid"])
             self.assertEqual(report["outer_invocation_markers"], 5)
             self.assertEqual(report["ptrace_calls"], 3)
+            self.assertTrue(report["gzip_integrity_verified"])
+            self.assertEqual(report["raw_bytes_retained"], len(payload))
+            self.assertEqual(report["raw_retained_sha256"], hashlib.sha256(payload).hexdigest())
 
     def test_raw_cap_drains_and_does_not_finalize_gzip(self):
         payload = MARKERS + (b"raw-cap-data\n" * 2000)
@@ -113,6 +118,9 @@ class BoundedGzipCliTests(unittest.TestCase):
             self.assertEqual(metadata["raw_bytes_observed"], len(payload))
             self.assertTrue(metadata["raw_cap_reached"])
             self.assertFalse(metadata["gzip_finalized"])
+            self.assertGreater(metadata["raw_bytes_fed_to_compressor"], 0)
+            self.assertIsNone(metadata["raw_bytes_retained"])
+            self.assertIsNone(metadata["raw_retained_sha256"])
             self.assertTrue(marker.exists())
             self.assertLessEqual(trace.stat().st_size, 4096)
             verified, _ = self.run_verify(root, trace, metadata_path, 128)
@@ -122,14 +130,18 @@ class BoundedGzipCliTests(unittest.TestCase):
         payload = MARKERS + random.Random(20261126).randbytes(512 * 1024)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            captured, trace, metadata_path, marker = self.run_capture(root, payload, len(payload), 4096)
+            captured, trace, metadata_path, marker = self.run_capture(root, payload, len(payload), 10)
             self.assertEqual(captured.returncode, 1)
             metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
             self.assertEqual(metadata["raw_bytes_observed"], len(payload))
             self.assertTrue(metadata["compressed_cap_reached"])
             self.assertFalse(metadata["gzip_finalized"])
+            self.assertEqual(metadata["compressed_bytes_stored"], 10)
+            self.assertGreater(metadata["raw_bytes_fed_to_compressor"], 0)
+            self.assertIsNone(metadata["raw_bytes_retained"])
+            self.assertIsNone(metadata["raw_retained_sha256"])
             self.assertTrue(marker.exists())
-            self.assertLessEqual(trace.stat().st_size, 4096)
+            self.assertLessEqual(trace.stat().st_size, 10)
             verified, _ = self.run_verify(root, trace, metadata_path, len(payload))
             self.assertEqual(verified.returncode, 1)
 
@@ -145,8 +157,12 @@ class BoundedGzipCliTests(unittest.TestCase):
             metadata["compressed_bytes_stored"] = len(damaged)
             metadata["compressed_sha256"] = hashlib.sha256(damaged).hexdigest()
             metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
-            verified, _ = self.run_verify(root, trace, metadata_path, len(payload) + 1)
+            verified, report_path = self.run_verify(root, trace, metadata_path, len(payload) + 1)
             self.assertEqual(verified.returncode, 1)
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            self.assertFalse(report["gzip_integrity_verified"])
+            self.assertIsNone(report["raw_bytes_retained"])
+            self.assertIsNone(report["raw_retained_sha256"])
 
     def test_verifier_enforces_decompression_ceiling(self):
         payload = MARKERS + (b"expanded\n" * 10000)
@@ -159,6 +175,22 @@ class BoundedGzipCliTests(unittest.TestCase):
             report = json.loads(report_path.read_text(encoding="utf-8"))
             self.assertFalse(report["valid"])
             self.assertTrue(any("ceiling" in error for error in report["errors"]))
+
+    def test_verifier_has_independent_compressed_ceiling(self):
+        payload = MARKERS + (b"compress-me\n" * 300)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            captured, trace, metadata_path, _ = self.run_capture(root, payload, len(payload) + 1, 4096)
+            self.assertEqual(captured.returncode, 0, captured.stderr.decode(errors="replace"))
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+            metadata["compressed_cap_bytes"] = 1024 * 1024
+            metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+            verified, report_path = self.run_verify(root, trace, metadata_path, len(payload) + 1)
+            self.assertEqual(verified.returncode, 1)
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            self.assertFalse(report["valid"])
+            self.assertFalse(report["gzip_integrity_verified"])
+            self.assertTrue(any("verifier ceiling" in error for error in report["errors"]))
 
 
 if __name__ == "__main__":

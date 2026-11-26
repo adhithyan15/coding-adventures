@@ -166,7 +166,7 @@ def capture(args: argparse.Namespace) -> int:
         "compressed_cap_bytes": args.max_compressed_bytes,
         "raw_bytes_observed": raw_observed,
         "raw_bytes_fed_to_compressor": raw_fed,
-        "raw_bytes_retained": raw_fed,
+        "raw_bytes_retained": None,
         "compressed_bytes_stored": compressed_stored,
         "chunks_read": chunks_read,
         "raw_cap_reached": raw_cap_reached,
@@ -174,7 +174,8 @@ def capture(args: argparse.Namespace) -> int:
         "input_read_error": input_read_error,
         "gzip_finalized": gzip_finalized,
         "capture_complete": complete,
-        "raw_sha256": raw_digest.hexdigest(),
+        "raw_sha256_fed_to_compressor": raw_digest.hexdigest(),
+        "raw_retained_sha256": None,
         "compressed_sha256": compressed_sha256,
         "errors": errors,
     }

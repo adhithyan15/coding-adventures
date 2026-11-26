@@ -186,24 +186,33 @@ set +e
 python3 "$repo_root/.github/scripts/verify-gzip-bounded.py" \
   --trace "$outer_trace" --capture-metadata "$trace_capture_metadata" \
   --output "$trace_verification" --max-raw-bytes "$trace_raw_cap_bytes" \
+  --max-compressed-bytes "$trace_compressed_cap_bytes" \
   --expected-runs 5
 trace_verification_status=$?
 set -e
 trace_capture_complete=0
 trace_raw_cap_reached=1
 trace_compressed_cap_reached=1
+trace_raw_observed=0
+trace_raw_fed_to_compressor=0
 trace_nonempty=0
 trace_has_ptrace=0
 invocation_count=0
 trace_ptrace_calls=0
 trace_listen_eio_calls=0
+trace_raw_retained=null
+trace_raw_retained_sha256=null
 if [[ -f "$trace_capture_metadata" ]]; then
   trace_capture_complete="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("capture_complete") is True))' "$trace_capture_metadata")"
   trace_raw_cap_reached="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("raw_cap_reached") is True))' "$trace_capture_metadata")"
   trace_compressed_cap_reached="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("compressed_cap_reached") is True))' "$trace_capture_metadata")"
+  trace_raw_observed="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("raw_bytes_observed", 0))' "$trace_capture_metadata")"
+  trace_raw_fed_to_compressor="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("raw_bytes_fed_to_compressor", 0))' "$trace_capture_metadata")"
 fi
 if [[ -f "$trace_verification" ]]; then
-  trace_nonempty="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("raw_bytes_verified", 0) > 0))' "$trace_verification")"
+  trace_nonempty="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1], encoding="utf-8")).get("raw_bytes_decompressed", 0) > 0))' "$trace_verification")"
+  trace_raw_retained="$(python3 -c 'import json,sys; v=json.load(open(sys.argv[1], encoding="utf-8")).get("raw_bytes_retained"); print("null" if v is None else v)' "$trace_verification")"
+  trace_raw_retained_sha256="$(python3 -c 'import json,sys; v=json.load(open(sys.argv[1], encoding="utf-8")).get("raw_retained_sha256"); print("null" if v is None else v)' "$trace_verification")"
   invocation_count="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("outer_invocation_markers", 0))' "$trace_verification")"
   trace_ptrace_calls="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("ptrace_calls", 0))' "$trace_verification")"
   trace_listen_eio_calls="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("ptrace_listen_eio_calls", 0))' "$trace_verification")"
@@ -237,6 +246,10 @@ fi
   printf 'test_skip_markers=%s\n' "$skip_count"
   printf 'outer_trace_bytes=%s\n' "$outer_trace_bytes"
   printf 'outer_trace_capture_complete=%s\n' "$trace_capture_complete"
+  printf 'outer_trace_raw_bytes_observed=%s\n' "$trace_raw_observed"
+  printf 'outer_trace_raw_bytes_fed_to_compressor=%s\n' "$trace_raw_fed_to_compressor"
+  printf 'outer_trace_raw_bytes_retained=%s\n' "$trace_raw_retained"
+  printf 'outer_trace_raw_retained_sha256=%s\n' "$trace_raw_retained_sha256"
   printf 'outer_trace_nonempty=%s\n' "$trace_nonempty"
   printf 'outer_trace_has_ptrace=%s\n' "$trace_has_ptrace"
   printf 'outer_trace_invocation_markers=%s\n' "$invocation_count"
