@@ -1631,6 +1631,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/rust/llm-provider-ollama",
           "code/packages/rust/logic-core",
           "code/packages/rust/logic-engine",
+          "code/packages/rust/pif-check",
           "code/packages/rust/pif-prelude",
           "code/packages/rust/pif-writer",
           "code/packages/rust/polynomial",
