@@ -593,7 +593,11 @@ def _resolve(spec: Spec, ty: A.Ty, statics: set[str] | None = None, depth: int =
         if ty.args:
             raise OracleError("type", f"{head} takes no arguments")
         return ty
-    if head in spec.errors or head in spec.records or head in spec.variants:
+    if head in spec.errors:
+        # R117 (VER04r 16.22): an error type is not a type of a value; it occurs only as the second argument of
+        # ``Result`` (handled above, which does not come through here for its error name).
+        raise OracleError("type", "an error type is not a value type")
+    if head in spec.records or head in spec.variants:
         if ty.args:
             raise OracleError("type", "a named type takes no arguments")
         return ty
