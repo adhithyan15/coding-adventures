@@ -58,7 +58,7 @@ v1 document, with the prose contract in
 `evidence.bindings` (never edit it; `BUILD` fails if it drifts) and runs against
 the real exports:
 
-- **enumerated suites, 2,655,437 cases in 63 claims (859,848 exhaustive + 1,279,161 sampled + 516,428 bounded-set):** the *exhaustive* part is the half and full adder
+- **enumerated suites, 2,655,437 cases in 64 claims (859,848 exhaustive + 1,279,161 sampled + 516,428 bounded-set):** the *exhaustive* part is the half and full adder
   truth tables (a Boolean oracle and, independently, an arithmetic one); both
   ripple-carry adders at **every** input for 1, 2, 3, 4 and 8 bits (the 4-bit
   adder with a carry-in is the 512 cases `(a + b + cin) mod 16` plus carry and
@@ -78,7 +78,7 @@ the real exports:
   faults need a numeric or bytes result, so the ALU's only control is a swallowed
   rejection (AR01 "Verification status").
 
-The claim names (`ripple_carry_adder_with_carry_4_bit_exhaustive`,
+The claim names (`ripple_carry_adder_with_carry_4_bit_exhaustive_cin_0`,
 `alu_sub_8_bit_exhaustive`, ...) are stable identifiers a later layer links to
 (AR01, "Contracts this layer publishes"), as is the list of contracts this layer
 would assume from `logic-gates` (pending layer-contract linking, VER29).
