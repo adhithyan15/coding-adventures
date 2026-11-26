@@ -82,8 +82,14 @@ write a gzip footer, so a capped stream is never a valid gzip evidence file.
 
 After the collector reaches EOF and is joined, the diagnostic validates the
 gzip header, deflate stream, CRC/footer, exact raw byte count, and raw digest by
-streaming decompression with a hard 128 MiB ceiling. It also checks the
-compressed-file digest before upload. Missing or empty trace output, a reached
+streaming decompression with a hard 128 MiB ceiling and an independent 32 MiB
+compressed-file ceiling supplied by the verifier, not merely read from capture
+metadata. It also checks the compressed-file digest before upload. Bytes fed to
+the compressor are reported separately from recoverable retained bytes. On an
+incomplete capture, retained byte count and retained digest are null/unverified;
+the fed count/hash must not imply that a recoverable prefix exists. Retained
+count/hash are reported only after a complete gzip round trip verifies them.
+Missing or empty trace output, a reached
 capture limit, invalid or incomplete gzip, a capture error, or a digest/count
 mismatch makes an otherwise successful test command an overall diagnostic
 failure. A successful command also requires exactly five top-level RUN markers
@@ -92,9 +98,11 @@ outer-tracer invocation markers, and at least one captured `ptrace` call in the
 complete trace. A nonempty file containing only setup/exit text is not
 sufficient.
 Metadata always records the actual `go test` exit status separately from the
-diagnostic status, as well as raw bytes observed/retained, compressed bytes
-stored, both cap states, gzip finalization/verification state, errors, and
-integrity hashes.
+diagnostic status, as well as raw bytes observed/fed to compression/verified
+as retained, compressed bytes stored, both cap states, gzip
+finalization/verification state, errors, and integrity hashes. The verifier
+rejects a compressed artifact over its separately configured ceiling even if
+capture metadata advertises a larger limit.
 
 ## Acceptance
 
