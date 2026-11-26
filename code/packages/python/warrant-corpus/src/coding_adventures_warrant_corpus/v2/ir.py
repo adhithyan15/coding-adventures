@@ -68,6 +68,7 @@ from .wtypes import (
     UNKNOWN_TY,
     Ty,
     bind_widths,
+    check_types_table,
     flows,
     forget_widths,
     parse_type,
@@ -115,6 +116,27 @@ LEVEL_TAGS: dict[str, frozenset[str]] = {
     "ir.list": _tags("list"),
     "ir.seq": _tags("fold map all any range count"),
 }
+# The seven level names section 4.1 defines.  ``ir.list``, ``ir.seq`` and
+# ``ir.inout.records`` are reserved (nothing of them is implemented) but still
+# *defined*: a ``requires`` list naming them is a real list, and one naming
+# anything else is a corpus error, not a level the runner happens to lack.
+DEFINED_LEVELS = frozenset(LEVEL_TAGS) | {"ir.inout.records"}
+
+
+def check_requires(requires: object, code: str, what: str) -> list[str]:
+    """A ``requires`` list: a list of defined level names, else a refusal ``code``.
+
+    VER04r section 4.2 rule 7: an undefined level name is a corpus error in every
+    consumer.  It is never accepted, and it is never ``level-missing`` either --
+    that code is for a level this document *defines* and the runner lacks.
+    """
+    if type(requires) is not list or not all(
+        type(level) is str and level in DEFINED_LEVELS for level in requires
+    ):
+        raise Refusal(code, f"{what} names a level section 4.1 does not define")
+    return requires
+
+
 TAG_LEVEL = {tag: level for level, tags in LEVEL_TAGS.items() for tag in tags}
 
 # The calls-per-case of a node: a constant, or a function of the environment.
@@ -160,6 +182,11 @@ def is_node(value: object) -> bool:
 # string or number in an argument array is a malformed node, never a tag.
 _DATA_TAGS = frozenset({"lit", "var", "err"})
 _CALL_TAGS = frozenset({"subject_op", "model_call"})
+# Tags whose single operand is a *list* of expressions.  A tag-name check that
+# only followed `node[1:]` would never see inside it, and an unknown tag there
+# would be hidden behind the tag of the construct that holds it (section 4.2
+# rule 7: "an unknown tag is never skipped"; R69 (d)).
+_LIST_TAGS = frozenset({"tuple", "list"})
 
 
 def operands(node: list) -> list:
@@ -170,6 +197,20 @@ def operands(node: list) -> list:
     if tag in _CALL_TAGS:
         arguments = node[2] if len(node) > 2 else None
         return arguments if type(arguments) is list else []
+    if tag in _LIST_TAGS:  # ["tuple", [e1, .., en]]: the operands are in a list
+        listed = node[1] if len(node) > 1 else None
+        return listed if type(listed) is list else []
+    if tag == "ctor":  # ["ctor", "Name", [e1, .., en]]
+        listed = node[2] if len(node) > 2 else None
+        return listed if type(listed) is list else []
+    if tag == "match":  # ["match", scrutinee, [[pattern, arm], ..]]
+        arms = node[2] if len(node) > 2 else None
+        bodies = (
+            [arm[1] for arm in arms if type(arm) is list and len(arm) == 2]
+            if type(arms) is list
+            else []
+        )
+        return node[1:2] + bodies
     return node[1:]
 
 
@@ -208,10 +249,12 @@ class Compiled:
     ``nest`` how deeply its closures nest, which is what decides whether the
     evaluation needs more Python stack than the default.
 
-    ``written`` is only set on a bytes literal.  Its static type is
-    ``Bytes<len(value)>`` (R51, [D60]) so that it flows into a parameter of that
-    width and no other, but the node keeps the type the corpus *wrote*, ``Bytes``,
-    for anything that reports it.
+    ``written`` is only set on a bytes literal: the type the corpus *wrote*,
+    ``Bytes``.  The node's static type ``ty`` is ``Bytes<len(value)>`` (R51,
+    [D60], R73), so it flows into a parameter of that width and no other, and
+    **that** is what a report prints as ``expect.type``.  The written type is
+    "written nowhere" in the corpus IR (R51); it is not the type of the
+    expression.
     """
 
     ty: Ty
@@ -315,7 +358,7 @@ class Program:
         max_ir_cost: object = MAX_IR_COST,
         sem: Semantics = STANDARD,
     ) -> None:
-        self.types = types or {}
+        self.types = types if types is not None else {}
         self.sem = sem
         self.levels = frozenset(levels) & IMPLEMENTED_LEVELS
         if (
@@ -326,6 +369,9 @@ class Program:
                 "ir-cost", "max_ir_cost lies outside the permitted budget range"
             )
         self.max_cost = max_ir_cost
+        # Section 2.2: the limits of the types table hold "again by every
+        # consumer", whether or not anything reaches the row.
+        check_types_table(self.types, "ill-typed")
         self.subject_hook: Callable[[str, list], object] | None = None
         self._raw_models = models if models is not None else {}
         self._raw_ops = ops if ops is not None else {}
@@ -457,6 +503,8 @@ class Program:
                 raise Refusal(
                     "ill-typed", "width_params must be a list of different names"
                 )
+            if "requires" in row:  # section 6: always present in a real corpus
+                check_requires(row["requires"], "ill-typed", "an op's requires")
             names = frozenset(widths)
             params = [(p, self._declared(t, names)) for p, t in row["params"]]
             sig = OpSig(params, self._declared(row["ret"], names), tuple(widths))
