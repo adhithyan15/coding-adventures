@@ -671,14 +671,18 @@ integration test may classify one additional observation as an expected
 *refusal*, never as an accepted trace: the exact `openat` resumed line whose
 result is bare `= ?`. It is a known dying-thread shape only when the full trace
 later contains a parsed terminal exit for that same PID before any known spawn
-record reuses the PID. The test helper must require the existing refusal reason,
-the exact refusal line and PID, and that later terminal record; a different
-syscall, trailing text, missing or earlier exit, another PID's exit, or an
-ambiguous PID generation fails the test. This oracle does not change the D35
-parser policy: the production readers still refuse the incomplete trace. Keep
-the 20 completed probe iterations, empty stderr and reader agreement checks.
-The predicate and its negative controls must be testable on every host OS even
-though only Linux runs the real-strace driver.
+record reuses the PID. A known spawn may be printed as one complete call or as
+an unfinished start and a later resumed half; for the latter, the helper must
+match the same PID and syscall while allowing interleaved trace lines. It must
+validate both forms with the trace parser before treating a child PID as a known
+generation. The test helper must require the existing refusal reason, the exact
+refusal line and PID, and that later terminal record; a different syscall,
+trailing text, missing or earlier exit, another PID's exit, or an ambiguous PID
+generation fails the test. This oracle does not change the D35 parser policy:
+the production readers still refuse the incomplete trace. Keep the 20 completed
+probe iterations, empty stderr and reader agreement checks. The predicate and
+its negative controls must be testable on every host OS even though only Linux
+runs the real-strace driver.
 
 
 **Process model.**
