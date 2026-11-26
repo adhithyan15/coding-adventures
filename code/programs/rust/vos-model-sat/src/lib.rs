@@ -28,14 +28,17 @@
 //! Nothing in this crate proves anything about an implementation.  The labels of [`labels`] say
 //! "lemma", and the wider widths say the encoder is checked at N = 8 only.
 
+pub mod cli;
 pub mod crosscheck;
 pub mod labels;
+pub mod lane;
 pub mod lemmas;
 pub mod model;
 pub mod mutants;
 pub mod oracle;
 pub mod probes;
 pub mod reference;
+pub mod solve;
 pub mod sweep;
 pub mod types;
 
@@ -57,6 +60,11 @@ pub struct BadWidth(pub usize);
 /// whether every check was clean.  Used by the CLI and by the tests.
 pub fn run_cross_checks(files: &oracle::ContractFiles) -> Result<(Vec<String>, bool), String> {
     let ev = crosscheck::gather(files)?;
+    Ok(run_cross_checks_with(&ev))
+}
+
+/// [`run_cross_checks`] on evidence already gathered (the lane also needs it for replay).
+pub fn run_cross_checks_with(ev: &crosscheck::Evidence) -> (Vec<String>, bool) {
     let (base, mutant) = crosscheck::real_encoders();
     let mut lines = Vec::new();
     let mut ok = true;
@@ -78,7 +86,7 @@ pub fn run_cross_checks(files: &oracle::ContractFiles) -> Result<(Vec<String>, b
     };
     note(
         "evaluator side (a) lemmas and (b) functions, N = 8, base and mutants",
-        crosscheck::check_evaluator_side(&ev, &base, &mutant),
+        crosscheck::check_evaluator_side(ev, &base, &mutant),
     );
     note(
         "reference against the evaluator, N = 8",
@@ -88,5 +96,5 @@ pub fn run_cross_checks(files: &oracle::ContractFiles) -> Result<(Vec<String>, b
         "(c) width check, encoder against the reference, N = 1..=10",
         crosscheck::check_all_widths(&crosscheck::honest_at),
     );
-    Ok((lines, ok))
+    (lines, ok)
 }
