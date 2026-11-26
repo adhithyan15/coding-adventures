@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"math"
 	"reflect"
 	"testing"
 )
@@ -162,6 +163,93 @@ func TestTraversalsAndConnectivity(t *testing.T) {
 		}
 		if !IsConnected(makeGraph(repr)) {
 			t.Fatalf("expected connected graph for repr=%s", repr)
+		}
+	}
+}
+
+func TestShortestPathRejectsInvalidWeightsBeforeEndpointShortcut(t *testing.T) {
+	invalidWeights := []struct {
+		name   string
+		weight float64
+	}{
+		{name: "negative", weight: -1},
+		{name: "NaN", weight: math.NaN()},
+		{name: "positive infinity", weight: math.Inf(1)},
+		{name: "negative infinity", weight: math.Inf(-1)},
+	}
+
+	for _, repr := range representations() {
+		for _, test := range invalidWeights {
+			t.Run(string(repr)+"/"+test.name, func(t *testing.T) {
+				g := New(repr)
+				g.AddNode("A")
+				g.AddEdge("X", "Y", test.weight) // unrelated to the query
+
+				path, err := ShortestPath(g, "A", "A")
+				if err == nil {
+					t.Fatalf("ShortestPath(A, A) = %#v, nil error; want invalid-weight error", path)
+				}
+				if path != nil {
+					t.Fatalf("ShortestPath(A, A) path = %#v, want nil on invalid graph", path)
+				}
+			})
+		}
+	}
+}
+
+func TestShortestPathRejectsInvalidWeightPropertyUpdates(t *testing.T) {
+	for _, repr := range representations() {
+		for _, weight := range []float64{-2, math.NaN(), math.Inf(1)} {
+			g := New(repr)
+			g.AddEdge("A", "B", 1)
+			if err := g.SetEdgeProperty("A", "B", "weight", weight); err != nil {
+				t.Fatalf("SetEdgeProperty(%v) failed for repr=%s: %v", weight, repr, err)
+			}
+			if _, err := ShortestPath(g, "A", "B"); err == nil {
+				t.Fatalf("ShortestPath accepted weight %v for repr=%s", weight, repr)
+			}
+		}
+	}
+}
+
+func TestShortestPathWeightValidationPreservesMutationAndMSTSemantics(t *testing.T) {
+	for _, repr := range representations() {
+		g := New(repr)
+		g.AddEdge("A", "B", -2)
+		g.AddEdge("B", "C", 1)
+
+		weight, err := g.EdgeWeight("A", "B")
+		if err != nil || weight != -2 {
+			t.Fatalf("EdgeWeight(A, B) = %v, %v; want retained -2 for repr=%s", weight, err, repr)
+		}
+		if !g.HasEdge("A", "B") {
+			t.Fatalf("AddEdge should retain a finite negative edge for repr=%s", repr)
+		}
+		if _, err := ShortestPath(g, "A", "C"); err == nil {
+			t.Fatalf("ShortestPath accepted finite negative edge for repr=%s", repr)
+		}
+
+		mst, err := MinimumSpanningTree(g)
+		if err != nil {
+			t.Fatalf("MinimumSpanningTree rejected finite negative edge for repr=%s: %v", repr, err)
+		}
+		if len(mst) != 2 || mst[0].Weight != -2 {
+			t.Fatalf("MinimumSpanningTree = %#v; want both edges including weight -2 for repr=%s", mst, repr)
+		}
+	}
+}
+
+func TestShortestPathSupportsFiniteDistancesAboveFormerSentinel(t *testing.T) {
+	for _, repr := range representations() {
+		g := New(repr)
+		g.AddEdge("A", "B", 1.2e308)
+
+		path, err := ShortestPath(g, "A", "B")
+		if err != nil {
+			t.Fatalf("ShortestPath with a large finite distance failed for repr=%s: %v", repr, err)
+		}
+		if !reflect.DeepEqual(path, []string{"A", "B"}) {
+			t.Fatalf("ShortestPath with a large finite distance = %#v, want [A B] for repr=%s", path, repr)
 		}
 	}
 }
