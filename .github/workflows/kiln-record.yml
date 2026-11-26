@@ -1,0 +1,538 @@
+name: Kiln record
+
+# The RECORDING half of Kiln's "shadow plan" (KILN04 section 7.1 and 16, stage 4
+# PR 3b).  On every push to the default branch this workflow records the build
+# of a sample-free set of shards with the traced recorder, joins the shards in
+# one merge job (`kiln record-merge`) and keeps the resulting LEDGER in the
+# GitHub Actions cache.  A later workflow (the "shadow lookup", a separate PR)
+# will read that ledger on pull requests and REPORT which steps would have been
+# skipped.  Nothing here, and nothing in that later PR, reuses a result: no job
+# outcome changes.  The ledger is a record of what was observed, nothing more.
+#
+# STATUS: DISARMED.  Both jobs carry a literal `false &&` at the front of their
+# `if`, so a push or a dispatch runs nothing.  The reason is the language
+# selector.  This workflow is meant to record Go packages only (a fresh runner
+# has Go and nothing else, and Go is a few hundred of the repository's ~5900
+# packages), but `kiln record prepare` has no such selector: its plan is "every
+# package, whatever the diff" (internal/record/prepare.go PlanArgs, `-language
+# all`), `record-merge` demands one raw record per package of every shard, and
+# the build tool's `-language` flag does not narrow an emitted plan in force
+# mode.  Armed as it stands, every shard would record Go and fail the rest, and
+# the merge would be void on every push.  The selector is its own PR (see the
+# KILN04 section "The record workflow" for what it must touch); that PR passes
+# the selector at the three places marked SELECTOR below and removes the
+# `false &&` clauses.  Everything else in this file is the final shape.
+#
+# WHAT IS STORED, AND WHERE (a decision of the project owner, KILN04):
+#
+#   The ledger -- the pass records (internal/ledger/record.go) and the names-only
+#   manifests (internal/ledger/manifest.go), the formats that already exist and
+#   nothing else.  No file content, no output, no log, no command line, no
+#   environment value.  It lives in the Actions cache, under the keys below.
+#
+#   The shard files the merge job needs (binding.json, host-facts.json,
+#   inventory.json, records.jsonl) are NOT the ledger.  They can carry runner
+#   host paths in reason strings, so they are uploaded as Actions artifacts with
+#   `retention-days: 1` and nothing from them is copied into the ledger, the job
+#   summary or a log line beyond what `kiln record-merge` itself already prints.
+#
+# TRUST.  The ledger is written ONLY by the merge job, ONLY on a `push` (or a
+# dispatch) whose ref is the default branch, NEVER on pull_request,
+# pull_request_target or a fork's own default branch (the repository is pinned
+# below).  Three independent layers say so:
+#
+#   1. the jobs' `if:` -- the trust expression below.  A dispatch from any other
+#      ref skips the whole workflow, so there is nothing to save from;
+#   2. `kiln record-merge --scope shared` refuses (exit 3) unless the run is a
+#      trusted GitHub run: internal/host/github.go Trusted() (KILN00 10.2) --
+#      GITHUB_ACTIONS, the default branch from the event file, GITHUB_REF equal
+#      to it, and an event of push, schedule or workflow_dispatch.  This is the
+#      existing code, reused, not reimplemented; and `kiln record prepare`
+#      applies the same refusal in every shard;
+#   3. the cache save step repeats the trust expression and also needs the merge
+#      to have reported `written=true`, which is set only when record-merge
+#      exited 0 AND the ledger holds more entries than before.
+#
+# THE TRUST EXPRESSION (repeated verbatim in every `if:` that needs it):
+#
+#   github.repository == 'adhithyan15/coding-adventures'
+#   && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+#   && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+#
+# VOID RUNS SAVE NOTHING.  A shard that does not pass the census hard criteria
+# (the exec-head criteria of code/programs/go/kiln/ci/census_not_clean.py, plus
+# a non-zero prepare/collect/census status) uploads no artifact and fails its
+# job.  The merge job runs anyway, counts the shards that arrived, and:
+#   * fewer than all of them: the run is void, nothing is merged, nothing saved;
+#   * all of them: `kiln record-merge` decides.  Exit 4 is a void verdict (it
+#     writes nothing); exits 1 and 3 are a broken job and a refused write.  Only
+#     exit 0 with new ledger entries leads to a cache save.
+#
+# THE ACTIONS CACHE AS THE LEDGER'S HOME.  Each successful run saves the whole
+# ledger under a NEW key, `kiln-ledger-v1-<run id>-<attempt>` (a cache entry is
+# immutable, so a fixed key could never be updated), and every run starts by
+# restoring the NEWEST entry whose key starts with `kiln-ledger-v1-`
+# (restore-keys).  The merge then APPENDS one segment to the restored ledger
+# (`record.Merge` -> `ledger.Store.Record`).  Entries the cache evicts -- GitHub
+# deletes an entry not used for 7 days and the oldest ones when a repository
+# passes its cache size cap -- are simply gone: the next run restores an older
+# entry, or none, and starts from there.  Losing the ledger only costs future
+# hits; it can never make a wrong one, because a hit needs a pass record whose
+# strong key is recomputed from the current tree.  (It is also why the cache is
+# acceptable for the SHADOW phase only: a cache entry can be rolled back to an
+# older one, which the high-water mark in ledger.MergeWithOptions exists to
+# detect.  record-merge does not apply that mark.  Before any result is REUSED
+# the ledger must move to a rollback-proof store, and that needs the project
+# owner's explicit approval; see KILN04.)
+#
+# BOUNDED GROWTH.  record-merge never prunes, so the ledger would grow with every
+# push.  The merge job therefore starts from an EMPTY ledger when the restored
+# one is over LEDGER_MAX_BYTES (or is not shaped like a ledger at all).  That
+# loses hits, not soundness, and the summary says so in a count.
+#
+# CONCURRENCY.  One recording at a time.  The group below queues a second push
+# behind the first and never cancels a recording; GitHub keeps only the NEWEST
+# pending run of a group, so under load an intermediate push may never be
+# recorded -- acceptable, the ledger is keyed by action content, not by commit.
+# Serial runs are what stop two merges from restoring the same cache and the
+# later save hiding the earlier one's segment.  (A newer run does not "win" by a
+# high-water mark here: because the runs are serialised, each starts from the
+# previous run's saved ledger, and the segment sequence only ever grows.)
+#
+# WORKFLOW RULES kept here (CI enforces some of them): no runner-context value
+# in a job-level env (the step scripts read the RUNNER_TEMP variable instead),
+# run scripts use `set +e` with explicit status handling, and no expression sits
+# inside any `run:` body: values arrive through a step's `env:`.
+
+on:
+  # No paths filter: the shadow comparison wants every main commit recorded, and
+  # a filter that is wrong silently starves the ledger.
+  push:
+    branches:
+      - main
+  # A dispatch is for re-recording main by hand.  On any other ref the trust
+  # expression is false, so the workflow does nothing at all.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kiln-record
+  cancel-in-progress: false
+
+env:
+  # How many shards the build is split into, and the matrix below runs one leg
+  # per index.  The merge job requires exactly this many artifacts.  The two
+  # must agree; the matrix is static, so a change is made in both places.
+  SHARD_COUNT: '4'
+
+jobs:
+  record:
+    name: Kiln record (shard ${{ matrix.shard }})
+    # SELECTOR: the disarming `false &&` is removed by the selector PR.
+    if: ${{ false && github.repository == 'adhithyan15/coding-adventures' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+    runs-on: ubuntu-26.04
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    # setup (<=15) + prepare and reset (<=20) + the build, capped at 90 minutes
+    # below + collect and census (<=25), with margin.
+    timeout-minutes: 180
+    permissions:
+      contents: read
+    steps:
+      # The whole repository, not the sparse checkout other jobs use: prepare
+      # verifies the tracked tree against GITHUB_SHA.  No token stays behind.
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.26.1'
+          cache: false
+
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      # BEFORE the job start is stamped, exactly as in kiln-census.yml: anything
+      # that modified /usr after the stamp would read as host-read:setup-modified.
+      - name: Install strace
+        timeout-minutes: 10  # a mirror can stall; fail fast, not at 6h (#12163)
+        run: |
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            echo "::warning::strace was not preinstalled; installing it, before the job start is stamped"
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
+
+      # Built from this checkout, then copied OUT of it with the checker scripts:
+      # a BUILD step can write the checkout, so nothing the shard runs afterwards
+      # is taken from there.
+      - name: Build kiln and the build tool
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bin" "$RUNNER_TEMP/gocache" "$RUNNER_TEMP/gomod"
+          export GOCACHE="$RUNNER_TEMP/gocache" GOMODCACHE="$RUNNER_TEMP/gomod" GOTOOLCHAIN=local
+          (cd code/programs/go/kiln && go build -o "$RUNNER_TEMP/bin/kiln" .)
+          (cd code/programs/go/build-tool && go build -o "$RUNNER_TEMP/bin/build-tool" .)
+          install -m 0555 code/programs/go/kiln/ci/census_not_clean.py "$RUNNER_TEMP/bin/census_not_clean.py"
+          ls -l "$RUNNER_TEMP/bin"
+
+      - name: Stamp the job start
+        shell: bash
+        run: echo "JOB_START=$(date +%s)" >> "$GITHUB_ENV"
+
+      # One shard: prepare (exec heads sealed ON), the traced build, collect, the
+      # census and its hard criteria, then the shard artifact.  The record
+      # directory, the traces and the census output stay on the runner; the
+      # artifact is the four files the merge reads.
+      #
+      # The build's output is wrapped in ::stop-commands:: because a step prints
+      # through to the log and GitHub would otherwise act on "::" lines a BUILD
+      # printed (KILN04 4.8).
+      #
+      # `clean` is written to $GITHUB_OUTPUT only when EVERY stage passed.  A
+      # failed BUILD step is not a failed shard (it is data: the merge makes the
+      # run void); a failed prepare, collect or census, a broken exec-head
+      # criterion, or a missing output is.
+      - name: Record the shard
+        id: record
+        shell: bash
+        env:
+          SHARD_INDEX: ${{ matrix.shard }}
+          # The census buffers a trace (up to 256 MiB) whole and parses it twice.
+          CENSUS_GOMEMLIMIT: 8GiB
+          # One shard's traced build is cut off after this long.  A cut-off shard
+          # is incomplete, so it is NOT clean: the merge would otherwise void.
+          SHARD_BUILD_TIMEOUT: 90m
+        run: |
+          set +e -uo pipefail
+          cd "$RUNNER_TEMP"
+          token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
+          echo "::stop-commands::$token"
+          trap 'echo "::$token::"' EXIT
+
+          kiln="$RUNNER_TEMP/bin/kiln"
+          bt="$RUNNER_TEMP/bin/build-tool"
+          not_clean="$RUNNER_TEMP/bin/census_not_clean.py"
+          idx="$SHARD_INDEX"
+          rec="$RUNNER_TEMP/kiln-record-$idx"
+          out="$RUNNER_TEMP/shard-out"
+          census_out="$RUNNER_TEMP/census-out"
+          shard_home="$HOME/.kiln-record-home"
+          rm -rf "$out" "$census_out"
+          mkdir -p "$out" "$census_out"
+
+          # A sealed pre/ is 0444 files in 0555 directories; a plain rm -rf
+          # cannot remove it.
+          rmrec() { chmod -R u+w "$1" 2>/dev/null || true; rm -rf "$1"; }
+          # not_clean_exit MESSAGE: say it, count it, stop with clean=false.  The
+          # message is a fixed string chosen here, never text from a shard.
+          not_clean_exit() {
+            echo "::error::shard $idx is not clean: $1"
+            printf -- '- shard %s: **not clean** (%s)\n\n' "$idx" "$1" >> "$GITHUB_STEP_SUMMARY"
+            rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
+            echo "clean=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+
+          rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
+          mkdir -m 0700 "$shard_home" || not_clean_exit "could not create the fresh HOME"
+
+          # exec heads ON (--exec-head): sealed in the binding and in
+          # pre/exec-wrapper.json, which the build tool's -exec-wrapper carries
+          # to every step.  A fresh HOME and GOWORK=off as in the census:
+          # GOWORK=off stops Go's upward go.work search past the checkout, which
+          # would probe /go.work and /home/go.work (host reads; KILN04 D38).
+          # SELECTOR: the language selector flag goes on this command and on the
+          # collect and census commands below if the selector PR needs it there.
+          HOME="$shard_home" GOWORK=off "$kiln" record prepare \
+            --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
+            --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START" \
+            --exec-head
+          if (( $? != 0 )); then not_clean_exit "prepare failed"; fi
+
+          # The build tool's environment is EXACTLY build_tool_env: a shell's own
+          # PWD, SHLVL and _ would make every step refuse (KILN04 4.8).
+          mapfile -t tool_env < <(python3 -c 'import json,sys; [print(e) for e in json.load(open(sys.argv[1]))["build_tool_env"]]' "$rec/pre/tools.json")
+          wrapper=$(cat "$rec/pre/exec-wrapper.json")
+          # SELECTOR: the build tool's `-language` is "all" here because the plan
+          # is the whole repository; a Go-only plan makes it "go" (or leaves it).
+          timeout --kill-after=60s "$SHARD_BUILD_TIMEOUT" \
+            env -i "${tool_env[@]}" "$bt" \
+              -root "$GITHUB_WORKSPACE" -plan-file "$rec/pre/build-plan.json" \
+              -shard-index "$idx" -jobs 1 -force -language all \
+              -exec-wrapper "$wrapper" -emit-results "$rec/results.json"
+          build_rc=$?
+          echo "build tool exit status for shard $idx: $build_rc (failed BUILD steps are data, not a failed shard)"
+          if (( build_rc == 124 || build_rc == 137 )); then
+            not_clean_exit "the traced build was cut off (timeout or OOM), so the shard is incomplete"
+          fi
+
+          if ! HOME="$shard_home" "$kiln" record collect \
+              --root "$GITHUB_WORKSPACE" --dir "$rec" \
+              --results "$rec/results.json" --out "$out/records.jsonl"; then
+            not_clean_exit "collect failed"
+          fi
+
+          GOMEMLIMIT="$CENSUS_GOMEMLIMIT" "$kiln" record census \
+            --dir "$rec" --records "$out/records.jsonl" \
+            --out "$census_out/census.json" --md "$census_out/census.md"
+          census_rc=$?
+          if (( census_rc != 0 )); then not_clean_exit "the census exited $census_rc"; fi
+          if [[ ! -f "$census_out/census.json" ]]; then not_clean_exit "the census left no summary"; fi
+
+          # The hard criteria.  --strict-exec-head exits 1 only for the exec-head
+          # criteria or an unreadable summary; its lines are fixed text and
+          # counters from closed lists, and go to the log, not the job summary.
+          python3 "$not_clean" "$census_out/census.json" "$idx" --strict-exec-head
+          if (( $? != 0 )); then not_clean_exit "the exec-head hard criteria were not met"; fi
+
+          # The shard artifact: the three sealed pre/ files and collect's records,
+          # each a regular file copied by name.  Nothing else leaves the runner.
+          for f in binding.json host-facts.json inventory.json; do
+            if [[ -L "$rec/pre/$f" || ! -f "$rec/pre/$f" ]]; then not_clean_exit "a sealed shard file is missing"; fi
+            cp "$rec/pre/$f" "$out/$f" || not_clean_exit "could not copy a sealed shard file"
+          done
+          if [[ -L "$out/records.jsonl" || ! -f "$out/records.jsonl" ]]; then not_clean_exit "collect left no records"; fi
+          chmod 0644 "$out"/*.json "$out/records.jsonl"
+
+          printf -- '- shard %s: clean\n\n' "$idx" >> "$GITHUB_STEP_SUMMARY"
+          rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
+          echo "clean=true" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      # ONE DAY.  These files can carry runner host paths in reason strings; they
+      # exist only so the merge job of this same run can read them.
+      - name: Upload the shard (one day)
+        if: steps.record.outputs.clean == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kiln-record-shard-${{ matrix.shard }}
+          path: ${{ runner.temp }}/shard-out
+          if-no-files-found: error
+          retention-days: 1
+
+      # A shard that is not clean fails its job, so the run is red and the gap is
+      # visible; the merge job still runs and decides that the run is void.
+      - name: Fail when the shard is not clean
+        if: always() && steps.record.outputs.clean != 'true'
+        run: |
+          echo "::error::this shard contributed nothing"
+          exit 1
+
+  merge:
+    name: Kiln record merge
+    needs: record
+    # SELECTOR: the disarming `false &&` is removed by the selector PR.  It is
+    # not needed for safety (a skipped `record` skips this job too) and is here
+    # so that arming means removing the same text in both places.
+    #
+    # !cancelled() and not "skipped": the merge must run when a shard failed, to
+    # report that the run is void, but never when its shards were never started.
+    if: ${{ false && !cancelled() && needs.record.result != 'skipped' && github.repository == 'adhithyan15/coding-adventures' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    # contents: read for the checkout.  The Actions cache needs no token
+    # permission: restore and save use the runner's cache credentials, which are
+    # scoped to this run's ref.  `actions: write` is only for deleting caches
+    # through the API, which this workflow does not do.
+    permissions:
+      contents: read
+    env:
+      # Over this the restored ledger is dropped and the merge starts empty (see
+      # BOUNDED GROWTH).  The ledger reader's own cap is 256 MiB per directory.
+      LEDGER_MAX_BYTES: '67108864'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.26.1'
+          cache: false
+
+      - name: Build kiln and the build tool
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bin" "$RUNNER_TEMP/gocache" "$RUNNER_TEMP/gomod"
+          export GOCACHE="$RUNNER_TEMP/gocache" GOMODCACHE="$RUNNER_TEMP/gomod" GOTOOLCHAIN=local
+          (cd code/programs/go/kiln && go build -o "$RUNNER_TEMP/bin/kiln" .)
+          (cd code/programs/go/build-tool && go build -o "$RUNNER_TEMP/bin/build-tool" .)
+          install -m 0555 code/programs/go/kiln/ci/record_ledger_stats.py "$RUNNER_TEMP/bin/record_ledger_stats.py"
+
+      # Only the shards that were clean uploaded anything.  A step that finds no
+      # artifact is not an error here: the next step counts what arrived.
+      - name: Download the shards
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: kiln-record-shard-*
+          path: ${{ runner.temp }}/shards
+
+      # Restore the newest ledger.  `key` is the key THIS run would save under
+      # and can never exist yet, so the restore always goes through restore-keys
+      # and picks the most recently created entry that starts with the prefix.
+      # A miss is normal (first run, or eviction) and leaves an empty ledger.
+      - name: Restore the ledger
+        id: restore
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/kiln-ledger
+          key: kiln-ledger-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            kiln-ledger-v1-
+
+      # Everything below prints COUNTS.  Host paths and reason text never reach
+      # the summary: the only free-form output is `kiln record-merge`'s own
+      # report, which goes to the log (inside ::stop-commands::), as it already
+      # did when it was written.
+      - name: Merge the shards into the ledger
+        id: merge
+        shell: bash
+        env:
+          # The three exports are regenerated here from this checkout, with the
+          # same arguments `kiln record prepare` uses (internal/record/prepare.go
+          # GraphArgs and PlanArgs); merge checks their hashes against every
+          # shard's binding, so a difference voids the run, never corrupts it.
+          # SELECTOR: the plan arguments gain the selector.
+          WEIGHTS: code/specs/data/ci-package-durations.json
+        run: |
+          set +e -uo pipefail
+          token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
+          echo "::stop-commands::$token"
+          trap 'echo "::$token::"' EXIT
+
+          kiln="$RUNNER_TEMP/bin/kiln"
+          bt="$RUNNER_TEMP/bin/build-tool"
+          stats="$RUNNER_TEMP/bin/record_ledger_stats.py"
+          ledger="$RUNNER_TEMP/kiln-ledger"
+          shards="$RUNNER_TEMP/shards"
+          exports="$RUNNER_TEMP/exports"
+          expected="$SHARD_COUNT"
+
+          summary() { printf -- '%s\n' "$1" >> "$GITHUB_STEP_SUMMARY"; }
+          finish() { # finish WRITTEN RESULT: record the outcome for the save step
+            echo "written=$1" >> "$GITHUB_OUTPUT"
+            summary "- result: **$2**"
+            exit 0
+          }
+
+          summary "### Kiln record: merge"
+          summary ""
+          summary "- shards expected: $expected"
+
+          # 1. The shards that arrived.  Directory names are `kiln-record-shard-N`
+          # with N a plain index below the expected count; each must be a real
+          # directory.  A name outside that shape is ignored, not trusted, and the
+          # count then falls short, which makes the run void.
+          args=()
+          have=0
+          for (( i = 0; i < expected; i++ )); do
+            d="$shards/kiln-record-shard-$i"
+            if [[ -d "$d" && ! -L "$d" ]]; then
+              args+=(--shard "$i=$d")
+              have=$((have + 1))
+            fi
+          done
+          summary "- shards recorded: $have"
+          if (( have != expected )); then
+            summary "- shards missing: $((expected - have))"
+            finish false "void (a shard contributed nothing; nothing merged, nothing saved)"
+          fi
+
+          # 2. The restored ledger: kept only if it is shaped like a ledger and
+          # small enough.  Counts only.
+          before=0
+          dropped=no
+          if [[ -e "$ledger" ]]; then
+            line=$(python3 "$stats" "$ledger")
+            rc=$?
+            bytes=${line##*bytes=}
+            if (( rc != 0 )) || [[ ! "$bytes" =~ ^[0-9]+$ ]] || (( bytes > LEDGER_MAX_BYTES )); then
+              dropped=yes
+              rm -rf "$ledger"
+            else
+              recs=${line#records=}
+              before=${recs%% *}
+            fi
+          fi
+          summary "- restored ledger dropped (over the size cap or malformed): $dropped"
+          summary "- ledger entries before: $before"
+
+          # 3. The exports, from this checkout, as prepare makes them.
+          mkdir -p "$exports"
+          env -i HOME="$RUNNER_TEMP" PATH=/usr/bin:/bin GOWORK=off "$bt" \
+            -root "$GITHUB_WORKSPACE" -emit-kiln-graph "$exports/graph.json" -emit-kiln-steps "$exports/steps.json"
+          g_rc=$?
+          env -i HOME="$RUNNER_TEMP" PATH=/usr/bin:/bin GOWORK=off "$bt" \
+            -root "$GITHUB_WORKSPACE" -force -language all -shard-count "$SHARD_COUNT" \
+            -shard-weights "$WEIGHTS" -emit-plan "$exports/build-plan.json"
+          p_rc=$?
+          if (( g_rc != 0 || p_rc != 0 )); then
+            finish false "failed (the build tool could not write its exports)"
+          fi
+
+          # 4. The merge.  record-merge itself refuses an untrusted run (exit 3)
+          # before any work, and writes nothing for a void run (exit 4).
+          "$kiln" record-merge \
+            --root "$GITHUB_WORKSPACE" \
+            --graph "$exports/graph.json" --steps "$exports/steps.json" --plan "$exports/build-plan.json" \
+            --shard-count "$SHARD_COUNT" --ledger "$ledger" --scope shared \
+            "${args[@]}"
+          m_rc=$?
+
+          after=$before
+          if [[ -e "$ledger" ]]; then
+            line=$(python3 "$stats" "$ledger")
+            if (( $? == 0 )); then
+              recs=${line#records=}
+              after=${recs%% *}
+            fi
+          fi
+          summary "- ledger entries after: $after"
+          summary "- ledger entries written: $((after - before))"
+
+          case "$m_rc" in
+            0)
+              # Emitted.  Saved only if the ledger actually gained entries: an
+              # emit that wrote nothing has nothing to preserve.
+              if (( after > before )); then
+                finish true "written"
+              fi
+              finish false "emitted nothing new (nothing saved)"
+              ;;
+            4) finish false "void (record-merge wrote nothing; nothing saved)" ;;
+            3) finish false "refused (this run may not write the ledger; nothing saved)" ;;
+            *) finish false "failed (record-merge exit $m_rc; nothing saved)" ;;
+          esac
+
+      # SAVE: the one place the ledger is stored.  Reached only when the merge
+      # reported `written=true` AND the trust expression holds again, so this
+      # step is skipped on a void run, a refused run, a failed run, a dispatch on
+      # a branch and anything that is not the default branch of this repository.
+      - name: Save the ledger
+        if: ${{ steps.merge.outputs.written == 'true' && github.repository == 'adhithyan15/coding-adventures' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/kiln-ledger
+          key: kiln-ledger-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
+      # A merge that failed (exit 1) is a broken job, not a void run, and is red.
+      - name: Fail when the merge itself broke
+        if: always() && steps.merge.outputs.written == ''
+        run: |
+          echo "::error::the merge step did not report a result"
+          exit 1
