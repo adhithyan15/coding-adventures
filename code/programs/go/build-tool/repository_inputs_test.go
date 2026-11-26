@@ -728,13 +728,14 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 		{Name: "lua/test_bootstrap", Language: "lua"},
 		{Name: "rust/ct-compare", Language: "rust"},
 		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "swift/test-bootstrap", Language: "swift"},
 	}
 	corpus := []string{"code/specs/fixtures/fuzz-v1/cases.json"}
 	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1149,13 +1150,14 @@ func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 		{Name: "lua/test_bootstrap", Language: "lua"},
 		{Name: "rust/ct-compare", Language: "rust"},
 		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "swift/test-bootstrap", Language: "swift"},
 	}
 	corpus := []string{"code/specs/fixtures/fuzz-v1/cases.json"}
 	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1204,13 +1206,14 @@ func TestGoFuzzReferenceVectorsSelectTheJavaEngine(t *testing.T) {
 		{Name: "lua/test_bootstrap", Language: "lua"},
 		{Name: "rust/ct-compare", Language: "rust"},
 		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "swift/test-bootstrap", Language: "swift"},
 	}
 	vectors := []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	got, err := repositoryInputConsumersForChange(vectors, packages, "all")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "java/test-bootstrap": true, "lua/test_bootstrap": true, "ruby/test_bootstrap": true}; !reflect.DeepEqual(got, want) {
+	if want := map[string]bool{"c/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "java/test-bootstrap": true, "lua/test_bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
 	if _, err := repositoryInputConsumersForChange(vectors, packages[:2], "java"); err == nil {
@@ -2084,6 +2087,48 @@ func TestFuzzV1CorpusAndGoVectorsSelectTheCEngine(t *testing.T) {
 		"code/packages/c/test-bootstrap/tests/test_fuzz_corpus.c",
 		"code/packages/c/test-bootstrap/tests/test_fuzz_vectors.c",
 		"code/specs/fixtures/fuzz-v10/cases.json",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select a corpus row: %v %v", other, got, err)
+		}
+	}
+}
+
+func TestFuzzV1CorpusAndGoVectorsSelectTheSwiftEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "swift/test-bootstrap", Language: "swift"},
+		{Name: "swift/ct-compare", Language: "swift"},
+	}
+	// Both the corpus (JSON and its generated TFV) and Go's oracle table are Swift inputs.
+	for _, input := range []string{
+		"code/specs/fixtures/fuzz-v1/cases.json",
+		"code/specs/fixtures/fuzz-v1/cases.tfv",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "swift")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"swift/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: got %v, want %v", input, got, want)
+		}
+		// The Swift engine package missing from discovery fails closed.
+		if _, err := repositoryInputConsumersForChange([]string{input}, append(packages[:1:1], packages[2]), "swift"); err == nil {
+			t.Fatalf("%s with the Swift engine package missing must fail closed", input)
+		}
+	}
+	// The pbt-v1 corpus still selects it through its own row, and the corpora stay distinct.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.json"}, packages, "swift"); err != nil || !got["swift/test-bootstrap"] {
+		t.Fatalf("pbt-v1 must still select the Swift engine: %v %v", got, err)
+	}
+	// Look-alikes and the engine's own files are not rows.
+	for _, other := range []string{
+		"code/specs/fixtures/fuzz-v10/cases.json",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go.bak",
+		"code/packages/go/test-bootstrap/fuzz/testdata/gen_reference_vectors.py",
+		"code/packages/swift/test-bootstrap/Tests/TestBootstrapTests/FuzzCorpusConformanceTests.swift",
+		"code/packages/swift/test-bootstrap/Sources/TestBootstrap/Fuzz/FuzzCorpus.swift",
 	} {
 		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
 			t.Fatalf("%s must not select a corpus row: %v %v", other, got, err)
