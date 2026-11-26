@@ -242,9 +242,9 @@ def test_a_budget_refusal_is_recorded_per_suite():
 def test_census_counts_levels():
     c = census(lower_document(parse_source(adopter_bytes("arithmetic"))))
     assert (
-        c["suites"] == 63
-        and c["suites_by_level"] == {"ir.core": 63}  # S11c-1: was {"ir.core": 8, "ir.data": 55} (S11a)
-        and c["suites_lowered"] == 63
+        c["suites"] == 64  # was 63 before VER04r D76 split the 9-binder claim in two
+        and c["suites_by_level"] == {"ir.core": 64}  # S11c-1: was {"ir.core": 8, "ir.data": 55} (S11a)
+        and c["suites_lowered"] == 64
         and c["models_not_ir_core"] == 0  # was 19 (S11a)
         and c["models_refused_at_lowering"] == 0
     )
@@ -265,3 +265,15 @@ def test_module_entry_point(monkeypatch, capsys):
     with pytest.raises(SystemExit) as exc:
         runpy.run_module("coding_adventures_warrant_oracle", run_name="__main__")
     assert exc.value.code == 0 and "ct_compare" in capsys.readouterr().out
+
+
+def test_emit_reports_a_nine_binder_claim_as_refused_limit():
+    # CV2-F17 O3: VER04r 5.3 / 14 / R75, the cap holds when deriving, not only in the kit reader.
+    names = ", ".join(f"b{i}: Bool" for i in range(9))
+    src = (
+        "warrant many v1\n  op f(a: Bool) -> Bool\n  model keep(a: Bool) -> Bool = a\n"
+        f"  claim wide:\n    forall {names}. f(b0) == keep(b0)\n"
+    ).encode()
+    tree = emit(src)
+    assert tree["summary"]["refused"] == 1
+    assert tree["suites"]["wide"]["status"] == "refused" and tree["suites"]["wide"]["code"] == "limit"

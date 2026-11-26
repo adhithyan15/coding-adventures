@@ -11,6 +11,10 @@ cargo clippy -p coding_adventures_warrant_corpus_gen --all-targets -- -D warning
 # CV2-S10c-2: tests/fixed_eval_parity.rs reproduces the oracle's fixed-eval-v1 dumps (lowering, evaluation, faults under the
 # shipped and the open gate, values, domains) byte for byte, reading them from python/warrant-oracle/tests/fixtures/fixed-eval-v1/
 # (an edit there selects this package: repository_inputs.go).
+# CV2-S11c-2: tests/data_eval_parity.rs reproduces the oracle's data-eval-v1 dumps (lowering, evaluation, faults under the
+# gate before ir.data and with it, values, domains, refusals with the typing rows) byte for byte, reading them from
+# python/warrant-oracle/tests/fixtures/data-eval-v1/ (an edit there selects this package: repository_inputs.go,
+# warrantDataEvalFixture), and runs the oracle's verify-v2 on a generator-written corpus when python3 is available.
 # CV2-S10-1: tests/omit_example.rs regenerates the oracle's omit-example-v2 fixture (omit.warrant +
 # corpus.profile -> corpus/) byte for byte; an edit to that directory selects this package
 # (repository_inputs.go). A generator version bump regenerates it too (ct-compare README checklist).

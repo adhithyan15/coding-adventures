@@ -1,1 +1,1 @@
-cargo test -p image-codec-gif -- --nocapture
+cargo test --locked -p image-codec-gif -- --nocapture

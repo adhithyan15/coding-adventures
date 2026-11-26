@@ -1,1 +1,1 @@
-cargo test -p math-layout -- --nocapture
+cargo test --locked -p math-layout -- --nocapture

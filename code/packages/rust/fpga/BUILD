@@ -1,1 +1,1 @@
-cargo test -p fpga -- --nocapture
+cargo test --locked -p fpga -- --nocapture

@@ -417,7 +417,9 @@ def _checked_mul(a: int, b: int) -> int:
 
 def descriptor_for(spec: Spec, ty: A.Ty, depth: int = 0) -> Desc:
     """The (undemoted) descriptor of a binder type (VER04h section 3, VER04j 2.6/4.7)."""
-    if depth > MAX_DESC_DEPTH:
+    # VER04r 14: a path has at most 16 *nodes*, a leaf alone counting as one; ``depth`` is the
+    # number of ancestors, so this node is the ``depth + 1``-th on its path (as ``descriptor_size``).
+    if depth + 1 > MAX_DESC_DEPTH:
         raise OracleError("limit", "descriptor tree deeper than 16 levels")
     head = ty.head
     if head == "Bool":
@@ -573,8 +575,13 @@ def descriptor_size(d: object, depth: int = 1) -> int:
     elif kind == "tuple":
         need({"of"})
         parts = d["of"]
+        # VER04r 5.1 and 16.20 R103 (b), CV2-F17: 1 to 32 entries (the record bound, 2.2 rule 3).  The
+        # exact component or field count of the binder type is the caller's, where the type is known.
+        # (The wording for an empty or non-list ``of`` is the committed one: data_eval_v1.oracle-domains.json.)
         if not isinstance(parts, list) or not parts:
             raise OracleError("generation", "a tuple descriptor has components")
+        if len(parts) > 32:
+            raise OracleError("generation", "a tuple descriptor has at most 32 components")
         size = 1
         for part in parts:
             size = _checked_size(size * descriptor_size(part, depth + 1))
@@ -601,12 +608,26 @@ def descriptor_size(d: object, depth: int = 1) -> int:
         size = _checked_size(1 + d16 + d16**2 + d4**3)
     elif kind == "variant":
         need({"ctors"})
+        # VER04r 5.1 and 16.20 R103 (a), CV2-F17: 2 to 64 constructors, each ``[name, [desc..]]`` with a
+        # name of the name grammar (no duplicates) and 0 to 8 fields.  Equality with the declared
+        # constructors is the caller's, where the ``types`` table is present.
+        # (The wording for an empty or non-list ``ctors`` is the committed one, as for a tuple.)
         if not isinstance(d["ctors"], list) or not d["ctors"]:
             raise OracleError("generation", "a variant descriptor has constructors")
+        if not 2 <= len(d["ctors"]) <= 64:
+            raise OracleError("generation", "a variant descriptor lists 2 to 64 constructors")
         size = 0
+        seen: set[str] = set()
         for ctor in d["ctors"]:
             if not (isinstance(ctor, list) and len(ctor) == 2 and isinstance(ctor[1], list)):
                 raise OracleError("generation", "a malformed variant constructor")
+            if not isinstance(ctor[0], str) or not _CASE_NAME.fullmatch(ctor[0]):
+                raise OracleError("generation", "a constructor name is not a name of the name grammar")
+            if ctor[0] in seen:
+                raise OracleError("generation", "a variant descriptor repeats a constructor")
+            seen.add(ctor[0])
+            if len(ctor[1]) > 8:
+                raise OracleError("generation", "a constructor has 0 to 8 field descriptors")
             fields = 1
             for field in ctor[1]:
                 fields = _checked_size(fields * descriptor_size(field, depth + 1))
@@ -700,28 +721,50 @@ def demote(binders: list[Desc], budget: int) -> list[str]:
 
 
 def _refresh(binders: list[Desc]) -> None:
-    """Drop cached sizes after a demotion changed a leaf."""
-    stack = list(binders)
-    while stack:
-        d = stack.pop()
+    """Recompute every cached size after a demotion changed a leaf.
+
+    Strictly bottom-up (post-order): a variant's per-constructor sizes and a list's ``d16``/``d4``
+    are cached *from their children's sizes* (and every ``label`` from the children's labels: a demoted
+    ``fx_edge`` leaf is ``bounded-set``, so each ancestor must stop saying ``full``), so a child tuple must drop its own cache before the
+    parent reads it.  Recomputing a parent first would read the child's stale size (CV2-F17 / O1).
+    """
+
+    def walk(d: Desc) -> None:
         if isinstance(d, TupleDesc):
+            for p in d.parts:
+                walk(p)
             d._size = None
-            stack.extend(d.parts)
+            d.label = _weakest(p.label for p in d.parts)
         elif isinstance(d, VariantDesc):
+            for _, fields in d.ctors:
+                for f in fields:
+                    walk(f)
             d._sizes = []
             for _, fields in d.ctors:
                 total = 1
                 for f in fields:
                     total *= f.size()
                 d._sizes.append(total)
-                stack.extend(fields)
-        elif isinstance(d, (OptionDesc, ListDesc)):
-            if isinstance(d, ListDesc):
-                d.d16 = min(16, d.inner.size())
-                d.d4 = min(4, d.inner.size())
-            stack.append(d.inner)
+            # the constructor's rule: the weakest field label, or ``full`` with no fields at all
+            d.label = (
+                _weakest(f.label for _, fs in d.ctors for f in fs)
+                if any(fs for _, fs in d.ctors)
+                else "full"
+            )
+        elif isinstance(d, ListDesc):
+            walk(d.inner)
+            d.d16 = min(16, d.inner.size())
+            d.d4 = min(4, d.inner.size())
+            d.label = "bounded-set" if d.inner.label != "sample" else "sample"
+        elif isinstance(d, OptionDesc):
+            walk(d.inner)
+            d.label = _weakest([d.inner.label])
         elif isinstance(d, ResultDesc):
-            stack.append(d.ok)
+            walk(d.ok)
+            d.label = d.ok.label
+
+    for b in binders:
+        walk(b)
 
 
 def check_budget(binders: list[Desc], budget: int) -> int:

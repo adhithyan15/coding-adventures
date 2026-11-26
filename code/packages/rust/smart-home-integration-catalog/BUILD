@@ -1,1 +1,1 @@
-cargo test -p smart-home-integration-catalog -- --nocapture
+cargo test --locked -p smart-home-integration-catalog -- --nocapture

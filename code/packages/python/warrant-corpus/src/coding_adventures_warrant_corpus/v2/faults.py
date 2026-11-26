@@ -40,10 +40,10 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from .errors import Refusal
-from .ir import IMPLEMENTED_LEVELS, Compiled, Program, evaluate
+from .ir import IMPLEMENTED_LEVELS, Compiled, Program, check_requires, evaluate
 from .semantics import STANDARD, Semantics
 from .values import decode_value, value_to_json
-from .wtypes import Ty, unify
+from .wtypes import Ty, check_types_table, unify
 
 KINDS = ("pre", "post", "replace")
 
@@ -121,6 +121,8 @@ def _check_fault_shape(fault: object) -> dict:
     requires = fault["requires"]
     if type(requires) is not list or not all(type(level) is str for level in requires):
         raise _ill_formed("requires is a list of level names")
+    # An undefined level name is a corpus error, never `level-missing` (4.2 rule 7).
+    check_requires(requires, "corpus", "a fault's requires")
     return fault
 
 
@@ -170,7 +172,9 @@ def compile_fault(
 ) -> CompiledFault:
     """Check a fault row against its op's section 6 row and compile its expressions.
 
-    Refusals (the kit's ``v2-fault`` codes): ``level-missing`` when the row's
+    Refusals (the kit's ``v2-fault`` codes, in this order: R110 (b)): ``ill-typed``
+    for a ``types`` table that breaks section 2.2 (read whole, before any
+    expression), then ``level-missing`` when the row's
     ``requires`` (or a tag in its expressions) is a level this runner lacks -- a
     lane records such a control ``not-live``, it is not an error of the lane --
     and ``subject-forbidden`` for a ``subject_op`` in a fault expression.  A row
@@ -178,6 +182,10 @@ def compile_fault(
     of what they replace, is ``ill-typed`` (F6).
     """
     row = _check_fault_shape(fault)
+    # Section 2.2, again by every consumer: the table is read whole, and first
+    # after the row's own shape.  Its code in a fault case is `ill-typed`
+    # ([D74], R110 (b)); `corpus` is not in the closed set of `v2-fault`.
+    check_types_table(types, "ill-typed")
     available = frozenset(levels) & IMPLEMENTED_LEVELS
     if not set(row["requires"]) <= available:
         raise Refusal("level-missing", "the fault needs a level this runner lacks")

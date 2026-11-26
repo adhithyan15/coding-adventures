@@ -1,1 +1,1 @@
-cargo test -p coding_adventures_sha384 -- --nocapture
+cargo test --locked -p coding_adventures_sha384 -- --nocapture

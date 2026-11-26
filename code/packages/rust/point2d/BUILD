@@ -1,1 +1,1 @@
-cargo test -p point2d -- --nocapture
+cargo test --locked -p point2d -- --nocapture

@@ -10,5 +10,5 @@
       "justification": "The fuzz engine (VER06q) bounds every target execution with a one-shot Time::HiRes alarm and reads Time::HiRes::time after the run to detect a cancelled or re-armed timer; no calendar time is read and nothing is slept on."
     }
   ],
-  "justification": "No filesystem, network or environment access. The fuzz engine runs each target through Safe::call under a wall-clock alarm and reads the clock to check the alarm was left alone; it starts no process (a forked child of a target that returns into the engine exits through POSIX::_exit). The tests read the committed pbt-v1 and fuzz-v1 fixtures and Go's fuzz reference-vector table."
+  "justification": "No filesystem, network or environment access. The pbt-v1 property engine (VER05p, lib/) is pure and in-memory; the fuzz engine runs each target through Safe::call under a wall-clock alarm and reads the clock to check the alarm was left alone; it starts no process (a forked child of a target that returns into the engine exits through POSIX::_exit). The test suite (t/) is not shipped: it reads the committed pbt-v1 and fuzz-v1 fixtures, Go's fuzz reference-vector table and the package's own lib/ sources from the repo checkout, and bounds each test with an alarm watchdog."
 }

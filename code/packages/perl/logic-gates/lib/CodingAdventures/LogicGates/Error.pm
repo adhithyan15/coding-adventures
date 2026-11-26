@@ -19,6 +19,7 @@ package CodingAdventures::LogicGates::Error;
 #   INVALID_BIT    an argument is not the bit 0 or 1
 #   INVALID_ARITY  wrong number of arguments or inputs
 #   INVALID_WIDTH  a counter width outside 1..65536 or not an integer
+#   INVALID_CONTEXT a list-returning block was called in scalar context
 #   INVALID_SHAPE  a container argument has the wrong type, length or value
 #                  (state hash, bit array, direction, missing state ...)
 #
@@ -40,9 +41,9 @@ use strict;
 use warnings;
 use Scalar::Util ();
 
-our $VERSION = '0.6.0';
+our $VERSION = '0.7.0';
 
-use constant CODES => qw(INVALID_BIT INVALID_ARITY INVALID_WIDTH INVALID_SHAPE);
+use constant CODES => qw(INVALID_BIT INVALID_ARITY INVALID_WIDTH INVALID_SHAPE INVALID_CONTEXT);
 
 use overload
     '""'     => sub { $_[0]{message} },
@@ -83,10 +84,17 @@ use overload
 
 # new(code => ..., param => ..., value_description => ..., message => ...)
 sub new {
-    my ( $class, %a ) = @_;
+    shift;
+    my %a = @_;
+    # Fields must be plain (non-reference) scalars.  A reference or overloaded
+    # object would be stringified, running caller code; reject with a fixed
+    # message built from constants.
+    for my $f (qw(code param value_description message)) {
+        _fixed_die("field '$f' must be a plain string")
+            if defined $a{$f} && ref $a{$f};
+    }
     my %known = map { $_ => 1 } CODES;
-    die "CodingAdventures::LogicGates::Error: unknown code '"
-        . ( defined $a{code} ? $a{code} : 'undef' ) . "'\n"
+    _fixed_die("unknown code")
         unless defined $a{code} && $known{ $a{code} };
     my $message = defined $a{message} ? $a{message} : '';
     $message .= "\n" unless $message =~ /\n\z/;
@@ -95,7 +103,16 @@ sub new {
         param             => $a{param},
         value_description => $a{value_description},
         message           => $message,
-    }, $class;
+    }, __PACKAGE__;
+}
+
+# Die with a package Error built from constants only (no caller text).
+sub _fixed_die {
+    my ($why) = @_;
+    die bless {
+        code => 'INVALID_SHAPE', param => undef, value_description => undef,
+        message => "CodingAdventures::LogicGates::Error: $why\n",
+    }, __PACKAGE__;
 }
 
 sub code              { $_[0]{code} }
@@ -111,10 +128,17 @@ sub message           { $_[0]{message} }
 # their own hash into this very class can of course forge it; Perl has no
 # private constructors, and that is the same trust boundary as the package.)
 sub is_invalid_bit {
+    return 0 if tied $_[0];    # reading a tied scalar would run caller code
     my ($err) = @_;
     return 0 unless Scalar::Util::blessed($err);
     return 0 unless ref($err) eq __PACKAGE__;
-    return ( defined $err->{code} && $err->{code} eq 'INVALID_BIT' ) ? 1 : 0;
+    return 0 unless Scalar::Util::reftype($err) eq 'HASH';
+    return 0 if tied %{$err};
+    return 0 unless exists $err->{code};
+    return 0 if tied $err->{code};
+    my $code = $err->{code};
+    return 0 if !defined $code || ref $code;
+    return $code eq 'INVALID_BIT' ? 1 : 0;
 }
 
 1;

@@ -1,1 +1,1 @@
-cargo test -p board-vm-host -- --nocapture
+cargo test --locked -p board-vm-host -- --nocapture
