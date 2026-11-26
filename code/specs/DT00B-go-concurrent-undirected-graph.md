@@ -19,6 +19,16 @@ acceptance and error behavior are inherited from the resulting sequential Go
 package. DT00B does not change the shared DT00 contract or add synchronization
 to the sequential API.
 
+The wrapper preserves the sequential package's existing mutation semantics:
+`AddEdge` still maps zero to one and stores negative or nonfinite float weights;
+`SetEdgeProperty("weight", ...)` stores numeric negative or nonfinite values.
+It does not turn shortest-path restrictions into mutation validation. A
+snapshot's shortest-path query delegates to the sequential algorithm and
+returns its finite, non-negative-weight error, including for `start == end`
+and for a disconnected destination when an invalid edge exists elsewhere in
+the graph. Minimum-spanning-tree queries continue to accept finite negative
+weights. A future mutation-checked DT00 API is a separate work item.
+
 ## Contract
 
 Every public operation on the wrapper is linearizable: it has one effective
