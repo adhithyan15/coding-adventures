@@ -18,3 +18,8 @@ mst, _ := graph.MinimumSpanningTree(g)
 
 Graph, node, and edge property bags are copied on read. The canonical edge
 property `weight` is kept in sync with `EdgeWeight` and weighted algorithms.
+
+`ShortestPath` validates every stored edge before searching, including for a
+same-node query. It returns an error if any weight is negative, NaN, or infinite.
+`AddEdge` retains its existing zero-means-default behavior and permits finite
+negative weights for algorithms such as `MinimumSpanningTree`.
