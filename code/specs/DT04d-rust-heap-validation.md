@@ -108,10 +108,10 @@ controls must show that the model detects both wrong removal and admission
 past capacity; identify whether each faulty control is a test adapter rather
 than production code.
 
-Test allocator-failure semantics through code inspection unless a sound local
-injection boundary is added without changing the public contract. Never claim
-the process survived a simulated `GlobalAlloc` failure if the test actually
-aborted or skipped allocation. Measure package coverage only with a real
+Test the reservation-error branch through the private safe capacity-overflow
+seam; this is not a simulated allocator failure. Never claim the process
+survived a simulated `GlobalAlloc` failure if the test actually aborted or
+skipped allocation. Measure package coverage only with a real
 instrumented toolchain, state its metric and scope, and do not claim built-in
 Rust coverage.
 
@@ -130,9 +130,12 @@ registry install.
 Run debug and release tests, package-scoped formatting and Clippy with the
 repository-supported toolchain, plus an installed consumer. Report exact
 commands, tool versions, test/history counts, and package/extraction results.
-Miri evidence is not required by this item: the heap is safe Rust, and the
-repository Miri workflow's selected packages must be rechecked before making
-any Miri claim.
+At the source pin used for this profile, the repository's blocking Miri job
+selects `lang-runtime-core` and `dynval-runtime`, while the separate deep job
+also selects `twig-vm`; none is a dependency of this heap change. The item
+touches no unsafe code and no selected Miri package, so the scoped Miri rule
+does not request a new heap Miri run. Do not claim Miri evidence for this
+profile.
 
 ## Teaching notes
 
