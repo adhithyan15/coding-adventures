@@ -20,3 +20,19 @@ finite representable path distance is not mistaken for unreachable merely
 because it exceeds a finite sentinel. Correct weighted path ordering is scoped
 to cumulative distances representable by `float64`; handling sums that overflow
 that domain remains a follow-up.
+
+## Verification evidence
+
+The Go package's unit tests cover invalid stored weights and API compatibility.
+A deterministic model property exhausts the 3^6 four-node undirected graphs
+whose six possible edges are absent, weight 1, or weight 2. For both graph
+representations and every start/end pair, it compares `ShortestPath` reachability
+and returned path cost with an independent simple-path enumerator. A fixed
+negative control confirms that the oracle rejects a known non-shortest path.
+
+A native Go fuzz target maps bounded byte inputs to graphs of at most four nodes
+with absent, valid, and invalid weights. Its seed corpus is checked in with the
+tests, and the build runs a time-bounded fuzz smoke campaign. These checks are
+reproducible finite evidence, not a proof for arbitrary graph sizes or
+float64 values; the fuzz target also does not claim a VER06 engine campaign or
+per-edge coverage report.
