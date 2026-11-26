@@ -8,6 +8,12 @@ type. The wrapper owns one `*Graph` exclusively and serializes access with one
 `sync.Mutex`; callers never receive that backing pointer or any of its maps,
 slices, rows, or property bags.
 
+The constructor initializes the owner. The zero value of `ConcurrentGraph` is
+not usable. Copying an initialized `ConcurrentGraph` value copies only a handle:
+all copies share the same private state, mutex, and owned graph. A snapshot's
+zero value is likewise not a valid snapshot; snapshots returned by `Snapshot`
+are immutable and may be copied freely.
+
 This work starts only after DS-GRAPH-WEIGHTS-GO (#20141) merges. Its weight
 acceptance and error behavior are inherited from the resulting sequential Go
 package. DT00B does not change the shared DT00 contract or add synchronization
@@ -58,9 +64,11 @@ work. It copies the node collection, adjacency maps or matrix rows, graph,
 node, and edge property maps, and all representation indexes. Copying costs
 O(V+E+P) for an adjacency list and O(V^2+P) for a matrix, where P is the
 number of stored property entries. Snapshot iterators retain their own
-snapshot and cursor; each consumer creates a separate iterator. A cursor is
-single-consumer state and must not be concurrently advanced or copied for
-shared use.
+snapshot and cursor. Each iterator is single-consumer state and must not be
+advanced concurrently through the same handle. Copying an iterator copies its
+cursor position and creates an independent cursor over the same immutable edge
+slice; each copy advances from that position independently. Consumers that
+need a fresh traversal should create a new iterator from the snapshot.
 
 DT00's Go `PropertyBag` uses `any`, but its portable profile permits only
 scalar values: strings, booleans, numeric scalar values, and nil. Snapshot
@@ -76,9 +84,9 @@ map cannot modify wrapper state.
 
 ### Locking discipline
 
-Mutations and single-value or scalar reads use the mutex.
-Methods that return collections either copy them under the read lock or use a
-snapshot; they never return internal storage. Multi-step algorithms and
+Mutations, single-value reads, and collection copies use the mutex. Methods
+that return collections either copy them under the mutex or use a snapshot;
+they never return internal storage. Multi-step algorithms and
 iterators operate only on a snapshot after lock release. The mutex is not
 reentrant, and code under it must not call user code or block on external
 work. The wrapper does not promise fairness or wait-free progress.
