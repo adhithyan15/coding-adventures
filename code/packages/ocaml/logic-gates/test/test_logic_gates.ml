@@ -270,6 +270,204 @@ let test_sequential_state_errors () =
   let inconsistent = { value = [ 1 ]; flip_flops = [ valid_zero ] } in
   expect_error (counter ~state:inconsistent ~width:1 ~clock:0 ())
 
+(* ---- Hardening: resource caps, hostile lists, total functions ---- *)
+
+let cyclic_ones =
+  let rec l = 1 :: l in
+  l
+
+let cyclic_zeros =
+  let rec l = 0 :: l in
+  l
+
+let zero_ff =
+  Sequential.{ master_q = 0; master_q_bar = 1; slave_q = 0; slave_q_bar = 1 }
+
+let cyclic_zeros_state =
+  let rec l = zero_ff :: l in
+  l
+
+let expect_width expected = function
+  | Error (Invalid_width w) -> Alcotest.check Alcotest.int "width" expected w
+  | Error _ -> Alcotest.fail "wrong error constructor"
+  | Ok _ -> Alcotest.fail "expected Invalid_width"
+
+let expect_length_error name = function
+  | Error (Invalid_length { name = n; _ }) ->
+      Alcotest.check Alcotest.string "length name" name n
+  | Error _ -> Alcotest.fail "wrong error constructor"
+  | Ok _ -> Alcotest.fail "expected Invalid_length"
+
+let test_cyclic_lists () =
+  (fun () ->
+    expect_width 65_537 (Basic.and_n cyclic_ones);
+    expect_width 65_537 (Basic.or_n cyclic_ones);
+    expect_width 65_537 (Basic.xor_n cyclic_zeros);
+    expect_width 65_537 (Combinational.mux_n cyclic_ones ~sel:[]);
+    expect_width 65_537 (Combinational.encoder cyclic_ones);
+    expect_width 65_537 (Combinational.priority_encoder cyclic_zeros);
+    expect_width 17 (Combinational.decoder cyclic_zeros);
+    expect_length_error "sel" (Combinational.mux_n [ 0; 1 ] ~sel:cyclic_zeros);
+    expect_length_error "sel"
+      (Combinational.demux 1 ~sel:cyclic_zeros ~n_outputs:4);
+    expect_length_error "inputs"
+      (Combinational.mux8 cyclic_zeros ~sel:[ 0; 0; 0 ]);
+    expect_width 65_537 (Sequential.register ~data:cyclic_zeros ~clock:0 ());
+    expect_width 65_537
+      (Sequential.register ~width:4 ~data:cyclic_zeros ~clock:0 ());
+    expect_length_error "state"
+      (Sequential.register ~state:cyclic_zeros_state ~width:2 ~data:[ 0; 0 ]
+         ~clock:0 ());
+    expect_length_error "state"
+      (Sequential.shift_register ~state:cyclic_zeros_state ~width:2 ~serial_in:0
+         ~clock:0 ());
+    expect_length_error "counter value"
+      (Sequential.counter
+         ~state:{ value = cyclic_zeros; flip_flops = [] }
+         ~width:2 ~clock:0 ());
+    expect_length_error "counter flip-flops"
+      (Sequential.counter
+         ~state:{ value = [ 0; 0 ]; flip_flops = cyclic_zeros_state }
+         ~width:2 ~clock:0 ()))
+    ()
+
+let test_caps () =
+  (* Exactly at the list cap is accepted; one past is rejected. *)
+  let at_cap = List.init 65_536 (fun _ -> 1) in
+  Alcotest.check bit "and_n at cap" 1 (get (Basic.and_n at_cap));
+  expect_width 65_537 (Basic.and_n (1 :: at_cap));
+  Alcotest.check Alcotest.int "demux at cap" 65_536
+    (List.length
+       (get
+          (Combinational.demux 1
+             ~sel:(List.init 16 (fun _ -> 0))
+             ~n_outputs:65_536)));
+  expect_width 131_072
+    (Combinational.demux 1 ~sel:(List.init 17 (fun _ -> 0)) ~n_outputs:131_072);
+  (* Hostile powers of two never reach List.init. *)
+  expect_width (1 lsl 61) (Combinational.demux 1 ~sel:[] ~n_outputs:(1 lsl 61));
+  expect_width 1_073_741_824
+    (Combinational.demux 1 ~sel:[] ~n_outputs:1_073_741_824);
+  Alcotest.check Alcotest.bool "demux zero outputs" true
+    (match Combinational.demux 1 ~sel:[] ~n_outputs:0 with
+    | Error (Invalid_power_of_two _) -> true
+    | _ -> false);
+  Alcotest.check Alcotest.bool "demux min_int" true
+    (match Combinational.demux 1 ~sel:[] ~n_outputs:min_int with
+    | Error (Invalid_power_of_two _) -> true
+    | _ -> false);
+  expect_width max_int
+    (Sequential.shift_register ~width:max_int ~serial_in:0 ~clock:0 ());
+  expect_width 65_537
+    (Sequential.shift_register ~width:65_537 ~serial_in:0 ~clock:0 ());
+  Alcotest.check Alcotest.int "shift_register at cap" 65_536
+    (let outputs, _, _ =
+       get (Sequential.shift_register ~width:65_536 ~serial_in:1 ~clock:0 ())
+     in
+     List.length outputs);
+  expect_width max_int
+    (Sequential.register ~width:max_int ~data:[ 0 ] ~clock:0 ());
+  expect_width min_int
+    (Sequential.register ~width:min_int ~data:[ 0 ] ~clock:0 ());
+  expect_width max_int (Sequential.counter ~width:max_int ~clock:0 ());
+  expect_width 65 (Sequential.counter ~width:65 ~clock:0 ());
+  let _, state = get (Sequential.counter ~width:64 ~clock:0 ()) in
+  Alcotest.check Alcotest.int "counter 64 state" 64 (List.length state.value);
+  expect_width 65_537
+    (Combinational.mux_n (List.init 65_537 (fun _ -> 0)) ~sel:[]);
+  Alcotest.check bit "mux_n at cap" 1
+    (get
+       (Combinational.mux_n
+          (List.init 65_536 (fun i -> if i = 65_535 then 1 else 0))
+          ~sel:(List.init 16 (fun _ -> 1))))
+
+let test_total_paths () =
+  (* Former List.nth / hd / tl / assert false paths. *)
+  Alcotest.check bit "mux_n last" 1
+    (get (Combinational.mux_n [ 0; 0; 0; 1 ] ~sel:[ 1; 1 ]));
+  Alcotest.check bit "mux_n singleton" 1
+    (get (Combinational.mux_n [ 1 ] ~sel:[]));
+  expect_error (Combinational.mux_n [] ~sel:[]);
+  let out, _, _ =
+    get
+      (Sequential.shift_register ~width:1 ~direction:Right ~serial_in:1 ~clock:0
+         ())
+  in
+  Alcotest.check bits "width one right" [ 0 ] out;
+  let out, serial_out, _ =
+    get
+      (Sequential.shift_register ~width:1 ~direction:Left ~serial_in:1 ~clock:0
+         ())
+  in
+  Alcotest.check bits "width one left" [ 0 ] out;
+  Alcotest.check bit "width one left out" 0 serial_out;
+  (* Mismatched register/state shapes return errors, never raise. *)
+  expect_length_error "state"
+    (Sequential.register ~state:[ zero_ff ] ~width:2 ~data:[ 0; 0 ] ~clock:0 ());
+  (* Counter wrap exercises the iterative increment. *)
+  let rec run ?(width = 3) n state =
+    if n = 0 then state
+    else
+      let _, low = get (Sequential.counter ~state ~width ~clock:0 ()) in
+      let _, high = get (Sequential.counter ~state:low ~width ~clock:1 ()) in
+      run ~width (n - 1) high
+  in
+  let _, zero = get (Sequential.counter ~width:3 ~clock:0 ()) in
+  Alcotest.check bits "counter wraps" [ 0; 0; 0 ] (run 8 zero).value;
+  Alcotest.check bits "counter 5" [ 1; 0; 1 ] (run 5 zero).value;
+  let _, zero64 = get (Sequential.counter ~width:64 ~clock:0 ()) in
+  ignore
+    ( run ~width:64 3 zero64 |> fun s ->
+      Alcotest.check bit "64-bit lsb" 1 (List.nth s.value 0) )
+
+let test_shift_register_attribution () =
+  let open Sequential in
+  let bad = { zero_ff with slave_q = 2 } in
+  let check state =
+    match shift_register ~state ~width:2 ~serial_in:0 ~clock:0 () with
+    | Error (Invalid_bit { name; value }) ->
+        Alcotest.check Alcotest.string "attributed to state" "flip-flop state"
+          name;
+        Alcotest.check Alcotest.int "value" 2 value
+    | _ -> Alcotest.fail "expected Invalid_bit on flip-flop state"
+  in
+  check [ zero_ff; bad ];
+  check [ bad; zero_ff ];
+  List.iter
+    (fun direction ->
+      match
+        shift_register ~state:[ bad; zero_ff ] ~width:2 ~direction ~serial_in:0
+          ~clock:0 ()
+      with
+      | Error (Invalid_bit { name = "data"; _ }) ->
+          Alcotest.fail "state blamed as data"
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "expected error")
+    [ Left; Right ]
+
+let test_log2_total_and_wide_ints () =
+  (* Wide ints in non-bit positions. *)
+  List.iter
+    (fun v ->
+      expect_error (Combinational.mux2 v 0 ~sel:0);
+      expect_error (Combinational.mux2 0 0 ~sel:v);
+      expect_error (Combinational.demux v ~sel:[] ~n_outputs:1);
+      expect_error (Combinational.mux_n [ v ] ~sel:[]);
+      expect_error (Combinational.mux_n [ 0; 0 ] ~sel:[ v ]);
+      expect_error (Combinational.decoder [ v ]);
+      expect_error (Combinational.encoder [ v ]);
+      expect_error (Combinational.priority_encoder [ v ]);
+      expect_error (Combinational.tri_state v ~enable:0);
+      expect_error (Combinational.tri_state 0 ~enable:v);
+      expect_error (Basic.and_n [ v ]);
+      expect_error (Basic.or_n [ 1; v ]);
+      expect_error (Basic.xor_n [ v; 0 ]);
+      expect_error (Sequential.d_flip_flop ~data:v ~clock:0 ());
+      expect_error (Sequential.d_flip_flop ~data:0 ~clock:v ());
+      expect_error (Sequential.shift_register ~serial_in:v ~clock:0 ());
+      expect_error (Sequential.counter ~reset:v ~clock:0 ()))
+    [ max_int; min_int; max_int - 1; min_int + 1; -1; 2 ]
+
 let () =
   Alcotest.run "coding-adventures-logic-gates"
     [
@@ -296,5 +494,14 @@ let () =
           Alcotest.test_case "shift register" `Quick test_shift_register;
           Alcotest.test_case "counter" `Quick test_counter;
           Alcotest.test_case "state errors" `Quick test_sequential_state_errors;
+        ] );
+      ( "hardening",
+        [
+          Alcotest.test_case "cyclic lists" `Quick test_cyclic_lists;
+          Alcotest.test_case "caps" `Quick test_caps;
+          Alcotest.test_case "total paths" `Quick test_total_paths;
+          Alcotest.test_case "shift register attribution" `Quick
+            test_shift_register_attribution;
+          Alcotest.test_case "wide ints" `Quick test_log2_total_and_wide_ints;
         ] );
     ]
