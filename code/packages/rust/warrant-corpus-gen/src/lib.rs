@@ -34,6 +34,7 @@
 //! | [`ir`] | S3a | the 26 `ir.core` tags (Appendix A), `ir.fixed` nodes (S10b), the `ir.tuple` shapes (S10t-2), the four `ir.data` tags and ten patterns (S11b) and their JSON form |
 //! | [`patterns`] | S10t-2 | the six `match` patterns, the usefulness check and the corpus errors (`ir`) |
 //! | [`lower`] | S3a | syntax-directed lowering with the annotating typer; level refusals |
+//! | [`corpus_check`] | CV2-F17 | the document check that `Int` is named in no record or variant field, op signature or binder (VER04r 2.1, `W0701`) |
 //! | [`analysis`] | S3a | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
 //! | [`arith`] | S3a | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
 //! | [`cost`] | S3a | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
@@ -110,6 +111,7 @@ pub mod analysis;
 pub mod arith;
 pub mod census;
 pub mod cli;
+pub mod corpus_check;
 pub mod cost;
 pub mod domains;
 pub mod emit;
@@ -160,6 +162,12 @@ pub struct Analysis {
 /// error is attributed to the claim, model, operation or example it concerns.
 pub fn analyse(file: &WarrantFile<'_>, profile: &Profile) -> Result<Analysis, GenError> {
     let lowered = lower::lower_document_omitting(file, &profile.omit_examples)?;
+    cost_lowered(lowered, profile)
+}
+
+/// The costing half of [`analyse`], for a document already lowered: [`generate_gated`] lowers, runs
+/// [`corpus_check::refuse_int_in_corpus`] and only then costs, the order of the oracle's `derive`.
+fn cost_lowered(lowered: Lowered, profile: &Profile) -> Result<Analysis, GenError> {
     let limit = profile.max_ir_cost;
     let model_costs = ModelCosts::compute(&lowered.models, limit)?;
     let mut suite_costs = Vec::with_capacity(lowered.suites.len());
