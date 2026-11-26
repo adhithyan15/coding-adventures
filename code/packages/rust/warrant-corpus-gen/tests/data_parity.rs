@@ -260,8 +260,9 @@ fn leak(s: &str) -> &'static str {
 #[test]
 fn generate_no_longer_refuses_the_data_forms_document_naming_ir_data() {
     // S11b lowered, typed and costed the level and kept `generate` fail-closed; S11c-2 evaluates it.  The
-    // data-forms document is a *lowering* fixture (some of its claims have no enumeration the resolver can make
-    // under the default budget), so it is refused by the resolver, never for the level.
+    // data-forms document is a *lowering* fixture: since CV2-F17 (VER04r 2.1) `generate` refuses it as a document,
+    // before costing or enumerating anything, because its ops take and return `Int` (the oracle's `derive` says
+    // the same; before F17 the refusal was the resolver's, at the first claim it could not enumerate).
     use coding_adventures_warrant_corpus_gen::{generate, GenInput};
     let r = with_file(WARRANT, |f| {
         generate(&GenInput {
@@ -272,10 +273,10 @@ fn generate_no_longer_refuses_the_data_forms_document_naming_ir_data() {
             binding_faults: None,
         })
     });
-    // pinned: the refusal is the resolver's (W0701 at the first claim it cannot enumerate), not a level
+    // pinned: the refusal is the document-level `Int` check (W0701, no `at`), not a level
     let e = r.expect_err("the lowering fixture is not a generation fixture");
-    assert_eq!((e.code, e.level, e.at.as_str()), (code::W0701, None, "c_opt_widen_eq"), "{e}");
-    assert!(e.message.contains("binder domains cannot be resolved"), "{e}");
+    assert_eq!((e.code, e.level, e.at.as_str()), (code::W0701, None, ""), "{e}");
+    assert_eq!(e.message, "`Int` is model-internal and may not be an op signature of a corpus (VER04r 2.1)");
 }
 
 // ---- negative controls ---------------------------------------------------------------------------------
