@@ -149,7 +149,13 @@ more: the independence is that of a second reading of one specification, and the
 
 Levels are decided by what an expression reaches ([D64]): a model or op of a level the lane lacks is
 classified (`Program.not_live_models`, `not_live_ops`), and only the suites that reach it are `level-missing`. `subject_op`
-static widths (`width_params`) and bytes literals typed `Bytes<len>` are implemented. It does **not** yet read a v2 corpus, binding, session or manifest (slice S6b), and `python/ct-compare` still
+static widths (`width_params`) and bytes literals typed `Bytes<len>` are implemented (a report's `expect.type` is the
+static type, so a bytes literal prints `Bytes<2>`, not `Bytes`). Every consumer of a `types` table enforces
+section 2.2's limits (error types of 1 to 64 distinct cases, records of 1 to 32 fields, variants of 2 to 64
+constructors of at most 8 fields, no declared name that is a built-in), with the code of the context reading it
+(`type` for `v2-value`, `ill-typed` for `v2-ir`, `descriptor` for `v2-domain`, `corpus` for `v2-chunk` and a fault);
+an undefined level name in a suite's, fault's or op's `requires` is a corpus error, never `level-missing`; and a
+suite row whose `claim` is not one or two legal names is `corpus` (`chunks.chunk_file_name`, section 5.5). It does **not** yet read a v2 corpus, binding, session or manifest (slice S6b), and `python/ct-compare` still
 runs `warrant-corpus-v1` (slice S6c).
 
 ### Running the v2 conformance kit
