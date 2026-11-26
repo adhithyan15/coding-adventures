@@ -61,7 +61,7 @@ from .corpus_v2 import canonical, chunk_file_name, derive
 from .errors import OracleError
 from .faults import _compile_fault, fault_row
 from .irtree import children, is_node
-from .lower import FIXED, OpSig, lower_document
+from .lower import _DECLARED_RESERVED_V1, FIXED, OpSig, lower_document
 from .parser import parse_source
 from .profile import parse_profile
 from .suites import SuitePlan
@@ -310,9 +310,10 @@ def read_json(data: bytes) -> object:
 # 2. Type text (section 2.1) and JSON values decoded by declared type (section 2.3)
 # ================================================================================================
 
+#: The message of the R117 refusal of an error name used as a value type.
+ERROR_NOT_VALUE = "an error type is not a value type"
 _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 _WIDTH = re.compile(r"0|[1-9][0-9]*")
-_IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 _HEX = re.compile(r"(?:[0-9a-f]{2})*")
 _PRIMITIVE = frozenset({"Bool", "Nat", "Bytes", *FIXED})
 
@@ -401,7 +402,7 @@ def parse_type(text: object, types: dict | None, *, allow_int: bool = False, wid
             row = types[head]
             if isinstance(row, dict) and row.get("kind") == "error":
                 # R117 (VER04r 16.22): an error type is the second argument of a ``Result`` and nothing else.
-                raise Refused("type", "an error type is not a value type")
+                raise Refused("type", ERROR_NOT_VALUE)
             return A.Ty(head)
         raise Refused("type", "not a type of section 2.1, or not in types")
 
@@ -452,6 +453,10 @@ def check_type_table(types: object, code: str) -> None:
         raise Refused(code, "the types table is not an object")
     refs: dict[str, set[str]] = {}
     for name, row in types.items():
+        # section 2.2 rule 4 and R58: a type name has the name grammar and is not a reserved built-in (the primitive
+        # and fixed-width types, ``List``, ``Option``, ``Result``, ``Some``, ``None``, ...).
+        if not _NAME.fullmatch(name) or name in _DECLARED_RESERVED_V1:
+            raise Refused(code, "a type name is outside the name grammar or is a reserved built-in (rule 4, R58)")
         if not isinstance(row, dict):
             raise Refused(code, "a types row is not an object")
         kind = row.get("kind")
@@ -460,7 +465,7 @@ def check_type_table(types: object, code: str) -> None:
             if (
                 not isinstance(cases, list)
                 or not 1 <= len(cases) <= 64
-                or not all(isinstance(c, str) for c in cases)
+                or not all(isinstance(c, str) and _NAME.fullmatch(c) for c in cases)
                 or len(set(cases)) != len(cases)
             ):
                 raise Refused(code, "an error type has 1 to 64 distinct case names (section 2.2 rule 2)")
@@ -472,22 +477,26 @@ def check_type_table(types: object, code: str) -> None:
                 rows = row["fields"]
                 if not isinstance(rows, list) or not 1 <= len(rows) <= 32:
                     raise Refused(code, "a record has 1 to 32 fields (section 2.2 rule 3)")
+                if any(not isinstance(f, list) or len(f) != 2 or not isinstance(f[0], str) for f in rows):
+                    raise TypeError  # each field is a list of exactly a name and a type text
                 names = [f[0] for f in rows]
                 texts = [f[1] for f in rows]
-                if any(len(f) != 2 for f in rows):
-                    raise TypeError
             else:
                 rows = row["ctors"]
                 if not isinstance(rows, list) or not 2 <= len(rows) <= 64:
                     raise Refused(code, "a variant has 2 to 64 constructors (section 2.2 rule 3)")
-                if any(len(c) != 2 or not isinstance(c[1], list) or len(c[1]) > 8 for c in rows):
+                if any(not isinstance(c, list) or len(c) != 2 or not isinstance(c[0], str) for c in rows):
+                    raise TypeError  # each constructor is a list of exactly a name and a field list
+                if any(not isinstance(c[1], list) or len(c[1]) > 8 for c in rows):
                     raise Refused(code, "a constructor has 0 to 8 fields (section 2.2 rule 3)")
                 names = [c[0] for c in rows]
                 texts = [t for c in rows for t in c[1]]
             repeated = len(set(names)) != len(names)  # an unhashable name is a malformed row
         except (KeyError, IndexError, TypeError):
             raise Refused(code, "a types row is malformed") from None
-        if not all(isinstance(n, str) and _IDENT.fullmatch(n) for n in names):
+        if kind == "variant" and any(n in _DECLARED_RESERVED_V1 for n in names):
+            raise Refused(code, "a constructor name is a reserved built-in (R58)")
+        if not all(isinstance(n, str) and _NAME.fullmatch(n) for n in names):
             raise Refused(code, "a field or constructor name is outside [A-Za-z_][A-Za-z0-9_]* (section 2.2 rule 4)")
         if repeated:
             raise Refused(code, "a field or constructor name is repeated (section 2.2 rule 4)")
@@ -978,12 +987,17 @@ def compile_ir_case(case: dict) -> IrCase:
         except Refused as exc:
             # R111 (c): an op row or a model parameter whose type text the reader refuses (``Int`` in an op row, an
             # undeclared name) is ``ill-typed`` in the lanes; ``type`` is not in the closed set of ``v2-ir``.
-            if exc.code != "type":
-                raise
-            raise Refused("ill-typed", exc.why) from exc
+            raise Refused("ill-typed", exc.why) from exc  # ``parse_type`` is the only refuser here: code ``type``
         env, tenv = {}, {}
         for name, tagged in case["env"]:
-            ty = parse_type(tagged["type"], case["types"])
+            try:
+                ty = parse_type(tagged["type"], case["types"])
+            except Refused as exc:
+                # R117 (b), (c): an error type is not a value type, so it is ``ill-typed``; any other refusal of an
+                # ``env`` type (``Int``: R111 (c), an undeclared name) stays ``type``, which is no vector.
+                if exc.why == ERROR_NOT_VALUE:
+                    raise Refused("ill-typed", exc.why) from exc
+                raise
             tenv[name] = ty
             env[name] = decode_value(tagged["value"], ty, case["types"])
         root = prog.compile(case["ir"], tenv, True)
@@ -1515,14 +1529,23 @@ def instantiate_fault(name: str, op_name: str, op_row: dict, types: dict) -> dic
     the fields of its records, so ``field-zero`` and a record or ``Option`` payload of ``missing-error`` have their
     templates here as in a document.
     """
-    errors = {n: tuple(row["cases"]) for n, row in types.items() if row.get("kind") == "error"}
-    data_names = frozenset(n for n, row in types.items() if row.get("kind") in ("record", "variant"))
+    if not isinstance(types, dict):
+        raise Refused("ill-typed", "the types table is not an object")
+    # A malformed row (not an object, an error row without ``cases``) offers a template nothing: it is a *case*
+    # that ``derive_fault`` answers ``ill-typed``, never a crash of this builder.
+    rows = {n: row for n, row in types.items() if isinstance(row, dict)}
+    errors = {
+        n: tuple(row["cases"])
+        for n, row in rows.items()
+        if row.get("kind") == "error" and isinstance(row.get("cases"), list)
+    }
+    data_names = frozenset(n for n, row in rows.items() if row.get("kind") in ("record", "variant"))
     # A table with an undeclared field type is a *case* ([D74], R110: ``derive_fault`` answers ``ill-typed``), so the
     # row is still written: a record that holds such a field has no template fields to offer (the table check, not
     # this builder, is what refuses it).
     records: dict = {}
-    for rname, row in types.items():
-        if isinstance(row, dict) and row.get("kind") == "record":
+    for rname, row in rows.items():
+        if row.get("kind") == "record":
             try:
                 records[rname] = [(f, parse_type(t, types)) for f, t in row["fields"]]
             except (Refused, KeyError, IndexError, TypeError, ValueError):

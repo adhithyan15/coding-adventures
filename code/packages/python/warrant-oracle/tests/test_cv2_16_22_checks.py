@@ -83,6 +83,19 @@ BAD_TABLES = {
     "repeated-case": {"E": {"kind": "error", "cases": ["A", "A"]}},
     "malformed-row": {"R": {"kind": "record"}},
     "unhashable-name": {"R": {"kind": "record", "fields": [[["x"], "U8"]]}},
+    "key-digit": {"1R": rec(("a", "U8"))},
+    "key-empty": {"": rec(("a", "U8"))},
+    "key-dash": {"R-S": rec(("a", "U8"))},
+    "key-error-digit": {"1E": {"kind": "error", "cases": ["A"]}},
+    "case-digit": {"E": {"kind": "error", "cases": ["1A"]}},
+    "case-empty": {"E": {"kind": "error", "cases": [""]}},
+    "case-dash": {"E": {"kind": "error", "cases": ["A-B"]}},
+    "field-string": {"B": rec(("a", "U8")), "R": {"kind": "record", "fields": ["xB"]}},
+    "field-tuple": {"B": rec(("a", "U8")), "R": {"kind": "record", "fields": [["x", "B", "B"]]}},
+    "field-name-int": {"R": {"kind": "record", "fields": [[1, "U8"]]}},
+    "ctor-string": {"V": {"kind": "variant", "ctors": ["XY", "ZW"]}},
+    "ctor-three": {"V": {"kind": "variant", "ctors": [["X", [], 1], ["Y", []]]}},
+    "ctor-reserved": {"V": var(("Some", []), ("Y", []))},
     "bad-field-pair": {"R": {"kind": "record", "fields": [["a", "U8", 1]]}},
     "ctor-fields-not-list": {"V": {"kind": "variant", "ctors": [["X", []], ["Y", "U8"]]}},
 }
@@ -257,3 +270,46 @@ def test_the_cost_bound_comes_before_the_table_in_v2_ir():
     for cost in (1999, 65_537, "x", True):
         assert C.derive_ir(ir_case(["bogus"], types=bad, max_ir_cost=cost)) == {"error": "ir-cost"}
     assert C.derive_ir(ir_case(["bogus"], types=bad, max_ir_cost=2000)) == {"error": "ill-typed"}
+
+
+@pytest.mark.parametrize("reserved", ["Bool", "Int", "Nat", "List", "Option", "Result", "Bytes", "U8", "U64", "I8"])
+@pytest.mark.parametrize("kind", ["record", "error", "variant"])
+def test_a_row_named_like_a_builtin_is_refused(reserved, kind):
+    row = {"record": rec(("a", "Bool")), "error": {"kind": "error", "cases": ["A"]},
+           "variant": var(("X", []), ("Y", []))}[kind]
+    for code in ("ill-typed", "corpus", "type"):
+        refusal({reserved: row}, code)
+
+
+def test_the_bad_keys_cases_and_entries_reach_every_context():
+    """Each new class is refused with the context's own code in v2-value, v2-ir, v2-fault and v2-chunk."""
+    for name in ("key-digit", "key-empty", "key-dash", "key-error-digit", "case-digit", "case-empty", "case-dash",
+                 "field-string", "field-tuple", "field-name-int", "ctor-string", "ctor-three", "ctor-reserved"):
+        table = BAD_TABLES[name]
+        assert C.derive_value({"type": "Bool", "types": table, "input_hex": b"true".hex()}) == {
+            "outcome": "reject", "error": "type"}
+        assert C.derive_ir(ir_case(TRUE, types=table)) == {"error": "ill-typed"}
+        assert C.derive_fault(fault_case(types=table)) == {"error": "ill-typed"}
+        refusal(table, "corpus")  # ``v2-chunk`` (check_corpus_and_row) and a binding corpus call it with ``corpus``
+        with pytest.raises(BV.BindingKitError):
+            BV.read_corpus(binding_corpus(table))
+
+
+def test_an_env_entry_of_an_error_type_is_ill_typed_but_int_stays_type():
+    types = {"Ze": {"kind": "error", "cases": ["A"]}}
+    for text in ("Ze", "Option<Ze>", "Result<Ze,Ze>"):
+        case = ir_case(["var", "x"], types=types, env=[["x", {"type": text, "value": None}]], levels=["ir.core", "ir.data"])
+        assert C.derive_ir(case) == {"error": "ill-typed"}
+    assert C.derive_ir(ir_case(["var", "x"], env=[["x", {"type": "Int", "value": "3"}]])) == {"error": "type"}
+
+
+def test_instantiate_fault_never_crashes_on_a_malformed_table():
+    op = {"params": [["a", "U8"]], "ret": "U8", "requires": ["ir.core"]}
+    for types in ({"X": 5}, {"E": {"kind": "error"}}, {"R": {"kind": "record"}}, {"R": {"kind": "record", "fields": ["xB"]}}):
+        assert C.instantiate_fault("xor-lsb", "f", op, types)["fault"] == "xor-lsb"
+    with pytest.raises(C.Refused):
+        C.instantiate_fault("xor-lsb", "f", op, [])
+
+
+def test_requires_of_a_v2_value_case_with_a_type_the_reader_refuses_is_core():
+    assert C.requires_of("v2-value", {"type": "Nope", "types": {}}, {}) == ["ir.core"]
