@@ -391,10 +391,19 @@ pub struct CounterState {
     pub ff_state: Vec<FlipFlopState>,
 }
 
+/// Widest counter `CounterState::new` accepts (the Rust-lane parity cap; a
+/// counter wider than a machine word is not a use this package serves).
+pub const MAX_COUNTER_WIDTH: usize = 64;
+
 impl CounterState {
-    /// Create a new counter state with the given bit width, initialized to zero.
+    /// Create a new counter state with the given bit width (1 to
+    /// [`MAX_COUNTER_WIDTH`]), initialized to zero.
     pub fn new(width: usize) -> Self {
         assert!(width >= 1, "counter width must be >= 1");
+        assert!(
+            width <= MAX_COUNTER_WIDTH,
+            "counter width must be <= {MAX_COUNTER_WIDTH}, got {width}"
+        );
         Self {
             value: vec![0; width],
             ff_state: (0..width).map(|_| FlipFlopState::default()).collect(),
@@ -418,6 +427,9 @@ impl CounterState {
 /// ```
 pub fn counter(clock: u8, reset: u8, state: &mut CounterState) -> Vec<u8> {
     let width = state.value.len();
+
+    // `reset` is a bit like every other input: 2 or 255 is an error, not "no reset".
+    assert!(reset <= 1, "reset must be 0 or 1, got {reset}");
 
     let next_value = if reset == 1 {
         vec![0; width]

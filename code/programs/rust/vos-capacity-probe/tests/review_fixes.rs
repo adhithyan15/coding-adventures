@@ -2,12 +2,14 @@
 //! each with a negative control: a row, file or path that the fixed code refuses and the code
 //! before the fix accepted.  Tests that start child processes are unix-only.
 
+mod common;
+
 #[cfg(unix)]
 use std::path::Path;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 use vos_capacity_probe::cli::{dispatch, Failure};
-use vos_capacity_probe::cost::{is_cheap, CHEAP, CHEAP_MAX_MS};
+use vos_capacity_probe::cost::{derive_cheap, CHEAP, CHEAP_MAX_MS};
 use vos_capacity_probe::results::{
     compare_timing, full_plan_covered, full_plan_missing, quick_plan_covered, quick_specs,
     validate, within_band, Results, FULL_PLAN_EXEMPT, RSS_SLACK_KB, TIMING_BAND, TIMING_SLACK_MS,
@@ -24,9 +26,15 @@ fn data(name: &str) -> PathBuf {
         .join(name)
 }
 
-fn committed() -> Results {
+fn committed_raw() -> Results {
     Results::from_text(&std::fs::read_to_string(data("data/vos30-capacity-results.json")).unwrap())
         .unwrap()
+}
+
+/// The committed file completed with fixture rows for the plan rows it lacks (VOS-028c3c commit A
+/// registered B3 every2/every4, D5 and B5 before the recording; `common::complete_plan`).
+fn committed() -> Results {
+    common::complete_plan(committed_raw())
 }
 
 fn spec_text() -> String {
@@ -360,34 +368,68 @@ fn the_constants_the_spec_quotes_are_the_ones_in_the_code() {
 // ---- M4: the cost table agrees with the recording it was derived from -------------------------
 
 #[test]
-fn m4_the_cost_table_matches_the_committed_recording() {
-    use std::collections::BTreeMap;
-    let mut worst: BTreeMap<(String, String, String), f64> = BTreeMap::new();
-    for r in &committed().rows {
-        if r.tier != "full" || r.experiment.starts_with('E') {
-            continue;
-        }
-        let c = if matches!(r.result.as_str(), "killed" | "oom") {
-            f64::INFINITY
-        } else {
-            r.solve_ms + r.check_ms.unwrap_or(0.0)
-        };
-        let e = worst
-            .entry((r.experiment.clone(), r.mode.clone(), r.knob.key()))
-            .or_insert(0.0);
-        *e = e.max(c);
-    }
-    for ((e, m, k), c) in &worst {
-        assert_eq!(
-            is_cheap(e, m, k),
-            *c <= CHEAP_MAX_MS,
-            "{e} {m} {k}: slowest seed {c} ms"
-        );
-    }
-    assert_eq!(
-        CHEAP.len(),
-        worst.values().filter(|c| **c <= CHEAP_MAX_MS).count()
+fn cost_table_is_exactly_the_committed_recordings_cheap_set() {
+    // The REAL committed recording (CI run 45486250172), not the fixture-completed file: the cost
+    // table describes recorded rows only.  The rule is `cost::derive_cheap` (slowest seed's solve
+    // plus check at most `CHEAP_MAX_MS`; a killed or oom seed is infinitely slow), and the table
+    // must equal what it derives: no group missing, none extra (VOS-D143; this replaces the
+    // "at most 4x the line" test commit B loosened when the recording moved from a Mac to CI).
+    let derived: std::collections::BTreeSet<(String, String, String)> =
+        derive_cheap(&committed_raw().rows)
+            .into_iter()
+            .map(|(k, _)| k)
+            .collect();
+    let listed: std::collections::BTreeSet<(String, String, String)> = CHEAP
+        .iter()
+        .map(|(e, m, k)| (e.to_string(), m.to_string(), k.to_string()))
+        .collect();
+    assert_eq!(listed.len(), CHEAP.len(), "a group is listed twice");
+    let missing: Vec<_> = derived.difference(&listed).collect();
+    let extra: Vec<_> = listed.difference(&derived).collect();
+    assert!(
+        missing.is_empty() && extra.is_empty(),
+        "CHEAP is not the derived set; derived but unlisted: {missing:?}; listed but not derived: {extra:?}"
     );
+    // Negative control: a recording in which one cheap group's slowest seed is over the line, or
+    // killed, no longer derives that group.
+    let mut rows = committed_raw().rows.clone();
+    let (e, m, k) = CHEAP[0];
+    rows.iter_mut()
+        .find(|r| r.experiment == e && r.mode == m && r.knob.key() == k && r.tier == "full")
+        .unwrap()
+        .solve_ms = CHEAP_MAX_MS + 1.0;
+    assert!(!derive_cheap(&rows)
+        .iter()
+        .any(|((a, b, c), _)| (a.as_str(), b.as_str(), c.as_str()) == (e, m, k)));
+    for r in rows
+        .iter_mut()
+        .filter(|r| r.experiment == "A1" && r.tier == "full")
+    {
+        r.result = "killed".into();
+    }
+    assert!(!derive_cheap(&rows).iter().any(|((a, _, _), _)| a == "A1"));
+    // So do a crashed seed and a time that is not a number: neither is a finished run.
+    for bad in ["crashed", "nan"] {
+        let mut rows = committed_raw().rows.clone();
+        let (e, m, k) = CHEAP[0];
+        let r = rows
+            .iter_mut()
+            .find(|r| r.experiment == e && r.mode == m && r.knob.key() == k && r.tier == "full")
+            .unwrap();
+        if bad == "crashed" {
+            r.result = "crashed".into();
+        } else {
+            r.solve_ms = f64::NAN;
+        }
+        let derived = derive_cheap(&rows);
+        assert!(
+            !derived
+                .iter()
+                .any(|((a, b, c), _)| (a.as_str(), b.as_str(), c.as_str()) == (e, m, k)),
+            "{bad}"
+        );
+        assert!(derived.iter().all(|(_, t)| t.is_finite()), "{bad}");
+    }
 }
 
 // ---- L1: every reader is capped ------------------------------------------------------------------

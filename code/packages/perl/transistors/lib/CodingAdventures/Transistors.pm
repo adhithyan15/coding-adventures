@@ -79,10 +79,25 @@ package CodingAdventures::Transistors;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
+
+use CodingAdventures::Transistors::Error;
+
+# Every rejection throws a typed CodingAdventures::Transistors::Error (stable
+# code + parameter name), never a bare string: see that file for why.
+sub _throw {
+    my ( $code, $param, $value, $msg ) = @_;
+    die CodingAdventures::Transistors::Error->new(
+        code => $code, param => $param,
+        value_description => $value, message => $msg );
+}
+
+# Public alias: true only for an exact-class INVALID_BIT error object.
+sub is_invalid_bit { CodingAdventures::Transistors::Error::is_invalid_bit(@_) }
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
+    is_invalid_bit
     nmos  pmos  npn  pnp
     cmos_not  cmos_nand  cmos_nor  cmos_and  cmos_or  cmos_xor  cmos_xnor
     ttl_not   ttl_nand
@@ -308,7 +323,8 @@ sub pnp {
 # A type check must come before a value check.  \z (not $) so "1\n" fails.
 sub _check_bit {
     my ( $v, $name ) = @_;
-    die "Transistors: $name must be 0 or 1\n"
+    _throw( 'INVALID_BIT', $name, CodingAdventures::Transistors::Error::describe($v),
+        "Transistors: $name must be 0 or 1\n" )
         if !defined $v || ref $v || $v !~ /\A[01]\z/;
     # Return a FRESH integer.  We validated the STRING form, but the callers
     # compute NUMERICALLY (`$a == 1`); a dualvar such as dualvar(5, "1") would
@@ -329,11 +345,14 @@ sub _check_bit {
 # is never used.
 sub _num {
     my ( $v, $name ) = @_;
-    die "Transistors: $name must be a finite number\n"
+    _throw( 'INVALID_NUMBER', $name, CodingAdventures::Transistors::Error::describe($v),
+        "Transistors: $name must be a finite number\n" )
         if !defined $v || ref $v
         || $v !~ /\A[+-]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?\z/;
     my $n = 0 + substr( $v, 0 );
-    die "Transistors: $name must be a finite number\n" if $n != $n || $n == 9**9**9 || $n == -9**9**9;
+    _throw( 'INVALID_NUMBER', $name, CodingAdventures::Transistors::Error::describe($v),
+        "Transistors: $name must be a finite number\n" )
+        if $n != $n || $n == 9**9**9 || $n == -9**9**9;
     return $n;
 }
 
@@ -350,8 +369,9 @@ sub _fname { return ( ( caller(1) )[3] =~ s/.*:://r ); }
 sub _args {
     my ( $fname, $min, $max, $args ) = @_;
     my @a = @{$args};
-    die "Transistors: $fname takes " . ( $min == $max ? $min : "$min to $max" )
-        . " argument(s), got " . scalar(@a) . "\n"
+    _throw( 'INVALID_ARITY', undef, undef,
+        "Transistors: $fname takes " . ( $min == $max ? $min : "$min to $max" )
+        . " argument(s), got " . scalar(@a) . "\n" )
         if @a < $min || @a > $max;
     return @a;
 }
@@ -765,7 +785,7 @@ Pure-Perl simulation of transistor-level digital logic, implementing:
 
 =head1 VERSION
 
-0.02
+0.03
 
 =head1 AUTHOR
 

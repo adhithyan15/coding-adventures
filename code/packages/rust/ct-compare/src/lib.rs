@@ -183,7 +183,24 @@ pub fn ct_select_bytes(a: &[u8], b: &[u8], choice: bool) -> Vec<u8> {
     // Expand `choice` to an all-ones or all-zeros mask. `bool as u8` is
     // guaranteed to be exactly 0 or 1, so `0u8.wrapping_sub(choice as u8)`
     // gives 0x00 or 0xFF — no branch.
-    let mask: u8 = 0u8.wrapping_sub(choice as u8);
+    //
+    // The mask then passes through the volatile barrier. Without it the
+    // optimizer KNOWS the mask is 0x00 or 0xFF, recognises the whole loop as
+    // "copy whichever slice `choice` picks", and emits
+    //
+    //     %p = select i1 %choice, ptr %a, ptr %b ; then memcpy(out, %p, len)
+    //
+    // so the compiled code reads only the chosen buffer and the *addresses*
+    // it touches depend on the secret (security finding S2, LV-007b; pinned by
+    // `tests/optimized_ir.rs`). `black_box` hides the mask's value from the
+    // optimizer, so every output byte is computed from both inputs.
+    //
+    // Why `black_box` and not a volatile read through `volatile_barrier`: the
+    // proof pipeline lowers `black_box` to identity, but cannot take the
+    // address of a scalar local. `black_box` is documented as a best-effort
+    // hint, which is exactly why the optimized-IR test above exists: a
+    // compiler that sees through it fails CI instead of shipping the leak.
+    let mask: u8 = black_box(0u8.wrapping_sub(choice as u8));
     let mut out = vec![0u8; a.len()];
     for i in 0..a.len() {
         // When mask = 0xFF, out[i] = a[i].

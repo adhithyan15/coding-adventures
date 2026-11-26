@@ -47,17 +47,31 @@ module Basic = struct
   let nand_gate a b = bind (and_gate a b) (fun value -> Ok (1 - value))
   let nor_gate a b = bind (or_gate a b) (fun value -> Ok (1 - value))
   let xnor_gate a b = bind (xor_gate a b) (fun value -> Ok (1 - value))
-  let nand_not a = nand_gate a a
-  let nand_and a b = bind (nand_gate a b) (fun value -> nand_gate value value)
+
+  (* Every public gate reports the first invalid parameter under its OWN
+      parameter name ("a" before "b"). The NAND-built gates therefore validate
+      their arguments up front, before any inner [nand_gate] call, so an error
+      can never mention a wire that only exists inside the construction (for
+      example [nand_or 1 2] must blame "b", not the inner NOT's "a"). *)
+  let validate_pair a b =
+    bind (valid_bit "a" a) (fun _ -> bind (valid_bit "b" b) (fun _ -> Ok ()))
+
+  let nand_not a = bind (valid_bit "a" a) (fun _ -> nand_gate a a)
+
+  let nand_and a b =
+    bind (validate_pair a b) (fun () ->
+        bind (nand_gate a b) (fun value -> nand_gate value value))
 
   let nand_or a b =
-    bind (nand_not a) (fun left ->
-        bind (nand_not b) (fun right -> nand_gate left right))
+    bind (validate_pair a b) (fun () ->
+        bind (nand_not a) (fun left ->
+            bind (nand_not b) (fun right -> nand_gate left right)))
 
   let nand_xor a b =
-    bind (nand_gate a b) (fun both ->
-        bind (nand_gate a both) (fun left ->
-            bind (nand_gate b both) (fun right -> nand_gate left right)))
+    bind (validate_pair a b) (fun () ->
+        bind (nand_gate a b) (fun both ->
+            bind (nand_gate a both) (fun left ->
+                bind (nand_gate b both) (fun right -> nand_gate left right))))
 
   let reduce name identity operation inputs =
     bind (validate_bits name inputs) (fun () ->

@@ -117,6 +117,10 @@ REQUIRED = (
     # (the fd 6 pass-through, the step sidecar's digest fields, and collect
     # believing the exec of a tmpfs binary): sandbox_record_exechead_linux_amd64_test.go.
     "TestSandboxRecordExecHead",
+    # KILN04 D50: a restarted spawn (`= ? ERESTARTNOINTR`) and a bare read-only
+    # open against the real kernel (sandbox_restart_linux_amd64_test.go).  CI also
+    # runs it repeatedly (-count=20, ci.yml) after this single assertion run.
+    "TestSandboxStraceRestartedSpawn",
 )
 
 FINAL = {"pass", "fail", "skip"}

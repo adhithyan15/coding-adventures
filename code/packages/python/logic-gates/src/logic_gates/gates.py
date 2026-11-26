@@ -37,6 +37,60 @@ from functools import reduce
 # We also reject floats like 1.0 for the same reason.
 
 
+_MAX_NAME_LEN = 64
+
+
+def _safe_type_name(value: object) -> str:
+    """Return a bounded, printable description of ``type(value)``.
+
+    The name comes from ``type(value).__qualname__`` only when that is an
+    exact ``str`` (a metaclass may lie); control characters and non-ASCII are
+    escaped and the result is capped at 64 characters.  No user ``__repr__``,
+    ``__str__`` or ``__format__`` is ever invoked.
+    """
+    try:
+        # Read through ``type.__dict__`` so a metaclass ``__getattribute__``
+        # (arbitrary user code) is never dispatched to.
+        raw = type.__dict__["__qualname__"].__get__(type(value))
+    except Exception:  # pragma: no cover - defensive
+        raw = None
+    if type(raw) is not str:
+        raw = "<unnamed>"
+    # Escape one character at a time and stop at the cap, so an escape
+    # sequence is never cut in half.
+    parts: list[str] = []
+    used = 0
+    for c in raw:
+        o = ord(c)
+        if 32 <= o < 127:
+            piece = c
+        elif o < 256:
+            piece = f"\\x{o:02x}"
+        elif o < 65536:
+            piece = f"\\u{o:04x}"
+        else:
+            piece = f"\\U{o:08x}"
+        if used + len(piece) > _MAX_NAME_LEN:
+            parts.append("...")
+            break
+        parts.append(piece)
+        used += len(piece)
+    return "".join(parts)
+
+
+def _safe_int_text(value: int) -> str:
+    """Render a genuine ``int`` without calling ``str()`` on a huge one.
+
+    CPython refuses ``str()`` above 4300 digits; the bit-length guard keeps
+    the library's own message in force for arbitrarily large values.
+    ``int.bit_length`` is called unbound so a subclass cannot interpose.
+    """
+    bits = int.bit_length(value)
+    if bits > 128:
+        return f"an int with {bits} bits"
+    return int.__repr__(value)
+
+
 def _validate_bit(value: int, name: str = "input") -> None:
     """Ensure a value is a binary bit: the integer 0 or the integer 1.
 
@@ -64,10 +118,10 @@ def _validate_bit(value: int, name: str = "input") -> None:
     # Contract: a non-int (including bool and int subclasses) raises TypeError;
     # a genuine int outside {0, 1} raises ValueError.
     if type(value) is not int:
-        msg = f"{name} must be an int, got {type(value).__name__}"
+        msg = f"{name} must be an int, got {_safe_type_name(value)}"
         raise TypeError(msg)
     if value not in (0, 1):
-        msg = f"{name} must be 0 or 1, got {value}"
+        msg = f"{name} must be 0 or 1, got {_safe_int_text(value)}"
         raise ValueError(msg)
 
 

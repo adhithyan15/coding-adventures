@@ -1,0 +1,22 @@
+name: coding_adventures_aes_modes
+version: 0.1.0
+description: AES modes of operation (ECB/CBC/CTR/GCM). Dart lane of aes-modes.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/aes-modes
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_aes:
+    path: ../aes
+  coding_adventures_zeroize:
+    path: ../zeroize
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz

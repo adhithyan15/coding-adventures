@@ -1,14 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>$(WarningsAsErrors);FS0025;nullable</WarningsAsErrors>
+    <WarnOn>$(WarnOn);3390</WarnOn>
+    <OtherFlags>$(OtherFlags) --checked+</OtherFlags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.LogicGates.FSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Core digital logic gates and NAND-derived variants</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="LogicGates.fsi" />
     <Compile Include="LogicGates.fs" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,2486 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "elixir",
+  "family": "dynamic",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "CWE catalogue entries examined by hand for a pure-Elixir bit-validation library. MITRE publishes language views for C, C++ and Java, among others, and no Elixir-specific view is known to this review, so no view id is cited and no member-list snapshot exists; the considered_not_included list is a reviewer list, not a view walk (VER15a section 9 rule 9 cannot be checked for this lane)",
+      "ref": "https://cwe.mitre.org/data/index.html"
+    },
+    {
+      "name": "Elixir and BEAM language pitfalls: strict versus loose equality (1.0 == 1, 1.0 !== 1), guards and pattern-match failures (FunctionClauseError, MatchError, a guard that raises simply fails), atoms and the atom table, arbitrary-precision integers, Inspect and String.Chars protocol dispatch on caller structs, Code.eval_*, :erlang.binary_to_term, apply/3, the process dictionary, Application env, :persistent_term and ETS, runtime module redefinition, heap growth without a stack overflow, descending default ranges, Hex lock and publish rules",
+      "ref": "https://hexdocs.pm/elixir/Kernel.html"
+    },
+    {
+      "name": "LG02 sections 7 and 9: error identity and the type-confusion matrix (elixir rows; the section 7 row 12 and section 9 row are stale after PR #19952)",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md:500, :514, :625"
+    },
+    {
+      "name": "This repo's audits of the elixir lane: LGE-R-elixir (PR #19952, merged 2026-11-24: InvalidBitError, exhaustive tests), LGE-DOS-ALL (queued; names every lane with these blocks), and by-hand probes of this review on Elixir 1.19.5 (OTP 28): mux_n with three inputs, demux with n_outputs 0 and -3, mux4 with a struct whose Inspect implementation prints a marker, and_n over 2,000,000 bits, decoder over 16 bits, counter reset with a garbage state, a runtime redefinition of the transistors module, and one mix test --cover run (166 tests, 95.28% line coverage)",
+      "ref": "code/specs/VER-BACKLOG.d/logic-gates-everywhere.md"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "Elixir ~> 1.14 (mix.exs:9); probes for this review ran on Elixir 1.19.5 (the 1.19 range-step warning is the one cited)",
+    "implementations": [
+      "BEAM (Erlang/OTP) through mix, whichever BUILD finds (BUILD:1-2); probes ran on OTP 28; the toolchain version CI installs was not read for this review and no second implementation is exercised"
+    ]
+  },
+  "threats": [
+    {
+      "id": "elixir.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "rationale": "The BEAM garbage-collects every term and exposes no manual free, so a use after free needs native memory: a NIF or port driver loaded into the VM. A pure-Elixir package has no deallocator it controls. By reading, neither the package nor the transistors dependency loads native code (no :erlang.load_nif, Port, Rustler or Zigler in lib/).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-nif-port-ffi",
+          "state": "planned",
+          "detail": "Library sources, and every transitive dependency in the closure, load no NIF (:erlang.load_nif, Rustler, Zigler), open no port or port driver (Port.open, :erlang.open_port), call no :erlang.nif_error stubs and use no native-memory API. The Elixir analyzer is built on the repository grammar (LGE-A2, which needs the LGE-A1 core); nothing is written yet.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:beam-memory-safe",
+          "state": "unverified",
+          "detail": "The BEAM garbage-collects every term, terms are immutable, binaries and tuples are bounds-checked (element/2 and binary_part/3 out of range raise ArgumentError), and there is no pointer arithmetic or manual free. A statement about the VM (an accepted baseline), not a check on the package. It holds only while no NIF, port driver or other native code is loaded."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-nif-port-ffi"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "rationale": "Elixir terms are immutable: put_elem/3, List.replace_at/3 and Map.put/3 build new terms, and an index out of range raises ArgumentError rather than writing past a buffer. The package writes no buffer; its only index arithmetic is the select-bit address of demux (combinational.ex:266-285), over a list built by Enum.map. Out-of-bounds writes need a NIF or port.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-nif-port-ffi",
+          "state": "planned",
+          "detail": "Library sources, and every transitive dependency in the closure, load no NIF (:erlang.load_nif, Rustler, Zigler), open no port or port driver (Port.open, :erlang.open_port), call no :erlang.nif_error stubs and use no native-memory API. The Elixir analyzer is built on the repository grammar (LGE-A2, which needs the LGE-A1 core); nothing is written yet.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:beam-memory-safe",
+          "state": "unverified",
+          "detail": "The BEAM garbage-collects every term, terms are immutable, binaries and tuples are bounds-checked (element/2 and binary_part/3 out of range raise ArgumentError), and there is no pointer arithmetic or manual free. A statement about the VM (an accepted baseline), not a check on the package. It holds only while no NIF, port driver or other native code is loaded."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-nif-port-ffi"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "rationale": "elem/2, binary_part/3 and Enum.at/2 are bounds-checked (an out-of-range elem/2 raises ArgumentError, Enum.at returns nil), so a read never reaches stray memory. The package indexes nothing by a caller value: the only elem/2 call is on a constant index of a two-tuple (sequential.ex:237). A native out-of-bounds read needs a NIF or port.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-nif-port-ffi",
+          "state": "planned",
+          "detail": "Library sources, and every transitive dependency in the closure, load no NIF (:erlang.load_nif, Rustler, Zigler), open no port or port driver (Port.open, :erlang.open_port), call no :erlang.nif_error stubs and use no native-memory API. The Elixir analyzer is built on the repository grammar (LGE-A2, which needs the LGE-A1 core); nothing is written yet.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:beam-memory-safe",
+          "state": "unverified",
+          "detail": "The BEAM garbage-collects every term, terms are immutable, binaries and tuples are bounds-checked (element/2 and binary_part/3 out of range raise ArgumentError), and there is no pointer arithmetic or manual free. A statement about the VM (an accepted baseline), not a check on the package. It holds only while no NIF, port driver or other native code is loaded."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-nif-port-ffi"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "rationale": "No free exists to call twice: the BEAM reclaims memory by garbage collection and reference counting of large binaries. A double free needs a NIF resource destructor or port driver; there is none in the package or its dependency by reading.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-nif-port-ffi",
+          "state": "planned",
+          "detail": "Library sources, and every transitive dependency in the closure, load no NIF (:erlang.load_nif, Rustler, Zigler), open no port or port driver (Port.open, :erlang.open_port), call no :erlang.nif_error stubs and use no native-memory API. The Elixir analyzer is built on the repository grammar (LGE-A2, which needs the LGE-A1 core); nothing is written yet.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:beam-memory-safe",
+          "state": "unverified",
+          "detail": "The BEAM garbage-collects every term, terms are immutable, binaries and tuples are bounds-checked (element/2 and binary_part/3 out of range raise ArgumentError), and there is no pointer arithmetic or manual free. A statement about the VM (an accepted baseline), not a check on the package. It holds only while no NIF, port driver or other native code is loaded."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-nif-port-ffi"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "rationale": "There are no pointers; nil is an ordinary atom. The nearest effect is nil reaching code that expects a bit or a map: a gate rejects nil with InvalidBitError (gates.ex:91, \"nil\"; gates_exhaustive_test.exs:58-60), tri_state returns nil on purpose for a disabled output (combinational.ex:526-534, spec 0 | 1 | nil), and nil as a sequential state raises BadMapError (see elixir.unexpected-error-classes). A native null dereference needs a NIF.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-nif-port-ffi",
+          "state": "planned",
+          "detail": "Library sources, and every transitive dependency in the closure, load no NIF (:erlang.load_nif, Rustler, Zigler), open no port or port driver (Port.open, :erlang.open_port), call no :erlang.nif_error stubs and use no native-memory API. The Elixir analyzer is built on the repository grammar (LGE-A2, which needs the LGE-A1 core); nothing is written yet.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:beam-memory-safe",
+          "state": "unverified",
+          "detail": "The BEAM garbage-collects every term, terms are immutable, binaries and tuples are bounds-checked (element/2 and binary_part/3 out of range raise ArgumentError), and there is no pointer arithmetic or manual free. A statement about the VM (an accepted baseline), not a check on the package. It holds only while no NIF, port driver or other native code is loaded."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-nif-port-ffi"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "This registry class is wraparound that leads to a wrong buffer size or offset. Elixir integers are arbitrary precision and never wrap, so no integer arithmetic here can overflow into a buffer boundary; the one place a width appears is a bitstring segment (<<x::8>> truncates silently), and the package has no bitstring literal. Bitwise.bsl(1, length(inputs)) (combinational.ex:337) cannot overflow but a large caller-chosen length makes a huge integer and a huge list, which is the resource row elixir.input-size-heap-growth, not this one. Release text must render the full registry name, never \"integer overflow excluded\".",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-nif-port-ffi",
+          "state": "planned",
+          "detail": "Library sources, and every transitive dependency in the closure, load no NIF (:erlang.load_nif, Rustler, Zigler), open no port or port driver (Port.open, :erlang.open_port), call no :erlang.nif_error stubs and use no native-memory API. The Elixir analyzer is built on the repository grammar (LGE-A2, which needs the LGE-A1 core); nothing is written yet.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-bitstring-truncation",
+          "state": "planned",
+          "detail": "No bitstring construction or match with a fixed size on a caller-derived integer (<<x::8>>, <<x::size(n)>>), no :binary.decode_unsigned/encode_unsigned on caller data outside the bounded description helper, no Bitwise.bsl whose shift is caller-derived and uncapped. Elixir integers never wrap, but a bitstring segment silently truncates (<<256::8>> is <<0>>). The package has no bitstring literal today; the only caller-derived shift is combinational.ex:337 (Bitwise.bsl(1, length(inputs))).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:beam-memory-safe",
+          "state": "unverified",
+          "detail": "The BEAM garbage-collects every term, terms are immutable, binaries and tuples are bounds-checked (element/2 and binary_part/3 out of range raise ArgumentError), and there is no pointer arithmetic or manual free. A statement about the VM (an accepted baseline), not a check on the package. It holds only while no NIF, port driver or other native code is loaded."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-nif-port-ffi",
+        "analyzer-rule:ex.no-bitstring-truncation"
+      ],
+      "safe_subset": "gc_runtimes",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "rationale": "Command injection needs System.cmd, System.shell, :os.cmd, Port.open or :erlang.open_port. The package calls none (a grep of lib/ for System, Port, :os and open_port finds nothing; neither does the transistors dependency).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "rationale": "No database client: the only dependency is the first-party transistors package (mix.exs:24-28), and neither package builds query text.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "rationale": "No File, Path, :file or :filelib use: the package never opens or names a path. Code.require_file is covered by elixir.cwe-94.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "The package produces no HTML, no template and no markup; its only text is exception messages built from literals and bounded descriptions (invalid_bit_error.ex:23-26; gates.ex:72-103).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "rationale": "Elixir can compile and run text or data as code (Code.eval_*, Code.compile_*, Code.require_file), build atoms and modules from data (String.to_atom, Module.concat, Module.create), decode terms that carry functions (:erlang.binary_to_term) and call a computed module and function (apply/3, a variable-module call). The v2 subset no_dynamic_eval_reachable (VER15a section 1.3) gives the class an exclusion route under fail-closed semantics: an over-approximating analyzer rule plus a seeded negative-control corpus, both live. By reading, the library calls none of them (a grep of lib/ in both packages finds no Code., apply, binary_to_term, String.to_atom, Module. or variable-module call); apply/3 appears only in the test file (gates_exhaustive_test.exs:90, :96, :106), which is an evidence producer, not part of the claim.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-dynamic-eval-reachable",
+          "state": "planned",
+          "detail": "Over-approximating call-graph rule (VER15a section 1.3(a)): every call target resolved to a constant, none an evaluation primitive; an unresolved variable-module call (mod.fun(...)), Function.capture/3 or apply with a computed module or function is itself a finding. Primitive list (closed, versioned, minimum per section 1.3(c)): Code.eval_string, Code.eval_quoted, Code.eval_file, Code.compile_string, Code.compile_quoted, Code.compile_file, Code.require_file, Code.load_file, macros that evaluate caller data, :erlang.binary_to_term, String.to_atom and Module.concat on caller data, :erlang.apply, apply/3 and apply/2 with a computed module or function; this lane adds Module.create, :code.load_binary/:code.load_file, :erlang.load_module and List.to_atom/:erlang.binary_to_atom. Transitive dependencies are in the call graph (the transistors package). Build, mix-task and install hooks belong to elixir.build-and-hex-hygiene, not this rule.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.seeded-eval-primitives",
+          "state": "planned",
+          "detail": "Seeded negative control (VER15a section 1.3(b)): a planted instance of every primitive in the list above, each directly and via indirection (an alias, a callback, a captured function, apply with a variable module), and the rule must flag every one. A new primitive needs a new seeded case in the same change.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-dynamic-eval-reachable",
+        "lane-corpus:ex.seeded-eval-primitives"
+      ],
+      "safe_subset": "no_dynamic_eval_reachable",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "rationale": "The package encodes nothing for another protocol. Its only output text is InvalidBitError.message/1 (invalid_bit_error.ex:23-26), built from a literal parameter name and a description chosen from a fixed vocabulary or an integer; combinational.ex:136 additionally interpolates inspect(sel), which is caller-derived text (elixir.caller-protocol-dispatch-in-messages).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_no_serialization",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "rationale": "The package calls no Logger, IO or Application function (:logger appears in extra_applications, mix.exs:20, but nothing in lib/ logs). Exception message text is built from literals, except combinational.ex:136, where inspect(sel) puts caller-derived text into an ArgumentError message that a caller may log; inspect escapes control characters in binaries but runs caller code (elixir.caller-protocol-dispatch-in-messages).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "Resource use is driven by caller-chosen sizes: decoder returns 2^n outputs for n select bits (combinational.ex:337, :266), demux builds one output per index, and_n/or_n walk an uncapped list (gates.ex:530-533, :557-560: length/1 in the guard, then Enum.each, then Enum.reduce), shift_left/right append with ++ in a loop (sequential.ex:284, :299). Probes on Elixir 1.19.5: decoder of 16 select bits took about 437 ms; and_n over 2,000,000 valid bits took about 666 ms and returned 1. ceil_log2 on a bignum n_outputs is quadratic in its bit length (about 431 ms for 10**80000, review probe). The registry safe subset pure_zero_allocation is unsatisfiable (the package allocates lists) and the discharge needs a step-bound proof, for which no Elixir tool exists. The package-local part (caps, rejecting n_outputs early) is routed on elixir.input-size-heap-growth (LGE-DOS-ALL, LGE-EX-HARDEN).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:decoder-select-bits-uncapped",
+          "state": "claimed",
+          "detail": "decoder allocates 2^n outputs for n caller-chosen bits and takes no cap (combinational.ex:337, then demux over 0..(n_outputs - 1) at :266); demux and mux_n take their sizes from list lengths with no cap (:246-262, :162-176). LGE-DOS-ALL would cap select bits at 16; nothing is merged for Elixir.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:337, :266, :246-262, :162-176"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:nary-gates-uncapped",
+          "state": "claimed",
+          "detail": "and_n and or_n accept a list of any length: length/1 in the guard walks it, Enum.each validates it, Enum.reduce folds it (gates.ex:530-533, :557-560); no cap and no length rule beyond at least 2.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:quadratic-list-append",
+          "state": "claimed",
+          "detail": "shift_left and shift_right build their result with acc ++ [new_ff_state] inside Enum.reduce (sequential.ex:284, :299), which copies the accumulator on every step: quadratic in the register width.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:ceil-log2-quadratic-bignum",
+          "state": "claimed",
+          "detail": "demux calls ceil_log2/2 on n_outputs before any size check (combinational.ex:248-250, :203-212); it loops acc from 0 up to the bit length, building Bitwise.bsl(1, acc) each time, so the cost is quadratic in the bit length of a bignum n_outputs. Independent review probe on Elixir 1.19.5: demux(1, [], 10 ** 80000) took about 431 ms before raising ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212, :246-262"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.size-caps",
+          "state": "planned",
+          "detail": "Select bits of decoder, demux and mux_n capped at 16, register and shift-register widths capped, each rejected before anything is allocated, with tests at the cap and one past it. Backlog LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"); no Elixir change exists yet.",
+          "planned_item": "LGE-DOS-ALL"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.nary-and-list-caps",
+          "state": "planned",
+          "detail": "and_n and or_n cap the input list length, with a test at the cap and one past it, and length is checked in O(cap) (length/1 walks the whole list, so an uncapped call costs time linear in a list the caller chose; guard clauses that call length/1 are re-evaluated per clause).",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "cannot_close_in_package": true,
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded"
+    },
+    {
+      "id": "elixir.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "rationale": "No :zlib, :zip, :erl_tar or compressed-binary decode: nothing in the package expands data.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "non_decompressing_packages",
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded"
+    },
+    {
+      "id": "elixir.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "rationale": "The BEAM has no call-stack overflow: a non-tail recursion lives on the process heap and grows until the machine runs out of memory, so uncontrolled recursion shows up as heap growth, not a stack error. The package recurses in three places: do_mux_n splits its input list and recurses non-tail (combinational.ex:184-198), depth ceil(log2(n)) for an n-input mux_n; ceil_log2/2 is a tail-recursive loop of at most log2(n) steps (:203-212); stabilize_sr is a tail-recursive loop of at most 3 iterations (sequential.ex:90-102). All are shallow, but a recursion exists, so iterative_only_algorithms does not hold and the exclusion needs the call-graph rule and a rewrite.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.call-graph-acyclic",
+          "state": "planned",
+          "detail": "No direct or mutual recursion among library functions, tail-recursive ones included (a tail call is a loop on the BEAM, but the rule treats a cycle as a finding so the exclusion is simple). Fails today: do_mux_n (combinational.ex:184-198) recurses non-tail to depth ceil(log2(n)), ceil_log2/2 (:203-212) and stabilize_sr (sequential.ex:90-102, depth at most 3) are tail-recursive loops.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.call-graph-acyclic"
+      ],
+      "safe_subset": "iterative_only_algorithms",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "No Regex, ~r sigil, :re or String.match? anywhere in the package or the transistors dependency; every check is a guard or pattern match.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "no_regular_expressions",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Package algorithms worse than linear: shift_left and shift_right use acc ++ [x] in a fold, quadratic in the register width (sequential.ex:284, :299); ceil_log2/2 is quadratic in the bit length of a bignum n_outputs (combinational.ex:203-212, about 431 ms for 10**80000 in a review probe); decoder and demux do work proportional to 2^n times n (combinational.ex:246-290, :337). The package has no hash table, sort or search over caller data, so the subset constant_time_linear_algorithms is reachable once the quadratic append and ceil_log2 are rewritten (LGE-EX-HARDEN) and sizes are capped (LGE-DOS-ALL), with an analyzer rule checking the absence of the hash, sort and search constructs.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:decoder-select-bits-uncapped",
+          "state": "claimed",
+          "detail": "decoder allocates 2^n outputs for n caller-chosen bits and takes no cap (combinational.ex:337, then demux over 0..(n_outputs - 1) at :266); demux and mux_n take their sizes from list lengths with no cap (:246-262, :162-176). LGE-DOS-ALL would cap select bits at 16; nothing is merged for Elixir.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:337, :266, :246-262, :162-176"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:quadratic-list-append",
+          "state": "claimed",
+          "detail": "shift_left and shift_right build their result with acc ++ [new_ff_state] inside Enum.reduce (sequential.ex:284, :299), which copies the accumulator on every step: quadratic in the register width.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:ceil-log2-quadratic-bignum",
+          "state": "claimed",
+          "detail": "demux calls ceil_log2/2 on n_outputs before any size check (combinational.ex:248-250, :203-212); it loops acc from 0 up to the bit length, building Bitwise.bsl(1, acc) each time, so the cost is quadratic in the bit length of a bignum n_outputs. Independent review probe on Elixir 1.19.5: demux(1, [], 10 ** 80000) took about 431 ms before raising ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212, :246-262"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-hash-sort-search-over-caller-data",
+          "state": "planned",
+          "detail": "Library sources contain no hash table, sort or search over caller data (no Map/MapSet/:ets keyed by caller values, Enum.sort*, Enum.uniq*, Enum.member?/find over caller lists) and no append (++) or list concatenation inside a fold; every loop is linear in a list the caller already holds. Fails today on acc ++ [x] (sequential.ex:284, :299).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.size-caps",
+          "state": "planned",
+          "detail": "Select bits of decoder, demux and mux_n capped at 16, register and shift-register widths capped, each rejected before anything is allocated, with tests at the cap and one past it. Backlog LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"); no Elixir change exists yet.",
+          "planned_item": "LGE-DOS-ALL"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-hash-sort-search-over-caller-data"
+      ],
+      "safe_subset": "constant_time_linear_algorithms",
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded"
+    },
+    {
+      "id": "elixir.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "rationale": "The operands are public bits, not secrets, and the package makes no constant-time claim. The BEAM gives no constant-time guarantee either (guard clause order, bignum comparison and scheduler preemption all vary with input), so the exclusion rests on no_secret_inputs and an analyzer-checked absence of secret-handling calls (:crypto, :public_key).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "no_secret_inputs",
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level"
+    },
+    {
+      "id": "elixir.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "The gates are deterministic functions of their arguments; no :rand, :crypto.strong_rand_bytes, Enum.random or :erlang.unique_integer call appears.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_deterministic",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "No cryptography: no :crypto or :public_key call, no hash or cipher.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_non_cryptographic",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "rationale": "No encryption and no key: nothing in the package has a strength to be inadequate.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation_non_cryptographic",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "The package starts no process (no spawn, Task, Agent, GenServer, send or receive), has no timeout, and holds no process dictionary, ETS table, :persistent_term or Application-env state, so it creates no race itself; every function is a pure function of its arguments and sequential state is passed in and returned (sequential.ex:172-193). Terms are immutable, so a caller thread cannot change a list between validation and use (the Python container-double-read class does not exist here). The mailbox-growth and message-ordering classes need a process, which is the caller's.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "No file or process-state check precedes a use: validation and use read the same immutable term inside one function call, so there is no window to race.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-ambient-capability-calls"
+      ],
+      "safe_subset": "pure_computation",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "No :erlang.binary_to_term, no :erlang.term_to_binary round trip, no Jason, no Plug.Crypto.non_executable_binary_to_term. binary_to_term of an untrusted binary can create atoms and functions (the Erlang documentation advises the :safe option and still warns about funs), so the analyzer rule bans it outright.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-binary-to-term-or-deserialization",
+          "state": "planned",
+          "detail": "Library sources call no :erlang.binary_to_term (with or without :safe), no :erlang.term_to_binary round trip on caller data, no JSON, YAML, XML or Plug decoder, and load no external term format.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-ambient-capability-calls",
+          "state": "planned",
+          "detail": "Library sources call nothing that reaches a process, file, network, database, UI, serialization, decompression, regular-expression, randomness, clock, thread or global-state facility: System.cmd/shell/get_env, File.*, Path.*, IO.*, Logger.*, Port.*, :os, :file, :gen_tcp/:gen_udp/:httpc, Node.*, spawn*/Task/Agent/GenServer/send/receive, :ets, :persistent_term, Process.put/get, Application.get_env/put_env, Regex and the ~r sigils, :re, :zlib/:zip, :rand, Enum.random, :crypto and :public_key. Imports and aliases today: only Gates, InvalidBitError, CMOSGates and Bitwise (gates.ex:42-43, combinational.ex:37, sequential.ex).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5-6 declares an empty capability list and \"Pure computation\"; nothing checks the sources against it yet. The transitive path dependency (code/packages/elixir/transistors) declares its own file and was read by hand for the same constructs (no match for File, System, Port, :os, :erlang.* calls, Process, Application, :ets, spawn, Code, Regex or :crypto in its lib/)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-binary-to-term-or-deserialization"
+      ],
+      "safe_subset": "pure_computation_no_deserialization",
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "rationale": "Prototype pollution mutates a prototype chain of a JavaScript-style object. Elixir has immutable terms, no objects and no inheritance chain; a loaded module cannot be extended by data. The pair (elixir, 1321) is on the VER15a section 5.5 excluded-by-language whitelist, entered unsigned (signed_off false), and no registry subset covers elixir, so that whitelist entry is the sole authority. The entry excludes the prototype-chain mechanism only: the process dictionary, :persistent_term, ETS and Application env are shared mutable state, which belongs to elixir.shared-runtime-state, and redefining a loaded module belongs to elixir.module-redefinition-and-hot-code-loading.",
+      "applicability": "not-applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:elixir-has-no-prototype-chains",
+          "state": "unverified",
+          "detail": "Elixir terms are immutable; there are no objects, classes or prototype chains for a program to extend from input, and a map key written with Map.put/3 produces a new map instead of mutating a shared one. A statement about the language, not a check."
+        }
+      ],
+      "language_exclusion": {
+        "justification": "VER15a section 5.5 whitelist entry (elixir, 1321): immutable terms, no objects and no inheritance chain; a loaded module cannot be extended by data. Prototype-chain mechanism only; shared mutable runtime state and module redefinition belong to lane threats, not this row.",
+        "reviewer": "owner signs (VER15a section 5.5: signed_off false)",
+        "signed_off": false
+      },
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "elixir.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied terms and must reject everything except the integer 0 and the integer 1 in every position before computing. The 11 gates do through one guard (gates.ex:60) and a fallback clause that validates a then b (gates.ex:137-145 and the ten binary clauses after it); the NAND-built gates validate their own arguments instead of leaning on the inner gate (nand_not :425-427, nand_and :444-452, nand_or :469-477, nand_xor :493-502), so the parameter named is always the gate's own. Validation is complete before any result is produced: the success clause is selected only when both guards hold, so there is no short-circuit row. Outside the 11 gates validation is per function: mux2, tri_state, the latches and the flip-flop call validate_bit! per argument; and_n, or_n, mux_n, demux, decoder, encoder and priority_encoder validate each list element (parameter name \"input\" or \"sel\", no index); mux4 validates its six arguments only after matching a two-element list. Those functions have example tests, not the rejection matrix (lane-corpus:ex.blocks-rejection-matrix is planned in LGE-EX-HARDEN).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-elixir",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: true, false, nil, :a, :\"1\", 1.0, 0.0, -0.0, 1.5, \"1\", \"\", ~c\"1\", [1], [], {1}, {}, %{}, %{a: 1}, two structs, a pid, a reference, two functions (gates_exhaustive_test.exs:56-83, matrix at :111-119). Rows LG02 section 9 lists and this matrix lacks: \"1abc\", \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 2^32 + 1 (the integer range in :44-54 covers 256 and 257 and four powers of two), improper lists. NaN and Infinity cannot be built in Elixir floats (an arithmetic that would produce one raises ArithmeticError), so those rows have no Elixir value."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:ex-is-bit-guard",
+          "state": "claimed",
+          "detail": "gates.ex:60 defguardp is_bit(value) when is_integer(value) and (value === 0 or value === 1); every gate has a guarded success clause and a fallback clause that calls validate_bit! on a then b (gates.ex:137-145, :177-187, :218-228, :260-270, :308-318, :345-355, :383-394, :425-427, :444-452, :469-477, :493-502). A runtime guard exercised by the suite, not a language guarantee: Elixir enforces no @spec at the call boundary and Dialyzer is not run by BUILD (BUILD:2)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.blocks-rejection-matrix",
+          "state": "planned",
+          "detail": "The LG02 section 9 matrix extended past the 11 gates: and_n and or_n at every element position, mux2, mux4, mux_n, demux, decoder, encoder, priority_encoder, tri_state, sr_latch, d_latch, d_flip_flop, register, shift_register and counter with a bad value in every argument position and in every list element, checking the exception module and the parameter name. Today those functions have example tests only (combinational_test.exs, sequential_test.exs, gates_test.exs:269-325).",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex-truth-and-rejection-suite",
+        "type-confusion-matrix:lg02-s9-elixir"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:ex-truth-and-rejection-suite"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:ex-truth-and-rejection-suite"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:ex-truth-and-rejection-suite",
+          "type-confusion-matrix:lg02-s9-elixir"
+        ]
+      }
+    },
+    {
+      "id": "elixir.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "Elixir is dynamically typed: nothing at compile time stops a value of one type being passed as a bit. Type confusion therefore means a non-integer accepted as a bit. The language has no implicit coercion of the kind Perl, Lua or JavaScript have (1 + \"1\" raises ArithmeticError), so the confusions are booleans (atoms, true and false are not 1 and 0), a charlist (~c\"1\" is the list [49]), a binary (\"1\"), a float (1.0 == 1 is true but 1.0 === 1 is false), nil, structs (maps with a __struct__ key) and protocol-bearing structs. The guard is_integer(v) and (v === 0 or v === 1) (gates.ex:60) rejects all of them, and the suite exercises each (gates_exhaustive_test.exs:56-83). @spec 0 | 1 and Dialyzer are advisory only; Dialyzer is not run by BUILD (BUILD:2). The escape hatches are :erlang.binary_to_term, :erlang.apply and native code, none used by reading.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-elixir",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: true, false, nil, :a, :\"1\", 1.0, 0.0, -0.0, 1.5, \"1\", \"\", ~c\"1\", [1], [], {1}, {}, %{}, %{a: 1}, two structs, a pid, a reference, two functions (gates_exhaustive_test.exs:56-83, matrix at :111-119). Rows LG02 section 9 lists and this matrix lacks: \"1abc\", \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 2^32 + 1 (the integer range in :44-54 covers 256 and 257 and four powers of two), improper lists. NaN and Infinity cannot be built in Elixir floats (an arithmetic that would produce one raises ArithmeticError), so those rows have no Elixir value."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:ex-is-bit-guard",
+          "state": "claimed",
+          "detail": "gates.ex:60 defguardp is_bit(value) when is_integer(value) and (value === 0 or value === 1); every gate has a guarded success clause and a fallback clause that calls validate_bit! on a then b (gates.ex:137-145, :177-187, :218-228, :260-270, :308-318, :345-355, :383-394, :425-427, :444-452, :469-477, :493-502). A runtime guard exercised by the suite, not a language guarantee: Elixir enforces no @spec at the call boundary and Dialyzer is not run by BUILD (BUILD:2)."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-escape-hatches",
+          "state": "planned",
+          "detail": "Library sources use no :erlang.binary_to_term, :erlang.apply, NIF, port, unsafe term construction (:erlang.setelement on caller tuples, :erlang.list_to_atom) or dynamic dispatch on caller data. Elixir has no unsafeCoerce; these are the places a value can be treated as another type.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:lg02-s9-elixir",
+        "build-check:ex-is-bit-guard",
+        "analyzer-rule:ex.no-escape-hatches"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "type-confusion-matrix-all-operations-all-positions": [
+          "type-confusion-matrix:lg02-s9-elixir"
+        ],
+        "language-type-system-guarantee": [
+          "build-check:ex-is-bit-guard"
+        ],
+        "analyzer-no-escape-hatch": [
+          "analyzer-rule:ex.no-escape-hatches"
+        ]
+      }
+    },
+    {
+      "id": "elixir.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "The conversion changes the meaning of the value: 1.0 read as 1, -0.0 as 0, 256 truncated to 0, \"1abc\" read as 1. Elixir never converts implicitly, and the package converts nothing on its inputs: no String.to_integer, Integer.parse, trunc, round or bitstring segment (grep of lib/), and the strict guard (gates.ex:60) rejects the float rows (1.0, 0.0, -0.0, 1.5; gates_exhaustive_test.exs:63-66) and the wide-integer rows (256 and 257 are inside -1024..1024, and +-2^31, +-2^63, +-2^64, +-10^100; :44-54). The numeric conversions that do occur are to_string of an already-validated integer in a message (gates.ex:82-83) and Bitwise shifts over validated indices (combinational.ex:275, :406, :476). Strings such as \"1abc\" and \"1\\n\" are not in the matrix; they are binaries and are rejected by the same guard.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-elixir",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: true, false, nil, :a, :\"1\", 1.0, 0.0, -0.0, 1.5, \"1\", \"\", ~c\"1\", [1], [], {1}, {}, %{}, %{a: 1}, two structs, a pid, a reference, two functions (gates_exhaustive_test.exs:56-83, matrix at :111-119). Rows LG02 section 9 lists and this matrix lacks: \"1abc\", \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 2^32 + 1 (the integer range in :44-54 covers 256 and 257 and four powers of two), improper lists. NaN and Infinity cannot be built in Elixir floats (an arithmetic that would produce one raises ArithmeticError), so those rows have no Elixir value."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-implicit-conversion-calls",
+          "state": "planned",
+          "detail": "Library sources call no String.to_integer, Integer.parse, Integer.to_string on caller data outside the bounded description helper, Float.* conversion, trunc, round, ceil, floor, :erlang.list_to_integer/binary_to_integer, to_string or string interpolation of an unvalidated caller value. Today to_string/interpolation touches an integer only after validate_bit! (gates.ex:82-83) or a length (combinational.ex:167-174, :253-255).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:ex.warnings-as-errors",
+          "state": "planned",
+          "detail": "BUILD runs mix compile --warnings-as-errors (and mix test with warnings as errors) for the package and its path dependency. BUILD:1-2 does not: a compile warning is printed and the build is green. Today the package emits one: combinational.ex:266 (0..(n_outputs - 1) defaults to a step of -1 when n_outputs is 0 or negative; seen on Elixir 1.19.5).",
+          "planned_item": "LGE-EX-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-bitstring-truncation",
+          "state": "planned",
+          "detail": "No bitstring construction or match with a fixed size on a caller-derived integer (<<x::8>>, <<x::size(n)>>), no :binary.decode_unsigned/encode_unsigned on caller data outside the bounded description helper, no Bitwise.bsl whose shift is caller-derived and uncapped. Elixir integers never wrap, but a bitstring segment silently truncates (<<256::8>> is <<0>>). The package has no bitstring literal today; the only caller-derived shift is combinational.ex:337 (Bitwise.bsl(1, length(inputs))).",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex-truth-and-rejection-suite",
+        "type-confusion-matrix:lg02-s9-elixir",
+        "analyzer-rule:ex.no-implicit-conversion-calls",
+        "compiler-flag:ex.warnings-as-errors"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "wide-integer-and-coercion-rows": [
+          "lane-corpus:ex-truth-and-rejection-suite",
+          "type-confusion-matrix:lg02-s9-elixir"
+        ],
+        "conversion-warning-clean-build": [
+          "compiler-flag:ex.warnings-as-errors"
+        ],
+        "implicit-conversion-audit": [
+          "analyzer-rule:ex.no-implicit-conversion-calls"
+        ]
+      }
+    },
+    {
+      "id": "elixir.strict-equality-and-float-confusion",
+      "origin": "lane",
+      "cwe": 697,
+      "name": "loose == lets 1.0 pass for 1",
+      "rationale": "In Elixir 1.0 == 1 is true and 1.0 === 1 is false, and the language has no NaN or Infinity float to add rows. The gate guard uses is_integer plus === (gates.ex:60), so a float is rejected before any comparison. The suite includes 1.0, 0.0, -0.0 and 1.5 in every position (gates_exhaustive_test.exs:63-66). The weakness is the fragility around it: later code compares with ==, so the strictness depends on validation always running first.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:lg02-s9-elixir",
+          "state": "claimed",
+          "detail": "LG02 section 9 on the 11 operations, bad value in each position: true, false, nil, :a, :\"1\", 1.0, 0.0, -0.0, 1.5, \"1\", \"\", ~c\"1\", [1], [], {1}, {}, %{}, %{a: 1}, two structs, a pid, a reference, two functions (gates_exhaustive_test.exs:56-83, matrix at :111-119). Rows LG02 section 9 lists and this matrix lacks: \"1abc\", \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\", 2^32 + 1 (the integer range in :44-54 covers 256 and 257 and four powers of two), improper lists. NaN and Infinity cannot be built in Elixir floats (an arithmetic that would produce one raises ArithmeticError), so those rows have no Elixir value."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:ex-is-bit-guard",
+          "state": "claimed",
+          "detail": "gates.ex:60 defguardp is_bit(value) when is_integer(value) and (value === 0 or value === 1); every gate has a guarded success clause and a fallback clause that calls validate_bit! on a then b (gates.ex:137-145, :177-187, :218-228, :260-270, :308-318, :345-355, :383-394, :425-427, :444-452, :469-477, :493-502). A runtime guard exercised by the suite, not a language guarantee: Elixir enforces no @spec at the call boundary and Dialyzer is not run by BUILD (BUILD:2)."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:loose-equality-after-validation",
+          "state": "claimed",
+          "detail": "Outside the gates the package compares validated bits with == rather than ===: combinational.ex:392, :463, :471 (&1 == 1), sequential.ex:96 (new_q == q), :340 (reset == 1). Safe today because validate_bit! has already limited the value to the integer 0 or 1, but 1.0 == 1 is true in Elixir, so a validation that were dropped would let a float through these comparisons silently.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:392, :463, :471; code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:96, :340"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex-truth-and-rejection-suite",
+        "type-confusion-matrix:lg02-s9-elixir"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.unexpected-error-classes",
+      "origin": "lane",
+      "cwe": 703,
+      "name": "pattern-match and clause failures instead of the package error",
+      "rationale": "Elixir signals a failed match with MatchError, a failed function head with FunctionClauseError, a missing map key with KeyError, a non-map with BadMapError and an unmatched case with CaseClauseError. The package's documented identities are InvalidBitError for a bad bit and ArgumentError for a bad structure (CHANGELOG.d/00040-invalid-bit-error-exhaustive-tests.md); several inputs reach the VM's own errors instead, so a caller or a binding that rescues the two documented classes lets the others escape. Found by probes on Elixir 1.19.5 (see the three source-ref items).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:mux-n-non-power-of-two-matcherror",
+          "state": "claimed",
+          "detail": "mux_n checks only that sel has ceil(log2(n)) bits (combinational.ex:162-176); for n = 3 inputs and 2 select bits do_mux_n splits to a one-element list and falls through to the general clause, where [msb | rest] = sel matches an empty list (:184-198). Probe on Elixir 1.19.5: mux_n([0, 1, 0], [0, 1]) raises MatchError, not ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:162-198"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:sequential-state-shape-errors",
+          "state": "claimed",
+          "detail": "d_flip_flop reads state.master_q and state.slave_q directly (sequential.ex:180-184): a state that is not a map with those keys raises KeyError or BadMapError, and shift_register raises CaseClauseError for an unknown :direction (sequential.ex:272-275). Probes: d_flip_flop(1, 1, %{}) raises KeyError, d_flip_flop(1, 1, 5) raises BadMapError, shift_register(1, 1, [], direction: :up) raises CaseClauseError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:180-184, :272-275"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:function-clause-and-guard-swallow",
+          "state": "claimed",
+          "detail": "and_n/or_n are guarded by is_list and length(inputs) >= 2 (gates.ex:531, :558); an exception inside a guard makes the clause not match instead of raising, so an improper list falls to the second clause whose body calls length/1 and raises ArgumentError (\"not a list\"), while a non-list raises FunctionClauseError. Probes: and_n([1, 1 | 1]) raises ArgumentError, and_n(5) raises FunctionClauseError. Calling a gate with the wrong arity raises UndefinedFunctionError. demux and mux_n have the same guard shape (combinational.ex:162, :246).",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565; code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:162, :246"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:shift-register-unguarded-state-enumerable",
+          "state": "claimed",
+          "detail": "shift_register has no is_list guard on state and no check on opts (sequential.ex:266-275) and shift_left/shift_right call Enum.with_index(state) (:281, :294). Independent review probes on Elixir 1.19.5: a caller struct implementing Enumerable had its reduce/3 run (\"CALLER ENUM RAN\"); a Stream.cycle state never returns (infinite loop and heap growth); a non-enumerable state raises Protocol.UndefinedError (a further error class); a %{} state silently returns {[], []}; non-keyword opts raise FunctionClauseError from Keyword.get/3. Improper-list differences: decoder([1 | 1]) and counter(0, 0, [1 | 1]) raise FunctionClauseError, register and encoder raise ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-275, :278-305"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.error-class-matrix",
+          "state": "planned",
+          "detail": "A test that every public function raises only InvalidBitError (a bad bit) or ArgumentError (a bad structure) for every non-conforming argument, with a table that includes mux_n with a non-power-of-two input count, demux with n_outputs <= 0, and_n/or_n with a non-list or an improper list, d_flip_flop and counter with a state that is not a map of four bits, and shift_register with an unknown :direction, a non-list or non-enumerable state, an element that is not a state map and non-keyword opts; improper lists in every list-taking function (decoder, counter, register and encoder currently differ). Fails today on all of those (see elixir.unexpected-error-classes).",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex.error-class-matrix"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.exception-identity",
+      "origin": "lane",
+      "cwe": 755,
+      "name": "InvalidBitError is not an ArgumentError, and the spec says it is",
+      "rationale": "The error identity is a dedicated exception struct, InvalidBitError, chosen so a caller's rescue of ArgumentError does not catch unrelated failures. Elixir exceptions cannot subclass one another, so it is a distinct module and callers that rescued ArgumentError for bad bits must rescue the new one (invalid_bit_error.ex:9-11). The cross-lane contract (LG02) still describes ArgumentError and the corpus binding built from it would not match; and the transistors dependency raises ArgumentError with different text for the same inputs.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:ex-error-identity-contract",
+          "state": "claimed",
+          "detail": "invalid_bit_error.ex:21 defines InvalidBitError with :param and :value_description; the suite asserts the class, the parameter name, a description of at most 64 characters and the message prefix for every bad value (gates_exhaustive_test.exs:94-99, :113-119). It is not an ArgumentError (Elixir exceptions cannot subclass; README.md:113). Structural errors stay ArgumentError (CHANGELOG.d/00040-invalid-bit-error-exhaustive-tests.md)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:lg02-elixir-rows-stale",
+          "state": "claimed",
+          "detail": "LG02 section 7 row 12 says the elixir identity is ArgumentError and the planned binding is errors=INVALID_INPUT:ArgumentError (LG02-basic-gates-cross-lane-contract.md:500), section 7 lists Elixir among the lanes that match a general-purpose class (:514), and section 9 row 625 says the accepted rows cite gates.ex:56-70; the package merged InvalidBitError in PR #19952, so those rows are out of date. A v2 corpus binding written from the spec would not match what is raised; transistors (cmos_gates.ex:43-49) still raises ArgumentError for the same inputs, so a class-only ArgumentError binding could not tell a gate rejection from a transistor-layer one.",
+          "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md:500, :514, :625; code/packages/elixir/transistors/lib/coding_adventures/transistors/cmos_gates.ex:40-50"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:lg02-elixir-rows-current",
+          "state": "planned",
+          "detail": "LG02 section 7 row 12 and section 9 row updated to InvalidBitError, gates.ex line references refreshed, and the drift guard (code/scripts/logic_gates_basic_drift.py, LGE-S1b) covering the elixir row.",
+          "planned_item": "LGE-EX-HARDEN"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-v2-corpus-replay",
+          "state": "planned",
+          "detail": "warrant-corpus-v2 replay with the binding row errors=INVALID_INPUT:CodingAdventures.LogicGates.InvalidBitError; the lane runner does not exist (blocked on LGE-CV2).",
+          "planned_item": "LGE-L-elixir"
+        }
+      ],
+      "discharge_requires": [
+        "build-check:ex-error-identity-contract",
+        "lane-corpus:ex-truth-and-rejection-suite",
+        "lane-corpus:ex-v2-corpus-replay",
+        "build-check:lg02-elixir-rows-current"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.caller-protocol-dispatch-in-messages",
+      "origin": "lane",
+      "name": "Inspect and String.Chars run caller code while formatting an error",
+      "rationale": "Elixir protocols dispatch on the data type of their argument, and a struct can implement Inspect and String.Chars. inspect/2, to_string/1 and string interpolation of such a value therefore run code the caller wrote, in the middle of the library's error path: it may raise a different error, loop, block or spawn. The inspect limit option does not bound integer digits either. The gate path is clean: InvalidBitError describes by type with guards only (gates.ex:72-103) and the suite proves no implementation runs (a struct whose Inspect and String.Chars raise, gates_exhaustive_test.exs:1-11, with protocols deliberately unconsolidated in :test, mix.exs:8). mux4 is not clean, and the transistors layer is clean only because the gates filter first.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:mux4-inspects-caller-term",
+          "state": "claimed",
+          "detail": "mux4 builds its error text with inspect(sel) on whatever the caller passed as the select list (combinational.ex:135-137). inspect dispatches to the Inspect implementation of any struct inside it, which is caller code. Probe on Elixir 1.19.5 with a struct whose Inspect implementation prints a marker: mux4(0, 0, 0, 0, struct) and mux4(0, 0, 0, 0, [struct]) both ran the implementation before raising ArgumentError. The probe holds only with unconsolidated protocols (MIX_ENV=test, mix.exs:8, or a consumer whose impl is not consolidated). gates.ex:72-80 documents why the gates avoid exactly this.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:135-137; code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:72-80"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:transistors-inspect-unreachable",
+          "state": "claimed",
+          "detail": "The transistors layer builds its ArgumentError text with inspect(value) (cmos_gates.ex:43-46). The gates filter with the is_bit guard first, so a bad value never reaches it through the 11 gates; a direct call to CMOSGates with a caller struct would run its Inspect implementation.",
+          "ref": "code/packages/elixir/transistors/lib/coding_adventures/transistors/cmos_gates.ex:40-50"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:shift-register-unguarded-state-enumerable",
+          "state": "claimed",
+          "detail": "shift_register has no is_list guard on state and no check on opts (sequential.ex:266-275) and shift_left/shift_right call Enum.with_index(state) (:281, :294). Independent review probes on Elixir 1.19.5: a caller struct implementing Enumerable had its reduce/3 run (\"CALLER ENUM RAN\"); a Stream.cycle state never returns (infinite loop and heap growth); a non-enumerable state raises Protocol.UndefinedError (a further error class); a %{} state silently returns {[], []}; non-keyword opts raise FunctionClauseError from Keyword.get/3. Improper-list differences: decoder([1 | 1]) and counter(0, 0, [1 | 1]) raise FunctionClauseError, register and encoder raise ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-275, :278-305"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-inspect-or-to-string-on-caller-values",
+          "state": "planned",
+          "detail": "No inspect/2, to_string/1, String.Chars or Inspect call, and no string interpolation, on a value that came from the caller; error text is built from literals, lengths and the bounded description helper only. Fails today at combinational.ex:136 (inspect(sel)).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.protocol-boom-all-public-functions",
+          "state": "planned",
+          "detail": "The BoomStruct (Inspect, String.Chars and Enumerable all raise or flag; today the struct implements only the first two, gates_exhaustive_test.exs:1-11, so the Enumerable impl is to be added) passed as every argument and as every list element of every public function, and as the select list of mux4, asserting that only InvalidBitError or ArgumentError is raised and that neither implementation runs. mix.exs:8 leaves protocols unconsolidated in :test so an impl is live.",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex.protocol-boom-all-public-functions",
+        "analyzer-rule:ex.no-inspect-or-to-string-on-caller-values"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.bignum-in-error-text",
+      "origin": "lane",
+      "name": "huge integers in error messages",
+      "rationale": "Elixir integers have no size limit, so a rejected integer can have a million digits. Printing it (to_string, inspect, interpolation) costs time and memory proportional to its length, and inspect's limit option does not shorten integers. The description helper prints an integer exactly only inside +-2^64 and otherwise states its bit length, computed from :binary.encode_unsigned(abs(v)) (gates.ex:80-88), so the message is short whatever the size; that call copies the integer once, linear in a number the caller already built. The suite checks a 10^100000 integer and the 2^64 boundary (gates_exhaustive_test.exs:139-148).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex-truth-and-rejection-suite",
+          "state": "claimed",
+          "detail": "test/coding_adventures/gates_exhaustive_test.exs (PR #19952, merged): literal truth tables for all 11 gates and NAND-built equals direct (:28-42, :87-137); every integer in [-1024, 1024] other than 0 and 1 plus +-2^31, +-2^63, +-2^64 and +-10^100 (:44-54) and 24 non-integer values (booleans, nil, atoms, 1.0, 0.0, -0.0, 1.5, binaries, charlists, lists, tuples, maps, a struct whose Inspect and String.Chars raise, pid, reference, functions; :56-83) in every argument position of all 11 gates, the first invalid parameter reported under the gate's own name (:121-126), bounded error text and a 10^100000 integer (:139-148). 166 tests, 0 failures, 95.28% line coverage in one local run (mix test --cover, Elixir 1.19.5). Run by BUILD:2 (mix test --cover) with a coverage threshold of 80 (mix.exs:12-14). Covers the 11 gates only: and_n, or_n and the combinational and sequential blocks have example tests, not this matrix."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex-truth-and-rejection-suite"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.atom-table-exhaustion",
+      "origin": "lane",
+      "cwe": 770,
+      "name": "atoms are never garbage-collected",
+      "rationale": "Atoms live in a fixed-size global table (about one million by default) and are never freed; creating enough of them from data kills the whole VM. String.to_atom, List.to_atom, :erlang.binary_to_atom and Module.concat on caller data are how that happens. The package converts nothing to an atom: a rejected atom is described by type without being turned into text (gates.ex:90-92) and nothing calls String.to_atom (grep of lib/). The suite passes :a and :\"1\" (gates_exhaustive_test.exs:61-62), which proves rejection, not that the table does not grow.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-string-to-atom-on-caller-data",
+          "state": "planned",
+          "detail": "Library sources call no String.to_atom, List.to_atom, :erlang.binary_to_atom, :erlang.list_to_atom or Module.concat/Module.safe_concat on a value that came from the caller (String.to_existing_atom is also flagged, because it still lets caller data probe the table).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:beam-memory-safe",
+          "state": "unverified",
+          "detail": "The BEAM garbage-collects every term, terms are immutable, binaries and tuples are bounds-checked (element/2 and binary_part/3 out of range raise ArgumentError), and there is no pointer arithmetic or manual free. A statement about the VM (an accepted baseline), not a check on the package. It holds only while no NIF, port driver or other native code is loaded."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-string-to-atom-on-caller-data"
+      ]
+    },
+    {
+      "id": "elixir.shared-runtime-state",
+      "origin": "lane",
+      "name": "process dictionary, Application env, persistent_term and ETS",
+      "rationale": "The BEAM offers four places to hide mutable state outside the arguments: the process dictionary (Process.put/get), the application environment (Application.put_env), :persistent_term and ETS tables. A library that read configuration from one of them, or cached a result in one, would make a gate's output depend on something other than its arguments, and a caller or another library could change it. The package uses none of them by reading; its state is explicit.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ex.no-global-state-apis",
+          "state": "planned",
+          "detail": "Library sources call no Process.put/get/delete, Application.put_env/get_env/fetch_env, :persistent_term, :ets, :atomics or :counters function, and define no module attribute that is read at runtime from the environment.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:state-passed-explicitly",
+          "state": "claimed",
+          "detail": "The sequential blocks keep no state of their own: d_flip_flop, register, shift_register and counter take the state in and return the new state (sequential.ex:172-193, :223-237); a grep of lib/ in both packages finds no Process, Application, :persistent_term or :ets call.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:172-193, :223-237"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ex.no-global-state-apis"
+      ]
+    },
+    {
+      "id": "elixir.module-redefinition-and-hot-code-loading",
+      "origin": "lane",
+      "cwe": 471,
+      "name": "any code in the VM can replace a module",
+      "rationale": "The BEAM loads modules by name into one global table and supports hot code replacement: Code.compile_string, Code.require_file, :code.load_binary or a second defmodule with the same name replaces the loaded module, with a warning. Any code in the same VM can therefore replace Gates or the transistors module, and the gates would then return whatever the replacement returns. This is the in-process analogue of Python monkeypatching and the C lane's caller-side narrowing: the library cannot detect or prevent it.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:beam-modules-replaceable",
+          "state": "unverified",
+          "detail": "A module loaded in the VM can be redefined at runtime by any code in the same VM; nothing in the language or the package can prevent it. Confirmed by the probe quoted in the rationale."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:gates-trust-delegate-output",
+          "state": "claimed",
+          "detail": "Each primitive gate returns the delegate's value unchecked: CMOSGates.inverter_evaluate_digital, and_evaluate_digital, or_, xor_, nand_, nor_ and xnor_ (gates.ex:142, :181, :222, :264, :312, :349, :388). The NAND-built gates return the result of nand_gate (gates.ex:426, :446, :471, :496). Probe on Elixir 1.19.5: after Code.compile_string redefined CodingAdventures.Transistors.CMOSGates in the running VM (a warning, nothing else), nand_gate(1, 1), and_gate(1, 1) and nand_not(1) all returned 7, which is not a bit.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:142, :181, :222, :264, :312, :349, :388"
+        }
+      ],
+      "cannot_close_in_package": true,
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.input-size-heap-growth",
+      "origin": "lane",
+      "cwe": 789,
+      "name": "caller-chosen sizes grow the process heap without a cap",
+      "rationale": "A BEAM process's heap grows without limit unless the caller set max_heap_size, and running out of memory takes the whole VM with it, not just the process. The package takes sizes from the caller with no cap: decoder returns 2^n outputs (combinational.ex:337, :266), demux, mux_n, register, shift_register and counter size themselves from list lengths, and_n/or_n walk lists of any length, and the shift functions append quadratically (sequential.ex:284, :299). Measured on Elixir 1.19.5: 16 select bits took about 437 ms; the cost doubles per bit, so about 30 bits would need about a billion list cells (arithmetic, not run). The backlog item LGE-DOS-ALL caps select bits at 16 and sequential widths in every lane with these blocks; nothing is merged for Elixir.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:decoder-select-bits-uncapped",
+          "state": "claimed",
+          "detail": "decoder allocates 2^n outputs for n caller-chosen bits and takes no cap (combinational.ex:337, then demux over 0..(n_outputs - 1) at :266); demux and mux_n take their sizes from list lengths with no cap (:246-262, :162-176). LGE-DOS-ALL would cap select bits at 16; nothing is merged for Elixir.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:337, :266, :246-262, :162-176"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:nary-gates-uncapped",
+          "state": "claimed",
+          "detail": "and_n and or_n accept a list of any length: length/1 in the guard walks it, Enum.each validates it, Enum.reduce folds it (gates.ex:530-533, :557-560); no cap and no length rule beyond at least 2.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:quadratic-list-append",
+          "state": "claimed",
+          "detail": "shift_left and shift_right build their result with acc ++ [new_ff_state] inside Enum.reduce (sequential.ex:284, :299), which copies the accumulator on every step: quadratic in the register width.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:ceil-log2-quadratic-bignum",
+          "state": "claimed",
+          "detail": "demux calls ceil_log2/2 on n_outputs before any size check (combinational.ex:248-250, :203-212); it loops acc from 0 up to the bit length, building Bitwise.bsl(1, acc) each time, so the cost is quadratic in the bit length of a bignum n_outputs. Independent review probe on Elixir 1.19.5: demux(1, [], 10 ** 80000) took about 431 ms before raising ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212, :246-262"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:shift-register-unguarded-state-enumerable",
+          "state": "claimed",
+          "detail": "shift_register has no is_list guard on state and no check on opts (sequential.ex:266-275) and shift_left/shift_right call Enum.with_index(state) (:281, :294). Independent review probes on Elixir 1.19.5: a caller struct implementing Enumerable had its reduce/3 run (\"CALLER ENUM RAN\"); a Stream.cycle state never returns (infinite loop and heap growth); a non-enumerable state raises Protocol.UndefinedError (a further error class); a %{} state silently returns {[], []}; non-keyword opts raise FunctionClauseError from Keyword.get/3. Improper-list differences: decoder([1 | 1]) and counter(0, 0, [1 | 1]) raise FunctionClauseError, register and encoder raise ArgumentError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-275, :278-305"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.size-caps",
+          "state": "planned",
+          "detail": "Select bits of decoder, demux and mux_n capped at 16, register and shift-register widths capped, each rejected before anything is allocated, with tests at the cap and one past it. Backlog LGE-DOS-ALL (\"Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks\"); no Elixir change exists yet.",
+          "planned_item": "LGE-DOS-ALL"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.nary-and-list-caps",
+          "state": "planned",
+          "detail": "and_n and or_n cap the input list length, with a test at the cap and one past it, and length is checked in O(cap) (length/1 walks the whole list, so an uncapped call costs time linear in a list the caller chose; guard clauses that call length/1 are re-evaluated per clause).",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex.size-caps",
+        "lane-corpus:ex.nary-and-list-caps"
+      ],
+      "floor_label": "bounded"
+    },
+    {
+      "id": "elixir.demux-output-count-and-range-step",
+      "origin": "lane",
+      "cwe": 193,
+      "name": "demux with n_outputs below 1 returns wrong outputs",
+      "rationale": "Elixir ranges run downward when the last element is smaller than the first, unless a step is given, so 0..(n - 1) for n = 0 is [0, -1] and not empty. demux accepts any integer n_outputs and returns that many bit lists of the wrong length instead of rejecting it. A wrong-length result is a silent wrong answer, not an error; it is a package-local bug found by this review.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:demux-descending-range",
+          "state": "claimed",
+          "detail": "demux enumerates outputs with Enum.map(0..(n_outputs - 1), ...) (combinational.ex:266) and checks only that sel has ceil_log2(n_outputs) bits (:248-255); for n_outputs <= 0 that check passes with an empty sel, and the range 0..-1 (or 0..-4) runs downward by default. Probes on Elixir 1.19.5: demux(1, [], 0) returned [1, 1] and demux(1, [], -3) returned a list of more than four ones; the compiler printed \"Range.new/2 and first..last default to a step of -1 when last < first\" at that line.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:246-266"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.demux-outputs-matrix",
+          "state": "planned",
+          "detail": "demux rejects an n_outputs that is not a positive integer, and every output count from 1 to 17 returns exactly n_outputs bits.",
+          "planned_item": "LGE-EX-HARDEN"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:ex.warnings-as-errors",
+          "state": "planned",
+          "detail": "BUILD runs mix compile --warnings-as-errors (and mix test with warnings as errors) for the package and its path dependency. BUILD:1-2 does not: a compile warning is printed and the build is green. Today the package emits one: combinational.ex:266 (0..(n_outputs - 1) defaults to a step of -1 when n_outputs is 0 or negative; seen on Elixir 1.19.5).",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex.demux-outputs-matrix",
+        "compiler-flag:ex.warnings-as-errors"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.sequential-state-validation",
+      "origin": "lane",
+      "cwe": 665,
+      "name": "state is a caller-owned map the blocks trust",
+      "rationale": "The sequential blocks take the previous state from the caller and return a new one. The four bit fields are validated through d_latch (sequential.ex:135-139), but the state container is not: its shape, its length on the counter reset path, and its element types are accepted or fail with a VM error (elixir.unexpected-error-classes). Repairing garbage silently on reset hides a caller bug, the analogue of the \"no silent register repair\" findings in other lanes.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:counter-reset-skips-state-check",
+          "state": "claimed",
+          "detail": "On reset counter replaces the whole state with zeros without reading it (sequential.ex:340-347), so counter(0, 1, [:a, 7]) returns {[0, 0], zeros} for a state that is not a list of flip-flop maps (probe on Elixir 1.19.5); the other path reads ff_state.slave_q directly (:356) and validates it only through xor_gate. register checks the data and state lengths match (:225-229) but not that the elements are maps.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:225-229, :335-366"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:sequential-state-shape-errors",
+          "state": "claimed",
+          "detail": "d_flip_flop reads state.master_q and state.slave_q directly (sequential.ex:180-184): a state that is not a map with those keys raises KeyError or BadMapError, and shift_register raises CaseClauseError for an unknown :direction (sequential.ex:272-275). Probes: d_flip_flop(1, 1, %{}) raises KeyError, d_flip_flop(1, 1, 5) raises BadMapError, shift_register(1, 1, [], direction: :up) raises CaseClauseError.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:180-184, :272-275"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ex.sequential-state-matrix",
+          "state": "planned",
+          "detail": "Every sequential function rejects, with ArgumentError, a state that is not a map holding the four bit fields, a state list of the wrong length, and an element that is not a state map, and counter validates its state on the reset path too; tests with a bad value in every state field, and an is_list(state) guard, element-shape check and keyword-opts check on shift_register.",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ex.sequential-state-matrix"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.compiler-warnings-not-fatal",
+      "origin": "lane",
+      "cwe": 710,
+      "name": "a compile warning does not fail the build",
+      "rationale": "The Elixir compiler reports dead code, unused variables, deprecated calls and, as here, a descending default range as warnings, and BUILD only runs mix deps.get and mix test --cover (BUILD:1-2), so a warning cannot break a build. The compiler is the closest thing Elixir has to a conversion and type lint, which is why the registry row CWE-704 asks for a clean build. The package emits one warning today (combinational.ex:266, Range step).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:demux-descending-range",
+          "state": "claimed",
+          "detail": "demux enumerates outputs with Enum.map(0..(n_outputs - 1), ...) (combinational.ex:266) and checks only that sel has ceil_log2(n_outputs) bits (:248-255); for n_outputs <= 0 that check passes with an empty sel, and the range 0..-1 (or 0..-4) runs downward by default. Probes on Elixir 1.19.5: demux(1, [], 0) returned [1, 1] and demux(1, [], -3) returned a list of more than four ones; the compiler printed \"Range.new/2 and first..last default to a step of -1 when last < first\" at that line.",
+          "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:246-266"
+        },
+        {
+          "kind": "compiler-flag",
+          "id": "compiler-flag:ex.warnings-as-errors",
+          "state": "planned",
+          "detail": "BUILD runs mix compile --warnings-as-errors (and mix test with warnings as errors) for the package and its path dependency. BUILD:1-2 does not: a compile warning is printed and the build is green. Today the package emits one: combinational.ex:266 (0..(n_outputs - 1) defaults to a step of -1 when n_outputs is 0 or negative; seen on Elixir 1.19.5).",
+          "planned_item": "LGE-EX-HARDEN"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:ex.mix-format-check",
+          "state": "planned",
+          "detail": "BUILD also runs mix format --check-formatted so style drift is a build failure; it is hygiene, not a weakness proof.",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "compiler-flag:ex.warnings-as-errors"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "elixir.build-and-hex-hygiene",
+      "origin": "lane",
+      "cwe": 1357,
+      "name": "Hex publishing, lock files, coverage gate and test/release divergence",
+      "rationale": "The Hex supply chain is mix.lock (the pinned versions with checksums) and the Hex registry's package signing. This closure has no Hex dependency, so there is nothing to lock today, and the repository guards would fail a closure that gained one without a lock. Publishing is a separate gap: a path dependency cannot be published, there is no package metadata, the coverage gate is 80 against a 95 target, the test build differs from a release in protocol consolidation, and Windows builds the dependency by a different line. None of these is a weakness class by itself; each decides whether what is tested is what is shipped. Build, mix-task and install hooks are in this row, not in the CWE-94 rule.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:ex.hex-lock-and-dependency-policy-guards",
+          "state": "claimed",
+          "detail": "Repository CI runs python3 code/scripts/elixir_locks.py check (.github/workflows/ci.yml:869) and third_party_dependency_policy.py check --ecosystem elixir (ci.yml:915): a project whose path-dependency closure reaches a Hex dependency must carry a tracked mix.lock with checksums. This closure has none: mix.exs:24-28 lists only the path dependency, and code/packages/elixir/transistors/mix.exs lists deps [] (:24-26); there is no mix.lock. The guards run in the repository contracts job, not as part of a lane report."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:path-dependency-and-metadata",
+          "state": "claimed",
+          "detail": "mix.exs:26 depends on the transistors package by path (path: \"../transistors\"), which Hex refuses to publish; mix.exs:4-16 has no description or package metadata; the coverage threshold is 80 (mix.exs:12-14) although the suite measures 95.28%; consolidate_protocols is false in :test only (mix.exs:8), so the test build dispatches protocols differently from a release; BUILD_windows omits the transistors compile line that BUILD has (BUILD:1 versus BUILD_windows:1).",
+          "ref": "code/packages/elixir/logic_gates/mix.exs:4-28; code/packages/elixir/logic_gates/BUILD:1-2; code/packages/elixir/logic_gates/BUILD_windows:1"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:ex.publishable-package-metadata",
+          "state": "planned",
+          "detail": "mix.exs gains description, package (licenses, links, files) and a Hex-publishable dependency story: a path: dependency cannot be published to Hex (mix.exs:26), so the transistors package must be published first and referenced by version. Covered by the publish work of LGE-S5 (VER31 amendment) and the per-registry publish jobs; the package-local part is the mix.exs change.",
+          "planned_item": "LGE-EX-HARDEN"
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:ex.coverage-gate-95",
+          "state": "planned",
+          "detail": "mix.exs test_coverage threshold raised from 80 (mix.exs:12-14) to at least 95 for this package; the built-in mix test --cover is the coverage tool (no ExCoveralls). One local run on Elixir 1.19.5 measured 95.28% total, so the gate would pass today but nothing enforces it.",
+          "planned_item": "LGE-EX-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "build-check:ex.hex-lock-and-dependency-policy-guards",
+        "build-check:ex.publishable-package-metadata",
+        "build-check:ex.coverage-gate-95"
+      ]
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 95,
+      "name": "Improper Neutralization of Directives in Dynamically Evaluated Code (Eval Injection)",
+      "why_not": "Folded into registry row CWE-94; the library calls no Code.eval_* or Code.compile_*."
+    },
+    {
+      "cwe": 470,
+      "name": "Use of Externally-Controlled Input to Select Classes or Code (Unsafe Reflection)",
+      "why_not": "apply/3 and variable-module calls with caller data are on the CWE-94 primitive list (analyzer-rule:ex.no-dynamic-eval-reachable); the library makes none, and apply/3 appears only in the test file."
+    },
+    {
+      "cwe": 913,
+      "name": "Improper Control of Dynamically-Managed Code Resources",
+      "why_not": "Folded into CWE-94 (dynamic code) and elixir.module-redefinition-and-hot-code-loading (replacing a loaded module)."
+    },
+    {
+      "cwe": 915,
+      "name": "Improperly Controlled Modification of Dynamically-Determined Object Attributes",
+      "why_not": "Elixir maps and structs are immutable; Map.put/3 returns a new map, so there is no attribute write on a shared object. Folded into the CWE-1321 whitelist row and elixir.shared-runtime-state."
+    },
+    {
+      "cwe": 15,
+      "name": "External Control of System or Configuration Setting",
+      "why_not": "The Application environment is the setting store in Elixir; the library neither reads nor writes it. Folded into elixir.shared-runtime-state."
+    },
+    {
+      "cwe": 129,
+      "name": "Improper Validation of Array Index",
+      "why_not": "Nothing is indexed by a caller value: the one elem/2 call uses the constant indices 0 and 1 (sequential.ex:237), and an out-of-range elem/2 raises ArgumentError anyway."
+    },
+    {
+      "cwe": 191,
+      "name": "Integer Underflow (Wrap or Wraparound)",
+      "why_not": "Elixir integers are arbitrary precision and never wrap."
+    },
+    {
+      "cwe": 681,
+      "name": "Incorrect Conversion between Numeric Types",
+      "why_not": "The package converts no numeric type; folded into registry row CWE-704."
+    },
+    {
+      "cwe": 197,
+      "name": "Numeric Truncation Error",
+      "why_not": "No fixed-width integer exists in Elixir; only a bitstring segment truncates and the package has none (analyzer-rule:ex.no-bitstring-truncation covers it under CWE-190 and CWE-704)."
+    },
+    {
+      "cwe": 1287,
+      "name": "Improper Validation of Specified Type of Input",
+      "why_not": "Folded into registry rows CWE-20 and CWE-843 (the is_bit guard at gates.ex:60)."
+    },
+    {
+      "cwe": 252,
+      "name": "Unchecked Return Value",
+      "why_not": "Errors are raised, not returned as status codes. The fallback gate clauses call validate_bit! and would return its :ok if both arguments were valid, but that clause is reachable only when a guard has already failed, so at least one argument is invalid and validate_bit! raises (gates.ex:178-187)."
+    },
+    {
+      "cwe": 248,
+      "name": "Uncaught Exception",
+      "why_not": "Raising on a bad argument is the package contract; the classes that escape the documented pair are the row elixir.unexpected-error-classes."
+    },
+    {
+      "cwe": 833,
+      "name": "Deadlock",
+      "why_not": "No process, lock, message or timeout in the package; folded into registry row CWE-362."
+    },
+    {
+      "cwe": 667,
+      "name": "Improper Locking",
+      "why_not": "No lock or shared resource exists; folded into registry row CWE-362."
+    },
+    {
+      "cwe": 662,
+      "name": "Improper Synchronization",
+      "why_not": "No synchronization primitive is used; folded into registry row CWE-362."
+    },
+    {
+      "cwe": 426,
+      "name": "Untrusted Search Path",
+      "why_not": "The package loads no code and changes no code path (no :code.add_path, Code.require_file or Code.prepend_path); on the CWE-94 primitive list."
+    },
+    {
+      "cwe": 494,
+      "name": "Download of Code Without Integrity Check",
+      "why_not": "The library downloads nothing at runtime. Hex tarballs are checksum-verified through mix.lock; this closure has no Hex dependency (see elixir.build-and-hex-hygiene)."
+    },
+    {
+      "cwe": 1395,
+      "name": "Dependency on Vulnerable Third-Party Component",
+      "why_not": "No third-party dependency: the only dependency is the first-party transistors package by path (mix.exs:26)."
+    },
+    {
+      "cwe": 829,
+      "name": "Inclusion of Functionality from Untrusted Control Sphere",
+      "why_not": "Code.require_file, :code.load_file and similar are on the CWE-94 primitive list; the package includes nothing at runtime."
+    },
+    {
+      "cwe": 1050,
+      "name": "Excessive Platform Resource Consumption within a Loop",
+      "why_not": "Folded into elixir.input-size-heap-growth and registry rows CWE-400 and CWE-407."
+    },
+    {
+      "cwe": 606,
+      "name": "Unchecked Input for Loop Condition",
+      "why_not": "The loop bounds are list lengths and 2^n counts; folded into elixir.input-size-heap-growth."
+    },
+    {
+      "cwe": 1284,
+      "name": "Improper Validation of Specified Quantity in Input",
+      "why_not": "demux n_outputs is the one quantity argument; folded into elixir.demux-output-count-and-range-step. List lengths and select-bit counts are folded into elixir.input-size-heap-growth."
+    },
+    {
+      "cwe": 401,
+      "name": "Missing Release of Memory after Effective Lifetime",
+      "why_not": "The BEAM garbage-collects; the package starts no long-lived process and keeps no ETS table, so there is nothing to leak except atoms (elixir.atom-table-exhaustion)."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "elixir/logic_gates",
+      "reviewed_at_commit": "66ad075",
+      "scope": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/ (gates.ex, combinational.ex, sequential.ex, invalid_bit_error.ex) and lib/coding_adventures/logic_gates.ex (delegates), at the last commit that touched the package on main (66ad07564431, PR #19952: InvalidBitError and the exhaustive suite); line numbers were verified in a checkout that contains that commit and whose origin/main moved on only in other packages. The path dependency code/packages/elixir/transistors was read by hand for the same constructs and is in the call graph of the planned analyzer rules, but its own rows belong to its own threat list. tests/ and BUILD are evidence producers, not part of the claim. Hex is not involved: the closure has no Hex dependency.",
+      "rows": [
+        {
+          "threat": "elixir.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:ex.no-nif-port-ffi to be live, and no Elixir analyzer rule exists (LGE-A2 builds the grammar first, on top of the LGE-A1 core). By reading, the package and its transistors dependency contain no NIF, port or native call. The BEAM is an accepted baseline, so nothing in this row doubts the VM itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-nif-port-ffi",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:ex.no-nif-port-ffi to be live, and no Elixir analyzer rule exists (LGE-A2 builds the grammar first, on top of the LGE-A1 core). By reading, the package and its transistors dependency contain no NIF, port or native call. The BEAM is an accepted baseline, so nothing in this row doubts the VM itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-nif-port-ffi",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:ex.no-nif-port-ffi to be live, and no Elixir analyzer rule exists (LGE-A2 builds the grammar first, on top of the LGE-A1 core). By reading, the package and its transistors dependency contain no NIF, port or native call. The BEAM is an accepted baseline, so nothing in this row doubts the VM itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-nif-port-ffi",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:ex.no-nif-port-ffi to be live, and no Elixir analyzer rule exists (LGE-A2 builds the grammar first, on top of the LGE-A1 core). By reading, the package and its transistors dependency contain no NIF, port or native call. The BEAM is an accepted baseline, so nothing in this row doubts the VM itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-nif-port-ffi",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:ex.no-nif-port-ffi to be live, and no Elixir analyzer rule exists (LGE-A2 builds the grammar first, on top of the LGE-A1 core). By reading, the package and its transistors dependency contain no NIF, port or native call. The BEAM is an accepted baseline, so nothing in this row doubts the VM itself.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-nif-port-ffi",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-190",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time, and the two analyzer rules (no native code, no bitstring truncation) do not exist. The lane suite does push integer boundaries through every gate (+-2^31, +-2^63, +-2^64, +-10^100 are rejected with a bounded message, gates_exhaustive_test.exs:44-54, :139-148), which is why the row reaches tested; that is a probe set, not a proof for the whole integer line.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ex-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:44-54, :111-119, :139-148; code/packages/elixir/logic_gates/BUILD:2"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ex.no-nif-port-ffi",
+            "analyzer-rule:ex.no-bitstring-truncation",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: no analyzer rule and no seeded negative-control corpus exist or are live, so the exclusion route (no_dynamic_eval_reachable) is declared but unsatisfied. By reading, the library contains no evaluation primitive and no computed-module call; the compiled-only subset compiled_languages_no_eval never applies to Elixir, which compiles at runtime.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-dynamic-eval-reachable",
+            "lane-corpus:ex.seeded-eval-primitives",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-400",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close by itself: the registry safe subset pure_zero_allocation is unsatisfiable (the package allocates lists) and the discharge needs a step-bound proof for which no Elixir tool exists. What the package can fix, uncapped sizes, is carried by elixir.input-size-heap-growth with LGE-DOS-ALL and LGE-EX-HARDEN; no cap is merged for Elixir today (decoder, demux, mux_n, and_n, or_n, register and shift_register all accept any length).",
+          "evidence": [
+            {
+              "closure_id": "source-ref:decoder-select-bits-uncapped",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:337, :266, :246-262"
+            },
+            {
+              "closure_id": "source-ref:nary-gates-uncapped",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565"
+            },
+            {
+              "closure_id": "source-ref:ceil-log2-quadratic-bignum",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212, :246-262"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "elixir.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Open because recursion exists on main: depth is bounded by log2 of the list length (and a constant 3 for stabilize_sr), which does not make the class excluded. Excluding needs do_mux_n, ceil_log2 and stabilize_sr rewritten as folds (a package-local change carried in LGE-EX-HARDEN) and analyzer-rule:ex.call-graph-acyclic live (LGE-A2).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.call-graph-acyclic",
+            "LGE-A2",
+            "LGE-EX-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: the exclusion needs analyzer-rule:ex.no-hash-sort-search-over-caller-data (planned LGE-A2) and the package currently fails it (quadratic append at sequential.ex:284 and :299), and ceil_log2 is quadratic on a bignum count. The rewrites are package-local (LGE-EX-HARDEN) and the caps are LGE-DOS-ALL.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:quadratic-list-append",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
+            },
+            {
+              "closure_id": "source-ref:decoder-select-bits-uncapped",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:337, :266"
+            },
+            {
+              "closure_id": "source-ref:ceil-log2-quadratic-bignum",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ex.no-hash-sort-search-over-caller-data",
+            "LGE-A2",
+            "LGE-EX-HARDEN",
+            "LGE-DOS-ALL",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-ambient-capability-calls to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-ambient-capability-calls",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs ex.no-binary-to-term-or-deserialization to be live (the Elixir analyzer is LGE-A2, on top of the LGE-A1 core) and no analyzer reads this package. By reading, the library calls nothing in that category; the capability manifest (required_capabilities.json:5) is empty but checks nothing.",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-binary-to-term-or-deserialization",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "Proposed excluded-by-language, sign-off pending: the (elixir, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read \"excluded by language semantics (not machine-checked)\". Elixir has no prototype chains; the entry covers that mechanism only.",
+          "evidence": [],
+          "becomes_when": [
+            "LGE-S3b"
+          ],
+          "becomes_status": "excluded-by-language"
+        },
+        {
+          "threat": "elixir.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The 11 gates are tested at the boundaries and over [-1024, 1024] in both positions plus four powers of two and 10^100, but the domain is every term, so the label is tested; the floor is proved and no proof route for Elixir is planned. The matrix covers the 11 gates only; and_n and or_n are tested with one bad element, and the combinational and sequential blocks with examples (extending it is lane-corpus:ex.blocks-rejection-matrix in LGE-EX-HARDEN, which would not by itself reach the floor).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ex-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:28-137 (truth tables, every bad integer, every bad type, both positions, first-invalid-parameter order); code/packages/elixir/logic_gates/BUILD:2"
+            },
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-elixir",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:56-83 (type list), :111-119 (matrix); LG02-basic-gates-cross-lane-contract.md:625"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "elixir.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time, and analyzer-rule:ex.no-escape-hatches does not exist. The matrix covers the 11 gates in every position with 24 non-integer values; the guard is a runtime check, not a type-system guarantee (Elixir has none that is enforced), so the floor of proved has no route, and the registry evidence language-type-system-guarantee is supplied only by the runtime guard item.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-elixir",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:56-83, :111-119; LG02-basic-gates-cross-lane-contract.md:625"
+            },
+            {
+              "closure_id": "build-check:ex-is-bit-guard",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:60, :66-70, :137-145"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "elixir.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time; analyzer-rule:ex.no-implicit-conversion-calls and the warnings-as-errors build do not exist (BUILD:1-2 does not fail on a warning, and the package emits one today at combinational.ex:266). The float and wide-integer rows are tested for the 11 gates, so the row reaches tested; the floor is proved and no proof route for Elixir is planned.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ex-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:44-54 (wide integers), :63-66 (floats)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-elixir",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:56-83; LG02-basic-gates-cross-lane-contract.md:625"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "elixir.strict-equality-and-float-confusion",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. Floats are rejected by the guard and tested in every position of the 11 gates; the == comparisons that follow validation (combinational.ex:392, :463, :471; sequential.ex:96, :340) are safe today but would accept 1.0 if validation were removed.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ex-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:63-66, :111-119"
+            },
+            {
+              "closure_id": "type-confusion-matrix:lg02-s9-elixir",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:56-83"
+            },
+            {
+              "closure_id": "source-ref:loose-equality-after-validation",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:392, :463, :471; code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:96, :340"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ex-truth-and-rejection-suite",
+            "type-confusion-matrix:lg02-s9-elixir",
+            "LGE-L-elixir",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.unexpected-error-classes",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: six public functions raise errors outside the documented pair on ordinary bad input (mux_n with a non-power-of-two input count raises MatchError; and_n/or_n/demux with a non-list raise FunctionClauseError; d_flip_flop and the shift/counter functions raise KeyError or BadMapError for a bad state; shift_register raises CaseClauseError for an unknown direction, Protocol.UndefinedError for a non-enumerable state and FunctionClauseError for non-keyword opts; improper lists give FunctionClauseError in decoder and counter but ArgumentError in register and encoder). The planned fix is a package-local change plus a table test, both in LGE-EX-HARDEN; nothing is merged.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:mux-n-non-power-of-two-matcherror",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:162-198"
+            },
+            {
+              "closure_id": "source-ref:sequential-state-shape-errors",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:180-184, :272-275"
+            },
+            {
+              "closure_id": "source-ref:function-clause-and-guard-swallow",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565"
+            },
+            {
+              "closure_id": "source-ref:shift-register-unguarded-state-enumerable",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-305"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ex.error-class-matrix",
+            "LGE-EX-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.exception-identity",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. The suite asserts InvalidBitError, the parameter name and a bounded description on every gate in every position, so the label is tested. The cross-lane spec rows are stale (LG02 :500, :514, :625) and the v2 corpus binding is not built (the runner is blocked on LGE-CV2).",
+          "evidence": [
+            {
+              "closure_id": "build-check:ex-error-identity-contract",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/invalid_bit_error.ex:21-26; code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:94-99, :113-119"
+            },
+            {
+              "closure_id": "lane-corpus:ex-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:94-99, :111-119"
+            },
+            {
+              "closure_id": "source-ref:lg02-elixir-rows-stale",
+              "state": "claimed",
+              "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md:500, :514, :625"
+            }
+          ],
+          "becomes_when": [
+            "build-check:ex-error-identity-contract",
+            "lane-corpus:ex-truth-and-rejection-suite",
+            "lane-corpus:ex-v2-corpus-replay",
+            "build-check:lg02-elixir-rows-current",
+            "LGE-L-elixir",
+            "LGE-EX-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.caller-protocol-dispatch-in-messages",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: mux4 runs a caller's Inspect implementation (combinational.ex:136; verified with a marker-printing struct on Elixir 1.19.5, unconsolidated protocols) and shift_register runs a caller struct's Enumerable reduce (sequential.ex:281, review probe), so the package has counterexamples and the row reaches none. The 11 gates are clean and tested with a raising Inspect and String.Chars implementation, but that does not carry to this row.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ex-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:1-11, :76-77, :111-119"
+            },
+            {
+              "closure_id": "source-ref:mux4-inspects-caller-term",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:135-137"
+            },
+            {
+              "closure_id": "source-ref:shift-register-unguarded-state-enumerable",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-305"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ex.protocol-boom-all-public-functions",
+            "analyzer-rule:ex.no-inspect-or-to-string-on-caller-values",
+            "LGE-EX-HARDEN",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.bignum-in-error-text",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads the suite at report time. A 10^100000 integer yields a message under 120 characters and 2^64 prints exactly (gates_exhaustive_test.exs:139-148). Not every integer path is covered: other functions' messages print lengths and counts only (combinational.ex:167-174, :253-255), which cannot be huge.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ex-truth-and-rejection-suite",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/test/coding_adventures/gates_exhaustive_test.exs:139-148; code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:80-88"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ex-truth-and-rejection-suite",
+            "LGE-L-elixir",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.atom-table-exhaustion",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:ex.no-string-to-atom-on-caller-data to be live and no Elixir analyzer exists (LGE-A2). By reading, the package creates no atom from data; the description helper returns constant strings (gates.ex:90-92).",
+          "evidence": [],
+          "becomes_when": [
+            "analyzer-rule:ex.no-string-to-atom-on-caller-data",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.shared-runtime-state",
+          "status": "open",
+          "reached": "none",
+          "reason": "No machine check: the exclusion needs analyzer-rule:ex.no-global-state-apis to be live and no Elixir analyzer exists (LGE-A2). By reading, no function reads or writes the process dictionary, the application environment, :persistent_term or ETS.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:state-passed-explicitly",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:172-193, :223-237"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ex.no-global-state-apis",
+            "LGE-A2",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "elixir.module-redefinition-and-hot-code-loading",
+          "status": "open",
+          "reached": "none",
+          "reason": "Cannot close inside the package: a caller in the same VM can redefine any module (probe: the gates returned 7 after the transistors module was replaced), and the library has no way to detect or prevent it. Every release says so. Output validation of the delegate's result would only help against a partial replacement, not against a caller who can also replace Gates.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:gates-trust-delegate-output",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:142, :181, :222, :264, :312, :349, :388"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "elixir.input-size-heap-growth",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: no size cap exists in the package (decoder, demux, mux_n, register, shift_register, counter, and_n and or_n all accept any length), and neither planned cap suite exists. demux must also reject n_outputs outside a small positive range before any computation (ceil_log2 is quadratic on a bignum), and shift_register can be given a never-ending Stream state. Both caps are package-local work: the select and width caps are LGE-DOS-ALL and the n-ary cap plus the linear-time append are LGE-EX-HARDEN.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:decoder-select-bits-uncapped",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:337, :266"
+            },
+            {
+              "closure_id": "source-ref:nary-gates-uncapped",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:530-538, :557-565"
+            },
+            {
+              "closure_id": "source-ref:quadratic-list-append",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:278-305"
+            },
+            {
+              "closure_id": "source-ref:ceil-log2-quadratic-bignum",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:203-212"
+            },
+            {
+              "closure_id": "source-ref:shift-register-unguarded-state-enumerable",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:266-305"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ex.size-caps",
+            "lane-corpus:ex.nary-and-list-caps",
+            "LGE-DOS-ALL",
+            "LGE-EX-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.demux-output-count-and-range-step",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: demux(1, [], 0) returns [1, 1] and a negative count returns a longer list (probes), and the compiler warns at combinational.ex:266 without failing the build. The fix and its test are package-local (LGE-EX-HARDEN).",
+          "evidence": [
+            {
+              "closure_id": "source-ref:demux-descending-range",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:246-266"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ex.demux-outputs-matrix",
+            "compiler-flag:ex.warnings-as-errors",
+            "LGE-EX-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.sequential-state-validation",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: counter on reset discards and replaces any state without validating it, and a state of the wrong shape raises KeyError or BadMapError rather than ArgumentError. The existing sequential tests are examples (sequential_test.exs) and none feeds a bad state. The fix and the matrix are package-local (LGE-EX-HARDEN).",
+          "evidence": [
+            {
+              "closure_id": "source-ref:counter-reset-skips-state-check",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:225-229, :335-366"
+            },
+            {
+              "closure_id": "source-ref:sequential-state-shape-errors",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/sequential.ex:180-184, :272-275"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ex.sequential-state-matrix",
+            "LGE-EX-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.compiler-warnings-not-fatal",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: BUILD does not pass --warnings-as-errors and the package compiles with one warning (combinational.ex:266, seen on Elixir 1.19.5). The flag is a one-line BUILD change in LGE-EX-HARDEN together with the Range fix.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:demux-descending-range",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:266; code/packages/elixir/logic_gates/BUILD:1-2"
+            }
+          ],
+          "becomes_when": [
+            "compiler-flag:ex.warnings-as-errors",
+            "LGE-EX-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "elixir.build-and-hex-hygiene",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: the repository guards exist in CI but no lane report reads them. Publishing is not possible as written (path dependency, no metadata, mix.exs:26) and the coverage gate is below the target; those are package-local fixes (LGE-EX-HARDEN) plus the publish work (LGE-S5).",
+          "evidence": [
+            {
+              "closure_id": "build-check:ex.hex-lock-and-dependency-policy-guards",
+              "state": "claimed",
+              "ref": ".github/workflows/ci.yml:869, :915; code/scripts/elixir_locks.py:1-30; code/packages/elixir/logic_gates/mix.exs:24-28"
+            },
+            {
+              "closure_id": "source-ref:path-dependency-and-metadata",
+              "state": "claimed",
+              "ref": "code/packages/elixir/logic_gates/mix.exs:4-28; code/packages/elixir/logic_gates/BUILD:1-2"
+            }
+          ],
+          "becomes_when": [
+            "build-check:ex.hex-lock-and-dependency-policy-guards",
+            "build-check:ex.publishable-package-metadata",
+            "build-check:ex.coverage-gate-95",
+            "LGE-EX-HARDEN",
+            "LGE-S5",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        }
+      ]
+    }
+  }
+}

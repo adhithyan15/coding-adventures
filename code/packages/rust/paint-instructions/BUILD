@@ -1,1 +1,1 @@
-cargo test -p paint-instructions -- --nocapture
+cargo test --locked -p paint-instructions -- --nocapture

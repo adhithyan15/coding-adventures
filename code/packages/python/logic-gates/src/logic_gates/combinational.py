@@ -42,7 +42,14 @@ These circuits fill the gap between individual gates and the ALU:
 
 from __future__ import annotations
 
-from logic_gates.gates import AND, NOT, OR, _validate_bit
+from logic_gates.gates import (
+    AND,
+    NOT,
+    OR,
+    _safe_int_text,
+    _safe_type_name,
+    _validate_bit,
+)
 
 # ---------------------------------------------------------------------------
 # Size caps (denial-of-service defence)
@@ -77,7 +84,7 @@ def _require_bit_list(value: object, name: str, *, min_len: int = 0) -> list[int
     list is rejected in O(1).
     """
     if type(value) is not list:
-        msg = f"{name} must be a list of bits, got {type(value).__name__}"
+        msg = f"{name} must be a list of bits, got {_safe_type_name(value)}"
         raise TypeError(msg)
     if len(value) > MAX_WIDTH:
         msg = f"{name} has {len(value)} elements; maximum is {MAX_WIDTH}"
@@ -206,12 +213,11 @@ def mux4(d0: int, d1: int, d2: int, d3: int, sel: list[int]) -> int:
     _validate_bit(d2, "d2")
     _validate_bit(d3, "d3")
 
-    if not isinstance(sel, list) or len(sel) != 2:
+    # Exact-list check plus validated snapshot: compute only from the copy.
+    sel = _require_bit_list(sel, "sel")
+    if len(sel) != 2:
         msg = "sel must be a list of exactly 2 bits"
         raise ValueError(msg)
-
-    for i, bit in enumerate(sel):
-        _validate_bit(bit, f"sel[{i}]")
 
     # First level: sel[0] selects within each pair
     r0 = mux2(d0, d1, sel[0])
@@ -243,19 +249,15 @@ def mux8(inputs: list[int], sel: list[int]) -> int:
         >>> mux8([0, 0, 0, 0, 0, 0, 0, 1], [1, 1, 1])  # sel=111, select inputs[7]=1
         1
     """
-    if not isinstance(inputs, list) or len(inputs) != 8:
+    inputs = _require_bit_list(inputs, "inputs")
+    if len(inputs) != 8:
         msg = "inputs must be a list of exactly 8 bits"
         raise ValueError(msg)
 
-    for i, bit in enumerate(inputs):
-        _validate_bit(bit, f"inputs[{i}]")
-
-    if not isinstance(sel, list) or len(sel) != 3:
+    sel = _require_bit_list(sel, "sel")
+    if len(sel) != 3:
         msg = "sel must be a list of exactly 3 bits"
         raise ValueError(msg)
-
-    for i, bit in enumerate(sel):
-        _validate_bit(bit, f"sel[{i}]")
 
     # Lower 4 inputs selected by sel[0:2]
     r0 = mux4(inputs[0], inputs[1], inputs[2], inputs[3], sel[0:2])
@@ -301,7 +303,7 @@ def mux_n(inputs: list[int], sel: list[int]) -> int:
 
     expected_sel_bits = n.bit_length() - 1
     if type(sel) is not list:
-        msg = f"sel must be a list of bits, got {type(sel).__name__}"
+        msg = f"sel must be a list of bits, got {_safe_type_name(sel)}"
         raise TypeError(msg)
     if expected_sel_bits > MAX_SELECT_BITS or len(sel) != expected_sel_bits:
         msg = (
@@ -385,20 +387,20 @@ def demux(data: int, sel: list[int], n_outputs: int) -> list[int]:
     _validate_bit(data, "data")
 
     if type(n_outputs) is not int:
-        msg = f"n_outputs must be an int, got {type(n_outputs).__name__}"
+        msg = f"n_outputs must be an int, got {_safe_type_name(n_outputs)}"
         raise TypeError(msg)
 
     # Cap BEFORE any allocation: n_outputs is caller-chosen.
     if n_outputs < 2 or (n_outputs & (n_outputs - 1)) != 0:
-        msg = f"n_outputs must be a power of 2 >= 2, got {n_outputs}"
+        msg = f"n_outputs must be a power of 2 >= 2, got {_safe_int_text(n_outputs)}"
         raise ValueError(msg)
     if n_outputs > MAX_WIDTH:
-        msg = f"n_outputs {n_outputs} exceeds maximum {MAX_WIDTH}"
+        msg = f"n_outputs {_safe_int_text(n_outputs)} exceeds maximum {MAX_WIDTH}"
         raise ValueError(msg)
 
     expected_sel_bits = n_outputs.bit_length() - 1
     if type(sel) is not list:
-        msg = f"sel must be a list of bits, got {type(sel).__name__}"
+        msg = f"sel must be a list of bits, got {_safe_type_name(sel)}"
         raise TypeError(msg)
     if len(sel) != expected_sel_bits:
         msg = f"sel must be a list of {expected_sel_bits} bits for {n_outputs} outputs"

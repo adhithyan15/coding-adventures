@@ -1,1 +1,1 @@
-cargo test -p ppt-writer -- --nocapture
+cargo test --locked -p ppt-writer -- --nocapture

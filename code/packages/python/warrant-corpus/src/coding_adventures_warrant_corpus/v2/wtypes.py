@@ -302,6 +302,99 @@ def parse_type(
     return ty
 
 
+# ---------------------------------------------------------------------------
+# The ``types`` table itself (section 2.2): limits every consumer enforces
+# ---------------------------------------------------------------------------
+# "Rules, all enforced at generation and again by every consumer."  The table is
+# a hostile input like any other part of a corpus, so before a name in it is
+# looked up (by ``parse_type``, a codec or a descriptor) the table as a whole is
+# held to the rules.  The *code* of the refusal belongs to the context that is
+# reading the table -- ``type`` for a ``v2-value`` case, ``corpus`` for a
+# ``v2-chunk`` case or a corpus part, ``descriptor`` for a ``v2-domain`` case --
+# so the checker takes it as an argument.
+MAX_ERROR_CASES = 64  # rule 2: one to 64 cases
+MAX_RECORD_FIELDS = 32  # rule 3: one to 32 fields
+MIN_VARIANT_CTORS = 2  # rule 3: a one-constructor sum is a record
+MAX_VARIANT_CTORS = 64
+MAX_CTOR_FIELDS = 8  # rule 3: a constructor has zero to 8 fields
+
+# The reserved built-ins a declared name may not take (section 2.2, R58): the
+# names of the type grammar.  A table row called ``U8`` would otherwise be
+# unreachable (the grammar reads ``U8`` as the integer) or, worse, ambiguous.
+BUILTIN_TYPE_NAMES = frozenset(
+    {"Bool", "Nat", "Int", "Bytes", "List", "Option", "Result", *FIXED}
+)
+
+_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
+
+
+def _is_name(value: object) -> bool:
+    return type(value) is str and _NAME.match(value) is not None
+
+
+def check_types_table(types: object, code: str) -> None:
+    """Refuse, with ``code``, a ``types`` table that breaks a rule of section 2.2.
+
+    Checked, for every row: the name is not a reserved built-in; an ``error``
+    type has 1 to 64 cases, each a name of the grammar of rule 4, all different
+    (cases are compared by name, rule 2); a ``record`` has 1 to 32 fields; a
+    ``variant`` has 2 to 64 constructors; a constructor has 0 to 8 fields; field
+    and constructor names match ``[A-Za-z_][A-Za-z0-9_]*`` (rule 4) and a
+    constructor is not a built-in either.  A row that is not one of those three
+    kinds, or whose lists are not lists of the right shape, is refused too: it
+    cannot be counted.
+
+    The table is walked once, with no recursion, so its size costs time
+    proportional to itself and nothing more.
+    """
+
+    def refuse(why: str) -> Refusal:
+        return Refusal(code, f"the types table breaks section 2.2: {why}")
+
+    if type(types) is not dict:
+        raise refuse("it is an object")
+    for name, row in types.items():
+        if not _is_name(name) or name in BUILTIN_TYPE_NAMES:
+            raise refuse("a declared type name is a built-in or not a name")
+        if type(row) is not dict:
+            raise refuse("a row is an object")
+        kind = row.get("kind")
+        if kind == "error":
+            cases = row.get("cases")
+            if type(cases) is not list or not 1 <= len(cases) <= MAX_ERROR_CASES:
+                raise refuse("an error type has one to 64 cases")
+            if not all(_is_name(c) for c in cases) or len(set(cases)) != len(cases):
+                raise refuse("the cases of an error type are different names")
+        elif kind == "record":
+            fields = row.get("fields")
+            if type(fields) is not list or not 1 <= len(fields) <= MAX_RECORD_FIELDS:
+                raise refuse("a record has one to 32 fields")
+            for entry in fields:
+                if type(entry) is not list or len(entry) != 2 or not _is_name(entry[0]):
+                    raise refuse("a field is a [name, type] pair with a legal name")
+                if type(entry[1]) is not str:
+                    raise refuse("a field type is text")
+        elif kind == "variant":
+            ctors = row.get("ctors")
+            if (
+                type(ctors) is not list
+                or not MIN_VARIANT_CTORS <= len(ctors) <= MAX_VARIANT_CTORS
+            ):
+                raise refuse("a variant has two to 64 constructors")
+            for entry in ctors:
+                if type(entry) is not list or len(entry) != 2:
+                    raise refuse("a constructor is a [name, [types]] pair")
+                ctor, payload = entry
+                if not _is_name(ctor) or ctor in BUILTIN_TYPE_NAMES:
+                    raise refuse("a constructor name is a built-in or not a name")
+                if type(payload) is not list or len(payload) > MAX_CTOR_FIELDS:
+                    raise refuse("a constructor has zero to 8 fields")
+                if not all(type(t) is str for t in payload):
+                    raise refuse("a constructor field type is text")
+        else:
+            raise refuse("a row is an error, a record or a variant")
+
+
 def forget_widths(ty: Ty) -> Ty:
     """Replace every *named* width in ``ty`` by plain ``Bytes`` (R70)."""
     if ty.head == "Bytes" and ty.args and isinstance(ty.args[0], str):

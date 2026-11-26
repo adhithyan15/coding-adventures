@@ -400,6 +400,7 @@ func (c *classifier) budgetOut() {
 // runTrace classifies one step's trace.
 func (c *classifier) runTrace(t *trace.Trace) {
 	c.pairs = nil
+	c.census.noteParseRules(t)
 	if c.step < len(c.execHeads) && c.execHeads[c.step] != nil {
 		c.pairs = pairExecHeads(t, c.execHeads[c.step])
 	}

@@ -164,6 +164,36 @@ func TestEveryExternalConsumerExportsInputs(t *testing.T) {
 	}
 }
 
+func TestMicrobenchmarkPairsConsumersExportCanonicalInput(t *testing.T) {
+	want := []string{microbenchmarkPairsFixturePath}
+	root := t.TempDir()
+	packages := []discovery.Package{
+		{Name: "go/microbenchmark", Language: "go", Path: filepath.Join(root, "code", "packages", "go", "microbenchmark")},
+		{Name: "go/rank-statistics", Language: "go", Path: filepath.Join(root, "code", "packages", "go", "rank-statistics")},
+		{Name: "python/microbenchmark", Language: "python", Path: filepath.Join(root, "code", "packages", "python", "microbenchmark")},
+		{Name: "python/rank-statistics", Language: "python", Path: filepath.Join(root, "code", "packages", "python", "rank-statistics")},
+	}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics"} {
+		var got []string
+		for _, pkg := range graph.Packages {
+			if pkg.Name == name {
+				got = pkg.RepoInputs
+				if len(pkg.RepoInputGlobs) != 0 || pkg.RepoInputsUnknown {
+					t.Errorf("%s unexpectedly exports globs/unknown=%v", name, pkg.RepoInputsUnknown)
+				}
+				break
+			}
+		}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("%s exports %v; want only %v", name, got, want)
+		}
+	}
+}
+
 func TestKilnExportRefusesSymlinkAndEmpty(t *testing.T) {
 	dir := t.TempDir()
 	target := filepath.Join(dir, "real.json")

@@ -27,3 +27,5 @@ cd ..\..\..\.. && cargo run -q --release --manifest-path code/packages/rust/Carg
 # CV2 S10 adopter (wasm-leb128): the same line for the committed wasm-leb128 v2 fixture, with `--release`
 # (2 min 11 s; in debug about 20 min, because the corpus has 46.6 M cases).
 cd ..\..\..\.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/wasm-leb128.warrant --profile code/specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings code/packages/rust/wasm-leb128/evidence.bindings --out code/specs/fixtures/wasm-leb128-warrant-v2
+# LGE-S1c (logic-gates-basic): the same line for the committed basic-gates v2 fixture, without --bindings.
+cd ..\..\..\.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/logic-gates-basic.warrant --profile code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile --out code/specs/fixtures/logic-gates-basic-warrant-v2

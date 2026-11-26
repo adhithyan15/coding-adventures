@@ -243,3 +243,41 @@ fn test_tri_state_exhaustive() {
     assert_eq!(tri_state(0, 1), Some(0));
     assert_eq!(tri_state(1, 1), Some(1));
 }
+
+// ===========================================================================
+// MUX_N — differential test against the plain index formula
+// ===========================================================================
+//
+// The select bits are an LSB-first binary number: output = inputs[sum sel[i] << i].
+// mux_n is built from a tournament of 2:1 MUXes; this pins it to the formula for
+// every select value, with several deterministic input patterns per width.
+
+#[test]
+fn test_mux_n_matches_the_index_formula() {
+    for &n in &[2usize, 4, 32, 64] {
+        let width = n.trailing_zeros() as usize;
+        let mut seed: u64 = 0x9E37_79B9_7F4A_7C15 ^ n as u64;
+        for round in 0..16 {
+            let inputs: Vec<u8> = (0..n)
+                .map(|i| match round {
+                    0 => 0,
+                    1 => 1,
+                    2 => (i % 2) as u8,
+                    3 => ((i + 1) % 2) as u8,
+                    _ => {
+                        seed = seed
+                            .wrapping_mul(6364136223846793005)
+                            .wrapping_add(1442695040888963407);
+                        ((seed >> 33) & 1) as u8
+                    }
+                })
+                .collect();
+            for index in 0..n {
+                let sel: Vec<u8> = (0..width).map(|i| ((index >> i) & 1) as u8).collect();
+                let formula: usize = sel.iter().enumerate().map(|(i, &b)| (b as usize) << i).sum();
+                assert_eq!(formula, index);
+                assert_eq!(mux_n(&inputs, &sel), inputs[formula], "n={n} index={index}");
+            }
+        }
+    }
+}

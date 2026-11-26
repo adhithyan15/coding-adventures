@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "c45d240d96a9067b2d3c55b236c5ac0f69ca72f032cbd3116a61bf5a19442f09"
+    "0293cb2c0d5c0c97d2513251f1a8bbfca64f27cc8f04acbec88035dcf8a7ad74"
 )
 WINDOWS_COVERAGE_PREFIX_BLOCK = (
     '          coverage_prefix="$PWD/bisect"\n'
@@ -398,6 +398,7 @@ def validate_workflow_policy_text(workflow_text: str) -> None:
         "create-source-archive",
         "validate-downstream-output",
         "if-no-files-found: error",
+        'archive-mirrors: "https://opam.ocaml.org/cache"',
         "retention-days: 7",
     ):
         if required not in workflow_text:
@@ -419,6 +420,31 @@ def validate_workflow_policy_text(workflow_text: str) -> None:
     jobs = parsed.get("jobs")
     if not isinstance(jobs, Mapping) or set(jobs) != {"contract", "representative"}:
         raise ContractError("workflow jobs must be exactly contract and representative")
+    # The only reviewed integrity-bypass flag is the local-package pin line.
+    try:
+        ocaml_toolchain_lock.require_no_checksum_bypass(
+            workflow_text, allow_no_checksums=1
+        )
+    except ocaml_toolchain_lock.ContractError as exc:
+        raise ContractError(str(exc)) from exc
+    if (
+        "opam pin add --no-action --working-dir --no-checksums --yes"
+        not in workflow_text
+    ):
+        raise ContractError("workflow --no-checksums must be the reviewed local pin")
+    steps = jobs["representative"].get("steps") if isinstance(jobs["representative"], Mapping) else None
+    mirror_runs = [
+        step.get("run")
+        for step in steps or []
+        if isinstance(step, Mapping) and step.get("name") == "Add the opam archive mirror"
+    ]
+    if (
+        len(mirror_runs) != 1
+        or not isinstance(mirror_runs[0], str)
+        or mirror_runs[0].rstrip()
+        != ocaml_toolchain_lock.EXPECTED_ARCHIVE_MIRROR_RUN.rstrip()
+    ):
+        raise ContractError("workflow must contain exactly the reviewed opam archive mirror step")
 
 
 def validate_repository(repo_root: Path, *, check_workflow: bool = True) -> dict[str, Any]:

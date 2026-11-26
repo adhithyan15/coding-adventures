@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- The C# engine this package binds is CodingAdventures.TestBootstrap. Two
+         assemblies with one identity collide in coverlet (and look like 0%
+         coverage), so the F# binding names itself explicitly. -->
+    <AssemblyName>CodingAdventures.TestBootstrap.FSharp</AssemblyName>
+    <RootNamespace>CodingAdventures.TestBootstrap.FSharp</RootNamespace>
+    <PackageId>CodingAdventures.TestBootstrap.FSharp</PackageId>
+    <Version>0.2.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Idiomatic F# bindings over the C# pbt-v1 property-based testing engine (Gen combinators, gen { }, Prop.check, Verdict) and the C# fuzz-v1 coverage-guided fuzz engine (fuzz { }, Campaign.run, mutators, signatures, TAP)</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="TestBootstrap.fs" />
+    <Compile Include="Fuzz.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- One engine, not two (VER05l section 1): the C# project is the engine. -->
+    <ProjectReference Include="../../csharp/test-bootstrap/CodingAdventures.TestBootstrap.csproj" />
+  </ItemGroup>
+</Project>

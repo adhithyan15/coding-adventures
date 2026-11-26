@@ -540,7 +540,8 @@ a call, second `???(` or signal line from the same pid before its exit is
 `unmatched-resume`, and one never followed by the exit is `unresumed-call`.
 This covers the superseded-leader exec case too, which is still refused. A
 handled call whose result is `?` (including `ERESTARTSYS`) is `result`:
-restarted calls are not recognised in v1. A final line without its newline is `unparsable-line`, since strace may have
+restarted calls are not recognised in v1, except the one shape of D50 rule 2b
+(a `fork`, `vfork` or `clone` that ended `= ? ERESTARTNOINTR`). A final line without its newline is `unparsable-line`, since strace may have
 been cut off mid-line.
 
 **A phantom `execve` (D33).** The same race has a fourth spelling. A thread T
@@ -2118,7 +2119,27 @@ supervisor's half of the G7 definition: strace started, was not signalled
 (by anyone, so also not by the supervisor's own kill), was not truncated, and
 wrote nothing to its standard output or error. The other half (the trace
 parses, the root's exit line exists, and `strace_exit` equals it) is
-`collect`'s. `step_netns` is true only when strace was started with the
+`collect`'s. When strace did write to its standard error, the
+sidecar also carries `strace_stderr_code` (additive, omitted when strace was
+quiet, so the step schema stays at 3): the recorder, ON THE RUNNER, reduces
+the first 4 KiB of that text to one code of a closed list (the stream also
+carries the sandbox helper's stderr, so Kiln's own prefixes are matched first),
+in this order of precedence: `sandbox-exec-notify` (`kiln sandbox-init:
+exec-notify:`), `sandbox-helper` (`kiln sandbox-exec:` or `kiln sandbox-init:`),
+`ptrace-listen-eio` (`ptrace(PTRACE_LISTEN` with `Input/output error`, the known
+race on a dying thread), `attach-failed` (`attach: ptrace(PTRACE_SEIZE`, or
+`PTRACE_SEIZE` with `attach`), `oom`, `tracee-gone` (`No such process`),
+`unknown-pid` (`Exit of unknown pid`), `umove-failed` (`umoven:`/`umovestr:
+short read`), `ptrace-other` (any other `ptrace(` failure, a bare `Operation not
+permitted` from one included), `wait-failed` (`wait4(` or `waitid(`),
+`exit-killed` (strace was signalled and nothing above matched) and `unknown`
+(an EPERM that is not a ptrace call lands here). The strace wordings are from
+memory of strace's sources, not checked against 6.19. The text is never copied into the sidecar, a record or the census (it stays in
+`<step>.strace-stderr`); the census counts the codes, and the signals that
+killed strace, per shard (`explain.sidecar.strace_stderr_codes` and
+`strace_signals`, and `strace_exits` for the exit status of steps with stderr text as `exit-0`, `exit-1`, `exit-2`, `exit-125`, `exit-126`, `exit-127` or `exit-other`; `unrecorded` for text with no code). The field is
+informational: the reason stays `strace-stderr-not-empty`, no key reads it,
+and `kiln:recorder` is unchanged. `step_netns` is true only when strace was started with the
 `kiln sandbox-exec` command above, the only way a step runs, because that
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
@@ -4275,6 +4296,75 @@ reader, not by G2. The census keeps reporting the share p50/p90/p99, the
 is annotated in the summary as reported, not a gate, and no census or CI job fails
 on G2.
 
+**Decision D50: two shapes the model refused that are provably safe (parser pass 2, `internal/trace/model.go`; `kiln:recorder` 19 to 21).**
+Both rules live in the shared model, so both readers get them. Each was specified
+by the reviewer and neither widens what the classifier believes beyond what is
+argued here. The recorder version only goes up: 20 belongs to the open PR that
+took it, and whichever change lands second renumbers.
+
+*Rule 2b: a spawn that ended `= ? ERESTARTNOINTR`.* Accepted for `fork`, `vfork`
+and `clone` (never `clone3`), whole-line or split (`clone(... <unfinished ...>`
+then `<... clone resumed>...) = ? ERESTARTNOINTR (To be restarted)`). The result
+must be `?` with the errno name exactly `ERESTARTNOINTR`, and a clone's flags
+must pass the existing flag check (no `CLONE_UNTRACED`, no `CLONE_NEW*`, no
+hex or unnamed token) and every token must be a name strace prints. It emits no
+event, no spawn record, and is not a dropped spawn; it is NOT paired with the
+call that follows. Soundness: `ERESTARTNOINTR` is the kernel's "restart this call
+unconditionally" code, returned from `copy_process` when a signal became pending
+before the new task was made visible, on a path that frees the half-built task. No
+child exists and none ran. The kernel then re-executes the call itself, a
+fresh line judged like any other, and a signal handler may run in between, so
+pairing would hide a spawn that happened or invent one that did not. Still
+`result`: any other `ERESTART*` name on these calls, `ERESTARTNOINTR` on a
+call that is not a spawn, and a bare `= ?`.
+
+*Rule 2c: a successful read-only `open` or `openat` with no descriptor
+annotation.* Today `fd-path`. Accepted when the result is a plain non-negative
+decimal descriptor with NO annotation at all (one that is present but does not
+parse stays refused, as does a hex or pid-namespace-annotated result); the path
+is a quoted string; the directory descriptor passes the existing rules; every
+`|`-separated flag token is in the closed set `O_RDONLY, O_CLOEXEC, O_NONBLOCK,
+O_NDELAY, O_DIRECTORY, O_NOFOLLOW, O_LARGEFILE, O_NOCTTY, O_NOATIME, O_PATH`
+with no numeric residue; and `O_RDONLY` or `O_PATH` is present. The event is
+emitted with an empty `ReturnFDPath`. Soundness: the annotation only lets the
+classifier compare the walk with the kernel; without it the classifier walks
+the named path and records the read against it under the strict stability rule,
+as it already does for a descriptor that names a pipe or an anonymous inode
+(`openCall` with a non-absolute return path, confirmed by `bareopen_test.go`:
+a final symlink is followed as a stat follows it, a `/proc` magic link is still
+`proc-path`, a path under the tmpfs is contained). The closed flag set rules out
+any hidden write. Still `fd-path`: any write-capable, creating, truncating or
+`O_TMPFILE` open, `openat2`, `creat`, and every LATER call on the descriptor
+that lacks its own annotation (listings, `fchdir`).
+
+*Evidence.* Both rules count their firings (`Trace.RestartedSpawns`,
+`Trace.BareOpens`), summed into the census (`parse_restarted_spawns`,
+`parse_bare_opens` in each action's census file, `parse_rules` in the shard
+summary, a "Parse rules" section in its markdown), so the next census shows
+whether they matter. Tests: `d50_*_test.go` (accept and neighbour-refuse shapes,
+a biased twin differential, mutants that must be killed),
+`bareopen_*_test.go` (classifier and the biased read-set oracle), and the real
+kernel test `TestSandboxStraceRestartedSpawn`, which CI runs with `-count=20`
+next to the signal and dying-thread tests: a refusal rule that passes once is not
+evidence (the D46 flake).
+
+*Observed on real kernels, and the pinned-strace experiment.* Both runner images
+run kernel 7.0 but ship different strace: 6.8 on ubuntu-24.04, 6.19 on
+ubuntu-26.04. About a quarter of Go actions per census run are refused as
+`unresumed-call` on 24.04 and none on 26.04. The hypothesis is that 6.19 prints a
+thread killed at its syscall-entry stop in the "never ran" form the parser
+already accepts. To test it without changing the default, the census workflow
+(`.github/workflows/kiln-census.yml`) has a dispatch-only input `strace`
+(`system`, the default, or `6.19`). `6.19` builds strace from the official
+release tarball (SHA-256 pinned in the workflow), installs it under
+`$RUNNER_TEMP`, and passes it to every `kiln record prepare` as `--strace`; that
+path meets prepare's placement rules (canonical, a regular file, outside the
+checkout, the step TMPDIR, every state root and the record directory) for the
+same reason the kiln and build-tool binaries do. Nothing in Kiln reads the
+strace version except to record it in the binding and the census "Host" line;
+its path is sealed in `pre/tools.json`. Such a run says so in every shard's summary and is NOT PR8
+evidence; the scheduled run is always `system`.
+
 **Decision D48: exec heads recorded at exec time (`kiln:recorder` bumps at step 3 for the filter and at step 5 for consumption; design adopted from the spike, `specs/KILN04-exec-head-spike.md`).**
 *This decision is the design. Nothing in it changes what the classifier believes until step 5 of the plan below.*
 
@@ -5181,10 +5271,10 @@ from the text above, the text is not changed and the departure is listed here:
      only when the shard ran with exec heads, four hard criteria: no `exechead-*` unclean reason on any
      step, no supervisor kill, no `exechead-*` parse reason (and no `exechead-seal` void), and no
      `exechead-kernel` sub-code when the kernel series is on the trusted table (7.0).
-  3. The census workflow's `workflow_dispatch` takes `exec_head` (default false). When true, every
+  3. The census workflow's `workflow_dispatch` takes `exec_head` (default true since 2026-11-25; it was false). When true, every
      shard's summary opens with a line saying the run is an exec-head run and NOT PR8 evidence,
      `prepare` gets `--exec-head`, and a broken criterion fails the shard (`--strict-exec-head`:
-     the soft passes of a fresh run stay annotations). The scheduled run sets nothing and is unchanged.
+     the soft passes of a fresh run stay annotations). The default flipped to true because census runs A' (45443745064/45443753967), B (45466205573/45466210497) and the classification pair (45557016876/45557181111) were all clean on the hard criteria. The scheduled run is forced to `exec_head=false` in the validate step, so the weekly PR8 evidence is unchanged.
 - *Step 6 vacuity counters (census run A found a hole in items 2-3).* Run A sealed exec heads on shards
   that held only Rust actions; a fresh HOME has no cargo, so every action failed in 0.1 s and no step
   exec'd a binary under the step tmpfs. Every sub-code was 0, `go_emittable` was 0, and the strict checker

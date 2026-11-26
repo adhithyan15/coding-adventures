@@ -1,1 +1,1 @@
-cargo test -p datetime-core -- --nocapture
+cargo test --locked -p datetime-core -- --nocapture

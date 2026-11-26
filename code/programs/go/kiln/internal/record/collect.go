@@ -120,6 +120,26 @@ type CollectResult struct {
 // anything there (O_EXCL). `step` refuses to run once it exists.
 const CollectedMarker = ".collected"
 
+// SeqFile and SerialFile are the recorder's own files at the top of traces/:
+// the step sequence counter (`prepare` writes it) and the serial lock (`step`
+// takes it). Neither is an action directory.
+const (
+	SeqFile    = ".seq"
+	SerialFile = ".serial"
+)
+
+// isTracesMarker reports whether name is one of the non-action files the
+// recorder itself keeps directly under traces/: the sequence counter, the
+// serial lock, the collected marker, and the state-preloaded marker. The census
+// must not count any of them as a stray entry.
+func isTracesMarker(name string) bool {
+	switch name {
+	case SeqFile, SerialFile, CollectedMarker, StatePreloadedMarker:
+		return true
+	}
+	return false
+}
+
 func (o *CollectOptions) defaults() {
 	if o.Lock == nil {
 		o.Lock = LockDir
@@ -446,7 +466,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 	if overlap {
 		return "serial-violated: an overlap marker"
 	}
-	data, err := readBoundedFile(filepath.Join(traces, ".seq"), 64)
+	data, err := readBoundedFile(filepath.Join(traces, SeqFile), 64)
 	if err != nil {
 		return "serial-violated: traces/.seq: " + err.Error()
 	}
@@ -484,7 +504,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 		return fmt.Sprintf("serial-violated: the counter reached %d and %d sidecars hold a number", final, total)
 	}
 	// Only what the supervisors and `prepare` make is in traces/.
-	known := map[string]bool{".seq": true, ".serial": true, CollectedMarker: true, StatePreloadedMarker: true}
+	known := map[string]bool{}
 	for _, ao := range outs {
 		known[filepath.Base(StepDir(c.dir, ao.name))] = true
 	}
@@ -493,7 +513,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 		return "serial-violated: traces/: " + err.Error()
 	}
 	for _, n := range entries {
-		if !known[n] {
+		if !known[n] && !isTracesMarker(n) {
 			return "serial-violated: traces/ holds an unexpected entry " + reasonText(n)
 		}
 	}

@@ -1,1 +1,1 @@
-cargo test -p parallel-execution-engine -- --nocapture
+cargo test --locked -p parallel-execution-engine -- --nocapture

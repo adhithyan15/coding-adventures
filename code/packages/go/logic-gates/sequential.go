@@ -635,7 +635,7 @@ func Counter(clock, reset int, state *CounterState) ([]int, *CounterState) {
 			if reset == 1 {
 				newBits := make([]int, width)
 				newState := &CounterState{Bits: newBits, Width: width}
-				return rf.Generate(true, false, ctrResult{outputs: newBits, newState: newState})
+				return rf.Generate(true, false, ctrResult{outputs: append([]int(nil), newBits...), newState: newState})
 			}
 
 			// On clock = 1, increment the counter
@@ -644,7 +644,7 @@ func Counter(clock, reset int, state *CounterState) ([]int, *CounterState) {
 				output := make([]int, width)
 				copy(output, state.Bits)
 				newState := &CounterState{Bits: output, Width: width}
-				return rf.Generate(true, false, ctrResult{outputs: output, newState: newState})
+				return rf.Generate(true, false, ctrResult{outputs: append([]int(nil), output...), newState: newState})
 			}
 
 			// Increment using ripple carry:
@@ -662,7 +662,7 @@ func Counter(clock, reset int, state *CounterState) ([]int, *CounterState) {
 			}
 
 			newState := &CounterState{Bits: newBits, Width: width}
-			return rf.Generate(true, false, ctrResult{outputs: newBits, newState: newState})
+			return rf.Generate(true, false, ctrResult{outputs: append([]int(nil), newBits...), newState: newState})
 		}).PanicOnUnexpected().GetResult()
 	return result.outputs, result.newState
 }

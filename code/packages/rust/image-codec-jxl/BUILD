@@ -1,1 +1,1 @@
-cargo test -p image-codec-jxl -- --nocapture
+cargo test --locked -p image-codec-jxl -- --nocapture

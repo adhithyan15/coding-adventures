@@ -1,0 +1,2777 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "kotlin",
+  "family": "managed-static",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "MITRE CWE-660, Weaknesses in Software Written in Java (view; the JVM-shared classes, 84 members when fetched 2026-11-24; reused from lanes/java.json). No MITRE view exists for Kotlin itself",
+      "ref": "https://cwe.mitre.org/data/definitions/660.html"
+    },
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "LG02 sections 7 (error identities) and 9 (type-confusion matrix; Kotlin is a statically typed lane that runs the wide-integer rows only)",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md"
+    },
+    {
+      "name": "Kotlin language specification and Kotlin/JVM interop documentation: null safety and platform types, no implicit numeric widening, default imports, vararg and spread copying, compiler options -Xno-param-assertions / -Xno-call-assertions",
+      "ref": "https://kotlinlang.org/spec/ ; https://kotlinlang.org/docs/java-interop.html"
+    },
+    {
+      "name": "Review of kotlin/logic-gates at origin/main 7a793727a16 for this file, with three local probes that are NOT repository tools (javap on the compiled class; a Java caller exercising AND_N/OR_N/XOR_N null and bad elements; `gradle --offline dependencies --configuration runtimeClasspath`): null int[] raises NullPointerException, AND_N/OR_N name the element \"b\", XOR_N builds \"bit[i]\" eagerly, runtime dependency on kotlin-stdlib 2.1.20",
+      "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt"
+    },
+    {
+      "name": "Unmerged local branch claude/kotlin-logic-gates-nary (LGE-KT-NARY, d44cbdeef29): cited only as planned evidence; it adds the null guard, snapshot, 65,536 cap, inputs[i] naming, InvalidShapeException and -Xno-param-assertions",
+      "ref": "branch claude/kotlin-logic-gates-nary (backlog LGE-KT-NARY)"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "Kotlin 2.1.20 (kotlin(\"jvm\") plugin, build.gradle.kts:4), jvmTarget 21 (:16-20), Java release 21 (:22-26)",
+    "implementations": [
+      "the Kotlin Gradle plugin 2.1.20 compiler on whatever JDK and `gradle` the CI image provides (no wrapper, no JDK vendor pin; the version is pinned in build.gradle.kts, the Gradle distribution is not)",
+      "JUnit Jupiter 5.11.4 with kotlin(\"test\") and an unversioned junit-platform-launcher (build.gradle.kts:29-31), JaCoCo 0.8.12 (:39), from mavenCentral by version"
+    ]
+  },
+  "threats": [
+    {
+      "id": "kotlin.cwe-416",
+      "origin": "registry-v2",
+      "name": "Use After Free",
+      "rationale": "Use after free needs manual deallocation. The JVM frees an object only when it is unreachable, so a live reference never dangles. Kotlin/JVM code runs on a garbage-collected, bounds-checked runtime. The residual routes are native memory (an `external` function, JNI, Unsafe, the foreign-memory API, or Kotlin/Native interop), none of which the library uses: LogicGates.kt has no `external` declaration and no import statement (default imports such as java.lang.* are still in scope, so the FFI analyzer rule must resolve names).",
+      "applicability": "applicable-in-principle",
+      "cwe": 416,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `external` function, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign, MethodHandles or JNI/JNA use, and no Kotlin/Native cinterop or @CName, in the library sources. The rule resolves names, not just import lines: java.lang.* and kotlin.* are default-imported, so `System.load(...)` needs no import statement.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, bounds-checks every array index, null-checks dereferences and has no pointer arithmetic or manual free; a memory error in pure Kotlin/JVM code surfaces as an exception, not corruption. A statement about the runtime, not a check on the package; it holds only while no JNI, Unsafe or foreign-memory use exists (the FFI analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "kotlin.cwe-787",
+      "origin": "registry-v2",
+      "name": "Out-of-bounds Write",
+      "rationale": "The library writes no array element at all: the vararg IntArray is read, never stored to (LogicGates.kt:442-445, 460-463, 487-490), and the JVM would raise ArrayIndexOutOfBoundsException rather than corrupt memory. Kotlin/JVM code runs on a garbage-collected, bounds-checked runtime. The residual routes are native memory (an `external` function, JNI, Unsafe, the foreign-memory API, or Kotlin/Native interop), none of which the library uses: LogicGates.kt has no `external` declaration and no import statement (default imports such as java.lang.* are still in scope, so the FFI analyzer rule must resolve names).",
+      "applicability": "applicable-in-principle",
+      "cwe": 787,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `external` function, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign, MethodHandles or JNI/JNA use, and no Kotlin/Native cinterop or @CName, in the library sources. The rule resolves names, not just import lines: java.lang.* and kotlin.* are default-imported, so `System.load(...)` needs no import statement.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, bounds-checks every array index, null-checks dereferences and has no pointer arithmetic or manual free; a memory error in pure Kotlin/JVM code surfaces as an exception, not corruption. A statement about the runtime, not a check on the package; it holds only while no JNI, Unsafe or foreign-memory use exists (the FFI analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "kotlin.cwe-125",
+      "origin": "registry-v2",
+      "name": "Out-of-bounds Read",
+      "rationale": "AND_N and OR_N read inputs[0] and inputs[1] (LogicGates.kt:442, 460); both are guarded by `require(inputs.size >= 2)` (:441, :459). Were the guard wrong the JVM would raise ArrayIndexOutOfBoundsException, never read adjacent memory. XOR_N reads only indices below bits.size (:485, :488). CWE-129 (array index validation) is folded here. Kotlin/JVM code runs on a garbage-collected, bounds-checked runtime. The residual routes are native memory (an `external` function, JNI, Unsafe, the foreign-memory API, or Kotlin/Native interop), none of which the library uses: LogicGates.kt has no `external` declaration and no import statement (default imports such as java.lang.* are still in scope, so the FFI analyzer rule must resolve names).",
+      "applicability": "applicable-in-principle",
+      "cwe": 125,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `external` function, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign, MethodHandles or JNI/JNA use, and no Kotlin/Native cinterop or @CName, in the library sources. The rule resolves names, not just import lines: java.lang.* and kotlin.* are default-imported, so `System.load(...)` needs no import statement.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, bounds-checks every array index, null-checks dereferences and has no pointer arithmetic or manual free; a memory error in pure Kotlin/JVM code surfaces as an exception, not corruption. A statement about the runtime, not a check on the package; it holds only while no JNI, Unsafe or foreign-memory use exists (the FFI analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "kotlin.cwe-415",
+      "origin": "registry-v2",
+      "name": "Double Free",
+      "rationale": "There is no free to call twice; the library holds no resource or handle. Kotlin/JVM code runs on a garbage-collected, bounds-checked runtime. The residual routes are native memory (an `external` function, JNI, Unsafe, the foreign-memory API, or Kotlin/Native interop), none of which the library uses: LogicGates.kt has no `external` declaration and no import statement (default imports such as java.lang.* are still in scope, so the FFI analyzer rule must resolve names).",
+      "applicability": "applicable-in-principle",
+      "cwe": 415,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `external` function, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign, MethodHandles or JNI/JNA use, and no Kotlin/Native cinterop or @CName, in the library sources. The rule resolves names, not just import lines: java.lang.* and kotlin.* are default-imported, so `System.load(...)` needs no import statement.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, bounds-checks every array index, null-checks dereferences and has no pointer arithmetic or manual free; a memory error in pure Kotlin/JVM code surfaces as an exception, not corruption. A statement about the runtime, not a check on the package; it holds only while no JNI, Unsafe or foreign-memory use exists (the FFI analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "kotlin.cwe-476",
+      "origin": "registry-v2",
+      "name": "NULL Pointer Dereference",
+      "rationale": "The JVM turns every null dereference into an exception instead of memory corruption, and Kotlin's non-null types stop a Kotlin caller from passing null at all: the eleven basic gates take primitive Int. The residual route is a Java caller. Verified in this review by compiling the package at origin/main 7a793727a16 and calling it from a Java class: LogicGates.INSTANCE.AND_N((int[]) null) and XOR_N((int[]) null) throw java.lang.NullPointerException, raised by the compiler-generated Intrinsics.checkNotNullParameter at the top of every N-ary gate (javap shows it at offset 3). So null does not corrupt anything, but the error is a NullPointerException, not the package's documented IllegalArgumentException family (LogicGates.kt:438, 456, 482), and no test passes a null array because the tests are written in Kotlin. The registry subset gc_runtimes does not close the class on its own: the null is reachable from public input. A boxed `Integer` null passed to NOT/AND... NPEs in the CALLER at the unboxing, before the library runs (kotlin.null-unboxing-at-java-call-site).",
+      "applicability": "applicable",
+      "cwe": 476,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-null-reachable-from-public-methods",
+          "state": "planned",
+          "detail": "Flow analysis shows no public function dereferences a reference-typed parameter that may be null; a Java-callable vararg IntArray must be guarded explicitly (or the module must keep the compiler-generated check and the contract must name its exception).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `external` function, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign, MethodHandles or JNI/JNA use, and no Kotlin/Native cinterop or @CName, in the library sources. The rule resolves names, not just import lines: java.lang.* and kotlin.* are default-imported, so `System.load(...)` needs no import statement.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:kotlin-int-parameters-no-implicit-widening",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a Kotlin Int (compiled to JVM int): LogicGates.kt:113,148,183,222,272,301,332,356,373,391,413. Kotlin has no implicit numeric widening, so Long, Double, Boolean, Char, Byte, Short and String arguments fail to compile, which is stricter than Java (java.implicit-widening-char-byte-short does not exist here). The N-ary gates take `vararg Int`, compiled to int[] (:440,458,484), a reference type that Kotlin callers can never make null but Java callers can. Established only by the Kotlin compiler during `gradle test` (BUILD:1); no compile-fail test pins it."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+          "state": "planned",
+          "detail": "LGE-KT-NARY adds NaryGatesTest: exhaustive over the domain {-1,0,1,2} for lengths 0..8 on all three N-ary gates with the exact parameter name inputs[i] and a no-mutation check (NaryGatesTest.kt:79-105), a null array passed through reflection (:24-35), the 65,536 boundary (:47-58) and shape-beats-bit ordering (:69-77). Exists only on the unmerged local branch.",
+          "planned_item": "LGE-KT-NARY"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-null-reachable-from-public-methods",
+        "analyzer-rule:kotlin.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "kotlin.cwe-190",
+      "origin": "registry-v2",
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "Narrow registry class: wraparound that sizes or indexes a buffer. Kotlin Int arithmetic wraps silently, but the library does no arithmetic on a caller value: its loops index with `i` bounded by the array size (LogicGates.kt:443, 461, 488) and no buffer is sized from a computed Int. CWE-190 as named by the registry says nothing about integer overflow in general (kotlin.silent-integer-wraparound). Kotlin/JVM code runs on a garbage-collected, bounds-checked runtime. The residual routes are native memory (an `external` function, JNI, Unsafe, the foreign-memory API, or Kotlin/Native interop), none of which the library uses: LogicGates.kt has no `external` declaration and no import statement (default imports such as java.lang.* are still in scope, so the FFI analyzer rule must resolve names).",
+      "applicability": "applicable-in-principle",
+      "cwe": 190,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.integer-value-range",
+          "state": "planned",
+          "detail": "Value-range analysis over Int expressions: no arithmetic on caller-supplied values can overflow; the only arithmetic is the loop index and array size.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `external` function, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign, MethodHandles or JNI/JNA use, and no Kotlin/Native cinterop or @CName, in the library sources. The rule resolves names, not just import lines: java.lang.* and kotlin.* are default-imported, so `System.load(...)` needs no import statement.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:jvm-bytecode-verifier-and-bounds-checks",
+          "state": "unverified",
+          "detail": "The JVM verifies bytecode, bounds-checks every array index, null-checks dereferences and has no pointer arithmetic or manual free; a memory error in pure Kotlin/JVM code surfaces as an exception, not corruption. A statement about the runtime, not a check on the package; it holds only while no JNI, Unsafe or foreign-memory use exists (the FFI analyzer rule)."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.integer-value-range",
+        "analyzer-rule:kotlin.no-ffi-unsafe-native"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "kotlin.cwe-78",
+      "origin": "registry-v2",
+      "name": "OS Command Injection",
+      "rationale": "No process is spawned: nothing calls ProcessBuilder or Runtime.exec (both reachable without an import). The library takes bits and returns a bit; it has no import statement, but java.lang.* and kotlin.* are default-imported (Runtime, ProcessBuilder, System, println), so only a name-resolving analyzer can show the capability is unreachable.",
+      "applicability": "applicable-in-principle",
+      "cwe": 78,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "kotlin.cwe-89",
+      "origin": "registry-v2",
+      "name": "SQL Injection",
+      "rationale": "No query is built: no java.sql, JDBC, Room or Exposed use, and no string is ever concatenated into a statement. The library takes bits and returns a bit; it has no import statement, but java.lang.* and kotlin.* are default-imported (Runtime, ProcessBuilder, System, println), so only a name-resolving analyzer can show the capability is unreachable.",
+      "applicability": "applicable-in-principle",
+      "cwe": 89,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "kotlin.cwe-22",
+      "origin": "registry-v2",
+      "name": "Path Traversal",
+      "rationale": "No path is formed: no java.io.File, java.nio.file or kotlin.io.path use; the gates take no String. The library takes bits and returns a bit; it has no import statement, but java.lang.* and kotlin.* are default-imported (Runtime, ProcessBuilder, System, println), so only a name-resolving analyzer can show the capability is unreachable.",
+      "applicability": "applicable-in-principle",
+      "cwe": 22,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "kotlin.cwe-79",
+      "origin": "registry-v2",
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "No markup, HTTP response or UI toolkit; the gates produce an Int. The library takes bits and returns a bit; it has no import statement, but java.lang.* and kotlin.* are default-imported (Runtime, ProcessBuilder, System, println), so only a name-resolving analyzer can show the capability is unreachable.",
+      "applicability": "applicable-in-principle",
+      "cwe": 79,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "kotlin.cwe-94",
+      "origin": "registry-v2",
+      "name": "Code Injection / Eval",
+      "rationale": "No gate evaluates caller data. Kotlin/JVM can still evaluate code (javax.script.ScriptEngine, kotlin.script, Class.forName, MethodHandles, a compiler embedded as a dependency), so per VER15a section 1.3 excluding the class under compiled_languages_no_eval needs an analyzer rule that bans those constructs; the rule's definition, not the lane's say-so, decides whether it counts. The library takes bits and returns a bit; it has no import statement, but java.lang.* and kotlin.* are default-imported (Runtime, ProcessBuilder, System, println), so only a name-resolving analyzer can show the capability is unreachable.",
+      "applicability": "applicable-in-principle",
+      "cwe": 94,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+          "state": "planned",
+          "detail": "No kotlin.reflect.full, ::class.java.getMethod, Class.forName, MethodHandles, ClassLoader, ServiceLoader, javax.script / kotlin.script, setAccessible or Runtime.exec in the library sources; callable references (`g::NOT`) that compile to synthetic classes are allowed only in tests.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "compiled_languages_no_eval"
+    },
+    {
+      "id": "kotlin.cwe-116",
+      "origin": "registry-v2",
+      "name": "Improper Output Encoding",
+      "rationale": "The only text the library produces is an exception message: `\"$parameter must be 0 or 1, got: $value\"` (LogicGates.kt:502) with parameter a literal (\"a\", \"b\") or `\"bit[$i]\"` and value an Int. No encoder, serializer or output channel is used; the risk is a downstream consumer treating the message as markup, which the Int-and-literal construction makes inert. The public constructor lets a caller build a message from any String; that is the caller's own text.",
+      "applicability": "applicable-in-principle",
+      "cwe": 116,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message is built only from string literals and Int values (no caller-supplied String reaches a message). The two string templates are LogicGates.kt:502 `\"$parameter must be 0 or 1, got: $value\"` and the name `\"bit[$i]\"` (LogicGates.kt:485); the constructor is public, so a caller can still pass any parameter String, which the rule must treat as the caller echoing its own text.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use",
+        "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "kotlin.cwe-117",
+      "origin": "registry-v2",
+      "name": "Log Injection",
+      "rationale": "The library logs nothing: no java.util.logging, SLF4J, println or System.err use (kotlin.io.println is default-imported, so only a name-resolving rule can prove its absence). A caller that logs the exception message gets \"a must be 0 or 1, got: 2\": literals plus an Int, with no newline or caller-controlled text. The public InvalidBitException constructor accepts any parameter String, so a forged exception can carry a newline; the library never constructs one that does.",
+      "applicability": "applicable-in-principle",
+      "cwe": 117,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message is built only from string literals and Int values (no caller-supplied String reaches a message). The two string templates are LogicGates.kt:502 `\"$parameter must be 0 or 1, got: $value\"` and the name `\"bit[$i]\"` (LogicGates.kt:485); the constructor is public, so a caller can still pass any parameter String, which the rule must treat as the caller echoing its own text.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use",
+        "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "kotlin.cwe-400",
+      "origin": "registry-v2",
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "The two-input gates do constant work. The N-ary gates do linear work in an array the CALLER already holds, with no cap on main. Verified with javap in this review: XOR_N builds the name `\"bit[$i]\"` EAGERLY for every element on every call (an invokedynamic string concatenation before the call to validateBit, LogicGates.kt:485), so a successful XOR_N over n elements allocates n short Strings, a per-call allocation proportional to input that the success path never uses. Each rejection also constructs an exception and fills its stack trace, a cost per rejected call that a caller feeding invalid input in a loop pays. Kotlin callers pass the array through the spread operator, which copies it. Both causes are fixable inside the package: a length cap plus a name built only on failure. LGE-KT-NARY (local branch) caps the length at 65,536 and snapshots the array (LogicGates.kt:431-459 on that branch) and builds \"inputs[$i]\" lazily (NaryGatesTest.kt:47-58 tests the boundary). The registry route pure_zero_allocation is the closest subset; the closing rules are the planned loop-bound analyzer rule and the N-ary rows. The registry's discharge evidence (microbenchmark, step-bound proof, input-bound check) cannot all be supplied, so there is no discharge route.",
+      "applicability": "applicable-in-principle",
+      "cwe": 400,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "The call graph of the library is acyclic (no recursion, no tailrec) and every loop is bounded by a caller-supplied array length or a constant; no loop is unbounded and no allocation is sized from a caller value.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+          "state": "planned",
+          "detail": "LGE-KT-NARY adds NaryGatesTest: exhaustive over the domain {-1,0,1,2} for lengths 0..8 on all three N-ary gates with the exact parameter name inputs[i] and a no-mutation check (NaryGatesTest.kt:79-105), a null array passed through reflection (:24-35), the 65,536 boundary (:47-58) and shape-beats-bit ordering (:69-77). Exists only on the unmerged local branch.",
+          "planned_item": "LGE-KT-NARY"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+        "lane-corpus:kotlin.nary-shape-and-bit-rows"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "pure_zero_allocation"
+    },
+    {
+      "id": "kotlin.cwe-409",
+      "origin": "registry-v2",
+      "name": "Decompression Bomb",
+      "rationale": "Nothing is decompressed or expanded; the gates map bits to a bit. java.util.zip and kotlin.io streams are not used (only an analyzer that resolves names, including default imports, can show it).",
+      "applicability": "applicable-in-principle",
+      "cwe": 409,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "kotlin.cwe-674",
+      "origin": "registry-v2",
+      "name": "Uncontrolled Recursion",
+      "rationale": "The call graph is acyclic: NAND calls NOT and AND, nandAND calls nandNOT and NAND, and nothing calls back up. AND_N, OR_N and XOR_N loop. No `tailrec`, no recursive lambda. The JVM stack is the resource at risk, and it is not recursed on.",
+      "applicability": "applicable-in-principle",
+      "cwe": 674,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "The call graph of the library is acyclic (no recursion, no tailrec) and every loop is bounded by a caller-supplied array length or a constant; no loop is unbounded and no allocation is sized from a caller value.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "kotlin.cwe-1333",
+      "origin": "registry-v2",
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "No regular expression exists in the library; kotlin.text.Regex and String.matches are default-imported, so the absence is shown only by an analyzer that resolves names.",
+      "applicability": "applicable-in-principle",
+      "cwe": 1333,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-regex-or-string-parsing",
+          "state": "planned",
+          "detail": "No kotlin.text.Regex, String.toRegex, String.matches, Pattern or parser anywhere in the library (kotlin.text.* is default-imported).",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use",
+        "analyzer-rule:kotlin.no-regex-or-string-parsing"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "kotlin.cwe-407",
+      "origin": "registry-v2",
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Every gate is O(1) except the N-ary gates, which are a single linear pass; no map, sort, string search or nested loop. The linear pass is over a caller array with no cap on main (see kotlin.cwe-400).",
+      "applicability": "applicable-in-principle",
+      "cwe": 407,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+          "state": "planned",
+          "detail": "The call graph of the library is acyclic (no recursion, no tailrec) and every loop is bounded by a caller-supplied array length or a constant; no loop is unbounded and no allocation is sized from a caller value.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "constant_time_linear_algorithms"
+    },
+    {
+      "id": "kotlin.cwe-208",
+      "origin": "registry-v2",
+      "name": "Observable Timing Discrepancy",
+      "rationale": "The gates branch on their input (`return if (a == 0) 1 else 0`, LogicGates.kt:115, 151, 186, 225) and the JVM JIT may turn that into either a branch or a conditional move, so execution time is not guaranteed constant. That matters only if a gate input is a secret; the package declares none. The floor is proved-to-gate-level, which no JVM lane can reach, so only the no-secret-inputs exclusion is a route.",
+      "applicability": "applicable-in-principle",
+      "cwe": 208,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-secret-inputs-declared",
+          "state": "planned",
+          "detail": "The package declares no secret-typed input and no gate output is consumed as a key or token; the gates branch on their input (`if (a == 0) 1 else 0`).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-secret-inputs-declared",
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "safe_subset": "no_secret_inputs"
+    },
+    {
+      "id": "kotlin.cwe-330",
+      "origin": "registry-v2",
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "No random value is generated (Math.random, kotlin.random.Random and java.util.Random are not used; Math.random is reachable without an import).",
+      "applicability": "applicable-in-principle",
+      "cwe": 330,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-crypto-or-random-use",
+          "state": "planned",
+          "detail": "No java.security, javax.crypto, kotlin.random, java.util.Random, SecureRandom or Math.random use (Math.random is reachable without an import).",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use",
+        "analyzer-rule:kotlin.no-crypto-or-random-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "kotlin.cwe-327",
+      "origin": "registry-v2",
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "No cryptographic algorithm is used (no java.security, javax.crypto, MessageDigest or Cipher).",
+      "applicability": "applicable-in-principle",
+      "cwe": 327,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-crypto-or-random-use",
+          "state": "planned",
+          "detail": "No java.security, javax.crypto, kotlin.random, java.util.Random, SecureRandom or Math.random use (Math.random is reachable without an import).",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use",
+        "analyzer-rule:kotlin.no-crypto-or-random-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "kotlin.cwe-326",
+      "origin": "registry-v2",
+      "name": "Inadequate Encryption Strength",
+      "rationale": "No key or cipher is used, so no key size can be inadequate.",
+      "applicability": "applicable-in-principle",
+      "cwe": 326,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-crypto-or-random-use",
+          "state": "planned",
+          "detail": "No java.security, javax.crypto, kotlin.random, java.util.Random, SecureRandom or Math.random use (Math.random is reachable without an import).",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ambient-capability-use",
+        "analyzer-rule:kotlin.no-crypto-or-random-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "kotlin.cwe-362",
+      "origin": "registry-v2",
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "The library has no shared state of its own: `object LogicGates` declares no property, and class initialisation is serialized by the JVM. No Thread, coroutine, lock or lazy delegate is used. The one concurrency hazard is the caller's array. Kotlin differs from Java here. A Kotlin caller must write the spread operator (`AND_N(*arr)`), and spreading COPIES the array, so a Kotlin caller cannot alias its array into the gate. A Java caller passes its int[] directly (`LogicGates.INSTANCE.XOR_N(arr)`), so the callee sees the live array. XOR_N validates every element in one loop (LogicGates.kt:485) and then re-reads `bits[0]` and `bits[i]` (:487-490); a second thread mutating the array between the loops makes a value that was validated as 0 or 1 be read as something else, and XOR(result, 7) then raises InvalidBitException from the 2-input gate under the wrong name. AND_N and OR_N read each element once through AND/OR, so they have no check-then-reread window.",
+      "applicability": "applicable",
+      "cwe": 362,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-threads-or-shared-mutable-state",
+          "state": "planned",
+          "detail": "No Thread, kotlinx.coroutines, kotlin.concurrent.thread, @Volatile, @Synchronized, synchronized, `by lazy`, java.util.concurrent or Atomic* use, and no property or top-level variable of the object that two callers could share.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every reference-typed parameter (the vararg int[] of AND_N, OR_N, XOR_N) is either read exactly once per element or copied before it is validated; no validate-then-reread. XOR_N reads `bits[i]` in the validation loop (:485) and again in the computing loop (:487-490), which the rule would flag today.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+          "state": "planned",
+          "detail": "LGE-KT-NARY adds NaryGatesTest: exhaustive over the domain {-1,0,1,2} for lengths 0..8 on all three N-ary gates with the exact parameter name inputs[i] and a no-mutation check (NaryGatesTest.kt:79-105), a null array passed through reflection (:24-35), the 65,536 boundary (:47-58) and shape-beats-bit ordering (:69-77). Exists only on the unmerged local branch.",
+          "planned_item": "LGE-KT-NARY"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-threads-or-shared-mutable-state",
+        "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "kotlin.cwe-367",
+      "origin": "registry-v2",
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "The classic file TOCTOU does not apply (no file access). The structural twin does: XOR_N checks the whole caller array and then uses it again. Kotlin differs from Java here. A Kotlin caller must write the spread operator (`AND_N(*arr)`), and spreading COPIES the array, so a Kotlin caller cannot alias its array into the gate. A Java caller passes its int[] directly (`LogicGates.INSTANCE.XOR_N(arr)`), so the callee sees the live array. XOR_N validates every element in one loop (LogicGates.kt:485) and then re-reads `bits[0]` and `bits[i]` (:487-490); a second thread mutating the array between the loops makes a value that was validated as 0 or 1 be read as something else, and XOR(result, 7) then raises InvalidBitException from the 2-input gate under the wrong name. AND_N and OR_N read each element once through AND/OR, so they have no check-then-reread window.",
+      "applicability": "applicable",
+      "cwe": 367,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every reference-typed parameter (the vararg int[] of AND_N, OR_N, XOR_N) is either read exactly once per element or copied before it is validated; no validate-then-reread. XOR_N reads `bits[i]` in the validation loop (:485) and again in the computing loop (:487-490), which the rule would flag today.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "kotlin.cwe-502",
+      "origin": "registry-v2",
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "The library deserializes nothing. The one serializable type is InvalidBitException: Throwable is java.io.Serializable, so the class is serializable (LogicGates.kt:501), it declares no serialVersionUID, and it holds only a String parameter and an Int value, no secret. It becomes a deserialization-gadget concern only if a caller's code uses ObjectInputStream on untrusted bytes, which is outside the package. The runtime classpath adds kotlin-stdlib 2.1.20 (kotlin.kotlin-stdlib dependency, verified locally), whose types are also on a deserializing caller's classpath.",
+      "applicability": "applicable-in-principle",
+      "cwe": 502,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-serialization-or-deserialization-calls",
+          "state": "planned",
+          "detail": "No ObjectInputStream/ObjectOutputStream, readObject/writeObject, kotlinx.serialization, Serializable implementation or Externalizable in the library; InvalidBitException inherits Serializable from Throwable (:501) and is the one serializable type, with fields parameter (String) and value (Int).",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+          "state": "planned",
+          "detail": "No kotlin.reflect.full, ::class.java.getMethod, Class.forName, MethodHandles, ClassLoader, ServiceLoader, javax.script / kotlin.script, setAccessible or Runtime.exec in the library sources; callable references (`g::NOT`) that compile to synthetic classes are allowed only in tests.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-serialization-or-deserialization-calls",
+        "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "kotlin.cwe-1321",
+      "origin": "registry-v2",
+      "name": "Prototype Pollution",
+      "rationale": "Prototype pollution mutates the prototype chain of a JavaScript-style object. Kotlin/JVM is class-based; the registry v1 lists jvm among the safe subsets of this class. The pair (kotlin, 1321) is on the VER15a section 5.5 excluded-by-language whitelist, entered unsigned (signed_off false). The entry excludes the prototype-chain mechanism only: reflective, Unsafe or agent-driven writes to shared statics are the lane threat kotlin.reflection-and-class-loading, and `object LogicGates` has no mutable state for them to write (kotlin.object-singleton-mutable-state).",
+      "applicability": "not-applicable",
+      "cwe": 1321,
+      "closed_by": [
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:kotlin-has-no-prototype-chains",
+          "state": "unverified",
+          "detail": "Kotlin/JVM is class-based: objects have a fixed class and there is no mutable prototype or delegate chain a program can write to from input. (Reflection, kotlin-reflect and Unsafe can alter behaviour or shared statics; those are the separate row kotlin.reflection-and-class-loading.)"
+        }
+      ],
+      "language_exclusion": {
+        "justification": "VER15a section 5.5 whitelist entry (kotlin, 1321): the same JVM object model as Java; no prototype or delegate chain that a program can extend with a property other objects inherit from. Prototype-chain mechanism only; reflective shared-static writes belong to kotlin.reflection-and-class-loading.",
+        "reviewer": "owner signs (VER15a section 5.5: signed_off false)",
+        "signed_off": false
+      },
+      "registry_floor": "proved",
+      "floor_label": "proved"
+    },
+    {
+      "id": "kotlin.cwe-20",
+      "origin": "registry-v2",
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied Ints. Kotlin does not check an Int's value; each public gate must reject everything except 0 and 1 in every argument position before it produces a result. validateBit (LogicGates.kt:75-77) does so, and every gate calls it for each parameter left to right; the NAND-built gates and nandOR re-validate under their own names before delegating (:356-359, 373-377, 391-396, 413-418). XOR_N validates every element first (:485); AND_N and OR_N validate through the 2-input gates, so index 0 is reported as \"a\" and every other element as \"b\", not its index (kotlin.error-identity-and-parameter-attribution). The rejection set tested is 2,051 Ints per position, not all 2^32, and no proof route exists, so the floor (proved) is not reachable.",
+      "applicability": "applicable",
+      "cwe": 20,
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:kotlin-int-extremes-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows that are Ints (-1, 2, 255, 256, 257 and every value in [-1024, 1024], plus Int.MIN_VALUE and Int.MAX_VALUE; LogicGatesExhaustiveTest.kt:36-38, 81-90). The rows 2^31 .. 2^64 are not Ints (a literal above Int.MAX_VALUE is typed Long and does not compile) and the string, float, boolean, container and Long rows cannot be written; there is no char/byte/short row because Kotlin does not widen them. No test asserts non-compilation."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:kotlin-int-parameters-no-implicit-widening",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a Kotlin Int (compiled to JVM int): LogicGates.kt:113,148,183,222,272,301,332,356,373,391,413. Kotlin has no implicit numeric widening, so Long, Double, Boolean, Char, Byte, Short and String arguments fail to compile, which is stricter than Java (java.implicit-widening-char-byte-short does not exist here). The N-ary gates take `vararg Int`, compiled to int[] (:440,458,484), a reference type that Kotlin callers can never make null but Java callers can. Established only by the Kotlin compiler during `gradle test` (BUILD:1); no compile-fail test pins it."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:kotlin.validatebit-all-2pow32-ints",
+          "state": "planned",
+          "detail": "Exhaustive check of the single validator over all 2^32 Ints: validateBit accepts exactly 0 and 1 and throws InvalidBitException for every other Int (a loop over Int.MIN_VALUE..Int.MAX_VALUE; validateBit is private, so the check goes through NOT(a)).",
+          "planned_item": "LGE-L-kotlin"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.every-gate-calls-validatebit-on-every-parameter",
+          "state": "planned",
+          "detail": "Every public gate calls validateBit (or the equivalent loop) on every Int parameter or array element before using it, left to right, with no early return before the last check.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+          "state": "planned",
+          "detail": "LGE-KT-NARY adds NaryGatesTest: exhaustive over the domain {-1,0,1,2} for lengths 0..8 on all three N-ary gates with the exact parameter name inputs[i] and a no-mutation check (NaryGatesTest.kt:79-105), a null array passed through reflection (:24-35), the 65,536 boundary (:47-58) and shape-beats-bit ordering (:69-77). Exists only on the unmerged local branch.",
+          "planned_item": "LGE-KT-NARY"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables",
+        "type-confusion-matrix:kotlin-int-extremes-rows"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "type-confusion-matrix:kotlin-int-extremes-rows"
+        ]
+      }
+    },
+    {
+      "id": "kotlin.cwe-843",
+      "origin": "registry-v2",
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "Kotlin is statically typed with non-null types by default and no implicit numeric widening, so a wrong-typed argument to an Int parameter does not compile. The escape hatches are `as` and `as?`, `is`, unchecked casts (@Suppress(\"UNCHECKED_CAST\")), `reified` generics, `Any`-typed parameters, Java raw types and platform types from Java interop, and reflection; the library uses none (no cast, no generic, no Any, no import). Kotlin differs from Java: there is no char/byte/short widening row, because the compiler refuses them. The vararg parameter is the one reference type and is typed IntArray.",
+      "applicability": "applicable-in-principle",
+      "cwe": 843,
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:kotlin-int-parameters-no-implicit-widening",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a Kotlin Int (compiled to JVM int): LogicGates.kt:113,148,183,222,272,301,332,356,373,391,413. Kotlin has no implicit numeric widening, so Long, Double, Boolean, Char, Byte, Short and String arguments fail to compile, which is stricter than Java (java.implicit-widening-char-byte-short does not exist here). The N-ary gates take `vararg Int`, compiled to int[] (:440,458,484), a reference type that Kotlin callers can never make null but Java callers can. Established only by the Kotlin compiler during `gradle test` (BUILD:1); no compile-fail test pins it."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:kotlin-int-extremes-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows that are Ints (-1, 2, 255, 256, 257 and every value in [-1024, 1024], plus Int.MIN_VALUE and Int.MAX_VALUE; LogicGatesExhaustiveTest.kt:36-38, 81-90). The rows 2^31 .. 2^64 are not Ints (a literal above Int.MAX_VALUE is typed Long and does not compile) and the string, float, boolean, container and Long rows cannot be written; there is no char/byte/short row because Kotlin does not widen them. No test asserts non-compilation."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-casts-is-checks-unchecked-reified-or-any",
+          "state": "planned",
+          "detail": "No `as`, `as?`, `is`, @Suppress(\"UNCHECKED_CAST\"), `reified` type parameter, star projection, `Any`/`Any?`-typed parameter, raw Java type or platform-typed value in the library sources: nothing reinterprets one type as another. (`inline`/`reified` generics erase nothing the package uses today.)",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+          "state": "planned",
+          "detail": "No kotlin.reflect.full, ::class.java.getMethod, Class.forName, MethodHandles, ClassLoader, ServiceLoader, javax.script / kotlin.script, setAccessible or Runtime.exec in the library sources; callable references (`g::NOT`) that compile to synthetic classes are allowed only in tests.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "type-system:kotlin-int-parameters-no-implicit-widening",
+        "analyzer-rule:kotlin.no-casts-is-checks-unchecked-reified-or-any",
+        "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "statically_typed_no_escape_hatches"
+    },
+    {
+      "id": "kotlin.cwe-704",
+      "origin": "registry-v2",
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "The library converts nothing: no toInt(), toLong(), toChar(), `.code`, `as` or Number is applied to an input. Kotlin has no implicit conversion, so a wider value must be converted EXPLICITLY at the call site (caller-side narrowing, kotlin.caller-side-narrowing, which the package cannot see). The truncation half of LG02 section 9 (256, 257, 2^32 + 1) cannot be written against an Int parameter: the values are rejected as 256 and 257, and 2^32 + 1 is not an Int.",
+      "applicability": "applicable",
+      "cwe": 704,
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:kotlin-int-extremes-rows",
+          "state": "claimed",
+          "detail": "LG02 section 9 for a statically typed lane: the wide-integer rows that are Ints (-1, 2, 255, 256, 257 and every value in [-1024, 1024], plus Int.MIN_VALUE and Int.MAX_VALUE; LogicGatesExhaustiveTest.kt:36-38, 81-90). The rows 2^31 .. 2^64 are not Ints (a literal above Int.MAX_VALUE is typed Long and does not compile) and the string, float, boolean, container and Long rows cannot be written; there is no char/byte/short row because Kotlin does not widen them. No test asserts non-compilation."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-conversions-on-inputs",
+          "state": "planned",
+          "detail": "No toInt(), toLong(), toChar(), toByte(), toShort(), .code, Number parameter or numeric cast applied to a caller-supplied value.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-casts-is-checks-unchecked-reified-or-any",
+          "state": "planned",
+          "detail": "No `as`, `as?`, `is`, @Suppress(\"UNCHECKED_CAST\"), `reified` type parameter, star projection, `Any`/`Any?`-typed parameter, raw Java type or platform-typed value in the library sources: nothing reinterprets one type as another. (`inline`/`reified` generics erase nothing the package uses today.)",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-conversions-on-inputs",
+        "analyzer-rule:kotlin.no-casts-is-checks-unchecked-reified-or-any"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_conversions_on_inputs"
+    },
+    {
+      "id": "kotlin.null-guards-and-param-assertions",
+      "origin": "lane",
+      "name": "Compiler-generated null checks: wrong identity today, silently removable by a module-wide flag",
+      "rationale": "Kotlin emits Intrinsics.checkNotNullParameter for every public function's reference-typed non-null parameter, so a Java null reaches the N-ary gates as a NullPointerException (verified in this review, see kotlin.cwe-476). The flags -Xno-param-assertions, -Xno-call-assertions and -Xno-receiver-assertions remove those checks MODULE-WIDE and silently: the local branch claude/kotlin-logic-gates-nary (LGE-KT-NARY) turns -Xno-param-assertions on (build.gradle.kts:24) so its explicit guard wins, and its own NOTE says every future public function with a reference parameter then needs an explicit guard and a Java-null test, because the compiler no longer supplies one. Today only the three N-ary gates and the two exception constructors have reference parameters, and the flag is absent on main. Platform types (T!) from Java calls are not used in the library.",
+      "applicability": "applicable-in-principle",
+      "cwe": 693,
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:kotlin-compiler-flags-default",
+          "state": "claimed",
+          "detail": "On main the KotlinCompile task sets only jvmTarget 21 (build.gradle.kts:16-20): no freeCompilerArgs, so Kotlin's compiler-generated parameter null checks (Intrinsics.checkNotNullParameter, present in AND_N, OR_N and XOR_N of the compiled class, seen with javap in this review) are on. Nothing reads the build file at report time."
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:kotlin.nary-branch-disables-param-assertions",
+          "state": "planned",
+          "detail": "The unmerged LGE-KT-NARY branch adds `freeCompilerArgs.add(\"-Xno-param-assertions\")` MODULE-WIDE (build.gradle.kts:24, with a NOTE comment at :19-23) so its own InvalidShapeException guard runs instead of the compiler's NullPointerException; after it lands, any new public function with a reference-typed parameter has NO compiler null check and needs an explicit guard.",
+          "planned_item": "LGE-KT-NARY",
+          "ref": "code/packages/kotlin/logic-gates/build.gradle.kts:19-24 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-null-reachable-from-public-methods",
+          "state": "planned",
+          "detail": "Flow analysis shows no public function dereferences a reference-typed parameter that may be null; a Java-callable vararg IntArray must be guarded explicitly (or the module must keep the compiler-generated check and the contract must name its exception).",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "build-check:kotlin-compiler-flags-default"
+      ]
+    },
+    {
+      "id": "kotlin.vararg-array-shared-with-java-caller",
+      "origin": "lane",
+      "name": "Vararg IntArray shared with a Java or Groovy caller (no spread copy)",
+      "rationale": "Kotlin copies an array at the call site when a caller spreads it (`f(*arr)`), so Kotlin callers never alias. Java and other JVM callers pass the int[] itself. The package therefore must not assume a stable array: it must read each element once or copy first. XOR_N reads twice (LogicGates.kt:485 and :487-490), AND_N and OR_N once (:442-445, 460-463). This is the Kotlin-specific face of kotlin.cwe-362 and kotlin.cwe-367, recorded so the lane list says the safety depends on the caller's language.",
+      "applicability": "applicable",
+      "cwe": null,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+          "state": "planned",
+          "detail": "Every reference-typed parameter (the vararg int[] of AND_N, OR_N, XOR_N) is either read exactly once per element or copied before it is validated; no validate-then-reread. XOR_N reads `bits[i]` in the validation loop (:485) and again in the computing loop (:487-490), which the rule would flag today.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+          "state": "planned",
+          "detail": "LGE-KT-NARY adds NaryGatesTest: exhaustive over the domain {-1,0,1,2} for lengths 0..8 on all three N-ary gates with the exact parameter name inputs[i] and a no-mutation check (NaryGatesTest.kt:79-105), a null array passed through reflection (:24-35), the 65,536 boundary (:47-58) and shape-beats-bit ordering (:69-77). Exists only on the unmerged local branch.",
+          "planned_item": "LGE-KT-NARY"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.reference-parameters-read-once-or-copied"
+      ]
+    },
+    {
+      "id": "kotlin.null-unboxing-at-java-call-site",
+      "origin": "lane",
+      "name": "A Java caller's null Integer fails in the caller, before the library runs",
+      "rationale": "The gates compile to `int` parameters. A Java caller holding a null Integer and calling `LogicGates.INSTANCE.NOT(boxed)` throws NullPointerException at the unboxing in the CALLER (verified in this review). The library never sees the value; its contract cannot name or catch the error, and a binding that expects InvalidBitException gets an NPE it did not cause.",
+      "applicability": "applicable",
+      "cwe": null,
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:kotlin-int-parameters-no-implicit-widening",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a Kotlin Int (compiled to JVM int): LogicGates.kt:113,148,183,222,272,301,332,356,373,391,413. Kotlin has no implicit numeric widening, so Long, Double, Boolean, Char, Byte, Short and String arguments fail to compile, which is stricter than Java (java.implicit-widening-char-byte-short does not exist here). The N-ary gates take `vararg Int`, compiled to int[] (:440,458,484), a reference type that Kotlin callers can never make null but Java callers can. Established only by the Kotlin compiler during `gradle test` (BUILD:1); no compile-fail test pins it."
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "kotlin.caller-side-narrowing",
+      "origin": "lane",
+      "name": "A caller's wider integer is narrowed before the call",
+      "rationale": "A gate takes Int. A caller holding a Long, Char, Byte or Short must convert it with an explicit call (`toInt()`, `.code`), and `4294967296L.toInt()` is 0, a valid bit that no gate can recognise as a lie. The library cannot see the original value. In Kotlin the narrowing is explicit and greppable at the call site, unlike Java's implicit char/byte/short widening, which does not exist here. CWE-197 Numeric Truncation Error.",
+      "applicability": "applicable",
+      "cwe": 197,
+      "closed_by": [
+        {
+          "kind": "type-system",
+          "id": "type-system:kotlin-int-parameters-no-implicit-widening",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a Kotlin Int (compiled to JVM int): LogicGates.kt:113,148,183,222,272,301,332,356,373,391,413. Kotlin has no implicit numeric widening, so Long, Double, Boolean, Char, Byte, Short and String arguments fail to compile, which is stricter than Java (java.implicit-widening-char-byte-short does not exist here). The N-ary gates take `vararg Int`, compiled to int[] (:440,458,484), a reference type that Kotlin callers can never make null but Java callers can. Established only by the Kotlin compiler during `gradle test` (BUILD:1); no compile-fail test pins it."
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:kotlin-null-safety-and-no-implicit-widening",
+          "state": "unverified",
+          "detail": "A statement about Kotlin's type system (non-null types by default, no implicit numeric conversion); it holds for Kotlin callers only and says nothing about Java callers."
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "kotlin.nullable-int-and-referential-equality",
+      "origin": "lane",
+      "name": "Boxed Int? and referential equality",
+      "rationale": "Kotlin compiles Int to int and Int? to Integer. `===` on boxed Ints compares references and is false for values outside the Integer cache (-128..127 by default) though `==` is true. The library has no Int? and no `===`; a future change adding an Int? parameter or a nullable result, or a List<Int>, would introduce both a null path and the cache pitfall. CWE-595 Comparison of Object References Instead of Object Contents.",
+      "applicability": "applicable-in-principle",
+      "cwe": 595,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-nullable-int-or-referential-equality",
+          "state": "planned",
+          "detail": "No Int?, Integer, Number or Any parameter or return type, and no `===` or `!==` anywhere; comparisons are `==`/`!=` on non-null Int, which Kotlin compiles to primitive comparison.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:kotlin-int-parameters-no-implicit-widening",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a Kotlin Int (compiled to JVM int): LogicGates.kt:113,148,183,222,272,301,332,356,373,391,413. Kotlin has no implicit numeric widening, so Long, Double, Boolean, Char, Byte, Short and String arguments fail to compile, which is stricter than Java (java.implicit-widening-char-byte-short does not exist here). The N-ary gates take `vararg Int`, compiled to int[] (:440,458,484), a reference type that Kotlin callers can never make null but Java callers can. Established only by the Kotlin compiler during `gradle test` (BUILD:1); no compile-fail test pins it."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-nullable-int-or-referential-equality"
+      ]
+    },
+    {
+      "id": "kotlin.silent-integer-wraparound",
+      "origin": "lane",
+      "name": "Silent Int wraparound",
+      "rationale": "Kotlin Int arithmetic wraps without an exception (Int.MAX_VALUE + 1 is Int.MIN_VALUE). The library does no arithmetic on a caller value; validateBit uses comparisons only, and the `i` loop counters and the array size are the only integers computed. CWE-191 (wraparound; the overflow-to-buffer-boundary side is the registry row kotlin.cwe-190).",
+      "applicability": "applicable-in-principle",
+      "cwe": 191,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.integer-value-range",
+          "state": "planned",
+          "detail": "Value-range analysis over Int expressions: no arithmetic on caller-supplied values can overflow; the only arithmetic is the loop index and array size.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.integer-value-range"
+      ]
+    },
+    {
+      "id": "kotlin.not-null-assertion-and-lateinit",
+      "origin": "lane",
+      "name": "Not-null assertion (!!), lateinit and unchecked platform types",
+      "rationale": "`!!` converts a null into a NullPointerException, `lateinit` into UninitializedPropertyAccessException, and a Java platform type (T!) assigned to a non-null Kotlin type into an NPE at an arbitrary later line. All three turn a missing value into an unchecked exception far from its cause. The library has none: no `!!`, no `lateinit`, no value from a Java API (grep of LogicGates.kt). CWE-754 Improper Check for Unusual or Exceptional Conditions.",
+      "applicability": "applicable-in-principle",
+      "cwe": 754,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-not-null-assertion-lateinit-or-platform-type",
+          "state": "planned",
+          "detail": "No `!!`, no `lateinit`, no value of a Java platform type (T!) flowing into a Kotlin non-null position, and no `as` to a non-null type in the library sources.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-not-null-assertion-lateinit-or-platform-type"
+      ]
+    },
+    {
+      "id": "kotlin.uncaught-unchecked-exception",
+      "origin": "lane",
+      "name": "An unchecked exception escapes to the caller",
+      "rationale": "Kotlin has no checked exceptions and the library declares none with @Throws, so Java callers' javac does not force handling either. Every rejection is a thrown InvalidBitException (an IllegalArgumentException), or a plain IllegalArgumentException for N-ary arity. That is the designed error model; the weakness is that nothing makes the caller handle it, so an uncaught rejection ends the thread. CWE-248.",
+      "applicability": "applicable",
+      "cwe": 248,
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:kotlin.kdoc-documents-thrown-exceptions",
+          "state": "claimed",
+          "detail": "Package-documentation claim (a pointer to the stated contract, never a route and never live): the class KDoc says out-of-range Ints throw InvalidBitException, a subclass of IllegalArgumentException, naming the first offending parameter (LogicGates.kt:34-36); AND_N and OR_N document `@throws IllegalArgumentException` (:438, :456) and XOR_N `@throws InvalidBitException` (:482); the eleven basic gates have no per-method @throws. No function carries Kotlin's @Throws annotation, which is only metadata for Java callers; Kotlin has no checked exceptions, so neither compiler forces a caller to handle the exception.",
+          "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:34-36,438,456,482 (origin/main 7a793727a16, merged via PR #19938)"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        }
+      ],
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "kotlin.error-identity-and-parameter-attribution",
+      "origin": "lane",
+      "name": "Error identity differs between the N-ary gates and the 2-input gates",
+      "rationale": "Verified in this review by calling the compiled package from Java: AND_N(1,1,3) and OR_N(0,0,3) throw InvalidBitException with parameter \"b\" (index 0 would be \"a\", e.g. AND_N(3,1)) (the running-result position of the 2-input gate, LogicGates.kt:442-445), XOR_N(0,0,3) names \"bit[2]\" (:485), and AND_N(1) throws a plain java.lang.IllegalArgumentException, not InvalidBitException (:441). LG02 section 7 row 9 records the kotlin identity as `IllegalArgumentException` (LG02-basic-gates-cross-lane-contract.md:497, written before InvalidBitException existed) and says the runner matches the class that was raised, not a base class: a binding written to that row would see InvalidBitException and map it to unexpected-error, while a binding written to InvalidBitException would miss the arity error. LGE-KT-NARY (local branch) renames every element to inputs[i] and uses a distinct InvalidShapeException for arity.",
+      "applicability": "applicable",
+      "cwe": null,
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+          "state": "planned",
+          "detail": "LGE-KT-NARY adds NaryGatesTest: exhaustive over the domain {-1,0,1,2} for lengths 0..8 on all three N-ary gates with the exact parameter name inputs[i] and a no-mutation check (NaryGatesTest.kt:79-105), a null array passed through reflection (:24-35), the 65,536 boundary (:47-58) and shape-beats-bit ordering (:69-77). Exists only on the unmerged local branch.",
+          "planned_item": "LGE-KT-NARY"
+        },
+        {
+          "kind": "source-ref",
+          "id": "source-ref:kotlin.kdoc-documents-thrown-exceptions",
+          "state": "claimed",
+          "detail": "Package-documentation claim (a pointer to the stated contract, never a route and never live): the class KDoc says out-of-range Ints throw InvalidBitException, a subclass of IllegalArgumentException, naming the first offending parameter (LogicGates.kt:34-36); AND_N and OR_N document `@throws IllegalArgumentException` (:438, :456) and XOR_N `@throws InvalidBitException` (:482); the eleven basic gates have no per-method @throws. No function carries Kotlin's @Throws annotation, which is only metadata for Java callers; Kotlin has no checked exceptions, so neither compiler forces a caller to handle the exception.",
+          "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:34-36,438,456,482 (origin/main 7a793727a16, merged via PR #19938)"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables",
+        "lane-corpus:kotlin.nary-shape-and-bit-rows"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "kotlin.error-message-echo",
+      "origin": "lane",
+      "name": "The exception message echoes caller data",
+      "rationale": "The message is `\"$parameter must be 0 or 1, got: $value\"` (LogicGates.kt:502): the parameter is a literal or `\"bit[$i]\"`, the value an Int, so no caller String is echoed and no secret is exposed. The constructor is public, so a caller can build a message from any String, which is the caller's own text. CWE-209; JVM exceptions are serializable and carry the same two fields (kotlin.cwe-502). CWE-537 is folded here.",
+      "applicability": "applicable-in-principle",
+      "cwe": 209,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+          "state": "planned",
+          "detail": "Every exception message is built only from string literals and Int values (no caller-supplied String reaches a message). The two string templates are LogicGates.kt:502 `\"$parameter must be 0 or 1, got: $value\"` and the name `\"bit[$i]\"` (LogicGates.kt:485); the constructor is public, so a caller can still pass any parameter String, which the rule must treat as the caller echoing its own text.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints"
+      ]
+    },
+    {
+      "id": "kotlin.reflection-and-class-loading",
+      "origin": "lane",
+      "name": "Reflection, kotlin-reflect, class loading and reflective writes to shared state",
+      "rationale": "Kotlin code can reach any class by name (Class.forName, ::class.java), call any member (getMethod, kotlin.reflect.full), flip access with setAccessible (on the classpath, as this package is: no module-info) and write static fields. The library does none of it. Separately, any code in the same JVM can reflectively call the private validateBit or write a shared static; that matters only if it makes a gate accept a non-bit, and the public gates re-validate, and `object LogicGates` has no mutable state to write. Callable references (`g::NOT`) in the tests compile to synthetic classes, not reflection. The VER15a section 5.5 note for the (kotlin, 1321) entry sends reflective shared-static writes to this row. CWE-470.",
+      "applicability": "applicable-in-principle",
+      "cwe": 470,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+          "state": "planned",
+          "detail": "No kotlin.reflect.full, ::class.java.getMethod, Class.forName, MethodHandles, ClassLoader, ServiceLoader, javax.script / kotlin.script, setAccessible or Runtime.exec in the library sources; callable references (`g::NOT`) that compile to synthetic classes are allowed only in tests.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ambient-capability-use",
+          "state": "planned",
+          "detail": "No file, process, network, environment, clock, random, thread, stdin/stdout, reflection or serialization capability is reachable from the library, resolving DEFAULT IMPORTS (java.lang.*: Runtime, ProcessBuilder, System, Math.random; kotlin.io.*: println, readLine, File.readText; kotlin.text.*: Regex) and not only explicit import lines. The library has no import statement, which is weak evidence in Kotlin for exactly that reason.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+        "analyzer-rule:kotlin.no-ambient-capability-use"
+      ]
+    },
+    {
+      "id": "kotlin.ffi-external-unsafe-native",
+      "origin": "lane",
+      "name": "`external` functions, JNI and Unsafe",
+      "rationale": "`external fun` declares a JNI method; System.load, sun.misc.Unsafe and the foreign-memory API reach native memory and void every memory-safety row. The library declares none (it is pure Kotlin/JVM: kotlin(\"jvm\"), build.gradle.kts:4). CWE-111 Direct Use of Unsafe JNI.",
+      "applicability": "applicable-in-principle",
+      "cwe": 111,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+          "state": "planned",
+          "detail": "No `external` function, no System.load/loadLibrary, no sun.misc.Unsafe, jdk.internal.misc, java.lang.foreign, MethodHandles or JNI/JNA use, and no Kotlin/Native cinterop or @CName, in the library sources. The rule resolves names, not just import lines: java.lang.* and kotlin.* are default-imported, so `System.load(...)` needs no import statement.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-ffi-unsafe-native"
+      ]
+    },
+    {
+      "id": "kotlin.object-singleton-mutable-state",
+      "origin": "lane",
+      "name": "Mutable state in the `object` singleton, a companion, or a top-level property",
+      "rationale": "`object LogicGates` is a process-wide singleton (LogicGates.kt:58), so any `var`, `lateinit` or mutable collection added to it is shared by every caller, and the JVM runs its initializer once, lazily, under a lock but says nothing about later mutation. Kotlin declarations are public by default and the build does not enable explicitApi(), so a new property is public unless someone writes `private`. The object has no property today (the branch adds `const val MAX_INPUTS`, a compile-time constant). It is NOT a Java-style singleton with an instance field to guard. CWE-500 Public Static Field Not Marked Final, and its relatives CWE-493, 607, 766.",
+      "applicability": "applicable-in-principle",
+      "cwe": 500,
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-mutable-or-lateinit-state-in-object",
+          "state": "planned",
+          "detail": "The `object` and any companion object declare no `var`, no `lateinit`, no @JvmField var and no mutable collection or array property; the only property allowed is `const val`. explicitApi() is not enabled, so every new declaration is public by default; the rule must flag a new public member that is not a function.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-mutable-or-lateinit-state-in-object"
+      ]
+    },
+    {
+      "id": "kotlin.assert-for-validation",
+      "origin": "lane",
+      "name": "`assert()` used as validation is a no-op on the JVM by default",
+      "rationale": "Kotlin's assert(...) is checked only when the JVM runs with -ea, which production JVMs do not; a validator written with it silently accepts every non-bit. `require`, `check` and an explicit `throw` always run. The library uses require and an explicit throw only; it has no assert.",
+      "applicability": "applicable-in-principle",
+      "cwe": null,
+      "closed_by": [
+        {
+          "kind": "source-ref",
+          "id": "source-ref:kotlin.validation-uses-require-and-explicit-throw",
+          "state": "claimed",
+          "detail": "The validators are `require(...)` (LogicGates.kt:441, 459, always executed) and an explicit `throw InvalidBitException` (:76); the file contains no `assert(`.",
+          "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:76,441,459 (origin/main 7a793727a16, merged via PR #19938)"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.no-assert-for-validation",
+          "state": "planned",
+          "detail": "No call to kotlin `assert(...)` (a no-op unless the JVM runs with -ea) guards an input; validation uses require/explicit throw only. Today: require at LogicGates.kt:441, 459 and an explicit throw at :76.",
+          "planned_item": "LGE-A2"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:kotlin.no-assert-for-validation"
+      ]
+    },
+    {
+      "id": "kotlin.operator-and-comparison-misuse",
+      "origin": "lane",
+      "name": "Wrong operator or comparison in a gate body",
+      "rationale": "A gate is only comparisons and conditionals, so a wrong operator (`||` for `&&`, `!=` for `==`) is the typical bug. Kotlin removes the `=`-for-`==` form (assignment is not an expression) and `==` on Int is primitive comparison; `===` on Int? would be reference comparison but is absent. The exhaustive truth tables use literal expected values, not values computed from the code under test, so a wrong operator in the valid domain fails them. CWE-481.",
+      "applicability": "applicable",
+      "cwe": 481,
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:kotlin.operator-and-comparison-sanity",
+          "state": "planned",
+          "detail": "Only `==`, `!=`, `&&`, `||`, `if` on non-null Int; no `===`, no bitwise infix (`and`, `or`, `xor`, `shl`), no `when` without else; Kotlin assignments are not expressions, so `if (a = 0)` is already a compile error.",
+          "planned_item": "LGE-A2"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:kotlin-int-parameters-no-implicit-widening",
+          "state": "claimed",
+          "detail": "Every public gate parameter is a Kotlin Int (compiled to JVM int): LogicGates.kt:113,148,183,222,272,301,332,356,373,391,413. Kotlin has no implicit numeric widening, so Long, Double, Boolean, Char, Byte, Short and String arguments fail to compile, which is stricter than Java (java.implicit-widening-char-byte-short does not exist here). The N-ary gates take `vararg Int`, compiled to int[] (:440,458,484), a reference type that Kotlin callers can never make null but Java callers can. Established only by the Kotlin compiler during `gradle test` (BUILD:1); no compile-fail test pins it."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "exhaustive"
+    },
+    {
+      "id": "kotlin.short-circuit-validation",
+      "origin": "lane",
+      "name": "Incorrect short-circuit evaluation of validation",
+      "rationale": "A gate that returns before validating its second argument (`if (a == 0) 0 else check(b)`) accepts AND(0, 7). Kotlin `&&` and `||` short-circuit, so validation hidden in a condition is skipped. Every gate validates both parameters in separate statements before computing (LogicGates.kt:149-150, 184-185, 223-224), and the suite asserts the decisive-first-argument cases (f(v, other), f(other, v), f(v, v), LogicGatesExhaustiveTest.kt:81-90). CWE-768.",
+      "applicability": "applicable",
+      "cwe": 768,
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+          "state": "claimed",
+          "detail": "LogicGatesExhaustiveTest: literal truth tables for the 9 binary and 2 unary gates in (0,0) (0,1) (1,0) (1,1) order, NAND-built included (LogicGatesExhaustiveTest.kt:18-34, 47-56, 58-67); 2,051 distinct invalid Ints per argument position (the 2,047 values of -1024..1024 other than 0 and 1 plus Int.MIN_VALUE, MIN+1, MAX-1, MAX; :36-38), each reported with the FIRST offending parameter name and value, both-invalid case included (:69-90). The N-ary gates have only smoke rows: one bad element each (:96-102) and the spot rows of LogicGatesTest.kt:127-160, 187-205; no row asserts which parameter is named for AND_N/OR_N, none passes a null array (Kotlin callers cannot), none tests a long array."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:exhaustive-rejection-and-truth-tables"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "kotlin.build-dependency-trust",
+      "origin": "lane",
+      "name": "Build and runtime dependency trust: Kotlin Gradle plugin, kotlin-stdlib, JUnit, JaCoCo",
+      "rationale": "Unlike java/logic-gates, this library has a runtime dependency: the kotlin(\"jvm\") 2.1.20 plugin (build.gradle.kts:4) adds kotlin-stdlib 2.1.20 and org.jetbrains:annotations 13.0 to the runtime classpath (verified locally with `gradle dependencies`). The build resolves the plugin from the Gradle plugin portal and JUnit Jupiter 5.11.4 (:30) and the JaCoCo 0.8.12 tool (:39) from mavenCentral (:12-14) by version only; kotlin(\"test\") (:29) is pinned to 2.1.20 by the plugin, but `org.junit.platform:junit-platform-launcher` (:31) has no version stated (resolved to 1.11.4 via the JUnit BOM constraints), so for it resolution decides. There is no Gradle wrapper (BUILD runs `gradle test`), no JDK pin (only release 21, :22-26), and no dependency-verification metadata. A substituted plugin, compiler, stdlib or test dependency runs code on the build machine or in the caller. CWE-1357, and CWE-494 for the unverified download. JaCoCo is a LINE gate only (0.95, :48-58).",
+      "applicability": "applicable",
+      "cwe": 1357,
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:kotlin-stdlib-only-runtime-dependency",
+          "state": "claimed",
+          "detail": "build.gradle.kts declares only testImplementation (kotlin(\"test\"), junit-jupiter 5.11.4) and testRuntimeOnly (junit-platform-launcher) (:28-32), no implementation/api entry, but the kotlin(\"jvm\") 2.1.20 plugin (:4) adds kotlin-stdlib implicitly: a local `gradle --offline dependencies --configuration runtimeClasspath` during this review resolved org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> org.jetbrains:annotations:13.0. So the published library is NOT dependency-free (unlike java/logic-gates). Nothing reads the file or the resolution at report time; the junit-platform-launcher version is not stated in the file and nothing is hash-pinned."
+        },
+        {
+          "kind": "build-check",
+          "id": "build-check:gradle-test-jacoco-line-gate",
+          "state": "claimed",
+          "detail": "BUILD runs `gradle test`; build.gradle.kts finalises test with a JaCoCo 0.8.12 report (:39-46) and a LINE coverage verification of at least 0.95 (:48-58), wired into check (:60). Line coverage only: no branch coverage, no mutation testing, no allWarningsAsErrors, no explicitApi(), no detekt/ktlint/NullAway-style analyser in the build."
+        }
+      ],
+      "exclude_requires": [
+        "build-check:kotlin-stdlib-only-runtime-dependency"
+      ]
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 102,
+      "name": "Struts: Duplicate Validation Forms",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 103,
+      "name": "Struts: Incomplete validate() Method Definition",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 104,
+      "name": "Struts: Form Bean Does Not Extend Validation Class",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 105,
+      "name": "Struts: Form Field Without Validator",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 106,
+      "name": "Struts: Plug-in Framework not in Use",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 107,
+      "name": "Struts: Unused Validation Form",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 108,
+      "name": "Struts: Unvalidated Action Form",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 109,
+      "name": "Struts: Validator Turned Off",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 110,
+      "name": "Struts: Validator Without Form Field",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 608,
+      "name": "Struts: Non-private Field in ActionForm Class",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 5,
+      "name": "J2EE Misconfiguration: Data Transmission Without Encryption",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 6,
+      "name": "J2EE Misconfiguration: Insufficient Session-ID Length",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 7,
+      "name": "J2EE Misconfiguration: Missing Custom Error Page",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 8,
+      "name": "J2EE Misconfiguration: Entity Bean Declared Remote",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 9,
+      "name": "J2EE Misconfiguration: Weak Access Permissions for EJB Methods",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 555,
+      "name": "J2EE Misconfiguration: Plaintext Password in Configuration File",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 245,
+      "name": "J2EE Bad Practices: Direct Management of Connections",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 246,
+      "name": "J2EE Bad Practices: Direct Use of Sockets",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 382,
+      "name": "J2EE Bad Practices: Use of System.exit()",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 383,
+      "name": "J2EE Bad Practices: Direct Use of Threads",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 574,
+      "name": "EJB Bad Practices: Use of Synchronization Primitives",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 575,
+      "name": "EJB Bad Practices: Use of AWT Swing",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 576,
+      "name": "EJB Bad Practices: Use of Java I/O",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 577,
+      "name": "EJB Bad Practices: Use of Sockets",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 578,
+      "name": "EJB Bad Practices: Use of Class Loader",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 579,
+      "name": "J2EE Bad Practices: Non-serializable Object Stored in Session",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 594,
+      "name": "J2EE Framework: Saving Unserializable Objects to Disk",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 536,
+      "name": "Servlet Runtime Error Message Containing Sensitive Information",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 600,
+      "name": "Uncaught Exception in Servlet",
+      "why_not": "Struts/J2EE/servlet/EJB framework weakness; the package is a plain library with no framework, servlet, session, bean or web.xml: its runtime classpath is only kotlin-stdlib 2.1.20 and annotations 13.0 (build.gradle.kts:28-32; verified locally), so the construct cannot appear."
+    },
+    {
+      "cwe": 95,
+      "name": "Improper Neutralization of Directives in Dynamically Evaluated Code",
+      "why_not": "Folded into registry row kotlin.cwe-94: the closure is the absence of dynamic evaluation (kotlin.script, javax.script, reflection), which the reflection/dynamic-code analyzer rule defines."
+    },
+    {
+      "cwe": 917,
+      "name": "Improper Neutralization of Special Elements used in an Expression Language Statement",
+      "why_not": "Needs an expression-language engine (EL, OGNL, SpEL); none is on the runtime classpath. Folded into kotlin.cwe-94."
+    },
+    {
+      "cwe": 1336,
+      "name": "Improper Neutralization of Special Elements Used in a Template Engine",
+      "why_not": "Needs a template engine; none is used (Kotlin string templates `\"$x\"` are compile-time constructs, not an engine, and take no caller-chosen template). Folded into kotlin.cwe-94."
+    },
+    {
+      "cwe": 366,
+      "name": "Race Condition within a Thread",
+      "why_not": "Needs a shared field; `object LogicGates` has no property. The only shared memory is the caller array, covered by kotlin.cwe-362, kotlin.cwe-367 and kotlin.vararg-array-shared-with-java-caller."
+    },
+    {
+      "cwe": 567,
+      "name": "Unsynchronized Access to Shared Data in a Multithreaded Context",
+      "why_not": "Needs shared static or instance state; none exists (no property). Caller-array sharing is kotlin.cwe-362."
+    },
+    {
+      "cwe": 543,
+      "name": "Use of Singleton Pattern Without Synchronization in a Multithreaded Context",
+      "why_not": "Unlike Java, `object LogicGates` IS a singleton (LogicGates.kt:58), but the JVM runs its initializer once under a lock and it holds no mutable state; recorded in kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 609,
+      "name": "Double-Checked Locking",
+      "why_not": "No lazy initialisation (`by lazy` is not used), no static state and no synchronized block in the library."
+    },
+    {
+      "cwe": 585,
+      "name": "Empty Synchronized Block",
+      "why_not": "No synchronized statement or @Synchronized in the library."
+    },
+    {
+      "cwe": 572,
+      "name": "Call to Thread run() instead of start()",
+      "why_not": "No Thread use in the library."
+    },
+    {
+      "cwe": 395,
+      "name": "Use of NullPointerException Catch to Detect NULL Pointer Dereference",
+      "why_not": "The library has no catch block; the null issue is the reachable NPE of kotlin.cwe-476."
+    },
+    {
+      "cwe": 396,
+      "name": "Declaration of Catch for Generic Exception",
+      "why_not": "No catch block in the library."
+    },
+    {
+      "cwe": 397,
+      "name": "Declaration of Throws for Generic Exception",
+      "why_not": "Kotlin has no throws clause and the library has no @Throws annotation; InvalidBitException is unchecked (kotlin.uncaught-unchecked-exception)."
+    },
+    {
+      "cwe": 460,
+      "name": "Improper Cleanup on Thrown Exception",
+      "why_not": "The library acquires no resource, so there is nothing to clean up when a gate throws."
+    },
+    {
+      "cwe": 1341,
+      "name": "Multiple Releases of Same Resource or Handle",
+      "why_not": "The library holds no resource or handle."
+    },
+    {
+      "cwe": 478,
+      "name": "Missing Default Case in Multiple Condition Expression",
+      "why_not": "No `when` or multi-way conditional in the library; Kotlin requires an else for a `when` used as an expression. Folded into kotlin.operator-and-comparison-misuse."
+    },
+    {
+      "cwe": 484,
+      "name": "Omitted Break Statement in Switch",
+      "why_not": "Kotlin has no switch fall-through, and the library has no `when`."
+    },
+    {
+      "cwe": 597,
+      "name": "Use of Wrong Operator in String Comparison",
+      "why_not": "The library compares no String; folded into kotlin.operator-and-comparison-misuse."
+    },
+    {
+      "cwe": 462,
+      "name": "Duplicate Key in Associative List (Alist)",
+      "why_not": "No map or associative structure in the library."
+    },
+    {
+      "cwe": 486,
+      "name": "Comparison of Classes by Name",
+      "why_not": "No class comparison; no ::class or getClass() in the library."
+    },
+    {
+      "cwe": 487,
+      "name": "Reliance on Package-level Scope",
+      "why_not": "Kotlin has no package-private visibility; the helper validateBit is private (LogicGates.kt:75) and everything else is deliberately public. Closed by kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 491,
+      "name": "Public cloneable() Method Without Final",
+      "why_not": "No clone() method and no Cloneable."
+    },
+    {
+      "cwe": 498,
+      "name": "Cloneable Class Containing Sensitive Information",
+      "why_not": "No Cloneable class; no sensitive field."
+    },
+    {
+      "cwe": 499,
+      "name": "Serializable Class Containing Sensitive Data",
+      "why_not": "InvalidBitException is Serializable (inherited, LogicGates.kt:501) but holds only a parameter name and an Int, no secret; recorded in kotlin.cwe-502 and kotlin.error-message-echo."
+    },
+    {
+      "cwe": 492,
+      "name": "Use of Inner Class Containing Sensitive Data",
+      "why_not": "No inner, nested or anonymous class in the library; the only lambdas are the lazy message arguments of `require`, an inline function."
+    },
+    {
+      "cwe": 493,
+      "name": "Critical Public Variable Without Final Modifier",
+      "why_not": "Folded into kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 495,
+      "name": "Private Data Structure Returned From A Public Method",
+      "why_not": "No function returns an array or collection; folded into kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 496,
+      "name": "Public Data Assigned to Private Array-Typed Field",
+      "why_not": "No array-typed property; the vararg array is not stored. Folded into kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 582,
+      "name": "Array Declared Public, Final, and Static",
+      "why_not": "No array property; folded into kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 607,
+      "name": "Public Static Final Field References Mutable Object",
+      "why_not": "No static property at all on main (the branch adds only `const val MAX_INPUTS`, an Int constant); folded into kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 766,
+      "name": "Critical Data Element Declared Public",
+      "why_not": "No property; folded into kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 767,
+      "name": "Access to Critical Private Variable via Public Method",
+      "why_not": "No private variable is exposed by a method other than the two property getters of InvalidBitException (a String and an Int); folded into kotlin.object-singleton-mutable-state."
+    },
+    {
+      "cwe": 374,
+      "name": "Passing Mutable Objects to an Untrusted Method",
+      "why_not": "The library calls no method outside itself with a caller object; the array is read in place. The aliasing hazard of the caller array is kotlin.cwe-362/367."
+    },
+    {
+      "cwe": 375,
+      "name": "Returning a Mutable Object to an Untrusted Caller",
+      "why_not": "Every return is an Int or an exception; no mutable object is returned."
+    },
+    {
+      "cwe": 568,
+      "name": "finalize() Method Without super.finalize()",
+      "why_not": "No finalize() method."
+    },
+    {
+      "cwe": 580,
+      "name": "clone() Method Without super.clone()",
+      "why_not": "No clone() method."
+    },
+    {
+      "cwe": 581,
+      "name": "Object Model Violation: Just One of Equals and Hashcode Defined",
+      "why_not": "Neither equals() nor hashCode() is overridden (InvalidBitException is a plain class, not a data class)."
+    },
+    {
+      "cwe": 583,
+      "name": "finalize() Method Declared Public",
+      "why_not": "No finalize() method."
+    },
+    {
+      "cwe": 586,
+      "name": "Explicit Call to Finalize()",
+      "why_not": "No finalize() call."
+    },
+    {
+      "cwe": 537,
+      "name": "Java Runtime Error Message Containing Sensitive Information",
+      "why_not": "Folded into kotlin.error-message-echo (CWE-209 is its parent)."
+    },
+    {
+      "cwe": 617,
+      "name": "Reachable Assertion",
+      "why_not": "The library uses no `assert` and no AssertionError; invalid input throws InvalidBitException. The Kotlin-specific form (assert disabled by default) is the lane threat kotlin.assert-for-validation."
+    },
+    {
+      "cwe": 1335,
+      "name": "Incorrect Bitwise Shift of Integer",
+      "why_not": "The library performs no shift or bitwise operator (it uses ==, !=, &&, ||, if); closed by the integer-value-range analyzer rule if one is ever added."
+    },
+    {
+      "cwe": 129,
+      "name": "Improper Validation of Array Index",
+      "why_not": "Every indexed read is guarded by `require(inputs.size >= 2)` (LogicGates.kt:441, 459) or bounded by the loop (:485-488); a failure would be ArrayIndexOutOfBoundsException. Folded into kotlin.cwe-125."
+    },
+    {
+      "cwe": 833,
+      "name": "Deadlock",
+      "why_not": "The library takes no lock and uses no Thread, coroutine or synchronized block."
+    },
+    {
+      "cwe": 192,
+      "name": "Integer Coercion Error",
+      "why_not": "Kotlin has no implicit numeric conversion, so the Java widening form does not exist; explicit narrowing by a caller is kotlin.caller-side-narrowing (CWE-197)."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "kotlin/logic-gates",
+      "reviewed_at_commit": "7a793727a1654c1ca993ee67215c76752cdcbfbe",
+      "scope": "LogicGates.kt (the `object LogicGates` with the 11 basic gates and AND_N, OR_N, XOR_N, plus the InvalidBitException class; src/main) and build.gradle.kts as the build-input claim. The tests (LogicGatesTest.kt, LogicGatesExhaustiveTest.kt) and BUILD are evidence producers, not part of the claim. Package is on origin/main 7a793727a16 (LGE-R-kotlin merged as PR #19938). The unmerged local branch claude/kotlin-logic-gates-nary (LGE-KT-NARY) is cited only as planned evidence.",
+      "rows": [
+        {
+          "threat": "kotlin.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Pure Kotlin/JVM: no free, no native memory, so the class cannot corrupt memory here. That the library stays inside that subset is read by a person; the analyzer rule is planned (LGE-A2, Kotlin grammar) and the class is excluded under gc_runtimes only when it is live. Reached is none: the only test corpus (LogicGatesExhaustiveTest, truth tables and bit rejection) tests nothing about memory safety, so it is not listed.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29,58-502 (origin/main 7a793727a16, merged via PR #19938) (package declaration then `object LogicGates`; no `external` member, no import statement, no property)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No array write exists in the library and the runtime bounds-checks; the exclusion is read by a person until the FFI analyzer rule is live (LGE-A2). Reached none: no test exercises a write.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29,58-502 (origin/main 7a793727a16, merged via PR #19938) (package declaration then `object LogicGates`; no `external` member, no import statement, no property)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Every indexed read is guarded or loop-bounded and the runtime bounds-checks; a failure mode would be an exception, not an information leak. Exclusion is read by a person until the FFI analyzer rule is live (LGE-A2). Reached none: the corpus tests the AND_N(1) arity rejection only as a smoke row (LogicGatesTest.kt:136-140), which is not evidence about reads.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:440-447,458-465,484-492 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No deallocation, no resource, no AutoCloseable in the library; exclusion read by a person until the FFI analyzer rule is live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29,58-502 (origin/main 7a793727a16, merged via PR #19938) (package declaration then `object LogicGates`; no `external` member, no import statement, no property)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Finding (local probe, not a repository tool): a null int[] from Java raises NullPointerException from the compiler-generated parameter check, not an InvalidBitException/IllegalArgumentException. The row cannot be excluded until the null path is either guarded with a package exception or declared in the contract, and the null-reachability analyzer rule is live. LGE-KT-NARY (local branch) adds an explicit null guard (InvalidShapeException) and a reflection-driven null test, but it also turns the compiler check off module-wide (kotlin.null-guards-and-param-assertions). Reached none: no suite on main passes a null array.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-null-reachable-from-public-methods",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:440,458,484 (origin/main 7a793727a16, merged via PR #19938) (the three reference-typed parameters; Intrinsics.checkNotNullParameter seen with javap)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:96-102 (origin/main 7a793727a16, merged via PR #19938) (no null-array row; LogicGatesTest.kt:127-160 likewise)"
+            },
+            {
+              "closure_id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/NaryGatesTest.kt:24-35 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-null-reachable-from-public-methods",
+            "analyzer-rule:kotlin.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-KT-NARY"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-190",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No arithmetic feeds an index or size; the exclusion is read by a person until the value-range rule and the FFI rule are live (LGE-A2). Reached none: no sanitizer or overflow test exists.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.integer-value-range",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:443,461,488 (origin/main 7a793727a16, merged via PR #19938) (loop indices bounded by array size, no arithmetic on caller values)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.integer-value-range",
+            "analyzer-rule:kotlin.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. The library does not do this; that is read by a person. The capability analyzer for Kotlin (VER08c rule table, grammar via LGE-A2) is not built, and package manifests check nothing. Reached none: the truth-table corpus does not test this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ambient-capability-use",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938) (no import statement; no call to any capability API in the file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. The library does not do this; that is read by a person. The capability analyzer for Kotlin (VER08c rule table, grammar via LGE-A2) is not built, and package manifests check nothing. Reached none: the truth-table corpus does not test this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ambient-capability-use",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938) (no import statement; no call to any capability API in the file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. The library does not do this; that is read by a person. The capability analyzer for Kotlin (VER08c rule table, grammar via LGE-A2) is not built, and package manifests check nothing. Reached none: the truth-table corpus does not test this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ambient-capability-use",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938) (no import statement; no call to any capability API in the file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. The library does not do this; that is read by a person. The capability analyzer for Kotlin (VER08c rule table, grammar via LGE-A2) is not built, and package manifests check nothing. Reached none: the truth-table corpus does not test this class.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ambient-capability-use",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938) (no import statement; no call to any capability API in the file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. The library evaluates nothing and imports no scripting engine; the rule banning reflection, class loading and script engines is planned (LGE-A2). The compiled_languages_no_eval subset is claimed only through that rule, never from the language name.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Message text is built from literals and Ints only; that is read by a person. The message-construction analyzer rule and the capability rule are planned (LGE-A2). Reached none: the corpus asserts parameter and value fields, not message encoding.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:76,485,501-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No logging call and an Int-and-literal message; read by a person until the capability and message rules are live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:76,485,501-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-400",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Finding: no input-length cap on AND_N, OR_N, XOR_N and an eager per-element String in XOR_N (LogicGates.kt:485). No test passes a long array, so no label is reached. The in-package fix (cap plus lazy name) is LGE-KT-NARY on a local branch; the remaining gap is that no tool reads the loop bound or the boundary rows at report time.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:484-492 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:96-102 (origin/main 7a793727a16, merged via PR #19938) (smoke rows only; no long array)"
+            },
+            {
+              "closure_id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/NaryGatesTest.kt:47-58 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+            "lane-corpus:kotlin.nary-shape-and-bit-rows",
+            "LGE-KT-NARY",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No decompression or format parsing in the library; read by a person until the capability rule is live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ambient-capability-use",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Acyclic by inspection of LogicGates.kt:113-418; no tool checks it until the call-graph rule is live (LGE-A2). Reached none: the corpus calls every gate once, which does not show absence of recursion.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:113-418,440-492 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No regex or string parsing; read by a person until the rules are live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-regex-or-string-parsing",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "analyzer-rule:kotlin.no-regex-or-string-parsing",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Linear at worst by inspection; no tool checks the complexity until the loop-bound rule is live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:440-492 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.call-graph-acyclic-loops-bounded-by-input",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No secret input is declared; read by a person until the rule is live (LGE-A2). Reached none: no timing measurement exists.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-secret-inputs-declared",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:113-116,148-152,183-187,222-226 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-secret-inputs-declared",
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No cryptographic or random API use; read by a person until the rules are live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-crypto-or-random-use",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "analyzer-rule:kotlin.no-crypto-or-random-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No cryptographic or random API use; read by a person until the rules are live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-crypto-or-random-use",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "analyzer-rule:kotlin.no-crypto-or-random-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No cryptographic or random API use; read by a person until the rules are live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-crypto-or-random-use",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "analyzer-rule:kotlin.no-crypto-or-random-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Finding: XOR_N reads its array twice (validate loop :485, compute loop :487-490), a check-then-reread window for a Java caller that shares the array with a mutating thread. No test exercises concurrent mutation (the exhaustive suite is single-threaded), so nothing is claimed. LGE-KT-NARY (local branch) snapshots the array once (`copyOf`) and validates the copy; its test checks the caller array is not modified, not that a concurrent writer is tolerated.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:484-492 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:96-102 (origin/main 7a793727a16, merged via PR #19938) (single-threaded; no concurrent-mutation row)"
+            },
+            {
+              "closure_id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:431-459 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+            "analyzer-rule:kotlin.no-threads-or-shared-mutable-state",
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-KT-NARY"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Finding: validate-then-reread in XOR_N (LogicGates.kt:485 then :487-490). The read-once rule is planned (LGE-A2) and would flag it today; LGE-KT-NARY (local branch) replaces it with a single copy that the loops use. Reached none: no test.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:485,487-490 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-KT-NARY"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No serialization call in the library; read by a person until the rules are live (LGE-A2). Reached none: no test serializes the exception.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-serialization-or-deserialization-calls",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:501-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-serialization-or-deserialization-calls",
+            "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-1321",
+          "status": "open",
+          "reached": "none",
+          "reason": "Proposed excluded-by-language, sign-off pending: the (kotlin, 1321) pair is on the VER15a section 5.5 whitelist but unsigned, so the row cannot yet read \"excluded by language semantics (not machine-checked)\". The entry covers the prototype-chain mechanism only.",
+          "evidence": [],
+          "becomes_when": [
+            "LGE-S3b"
+          ],
+          "becomes_status": "excluded-by-language"
+        },
+        {
+          "threat": "kotlin.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rejection is tested at the Int boundaries and at every value in [-1024, 1024] other than 0 and 1, in each position, for all eleven gates. The probe set (2,051 invalid Ints per position) is not every Int (2^32 per position, 2^64 pairs), so the label is tested. Planned items would cover the whole domain by exhaustion: an exhaustive 2^32 check of the validator (LGE-L-kotlin), an analyzer rule that every gate validates every parameter (LGE-A2) and, for the N-ary gates, the small-domain exhaustive rows of LGE-KT-NARY. They only raise reached toward exhaustive; the floor is proved, VER15a section 5.2 names a machine-checked proof as the only route to proved and none exists for the Kotlin lane, so the row keeps no_planned_closure. N-ary rows on main are smoke rows only.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:18-90 (origin/main 7a793727a16, merged via PR #19938) (tables :47-56, equivalence :58-67, rejection every position :81-90)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:kotlin-int-extremes-rows",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:36-38,81-90 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "type-system:kotlin-int-parameters-no-implicit-widening",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:113,148,183,222,272,301,332,356,373,391,413 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "lane-corpus:kotlin.validatebit-all-2pow32-ints",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:75-77 (origin/main 7a793727a16, merged via PR #19938) (validateBit, the single validator the exhaustive check would enumerate)"
+            },
+            {
+              "closure_id": "analyzer-rule:kotlin.every-gate-calls-validatebit-on-every-parameter",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:114,149-150,184-185,223-224,357,374-375,392-393,414-415,485 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/NaryGatesTest.kt:79-105 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "kotlin.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The compiler half is real (Kotlin refuses Long, Double, Boolean, Char and String arguments) but is read by a person; the escape-hatch half (no cast, no reflection) is the planned analyzer rules (LGE-A2). The matrix rows that exist are the Int boundary rows.",
+          "evidence": [
+            {
+              "closure_id": "type-system:kotlin-int-parameters-no-implicit-widening",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:113,148,440 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "type-confusion-matrix:kotlin-int-extremes-rows",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:36-38,81-90 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "analyzer-rule:kotlin.no-casts-is-checks-unchecked-reified-or-any",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938) (no `as`, `is`, generic or Any in the file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-casts-is-checks-unchecked-reified-or-any",
+            "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. The wide-integer rows exist for Ints only (256 and 257 are rejected as themselves); the no-conversion statement is read by a person until the analyzer rules are live (LGE-A2).",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:kotlin-int-extremes-rows",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:36-38 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "analyzer-rule:kotlin.no-conversions-on-inputs",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938) (no conversion function in the file)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-conversions-on-inputs",
+            "analyzer-rule:kotlin.no-casts-is-checks-unchecked-reified-or-any",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.null-guards-and-param-assertions",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. On main the flag is absent (build.gradle.kts:16-20), so the compiler guard is on and a Java null raises NullPointerException, not the package contract. The planned change inverts the mechanism (explicit guard, compiler check off) and creates a module-wide trap for later functions; nothing checks the build flags or that each reference parameter carries a guard. The route item build-check:kotlin-compiler-flags-default becomes false once LGE-KT-NARY adds -Xno-param-assertions and must then be re-based (a flag-allowlist check plus explicit null guards). The flag also removes the compiler null check on the String constructor parameters of InvalidBitException and InvalidShapeException, so a Java `new InvalidBitException(null, 1)` is no longer rejected. No repository tool reads the build file; no backlog item delivers a build-flag allowlist check.",
+          "evidence": [
+            {
+              "closure_id": "build-check:kotlin-compiler-flags-default",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/build.gradle.kts:16-20 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "source-ref:kotlin.nary-branch-disables-param-assertions",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/build.gradle.kts:19-24 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "kotlin.vararg-array-shared-with-java-caller",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Finding: XOR_N validate-then-reread, reachable only from a non-Kotlin caller. No test calls from Java or mutates a shared array. LGE-KT-NARY (local branch) takes one copy, validates and computes from the copy, and tests that the caller array is unchanged.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:485,487-490 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:96-102 (origin/main 7a793727a16, merged via PR #19938) (Kotlin-only caller, spread copies; no aliasing row)"
+            },
+            {
+              "closure_id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/NaryGatesTest.kt:91,101 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.reference-parameters-read-once-or-copied",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-KT-NARY"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.null-unboxing-at-java-call-site",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library: the caller's unboxing fails before the call. The row stays open and every release says so. No test is possible from Kotlin.",
+          "evidence": [
+            {
+              "closure_id": "type-system:kotlin-int-parameters-no-implicit-widening",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:113,148 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "kotlin.caller-side-narrowing",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library: the truncation happens in the caller before the call. The row stays open; the registry class CWE-704 row says what the library itself does not do.",
+          "evidence": [
+            {
+              "closure_id": "type-system:kotlin-int-parameters-no-implicit-widening",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:113,148 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "kotlin.nullable-int-and-referential-equality",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No Int? and no === in the library (LogicGates.kt:29-502); read by a person until the rule is live (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-nullable-int-or-referential-equality",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:113-492 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-nullable-int-or-referential-equality",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.silent-integer-wraparound",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. The corpus feeds Int.MIN_VALUE, MIN+1, MAX-1 and MAX to every gate and every position and each is rejected (no wrap into a valid bit); no arithmetic exists to wrap. The value-range rule is planned (LGE-A2).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:36-38,81-90 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "analyzer-rule:kotlin.integer-value-range",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:75-77,443,461,488 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.integer-value-range",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.not-null-assertion-and-lateinit",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Absent today (no `!!`, `lateinit` or Java call in LogicGates.kt); no analyzer checks that it stays absent (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-not-null-assertion-lateinit-or-platform-type",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-not-null-assertion-lateinit-or-platform-type",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.uncaught-unchecked-exception",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Outside the library: the caller decides whether to catch. The corpus asserts every rejection throws (LogicGatesExhaustiveTest.kt:81-90); the KDoc states the contract (LogicGates.kt:34-36) but earns no label.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:kotlin.kdoc-documents-thrown-exceptions",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:34-36,438,456,482 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:81-90,92-94 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "kotlin.error-identity-and-parameter-attribution",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Finding (local probe): AND_N/OR_N report index 0 as a and every other element as b, never an index, XOR_N uses bit[i], arity is a different class; the suite asserts the parameter only for the 2-input gates (LogicGatesExhaustiveTest.kt:69-90) and the N-ary rows assert the class only (:96-102), so the discrepancy is untested. The row discharges when the lane corpus (live) and the N-ary rows of LGE-KT-NARY exist; The LG02 row 9 (:497) update has no owning backlog id (it needs an LG02 errata item) and is no_planned_closure for that part.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:69-90,96-102 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "lane-corpus:kotlin.nary-shape-and-bit-rows",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/NaryGatesTest.kt:60-77 (local branch claude/kotlin-logic-gates-nary at d44cbdeef29 (LGE-KT-NARY, not on main, not a PR))"
+            },
+            {
+              "closure_id": "source-ref:kotlin.kdoc-documents-thrown-exceptions",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:438,456,482 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:exhaustive-rejection-and-truth-tables",
+            "lane-corpus:kotlin.nary-shape-and-bit-rows",
+            "LGE-W1",
+            "LGE-S3v",
+            "LGE-KT-NARY"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "kotlin.error-message-echo",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. Only literals and Ints reach the message; the corpus asserts the parameter and value fields (LogicGatesExhaustiveTest.kt:69-90), not the full message text. The construction rule is planned (LGE-A2).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:76,485,501-502 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:69-90 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.exception-messages-built-from-literals-and-ints",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.reflection-and-class-loading",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No reflection or class loading in the library (no import statement; default-imported java.lang.Class would still be reachable, hence the name-resolving rule, LGE-A2).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-reflection-classloading-dynamic-code",
+            "analyzer-rule:kotlin.no-ambient-capability-use",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.ffi-external-unsafe-native",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No `external` and no native call in the file; read by a person until the rule is live (LGE-A2).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-ffi-unsafe-native",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-ffi-unsafe-native",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.object-singleton-mutable-state",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No property in the object on main (LogicGates.kt:58-493); no analyzer checks it stays that way (LGE-A2). Reached none.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:kotlin.no-mutable-or-lateinit-state-in-object",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:58-493 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-mutable-or-lateinit-state-in-object",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.assert-for-validation",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence planned, not machine-checked: no repository tool reads it at report time and the closing rule is not built. No assert( in LogicGates.kt; the closing rule is planned (LGE-A2). Reached none: the corpus asserts rejection, which a disabled assert would fail, but it runs with whatever JVM flags the test task uses and is not recorded here as evidence of this class.",
+          "evidence": [
+            {
+              "closure_id": "source-ref:kotlin.validation-uses-require-and-explicit-throw",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:76,441,459 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "analyzer-rule:kotlin.no-assert-for-validation",
+              "state": "planned",
+              "ref": "code/packages/kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:29-502 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:kotlin.no-assert-for-validation",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "kotlin.operator-and-comparison-misuse",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Truth tables of the 11 basic gates are exhaustive over their 2- or 4-row domain with literal expected values (LogicGatesExhaustiveTest.kt:18-34), but the N-ary gates are checked with a handful of rows only (LogicGatesTest.kt:127-181), so the row reaches tested, not exhaustive, until the small-domain exhaustive N-ary rows of LGE-KT-NARY (NaryGatesTest.kt:79-105, local branch) exist.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:18-34,47-56 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:exhaustive-rejection-and-truth-tables",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "kotlin.short-circuit-validation",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Tested for the two-input gates over every invalid value; AND_N and OR_N validate through the 2-input gates, so an invalid element after a decisive value still throws, but no test pins it (AND_N(0, 0, 7)).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/src/test/kotlin/com/codingadventures/logicgates/LogicGatesExhaustiveTest.kt:81-90 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:exhaustive-rejection-and-truth-tables",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "kotlin.build-dependency-trust",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The artefact depends on kotlin-stdlib and annotations at runtime (build.gradle.kts:4 plugin default); nothing pins any build input by hash, the launcher and kotlin-test have no version, and no tool reads the resolution at report time. The exclusion needs a dependency policy no backlog item delivers.",
+          "evidence": [
+            {
+              "closure_id": "build-check:kotlin-stdlib-only-runtime-dependency",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/build.gradle.kts:4,12-14,28-32 (origin/main 7a793727a16, merged via PR #19938)"
+            },
+            {
+              "closure_id": "build-check:gradle-test-jacoco-line-gate",
+              "state": "claimed",
+              "ref": "code/packages/kotlin/logic-gates/build.gradle.kts:34-60 (origin/main 7a793727a16, merged via PR #19938)"
+            }
+          ],
+          "no_planned_closure": true
+        }
+      ]
+    }
+  }
+}

@@ -190,62 +190,46 @@ impl fmt::Display for LexerError {
 impl std::error::Error for LexerError {}
 
 // ============================================================================
-// Section 3: Character Classification
+// Section 3: Grammar-driven tokenizer
 // ============================================================================
 //
-// Before we can tokenize, we need to know what characters belong to what
-// token types. These helper functions classify characters into categories.
+// This crate is a *thin wrapper*, not a hand-written lexer. Every Lisp
+// lexing rule lives in `code/grammars/lisp/lisp.tokens`, compiled to the
+// checked-in `src/_grammar.rs` (regenerate with
+// `grammar-tools compile-tokens lisp.tokens`). [`tokenize`] hands that
+// grammar to the shared [`lexer::grammar_lexer::GrammarLexer`] and maps
+// the generic tokens back onto this crate's public [`Token`] API, so
+// downstream crates (`lisp-parser`) are unaffected by the retirement of
+// the hand-written scanner.
 //
-// The key insight for Lisp is that the symbol character class is very broad:
-// it includes letters, digits (after the first character), and many characters
-// that other languages reserve for operators.
+// Two hand-scanner over-acceptances were retired along the way; both now
+// agree with the Go lane and the spec (`code/specs/lisp.md`):
+// form-feed is no longer skipped as whitespace, and a backslash-newline
+// inside a string no longer scans (the grammar's `\\.` never matches
+// `\\n`). Neither has ever appeared in a test or real input.
 // ============================================================================
 
-/// Check if a character can **start** a Lisp symbol.
-///
-/// Symbol-start characters: letters, underscore, and the operator characters
-/// `+`, `-`, `*`, `/`, `=`, `<`, `>`, `!`, `?`, `&`.
-///
-/// Note that digits CANNOT start a symbol -- a leading digit means we're
-/// reading a number instead.
-fn is_symbol_start(ch: char) -> bool {
-    ch.is_ascii_alphabetic()
-        || ch == '_'
-        || ch == '+'
-        || ch == '-'
-        || ch == '*'
-        || ch == '/'
-        || ch == '='
-        || ch == '<'
-        || ch == '>'
-        || ch == '!'
-        || ch == '?'
-        || ch == '&'
+mod _grammar;
+
+use std::sync::OnceLock;
+
+use _grammar::token_grammar;
+use grammar_tools::token_grammar::TokenGrammar;
+use lexer::grammar_lexer::GrammarLexer;
+
+static LISP_TOKEN_GRAMMAR: OnceLock<TokenGrammar> = OnceLock::new();
+
+fn lisp_token_grammar() -> &'static TokenGrammar {
+    LISP_TOKEN_GRAMMAR.get_or_init(token_grammar)
 }
 
-/// Check if a character can **continue** a Lisp symbol (after the first char).
+/// Borrow the compiled `lisp.tokens` grammar.
 ///
-/// Symbol-continuation characters: everything that can start a symbol, plus
-/// digits. This allows symbols like `list->string` or `char-at-2`.
-fn is_symbol_continue(ch: char) -> bool {
-    is_symbol_start(ch) || ch.is_ascii_digit()
+/// Exposed for tooling that wants to introspect the token set without
+/// re-parsing the canonical `.tokens` file.
+pub fn lisp_token_grammar_spec() -> &'static TokenGrammar {
+    lisp_token_grammar()
 }
-
-// ============================================================================
-// Section 4: The Tokenizer
-// ============================================================================
-//
-// The tokenizer is a hand-written scanner that processes source text one
-// character at a time. It uses a simple algorithm:
-//
-// 1. Skip whitespace and comments
-// 2. Look at the current character to decide what token type to try
-// 3. Read the full token (consuming characters)
-// 4. Emit the token and go back to step 1
-//
-// This is the same approach used by most production compilers (GCC, Clang,
-// V8, CPython). It's fast, simple, and gives maximum control over edge cases.
-// ============================================================================
 
 /// Tokenize Lisp source code into a vector of tokens.
 ///
@@ -261,182 +245,91 @@ fn is_symbol_continue(ch: char) -> bool {
 /// - `LParen` / `RParen` -- `(` and `)`
 /// - `Quote` -- `'` (syntactic sugar for `(quote ...)`)
 /// - `Dot` -- `.` (for dotted pairs like `(a . b)`)
-/// - `Eof` -- end of input
 ///
-/// Whitespace and comments (starting with `;`) are automatically skipped.
-///
-/// # Errors
-///
-/// Returns `LexerError` if the source contains characters that don't match
-/// any Lisp token pattern.
-///
-/// # Examples
-///
-/// ```
-/// use lisp_lexer::{tokenize, TokenType};
-///
-/// let tokens = tokenize("(+ 1 2)").unwrap();
-/// assert_eq!(tokens[0].token_type, TokenType::LParen);
-/// assert_eq!(tokens[1].token_type, TokenType::Symbol);
-/// assert_eq!(tokens[1].value, "+");
-/// assert_eq!(tokens[2].token_type, TokenType::Number);
-/// assert_eq!(tokens[2].value, "1");
-/// ```
+/// Token priority comes from definition order in `lisp.tokens`: skip
+/// patterns first, then NUMBER before SYMBOL (so `-42` is one token),
+/// then the rest. `.` is always DOT, exactly as before.
 pub fn tokenize(source: &str) -> Result<Vec<Token>, LexerError> {
-    let chars: Vec<char> = source.chars().collect();
-    let mut tokens = Vec::new();
-    let mut pos = 0;
+    let line_starts = line_start_chars(source);
+    let engine_tokens = GrammarLexer::new(source, lisp_token_grammar())
+        .tokenize()
+        .map_err(|e| map_error(source, &line_starts, &e))?;
+    engine_tokens.iter().map(map_token).collect()
+}
 
-    while pos < chars.len() {
-        // -----------------------------------------------------------------
-        // Step 1: Skip whitespace and comments
-        // -----------------------------------------------------------------
-        // Whitespace: spaces, tabs, carriage returns, newlines.
-        // Comments: everything from `;` to end of line.
-        // These are not meaningful tokens -- we consume them silently.
-        // -----------------------------------------------------------------
-        if chars[pos].is_ascii_whitespace() {
-            pos += 1;
-            continue;
+/// Char offsets at which each line starts (line 1 starts at 0).
+fn line_start_chars(source: &str) -> Vec<usize> {
+    let mut starts = vec![0usize];
+    for (i, ch) in source.chars().enumerate() {
+        if ch == '\n' {
+            starts.push(i + 1);
         }
-
-        if chars[pos] == ';' {
-            // Skip to end of line (or end of input)
-            while pos < chars.len() && chars[pos] != '\n' {
-                pos += 1;
-            }
-            continue;
-        }
-
-        // -----------------------------------------------------------------
-        // Step 2: Single-character delimiter tokens
-        // -----------------------------------------------------------------
-        // These are unambiguous -- one character, one token. No lookahead
-        // needed.
-        // -----------------------------------------------------------------
-        match chars[pos] {
-            '(' => {
-                tokens.push(Token::new(TokenType::LParen, "("));
-                pos += 1;
-                continue;
-            }
-            ')' => {
-                tokens.push(Token::new(TokenType::RParen, ")"));
-                pos += 1;
-                continue;
-            }
-            '\'' => {
-                tokens.push(Token::new(TokenType::Quote, "'"));
-                pos += 1;
-                continue;
-            }
-            '.' => {
-                // A dot is only the DOT token if it's not followed by a digit.
-                // (We don't support floating-point numbers in this Lisp, but
-                // if we did, `.5` would be ambiguous.)
-                tokens.push(Token::new(TokenType::Dot, "."));
-                pos += 1;
-                continue;
-            }
-            _ => {}
-        }
-
-        // -----------------------------------------------------------------
-        // Step 3: String literals
-        // -----------------------------------------------------------------
-        // Strings start with `"` and end with the matching `"`. Backslash
-        // can escape any character inside the string: `\"` produces a literal
-        // double-quote, `\\` produces a literal backslash.
-        //
-        // The value stored in the token INCLUDES the surrounding quotes,
-        // matching the Python lexer's behavior. The parser or compiler can
-        // strip them later.
-        // -----------------------------------------------------------------
-        if chars[pos] == '"' {
-            let start = pos;
-            pos += 1; // skip opening quote
-            while pos < chars.len() && chars[pos] != '"' {
-                if chars[pos] == '\\' {
-                    pos += 1; // skip the backslash
-                }
-                pos += 1; // skip the character (or the escaped character)
-            }
-            if pos >= chars.len() {
-                return Err(LexerError {
-                    message: "Unterminated string literal".to_string(),
-                    position: start,
-                });
-            }
-            pos += 1; // skip closing quote
-            let value: std::string::String = chars[start..pos].iter().collect();
-            tokens.push(Token::new(TokenType::String, value));
-            continue;
-        }
-
-        // -----------------------------------------------------------------
-        // Step 4: Numbers (including negative numbers)
-        // -----------------------------------------------------------------
-        // A number starts with a digit, or with `-` followed by a digit.
-        // The `-` ambiguity is resolved here: if `-` is followed by a digit,
-        // we tokenize it as a negative number. Otherwise, `-` falls through
-        // to the symbol case below.
-        //
-        // This priority ordering means:
-        //   `-42`  -> Token(Number, "-42")    (one token)
-        //   `- 42` -> Token(Symbol, "-"), Token(Number, "42")  (two tokens)
-        //   `(- 3 1)` -> LParen, Symbol("-"), Number("3"), Number("1"), RParen
-        // -----------------------------------------------------------------
-        if chars[pos].is_ascii_digit()
-            || (chars[pos] == '-'
-                && pos + 1 < chars.len()
-                && chars[pos + 1].is_ascii_digit())
-        {
-            let start = pos;
-            if chars[pos] == '-' {
-                pos += 1; // consume the minus sign
-            }
-            while pos < chars.len() && chars[pos].is_ascii_digit() {
-                pos += 1;
-            }
-            let value: std::string::String = chars[start..pos].iter().collect();
-            tokens.push(Token::new(TokenType::Number, value));
-            continue;
-        }
-
-        // -----------------------------------------------------------------
-        // Step 5: Symbols
-        // -----------------------------------------------------------------
-        // Symbols are the catch-all for identifiers and operator names.
-        // A symbol starts with a symbol-start character and continues with
-        // symbol-continue characters.
-        //
-        // Examples: `define`, `lambda`, `+`, `<=`, `set!`, `null?`
-        // -----------------------------------------------------------------
-        if is_symbol_start(chars[pos]) {
-            let start = pos;
-            pos += 1;
-            while pos < chars.len() && is_symbol_continue(chars[pos]) {
-                pos += 1;
-            }
-            let value: std::string::String = chars[start..pos].iter().collect();
-            tokens.push(Token::new(TokenType::Symbol, value));
-            continue;
-        }
-
-        // -----------------------------------------------------------------
-        // Step 6: Unrecognized character -- error
-        // -----------------------------------------------------------------
-        return Err(LexerError {
-            message: format!("Unexpected character: {:?}", chars[pos]),
-            position: pos,
-        });
     }
+    starts
+}
 
-    // Every token stream ends with EOF. This simplifies the parser: it can
-    // always peek at the next token without checking for end-of-input.
-    tokens.push(Token::new(TokenType::Eof, ""));
+/// Map an engine token onto this crate's public [`Token`] type.
+///
+/// String values regain their quotes: the grammar strips them (`escapes:
+/// none` keeps the inner text raw) while this API keeps them, so the
+/// reconstruction is byte-identical to the lexeme.
+fn map_token(token: &lexer::token::Token) -> Result<Token, LexerError> {
+    let token_type = match token.effective_type_name() {
+        "NUMBER" => TokenType::Number,
+        "SYMBOL" => TokenType::Symbol,
+        "STRING" => TokenType::String,
+        "LPAREN" => TokenType::LParen,
+        "RPAREN" => TokenType::RParen,
+        "QUOTE" => TokenType::Quote,
+        "DOT" => TokenType::Dot,
+        "EOF" => TokenType::Eof,
+        other => {
+            return Err(LexerError {
+                message: format!(
+                    "Internal error: fixed lisp grammar emitted unknown token type {other}"
+                ),
+                position: 0,
+            })
+        }
+    };
+    let value = if token_type == TokenType::String {
+        format!("\"{}\"", token.value)
+    } else {
+        token.value.clone()
+    };
+    Ok(Token { token_type, value })
+}
 
-    Ok(tokens)
+/// Map an engine error onto this crate's [`LexerError`].
+///
+/// Positions convert from 1-based line/column (chars) back to the char
+/// offset this API reports. A failure at a `"` always opens an
+/// unterminated string -- no other rule consumes quotes -- while any
+/// other failure re-words to the historical message with identical
+/// `{:?}` rendering.
+fn map_error(source: &str, line_starts: &[usize], err: &lexer::token::LexerError) -> LexerError {
+    let line_start = line_starts
+        .get(err.line.saturating_sub(1))
+        .copied()
+        .unwrap_or(0);
+    let position = line_start + err.column.saturating_sub(1);
+    let ch = source.chars().nth(position);
+    if ch == Some('"') {
+        return LexerError {
+            message: "Unterminated string literal".to_string(),
+            position,
+        };
+    }
+    match ch {
+        Some(c) => LexerError {
+            message: format!("Unexpected character: {c:?}"),
+            position,
+        },
+        None => LexerError {
+            message: err.message.clone(),
+            position,
+        },
+    }
 }
 
 // ============================================================================
@@ -845,5 +738,84 @@ mod tests {
         assert!(result.is_err());
         let err = result.unwrap_err();
         assert!(err.message.contains("Unexpected character"));
+    }
+
+    // =====================================================================
+    // Grammar-migration pins
+    // =====================================================================
+
+    #[test]
+    fn checked_in_grammar_matches_lisp_tokens() {
+        // Drift guard: the compiled `_grammar.rs` must equal a fresh
+        // parse of the canonical source. Regenerate with
+        // `grammar-tools compile-tokens lisp.tokens` (Rust emitter).
+        let manifest = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        let tokens_path = manifest
+            .parent() // rust
+            .unwrap()
+            .parent() // packages
+            .unwrap()
+            .parent() // code
+            .unwrap()
+            .join("grammars/lisp/lisp.tokens");
+        let source = std::fs::read_to_string(&tokens_path).unwrap();
+        let fresh =
+            grammar_tools::token_grammar::parse_token_grammar(&source).unwrap();
+        assert_eq!(&fresh, lisp_token_grammar_spec());
+    }
+
+    #[test]
+    fn error_positions_span_lines() {
+        // `(` `a` `\n` `@`: the error sits on line 2, char offset 3.
+        let err = tokenize("(a\n@)").unwrap_err();
+        assert_eq!(err.position, 3);
+        assert!(err.message.contains("Unexpected character"));
+    }
+
+    #[test]
+    fn error_positions_count_chars_not_bytes() {
+        // `é` is 2 bytes but 1 char: `@` sits at char offset 5, byte
+        // offset 6. The line/column-to-offset mapping must count chars.
+        let err = tokenize("(\"é\" @)").unwrap_err();
+        assert_eq!(err.position, 5);
+    }
+
+    #[test]
+    fn unterminated_string_on_later_line() {
+        let err = tokenize("(a\n\"oops)").unwrap_err();
+        assert_eq!(err.position, 3);
+        assert!(err.message.contains("Unterminated string"));
+    }
+
+    #[test]
+    fn form_feed_is_an_error() {
+        // Spec-compliance fix retired with the hand scanner: the grammar
+        // (and the spec, and the Go lane) never skipped `\x0C`; only
+        // `is_ascii_whitespace` did.
+        let err = tokenize("a\x0Cb").unwrap_err();
+        assert_eq!(err.position, 1);
+        assert!(err.message.contains("Unexpected character"));
+    }
+
+    #[test]
+    fn backslash_newline_in_string_is_unterminated() {
+        // The hand scanner skipped any char after `\`, including `\n`;
+        // the grammar's `\\.` never matches a newline, so the string
+        // cannot close. The grammar governs.
+        let err = tokenize("\"a\\\nb\"").unwrap_err();
+        assert_eq!(err.position, 0);
+        assert!(err.message.contains("Unterminated string"));
+    }
+
+    #[test]
+    fn spec_accessor_exposes_grammar() {
+        let names: Vec<&str> = lisp_token_grammar_spec()
+            .definitions
+            .iter()
+            .map(|d| d.name.as_str())
+            .collect();
+        assert!(names.contains(&"SYMBOL"));
+        assert!(names.contains(&"NUMBER"));
+        assert!(names.contains(&"STRING"));
     }
 }

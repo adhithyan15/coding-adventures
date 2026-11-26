@@ -1,0 +1,2491 @@
+{
+  "schema_version": 1,
+  "registry_version": 2,
+  "lane": "typescript",
+  "family": "dynamic",
+  "last_reviewed": "2026-11-24",
+  "sources": [
+    {
+      "name": "weakness-registry-v2 (29 classes)",
+      "ref": "code/specs/data/weakness-registry-v2.json"
+    },
+    {
+      "name": "MITRE CWE-1000 Research Concepts view (candidates for TypeScript; no JavaScript/TypeScript MITRE view exists (the CWE-1321 page lists membership only of 1415, 1000 and 1003), so candidates come from the whole CWE-1000 research view)",
+      "ref": "https://cwe.mitre.org/data/definitions/1000.html"
+    },
+    {
+      "name": "MITRE CWE-1003 Weaknesses for Simplified Mapping of Published Vulnerabilities (consulted for the JavaScript-era classes 1321 and 1333)",
+      "ref": "https://cwe.mitre.org/data/definitions/1003.html"
+    },
+    {
+      "name": "ECMAScript language pitfalls: -0 and Object.is, NaN, one number type (1.0 === 1), 32-bit bitwise operators and shifts, coercion hooks (valueOf, toString, Symbol.toPrimitive), type erasure, prototype pollution, eval and Function, intrinsics mutation",
+      "ref": "ECMA-262 (Number, Object.is, ToInt32, ToPrimitive); https://cwe.mitre.org/data/definitions/1321.html"
+    },
+    {
+      "name": "Cross-lane contract: error identity and the type-confusion matrix",
+      "ref": "code/specs/LG02-basic-gates-cross-lane-contract.md sections 7 and 9"
+    },
+    {
+      "name": "This repository's audits of the typescript lane: PR #19932 (every gate validates its own inputs, -0 rejected, exhaustive suite) and PR #19958 (merged as 3f9dc938ae7, package 0.3.0: size limits on the combinational and sequential blocks, the 32-bit shift fixes in combinational.ts, snapshot-then-validate for caller state objects in sequential.ts)",
+      "ref": "https://github.com/adhithyan15/coding-adventures/pull/19958"
+    },
+    {
+      "name": "The merged TypeScript capability analyzer and its CWE rules (1321, 1333, 674, 94, 78, 400, 20)",
+      "ref": "code/packages/typescript/ca-capability-analyzer/src/analyzer.ts"
+    },
+    {
+      "name": "MITRE CWE-1339 and CWE-915 pages (candidates added in review: CWE-1339 for signed zero, CWE-915 for the caller-state-object surface of the sibling modules)",
+      "ref": "https://cwe.mitre.org/data/definitions/1339.html"
+    }
+  ],
+  "toolchain": {
+    "language_standard": "ECMAScript 2022 (tsconfig.base.json target ES2022), TypeScript ^5.0.0 strict, ESM (module Node16)",
+    "implementations": [
+      "Node.js as installed on the CI image (V8), run by vitest ^4.1.11",
+      "no second engine today"
+    ]
+  },
+  "threats": [
+    {
+      "id": "typescript.cwe-416",
+      "origin": "registry-v2",
+      "cwe": 416,
+      "name": "Use After Free",
+      "rationale": "Use after free needs manual deallocation. JavaScript has none, but ArrayBuffer detachment and native addons are the escape routes. V8 is a garbage-collected, bounds-checked runtime, so these classes cannot corrupt memory from pure JavaScript; the exclusion holds only for a package that reaches no native code, WebAssembly or shared memory, which an analyzer must check (registry subset gc_runtimes). Engine and JIT bugs are outside the package and stated, not hidden.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-ffi-native-wasm",
+          "state": "planned",
+          "detail": "No process.dlopen, ffi-napi, native addon, WebAssembly instantiation, SharedArrayBuffer or Buffer.allocUnsafe in src/*.ts (the ffi:unsafe capability of rules.ts; the WebAssembly and Buffer parts are not in the analyzer today). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.import-allowlist",
+          "state": "planned",
+          "detail": "The only imports are ./*.js siblings and @coding-adventures/transistors; no node: built-in, no dynamic import(). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares capabilities: []; the manifest declares, nothing compares the sources to it."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-ffi-native-wasm",
+        "analyzer-rule:ts.import-allowlist"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "typescript.cwe-787",
+      "origin": "registry-v2",
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "rationale": "A write past a buffer end needs raw memory; JavaScript arrays and typed arrays are bounds-checked. V8 is a garbage-collected, bounds-checked runtime, so these classes cannot corrupt memory from pure JavaScript; the exclusion holds only for a package that reaches no native code, WebAssembly or shared memory, which an analyzer must check (registry subset gc_runtimes). Engine and JIT bugs are outside the package and stated, not hidden.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-ffi-native-wasm",
+          "state": "planned",
+          "detail": "No process.dlopen, ffi-napi, native addon, WebAssembly instantiation, SharedArrayBuffer or Buffer.allocUnsafe in src/*.ts (the ffi:unsafe capability of rules.ts; the WebAssembly and Buffer parts are not in the analyzer today). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.import-allowlist",
+          "state": "planned",
+          "detail": "The only imports are ./*.js siblings and @coding-adventures/transistors; no node: built-in, no dynamic import(). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares capabilities: []; the manifest declares, nothing compares the sources to it."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-ffi-native-wasm",
+        "analyzer-rule:ts.import-allowlist"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "typescript.cwe-125",
+      "origin": "registry-v2",
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "rationale": "A read past a buffer end needs raw memory; in JavaScript it yields undefined, a logic error and not a memory error. V8 is a garbage-collected, bounds-checked runtime, so these classes cannot corrupt memory from pure JavaScript; the exclusion holds only for a package that reaches no native code, WebAssembly or shared memory, which an analyzer must check (registry subset gc_runtimes). Engine and JIT bugs are outside the package and stated, not hidden.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-ffi-native-wasm",
+          "state": "planned",
+          "detail": "No process.dlopen, ffi-napi, native addon, WebAssembly instantiation, SharedArrayBuffer or Buffer.allocUnsafe in src/*.ts (the ffi:unsafe capability of rules.ts; the WebAssembly and Buffer parts are not in the analyzer today). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.import-allowlist",
+          "state": "planned",
+          "detail": "The only imports are ./*.js siblings and @coding-adventures/transistors; no node: built-in, no dynamic import(). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares capabilities: []; the manifest declares, nothing compares the sources to it."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-ffi-native-wasm",
+        "analyzer-rule:ts.import-allowlist"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "typescript.cwe-415",
+      "origin": "registry-v2",
+      "cwe": 415,
+      "name": "Double Free",
+      "rationale": "Double free needs manual deallocation, which the language does not offer. V8 is a garbage-collected, bounds-checked runtime, so these classes cannot corrupt memory from pure JavaScript; the exclusion holds only for a package that reaches no native code, WebAssembly or shared memory, which an analyzer must check (registry subset gc_runtimes). Engine and JIT bugs are outside the package and stated, not hidden.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-ffi-native-wasm",
+          "state": "planned",
+          "detail": "No process.dlopen, ffi-napi, native addon, WebAssembly instantiation, SharedArrayBuffer or Buffer.allocUnsafe in src/*.ts (the ffi:unsafe capability of rules.ts; the WebAssembly and Buffer parts are not in the analyzer today). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.import-allowlist",
+          "state": "planned",
+          "detail": "The only imports are ./*.js siblings and @coding-adventures/transistors; no node: built-in, no dynamic import(). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares capabilities: []; the manifest declares, nothing compares the sources to it."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-ffi-native-wasm",
+        "analyzer-rule:ts.import-allowlist"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "typescript.cwe-476",
+      "origin": "registry-v2",
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "rationale": "A null dereference in JavaScript is a thrown TypeError, never memory corruption, but the exception is an availability concern for a caller that does not catch it. V8 is a garbage-collected, bounds-checked runtime, so these classes cannot corrupt memory from pure JavaScript; the exclusion holds only for a package that reaches no native code, WebAssembly or shared memory, which an analyzer must check (registry subset gc_runtimes). Engine and JIT bugs are outside the package and stated, not hidden. Scope: this statement is about src/gates.ts only. src/sequential.ts reads properties of caller state objects (own-data descriptors, sequential.ts:119-131) and is covered by typescript.cwe-915 and typescript.unreviewed-sibling-modules.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-ffi-native-wasm",
+          "state": "planned",
+          "detail": "No process.dlopen, ffi-napi, native addon, WebAssembly instantiation, SharedArrayBuffer or Buffer.allocUnsafe in src/*.ts (the ffi:unsafe capability of rules.ts; the WebAssembly and Buffer parts are not in the analyzer today). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.import-allowlist",
+          "state": "planned",
+          "detail": "The only imports are ./*.js siblings and @coding-adventures/transistors; no node: built-in, no dynamic import(). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares capabilities: []; the manifest declares, nothing compares the sources to it."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-ffi-native-wasm",
+        "analyzer-rule:ts.import-allowlist"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "typescript.cwe-190",
+      "origin": "registry-v2",
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "rationale": "A wrapped size or offset needs a buffer to size; the 32-bit bitwise operators are the only JavaScript wraparound and must be absent from length arithmetic. V8 is a garbage-collected, bounds-checked runtime, so these classes cannot corrupt memory from pure JavaScript; the exclusion holds only for a package that reaches no native code, WebAssembly or shared memory, which an analyzer must check (registry subset gc_runtimes). Engine and JIT bugs are outside the package and stated, not hidden.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-ffi-native-wasm",
+          "state": "planned",
+          "detail": "No process.dlopen, ffi-napi, native addon, WebAssembly instantiation, SharedArrayBuffer or Buffer.allocUnsafe in src/*.ts (the ffi:unsafe capability of rules.ts; the WebAssembly and Buffer parts are not in the analyzer today). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.import-allowlist",
+          "state": "planned",
+          "detail": "The only imports are ./*.js siblings and @coding-adventures/transistors; no node: built-in, no dynamic import(). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares capabilities: []; the manifest declares, nothing compares the sources to it."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-int32-bitwise-operators",
+          "state": "planned",
+          "detail": "No <<, >>, >>>, &, |, ^, ~ and no |0 or >>>0 idioms on any value derived from a caller (JavaScript converts operands to 32-bit integers). src/gates.ts has none today; src/combinational.ts does (:406 `1 << n` guarded by MAX_SELECT_BITS; `n & (n - 1)` at :210, :471, :547 guarded by a real-array check and the 65536 bound), so the rule flags it until those sites are allowlisted or rewritten. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-ffi-native-wasm",
+        "analyzer-rule:ts.import-allowlist",
+        "analyzer-rule:ts.no-int32-bitwise-operators"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "gc_runtimes"
+    },
+    {
+      "id": "typescript.cwe-78",
+      "origin": "registry-v2",
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "rationale": "Command injection needs a process-spawn or shell sink. A pure bit function has none, but JavaScript reaches child_process with one import.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.capability-audit-empty",
+          "state": "planned",
+          "detail": "No fs, net, process, env, time or random capability use in src/*.ts (rules.ts CAPABILITY_RULES; analyzer.ts:649-757 random, time, net, fs, process spawn and ffi call rules). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares capabilities: []; the manifest declares, nothing compares the sources to it."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.capability-audit-empty",
+        "language-guarantee:required-capabilities-empty"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "capability_confined_no_proc"
+    },
+    {
+      "id": "typescript.cwe-89",
+      "origin": "registry-v2",
+      "cwe": 89,
+      "name": "SQL Injection",
+      "rationale": "SQL injection needs a database client; the package imports none (package.json:20-22).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.import-allowlist",
+          "state": "planned",
+          "detail": "The only imports are ./*.js siblings and @coding-adventures/transistors; no node: built-in, no dynamic import(). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.import-allowlist"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation"
+    },
+    {
+      "id": "typescript.cwe-22",
+      "origin": "registry-v2",
+      "cwe": 22,
+      "name": "Path Traversal",
+      "rationale": "Path traversal needs a path built from input and a filesystem sink; the package has neither.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.capability-audit-empty",
+          "state": "planned",
+          "detail": "No fs, net, process, env, time or random capability use in src/*.ts (rules.ts CAPABILITY_RULES; analyzer.ts:649-757 random, time, net, fs, process spawn and ffi call rules). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "language-guarantee",
+          "id": "language-guarantee:required-capabilities-empty",
+          "state": "unverified",
+          "detail": "required_capabilities.json:5 declares capabilities: []; the manifest declares, nothing compares the sources to it."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.capability-audit-empty",
+        "language-guarantee:required-capabilities-empty"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "capability_confined_no_fs"
+    },
+    {
+      "id": "typescript.cwe-79",
+      "origin": "registry-v2",
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "rationale": "XSS needs a DOM or HTML sink. The package has none; the visualizer program that renders gates is a separate package outside this threat list.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-dom-sinks",
+          "state": "planned",
+          "detail": "No document, window, innerHTML, outerHTML, insertAdjacentHTML, document.write. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-dom-sinks"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "capability_confined_no_ui"
+    },
+    {
+      "id": "typescript.cwe-116",
+      "origin": "registry-v2",
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "rationale": "Improper output encoding needs a protocol or format sink. The gates return numbers; error messages are plain strings built by template literal (gates.ts:86, 89, 92) and are not a protocol.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-serialization-or-deserialization",
+          "state": "planned",
+          "detail": "No JSON.parse, JSON.stringify, structuredClone, v8.deserialize, eval-based decoders. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-serialization-or-deserialization"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_serialization"
+    },
+    {
+      "id": "typescript.cwe-117",
+      "origin": "registry-v2",
+      "cwe": 117,
+      "name": "Log Injection",
+      "rationale": "Log injection needs a log or stdout sink. The package never logs; a caller may log the exception messages, which is the caller's sink.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-console-or-stdout",
+          "state": "planned",
+          "detail": "No console.*, process.stdout, process.stderr. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-console-or-stdout"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "capability_confined_no_stdout"
+    },
+    {
+      "id": "typescript.cwe-94",
+      "origin": "registry-v2",
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "rationale": "JavaScript has eval, new Function, dynamic import() and string timers. The v2 subset no_dynamic_eval_reachable (VER15a section 1.3) gives the class an exclusion route under fail-closed semantics: an over-approximating analyzer rule (closed primitive list: eval, new Function, import() of a variable, require(variable), vm.*, child_process, setTimeout/setInterval with a string, Reflect.construct) plus a seeded negative-control corpus, both live. src/gates.ts uses none today.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.banned-dynamic-code",
+          "state": "planned",
+          "detail": "No eval, new Function, globalThis.Function (analyzer.ts:633-645, 765-772). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-dynamic-import-string-timers-constructor-chain",
+          "state": "planned",
+          "detail": "No import(), vm, setTimeout/setInterval with a string, and no reach to the Function constructor through .constructor chains (the analyzer flags the property name constructor, analyzer.ts:841-887). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.import-allowlist",
+          "state": "planned",
+          "detail": "The only imports are ./*.js siblings and @coding-adventures/transistors; no node: built-in, no dynamic import(). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts.seeded-eval-primitives",
+          "state": "planned",
+          "detail": "Seeded negative control (VER15a section 1.3(b)): a planted instance of every primitive in the lane list, each directly and via indirection (alias, callback, Reflect, require(variable)), and the rule must flag every one. A new primitive needs a new seeded case in the same change.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:ts.banned-dynamic-code",
+        "analyzer-rule:ts.no-dynamic-import-string-timers-constructor-chain",
+        "lane-corpus:ts.seeded-eval-primitives"
+      ],
+      "safe_subset": "no_dynamic_eval_reachable"
+    },
+    {
+      "id": "typescript.cwe-400",
+      "origin": "registry-v2",
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "rationale": "andN, orN and xorN take a rest parameter whose length the caller chooses and loop over it (gates.ts:593-602, 614-623, 663-674); cost is linear in that length and the rest array is allocated by the call. The two-input gates are constant time. A huge spread (andN(...a) with millions of elements) either takes linear time or fails with an engine RangeError (stack size), which carries the same class as the gates' rejection (see typescript.engine-rangeerror-identity).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-nary-width-cap",
+          "state": "planned",
+          "detail": "A vitest case that andN, orN and xorN reject more than MAX_WIDTH inputs with RangeError. Planned in LGE-TS-HARDEN (local branch claude/typescript-logic-gates-harden, in progress): caps the n-ary gates at MAX_WIDTH. Supporting evidence only; it does not supply the bounded-step proof or zero-allocation evidence the registry route needs.",
+          "planned_item": "LGE-TS-HARDEN"
+        }
+      ],
+      "cannot_close_in_package": true,
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded"
+    },
+    {
+      "id": "typescript.cwe-409",
+      "origin": "registry-v2",
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "rationale": "The package performs no decompression or archive expansion.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-decompression-api",
+          "state": "planned",
+          "detail": "No zlib, DecompressionStream, tar or zip import. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-decompression-api"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "non_decompressing_packages"
+    },
+    {
+      "id": "typescript.cwe-674",
+      "origin": "registry-v2",
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "rationale": "Recursion depth needs a recursive function over input depth. Gates call each other in a fixed acyclic chain (nandXnor -> nandXor -> NAND), and the n-ary gates iterate with for loops.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.call-graph-acyclic",
+          "state": "planned",
+          "detail": "No direct or mutual recursion in src/gates.ts (analyzer.ts:898 onward, CWE-674 rule). The call chain nandXnor -> nandXor -> NAND and nandNor -> nandOr -> nandNot is acyclic. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.call-graph-acyclic"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "iterative_only_algorithms"
+    },
+    {
+      "id": "typescript.cwe-1333",
+      "origin": "registry-v2",
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "rationale": "ReDoS needs a regular expression; gates.ts has none (validation is typeof, Number.isInteger and Object.is, gates.ts:85-93).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-regular-expressions",
+          "state": "planned",
+          "detail": "No regex literal and no new RegExp in src/*.ts (analyzer.ts:776-818). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-regular-expressions"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "no_regular_expressions"
+    },
+    {
+      "id": "typescript.cwe-407",
+      "origin": "registry-v2",
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "rationale": "Algorithmic complexity attacks need a hash table, sort or search over caller data; the package has none, only the linear n-ary folds (gates.ts:593-674).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-hash-sort-search-algorithms",
+          "state": "planned",
+          "detail": "No Map/Set/object-keyed lookup, sort or search over caller data in src/gates.ts. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-hash-sort-search-algorithms"
+      ],
+      "registry_floor": "bounded(k)",
+      "floor_label": "bounded",
+      "safe_subset": "constant_time_linear_algorithms"
+    },
+    {
+      "id": "typescript.cwe-208",
+      "origin": "registry-v2",
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "rationale": "A gate that rejects early with an exception takes different time for valid and invalid inputs, but the inputs are public bits. The class applies only if a caller feeds secrets through the gates (for example building a comparator from XOR), which is outside the package. The registry route is the declaration no_secret_inputs. A rule that finds no crypto API in src/*.ts shows only that the package does not itself handle secrets; it cannot show that a caller never feeds secrets through the gates, so it does not establish no_secret_inputs and is kept as supporting evidence, not as an exclusion route.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-crypto-api-or-secret-comparison",
+          "state": "planned",
+          "detail": "No crypto, node:crypto, subtle, no comparison of secrets. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "registry_floor": "proved-to-gate-level",
+      "floor_label": "proved-to-gate-level",
+      "cannot_close_in_package": true
+    },
+    {
+      "id": "typescript.cwe-330",
+      "origin": "registry-v2",
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "rationale": "Insufficient randomness needs a random source; the package declares none and calls no Math.random or crypto.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.capability-audit-empty",
+          "state": "planned",
+          "detail": "No fs, net, process, env, time or random capability use in src/*.ts (rules.ts CAPABILITY_RULES; analyzer.ts:649-757 random, time, net, fs, process spawn and ffi call rules). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.capability-audit-empty"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_deterministic"
+    },
+    {
+      "id": "typescript.cwe-327",
+      "origin": "registry-v2",
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "rationale": "The package implements no cipher or digest.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-crypto-api-or-secret-comparison",
+          "state": "planned",
+          "detail": "No crypto, node:crypto, subtle, no comparison of secrets. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-crypto-api-or-secret-comparison"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "typescript.cwe-326",
+      "origin": "registry-v2",
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "rationale": "The package implements no cipher, so no key length exists to be too short.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-crypto-api-or-secret-comparison",
+          "state": "planned",
+          "detail": "No crypto, node:crypto, subtle, no comparison of secrets. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-crypto-api-or-secret-comparison"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_non_cryptographic"
+    },
+    {
+      "id": "typescript.cwe-362",
+      "origin": "registry-v2",
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "rationale": "JavaScript runs one thread per realm unless the package starts a Worker or uses SharedArrayBuffer and Atomics; gates.ts does neither. The seven module-level CMOS instances (gates.ts:59-65) are shared across all calls and would be a race only if their evaluateDigital methods mutated state across an await or a worker boundary.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-workers-shared-memory-async",
+          "state": "planned",
+          "detail": "No Worker, SharedArrayBuffer, Atomics, await, Promise, timers or event-loop APIs in src/*.ts. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-module-level-mutable-state",
+          "state": "planned",
+          "detail": "No module-level let/var and no mutation of module-level objects. gates.ts:59-65 holds seven module-level CMOS instances that are never reassigned; whether their methods mutate is a property of the transistors package. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-workers-shared-memory-async",
+        "analyzer-rule:ts.no-module-level-mutable-state"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "capability_confined_no_thread"
+    },
+    {
+      "id": "typescript.cwe-367",
+      "origin": "registry-v2",
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "rationale": "TOCTOU needs a check of external state followed by a use; the package has no file or process state.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.capability-audit-empty",
+          "state": "planned",
+          "detail": "No fs, net, process, env, time or random capability use in src/*.ts (rules.ts CAPABILITY_RULES; analyzer.ts:649-757 random, time, net, fs, process spawn and ffi call rules). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.capability-audit-empty"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "capability_confined_no_fs"
+    },
+    {
+      "id": "typescript.cwe-502",
+      "origin": "registry-v2",
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "rationale": "Deserialization of untrusted data needs a decoder; the package decodes nothing and accepts only primitive numbers (gates.ts:85).",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-serialization-or-deserialization",
+          "state": "planned",
+          "detail": "No JSON.parse, JSON.stringify, structuredClone, v8.deserialize, eval-based decoders. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-serialization-or-deserialization"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "safe_subset": "pure_computation_no_deserialization"
+    },
+    {
+      "id": "typescript.cwe-1321",
+      "origin": "registry-v2",
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "rationale": "This class applies to TypeScript and JavaScript by name (registry applies_to). The v2 subset no_computed_key_writes_to_shared_objects (VER15a section 1.3) gives it an exclusion route: a live analyzer rule (no write to a prototype or shared object, no write under a non-literal key, no recursive merge) plus a seeded negative-control corpus. gates.ts never reads a caller-supplied key or writes a property of a caller-supplied object: validateBit takes typeof first and everything else is a number. Pollution reaches the package only through code in the same realm that has already modified Object.prototype, Array.prototype or the transistors classes (see typescript.intrinsics-tampering). Scope: src/gates.ts only; src/sequential.ts reads properties of caller state objects (own-data descriptors, sequential.ts:119-131) and is covered by typescript.cwe-915 and typescript.unreviewed-sibling-modules.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-prototype-keys-or-dynamic-property-writes",
+          "state": "planned",
+          "detail": "No __proto__, prototype or constructor property access and no bracket write with a non-literal key (analyzer.ts:841-887). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-implicit-coercion",
+          "state": "planned",
+          "detail": "No ==/!=, unary +, Number(), parseInt, parseFloat, String(x) or template interpolation of a caller-supplied value outside the validated branch (the template literals at gates.ts:86, :89, :92 interpolate name, which is caller-supplied through the exported validateBit). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:ts-lg02-s9-partial",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:87-114 runs 23 non-number values (booleans, null, undefined, 0.5, NaN, +-Infinity, \"1\", \"0\", \"\", \"1abc\", 1n, 0n, [1], [], {}, valueOf object, toString object, new Number(1), Symbol, function) plus -0 on all 11 operations in each position. NOT in the matrix (LG02 section 9 and this list): strings \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\"; [0], [[1]]; Symbol.toPrimitive object, getter-bearing object, Proxy, Object.create(null), new Boolean(true), new String(\"1\"), Number subclass instance, typed array, Date; 2^32, 2^32+1; and nandNor, nandXnor, andN, orN, xorN, mux, dmux (only the 11 operations are looped)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts.seeded-shared-object-writes",
+          "state": "planned",
+          "detail": "Seeded negative control: planted writes of each shape (Object.prototype[k]=v, obj[k]=v with a non-literal key, __proto__ assignment, recursive merge of caller data), directly and via indirection, and the rule must flag every one.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "exclude_requires": [
+        "analyzer-rule:ts.no-prototype-keys-or-dynamic-property-writes",
+        "lane-corpus:ts.seeded-shared-object-writes"
+      ],
+      "safe_subset": "no_computed_key_writes_to_shared_objects"
+    },
+    {
+      "id": "typescript.cwe-915",
+      "origin": "lane",
+      "cwe": 915,
+      "name": "Caller-supplied state objects read and trusted by the sequential blocks (mass assignment, dynamically-determined attributes)",
+      "rationale": "src/gates.ts never reads a property of a caller object, but src/sequential.ts does: srLatch/dFlipFlop/register/shiftRegister/counter accept state objects (FlipFlopState, CounterState) and read their fields. Since 0.3.0 each is read once, by own data property descriptor, into a private copy (snapshotFlipFlopState, sequential.ts:119-135; getters, Proxy traps and inherited or polluted properties are rejected; tests/bounds.test.ts:175-264), so the check-then-use and inherited-property routes are tested. What is NOT reviewed here: extra attributes on a state object are silently ignored, the Array.isArray test accepts a Proxy over an array (its length and index reads run caller traps once each), and CWE-1321 and CWE-843 for those objects. Listed as a lane threat because the registry class CWE-915 is not in registry v2 and the earlier 'never reads a property of a caller-supplied object' exclusion held for src/gates.ts only.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-sequential-state-snapshot",
+          "state": "claimed",
+          "detail": "tests/bounds.test.ts:108-264 (state validation on every path, snapshot-then-validate with a counting Proxy and getters, own data properties only, inherited fields rejected). Runs in BUILD (npx vitest run --coverage); no repository tool reads the result at report time. Covers sequential.ts only; no corpus exists for src/gates.ts because it reads no object."
+        }
+      ],
+      "cannot_close_in_package": true,
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.cwe-20",
+      "origin": "registry-v2",
+      "cwe": 20,
+      "name": "Improper Input Validation",
+      "rationale": "Every gate takes caller-supplied values. JavaScript checks nothing: any value of any type reaches the function. validateBit (gates.ts:76-94) rejects non-numbers and non-integers with TypeError and integers other than +0 and 1 (including -0, via Object.is) with RangeError, and every gate calls it for every argument before computing (gates.ts:140-141, 173-175 and so on, including NAND, NOR, XNOR since 0.2.0). The check runs once per argument before any delegation, so the transistor layer is not trusted for input validation. mux and dmux validate (gates.ts:721-723, 748-749).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:ts-lg02-s9-partial",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:87-114 runs 23 non-number values (booleans, null, undefined, 0.5, NaN, +-Infinity, \"1\", \"0\", \"\", \"1abc\", 1n, 0n, [1], [], {}, valueOf object, toString object, new Number(1), Symbol, function) plus -0 on all 11 operations in each position. NOT in the matrix (LG02 section 9 and this list): strings \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\"; [0], [[1]]; Symbol.toPrimitive object, getter-bearing object, Proxy, Object.create(null), new Boolean(true), new String(\"1\"), Number subclass instance, typed array, Date; 2^32, 2^32+1; and nandNor, nandXnor, andN, orN, xorN, mux, dmux (only the 11 operations are looped)."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection",
+        "type-confusion-matrix:ts-lg02-s9-partial"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "rejection-corpus-every-operation-every-position": [
+          "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "type-confusion-matrix:ts-lg02-s9-partial"
+        ],
+        "short-circuit-rows": [
+          "lane-corpus:ts-exhaustive-truth-and-rejection"
+        ],
+        "input-domain-boundary-enumeration": [
+          "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "type-confusion-matrix:ts-lg02-s9-partial"
+        ]
+      }
+    },
+    {
+      "id": "typescript.cwe-843",
+      "origin": "registry-v2",
+      "cwe": 843,
+      "name": "Access of Resource Using Incompatible Type (Type Confusion)",
+      "rationale": "TypeScript types vanish at run time, so a JavaScript caller, an `any`, an `as` or a @ts-ignore can pass anything; there is no compile-time exclusion for a published library (registry subset statically_typed_no_escape_hatches does not hold). The runtime defence is typeof === \"number\" before anything else (gates.ts:85-87; this describes src/gates.ts, while the state objects of src/sequential.ts are covered by typescript.cwe-915 and typescript.unreviewed-sibling-modules): an object with valueOf or toString, a boxed Number, a Proxy, a getter object or a Symbol.toPrimitive object is a typeof \"object\" and is rejected without a single coercion hook being called.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:ts-lg02-s9-partial",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:87-114 runs 23 non-number values (booleans, null, undefined, 0.5, NaN, +-Infinity, \"1\", \"0\", \"\", \"1abc\", 1n, 0n, [1], [], {}, valueOf object, toString object, new Number(1), Symbol, function) plus -0 on all 11 operations in each position. NOT in the matrix (LG02 section 9 and this list): strings \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\"; [0], [[1]]; Symbol.toPrimitive object, getter-bearing object, Proxy, Object.create(null), new Boolean(true), new String(\"1\"), Number subclass instance, typed array, Date; 2^32, 2^32+1; and nandNor, nandXnor, andN, orN, xorN, mux, dmux (only the 11 operations are looped)."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:ts-strict-bit-type",
+          "state": "claimed",
+          "detail": "export type Bit = 0 | 1 (gates.ts:38) and strict: true (code/packages/typescript/tsconfig.base.json:6). Types are erased at run time, and BUILD (BUILD:1-3) never runs tsc (the package.json build script is not called), vitest does not type-check, and tsconfig.json:3 includes only src/, so the claim is that the config exists, not that anything checks it."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-as-casts-any-ts-ignore",
+          "state": "planned",
+          "detail": "No `as` assertion, no `any`, no @ts-ignore or @ts-expect-error, no non-null `!` in src/*.ts. src/gates.ts has seven `as Bit` casts of the transistor layer result (:143, :177, :211, :251, :299, :331, :364). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:ts-lg02-s9-partial",
+        "type-system:ts-strict-bit-type",
+        "analyzer-rule:ts.no-as-casts-any-ts-ignore"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "type-confusion-matrix-all-operations-all-positions": [
+          "type-confusion-matrix:ts-lg02-s9-partial"
+        ],
+        "language-type-system-guarantee": [
+          "type-system:ts-strict-bit-type"
+        ],
+        "analyzer-no-escape-hatch": [
+          "analyzer-rule:ts.no-as-casts-any-ts-ignore"
+        ]
+      }
+    },
+    {
+      "id": "typescript.cwe-704",
+      "origin": "registry-v2",
+      "cwe": 704,
+      "name": "Incorrect Type Conversion or Cast",
+      "rationale": "Conversions are the JavaScript trap: ==, unary +, Number(), |0, parseInt and template literals all convert silently. gates.ts uses none on a caller value: it compares with Object.is and Number.isInteger after a typeof check. Three conversion questions remain. (a) 1.0, 1e0, 0x1, 0b1 and 0.0 are the same Number as 1 and 0 and are accepted by design (LG02 section 9, tests/gates.exhaustive.test.ts:61-64), so a caller cannot make the library reject them. (b) -0 is rejected (gates.ts:91). (c) The seven `as Bit` casts (gates.ts:143, 177, 211, 251, 299, 331, 364) assert the transistor layer's return value is a bit without checking it; only the test at :116-128 notices.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:ts-lg02-s9-partial",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:87-114 runs 23 non-number values (booleans, null, undefined, 0.5, NaN, +-Infinity, \"1\", \"0\", \"\", \"1abc\", 1n, 0n, [1], [], {}, valueOf object, toString object, new Number(1), Symbol, function) plus -0 on all 11 operations in each position. NOT in the matrix (LG02 section 9 and this list): strings \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\"; [0], [[1]]; Symbol.toPrimitive object, getter-bearing object, Proxy, Object.create(null), new Boolean(true), new String(\"1\"), Number subclass instance, typed array, Date; 2^32, 2^32+1; and nandNor, nandXnor, andN, orN, xorN, mux, dmux (only the 11 operations are looped)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-as-casts-any-ts-ignore",
+          "state": "planned",
+          "detail": "No `as` assertion, no `any`, no @ts-ignore or @ts-expect-error, no non-null `!` in src/*.ts. src/gates.ts has seven `as Bit` casts of the transistor layer result (:143, :177, :211, :251, :299, :331, :364). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-implicit-coercion",
+          "state": "planned",
+          "detail": "No ==/!=, unary +, Number(), parseInt, parseFloat, String(x) or template interpolation of a caller-supplied value outside the validated branch (the template literals at gates.ts:86, :89, :92 interpolate name, which is caller-supplied through the exported validateBit). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:ts-strict-bit-type",
+          "state": "claimed",
+          "detail": "export type Bit = 0 | 1 (gates.ts:38) and strict: true (code/packages/typescript/tsconfig.base.json:6). Types are erased at run time, and BUILD (BUILD:1-3) never runs tsc (the package.json build script is not called), vitest does not type-check, and tsconfig.json:3 includes only src/, so the claim is that the config exists, not that anything checks it."
+        }
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:ts-lg02-s9-partial",
+        "lane-corpus:ts-exhaustive-truth-and-rejection",
+        "analyzer-rule:ts.no-as-casts-any-ts-ignore",
+        "analyzer-rule:ts.no-implicit-coercion",
+        "type-system:ts-strict-bit-type"
+      ],
+      "registry_floor": "proved",
+      "floor_label": "proved",
+      "registry_evidence_map": {
+        "wide-integer-and-coercion-rows": [
+          "type-confusion-matrix:ts-lg02-s9-partial",
+          "lane-corpus:ts-exhaustive-truth-and-rejection"
+        ],
+        "conversion-warning-clean-build": [
+          "type-system:ts-strict-bit-type"
+        ],
+        "implicit-conversion-audit": [
+          "analyzer-rule:ts.no-implicit-coercion",
+          "analyzer-rule:ts.no-as-casts-any-ts-ignore"
+        ]
+      }
+    },
+    {
+      "id": "typescript.negative-zero",
+      "origin": "lane",
+      "cwe": 1339,
+      "name": "Negative zero accepted as the bit 0 (IEEE-754 comparison pitfall)",
+      "rationale": "-0 === 0 in JavaScript, so a check written value !== 0 && value !== 1 lets -0 through as a valid bit, and it prints as \"0\". The library tests with Object.is (gates.ts:91) and rejects -0 with RangeError. History: before PR #19932 every gate accepted -0. CWE mapping: CWE-1339 (insufficient precision or accuracy of a real number) because -0 and +0 are two representations of one real value that compare equal; CWE-1077 (floating point comparison with incorrect operator) was dropped because the defect is not a wrong comparison operator but an equality that cannot see the sign bit; CWE-754 was not used because it is the parent of CWE-20 and is listed as covered by typescript.cwe-20.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-results-are-bits",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:116-128 checks every valid-input result is typeof number and exactly +0 or 1 (Object.is); :39-50 literal expected values, independent of the transistor model."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection",
+        "lane-corpus:ts-results-are-bits"
+      ],
+      "floor_label": "exhaustive"
+    },
+    {
+      "id": "typescript.nan-and-infinity",
+      "origin": "lane",
+      "name": "NaN and infinities reaching a comparison",
+      "rationale": "NaN !== NaN and every comparison with NaN is false, so a range check written with < or > lets NaN through; Infinity is a number that is not an integer. The library checks Number.isInteger first (gates.ts:88), which rejects NaN, +Infinity and -Infinity with TypeError.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:ts-lg02-s9-partial",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:87-114 runs 23 non-number values (booleans, null, undefined, 0.5, NaN, +-Infinity, \"1\", \"0\", \"\", \"1abc\", 1n, 0n, [1], [], {}, valueOf object, toString object, new Number(1), Symbol, function) plus -0 on all 11 operations in each position. NOT in the matrix (LG02 section 9 and this list): strings \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\"; [0], [[1]]; Symbol.toPrimitive object, getter-bearing object, Proxy, Object.create(null), new Boolean(true), new String(\"1\"), Number subclass instance, typed array, Date; 2^32, 2^32+1; and nandNor, nandXnor, andN, orN, xorN, mux, dmux (only the 11 operations are looped)."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection",
+        "type-confusion-matrix:ts-lg02-s9-partial"
+      ],
+      "floor_label": "exhaustive"
+    },
+    {
+      "id": "typescript.int32-bitwise-truncation",
+      "origin": "lane",
+      "cwe": 197,
+      "name": "Numeric truncation by the 32-bit bitwise operators and shifts",
+      "rationale": "JavaScript converts the operands of <<, >>, >>>, &, | and ^ to 32-bit integers and takes shift counts modulo 32: 2^32 + 1 & 1 is 1, 1 << 32 is 1, 1 << 31 is negative. A bitwise validity check or length computation would silently accept or mis-size wide values. src/gates.ts uses none (grep of the file finds no bitwise operator). The package ships src/combinational.ts, which still contains the operators at 0.3.0 but bounded: `1 << n` at :406 is guarded by MAX_SELECT_BITS (16, :395-399), and `n & (n - 1)` at :210, :471 and :547 runs only after a real-array check and a 65536 length bound (snapshotArray, :56-67; the encoder paths test nInputs after the snapshot). The 31-and-more-bit wrong results were fixed by PR #19958 (merged). The operators are present but bounded, and a syntactic rule still flags them.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-int32-bitwise-operators",
+          "state": "planned",
+          "detail": "No <<, >>, >>>, &, |, ^, ~ and no |0 or >>>0 idioms on any value derived from a caller (JavaScript converts operands to 32-bit integers). src/gates.ts has none today; src/combinational.ts does (:406 `1 << n` guarded by MAX_SELECT_BITS; `n & (n - 1)` at :210, :471, :547 guarded by a real-array check and the 65536 bound), so the rule flags it until those sites are allowlisted or rewritten. NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        }
+      ],
+      "exclude_requires": [
+        "analyzer-rule:ts.no-int32-bitwise-operators"
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.coercion-hooks",
+      "origin": "lane",
+      "name": "Caller-controlled coercion hooks: valueOf, toString, Symbol.toPrimitive, getters, Proxy",
+      "rationale": "JavaScript objects can run caller code during coercion (valueOf, toString, Symbol.toPrimitive), property reads (getters, Proxy traps) and template-literal interpolation. A validator that coerces first (+x, `${x}`, x == 1) would run that code and could return a value that passes once and a different one later (time-of-check to time-of-use inside one call). validateBit tests typeof value !== \"number\" first and only interpolates the value after it is known to be a primitive number (gates.ts:85-93), so no hook of a value argument runs. The exception is the name parameter (see typescript.error-message-name-coercion).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:ts-lg02-s9-partial",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:87-114 runs 23 non-number values (booleans, null, undefined, 0.5, NaN, +-Infinity, \"1\", \"0\", \"\", \"1abc\", 1n, 0n, [1], [], {}, valueOf object, toString object, new Number(1), Symbol, function) plus -0 on all 11 operations in each position. NOT in the matrix (LG02 section 9 and this list): strings \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\"; [0], [[1]]; Symbol.toPrimitive object, getter-bearing object, Proxy, Object.create(null), new Boolean(true), new String(\"1\"), Number subclass instance, typed array, Date; 2^32, 2^32+1; and nandNor, nandXnor, andN, orN, xorN, mux, dmux (only the 11 operations are looped)."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        }
+      ],
+      "discharge_requires": [
+        "type-confusion-matrix:ts-lg02-s9-partial",
+        "lane-corpus:ts-exhaustive-truth-and-rejection"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.type-erasure-any-unknown",
+      "origin": "lane",
+      "cwe": 1287,
+      "name": "Types erased at run time: any, unknown, as, @ts-ignore and plain JavaScript callers",
+      "rationale": "The Bit type (gates.ts:38) is checked only when the caller is TypeScript with strict on and uses no `any` or assertion. A plain JavaScript consumer, JSON.parse output, an `as Bit` or `// @ts-ignore` skips it entirely. validateBit takes `unknown` (gates.ts:76) and checks at run time, which is the closing control; the compile-time type is documentation. CWE-1287 is the specified-type child of CWE-20.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        },
+        {
+          "kind": "type-confusion-matrix",
+          "id": "type-confusion-matrix:ts-lg02-s9-partial",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:87-114 runs 23 non-number values (booleans, null, undefined, 0.5, NaN, +-Infinity, \"1\", \"0\", \"\", \"1abc\", 1n, 0n, [1], [], {}, valueOf object, toString object, new Number(1), Symbol, function) plus -0 on all 11 operations in each position. NOT in the matrix (LG02 section 9 and this list): strings \"1 \", \" 1\", \"1\\n\", \"0x1\", \"1e0\"; [0], [[1]]; Symbol.toPrimitive object, getter-bearing object, Proxy, Object.create(null), new Boolean(true), new String(\"1\"), Number subclass instance, typed array, Date; 2^32, 2^32+1; and nandNor, nandXnor, andN, orN, xorN, mux, dmux (only the 11 operations are looped)."
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:ts-strict-bit-type",
+          "state": "claimed",
+          "detail": "export type Bit = 0 | 1 (gates.ts:38) and strict: true (code/packages/typescript/tsconfig.base.json:6). Types are erased at run time, and BUILD (BUILD:1-3) never runs tsc (the package.json build script is not called), vitest does not type-check, and tsconfig.json:3 includes only src/, so the claim is that the config exists, not that anything checks it."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection",
+        "type-confusion-matrix:ts-lg02-s9-partial",
+        "type-system:ts-strict-bit-type"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.error-message-name-coercion",
+      "origin": "lane",
+      "name": "The exported validateBit takes an unvalidated name that is interpolated into the error message",
+      "rationale": "validateBit(value, name) is exported (index.ts:45). The name argument is typed string but is not checked; the messages interpolate it with a template literal (gates.ts:86, 89, 92). A caller passing an object calls its toString or Symbol.toPrimitive; a Symbol makes the template literal throw TypeError(\"Cannot convert a Symbol value to a string\") instead of the documented rejection; a string with newlines or control characters lands in the message (a log-injection vector only if a caller logs it without escaping). The gates themselves pass literal \"a\", \"b\" and `inputs[${i}]`, so the exposure is the public export only.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        },
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-validatebit-name-argument",
+          "state": "planned",
+          "detail": "A vitest case that validateBit with a non-string name (Symbol, object with a throwing toString) still throws the documented TypeError or RangeError. Planned in LGE-TS-HARDEN (local branch claude/typescript-logic-gates-harden, in progress): validates name.",
+          "planned_item": "LGE-TS-HARDEN"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection",
+        "lane-corpus:ts-validatebit-name-argument"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.intrinsics-tampering",
+      "origin": "lane",
+      "cwe": 471,
+      "name": "Modification of assumed-immutable intrinsics (Object.is, Number.isInteger, prototypes) by code in the same realm",
+      "rationale": "The validator looks Object.is and Number.isInteger up on the global every call (gates.ts:88, 91) and calls evaluateDigital through class instances whose prototypes are mutable. Any code running earlier in the same realm that replaces Object.is, Number.isInteger or CMOSNand.prototype.evaluateDigital changes every verdict. Capturing the intrinsics at module load narrows the window but not the case of tampering before load.",
+      "applicability": "applicable-in-principle",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        }
+      ],
+      "cannot_close_in_package": true,
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.dependency-result-trust",
+      "origin": "lane",
+      "cwe": 1357,
+      "name": "Unchecked `as Bit` cast of the transistor layer's return value",
+      "rationale": "Every primitive gate delegates to @coding-adventures/transistors and returns the result with `as Bit` (gates.ts:143, 177, 211, 251, 299, 331, 364): a compile-time assertion that checks nothing. If evaluateDigital returned 0.5, -0 or 2 (a bug or a changed transistor package) the gate would return it as a bit. Since 0.2.0 the gates validate their own inputs and no longer rely on the callee for rejection; the callee result is still trusted.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-results-are-bits",
+          "state": "claimed",
+          "detail": "tests/gates.exhaustive.test.ts:116-128 checks every valid-input result is typeof number and exactly +0 or 1 (Object.is); :39-50 literal expected values, independent of the transistor model."
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:ts.no-as-casts-any-ts-ignore",
+          "state": "planned",
+          "detail": "No `as` assertion, no `any`, no @ts-ignore or @ts-expect-error, no non-null `!` in src/*.ts. src/gates.ts has seven `as Bit` casts of the transistor layer result (:143, :177, :211, :251, :299, :331, :364). NOTE: this rule id does not exist today. The merged TypeScript analyzer (code/packages/typescript/ca-capability-analyzer) emits capability and weakness findings but has no rule of this name, LGE-A1 lists no TypeScript rule table, and the analyzer is not run on this package at report time. Authoring the rule is LGE-A-TYPESCRIPT (backlog row to add); wiring it into the report is LGE-W1.",
+          "planned_item": "LGE-A-TYPESCRIPT"
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-results-are-bits",
+        "analyzer-rule:ts.no-as-casts-any-ts-ignore"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.npm-supply-chain",
+      "origin": "lane",
+      "cwe": 1357,
+      "name": "Dependency and install supply chain (npm)",
+      "rationale": "The package depends on a sibling by path (file:../transistors, package.json:21) and on caret ranges for typescript ^5.0.0, vitest ^4.1.11 and @vitest/coverage-v8 ^4.1.11 (:24-26). BUILD installs with npm ci --quiet (BUILD:1-2), which is lockfile-exact and verifies integrity hashes, but a lockfile refresh is unreviewed by this threat list, the file: dependency has no integrity hash, there is no npm audit step, no provenance, no files or exports field in package.json (so npm publish would ship tests and sources and main points at .ts), and the install runs lifecycle scripts of dependencies. Publish-time and consumer-side exposure, none of it checked: (1) the published package.json would keep the dependency spec file:../transistors (package.json:21), which a consumer's npm resolves relative to the consumer's own tree, so install fails or, worse, picks up whatever directory sits at that path (planted-directory); (2) the @coding-adventures npm scope (package.json:2) is not verified as owned, so a dependency-confusion publish of @coding-adventures/transistors is possible; (3) BUILD runs npm ci without --ignore-scripts (BUILD:1-2), so lifecycle scripts of the whole dependency tree run during the build; (4) the lockfile of the transistors package, which BUILD installs first (BUILD:1), is not reviewed here.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:ts-npm-ci-and-vitest-coverage",
+          "state": "claimed",
+          "detail": "BUILD:1-3: npm ci --quiet for transistors and for the package (lockfile-exact install), then npx vitest run --coverage with a lines>=80 threshold (vitest.config.ts:7-9). Nothing rejects it.skip/it.only/describe.skip, and 80% lines is far below the exhaustive intent."
+        }
+      ],
+      "discharge_requires": [
+        "build-check:ts-npm-ci-and-vitest-coverage"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.number-has-no-integer-subtype",
+      "origin": "lane",
+      "name": "1.0, 1e0, 0x1, 0b1 and 0.0 are the same Number as 1 and 0",
+      "rationale": "JavaScript has one number type, so every spelling of the integer 1 is the same value and cannot be told apart at run time. The library accepts them (LG02 section 9, the one explicit JavaScript exception), unlike Python, Ruby, Lua and Elixir, which reject 1.0. A caller who expects \"1.0 is rejected\" across lanes will be surprised, and a binding that feeds a corpus 1.0 would see it accepted.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.arity-and-variadic-calls",
+      "origin": "lane",
+      "cwe": 685,
+      "name": "Wrong number of arguments (JavaScript ignores extras and fills missing with undefined)",
+      "rationale": "A JavaScript function can be called with any number of arguments. The two- and one-input gates check arguments.length (gates.ts:99-103, 140, 173 and so on) so a third wire is a TypeError. mux and dmux (gates.ts:720-751) have no arity check, so mux(0, 1, 0, 99) and dmux(1, 0, 5) silently ignore the extra argument; andN, orN and xorN are variadic by design. A missing argument arrives as undefined and is rejected by validateBit. Variadic gates differ: andN and orN reject fewer than 2 inputs with RangeError (gates.ts:594-596, 615-617), the same error identity as value rejection (so the arity failure is a RangeError while the two-input gates report arity as TypeError, and it widens the collision with the engine's own RangeError, see typescript.engine-rangeerror-identity); xorN accepts 0 and 1 inputs (gates.ts:663-672, returns the XOR identity 0 for none).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.engine-rangeerror-identity",
+      "origin": "lane",
+      "cwe": 755,
+      "name": "The gates' RangeError is not distinguishable from an engine RangeError",
+      "rationale": "The rejection identity for an out-of-range integer is the general-purpose RangeError (LG02 section 7). The engine raises the same class for call-stack exhaustion (a huge spread into andN), invalid array length and others, and the lane binding matches the class only. LG02 section 7 names this residual risk. The corpus catches a misfire on a valid input (it expects a value), not a RangeError for the wrong reason on an invalid input. andN and orN also use RangeError for too few inputs (gates.ts:594-596, 615-617), so an arity failure and a value failure share one identity.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        }
+      ],
+      "discharge_requires": [
+        "lane-corpus:ts-exhaustive-truth-and-rejection"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.evidence-vacuity-and-engine-variance",
+      "origin": "lane",
+      "cwe": 758,
+      "name": "The suite can pass vacuously or on one engine only",
+      "rationale": "vitest run exits 0 with it.skip, it.only or an empty loop; the only gate is a lines>=80 coverage threshold (vitest.config.ts:7-9). The tests run on whichever Node the CI image has; no engines field (package.json) and no run on a second engine (V8 versus JavaScriptCore or SpiderMonkey) exist, although ECMAScript leaves error message text and some number formatting implementation-defined (the library never reads a message). CWE mapping: CWE-758 (reliance on undefined, unspecified or implementation-defined behavior) fits the engine-variance half only (ECMAScript leaves error message text and some formatting implementation-defined); the vacuous-suite half (it.skip, it.only, an empty loop) has no precise CWE and is described by the row text, not by a mapping.",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "build-check",
+          "id": "build-check:ts-npm-ci-and-vitest-coverage",
+          "state": "claimed",
+          "detail": "BUILD:1-3: npm ci --quiet for transistors and for the package (lockfile-exact install), then npx vitest run --coverage with a lines>=80 threshold (vitest.config.ts:7-9). Nothing rejects it.skip/it.only/describe.skip, and 80% lines is far below the exhaustive intent."
+        }
+      ],
+      "discharge_requires": [
+        "build-check:ts-npm-ci-and-vitest-coverage"
+      ],
+      "floor_label": "tested"
+    },
+    {
+      "id": "typescript.unreviewed-sibling-modules",
+      "origin": "lane",
+      "name": "combinational.ts and sequential.ts ship in the same package and are not reviewed here",
+      "rationale": "The npm package ships src/combinational.ts and src/sequential.ts (index.ts:32-57). They are out of the logic-gates-everywhere scope (backlog: n-input gates, sequential logic and combinational blocks) and out of the scope of every row of this file, but a user installing the package gets them. PR #19958 (merged, package 0.3.0) fixed the earlier findings there: decoder and demuxN select bits are capped at MAX_SELECT_BITS = 16 (combinational.ts:47, :395-399, :305), arrays are snapshotted before `n & (n - 1)` (:56-67), widths are capped (sequential.ts:91-93) and caller state is read once by own data property (sequential.ts:119-135). Unreviewed here: the object-state surface of sequential.ts (CWE-1321 prototype pollution of state objects, CWE-915 ignored or extra attributes, CWE-843 type confusion for state objects, and Array.isArray accepting a Proxy over an array, whose trap runs once per read), the rest of combinational.ts (triState, priorityEncoder, mux2/mux4 arity), the 0.3.0 tests/bounds.test.ts as evidence, and CWE-400 for the capped widths (the caps are not a step bound).",
+      "applicability": "applicable",
+      "closed_by": [
+        {
+          "kind": "lane-corpus",
+          "id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+          "state": "claimed",
+          "detail": "Lane-local vitest suite tests/gates.exhaustive.test.ts: literal truth tables for the 11 basic gates (:39-65), integer rejection of every integer in [-1024, 1024] except 0 and 1 plus 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE and negatives, in each argument position with the other argument 0, 1 or 7 (:67-85), results exactly +0 or 1 (:116-128), arity (:130-142). Runs in BUILD (npx vitest run --coverage) but no repository tool reads the result at report time."
+        }
+      ],
+      "cannot_close_in_package": true,
+      "floor_label": "tested"
+    }
+  ],
+  "considered_not_included": [
+    {
+      "cwe": 95,
+      "name": "Improper Neutralization of Directives in Dynamically Evaluated Code (Eval Injection)",
+      "why_not": "A child of CWE-94; closed by the registry row typescript.cwe-94."
+    },
+    {
+      "cwe": 346,
+      "name": "Origin Validation Error",
+      "why_not": "Needs a network origin; the package has no I/O (required_capabilities.json:5)."
+    },
+    {
+      "cwe": 352,
+      "name": "Cross-Site Request Forgery",
+      "why_not": "Needs an HTTP session; the package has none."
+    },
+    {
+      "cwe": 601,
+      "name": "Open Redirect",
+      "why_not": "Needs a URL and a redirect; none."
+    },
+    {
+      "cwe": 918,
+      "name": "Server-Side Request Forgery",
+      "why_not": "Needs a network request; the package imports none."
+    },
+    {
+      "cwe": 798,
+      "name": "Use of Hard-coded Credentials",
+      "why_not": "The package holds no credential, key or token."
+    },
+    {
+      "cwe": 532,
+      "name": "Insertion of Sensitive Information into Log File",
+      "why_not": "The package never logs; messages contain a name and a number or type name only (gates.ts:86-92)."
+    },
+    {
+      "cwe": 209,
+      "name": "Generation of Error Message Containing Sensitive Information",
+      "why_not": "Messages carry the argument name and the offending number or typeof; the inputs are public bits."
+    },
+    {
+      "cwe": 248,
+      "name": "Uncaught Exception",
+      "why_not": "Throwing is the documented rejection contract (LG02 section 7); a caller that does not catch it terminates by design. Closed as typescript.engine-rangeerror-identity for the identity question."
+    },
+    {
+      "cwe": 681,
+      "name": "Incorrect Conversion between Numeric Types",
+      "why_not": "Folded into registry row typescript.cwe-704 and lane row typescript.int32-bitwise-truncation (CWE-197)."
+    },
+    {
+      "cwe": 191,
+      "name": "Integer Underflow (Wrap or Wraparound)",
+      "why_not": "The package does no arithmetic on caller values; JavaScript numbers do not wrap; the 32-bit wrap is typescript.int32-bitwise-truncation."
+    },
+    {
+      "cwe": 369,
+      "name": "Divide By Zero",
+      "why_not": "The package has no division or remainder (gates.ts contains none)."
+    },
+    {
+      "cwe": 835,
+      "name": "Loop with Unreachable Exit Condition (Infinite Loop)",
+      "why_not": "All loops are for loops bounded by the argument count (gates.ts:598, 619, 666, 670); cost is covered by typescript.cwe-400."
+    },
+    {
+      "cwe": 754,
+      "name": "Improper Check for Unusual or Exceptional Conditions",
+      "why_not": "Parent class of CWE-20 and CWE-1287 here; covered by typescript.cwe-20."
+    },
+    {
+      "cwe": 770,
+      "name": "Allocation of Resources Without Limits or Throttling",
+      "why_not": "Covered by typescript.cwe-400 (the only allocation is the caller-sized rest array)."
+    },
+    {
+      "cwe": 1286,
+      "name": "Improper Validation of Syntactic Correctness of Input",
+      "why_not": "There is no syntax: inputs are values, not text. Covered by typescript.cwe-20."
+    },
+    {
+      "cwe": 345,
+      "name": "Insufficient Verification of Data Authenticity",
+      "why_not": "No authenticity claim is made about any input."
+    },
+    {
+      "cwe": 611,
+      "name": "Improper Restriction of XML External Entity Reference",
+      "why_not": "No XML."
+    },
+    {
+      "cwe": 1236,
+      "name": "Improper Neutralization of Formula Elements in a CSV File",
+      "why_not": "No CSV."
+    },
+    {
+      "cwe": 1104,
+      "name": "Use of Unmaintained Third Party Components",
+      "why_not": "The one runtime dependency is a sibling package in the same repository; the dev-tool side is covered by typescript.npm-supply-chain."
+    },
+    {
+      "cwe": 829,
+      "name": "Inclusion of Functionality from Untrusted Control Sphere",
+      "why_not": "Folded into typescript.npm-supply-chain."
+    },
+    {
+      "cwe": 494,
+      "name": "Download of Code Without Integrity Check",
+      "why_not": "npm ci verifies lockfile integrity hashes (BUILD:1-2); the residual is folded into typescript.npm-supply-chain."
+    },
+    {
+      "cwe": 506,
+      "name": "Embedded Malicious Code",
+      "why_not": "Folded into typescript.npm-supply-chain."
+    },
+    {
+      "cwe": 1395,
+      "name": "Dependency on Vulnerable Third-Party Component",
+      "why_not": "Folded into typescript.npm-supply-chain (no npm audit step)."
+    },
+    {
+      "cwe": 200,
+      "name": "Exposure of Sensitive Information to an Unauthorized Actor",
+      "why_not": "The package handles no sensitive information; see typescript.cwe-208 for timing."
+    },
+    {
+      "cwe": 73,
+      "name": "External Control of File Name or Path",
+      "why_not": "Covered by typescript.cwe-22."
+    },
+    {
+      "cwe": 77,
+      "name": "Improper Neutralization of Special Elements used in a Command (Command Injection)",
+      "why_not": "Parent of CWE-78, covered by typescript.cwe-78."
+    },
+    {
+      "cwe": 1022,
+      "name": "Use of Web Link to Untrusted Target with window.opener Access",
+      "why_not": "No DOM; covered by typescript.cwe-79 row."
+    }
+  ],
+  "packages": {
+    "logic-gates": {
+      "package_id": "typescript/logic-gates",
+      "reviewed_at_commit": "b2ff3651874",
+      "scope": "src/gates.ts of code/packages/typescript/logic-gates at origin/main b2ff3651874 (version 0.3.0: the 11 basic gates, the n-ary gates, mux, dmux, validateBit; src/gates.ts is unchanged since f121d09cad7). tests/, BUILD and the tsconfig are evidence producers. src/combinational.ts and src/sequential.ts ship in the same package (PR #19958, merged, changed them) but are out of scope (rows typescript.unreviewed-sibling-modules and typescript.cwe-915 name what is unreviewed there). The transistors package is trusted as a dependency (typescript.dependency-result-trust).",
+      "rows": [
+        {
+          "threat": "typescript.cwe-416",
+          "status": "open",
+          "reached": "none",
+          "reason": "Excluded only on analyzer evidence, and no analyzer rule is wired to this package. There is no free() in JavaScript; the nearest analogues are ArrayBuffer detach/transfer and WebAssembly memory, and the package uses neither. The package imports only ./ siblings and the transistors package (package.json:20-22, src/gates.ts:49-57); that is a fact about the source today, not a check. required_capabilities.json:5 is an attestation nothing compares to the sources.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "code/packages/typescript/logic-gates/required_capabilities.json:5"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-ffi-native-wasm",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/rules.ts:45-50"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-ffi-native-wasm",
+            "analyzer-rule:ts.import-allowlist",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-787",
+          "status": "open",
+          "reached": "none",
+          "reason": "Excluded only on analyzer evidence, and no analyzer rule is wired to this package. Out-of-range array writes grow the array instead of corrupting memory; typed arrays ignore them. The package writes no caller-indexed element. The package imports only ./ siblings and the transistors package (package.json:20-22, src/gates.ts:49-57); that is a fact about the source today, not a check. required_capabilities.json:5 is an attestation nothing compares to the sources.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "code/packages/typescript/logic-gates/required_capabilities.json:5"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-ffi-native-wasm",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/rules.ts:45-50"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-ffi-native-wasm",
+            "analyzer-rule:ts.import-allowlist",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-125",
+          "status": "open",
+          "reached": "none",
+          "reason": "Excluded only on analyzer evidence, and no analyzer rule is wired to this package. An out-of-range read returns undefined, which validateBit rejects (gates.ts:85-87). The package reads only inputs[i] of its own rest array (gates.ts:598, 619, 666-671). The package imports only ./ siblings and the transistors package (package.json:20-22, src/gates.ts:49-57); that is a fact about the source today, not a check. required_capabilities.json:5 is an attestation nothing compares to the sources.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "code/packages/typescript/logic-gates/required_capabilities.json:5"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-ffi-native-wasm",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/rules.ts:45-50"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-ffi-native-wasm",
+            "analyzer-rule:ts.import-allowlist",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-415",
+          "status": "open",
+          "reached": "none",
+          "reason": "Excluded only on analyzer evidence, and no analyzer rule is wired to this package. There is no free() in JavaScript. The package imports only ./ siblings and the transistors package (package.json:20-22, src/gates.ts:49-57); that is a fact about the source today, not a check. required_capabilities.json:5 is an attestation nothing compares to the sources.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "code/packages/typescript/logic-gates/required_capabilities.json:5"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-ffi-native-wasm",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/rules.ts:45-50"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-ffi-native-wasm",
+            "analyzer-rule:ts.import-allowlist",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-476",
+          "status": "open",
+          "reached": "none",
+          "reason": "Excluded only on analyzer evidence, and no analyzer rule is wired to this package. Dereferencing null or undefined throws TypeError, a crash and not a memory error. src/gates.ts reads no property of a caller value (validateBit checks typeof first, gates.ts:85; src/sequential.ts does read caller state objects, sequential.ts:119-131, and is out of scope). The package imports only ./ siblings and the transistors package (package.json:20-22, src/gates.ts:49-57); that is a fact about the source today, not a check. required_capabilities.json:5 is an attestation nothing compares to the sources.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "code/packages/typescript/logic-gates/required_capabilities.json:5"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-ffi-native-wasm",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/rules.ts:45-50"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-ffi-native-wasm",
+            "analyzer-rule:ts.import-allowlist",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-190",
+          "status": "open",
+          "reached": "none",
+          "reason": "Excluded only on analyzer evidence, and no analyzer rule is wired to this package. This registry class is the narrow \"integer overflow to buffer boundary\" one; JavaScript numbers are doubles and do not wrap, but the 32-bit bitwise operators and 1 << n do (see typescript.int32-bitwise-truncation). The name is rendered in full in every release; it says nothing about integer overflow in general. gates.ts computes no length or offset. The package imports only ./ siblings and the transistors package (package.json:20-22, src/gates.ts:49-57); that is a fact about the source today, not a check. required_capabilities.json:5 is an attestation nothing compares to the sources.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "code/packages/typescript/logic-gates/required_capabilities.json:5"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-ffi-native-wasm",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/rules.ts:45-50"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-ffi-native-wasm",
+            "analyzer-rule:ts.import-allowlist",
+            "analyzer-rule:ts.no-int32-bitwise-operators",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-78",
+          "status": "open",
+          "reached": "none",
+          "reason": "No analyzer rule is wired to this package. The sources import nothing from node: (src/gates.ts:49-57) and required_capabilities.json:5 declares none, but the first is a fact and the second an attestation, not a check.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "code/packages/typescript/logic-gates/required_capabilities.json:5"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.capability-audit-empty",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/analyzer.ts:649-757"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.capability-audit-empty",
+            "language-guarantee:required-capabilities-empty",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-89",
+          "status": "open",
+          "reached": "none",
+          "reason": "The import list is one file and one package (src/gates.ts:49-57), but no tool checks it at report time.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.import-allowlist",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.import-allowlist",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-22",
+          "status": "open",
+          "reached": "none",
+          "reason": "No analyzer rule is wired; the fs rules of the TypeScript analyzer exist (analyzer.ts:649-757) and are not run on this package.",
+          "evidence": [
+            {
+              "closure_id": "language-guarantee:required-capabilities-empty",
+              "state": "unverified",
+              "ref": "code/packages/typescript/logic-gates/required_capabilities.json:5"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.capability-audit-empty",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/analyzer.ts:649-757"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.capability-audit-empty",
+            "language-guarantee:required-capabilities-empty",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-79",
+          "status": "open",
+          "reached": "none",
+          "reason": "No analyzer rule for DOM sinks exists in the TypeScript analyzer (rules.ts has no ui capability), so this exclusion needs a new rule.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-dom-sinks",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/rules.ts:19-64"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-dom-sinks",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-116",
+          "status": "open",
+          "reached": "none",
+          "reason": "No rule checks that the package emits no serialized format; the template-literal messages interpolate caller-supplied name (see typescript.error-message-name-coercion).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-serialization-or-deserialization",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:86-92"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-serialization-or-deserialization",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-117",
+          "status": "open",
+          "reached": "none",
+          "reason": "No analyzer rule for console or stdout exists in the TypeScript analyzer today.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-console-or-stdout",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:76-103"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-console-or-stdout",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-94",
+          "status": "open",
+          "reached": "none",
+          "reason": "Not closed: the analyzer rules (ts.banned-dynamic-code and ts.no-dynamic-import-string-timers-constructor-chain, which do not exist today as named rules; the merged analyzer is not run on this package at report time) and the seeded negative-control corpus are planned, so the exclusion route (no_dynamic_eval_reachable) is declared but unsatisfied. Build and install hooks (postinstall) are out of scope of this rule and belong to the supply-chain row.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.banned-dynamic-code",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/analyzer.ts:633-645"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-dynamic-import-string-timers-constructor-chain",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/analyzer.ts:765-772"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.banned-dynamic-code",
+            "analyzer-rule:ts.no-dynamic-import-string-timers-constructor-chain",
+            "lane-corpus:ts.seeded-eval-primitives",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-400",
+          "status": "open",
+          "reached": "none",
+          "reason": "The registry route pure_zero_allocation cannot hold (the n-ary gates allocate and loop over caller-chosen n), no step-bound proof or zero-allocation microbenchmark exists for TypeScript, and the registry floor bounded(k) needs a declared k. The n-ary arity is uncapped on main: LGE-DOS-ALL caps decoder, demux, mux and sequential widths, not andN/orN/xorN. The planned item LGE-TS-HARDEN (local branch claude/typescript-logic-gates-harden, in progress) caps the n-ary gates at MAX_WIDTH; that fixes the uncapped-arity finding but the row would still lack the bounded-step proof and zero-allocation evidence, has no route to discharge in this package (cannot_close_in_package), and so carries no becomes_when.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:164-170"
+            },
+            {
+              "closure_id": "lane-corpus:ts-nary-width-cap",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:593-602"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.cwe-409",
+          "status": "open",
+          "reached": "none",
+          "reason": "The sources import nothing that decompresses (src/gates.ts:49-57); no rule checks it.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-decompression-api",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-decompression-api",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-674",
+          "status": "open",
+          "reached": "none",
+          "reason": "The call graph of src/gates.ts is acyclic by reading (gates.ts:405-562, 593-674); the TypeScript analyzer has a recursion rule (analyzer.ts:898 onward) not wired to this package.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.call-graph-acyclic",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:405-562"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.call-graph-acyclic",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-1333",
+          "status": "open",
+          "reached": "none",
+          "reason": "The TypeScript analyzer has a regex rule (analyzer.ts:776-818); it is not run on this package at report time.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-regular-expressions",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/analyzer.ts:776-818"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-regular-expressions",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:76-94"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-regular-expressions",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-407",
+          "status": "open",
+          "reached": "none",
+          "reason": "No rule checks the absence of such algorithms; the n-ary folds are linear in caller-chosen length (see CWE-400).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-hash-sort-search-algorithms",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:593-674"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-hash-sort-search-algorithms",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-208",
+          "status": "open",
+          "reached": "none",
+          "reason": "The floor for this class is proved-to-gate-level and nothing in TypeScript can reach it (V8 JIT timing is not modelled). The only registry route is the declaration no_secret_inputs, which no analyzer can establish for a caller: an absence-of-crypto rule proves the package contains no secret comparison, not that no caller routes a secret through it. The row therefore cannot close inside the package and the declaration stays a statement for the release to make.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-crypto-api-or-secret-comparison",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:76-103"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.cwe-330",
+          "status": "open",
+          "reached": "none",
+          "reason": "The random:entropy rule exists (rules.ts:57-62) and is not run on this package.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.capability-audit-empty",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/rules.ts:57-62"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.capability-audit-empty",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-327",
+          "status": "open",
+          "reached": "none",
+          "reason": "No rule checks that no crypto API is used.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-crypto-api-or-secret-comparison",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-crypto-api-or-secret-comparison",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-326",
+          "status": "open",
+          "reached": "none",
+          "reason": "No rule checks that no crypto API is used.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-crypto-api-or-secret-comparison",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:49-57"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-crypto-api-or-secret-comparison",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-362",
+          "status": "open",
+          "reached": "none",
+          "reason": "No rule checks the absence of workers, shared memory or module-level mutable state, and whether the transistors instances are stateless is evidence the transistors package must supply (cmos_gates.ts:173-174, 293-295 read and return, no field write seen on review, unchecked).",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-workers-shared-memory-async",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:59-65"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-module-level-mutable-state",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:59-65"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-workers-shared-memory-async",
+            "analyzer-rule:ts.no-module-level-mutable-state",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-367",
+          "status": "open",
+          "reached": "none",
+          "reason": "No analyzer rule is wired to this package.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.capability-audit-empty",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/analyzer.ts:649-757"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.capability-audit-empty",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-502",
+          "status": "open",
+          "reached": "none",
+          "reason": "No rule checks the absence of JSON.parse, structuredClone or similar; the package never reads a property of a caller value.",
+          "evidence": [
+            {
+              "closure_id": "analyzer-rule:ts.no-serialization-or-deserialization",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:85-86"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-serialization-or-deserialization",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-1321",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked for the matrix; the exclusion route (no_computed_key_writes_to_shared_objects) is planned and unsatisfied: the analyzer rule and the seeded negative-control corpus do not exist or are not live. The matrix has no row that pollutes Object.prototype or passes an object with an inherited valueOf (only own valueOf and toString objects, tests/gates.exhaustive.test.ts:94-95). TypeScript is deliberately not on the section 5.5 whitelist: caller data can reach __proto__.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:ts-lg02-s9-partial",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:87-114"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-prototype-keys-or-dynamic-property-writes",
+              "state": "planned",
+              "ref": "code/packages/typescript/ca-capability-analyzer/src/analyzer.ts:841-887"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-prototype-keys-or-dynamic-property-writes",
+            "lane-corpus:ts.seeded-shared-object-writes",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.cwe-915",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The object-state surface of src/sequential.ts is outside the scope of every other row of this file: its snapshot-then-validate defence is tested (tests/bounds.test.ts:175-264) but not threat-listed, and ignored extra attributes, Proxy-of-array through Array.isArray, CWE-1321 and CWE-843 for state objects are unreviewed. The row stays open until a threat list for the sibling modules exists (see typescript.unreviewed-sibling-modules).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-sequential-state-snapshot",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/sequential.ts:119-135"
+            },
+            {
+              "closure_id": "lane-corpus:ts-sequential-state-snapshot",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/bounds.test.ts:231-264"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.cwe-20",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Rejection is tested at boundaries and a spread of integers and 23 non-number values for 11 operations in each position, with the other argument valid, out of range, or the same bad value (short circuit). The input domain is every JavaScript value, which no corpus enumerates, so the label is tested; the floor is proved and no proof route (for example a model checker over validateBit) is planned.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:67-85"
+            },
+            {
+              "closure_id": "type-confusion-matrix:ts-lg02-s9-partial",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:87-114"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.cwe-843",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The matrix covers 23 value kinds on the 11 operations (the LG02 section 9 minimum rows for JavaScript are largely present) but not Proxy, Symbol.toPrimitive, getters, Object.create(null), new Boolean/new String, subclasses, whitespace-padded numeric strings, and not nandNor, nandXnor, andN, orN, xorN, mux or dmux. No tool type-checks the package at report time (BUILD has no tsc line). Floor proved; no proof route planned.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:ts-lg02-s9-partial",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:87-114"
+            },
+            {
+              "closure_id": "type-system:ts-strict-bit-type",
+              "state": "claimed",
+              "ref": "code/packages/typescript/tsconfig.base.json:6"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-as-casts-any-ts-ignore",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:143"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.cwe-704",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The wide-integer rows (every integer in [-1024, 1024], 2^31, 2^53, MAX_SAFE_INTEGER, MAX_VALUE, and negatives) and the numeric-string rows (\"1\", \"0\", \"\", \"1abc\") are tested; 2^32, 2^32+1 and the whitespace and hex strings of LG02 section 9 are not. The implicit-conversion audit and the as-cast audit are analyzer rules not yet built for this package. Floor proved; no proof route planned.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:67-85"
+            },
+            {
+              "closure_id": "type-confusion-matrix:ts-lg02-s9-partial",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:87-114"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-as-casts-any-ts-ignore",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:143"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.negative-zero",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. -0 is one value and it is tested in every argument position of all 11 operations with the other argument 0 or 1 (:107-110); results are checked to be +0 or 1 by Object.is (:116-128) over the full truth tables. Nothing machine-reads the suite yet. The exhaustive suite loops 11 operations (NOT, AND, OR, XOR, NAND, NOR, XNOR, nandNot, nandAnd, nandOr, nandXor); it does not loop andN, orN, xorN, mux, dmux, nandNor, nandXnor or validateBit called directly, so the label is tested, not exhaustive.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:107-110"
+            },
+            {
+              "closure_id": "lane-corpus:ts-results-are-bits",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:116-128"
+            },
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:91"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ts-exhaustive-truth-and-rejection",
+            "lane-corpus:ts-results-are-bits",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "typescript.nan-and-infinity",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. NaN, Infinity and -Infinity are three values, each tested in every position with the other argument 0, 1 or itself (:90-91, :102-105). Float values that are integers but huge (MAX_VALUE) are in the RangeError loop (:70-71). The exhaustive suite loops 11 operations (NOT, AND, OR, XOR, NAND, NOR, XNOR, nandNot, nandAnd, nandOr, nandXor); it does not loop andN, orN, xorN, mux, dmux, nandNor, nandXnor or validateBit called directly, so the label is tested, not exhaustive.",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:ts-lg02-s9-partial",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:90-91"
+            },
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:70-71"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ts-exhaustive-truth-and-rejection",
+            "type-confusion-matrix:ts-lg02-s9-partial",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "typescript.int32-bitwise-truncation",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. For src/gates.ts the absence of bitwise operators is a fact of the file, not a check, and the rejection suite includes 2^31 and -(2^31) (:70). 2^32 and 2^32 + 1 are not probed. src/combinational.ts still contains the operators at 0.3.0 (:406, :210, :471, :547) but bounded by MAX_SELECT_BITS and a real-array plus 65536 check; they are present but bounded and still flagged by ts.no-int32-bitwise-operators, which does not exist yet. That module is outside this list's scope.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:67-85"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-int32-bitwise-operators",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/combinational.ts:406"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-int32-bitwise-operators",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/combinational.ts:210"
+            }
+          ],
+          "becomes_when": [
+            "analyzer-rule:ts.no-int32-bitwise-operators",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "excluded"
+        },
+        {
+          "threat": "typescript.coercion-hooks",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Own valueOf and toString objects and new Number(1) are tested (:94-96); Symbol.toPrimitive, getter and Proxy arguments, Object.create(null) and inherited-hook objects are not. All of them have typeof \"object\" and take the first branch, so the expected result is a TypeError with no hook called, but no test asserts that no hook ran (for example with a counter). Extended matrix rows are still to be added by the lane runner work (LGE-L-<lane>, not yet a concrete backlog row for typescript).",
+          "evidence": [
+            {
+              "closure_id": "type-confusion-matrix:ts-lg02-s9-partial",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:94-96"
+            },
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:85-87"
+            }
+          ],
+          "becomes_when": [
+            "type-confusion-matrix:ts-lg02-s9-partial",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "typescript.type-erasure-any-unknown",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The matrix feeds wrong types through an `any`-typed function (tests/gates.exhaustive.test.ts:16-17) and expects TypeError. BUILD never runs tsc (BUILD:1-3), so the strict-mode compile of src/ is not part of the pipeline, and the tests are outside tsconfig.json:3's include. package.json main points at src/index.ts (:6), TypeScript source, so a plain JavaScript consumer needs a loader and there is no emitted .js to test. A tsc --noEmit line in BUILD is proposed and has no backlog row.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:16-17"
+            },
+            {
+              "closure_id": "type-system:ts-strict-bit-type",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tsconfig.json:2-3"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ts-exhaustive-truth-and-rejection",
+            "type-confusion-matrix:ts-lg02-s9-partial",
+            "type-system:ts-strict-bit-type",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "typescript.error-message-name-coercion",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. No test passes a non-string name. This is a finding of this review, recorded so it can be fixed; the fix (validate name inside validateBit) is planned as LGE-TS-HARDEN (local branch claude/typescript-logic-gates-harden, in progress, not merged).",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:76-93"
+            },
+            {
+              "closure_id": "lane-corpus:ts-validatebit-name-argument",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/index.ts:45"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ts-validatebit-name-argument",
+            "lane-corpus:ts-exhaustive-truth-and-rejection",
+            "LGE-TS-HARDEN",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "typescript.intrinsics-tampering",
+          "status": "open",
+          "reached": "none",
+          "reason": "Code in the same realm is a trusted part of the program in this threat model (untrusted values, not untrusted code); a library cannot defend against its host. The row stays open so a release says so; it is not a gap the package can close.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:88,91"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.dependency-result-trust",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Every valid-input result is checked to be exactly +0 or 1 (:116-128) and against literal truth tables (:39-50), so a wrong callee fails the suite today; but no run-time check guards a result outside the tested inputs and the as-cast analyzer rule does not exist for this package.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-results-are-bits",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:116-128"
+            },
+            {
+              "closure_id": "analyzer-rule:ts.no-as-casts-any-ts-ignore",
+              "state": "planned",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:143"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ts-results-are-bits",
+            "analyzer-rule:ts.no-as-casts-any-ts-ignore",
+            "LGE-A-TYPESCRIPT",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "typescript.npm-supply-chain",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The lockfile-exact install and the vitest run are real; nothing audits the dependency tree, checks the lockfile for drift, or checks what would be published. The publish gate (LGE-S5, the VER31 publish-job amendment, and LGE-PUB-<registry>, both queued) does not name the checks this row needs: reject file: dependencies in the published package.json, verify @coding-adventures scope ownership, run npm ci with --ignore-scripts, review the transistors lockfile, add npm audit and a files/exports field. No backlog row carries them (needed: LGE-PUB-NPM, to add), so the row has no planned closure.",
+          "evidence": [
+            {
+              "closure_id": "build-check:ts-npm-ci-and-vitest-coverage",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/BUILD:1-3"
+            },
+            {
+              "closure_id": "build-check:ts-npm-ci-and-vitest-coverage",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/package.json:20-27"
+            },
+            {
+              "closure_id": "build-check:ts-npm-ci-and-vitest-coverage",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/package.json:21"
+            },
+            {
+              "closure_id": "build-check:ts-npm-ci-and-vitest-coverage",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/package.json:2"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.number-has-no-integer-subtype",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The acceptance of 1.0 and 0.0 is asserted (:61-64) and documented (validateBit comment gates.ts:76-84). Integers beyond 2^53 are rejected by the range check (:70-71), so precision loss cannot make an invalid integer look valid.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:61-64"
+            },
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:76-84"
+            }
+          ],
+          "becomes_when": [
+            "lane-corpus:ts-exhaustive-truth-and-rejection",
+            "LGE-W1",
+            "LGE-S3v"
+          ],
+          "becomes_status": "discharged"
+        },
+        {
+          "threat": "typescript.arity-and-variadic-calls",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Arity is tested for the 11 operations only: zero, one (for two-input gates), arity + 1 and an explicit trailing undefined (:130-142). No test calls mux or dmux with extra arguments; they do not reject them (finding of this review, no backlog row). andN and orN reject fewer than 2 inputs with RangeError (gates.ts:594-596, 615-617), the same identity as value rejection, which widens the engine-RangeError collision; xorN accepts 0 or 1 inputs and no test pins that choice.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:130-142"
+            },
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:720-751"
+            },
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/gates.ts:594-596"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.engine-rangeerror-identity",
+          "status": "open",
+          "reached": "tested",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. Valid inputs return values (:39-50), so a misfire on them fails. No dedicated error class exists and no backlog row plans one for TypeScript; the typed identity of LG02 section 7 is accepted as class-only for this lane.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:39-50"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.evidence-vacuity-and-engine-variance",
+          "status": "open",
+          "reached": "none",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The loops are checked by expectation counts inside tests (for example expect(table.length).toBe(1 << arity), :43) but nothing rejects a skipped test or measures that all 11 operations x positions ran. No second engine runs.",
+          "evidence": [
+            {
+              "closure_id": "build-check:ts-npm-ci-and-vitest-coverage",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/vitest.config.ts:7-9"
+            },
+            {
+              "closure_id": "build-check:ts-npm-ci-and-vitest-coverage",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/tests/gates.exhaustive.test.ts:43"
+            }
+          ],
+          "no_planned_closure": true
+        },
+        {
+          "threat": "typescript.unreviewed-sibling-modules",
+          "status": "open",
+          "reached": "none",
+          "reason": "Rows speak about src/gates.ts only. A release of this package would carry those modules unreviewed; since 0.3.0 they are bounded and snapshot caller state (PR #19958, merged), but no threat list covers them. The unreviewed surface is the object-state handling of sequential.ts (CWE-1321, CWE-915, CWE-843 for state objects, Array.isArray on a Proxy over an array) and the rest of combinational.ts; LGE-DOS-ALL covers the size caps only. Listed so the disclosure of a release includes the scope limit.",
+          "evidence": [
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/combinational.ts:56-67"
+            },
+            {
+              "closure_id": "lane-corpus:ts-exhaustive-truth-and-rejection",
+              "state": "claimed",
+              "ref": "code/packages/typescript/logic-gates/src/sequential.ts:119-135"
+            }
+          ],
+          "no_planned_closure": true
+        }
+      ]
+    }
+  }
+}

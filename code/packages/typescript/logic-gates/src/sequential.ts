@@ -87,10 +87,10 @@ export interface CounterState {
   ffState: FlipFlopState[];
 }
 
-/** Largest width (flip-flop count) for register, shift register and counter. */
-export const MAX_WIDTH = 65536;
-/** Largest counter width. */
-export const MAX_COUNTER_WIDTH = 64;
+import { MAX_WIDTH, MAX_COUNTER_WIDTH } from "./bounds.js";
+
+// Re-exported so existing importers of this module keep working.
+export { MAX_WIDTH, MAX_COUNTER_WIDTH };
 
 // A width must be a real integer in 1..cap, checked BEFORE any allocation.
 // `NaN < 1` is false, so a bare `width < 1` test let NaN through to

@@ -192,3 +192,32 @@ func TestMustEvalPanicsWithInternalError(t *testing.T) {
 	}()
 	mustEval("AND", 0, fmt.Errorf("boom"))
 }
+
+// wideInts are values that a truncating `int32(v)` (or uint32/float32) bit
+// check would wrongly map into {0,1}: 2^32 truncates to 0, 2^32+1 to 1, and
+// so on. A narrowing validator MUST fail these tests.
+func wideInts() []int {
+	return []int{
+		1 << 31, 1<<31 + 1, 1 << 32, 1<<32 + 1, 1<<53 + 1,
+		math.MaxInt64, math.MinInt64, -1,
+	}
+}
+
+func TestWideIntegerRejectionAllGates(t *testing.T) {
+	for _, v := range wideInts() {
+		for _, g := range binGates {
+			assertInvalidBit(t, g.name, "a", v, func() { g.fn(v, 0) })
+			assertInvalidBit(t, g.name, "a", v, func() { g.fn(v, 1) })
+			assertInvalidBit(t, g.name, "b", v, func() { g.fn(0, v) })
+			assertInvalidBit(t, g.name, "b", v, func() { g.fn(1, v) })
+		}
+		for _, g := range unGates {
+			assertInvalidBit(t, g.name, "a", v, func() { g.fn(v) })
+		}
+		for name, fn := range map[string]func(...int) int{"ANDn": ANDn, "ORn": ORn, "XORn": XORn} {
+			assertInvalidBit(t, name, "inputs[1]", v, func() { fn(1, v, 0) })
+			assertInvalidBit(t, name, "inputs[0]", v, func() { fn(v, 1) })
+			assertInvalidBit(t, name, "inputs[2]", v, func() { fn(0, 0, v) })
+		}
+	}
+}

@@ -1,0 +1,14 @@
+[package]
+name = "pif-prelude"
+version = "0.1.0"
+edition = "2021"
+description = "The generator of the PIF prelude (VER32 PIF-004b): the inductive types Bool, Nat, Int, Eq, And, Or, False, True, Exists, Option, List and Prod under Lean's names with Lean's declarations, plus the native Pif.* functions, built with pif-writer. The generated file is committed at code/specs/data/pif/prelude.pif and a test fails on drift."
+license = "MIT"
+
+[dependencies]
+pif-writer = { path = "../pif-writer" }
+
+[dev-dependencies]
+# The trusted reader and kernel, and the repository's own SHA-256 for the import digest.
+lean-kernel = { path = "../lean-kernel" }
+coding_adventures_sha256 = { path = "../sha256" }

@@ -194,7 +194,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
           ),
           GT::TokenDefinition.new(
             name: "CDATA_BRACK",
-            pattern: "]",
+            pattern: "[\\]]",
             is_regex: true,
             line_number: 152,
             alias_name: "CDATA_TEXT",

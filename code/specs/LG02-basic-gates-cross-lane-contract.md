@@ -353,7 +353,7 @@ any document and profile (VER04r section 1.1).
 ```text
 code/specs/fixtures/logic-gates-basic-warrant-v2/
   corpus.json  chunks/*.txt  corpus.profile  cases.tfv
-  consumers.json  schema.json  consumers.schema.json  README.md  CHANGELOG.md
+  README.md  .gitattributes  (no consumers.json: see Errata LGE-S1c)
 ```
 
 (the layout is VER04r section 1.1; the directory name follows the existing
@@ -481,47 +481,53 @@ VER04r section 7.5), which is the same mechanism the Rust binding uses
 (`evidence.bindings:11-18`).
 
 **Decision:** every lane's library must expose a stable identity for the
-rejection. Today sixteen lanes have a package (Rust and fifteen others); this is what each does and what
-the binding row is. "Read at" is the file and line of the validator.
+rejection. All eighteen lanes now have a package and, as of the errata of
+2026-11-24 (LGE-LG02-ERRATA, below), every row here was re-read from the merged
+source on `origin/main`. "Read at" is the file and line of the validator or of
+the identity's definition. **The binding row is the exact class** the lane's
+runner matches (`type(e) is cls`, VER04r section 7.5); a subclass is not a
+match and a base class is not a match.
 
-| # | Lane | Rejection idiom today | Read at | Binding row | Stable today? |
+| # | Lane | Rejection idiom on `main` | Read at | Binding row | Stable today? |
 |---|---|---|---|---|---|
 | 1 | rust | `assert!` panic | `rust/logic-gates/src/gates.rs:52-57` | `error=INVALID_INPUT` (generated adapter contains the panic; the `panics` row) | yes (this is the reference) |
-| 2 | python | `ValueError` for an int outside {0,1}; `TypeError` for a non-int, a `bool` or a float | `python/logic-gates/src/logic_gates/gates.py:57-62` | `errors=INVALID_INPUT:ValueError` | yes |
-| 3 | typescript | `RangeError` for a number outside {0,1}; `TypeError` for a non-number | `typescript/logic-gates/src/gates.ts:77-82` | `errors=INVALID_INPUT:RangeError` | yes |
-| 4 | go | `panic(fmt.Sprintf(...))`, a plain string | `go/logic-gates/gates.go:90-94` | reviewed adapter recovers the panic, returns sentinel `ErrInvalidBit` (VER04i section 5.3) | **no**, see below |
-| 5 | ruby | `ArgumentError` outside {0,1}; `TypeError` for a non-Integer | `ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:90-98` | `errors=INVALID_INPUT:ArgumentError` | yes |
-| 6 | c | none yet; package to be added | | `status=-1` (`LG_INVALID`) with an out parameter | to be built so |
-| 7 | cpp | none yet; package to be added | | `errors=INVALID_INPUT:std::invalid_argument` | to be built so |
-| 8 | java | `IllegalArgumentException` | `java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:70-74` | `errors=INVALID_INPUT:java.lang.IllegalArgumentException` | yes |
-| 9 | kotlin | `require(...)`, which throws `IllegalArgumentException` | `kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:68-72` | `errors=INVALID_INPUT:IllegalArgumentException` | yes |
-| 10 | csharp | `ArgumentOutOfRangeException` | `csharp/logic-gates/LogicGates.cs:8-14` | `errors=INVALID_INPUT:System.ArgumentOutOfRangeException` | yes |
-| 11 | fsharp | `ArgumentOutOfRangeException` | `fsharp/logic-gates/LogicGates.fs:8-10` | same class as csharp | yes |
-| 12 | elixir | `ArgumentError` for a boolean, a non-integer or an integer outside {0,1} | `elixir/logic_gates/lib/coding_adventures/logic_gates/gates.ex:56-70` | `errors=INVALID_INPUT:ArgumentError` (one class covers every cause, which is fine for a single-case error) | yes |
-| 13 | lua | `error(string)` | `lua/logic_gates/src/coding_adventures/logic_gates/gates.lua:72-76` | see below | **no** |
-| 14 | perl | `die "<string>\n"` | `perl/logic-gates/lib/CodingAdventures/LogicGates.pm:100-104` | see below | **no** |
-| 15 | haskell | `Left String` (an `Either`, not a raise) | `haskell/logic-gates/src/LogicGates/Basic.hs:14-17` | see below | **no** |
-| 16 | swift | `throw LogicGateError.invalidBit(name:got:)` | `swift/logic_gates/Sources/LogicGates/Gates.swift:53-56` | `errors=INVALID_INPUT:invalidBit` | yes |
-| 17 | dart | `ArgumentError.value(...)` | `dart/logic-gates/lib/src/gates.dart:5-9` | `errors=INVALID_INPUT:ArgumentError` | yes |
-| 18 | ocaml | `Error (Invalid_bit {name; value})` in a `result` | `ocaml/logic-gates/src/coding_adventures_logic_gates.ml:7-17` | `returns_error=Invalid_bit` | yes |
+| 2 | python | `ValueError` for an int outside {0,1}; `TypeError` for a non-int, a `bool`, an `int` subclass or a float | `python/logic-gates/src/logic_gates/gates.py:67-71` | `errors=INVALID_INPUT:ValueError` | yes (general-purpose class) |
+| 3 | typescript | `RangeError` for an integer outside {0,1} or `-0`; `TypeError` for a non-number or a non-integer number | `typescript/logic-gates/src/gates.ts:85-93` | `errors=INVALID_INPUT:RangeError` | yes (general-purpose class) |
+| 4 | go | panic with the typed value `*InvalidBitError` (an internal failure panics with a different type, `*InternalError`); `IsInvalidBit` is the exact-type test | `go/logic-gates/gates.go:115-118` (type), `:168-172` (panics) | reviewed adapter recovers the panic and returns sentinel `ErrInvalidBit` only when the value is `*InvalidBitError` (VER04i section 5.3) | yes (PR #19935) |
+| 5 | ruby | `CodingAdventures::LogicGates::InvalidBitError < ArgumentError` for anything that is not the Integer 0 or 1 (PR #19950) | `ruby/logic_gates/lib/coding_adventures/logic_gates/gates.rb:100` (class), `:139-141` (raise) | `errors=INVALID_INPUT:CodingAdventures::LogicGates::InvalidBitError` | yes (dedicated class) |
+| 6 | c | returns `LG_INVALID` (-1) from every gate (PR #19926) | `c/logic-gates/src/logic_gates.c:29`; `c/logic-gates/include/logic_gates.h:43` | `status=-1` (`LG_INVALID`) with an out parameter | yes |
+| 7 | cpp | `throw std::invalid_argument` from `detail::reject` (PR #19928) | `cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-79` | `errors=INVALID_INPUT:std::invalid_argument` | yes (general-purpose class) |
+| 8 | java | `com.codingadventures.logicgates.InvalidBitException extends IllegalArgumentException` (PR #19937) | `java/logic-gates/src/main/java/com/codingadventures/logicgates/InvalidBitException.java:14`; thrown at `LogicGates.java:75` | `errors=INVALID_INPUT:com.codingadventures.logicgates.InvalidBitException` | yes (dedicated class) |
+| 9 | kotlin | `com.codingadventures.logicgates.InvalidBitException : IllegalArgumentException` (PR #19938) | `kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:501-502` (class), `:76` (throw) | `errors=INVALID_INPUT:com.codingadventures.logicgates.InvalidBitException` | yes (dedicated class) |
+| 10 | csharp | `CodingAdventures.LogicGates.InvalidBitException : ArgumentOutOfRangeException` (sealed; PR #19939) | `csharp/logic-gates/LogicGates.cs:12` (class), `:48` (throw) | `errors=INVALID_INPUT:CodingAdventures.LogicGates.InvalidBitException` | yes (dedicated class) |
+| 11 | fsharp | `CodingAdventures.LogicGates.InvalidBitException`, inheriting `ArgumentOutOfRangeException` (PR #19941) | `fsharp/logic-gates/LogicGates.fs:16-17` (type), `:30` (raise) | `errors=INVALID_INPUT:CodingAdventures.LogicGates.InvalidBitException` | yes (dedicated class) |
+| 12 | elixir | `CodingAdventures.LogicGates.InvalidBitError` exception (`defexception [:param, :value_description]`; PR #19952) | `elixir/logic_gates/lib/coding_adventures/logic_gates/invalid_bit_error.ex:21`; raised at `gates.ex:69` | `errors=INVALID_INPUT:CodingAdventures.LogicGates.InvalidBitError` | yes (dedicated exception) |
+| 13 | lua | `error(<table>, 0)` with `code = "INVALID_BIT"` (PRs #19936, #19957); an internal failure raises a different shape and stays `unexpected-error` | `lua/logic_gates/src/coding_adventures/logic_gates/gates.lua:91` (code), `:192` (raise); `gates.is_invalid_bit` at `:120` | `errors=INVALID_INPUT:INVALID_BIT` (the `code` field) | yes |
+| 14 | perl | `die` of a `CodingAdventures::LogicGates::Error` object with `code` `INVALID_BIT` (PR #19944); `is_invalid_bit` is the exact-class test | `perl/logic-gates/lib/CodingAdventures/LogicGates/Error.pm:45` (codes), `:113` (`is_invalid_bit`); thrown at `LogicGates.pm:66-72,182` | `errors=INVALID_INPUT:INVALID_BIT` (the `code`) | yes |
+| 15 | haskell | `Left (InvalidBit { param, value })` of the `LogicGateError` ADT (PR #19942); an `Either`, not a raise | `haskell/logic-gates/src/LogicGates/Basic.hs:52-56` (type), `:70` (the `Left`) | `returns_error=InvalidBit` | yes |
+| 16 | swift | `throw LogicGateError.invalidBit(name:got:)` | `swift/logic_gates/Sources/LogicGates/Gates.swift:56` (case), `:140-142` (throw) | `errors=INVALID_INPUT:invalidBit` | yes |
+| 17 | dart | `InvalidBitError extends ArgumentError` (PR #19953) | `dart/logic-gates/lib/src/gates.dart:9` (class), `:22` (throw) | `errors=INVALID_INPUT:InvalidBitError` | yes (dedicated class) |
+| 18 | ocaml | `Error (Invalid_bit {name; value})` in a `result` | `ocaml/logic-gates/src/coding_adventures_logic_gates.ml:8,17` | `returns_error=Invalid_bit` | yes |
 
 **Rejection-specific identity, and the residual risk of class-only matching.**
 Where a library offers an identity that means "this was a bit rejection" and
-nothing else, the binding must use it: OCaml's `Invalid_bit` constructor
-(`ocaml/logic-gates/src/coding_adventures_logic_gates.ml:8`), Swift's
-`LogicGateError.invalidBit` (`swift/logic_gates/Sources/LogicGates/Gates.swift:56`)
-and the planned Lua `code`, Perl exception class and Haskell constructor below. For
-Python, TypeScript, Java, Kotlin, C#, F#, Dart, Elixir and Ruby the identity is a
-**general-purpose class** (`ValueError`, `RangeError`, `IllegalArgumentException`,
-`ArgumentOutOfRangeException`, `ArgumentError`), because the lane's runner matches
-the class that was raised and not the message (VER04r section 7.5). The
-**residual risk** is that an unrelated failure of the same class raised from
-inside a gate (for example from the transistor layer the gates delegate to, which
-can fail: `go/logic-gates/gates.go:154` shows one such path) would be mapped to
-`INVALID_INPUT` and look like a correct rejection. Why the corpus still catches
-the harmful direction: the truth-table and equivalence suites call every gate on
-every *valid* input and expect `Ok(value)` (`logic-gates.warrant` lines 666-719),
-so a misfire on a valid input becomes `Err(INVALID_INPUT)`, which differs from the
+nothing else, the binding must use it: OCaml's `Invalid_bit` constructor,
+Haskell's `InvalidBit` constructor, Swift's `LogicGateError.invalidBit`, the
+dedicated classes of Ruby, Java, Kotlin, C#, F#, Elixir, Dart and Go
+(`*InvalidBitError`), and the `INVALID_BIT` code of Lua and Perl. Only Python,
+TypeScript and C++ still bind a **general-purpose class** (`ValueError`,
+`RangeError`, `std::invalid_argument`), because those libraries offer nothing
+narrower and the runner matches the class that was raised and not the message
+(VER04r section 7.5). Rust matches the panic. C matches the status code. The
+**residual risk** for the general-purpose rows is that an unrelated failure of
+the same class raised from inside a gate (for example from the transistor layer
+the gates delegate to, which can fail) would be mapped to `INVALID_INPUT` and
+look like a correct rejection. (Go's string-panic version of this risk is
+closed: its internal failures panic with `*InternalError`,
+`go/logic-gates/gates.go:133`.) Why the corpus still catches the harmful
+direction: the truth-table and equivalence suites call every gate on every
+*valid* input and expect `Ok(value)` (`logic-gates.warrant` lines 666-719), so a
+misfire on a valid input becomes `Err(INVALID_INPUT)`, which differs from the
 expected `Ok` and fails the claim. What is not caught is a misfire on an
 *invalid* input for the wrong reason: the outcome (a rejection) is still the
 required one, and the corpus domain cannot see the reason. That is the accepted
@@ -529,57 +535,71 @@ limit of class-only matching; a lane that wants more adds the dedicated class.
 
 Notes the table cannot hold:
 
-* **Exact class matching.** `ArgumentOutOfRangeException` is a subclass of
-  `ArgumentException`, and Python/Ruby have both a type error and a value error
-  for the same gate. The runner matches the class that was raised, not a base
-  class (VER04r section 7.5). The corpus input type is `U8` (an integer), so the
-  corpus only ever reaches the *range* error; the type-error class is reached
-  by the lane-local matrix (section 9) and is asserted there.
-* **Go.** `gates.go:92` panics with a formatted string, and the same package
-  panics with a string for an unrelated internal failure (`gates.go:154`,
-  "AND CMOS evaluation error"). A recover-everything adapter would map both to
-  the sentinel, which is exactly the vacuous pass VER04i section 5.3 forbids
-  ("re-panicking any other panic"). **Decision:** the adapter is reviewed and
-  returns `ErrInvalidBit` only for a panic whose value is the package's typed
-  bit-rejection value; this needs the library to panic with a typed value
-  instead of a string. That library change is a separate follow-up item
-  (LGE-R, Go row), and until it lands the Go lane is not bindable.
-* **Lua, Perl, Haskell must gain a stable identity** (each a separate
-  follow-up item, because a binding may not match message text):
-
-  | Lane | Required identity |
-  |---|---|
-  | lua | `error` raises a table with a `code` field (`"INVALID_INPUT"`), not a string; an internal failure gets a different `code`, so it stays `unexpected-error` |
-  | perl | a blessed exception class `CodingAdventures::LogicGates::Error` with a `code` method; `die` throws an object, not a string |
-  | haskell | a `LogicGateError` algebraic data type (constructor `InvalidBit` and the rest) replaces `String` in `Left` |
-
-  Of the three, Haskell already returns a value rather than raising; the
-  decision for it is the type of the `Left` payload, not the mechanism.
+* **Exact class matching.** The dedicated classes are subclasses of a base
+  class (`InvalidBitError < ArgumentError`, `InvalidBitException <
+  IllegalArgumentException` / `ArgumentOutOfRangeException`, Dart
+  `InvalidBitError extends ArgumentError`). The runner matches the class that
+  was raised, not a base class (VER04r section 7.5), so a lane's runner must name
+  the dedicated class: a binding that still says `ArgumentError`,
+  `IllegalArgumentException` or `ArgumentOutOfRangeException` matches nothing
+  and fails the lane (the pre-errata table said exactly that; that was the
+  drift this errata removes). Python and TypeScript have both a type error and a
+  value/range error for the same gate; the corpus input type is `U8` (an
+  integer), so the corpus only ever reaches the *range* error
+  (`ValueError`, `RangeError`); the type-error class is reached by the lane-local
+  matrix (section 9) and is asserted there.
+* **Go** (resolved by PR #19935, LGE-R-go). The library panics with the typed
+  value `*InvalidBitError` (`gates.go:168-172`); the reviewed adapter returns
+  `ErrInvalidBit` only for that type and re-panics everything else
+  (VER04i section 5.3).
+* **Lua, Perl, Haskell** (resolved by PRs #19936/#19957, #19944, #19942): Lua
+  raises a table with `code = "INVALID_BIT"`; Perl dies with a
+  `CodingAdventures::LogicGates::Error` object whose `code` is `INVALID_BIT`;
+  Haskell returns `Left (InvalidBit ...)` of the `LogicGateError` ADT, so for it
+  the identity is a constructor, not a raise.
 * **Rust and Go** panics are "errors" only inside the adapter that contains
   them. The library contract is the panic.
 
-## 8. Decision 7 — the value mapping
+### 7.1 Shape and size errors (distinct from the bad-bit identity)
 
-Bits cross the boundary as the **lane's own integer type**, as the libraries
-already take them: Rust `u8`, Go `int` (`gates.go:90`), Java `int`
-(`LogicGates.java:70`), Kotlin `Int` (`LogicGates.kt:68`), C# `int`
-(`LogicGates.cs:8`), Dart `int` (`gates.dart:2-6`), Haskell `Int`
-(`Basic.hs:12`), OCaml `int` (`coding_adventures_logic_gates.ml:1`), Python,
-Ruby, Elixir, Lua, Perl and JavaScript's number. The corpus type is Warrant
-`U8`; the runner range-checks every corpus value on the way in (VER04r section
-7.2: a value the host type cannot hold is never truncated), and an adapter may
-translate representation and nothing else (VER04i section 5 rule 5). So the Go
-adapter converts the corpus's `uint8` to `int`, and OCaml's native `int` is fine
-because the rule only forbids it for widths over 32 bits (VER04r section 7.2).
+A *shape* or *size* error is a container or width argument that is the wrong
+length, size or kind (a 3-element `sel` for a 2-way mux, a counter width of 0,
+`inputs` not a power of two, a one-hot encoder input that is not one-hot).
+It is **not** a bad bit and must never carry the bad-bit identity, because the
+bad-bit identity is what the basic corpus asserts as `INVALID_INPUT`.
 
-**Python binding amendment needed.** VER04i section 5.1 says Python accepts only
-`Bool=bool`, `Bytes=bytes`, `U64=int`, `Nat=int` in `values` and refuses
-anything else as `BindingInvalid`. The basic gates need **`U8=int`**: a result is
-checked with `type(x) is int` (so a `bool` is refused, as for `U64`) and the
-value is range-checked to 0..255 at the boundary. TypeScript (`U8=number`) and
-Go (`U8=uint8`) already list `U8` (VER04i section 5.2 and section 5.3 `values`
-rows). The Python amendment belongs in VER04i section 5.1 when the Python v2
-runner (CV2-S6b/S6c) lands; it is recorded here so the runner slice includes it.
+**Matching rule for runners.** The **bad-bit identity is matched exactly**
+(the table above). The **shape identity is matched by family**: the runner (or
+the lane-local test) asserts only that the call was rejected with an error that
+is *not* the bad-bit identity and *is* a member of the lane's shape family
+below. The shape errors are outside the 11-gate basic corpus (which has only the
+`U8` input and the single `INVALID_INPUT` case), so no corpus runner matches
+them; they are asserted by lane-local tests. The family is deliberately loose
+because several lanes still reject shape with a general-purpose class.
+
+Status as of 2026-11-24 (`origin/main`). "Merged" cites the PR that landed it;
+"planned" is not on `main` and no runner may rely on it.
+
+| Lane | Shape / size identity on `main` | Read at | Status of a dedicated shape type |
+|---|---|---|---|
+| rust | `assert!` panic with a message | `rust/logic-gates/src/combinational.rs:186,227`, `sequential.rs:292,350` | none; the panic is the contract |
+| python | `ValueError` (wrong length or width); `TypeError` (wrong container type) | `python/logic-gates/src/logic_gates/combinational.py:81-87`, `sequential.py:68-93` | none planned; family is `{ValueError, TypeError}` |
+| typescript | `RangeError` (wrong length or width); `TypeError` (wrong container type) | `typescript/logic-gates/src/sequential.ts:102-107,140-144` | none planned; family is `{RangeError, TypeError}` |
+| go | plain-string `panic(fmt.Sprintf(...))` | `go/logic-gates/combinational.go:143,180-197`, `gates.go:636-713` | **planned**: typed `SizeError` (LGE-GO-SIZEERR); until it lands the shape family is "a panic whose value is not `*InvalidBitError` and not `*InternalError`" |
+| ruby | plain `ArgumentError` | `ruby/logic_gates/lib/coding_adventures/logic_gates/combinational.rb:131-366`, `gates.rb:575,591` | none planned. Note `InvalidBitError < ArgumentError`, so a shape check must test "`ArgumentError` and not `InvalidBitError`". `sequential.rb:76` still raises plain `ArgumentError` for a bad bit inside the sequential layer (outside the basic-gate scope; to be fixed with the sequential errata) |
+| c | none: the basic package has no container arguments | | not applicable |
+| cpp | none: the basic package has no container arguments | | not applicable |
+| java | `IllegalArgumentException` (plain, `AND_N`/`OR_N` arity) | `java/logic-gates/src/main/java/com/codingadventures/logicgates/LogicGates.java:466,486` | **planned**: `InvalidShapeException`, local branch only, unmerged |
+| kotlin | `require` -> `IllegalArgumentException` | `kotlin/logic-gates/src/main/kotlin/com/codingadventures/logicgates/LogicGates.kt:441,459` | **planned**: `InvalidShapeException`, local branch only, unmerged |
+| csharp | `ArgumentException` (with `ParamName`) | `csharp/logic-gates/LogicGates.cs:145,168` | none planned. `InvalidBitException` derives from `ArgumentOutOfRangeException`, which derives from `ArgumentException`: a shape check must test "`ArgumentException` and not `InvalidBitException`" |
+| fsharp | `invalidArg` -> `ArgumentException` | `fsharp/logic-gates/LogicGates.fs:98,106` | none planned; same caveat as C# |
+| elixir | plain `ArgumentError` | `elixir/logic_gates/lib/coding_adventures/logic_gates/combinational.ex:136-395`, `gates.ex:537,564` | none planned; `InvalidBitError` is not an `ArgumentError`, so the families are disjoint |
+| lua | `error(<table>)` with `code = "INVALID_SHAPE"` or `"INVALID_WIDTH"`; `"INVALID_ARITY"` for a wrong argument count | `lua/logic_gates/src/coding_adventures/logic_gates/gates.lua:131-132,169-175` | **merged** (PR #19957, with #19936); family is `{INVALID_SHAPE, INVALID_WIDTH, INVALID_ARITY}` |
+| perl | `die` of a `CodingAdventures::LogicGates::Error` with code `INVALID_SHAPE`, `INVALID_WIDTH` or `INVALID_ARITY` | `perl/logic-gates/lib/CodingAdventures/LogicGates/Error.pm:45`, `LogicGates.pm:666,800,856` | **merged** (PR #19944) |
+| haskell | `Left (InvalidShape String)` of `LogicGateError` | `haskell/logic-gates/src/LogicGates/Basic.hs:56`, `Combinational.hs:28-107` | **merged** (PR #19942) |
+| swift | `LogicGateError.invalidWidth`, `.invalidShape`, `.invalidSelectLength`, `.insufficientInputs`, `.invalidEncoderInput` | `swift/logic_gates/Sources/LogicGates/Gates.swift:62-75`, `Combinational.swift:124-395` | merged (cases exist in the enum on `main`); family is every case other than `.invalidBit` |
+| dart | plain `ArgumentError` (via `ArgumentError.value`) | `dart/logic-gates/lib/src/combinational.dart:14-123`, `sequential.dart:103-193` | none planned. `InvalidBitError extends ArgumentError`, so a shape check must test "`ArgumentError` and not `InvalidBitError`" |
+| ocaml | `Error` with `Invalid_length`, `Invalid_width`, `Invalid_power_of_two`, `Invalid_one_hot` or `Invalid_counter_state` | `ocaml/logic-gates/src/coding_adventures_logic_gates.ml:9-13` | merged; family is every constructor other than `Invalid_bit` |
 
 ## 9. Decision 8 — the type-confusion matrix (mandatory lane-local evidence)
 
@@ -593,8 +613,9 @@ java, kotlin, csharp, fsharp, haskell, swift, ocaml) have the type system do thi
 work for the rows that cannot be written; they still run the wide-integer rows.
 
 **Expected result of every row:** the call is rejected with the lane's
-identity from section 7 (the *type* identity where the lane has one, for
-example Python `TypeError`), it returns no value, and no input is modified. The
+bad-bit identity from section 7 (the *type* identity where the lane has one, for
+example Python `TypeError`; for Ruby, Elixir, Java, Kotlin, C#, F#, Dart, Go, Lua and Perl
+the same dedicated identity covers both the type and the range cause), it returns no value, and no input is modified. The
 matrix is run on **all eleven operations**, with the bad value in **each
 argument position**, with the other argument valid.
 
@@ -603,7 +624,7 @@ Minimum rows (a lane adds its own pitfalls in its per-language threat list):
 | Group | Rows |
 |---|---|
 | Strings that look numeric | `"0"`, `"1"`, `"1abc"`, `"1 "`, `" 1"`, `"1\n"`, `"0x1"`, `"1e0"`, `""` |
-| Booleans | `true`, `false` (Python `True` is an `int` subclass, `gates.py:42-49` rejects it deliberately) |
+| Booleans | `true`, `false` (Python `True` is an `int` subclass, `gates.py:67-71` rejects it deliberately) |
 | Absence | `nil` / `undef` / `None` / `null` / `undefined`; an Elixir atom such as `:ok` |
 | Floats | `1.0`, `0.0`, `-0.0`, `0.5`, `NaN`, `+Inf`, `-Inf` (in JavaScript `1.0` and `0.0` are accepted, see the rule table below) |
 | Wide and negative integers | `-1`, `2`, `255`, `256`, `257`, `2^31`, `2^32`, `2^32 + 1`, `2^53 + 1`, `2^63`, `2^64`, `2^64 + 1`, and the lane's `INT_MIN`/`INT_MAX` (the truncation rows: a lane that reduces its input modulo 256 or masks the low bit would accept `256` or `257`) |
@@ -619,20 +640,23 @@ so no row is ambiguous.
 
 | Lane | Accepts | Reject rows (must raise the section 7 identity) | Accepted rows (not reject rows) |
 |---|---|---|---|
-| python | `type(x) is int` and 0 or 1 (`gates.py:57-62`) | everything else, including `True`/`False`, `1.0`, `0.0`, numeric strings | none |
-| typescript | `typeof x === "number"` and `Object.is(x, 0)` or `Object.is(x, 1)` (after the library change in progress; today `gates.ts:77-82` accepts `-0`, so `-0` is a reject row only once that change lands, and the row fails until then) | `-0`, `-0.0`, `NaN`, `+-Inf`, `0.5`, `2`, every string, `1n`, `new Number(1)`, arrays, objects with `valueOf`, `null`, `undefined` | `1.0` and `0.0` are the **same JavaScript values** as `1` and `0` (the language has one `number` type), so they are accepted and are not matrix reject rows. This is the one explicit JS exception |
-| ruby | `Integer` and 0 or 1 (`gates.rb:90-98`) | `1.0`, `0.0`, `Rational(1, 1)`, `true`, `false`, strings, `nil`, arrays | none |
-| elixir | `is_integer` and 0 or 1 (`gates.ex:56-70`) | `1.0`, `true`, `false`, atoms, `nil`, strings, lists | none |
-| lua | `math.type(x) == "integer"` and 0 or 1 (Lua 5.3+, the runner already requires `math.type`, VER04r section 7.2 lua row) | `1.0`, `0.0`, `-0.0`, `NaN`, `+-inf`, strings (including `"1"`: Lua would coerce them in arithmetic), booleans, `nil`, tables | none. Today `gates.lua:72-76` is `value ~= 0 and value ~= 1`, which accepts `1.0`, so the `1.0` row fails until the Lua identity follow-up lands |
+| python | `type(x) is int` and 0 or 1 (`gates.py:67-71`) | everything else, including `True`/`False`, `1.0`, `0.0`, numeric strings | none |
+| typescript | `typeof x === "number"` and `Object.is(x, 0)` or `Object.is(x, 1)` (`gates.ts:85-93`; `-0` has been rejected since PR #19932) | `-0`, `-0.0`, `NaN`, `+-Inf`, `0.5`, `2`, every string, `1n`, `new Number(1)`, arrays, objects with `valueOf`, `null`, `undefined` | `1.0` and `0.0` are the **same JavaScript values** as `1` and `0` (the language has one `number` type), so they are accepted and are not matrix reject rows. This is the one explicit JS exception |
+| ruby | `Integer` and 0 or 1 (`gates.rb:139-141`; PR #19950) | `1.0`, `0.0`, `Rational(1, 1)`, `true`, `false`, strings, `nil`, arrays | none |
+| elixir | `is_integer` and 0 or 1 (`gates.ex:62-69`; PR #19952) | `1.0`, `true`, `false`, atoms, `nil`, strings, lists | none |
+| lua | `math.type(x) == "integer"` and 0 or 1 (Lua 5.3+, the runner already requires `math.type`, VER04r section 7.2 lua row) | `1.0`, `0.0`, `-0.0`, `NaN`, `+-inf`, strings (including `"1"`: Lua would coerce them in arithmetic), booleans, `nil`, tables | none. `gates.lua:186-192` tests `mtype(value) == "integer"`, so `1.0` is rejected (PR #19936) |
 | perl | defined, not a reference, and its string form matches `/\A[01]\z/` (decided by LGE-P1, PR #19927). The strings `"0"`/`"1"` and the integers 0/1 are accepted, as are the floats 0.0/1.0, because Perl stringifies them as `"0"`/`"1"`. Validation returns a fresh canonical integer | `"1.0"`, `" 1"`, `"1\n"`, `"01"`, `"+1"`, `"0 but true"`, `"1abc"`, the empty string, a `dualvar` whose string part is not a bit, references, `undef`, `NaN`, `Inf` | the strings `"0"`/`"1"` and the floats 0.0/1.0 (the documented Perl exception: the language does not separate the number from its string form) |
 
 **Gate rule: a failing row blocks the label.** A lane whose matrix has a row that
-currently fails (today: TypeScript `-0`, Lua `1.0`), or whose stable-identity
-follow-up of section 7 is still pending (Lua, Perl, Haskell, Go), **may not
-claim the lane-local label as passing** until the library change that fixes it
-has merged. The matrix is committed with the failing row marked, so the gap is
-visible, but the lane's release text may say "lane-local exhaustive" only when
-every row of its matrix passes.
+currently fails, or whose stable bad-bit identity (section 7) is not yet merged,
+**may not claim the lane-local label as passing** until the library change that
+fixes it has merged. The matrix is committed with the failing row marked, so the
+gap is visible, but the lane's release text may say "lane-local exhaustive" only
+when every row of its matrix passes. As of the 2026-11-24 errata every lane
+named in the first version of this rule (TypeScript `-0`, Lua `1.0`, and the
+Lua, Perl, Haskell and Go identities) has merged its fix, so the rule currently
+blocks no lane on these grounds; it remains in force for any lane whose matrix
+fails later.
 
 The statically typed lanes accept the integers 0 and 1 and reject every other
 value of their integer type; the booleans, floats and strings rows do not exist
@@ -640,7 +664,7 @@ there because the compiler refuses them before the call.
 
 **Why `-0` matters.** In JavaScript `-0 === 0`, so a check written as
 `value !== 0 && value !== 1` lets `-0` through as if it were a valid bit
-(`gates.ts:80`). `Object.is` tells them apart. The corpus side already refuses
+(`gates.ts:91`). `Object.is` tells them apart. The corpus side already refuses
 `-0` at the boundary for the same reason (VER04r section 7.2, `typescript, dart
 (web)` row), so the library and the runner then agree on one rule.
 
@@ -664,8 +688,8 @@ Recorded so the decision stays reviewable; none changes a decision above.
    1,048,576). That is compatible with this document: the basic corpus is a
    separate, smaller fixture with a different module name. The full adopter
    remains Rust-only and still needs S11c-2.
-2. **Go cannot be bound until its panic is typed** (section 7).
-3. **Haskell returns `Left String`**; it does not raise (section 7). The
+2. **Go's panic is typed** (PR #19935); the Go lane is bindable (section 7).
+3. **Haskell returns `Left (InvalidBit ...)`**; it does not raise (section 7). The
    decision's wording "raise free-text strings" is about identity, which still
    applies.
 4. **VER04r section 1.1 names the fixture directory `<module>-warrant-v2`**, but
@@ -684,8 +708,10 @@ Recorded so the decision stays reviewable; none changes a decision above.
 | LGE-S1d | build-tool: the `rust/logic-gates` input row, the `warrantAdopters` row and their tests (section 4.3) |
 | LGE-S1c | `logic-gates-basic-warrant-v2` fixture and profile (needs the generator on `main`: it is) |
 | LGE-S3 | `weakness-registry-v2` and the row-to-CWE mapping of section 9 |
-| LGE-R-go | Go: typed panic value for the bit rejection |
-| LGE-R-lua, LGE-R-perl, LGE-R-haskell | stable error identity (section 7 table) |
+| LGE-R-go | Go: typed panic value for the bit rejection (done, PR #19935) |
+| LGE-R-lua, LGE-R-perl, LGE-R-haskell | stable error identity (done: PRs #19936/#19957, #19944, #19942) |
+| LGE-GO-SIZEERR | Go: typed `SizeError` for shape/size panics (section 7.1; planned) |
+| (unnumbered) | Java/Kotlin `InvalidShapeException` (section 7.1; local branches, unmerged) |
 | CV2-S6b/S6c, S7, Go v2 port, S9 | the dependency of section 6 (owned by `portable-warrant.md`) |
 
 ## 12. Related specs
@@ -697,3 +723,89 @@ document), [10-logic-gates.md](10-logic-gates.md) (semantics and pedagogy),
 [VER04r](VER04r-warrant-corpus-v2.md) (the v2 corpus),
 `VER-BACKLOG.d/portable-warrant.md` (CV2 slice status) and
 `VER-BACKLOG.d/logic-gates-everywhere.md` (the program queue).
+
+## Errata 2026-11-24 (LGE-S1b)
+
+Recorded when the drift guard (`code/scripts/logic_gates_basic_drift.py`) was
+implemented; section 4 above is the intent, these are what the script does.
+
+* **Checks 10-12 are gated by `FIXTURE_REQUIRED`.** The fixture does not exist
+  until LGE-S1c. While the module constant `FIXTURE_REQUIRED` is `False` the
+  fixture checks are skipped only if the directory is absent AND the version
+  control index lists nothing tracked under it; if that query cannot be answered,
+  or any error other than "no such file" occurs, the guard fails closed. LGE-S1c
+  sets the constant to `True` in the same PR that adds the fixture, after which an
+  absent fixture fails.
+* **Parsers may not match nothing.** The bindings, the profile, the corpus
+  controls and the BUILD pins are each compared with the exact embedded set of 31
+  `(op, fault)` pairs (so an empty parse fails), and a pin line that mentions the
+  fault variable but is not exactly the Unix or Windows form is an error.
+* **All three BUILD variants are parsed** (`BUILD`, `BUILD_linux`, `BUILD_windows`,
+  the last in its `set X=..&& set Y=..` form); their basic-op pin sets must be
+  identical, and equal the corpus controls once the fixture exists. A corpus
+  required claim must be exactly `warrant/logic_gates_basic/exhaustive/<claim>`.
+* **Blank and comment lines inside a block are dropped** from the comparison
+  (they have no meaning to the grammar); block text is the remaining lines.
+* **Example subject = the declared operations the example body calls.** An example
+  calling only basic ops is copied; one calling none or only non-basic ops is not;
+  one mixing both is an error.
+* **Stricter link rule:** any symbolic link anywhere in an input's path is
+  refused (the real path must equal the repository path), not only links leading
+  outside the root. The opened descriptor must also be the file `lstat` saw.
+* **Duplicate block keys** in either document and duplicate corpus controls are
+  errors.
+* **The `warrantAdopters` row (4.3) is deferred to LGE-S1c**, with the fixture it
+  names; the `rust/logic-gates` repository-input row is already in place.
+
+## Errata 2026-11-24 (LGE-LG02-ERRATA)
+
+Every lane's section 7 binding row was re-read from the merged package on
+`origin/main`; the lane corpus runners match the exact class, so a stale row
+fails the lane. What changed, and why:
+
+* **ruby**: `ArgumentError`/`TypeError` -> `CodingAdventures::LogicGates::InvalidBitError`
+  (a subclass of `ArgumentError`; `gates.rb:100,141`, PR #19950).
+* **kotlin**: `IllegalArgumentException` -> `com.codingadventures.logicgates.InvalidBitException`
+  (`LogicGates.kt:76,501`, PR #19938).
+* **java**: `java.lang.IllegalArgumentException` -> `com.codingadventures.logicgates.InvalidBitException`
+  (`InvalidBitException.java:14`, PR #19937).
+* **csharp / fsharp**: `System.ArgumentOutOfRangeException` -> `CodingAdventures.LogicGates.InvalidBitException`
+  (`LogicGates.cs:12`, PR #19939; `LogicGates.fs:16`, PR #19941).
+* **elixir**: `ArgumentError` -> `CodingAdventures.LogicGates.InvalidBitError`
+  (`invalid_bit_error.ex:21`, PR #19952); the section 9 elixir row's line range is updated.
+* **dart**: `ArgumentError` -> `InvalidBitError` (a subclass; `gates.dart:9`, PR #19953).
+* **lua**: the `code` is `INVALID_BIT` (not `INVALID_INPUT`; `gates.lua:91`); floats
+  such as `1.0` are now rejected, so the stale "fails until the identity
+  follow-up lands" text is removed (PRs #19936, #19957).
+* **perl**: now a `CodingAdventures::LogicGates::Error` object with code `INVALID_BIT`
+  (PR #19944), no longer "to be added".
+* **haskell**: `Left String` -> `Left (InvalidBit ...)` of `LogicGateError` (PR #19942).
+* **go**: string panic -> typed `*InvalidBitError` (PR #19935); the Go lane is bindable.
+* **c, cpp**: rows said "package to be added"; both packages exist (PRs #19926, #19928)
+  and the rows now carry source lines. The C++ row is unchanged in value.
+* **typescript**: the "library change in progress" for `-0` has merged (PR #19932).
+* **python, swift, ocaml, rust**: identities verified unchanged; source lines refreshed
+  for python (`gates.py:67-71`).
+* **New subsection 7.1** defines the shape/size identity per lane, separately from the
+  bad-bit identity, with merged versus planned stated per lane. Runners match the
+  bad-bit identity exactly and the shape identity by family.
+* The sentence "Today sixteen lanes have a package" is replaced: all eighteen do.
+
+## Errata 2026-11-24 (LGE-S1c)
+
+* **The fixture exists** at `code/specs/fixtures/logic-gates-basic-warrant-v2/` (26 suites, 590,350 cases, 31
+  controls, generator 0.6.0), generated without `--bindings`. It has no `consumers.json`, `schema.json` or
+  `consumers.schema.json`: the shipped v2 fixtures have none, and section 5's layout list is corrected to
+  `corpus.json`, `chunks/`, `corpus.profile`, `cases.tfv`, `README.md`, `.gitattributes`.
+* **`FIXTURE_REQUIRED` is `True`**; checks 10 to 12 run. The generator `--check` (BUILD of
+  `rust/warrant-corpus-gen`) and the oracle `verify-v2` (BUILD of `python/warrant-oracle`) are wired, with
+  `--release` for the generator; the `warrantAdopters` row (section 4.3) exists with an empty `bindings`.
+  `max_ir_cost` needed no profile line.
+* **Finding: the shift-mask controls name a blind pin.** `shift-mask` on `not_gate` and `nand_not` makes
+  `*_rejects_non_bit` blind in the generator's stand-in (a constant expected `Err`) while it is the only claim
+  that kills the fault in the Rust harness (`p mod 8` is the identity on 0 and 1; the corpus's required claims
+  `*_truth_table` and `nand_not_equals_not` do not fail there). Section 4 check 11 says a pin the corpus calls
+  blind fails; the guard now allows exactly these two pins (`KNOWN_STAND_IN_BLIND`) and still fails any other.
+  Decision (2026-11-24): the two-pin exception is accepted for now; **LGE-S1d** gives the generator a real
+  witness for rejection claims and removes `KNOWN_STAND_IN_BLIND`, and must land before any lane binds
+  `shift-mask` literally.

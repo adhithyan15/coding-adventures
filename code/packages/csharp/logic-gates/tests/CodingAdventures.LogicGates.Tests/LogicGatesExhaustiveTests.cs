@@ -172,3 +172,108 @@ public sealed class LogicGatesExhaustiveTests
         Assert.Equal(1, LogicGates.And(one, one));
     }
 }
+
+public sealed class LogicGatesNaryTests
+{
+    private static readonly int[] Vals = [-1, 0, 1, 2];
+
+    private delegate int Gate(params int[] inputs);
+
+    private static IEnumerable<(string Name, Gate G, int Min, Func<int[], int> Ref)> Gates()
+    {
+        yield return ("AndN", LogicGates.AndN, 2, a => a.All(x => x == 1) ? 1 : 0);
+        yield return ("OrN", LogicGates.OrN, 2, a => a.Any(x => x == 1) ? 1 : 0);
+        yield return ("XorN", LogicGates.XorN, 0, a => a.Sum() % 2);
+    }
+
+    [Fact]
+    public void NullIsArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => LogicGates.AndN(null!));
+        Assert.Throws<ArgumentNullException>(() => LogicGates.OrN(null!));
+        Assert.Throws<ArgumentNullException>(() => LogicGates.XorN(null!));
+        // `AndN(null)` without the bang binds to the params array as null too.
+        Assert.Throws<ArgumentNullException>(() => LogicGates.XorN((int[])null!));
+    }
+
+    [Fact]
+    public void LengthCap()
+    {
+        foreach (var (_, g, _, _) in Gates())
+        {
+            Assert.Equal(0, g(new int[LogicGates.MaxInputs]));
+            var ex = Assert.Throws<ArgumentException>(() => g(new int[LogicGates.MaxInputs + 1]));
+            Assert.IsNotType<InvalidBitException>(ex);
+            Assert.Equal("inputs", ex.ParamName);
+        }
+    }
+
+    [Fact]
+    public void ShapeWinsOverBitErrors()
+    {
+        var big = new int[LogicGates.MaxInputs + 1];
+        big[0] = 7;
+        foreach (var (_, g, _, _) in Gates())
+        {
+            Assert.Throws<ArgumentException>(() => g(big));
+        }
+
+        Assert.Throws<ArgumentException>(() => LogicGates.AndN(9));
+        Assert.Throws<ArgumentException>(() => LogicGates.OrN(9));
+    }
+
+    [Fact]
+    public void FirstBadElementIsNamed()
+    {
+        var a = new int[100];
+        a[41] = 3;
+        a[77] = -1;
+        foreach (var (_, g, _, _) in Gates())
+        {
+            var ex = Assert.Throws<InvalidBitException>(() => g(a));
+            Assert.Equal("inputs[41]", ex.ParamName);
+            Assert.Equal(3, ex.Value);
+        }
+    }
+
+    [Fact]
+    public void ExhaustiveSmallLengths()
+    {
+        foreach (var (name, g, min, reference) in Gates())
+        {
+            for (var len = 0; len <= 8; len++)
+            {
+                var total = 1;
+                for (var k = 0; k < len; k++) total *= Vals.Length;
+                for (var code = 0; code < total; code++)
+                {
+                    var arr = new int[len];
+                    var c = code;
+                    for (var k = 0; k < len; k++) { arr[k] = Vals[c % 4]; c /= 4; }
+                    var before = (int[])arr.Clone();
+
+                    if (len < min)
+                    {
+                        Assert.Throws<ArgumentException>(() => g(arr));
+                    }
+                    else
+                    {
+                        var bad = Array.FindIndex(arr, x => x is not (0 or 1));
+                        if (bad >= 0)
+                        {
+                            var ex = Assert.Throws<InvalidBitException>(() => g(arr));
+                            Assert.Equal($"inputs[{bad}]", ex.ParamName);
+                            Assert.Equal(arr[bad], ex.Value);
+                        }
+                        else
+                        {
+                            Assert.Equal(reference(arr), g(arr));
+                        }
+                    }
+
+                    Assert.True(before.SequenceEqual(arr), name + " mutated caller array");
+                }
+            }
+        }
+    }
+}

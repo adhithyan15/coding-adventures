@@ -6,6 +6,19 @@ module CodingAdventures
       def initialize: (String param, String value_description) -> void
     end
 
+    MAX_INPUTS: Integer
+
+    module Combinational
+      MAX_SELECT_BITS: Integer
+      MAX_OUTPUTS: Integer
+      MAX_MUX_INPUTS: Integer
+    end
+
+    module Sequential
+      MAX_WIDTH: Integer
+      MAX_COUNTER_WIDTH: Integer
+    end
+
     # Fundamental gates
     def self.not_gate: (Integer a) -> Integer
     def self.and_gate: (Integer a, Integer b) -> Integer
@@ -24,8 +37,8 @@ module CodingAdventures
     def self.nand_xor: (Integer a, Integer b) -> Integer
 
     # Multi-input gates
-    def self.and_n: (*Integer inputs) -> Integer
-    def self.or_n: (*Integer inputs) -> Integer
+    def self.and_n: (*untyped inputs) -> Integer
+    def self.or_n: (*untyped inputs) -> Integer
 
     # Internal validation (private)
     # def self.validate_bit: (untyped value, ?String name) -> void

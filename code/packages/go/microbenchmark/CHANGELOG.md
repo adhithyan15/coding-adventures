@@ -1,0 +1,9 @@
+# Changelog
+
+## Unreleased
+
+- Use the Windows high-resolution performance counter for native measurements,
+  with exact overflow-checked elapsed-tick conversion and explicit query failures.
+- Validate counter arithmetic against an independent big-integer oracle and
+  fuzz inputs, and cover the actual Windows API and native array driver.
+- Added paired batch collection, ratio analysis, and indexed-array reference command.

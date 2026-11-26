@@ -1,0 +1,1 @@
+L=../../../../.build-locks/jvm-test-bootstrap.lock; mkdir -p ../../../../.build-locks; n=0; while ! mkdir "$L" 2>/dev/null; do n=$((n+1)); [ $n -ge 1800 ] && { echo "lock $L held for 30 min; remove it if no build is running" >&2; exit 1; }; sleep 1; done; trap 'rmdir "$L" 2>/dev/null' EXIT INT TERM; gradle --no-daemon --no-build-cache --max-workers=1 test check

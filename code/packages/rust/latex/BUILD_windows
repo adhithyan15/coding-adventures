@@ -1,1 +1,1 @@
-cargo test -p latex -- --nocapture
+cargo test --locked -p latex -- --nocapture

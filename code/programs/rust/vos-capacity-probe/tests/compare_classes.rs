@@ -238,8 +238,9 @@ fn a_killed_or_oom_row_is_compared_on_identity_result_cap_and_wall() {
 #[test]
 fn the_committed_b2_length_500_seed_1_and_2_rows_compare_clean() {
     // The motivating pair (VOS30 9.12.1): the committed B2 {length: 500, divergence: 1.0} rows
-    // for seeds 1 and 2 are `unknown` on the wall at 860,024 and 740,026 conflicts.  Re-running
-    // seed 1 under a slightly different clock gives seed 2's counters; that must not be a finding.
+    // for seeds 1 and 2 are `unknown` on the wall at different conflict counts (which counts
+    // depends on the recording's host, so none is asserted).  Re-running seed 1 under a slightly
+    // different clock gives seed 2's counters; that must not be a finding.
     let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../../../specs/data/vos30-capacity-results.json");
     let res = Results::from_text(&std::fs::read_to_string(path).unwrap()).unwrap();
@@ -257,7 +258,10 @@ fn the_committed_b2_length_500_seed_1_and_2_rows_compare_clean() {
             .clone()
     };
     let (one, two) = (find(1), find(2));
-    assert_eq!((one.conflicts, two.conflicts), (860_024, 740_026));
+    assert_ne!(
+        one.conflicts, two.conflicts,
+        "the pair needs different counters"
+    );
     let mut now = one.clone();
     now.conflicts = two.conflicts;
     now.propagations = two.propagations;

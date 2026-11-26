@@ -1,1 +1,1 @@
-cargo test -p dynval-runtime -- --nocapture
+cargo test --locked -p dynval-runtime -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p wasm-module-encoder
+cargo test --locked -p wasm-module-encoder

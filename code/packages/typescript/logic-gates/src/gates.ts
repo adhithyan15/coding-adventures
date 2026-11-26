@@ -55,6 +55,7 @@ import {
   CMOSXor,
   CMOSXnor,
 } from "@coding-adventures/transistors";
+import { MAX_WIDTH, MAX_NAME_LENGTH } from "./bounds.js";
 
 const _cmosNot  = new CMOSInverter();
 const _cmosNand = new CMOSNand();
@@ -74,6 +75,13 @@ const _cmosXnor = new CMOSXnor();
 // undefined behavior.
 
 export function validateBit(value: unknown, name: string = "input"): asserts value is Bit {
+  // The label is interpolated into error messages, so it must itself be a
+  // plain primitive string: interpolating an object would run its
+  // toString/Symbol.toPrimitive hooks (or throw a different error).
+  // Anything else, or an over-long string, becomes "argument".
+  if (typeof name !== "string" || name.length > MAX_NAME_LENGTH) {
+    name = "argument";
+  }
   // Rule (same for every gate in this package):
   //   * not a primitive number (boolean, string, bigint, null, undefined,
   //     objects incl. `new Number(1)`, symbols, functions)  -> TypeError
@@ -91,6 +99,32 @@ export function validateBit(value: unknown, name: string = "input"): asserts val
   if (!Object.is(value, 0) && !Object.is(value, 1)) {
     throw new RangeError(`${name} must be 0 or 1, got ${Object.is(value, -0) ? "-0" : value}`);
   }
+}
+
+// Re-exported so existing importers of this module keep working.
+export { MAX_NAME_LENGTH };
+
+/**
+ * Raised when the transistor layer (a dependency) returns something that is
+ * not the bit 0 or 1.  This is a defect in the dependency, not a caller
+ * mistake, so it is deliberately a different class from the TypeError /
+ * RangeError used to reject caller input.
+ */
+export class InternalGateError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InternalGateError";
+  }
+}
+
+// Defence in depth: replaces a bare `as Bit` cast.  If the transistor layer
+// ever yields a non-bit (e.g. 2, NaN, a string), fail loudly here rather
+// than let a corrupt "bit" flow into downstream circuits.
+function assertBitResult(r: unknown): Bit {
+  if (r !== 0 && r !== 1) {
+    throw new InternalGateError("transistor layer returned a non-bit result");
+  }
+  return r;
 }
 
 // Arity guard: gates take exactly N arguments. Too few means an argument is
@@ -140,7 +174,7 @@ export function NOT(a: Bit): Bit {
   checkArity("NOT", arguments.length, 1);
   validateBit(a, "a");
   // Delegate to the CMOS inverter (2 transistors: 1 PMOS + 1 NMOS).
-  return _cmosNot.evaluateDigital(a) as Bit;
+  return assertBitResult(_cmosNot.evaluateDigital(a));
 }
 
 /**
@@ -174,7 +208,7 @@ export function AND(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the CMOS AND gate (NAND + inverter = 6 transistors).
-  return _cmosAnd.evaluateDigital(a, b) as Bit;
+  return assertBitResult(_cmosAnd.evaluateDigital(a, b));
 }
 
 /**
@@ -208,7 +242,7 @@ export function OR(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the CMOS OR gate (NOR + inverter = 6 transistors).
-  return _cmosOr.evaluateDigital(a, b) as Bit;
+  return assertBitResult(_cmosOr.evaluateDigital(a, b));
 }
 
 /**
@@ -248,7 +282,7 @@ export function XOR(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the CMOS XOR gate (4 NAND gates = 16 transistors).
-  return _cmosXor.evaluateDigital(a, b) as Bit;
+  return assertBitResult(_cmosXor.evaluateDigital(a, b));
 }
 
 // ===========================================================================
@@ -296,7 +330,7 @@ export function NAND(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
-  return _cmosNand.evaluateDigital(a, b) as Bit;
+  return assertBitResult(_cmosNand.evaluateDigital(a, b));
 }
 
 /**
@@ -328,7 +362,7 @@ export function NOR(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
-  return _cmosNor.evaluateDigital(a, b) as Bit;
+  return assertBitResult(_cmosNor.evaluateDigital(a, b));
 }
 
 /**
@@ -361,7 +395,7 @@ export function XNOR(a: Bit, b: Bit): Bit {
   validateBit(a, "a");
   validateBit(b, "b");
   // Delegate to the dedicated CMOS XNOR gate (XOR + Inverter = 8 transistors).
-  return _cmosXnor.evaluateDigital(a, b) as Bit;
+  return assertBitResult(_cmosXnor.evaluateDigital(a, b));
 }
 
 // ===========================================================================
@@ -573,6 +607,19 @@ export function nandXnor(a: Bit, b: Bit): Bit {
 // TypeScript's Array.reduce does exactly this: it takes an array and
 // repeatedly applies a 2-argument function from left to right.
 
+// Cap the arity (MAX_WIDTH, from ./bounds.js) before any
+// iteration, then copy the arguments by index once so later work only ever
+// touches this private array.
+function snapshotArgs(gate: string, args: readonly unknown[]): Bit[] {
+  const n = args.length;
+  if (n > MAX_WIDTH) {
+    throw new RangeError(`${gate} accepts at most ${MAX_WIDTH} inputs, got ${n}`);
+  }
+  const copy: unknown[] = new Array(n);
+  for (let i = 0; i < n; i++) copy[i] = args[i];
+  return copy as Bit[];
+}
+
 /**
  * AND with N inputs. Returns 1 only if ALL inputs are 1.
  *
@@ -590,7 +637,8 @@ export function nandXnor(a: Bit, b: Bit): Bit {
  * andN(1, 1, 1, 1) // => 1
  * andN(1, 1, 0, 1) // => 0
  */
-export function andN(...inputs: Bit[]): Bit {
+export function andN(...args: Bit[]): Bit {
+  const inputs = snapshotArgs("andN", args);
   if (inputs.length < 2) {
     throw new RangeError("andN requires at least 2 inputs");
   }
@@ -611,7 +659,8 @@ export function andN(...inputs: Bit[]): Bit {
  * orN(0, 0, 0, 0) // => 0
  * orN(0, 0, 1, 0) // => 1
  */
-export function orN(...inputs: Bit[]): Bit {
+export function orN(...args: Bit[]): Bit {
+  const inputs = snapshotArgs("orN", args);
   if (inputs.length < 2) {
     throw new RangeError("orN requires at least 2 inputs");
   }
@@ -660,7 +709,8 @@ export function orN(...inputs: Bit[]): Bit {
  * xorN(1, 1, 1)       // => 1  (three 1-bits = odd)
  * xorN(1, 0, 1, 0)    // => 0  (two 1-bits = even)
  */
-export function xorN(...inputs: Bit[]): Bit {
+export function xorN(...args: Bit[]): Bit {
+  const inputs = snapshotArgs("xorN", args);
   // Validate every input up front (including the single-input case, which
   // used to return its argument unchecked), then fold from the XOR identity 0.
   for (let i = 0; i < inputs.length; i++) {
@@ -718,6 +768,7 @@ export function xorN(...inputs: Bit[]): Bit {
  * mux(0, 1, 1) // => 1  (selects b)
  */
 export function mux(a: Bit, b: Bit, sel: Bit): Bit {
+  checkArity("mux", arguments.length, 3);
   validateBit(a, "a");
   validateBit(b, "b");
   validateBit(sel, "sel");
@@ -745,6 +796,7 @@ export function mux(a: Bit, b: Bit, sel: Bit): Bit {
  * dmux(1, 1) // => [0, 1]  (input goes to b)
  */
 export function dmux(input: Bit, sel: Bit): [Bit, Bit] {
+  checkArity("dmux", arguments.length, 2);
   validateBit(input, "input");
   validateBit(sel, "sel");
   return [AND(input, NOT(sel)), AND(input, sel)];

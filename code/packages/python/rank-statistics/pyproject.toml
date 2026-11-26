@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-rank-statistics"
+version = "0.1.0"
+description = "Reusable sample medians and exact median confidence intervals"
+requires-python = ">=3.12"
+license = "MIT"
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.4"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rank_statistics"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"../../../specs/fixtures/microbenchmark-pairs-v1.json" = "tests/microbenchmark-pairs-v1.json"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=rank_statistics --cov-fail-under=95"
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

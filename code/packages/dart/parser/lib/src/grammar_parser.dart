@@ -8,10 +8,20 @@ typedef GrammarPostParseHook = ASTNode Function(ASTNode ast);
 typedef ASTNodeTransform = ASTNode? Function(ASTNode node, ASTNode? parent);
 
 class GrammarParserOptions {
-  const GrammarParserOptions({this.trace = false, this.traceWriter});
+  const GrammarParserOptions(
+      {this.trace = false, this.traceWriter, this.maxDepth});
 
   final bool trace;
   final void Function(String message)? traceWriter;
+
+  /// Maximum permitted `_parseRule` recursion depth. `null` (the
+  /// default) leaves the parser uncapped, mirroring the reference
+  /// opt-in guard: deep `(((…)))` nesting recurses once per rule call
+  /// and can overflow the native thread stack — an uncatchable
+  /// process abort in the reference (a `StackOverflowError` here) —
+  /// before any `Result`-returning entry point reports anything.
+  /// Lanes that face untrusted input must set this.
+  final int? maxDepth;
 }
 
 class ASTVisitor {
@@ -55,7 +65,8 @@ class GrammarParser {
     GrammarParserOptions? options,
   })  : _tokens = List<Token>.from(tokens),
         _trace = options?.trace ?? false,
-        _traceWriter = options?.traceWriter {
+        _traceWriter = options?.traceWriter,
+        _maxDepth = options?.maxDepth {
     for (var index = 0; index < grammar.rules.length; index++) {
       final rule = grammar.rules[index];
       _rules[rule.name] = rule;
@@ -78,6 +89,9 @@ class GrammarParser {
   int _position = 0;
   int _furthestPos = 0;
   final List<String> _furthestExpected = <String>[];
+  final int? _maxDepth;
+  int _depth = 0;
+  bool _depthExceeded = false;
 
   bool get newlinesSignificant => _newlinesSignificant;
 
@@ -106,6 +120,16 @@ class GrammarParser {
     final result = _parseRule(entryRule.name);
     if (result == null) {
       final token = _current();
+      // A depth-cap refusal takes priority over the generic
+      // furthest-failure message: the parse did not fail because the
+      // input was syntactically wrong, but because it nested deeper
+      // than we are willing to recurse.
+      if (_depthExceeded) {
+        throw GrammarParseError(
+          'input nests deeper than the supported limit ($_maxDepth)',
+          token,
+        );
+      }
       if (_furthestExpected.isNotEmpty) {
         final furthestToken = _furthestToken(token);
         throw GrammarParseError(
@@ -216,6 +240,26 @@ class GrammarParser {
   }
 
   ASTNode? _parseRule(String ruleName) {
+    final maxDepth = _maxDepth;
+    if (maxDepth != null && _depth >= maxDepth) {
+      // Refuse to descend further. Mark the refusal so `parse()` can
+      // emit a precise message, and record a failure at the current
+      // position so any surrounding furthest-failure logic stays sane.
+      // The check sits outside the memo lookup, so memoized hits count
+      // too — exactly like the reference.
+      _depthExceeded = true;
+      _recordFailure('input within the supported nesting limit');
+      return null;
+    }
+    _depth++;
+    try {
+      return _parseRuleInner(ruleName);
+    } finally {
+      _depth--;
+    }
+  }
+
+  ASTNode? _parseRuleInner(String ruleName) {
     final rule = _rules[ruleName];
     if (rule == null) {
       return null;

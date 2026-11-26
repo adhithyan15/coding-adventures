@@ -671,6 +671,86 @@ func TestCensusStrayEntries(t *testing.T) {
 	}
 }
 
+// The recorder's own marker files under traces/ (including the state-preloaded
+// marker that collect writes into every runner-home shard) are not stray; a
+// genuinely stray file still is.
+func TestCensusStateMarkerNotStray(t *testing.T) {
+	f := censusDirFix(t)
+	traces := filepath.Join(f.p.dir, "traces")
+	for _, n := range []string{StatePreloadedMarker, CollectedMarker, SerialFile} {
+		if err := os.WriteFile(filepath.Join(traces, n), []byte("x"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	_, s, _, _ := runCensus(t, f)
+	if s.Problems["stray_traces_entry"] != 0 {
+		t.Errorf("markers counted as stray: %v", s.Problems)
+	}
+	if err := os.WriteFile(filepath.Join(traces, "stray.txt"), []byte("x"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	_, s, _, _ = runCensus(t, f)
+	if s.Problems["stray_traces_entry"] != 1 {
+		t.Errorf("stray file not counted once: %v", s.Problems)
+	}
+}
+
+// A marker name is only a marker as a regular file: a directory, or a link to
+// one, with that name is stray, and is not reported as the marker's presence.
+func TestCensusMarkerNameAsDirectoryIsStray(t *testing.T) {
+	for name, mk := range map[string]func(p, other string) error{
+		"directory": func(p, _ string) error { return os.Mkdir(p, 0o755) },
+		"dir link":  func(p, other string) error { return os.Symlink(other, p) },
+	} {
+		f := censusDirFix(t)
+		traces := filepath.Join(f.p.dir, "traces")
+		if err := mk(filepath.Join(traces, StatePreloadedMarker), t.TempDir()); err != nil {
+			t.Fatal(err)
+		}
+		_, s, _, _ := runCensus(t, f)
+		if s.Problems["stray_traces_entry"] != 1 || s.StatePreloadedMarker {
+			t.Errorf("%s: problems %v marker %v", name, s.Problems, s.StatePreloadedMarker)
+		}
+	}
+}
+
+// The marker against collect's void list. Matching void: no problem. Marker
+// without the void: the named problem. No collect block: the fact only.
+func TestCensusStatePreloadedMarkerConsistency(t *testing.T) {
+	for name, tc := range map[string]struct {
+		void        string // the header's void list as JSON, "" for no records file
+		wantProblem int
+	}{
+		"matching void":     {`["state-preloaded"]`, 0},
+		"marker, no void":   {`["survivor"]`, 1},
+		"no collect block":  {"", 0},
+		"empty void":        {`[]`, 1},
+		"other tokens plus": {`["survivor","state-preloaded"]`, 0},
+	} {
+		f := censusDirFix(t)
+		if err := os.WriteFile(filepath.Join(f.p.dir, "traces", StatePreloadedMarker), []byte("/state"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		records := ""
+		if tc.void != "" {
+			records = filepath.Join(t.TempDir(), "records.jsonl")
+			hdr := fmt.Sprintf(`{"schema":"kiln-record-shard/1","binding_id":"%s","shard_index":0,"shard_count":1,"void":%s,"post_inventory_unexplained":0,"tracked_changed_unexplained":0}`, f.pre.BindingID, tc.void)
+			writeBytes(t, records, []byte(hdr+"\n"), 0o644)
+		}
+		_, s, _, mdPath := runCensus(t, f, func(o *CensusRunOptions) { o.Records = records })
+		if got := s.Problems["state_preloaded_marker_without_void"]; got != tc.wantProblem {
+			t.Errorf("%s: problem count %d, want %d (%v)", name, got, tc.wantProblem, s.Problems)
+		}
+		if s.Problems["stray_traces_entry"] != 0 || !s.StatePreloadedMarker {
+			t.Errorf("%s: stray %d marker fact %v", name, s.Problems["stray_traces_entry"], s.StatePreloadedMarker)
+		}
+		md, err := os.ReadFile(mdPath)
+		if err != nil || !strings.Contains(string(md), "state-preloaded marker present: true") {
+			t.Errorf("%s: Markdown lacks the marker fact (%v)", name, err)
+		}
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Synthetic summaries (no record directory)
 // ---------------------------------------------------------------------------

@@ -137,10 +137,19 @@ type CensusSummary struct {
 	CrossCheck            CrossCheckSummary `json:"cross_check"`
 	Languages             []LangSummary     `json:"languages"`
 	Collect               *CollectSummary   `json:"collect"`
+	// StatePreloadedMarker is a plain fact: traces/.state-preloaded is present as
+	// a regular file. The walk skips it (it is not an action), so this is what
+	// keeps "skipped" from meaning "unseen". Reported with or without --records;
+	// with a collect header the problem state_preloaded_marker_without_void checks
+	// it against the header's void list.
+	StatePreloadedMarker bool `json:"state_preloaded_marker"`
 	// ExecHead is the D48 step 6 report: whether the shard ran with exec heads
 	// and what the supervisor and the classifier made of them.
 	ExecHead ExecHeadSummary `json:"exec_head"`
-	Bounds   BoundsSummary   `json:"bounds"`
+	// ParseRules says how often the KILN04 D50 parse rules fired in this
+	// shard's actions (counts only; nothing here is a path).
+	ParseRules ParseRulesSummary `json:"parse_rules"`
+	Bounds     BoundsSummary     `json:"bounds"`
 	// Shapes are at most maxCensusShapes redacted line outlines of refusals
 	// and allowed divergences (see ShapeSummary).
 	Shapes []ShapeSummary `json:"shapes"`
@@ -443,6 +452,15 @@ type CollectSummary struct {
 	UnknownReasons map[string]int `json:"unknown_reasons"`
 }
 
+// ParseRulesSummary counts the firings of the two KILN04 D50 parse rules, so the
+// next census shows whether they matter.  RestartedSpawns: fork, vfork or clone
+// calls that ended `= ? ERESTARTNOINTR` and were dropped (rule 2b).  BareOpens:
+// successful read-only opens with no -y annotation that were accepted (rule 2c).
+type ParseRulesSummary struct {
+	RestartedSpawns int64 `json:"restarted_spawns"`
+	BareOpens       int64 `json:"bare_opens"`
+}
+
 // ExecHeadSummary is what the census says about exec heads (KILN04 D48 step 6).
 // Every key of every map is a member of a closed list written here (the
 // thirteen exec-unreadable sub-codes, the supervisor's six unclean reasons and
@@ -633,6 +651,7 @@ type censusAcc struct {
 	cross       CrossCheckSummary
 	langs       map[string]*langAcc
 	collect     *CollectSummary
+	markerSeen  bool // traces/.state-preloaded is a regular file
 	infra       string
 
 	// The exec-head report (ExecHeadSummary): the seal, and the sums the walk makes.
@@ -642,6 +661,7 @@ type censusAcc struct {
 	execHeadKillSteps            int
 	execHeadNotified             int64
 	execHeadSealMismatch         int
+	parseRules                   ParseRulesSummary
 
 	// Line shapes (trace.Shape): the distinct outlines kept, by key, the number
 	// of outline computations spent and the occurrences not kept.
@@ -735,12 +755,18 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 		acc.problem("traces_unreadable")
 	}
 	for _, e := range ents {
+		// A marker is only a marker as a regular file: a directory or a link
+		// with that name is somebody else's entry and is counted as stray below.
+		isMarker := isTracesMarker(e.Name()) && e.Type().IsRegular()
+		if isMarker && e.Name() == StatePreloadedMarker {
+			acc.markerSeen = true
+		}
 		if acc.actions.Total >= maxCensusActions {
 			acc.skipped++
 			continue
 		}
-		if e.Name() == ".seq" || e.Name() == ".serial" || e.Name() == ".collected" {
-			continue // the recorder's own sequence counter, lock and collected marker
+		if isMarker {
+			continue // the recorder's own sequence counter, lock, collected marker and state-preloaded marker
 		}
 		if !hexDigest(e.Name()) || !e.Type().IsDir() {
 			acc.problem("stray_traces_entry")
@@ -750,6 +776,19 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 	}
 	if o.Records != "" {
 		acc.collect = readCollectSummary(o.Records, acc)
+		// collect writes the marker and names the void in one pass; a marker the
+		// header does not account for means the two disagree.
+		if acc.collect != nil && acc.markerSeen {
+			named := false
+			for _, v := range acc.collect.Void {
+				if v == voidStatePreloaded {
+					named = true
+				}
+			}
+			if !named {
+				acc.problem("state_preloaded_marker_without_void")
+			}
+		}
 	}
 	if acc.infra == "" && len(acc.sizesAll) == 0 {
 		acc.infra = "no step trace was found to parse"
@@ -1183,6 +1222,12 @@ func (r *censusRun) readCensus(adir, name string) (censusState, *CensusDoc) {
 			}
 		}
 	}
+	for _, n := range []int64{doc.ParseRestartedSpawns, doc.ParseBareOpens} {
+		if n < 0 || n > traced.MaxParseRuleCount {
+			a.problem("census_bad_entry")
+			return censusInvalid, nil
+		}
+	}
 	if doc.ExecHeadTmpfsExecs < 0 || doc.ExecHeadTmpfsExecs > traced.MaxTmpfsExecs {
 		a.problem("census_bad_entry")
 		return censusInvalid, nil
@@ -1214,6 +1259,8 @@ func (r *censusRun) readCensus(adir, name string) (censusState, *CensusDoc) {
 	// no reason, so an action whose every exec was believed has an empty census
 	// and must still count as having exercised the mechanism.
 	a.execHead.TmpfsExecs = satAdd(a.execHead.TmpfsExecs, doc.ExecHeadTmpfsExecs)
+	a.parseRules.RestartedSpawns = satAdd(a.parseRules.RestartedSpawns, doc.ParseRestartedSpawns)
+	a.parseRules.BareOpens = satAdd(a.parseRules.BareOpens, doc.ParseBareOpens)
 	if doc.Total == 0 && doc.OverflowTotal == 0 && len(doc.Entries) == 0 {
 		return censusEmpty, nil
 	}
@@ -1711,7 +1758,7 @@ func readCollectSummary(path string, a *censusAcc) *CollectSummary {
 func (a *censusAcc) summary(top int) *CensusSummary {
 	s := &CensusSummary{
 		Schema: CensusSummarySchema, InfrastructureFailure: a.infra, Host: a.host,
-		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect, ExecHead: a.execHeadSummary(),
+		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect, StatePreloadedMarker: a.markerSeen, ExecHead: a.execHeadSummary(), ParseRules: a.parseRules,
 		Reasons: []KindSummary{}, Languages: []LangSummary{},
 	}
 	for k, v := range a.problems {
@@ -1868,6 +1915,22 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 		} else {
 			f.Unclean["other"]++
 		}
+	}
+	if sc.Started && !sc.StraceStderrEmpty {
+		c := sc.StraceStderrCode
+		if c == "" {
+			c = StraceErrUnrecorded
+		}
+		f.StraceStderrCodes[c]++ // Validate allows only the closed list
+		if sc.RootStatus != 0 {
+			f.StraceStderrFailedSteps[c]++ // the same closed list, so equally bounded
+		}
+		if sc.StraceExit >= 0 {
+			f.StraceExits[StraceExitLabel(sc.StraceExit)]++
+		}
+	}
+	if sc.Started && sc.StraceSignal != 0 {
+		f.StraceSignals[StraceSignalLabel(sc.StraceSignal)]++
 	}
 	if sc.Exit125 {
 		f.Exit125++

@@ -29,7 +29,7 @@ use coding_adventures_warrant_grammar::parser::WarrantFile;
 
 use crate::arith::check_v0_wraps;
 use crate::cost::{admit_check_cost, Depth, IrWork};
-use crate::domains::resolve_claim;
+use crate::domains::resolve_claim_in;
 use crate::error::{code, GenError};
 use crate::eval::Program;
 use crate::json::Json;
@@ -126,7 +126,8 @@ pub fn enumerate_analysed(
             }
         }
         let program = Program::new(&lowered.models)
-            .with_ops(&lowered.ops, lowered.version == coding_adventures_warrant_grammar::parser::Version::V0);
+            .with_ops(&lowered.ops, lowered.version == coding_adventures_warrant_grammar::parser::Version::V0)
+            .with_decls(crate::types::Decls::new(&lowered.types));
         let env = DomainEnv::new(file);
         let mut work = IrWork::new(Depth::Full);
         let mut ordinals = 0u64;
@@ -136,7 +137,7 @@ pub fn enumerate_analysed(
         // refused (VER04r 14: bounds are checked before the first case).
         let mut resolved = Vec::with_capacity(lowered.suites.len());
         for (suite, cost) in lowered.suites.iter().zip(&analysis.suite_costs) {
-            let domains = resolve_claim(file, &env, suite, profile.budget)?;
+            let domains = resolve_claim_in(file, &env, suite, profile.budget, program.decls())?;
             work.charge(cost.total, domains.product)
                 .map_err(|e| e.at(&suite.claim))?;
             // [D19]: the per-case check of every call's arguments against the callee's

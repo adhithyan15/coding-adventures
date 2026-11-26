@@ -294,6 +294,30 @@ type Census struct {
 	// are raised (loadChain), so it is never less than their sum.  Saturates at
 	// MaxTmpfsExecs; nothing reads it for a verdict.
 	TmpfsExecs int64
+	// RestartedSpawns and BareOpens count how often the two KILN04 D50 parse
+	// rules fired: a fork, vfork or clone that ended `= ? ERESTARTNOINTR` and
+	// was dropped (rule 2b), and a successful read-only open with no -y
+	// annotation that was accepted (rule 2c).  Summed over the action's steps
+	// from trace.Trace; saturate at MaxParseRuleCount; nothing reads them for a
+	// verdict.  They exist so the next census shows whether the rules matter.
+	RestartedSpawns, BareOpens int64
+}
+
+// MaxParseRuleCount bounds Census.RestartedSpawns and Census.BareOpens.
+const MaxParseRuleCount = 1 << 31
+
+// noteParseRules adds one trace's D50 counters.
+func (c *Census) noteParseRules(t *trace.Trace) {
+	if c == nil {
+		return
+	}
+	add := func(dst *int64, n int) {
+		if n > 0 {
+			*dst = min(*dst+int64(n), MaxParseRuleCount)
+		}
+	}
+	add(&c.RestartedSpawns, t.RestartedSpawns)
+	add(&c.BareOpens, t.BareOpens)
 }
 
 // MaxTmpfsExecs bounds Census.TmpfsExecs; it equals record.MaxExecHeadCount

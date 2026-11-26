@@ -1,1 +1,1 @@
-cargo test -p xls-writer -- --nocapture
+cargo test --locked -p xls-writer -- --nocapture

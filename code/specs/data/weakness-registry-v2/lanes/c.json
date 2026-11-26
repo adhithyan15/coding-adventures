@@ -2084,7 +2084,7 @@
             }
           ],
           "becomes_when": [
-            "analyzer-rule:c.no-shift-no-signed-arithmetic",
+            "analyzer-rule:c.integer-value-range",
             "analyzer-rule:c.no-pointer-array-heap",
             "LGE-C3",
             "LGE-W1",
@@ -2431,7 +2431,7 @@
           "reason": "The language exclusion is proposed, not signed off: the (c, CWE-1321) whitelist entry in VER15a section 5.5 needs its reviewer sign-off before the row can read 'excluded by language semantics (not machine-checked)'. C has no objects with prototype chains.",
           "evidence": [],
           "becomes_when": [
-            "reviewer sign-off on the (c, CWE-1321) language exclusion (LGE-S3b)"
+            "LGE-S3b"
           ],
           "becomes_status": "excluded-by-language"
         },
@@ -2525,7 +2525,7 @@
             }
           ],
           "becomes_when": [
-            "analyzer-rule:c.no-shift-no-signed-arithmetic",
+            "analyzer-rule:c.integer-value-range",
             "LGE-C3",
             "LGE-W1",
             "LGE-S3v"
@@ -2580,6 +2580,11 @@
               "closure_id": "language-guarantee:header-documents-status-code",
               "state": "unverified",
               "ref": "PR #19926 code/packages/c/logic-gates/include/logic_gates.h:12-16"
+            },
+            {
+              "closure_id": "lane-corpus:exhaustive-rejection-and-truth-tables",
+              "state": "claimed",
+              "ref": "code/packages/c/logic-gates/tests/logic_gates_test.c:105-123 (origin/main; LG_INVALID returned for each bad value at :108-114)"
             }
           ],
           "becomes_when": [
@@ -2681,7 +2686,7 @@
             }
           ],
           "becomes_when": [
-            "analyzer-rule:c.no-shift-no-signed-arithmetic",
+            "analyzer-rule:c.no-shift-operators",
             "LGE-C3",
             "LGE-W1",
             "LGE-S3v"

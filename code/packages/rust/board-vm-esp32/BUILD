@@ -1,1 +1,1 @@
-cargo test -p board-vm-esp32 -- --nocapture
+cargo test --locked -p board-vm-esp32 -- --nocapture

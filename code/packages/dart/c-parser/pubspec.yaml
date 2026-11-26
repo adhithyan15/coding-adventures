@@ -1,0 +1,26 @@
+name: coding_adventures_c_parser
+version: 0.1.0
+description: C parser driven by the compiled c.grammar grammar. Dart lane of c-parser.
+repository: https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/dart/c-parser
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_c_lexer:
+    path: ../c-lexer
+  coding_adventures_grammar_tools:
+    path: ../grammar-tools
+  coding_adventures_lexer:
+    path: ../lexer
+  coding_adventures_parser:
+    path: ../parser
+
+dev_dependencies:
+  test: ^1.24.0
+  coverage: ^1.6.0
+  coding_adventures_pbt:
+    path: ../pbt
+  coding_adventures_fuzz:
+    path: ../fuzz
