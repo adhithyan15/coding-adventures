@@ -257,6 +257,10 @@ def outcome_domain(case: dict, sem: Semantics) -> dict:
     low, high = _domain_window(case)
     types = case.get("types", {})
     try:
+        if "types" in case:
+            # R114: a present table is read whole, as `descriptor`, even `null`
+            # or `[]` (only an absent one means `{}`).
+            check_types_table(types, "descriptor")
         desc, ty = descriptor_for(case["descriptor"], case["type"], types, sem)
     except Refusal as refusal:
         return {"error": refusal.code}

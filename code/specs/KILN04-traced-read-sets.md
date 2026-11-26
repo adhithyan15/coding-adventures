@@ -666,6 +666,27 @@ record such a call as an OBSERVED READ with an unknown result (the path is lost,
 so the observation would have to be "something under the working directory may
 have been read"), which a later stage could judge.
 
+**Real-strace refusal test oracle.** The Linux `TestSandboxStraceDyingThreads`
+integration test may classify one additional observation as an expected
+*refusal*, never as an accepted trace: the exact `openat` resumed line whose
+result is bare `= ?`. It is a known dying-thread shape only when the full trace
+later contains a parsed terminal exit for that same PID before any known spawn
+record reuses the PID. A known spawn may be printed as one complete call or as
+an unfinished start and a later resumed half; for the latter, the helper must
+match the same PID and syscall while allowing interleaved trace lines. It must
+validate both forms with the trace parser before treating a child PID as a known
+generation. Successful `clone3` remains refused by production policy; the test
+oracle must require the parser to recognize that exact refusal and separately
+validate the translated child PID/parent relationship through a parser-supported
+spawn record. The test helper must require the existing refusal reason, the exact
+refusal line and PID, and that later terminal record; a different syscall,
+trailing text, missing or earlier exit, another PID's exit, or an ambiguous PID
+generation fails the test. This oracle does not change the D35 parser policy:
+the production readers still refuse the incomplete trace. Keep the 20 completed
+probe iterations, empty stderr and reader agreement checks. The predicate and
+its negative controls must be testable on every host OS even though only Linux
+runs the real-strace driver.
+
 
 **Process model.**
 - A first pass collects every child pid a `fork`, `vfork` or `clone`
@@ -973,6 +994,11 @@ fails the backstop. It requires, in order:
 4. a file over 1 GiB, a check over 20 minutes, or a file whose size changed
    while it was read is an error; 8 workers hash in parallel;
 5. an error lists at most 16 paths and says how many more there were.
+
+The deadline regression test must use an already-expired zero-duration budget,
+not a tiny positive duration: expiration of a positive timer depends on host
+timer resolution and scheduling. This is a test technique only; the production
+budget remains 20 minutes.
 
 Smudge filters, `ident`, `autocrlf` and LFS pointers are caught by their
 effect on the bytes. On Windows there are no executable bits and no
@@ -2144,6 +2170,17 @@ and `kiln:recorder` is unchanged. `step_netns` is true only when strace was star
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
 step's own `execve` is in the trace (a refused sandbox has none).
+
+The helper's JSON privacy test must inspect the complete serialized `StepSidecar`.
+It rejects duplicate object members before decoding, compares member names after
+JSON escape decoding, and checks the decoded remaining fields for copied stderr,
+secret text, and fixture-PID text. The only exempt values are valid lowercase
+64-character SHA-256 strings in the exact digest fields `binding_id`,
+`line_sha256`, `trace_sha256` and `exechead_sha256`; arbitrary identifiers,
+unknown fields, malformed digest values, and duplicate keys do not receive an
+exemption. Secret and fixture-PID text is checked after JSON decoding, including
+escaped string values. This is a test oracle for the serialized sidecar, not a
+change to its schema or production classification.
 
 **P15. `survivor` and `state-preloaded` (stage 4 PR 2b-2c-4).** Two header `void`
 tokens that the merge already knew (M3, M4) and nothing wrote until now.

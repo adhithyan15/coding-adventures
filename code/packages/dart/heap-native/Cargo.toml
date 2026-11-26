@@ -12,7 +12,7 @@ name = "heap_native"
 crate-type = ["cdylib"]
 
 [dependencies]
-heap = { path = "../../rust/heap" }
+heap = { package = "coding-adventures-heap", version = "0.1.0", path = "../../rust/heap" }
 
 [profile.release]
 opt-level = 3
