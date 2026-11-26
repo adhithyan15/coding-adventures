@@ -106,7 +106,9 @@ BAD_TABLES = {
     "variant with a repeated constructor name": {
         "V": {"kind": "variant", "ctors": [["A", []], ["A", ["U8"]]]}
     },
-    "field of an undeclared type": {"P": {"kind": "record", "fields": [["a", "Ghost"]]}},
+    "field of an undeclared type": {
+        "P": {"kind": "record", "fields": [["a", "Ghost"]]}
+    },
     "field of an undeclared type under Option": {
         "P": {"kind": "record", "fields": [["a", "Option<Ghost>"]]}
     },
@@ -115,6 +117,9 @@ BAD_TABLES = {
     },
     "Result with an undeclared error": {
         "P": {"kind": "record", "fields": [["a", "Result<U8,Ghost>"]]}
+    },
+    "field with a named Bytes width": {
+        "P": {"kind": "record", "fields": [["a", "Bytes<N>"]]}
     },
     "field type that is not a type text": {
         "P": {"kind": "record", "fields": [["a", "U8 U8"]]}
@@ -131,6 +136,11 @@ GOOD_TABLES = {
     "2 constructors": {"V": {"kind": "variant", "ctors": [["A", []], ["B", ["U8"]]]}},
     "64 constructors of 8 fields": {
         "V": {"kind": "variant", "ctors": many(64, lambda n: [f"K{n}", ["U8"] * 8])}
+    },
+    "a List of a plain type": {"P": {"kind": "record", "fields": [["a", "List<U8>"]]}},
+    "a Result with a declared error": {
+        "E": ERR,
+        "P": {"kind": "record", "fields": [["a", "Result<U8,E>"]]},
     },
     "records that share a field type without a cycle": {
         "Inner": {"kind": "record", "fields": [["x", "U8"]]},

@@ -47,6 +47,29 @@ def test_chunk_calls_that_do_not_sum_to_expected_calls_are_chunk_file(line, delt
     assert "expected_calls" in caught.value.message
 
 
+def test_a_predicate_suite_is_held_to_the_calls_sum_too():
+    corpus, row, data = sealed(BINDER_U8)
+    assert "expected_sha256" not in row and row["expected_calls"] > 0
+    altered = with_calls(data, 0, 1)
+    row = row | {"chunks_sha256": hashlib.sha256(altered).hexdigest()}
+    with pytest.raises(Refusal) as caught:
+        C.check_chunk_file(altered, C.build_suite(corpus, row))
+    assert caught.value.code == "chunk-file"
+    assert "expected_calls" in caught.value.message
+
+
+@pytest.mark.parametrize("field", ["expected_calls", "cases", "discarded"])
+def test_a_count_that_is_a_float_or_a_bool_is_chunk_file(field):
+    corpus, row, data = sealed(BINDER_U8)
+    for fake in (float(row[field]), bool(row[field]) if row[field] in (0, 1) else None):
+        if fake is None:
+            continue
+        edited = row | {field: fake}
+        with pytest.raises(Refusal) as caught:
+            C.check_chunk_file(data, C.build_suite(corpus, edited))
+        assert caught.value.code == "chunk-file"
+
+
 def test_a_row_whose_expected_calls_moved_is_chunk_file_too():
     refuse_file(sealed(A_AND_B, **REFINED), expected_calls=1)
 
@@ -59,6 +82,9 @@ def test_a_file_whose_calls_sum_to_the_row_is_accepted():
 # -- R107 (d) ---------------------------------------------------------------------------
 FIXED_TAG = ["bit_not", ["var", "b"]]  # ir.fixed: a level this runner lacks
 BINDER = [("b", "U8", {"d": "u8_all", "size": 256})]
+BINDER_U8 = BINDER
+LIVE_ELSEWHERE = ["eq", FIXED_TAG, lit_u8(0)]
+NEEDS_FIXED = ["ir.core", "ir.fixed"]
 
 
 def build(**edits):
@@ -132,3 +158,31 @@ def test_a_malformed_oracle_is_still_refused_not_crashed():
 
 def test_the_scan_is_a_no_op_on_a_good_suite():
     assert build().m == 1
+
+
+def nested_not(times):
+    node = ["lit", True]
+    for _ in range(times):
+        node = ["not", node]
+    return node
+
+
+@pytest.mark.parametrize(
+    "body",
+    [nested_not(70), ["eq", ["model_call", "nope", [["var", "b"]]], lit_u8(0)]],
+    ids=["depth over 64", "model_call to an unknown model"],
+)
+def test_depth_and_model_order_are_checked_before_level_missing(body):
+    with pytest.raises(Refusal) as caught:
+        build(admit=LIVE_ELSEWHERE, body=body, requires=NEEDS_FIXED)
+    assert caught.value.code == "corpus"
+
+
+def test_a_not_live_reference_suite_with_a_legal_subject_stays_level_missing():
+    corpus, row = bare(
+        BINDER, expected=["model_call", "m", [["var", "b"]]], result_type="U8"
+    )
+    row = copy.deepcopy(row) | {"admit": LIVE_ELSEWHERE, "requires": NEEDS_FIXED}
+    with pytest.raises(Refusal) as caught:
+        C.build_suite(corpus, row)
+    assert caught.value.code == "level-missing"

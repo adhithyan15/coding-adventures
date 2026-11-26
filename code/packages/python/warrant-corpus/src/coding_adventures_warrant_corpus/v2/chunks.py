@@ -393,10 +393,16 @@ def _assemble_suite(
     sides = (
         [oracle.get("subject"), oracle.get("expected")] if type(oracle) is dict else []
     )
-    scan_tags(row.get("admit"), "admit")
-    scan_tags(row.get("body"), "body")
-    scan_tags(sides[1] if sides else None, "expected")
-    scan_tags(sides[0] if sides else None, "body")
+    order = corpus.get("model_order")
+    known = (
+        set(order)
+        if type(order) is list and all(type(n) is str for n in order)
+        else None
+    )
+    scan_tags(row.get("admit"), "admit", known)
+    scan_tags(row.get("body"), "body", known)
+    scan_tags(sides[1] if sides else None, "expected", known)
+    scan_tags(sides[0] if sides else None, "body", known)
     names, tys, descs, product = _read_binders(row, types, sem)
     if product > MAX_SUITE_PRODUCT:
         raise _corpus_error(
@@ -607,8 +613,8 @@ def check_chunk_file(
     ``chunk-file``: its size, its digest (``chunks_sha256``), its ASCII text and
     line count (``m`` lines, each ended by LF), each line's grammar, the chunk
     index in sequence, ``first_admitted`` as the running total of ``cases``, the
-    total against the row's ``cases`` and ``discarded``, the ``calls`` total
-    against the row's ``expected_calls`` ([D73]), and finally the two suite
+    ``calls`` total against the row's ``expected_calls`` ([D73]), the ``cases``
+    total against the row's ``cases`` and ``discarded``, and finally the two suite
     digests, which are the ``warrant-chunks-v1`` framing of the per-chunk
     digests.  The expected column is there exactly when the suite is a
     ``reference`` suite.  The row's *slim* digests are **not** compared (R46).
@@ -640,10 +646,12 @@ def check_chunk_file(
         )
         total_calls += line.calls
         lines.append(line)
-    if total_calls != row["expected_calls"]:  # [D73]
-        raise _bad_file("the chunk calls do not sum to the row's expected_calls")
+    if not is_index(row["expected_calls"]) or total_calls != row["expected_calls"]:
+        raise _bad_file("the chunk calls do not sum to the row's expected_calls")  # D73
     if (
-        admitted_so_far != row["cases"]
+        not is_index(row["cases"])
+        or not is_index(row["discarded"])
+        or admitted_so_far != row["cases"]
         or row["discarded"] != row["product"] - admitted_so_far
     ):
         raise _bad_file(

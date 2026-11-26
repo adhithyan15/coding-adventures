@@ -431,7 +431,9 @@ def _check_references(types: dict, refuse: Callable[[str], Refusal]) -> None:
             try:
                 tokens = _cut_into_tokens(text)
             except Refusal as error:
-                raise refuse("a field type is not the text of a type") from error
+                raise refuse(
+                    "a field type has a character outside the type syntax"
+                ) from error
             for token in tokens:
                 if not _is_word(token) or token in BUILTIN_TYPE_NAMES:
                     continue
