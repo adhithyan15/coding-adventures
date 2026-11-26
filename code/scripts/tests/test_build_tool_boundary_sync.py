@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import re
 import shutil
 import sys
@@ -65,10 +66,15 @@ def roots_of(root: Path, boundary_id: str) -> list[str]:
     ]["exact_roots"]
 
 
-def snapshot(root: Path) -> dict[Path, bytes]:
-    return {
-        path: path.read_bytes() for path in sorted(root.rglob("*")) if path.is_file()
-    }
+def snapshot(root: Path) -> dict[Path, bytes | None]:
+    result: dict[Path, bytes | None] = {}
+    for path in sorted(root.rglob("*")):
+        try:
+            if path.is_file():
+                result[path] = path.read_bytes()
+        except PermissionError:  # an unreadable file is part of some scenarios
+            result[path] = None
+    return result
 
 
 class SyncBoundaryTests(unittest.TestCase):
@@ -77,6 +83,9 @@ class SyncBoundaryTests(unittest.TestCase):
         self.addCleanup(self._tmp.cleanup)
         self.root = Path(self._tmp.name)
         copy_working_set(self.root)
+        # A missing scan root is an error, so the miniature repo has them all.
+        for scan_root in sync.SCAN_ROOTS:
+            (self.root / scan_root).mkdir(parents=True, exist_ok=True)
         # What discovery "sees": by default exactly what the fixture says.
         self.discovered = {
             RUST_BOUNDARY: roots_of(self.root, RUST_BOUNDARY),
@@ -252,6 +261,144 @@ class SyncBoundaryTests(unittest.TestCase):
         stray.write_text(f'let d = "{digest}"\n', encoding="utf-8")
         self.assert_refuses_without_writing("pinned in files this tool does not")
 
+    # ---- fail-closed stale-digest safety net ------------------------------
+
+    def add_root(self) -> None:
+        self.discovered[RUST_BOUNDARY].append("code/packages/rust/zzz-new-crate")
+
+    def test_second_stale_copy_in_a_registered_file_is_an_error(self) -> None:
+        self.add_root()
+        old = runner.repository_source_input_boundary_digest(load_boundary(self.root))
+        go_path = self.root / sync.DIGEST_PINS[0][0]
+        go_path.write_text(
+            go_path.read_text("utf-8") + f'\n// stale copy: "{old}"\n',
+            encoding="utf-8",
+        )
+        self.assert_refuses_without_writing("still contains the stale boundary digest")
+
+    def test_second_stale_copy_under_another_case_key_is_an_error(self) -> None:
+        self.add_root()
+        old = runner.repository_source_input_boundary_digest(load_boundary(self.root))
+        case = next((self.root / sync.CASES_DIR).glob("*.json"))
+        case.write_text(
+            case.read_text("utf-8").replace(
+                '"boundary_sha256"', f'"other_digest": "{old}", "boundary_sha256"', 1
+            ),
+            encoding="utf-8",
+        )
+        self.assert_refuses_without_writing("still contains the stale boundary digest")
+
+    def test_scan_has_no_suffix_allowlist_and_skips_binary_and_narrative(self) -> None:
+        self.add_root()
+        old = runner.repository_source_input_boundary_digest(load_boundary(self.root))
+        programs = self.root / "code/programs/zz"
+        programs.mkdir(parents=True)
+        (programs / "pin.unheardof").write_text(old, encoding="utf-8")
+        self.assert_refuses_without_writing("pin.unheardof")
+        (programs / "pin.unheardof").unlink()
+
+        # A binary file that happens to contain the bytes is not a pin site.
+        (programs / "blob.bin").write_bytes(b"\0" + old.encode("ascii"))
+        # The dated narrative copy is deliberately preserved.
+        narrative = self.root / next(iter(sync.NARRATIVE_EXCLUSIONS))
+        narrative.parent.mkdir(parents=True, exist_ok=True)
+        narrative.write_text(f"validated {old}\n", encoding="utf-8")
+        self.assertEqual(self.invoke()[0], 0)
+        self.assertIn(old, narrative.read_text("utf-8"))
+        # .github is scanned too.
+        self.assertIn(".github", sync.SCAN_ROOTS)
+
+    @unittest.skipIf(hasattr(os, "geteuid") and os.geteuid() == 0, "root ignores modes")
+    def test_unreadable_file_during_scan_is_an_error(self) -> None:
+        self.add_root()
+        stray = self.root / "code/programs/zz/secret.txt"
+        stray.parent.mkdir(parents=True)
+        stray.write_text("x", encoding="utf-8")
+        stray.chmod(0)
+        self.addCleanup(stray.chmod, 0o644)
+        self.assert_refuses_without_writing("cannot be read while scanning")
+
+    @unittest.skipIf(hasattr(os, "geteuid") and os.geteuid() == 0, "root ignores modes")
+    def test_unreadable_directory_during_scan_is_an_error(self) -> None:
+        self.add_root()
+        directory = self.root / "code/programs/zz"
+        directory.mkdir(parents=True)
+        directory.chmod(0)
+        self.addCleanup(directory.chmod, 0o755)
+        self.assert_refuses_without_writing("cannot scan a directory")
+
+    def test_symlinked_target_is_refused_and_not_written_through(self) -> None:
+        self.add_root()
+        victim = self.root.parent / f"{self.root.name}-victim.txt"
+        victim.write_text("precious", encoding="utf-8")
+        self.addCleanup(victim.unlink)
+        pin = self.root / sync.DIGEST_PINS[1][0]
+        pin.unlink()
+        pin.symlink_to(victim)
+        before = snapshot(self.root)
+        code, _out, err = self.invoke()
+        self.assertEqual(code, 2)
+        self.assertIn("symlink", err)
+        self.assertEqual(victim.read_text("utf-8"), "precious")
+        self.assertTrue(pin.is_symlink())
+        self.assertEqual(snapshot(self.root), before)
+
+    def test_target_resolving_outside_the_repository_is_refused(self) -> None:
+        outside = self.root.parent / f"{self.root.name}-outside"
+        outside.mkdir()
+        self.addCleanup(shutil.rmtree, outside)
+        (outside / "Hasher.swift").write_text("x", encoding="utf-8")
+        parent = self.root / sync.DIGEST_PINS[3][0].parent
+        shutil.rmtree(parent)
+        parent.parent.mkdir(parents=True, exist_ok=True)
+        parent.symlink_to(outside)
+        code, _out, err = self.invoke()
+        self.assertEqual(code, 2)
+        self.assertIn("outside the repository", err)
+
+    def test_write_is_atomic_and_leaves_no_temporary_files(self) -> None:
+        self.add_root()
+        self.assertEqual(self.invoke()[0], 0)
+        leftovers = [p for p in self.root.rglob(".*") if p.is_file()]
+        self.assertEqual(leftovers, [])
+        mode = (self.root / sync.FIXTURE_PATH).stat().st_mode & 0o777
+        self.assertEqual(mode, (REAL / sync.FIXTURE_PATH).stat().st_mode & 0o777)
+
+    def test_apply_replaces_a_swapped_in_symlink_instead_of_following_it(self) -> None:
+        self.add_root()
+        plan = sync.plan(self.root, discover=lambda _r: dict(self.discovered))
+        victim = self.root.parent / f"{self.root.name}-victim2.txt"
+        victim.write_text("precious", encoding="utf-8")
+        self.addCleanup(victim.unlink)
+        target = self.root / sync.FIXTURE_PATH
+        target.unlink()
+        target.symlink_to(victim)
+        with self.assertRaises(sync.SyncError):
+            sync.apply(plan)
+        self.assertEqual(victim.read_text("utf-8"), "precious")
+
+
+class RealCorpusTests(unittest.TestCase):
+    def test_every_case_fixture_pins_the_current_digest(self) -> None:
+        """No case carries a deliberately wrong digest.
+
+        ``sync-boundary`` rewrites every ``boundary_sha256`` in the cases.  If a
+        negative case ever needs a wrong digest, exclude it from ``CASE_PIN``
+        explicitly and change this test; making that decision visible is the
+        point.
+        """
+
+        digest = runner.repository_source_input_boundary_digest(
+            runner.load_document(REAL / sync.FIXTURE_PATH)
+        )
+        seen = 0
+        for path in sorted((REAL / sync.CASES_DIR).glob("*.json")):
+            text = path.read_text(encoding="utf-8")
+            for value in re.findall(r'"boundary_sha256": "([^"]*)"', text):
+                seen += 1
+                self.assertEqual(value, digest, path.name)
+        self.assertGreater(seen, 0)
+
 
 class DiscoveryTests(unittest.TestCase):
     """``expected_repository_source_exact_roots`` on a tiny, real directory tree."""
@@ -259,6 +406,7 @@ class DiscoveryTests(unittest.TestCase):
     def test_finds_rust_starlark_consumer_and_typescript_workspace_root(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw)
+            (root / "code/programs").mkdir(parents=True)
             (root / "code/packages/python").mkdir(parents=True)
             (root / "code/packages/python/pyproject.toml").write_text(
                 "[tool.uv.workspace]\nmembers = []\n[tool.uv.sources]\n",
@@ -287,6 +435,84 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(roots[RUST_BOUNDARY], ["code/packages/rust/zz-demo"])
         self.assertEqual(roots[TS_BOUNDARY], ["code/packages/typescript/zz-demo"])
         self.assertEqual(roots["starlark-go-library-rule-consumers"], [])
+
+    def make_tree(self, root: Path, members: str = "") -> Path:
+        (root / "code/packages/python").mkdir(parents=True)
+        (root / "code/packages/python/pyproject.toml").write_text(
+            f"[tool.uv.workspace]\nmembers = [{members}]\n[tool.uv.sources]\n",
+            encoding="utf-8",
+        )
+        (root / "code/programs").mkdir(parents=True)
+        return root
+
+    def test_workspace_member_escaping_the_python_tree_is_rejected(self) -> None:
+        for member in ("../../programs/x", "/etc", "a/../../b"):
+            with self.subTest(member=member), tempfile.TemporaryDirectory() as raw:
+                root = self.make_tree(Path(raw), f'"{member}"')
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.expected_repository_source_exact_roots(root)
+                self.assertEqual(
+                    raised.exception.code, "BOUNDARY_DISCOVERY_MEMBER_ESCAPES"
+                )
+
+    def test_oversized_discovery_input_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = self.make_tree(Path(raw))
+            big = root / "code/packages/rust/big"
+            big.mkdir(parents=True)
+            (big / "BUILD").write_bytes(b"#" * (1024 * 1024 + 1))
+            with self.assertRaises(runner.ConformanceError) as raised:
+                runner.expected_repository_source_exact_roots(root)
+            self.assertEqual(raised.exception.code, "BOUNDARY_DISCOVERY_FILE_TOO_LARGE")
+
+    def test_symlinked_build_and_tsconfig_are_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = self.make_tree(Path(raw))
+            real = root / "real.txt"
+            real.write_text("x", encoding="utf-8")
+            pkg = root / "code/packages/rust/linked"
+            pkg.mkdir(parents=True)
+            (pkg / "BUILD").symlink_to(real)
+            with self.assertRaises(runner.ConformanceError) as raised:
+                runner.expected_repository_source_exact_roots(root)
+            self.assertEqual(raised.exception.code, "BOUNDARY_DISCOVERY_SYMLINK")
+        with tempfile.TemporaryDirectory() as raw:
+            root = self.make_tree(Path(raw))
+            pkg = root / "code/packages/typescript/linked"
+            pkg.mkdir(parents=True)
+            (pkg / "BUILD").write_text("npm install\n", encoding="utf-8")
+            (root / "real.json").write_text("{}", encoding="utf-8")
+            (pkg / "tsconfig.json").symlink_to(root / "real.json")
+            with self.assertRaises(runner.ConformanceError) as raised:
+                runner.expected_repository_source_exact_roots(root)
+            self.assertEqual(raised.exception.code, "BOUNDARY_DISCOVERY_SYMLINK")
+
+    @unittest.skipIf(hasattr(os, "geteuid") and os.geteuid() == 0, "root ignores modes")
+    def test_unreadable_directory_fails_instead_of_being_omitted(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = self.make_tree(Path(raw))
+            hidden = root / "code/packages/rust/hidden"
+            hidden.mkdir(parents=True)
+            hidden.chmod(0)
+            try:
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.expected_repository_source_exact_roots(root)
+            finally:
+                hidden.chmod(0o755)
+            self.assertEqual(raised.exception.code, "BOUNDARY_DISCOVERY_UNREADABLE")
+
+    def test_generated_directories_are_pruned(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = self.make_tree(Path(raw))
+            for name in ("node_modules", "target", ".venv", "dist", "bin"):
+                vendored = root / "code/packages/rust/pkg" / name / "inner"
+                vendored.mkdir(parents=True)
+                (vendored / "BUILD").write_text(
+                    'load("code/packages/starlark/library-rules/rust_library.star")\n',
+                    encoding="utf-8",
+                )
+            roots = runner.expected_repository_source_exact_roots(root)
+        self.assertEqual(roots[RUST_BOUNDARY], [])
 
 
 if __name__ == "__main__":

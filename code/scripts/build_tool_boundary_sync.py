@@ -59,6 +59,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -131,17 +132,29 @@ COUNT_PIN = (
     r"(,\n)"
 )
 
-#: The bounded set of directories scanned for *unregistered* copies of the old
-#: digest.  Anything outside is covered by ``DIGEST_PINS``/cases or is dated
-#: narrative that must keep the digest an earlier PR validated.
-SCAN_ROOTS = ("code/programs", "code/scripts", "code/specs/fixtures/build-tool-v1")
+#: The directories scanned for *unregistered* copies of a stale digest.  Every
+#: non-binary file below them is read; there is no suffix allowlist, so a pin
+#: in a language this module has never heard of is still found.
+SCAN_ROOTS = (
+    "code/programs",
+    "code/scripts",
+    "code/specs/fixtures/build-tool-v1",
+    ".github",
+)
+
+#: Generated or vendored directories that are never scanned.
 SCAN_SKIP_DIRS = frozenset(
     {".git", "node_modules", "target", ".build", "bin", "obj", ".gradle", "__pycache__"}
 )
-SCAN_SUFFIXES = (
-    ".go", ".cs", ".swift", ".py", ".json", ".ml", ".rs", ".ts", ".java", ".kt",
-    ".dart", ".pl", ".pm", ".rb", ".ex", ".exs", ".lua", ".hs", ".md", ".toml",
-)  # fmt: skip
+
+#: Dated narrative that deliberately keeps the digest an earlier PR validated.
+#: These record history, not a live pin, and must never be rewritten.
+NARRATIVE_EXCLUSIONS = frozenset(
+    {
+        Path("code/specs/package-parity-roadmap.md"),
+        Path(".claude/package-parity-loop-state.json"),
+    }
+)
 
 
 # --------------------------------------------------------------------------
@@ -305,10 +318,29 @@ class SyncPlan:
         return "\n".join(chunks)
 
 
-def _read(repo_root: Path, path: Path) -> str:
+def _checked_path(repo_root: Path, path: Path) -> Path:
+    """Return ``repo_root / path`` after refusing symlinks and escapes.
+
+    A target that is a symlink could redirect a write (or a read) to a file the
+    tool was never meant to touch, and a path that resolves outside the
+    repository is never legitimate, so both are errors rather than followed.
+    """
+
+    full = repo_root / path
+    if full.is_symlink():
+        raise SyncError(f"{path}: is a symlink; refusing to read or write through it")
     try:
-        return (repo_root / path).read_text(encoding="utf-8")
-    except OSError as error:
+        full.resolve().relative_to(repo_root.resolve())
+    except ValueError as error:
+        raise SyncError(f"{path}: resolves outside the repository") from error
+    return full
+
+
+def _read(repo_root: Path, path: Path) -> str:
+    full = _checked_path(repo_root, path)
+    try:
+        return full.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as error:
         raise SyncError(
             f"{path}: cannot read a file the boundary sync needs ({error})"
         ) from error
@@ -323,23 +355,42 @@ def _dump(document: object) -> str:
 def _scan_for_unregistered_pins(
     repo_root: Path, digests: set[str], registered: set[Path]
 ) -> list[Path]:
-    """Find files in the build-tool lanes that hold an old digest unexpectedly."""
+    """Find files outside ``registered`` that still hold a stale digest.
+
+    Registered targets are excluded here only because ``plan`` checks their
+    *desired* content directly.  Every other non-binary file under
+    ``SCAN_ROOTS`` is read; a file that cannot be read is an error, never a
+    silent skip.
+    """
 
     needles = [digest.encode("ascii") for digest in sorted(digests)]
     found: list[Path] = []
     for scan_root in SCAN_ROOTS:
-        for directory, subdirectories, filenames in os.walk(repo_root / scan_root):
+
+        def walk_error(error: OSError) -> None:
+            raise SyncError(f"cannot scan a directory for stale pins: {error}")
+
+        for directory, subdirectories, filenames in os.walk(
+            repo_root / scan_root, onerror=walk_error
+        ):
             subdirectories[:] = [d for d in subdirectories if d not in SCAN_SKIP_DIRS]
             for name in filenames:
-                if not name.endswith(SCAN_SUFFIXES):
-                    continue
                 full = Path(directory) / name
                 relative = full.relative_to(repo_root)
-                if relative in registered:
+                if (
+                    relative in registered
+                    or relative in NARRATIVE_EXCLUSIONS
+                    or full.is_symlink()
+                ):
                     continue
                 try:
                     data = full.read_bytes()
-                except OSError:
+                except OSError as error:
+                    raise SyncError(
+                        f"{relative}: cannot be read while scanning for stale "
+                        f"digest pins ({error})"
+                    ) from error
+                if b"\0" in data:  # binary: not a text pin site
                     continue
                 if any(needle in data for needle in needles):
                     found.append(relative)
@@ -461,17 +512,31 @@ def plan(
     )
     targets[PYTHON_TEST_PATH] = test_text
 
-    # 8. Safety net: a stale digest must not be pinned somewhere unknown.
-    stale = old_values - {new_digest}
-    if stale:
-        unknown = _scan_for_unregistered_pins(repo_root, stale, set(targets))
-        if unknown:
-            listing = "\n".join(f"  {path}" for path in unknown)
-            raise SyncError(
-                "the old boundary digest is pinned in files this tool does not "
-                f"know how to rewrite:\n{listing}\n"
-                "Teach build_tool_boundary_sync.DIGEST_PINS about them."
-            )
+    # 8. Safety net.  A digest that is being replaced must not survive
+    #    anywhere: not in a second place inside a file we rewrite (another key
+    #    of a case fixture, a duplicated constant), and not in a file this
+    #    module does not know about.
+    old_digest = runner.repository_source_input_boundary_digest(current)
+    stale = (old_values | {old_digest}) - {new_digest}
+    for path in sorted(targets, key=str):
+        for digest in sorted(stale):
+            if digest in targets[path]:
+                raise SyncError(
+                    f"{path}: still contains the stale boundary digest {digest} "
+                    "after substitution (a second copy in an unrecognised place); "
+                    "refusing to write a half-updated tree"
+                )
+    # Nothing is stale when the tree is already in sync; skip the wide scan.
+    unknown = (
+        _scan_for_unregistered_pins(repo_root, stale, set(targets)) if stale else []
+    )
+    if unknown:
+        listing = "\n".join(f"  {path}" for path in unknown)
+        raise SyncError(
+            "the old boundary digest is pinned in files this tool does not "
+            f"know how to rewrite:\n{listing}\n"
+            "Teach build_tool_boundary_sync.DIGEST_PINS about them."
+        )
 
     changes = {}
     for path, desired_content in targets.items():
@@ -479,7 +544,6 @@ def plan(
         if existing != desired_content:
             changes[path] = (existing, desired_content)
 
-    old_digest = runner.repository_source_input_boundary_digest(current)
     if (stale or old_digest != new_digest) and not changes:
         raise SyncError(
             "the boundary changed but no file would be updated; refusing to "
@@ -495,13 +559,38 @@ def plan(
     )
 
 
+def _atomic_write(path: Path, text: str) -> None:
+    """Replace ``path`` with ``text`` atomically, keeping its permissions.
+
+    The text goes to a temporary file in the same directory and is moved over
+    the target with ``os.replace``.  A reader never sees a half-written file,
+    and a link at ``path`` would be replaced rather than written through.
+    """
+
+    mode = path.stat().st_mode & 0o7777
+    descriptor, temporary = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.")
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as handle:
+            handle.write(text)
+        os.chmod(temporary, mode)
+        os.replace(temporary, path)
+    except BaseException:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+        raise
+
+
 def apply(sync_plan: SyncPlan) -> list[Path]:
     """Write every change in ``sync_plan``; return the paths written."""
 
+    # Validate every target before writing any, so a refused path leaves the
+    # tree untouched.
+    targets = {
+        path: _checked_path(sync_plan.repo_root, path) for path in sync_plan.changes
+    }
     written = []
     for path in sorted(sync_plan.changes, key=str):
-        _before, after = sync_plan.changes[path]
-        (sync_plan.repo_root / path).write_text(after, encoding="utf-8", newline="")
+        _atomic_write(targets[path], sync_plan.changes[path][1])
         written.append(path)
     return written
 

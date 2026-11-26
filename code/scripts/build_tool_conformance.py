@@ -1750,6 +1750,27 @@ def _default_repository_source_input_boundary() -> dict[str, Any]:
 #: their own, because every package that has them also has a plain ``BUILD``.
 _BOUNDARY_BUILD_FILENAMES = frozenset({"BUILD", "BUILD_windows"})
 
+#: Directories never descended into by boundary discovery.  Verified against
+#: the repository: no package root, and no root named by the boundary, lives
+#: inside one of these.
+_BOUNDARY_PRUNED_DIRECTORIES = frozenset(
+    {
+        "node_modules",
+        "target",
+        ".venv",
+        "__pycache__",
+        ".build",
+        "dist",
+        ".git",
+        "bin",
+        "obj",
+    }
+)
+
+#: Discovery reads BUILD, tsconfig.json and pyproject.toml files; none is
+#: legitimately large, so a bigger one is rejected rather than slurped.
+_BOUNDARY_MAX_INPUT_BYTES = 1024 * 1024
+
 
 def _utf8_sorted(paths: Any) -> list[str]:
     """Sort repository paths in UTF-8 byte order, the boundary's canonical order."""
@@ -1779,23 +1800,49 @@ def expected_repository_source_exact_roots(
     that a freshly created, still-untracked package is seen immediately.
     """
 
+    def read_text(path: Path) -> str:
+        """Read one discovery input; refuse symlinks and oversized files."""
+
+        if path.is_symlink():
+            raise ConformanceError(
+                "BOUNDARY_DISCOVERY_SYMLINK",
+                f"discovery input is a symlink: {path.relative_to(repo_root)}",
+            )
+        if path.stat().st_size > _BOUNDARY_MAX_INPUT_BYTES:
+            raise ConformanceError(
+                "BOUNDARY_DISCOVERY_FILE_TOO_LARGE",
+                f"discovery input exceeds {_BOUNDARY_MAX_INPUT_BYTES} bytes: "
+                f"{path.relative_to(repo_root)}",
+            )
+        return path.read_text(encoding="utf-8")
+
+    def raise_walk_error(error: OSError) -> None:
+        raise ConformanceError(
+            "BOUNDARY_DISCOVERY_UNREADABLE",
+            f"cannot list a directory during boundary discovery: {error}",
+        )
+
     # One walk over both package trees; every question below is answered from
-    # the resulting {package_root: [BUILD file text, ...]} map.
+    # the resulting {package_root: [BUILD file text, ...]} map.  Generated and
+    # vendored directories are pruned: no package root lives inside them, and
+    # walking node_modules or target dominates the run time.
     build_texts: dict[str, list[str]] = {}
     for tree in ("code/packages", "code/programs"):
-        for directory, _subdirectories, filenames in os.walk(repo_root / tree):
+        for directory, subdirectories, filenames in os.walk(
+            repo_root / tree, onerror=raise_walk_error
+        ):
+            subdirectories[:] = [
+                name
+                for name in subdirectories
+                if name not in _BOUNDARY_PRUNED_DIRECTORIES
+            ]
             names = sorted(_BOUNDARY_BUILD_FILENAMES.intersection(filenames))
             if not names:
                 continue
             directory_path = Path(directory)
-            texts = []
-            for name in names:
-                build_file = directory_path / name
-                if build_file.is_file():
-                    texts.append(build_file.read_text(encoding="utf-8"))
-            if texts:
-                root = directory_path.relative_to(repo_root).as_posix()
-                build_texts[root] = texts
+            texts = [read_text(directory_path / name) for name in names]
+            root = directory_path.relative_to(repo_root).as_posix()
+            build_texts[root] = texts
 
     def build_roots(prefix: str, needle: str | None = None) -> list[str]:
         """Package roots under ``prefix`` whose BUILD files mention ``needle``."""
@@ -1818,9 +1865,7 @@ def expected_repository_source_exact_roots(
     # Python: uv workspace members whose BUILD runs a project-aware uv command
     # (a bare `uv run` reads the workspace pyproject.toml; `--no-project` does
     # not).
-    python_workspace = (repo_root / "code/packages/python/pyproject.toml").read_text(
-        encoding="utf-8"
-    )
+    python_workspace = read_text(repo_root / "code/packages/python/pyproject.toml")
     member_block = python_workspace.split("[tool.uv.workspace]", 1)[1].split(
         "[tool.uv.sources]", 1
     )[0]
@@ -1830,11 +1875,19 @@ def expected_repository_source_exact_roots(
     )
     python_roots = []
     for member in re.findall(r'"([^"]+)"', member_block):
+        # A workspace member is a path below code/packages/python.  Refuse
+        # anything that could name a directory outside it.
+        member_parts = member.replace("\\", "/").split("/")
+        if member.startswith(("/", "\\")) or ".." in member_parts or ":" in member:
+            raise ConformanceError(
+                "BOUNDARY_DISCOVERY_MEMBER_ESCAPES",
+                f"uv workspace member escapes code/packages/python: {member!r}",
+            )
         root = repo_root / "code/packages/python" / member
         lines = [
             line
-            for build_file in root.glob("BUILD*")
-            for line in build_file.read_text(encoding="utf-8").splitlines()
+            for build_file in sorted(root.glob("BUILD*"))
+            for line in read_text(build_file).splitlines()
             if not line.lstrip().startswith("#")
         ]
         if any(
@@ -1864,9 +1917,9 @@ def expected_repository_source_exact_roots(
     typescript = []
     for root in build_roots("code/packages/typescript"):
         tsconfig = repo_root / root / "tsconfig.json"
-        if tsconfig.is_file() and "../tsconfig.base.json" in tsconfig.read_text(
-            encoding="utf-8"
-        ):
+        if (
+            tsconfig.is_symlink() or tsconfig.is_file()
+        ) and "../tsconfig.base.json" in read_text(tsconfig):
             typescript.append(root)
 
     expected = {
