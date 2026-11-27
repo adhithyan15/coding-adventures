@@ -75,3 +75,15 @@ def test_early_web_exchange(exchange: dict) -> None:
     assert parse_http09_request(request) == exchange["address"]
     body = decode_http09_response(bytes.fromhex(exchange["response_hex"]))
     assert portable_tree(body) == exchange["tree"]
+
+
+def test_deep_unmatched_end_tags_do_not_change_scope() -> None:
+    """Unmatched tags after deep nesting remain harmless and linear-time."""
+    source = "<A>" * 2_000 + "</TITLE>" * 2_000 + "tail"
+    tree = parse_html_tags_1992(source)
+    current = tree[0]
+    for _ in range(1_999):
+        assert current.tag == "a"
+        current = current.children[0]
+    assert current.tag == "a"
+    assert current.children == ["tail"]

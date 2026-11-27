@@ -124,21 +124,34 @@ def _anchor_attributes(source: str) -> dict[str, str | None]:
 
 
 def _closing_index(
-    stack: list[Element], names: Set[str], boundaries: Set[str] = frozenset()
+    positions: dict[str, list[int]], names: Set[str], boundaries: Set[str] = frozenset()
 ) -> int | None:
-    for index in range(len(stack) - 1, -1, -1):
-        tag = stack[index].tag
-        if tag in names:
-            return index
-        if tag in boundaries:
-            break
-    return None
+    """Find the newest matching stack slot without rescanning the stack.
+
+    The parser frequently has to reject unmatched end tags.  Keeping each
+    tag's currently-open indexes makes a deeply nested malformed document
+    linear in the number of tokens rather than quadratic in stack depth.
+    Boundary tags still have their old scope semantics: a match is valid only
+    when it is newer than the newest boundary.
+    """
+    match = max(
+        (indexes[-1] for name in names if (indexes := positions.get(name))),
+        default=-1,
+    )
+    if match < 0:
+        return None
+    boundary = max(
+        (indexes[-1] for name in boundaries if (indexes := positions.get(name))),
+        default=-1,
+    )
+    return match if match > boundary else None
 
 
 def parse_html_tags_1992(source: str) -> list[Node]:
     """Build the teaching profile's tree using tag omission and a stack."""
     root: list[Node] = []
     stack: list[Element] = []
+    positions: dict[str, list[int]] = {}
     text: list[str] = []
     for token in _tokens(source.replace("\r\n", "\n")):
         if isinstance(token, str):
@@ -150,15 +163,15 @@ def parse_html_tags_1992(source: str) -> list[Node]:
             continue
         close_at = None
         if token.closing:
-            close_at = _closing_index(stack, {name})
+            close_at = _closing_index(positions, {name})
             if close_at is None:
                 continue
         elif name == "li":
-            close_at = _closing_index(stack, {"li"}, _LISTS)
+            close_at = _closing_index(positions, {"li"}, _LISTS)
         elif name in _TERMS:
-            close_at = _closing_index(stack, _TERMS, {"dl"})
+            close_at = _closing_index(positions, _TERMS, {"dl"})
         elif name in _HEADINGS:
-            close_at = _closing_index(stack, _HEADINGS)
+            close_at = _closing_index(positions, _HEADINGS)
         # Text belongs to the old parent. An implied close can change the
         # parent for the new element, as with the second <LI> in a list.
         if text:
@@ -166,7 +179,9 @@ def parse_html_tags_1992(source: str) -> list[Node]:
             children.append("".join(text))
             text.clear()
         if close_at is not None:
-            del stack[close_at:]
+            while len(stack) > close_at:
+                popped = stack.pop()
+                positions[popped.tag].pop()
         if token.closing:
             continue
         attributes = _anchor_attributes(token.attributes) if name == "a" else {}
@@ -174,6 +189,7 @@ def parse_html_tags_1992(source: str) -> list[Node]:
         children = stack[-1].children if stack else root
         children.append(element)
         if name not in _EMPTY:
+            positions.setdefault(name, []).append(len(stack))
             stack.append(element)
     if text:
         children = stack[-1].children if stack else root
