@@ -9,14 +9,17 @@ The command reads at most 8 MiB of UTF-8 JSON, rejects duplicate decoded object
 keys, excessive nesting (16 containers), unknown fields, missing required fields,
 null required values and integer tokens outside signed 64-bit bounds. It accepts
 1 through 10,000 pairs, positive durations, valid config and batch bounds, and
-the balanced baseline-first/candidate-first schedule counts. Standard CLI
-metadata is optional; each present field has its documented string or string
-array type. When `workload` is present, its string must be nonblank and contain
-no U+0000, matching the generic single-report replay contract in VER07ab.
+the balanced baseline-first/candidate-first schedule counts. The standard
+driver metadata group (`workload`, `invocation`, `revision`, `runtime`, `os`,
+and `arch`) is optional as a group: when any member appears, require all six.
+`profile` is optional only alongside that complete group. The descriptive
+string fields must be nonempty and contain no U+0000. When `workload` is
+present, it must also be nonblank under VER07ab's ASCII-whitespace rule.
 Reject escaped lone UTF-16 surrogates in workload strings; preserve valid
-surrogate pairs, U+FFFD, and literal backslash-u text.
-An invocation array may be empty when a producer records arguments without the
-executable name; null and non-string entries remain invalid.
+surrogate pairs, U+FFFD, and literal backslash-u text. `invocation` is an array
+of strings without U+0000; the array and individual argument strings may be
+empty, since a producer records the argument vector and an empty argument is
+valid. Null and non-string invocation entries remain invalid.
 Integer-form finite `minimum_factor` numbers are valid.
 
 Recompute binary64 ratios through the Go microbenchmark analysis API. Stored
