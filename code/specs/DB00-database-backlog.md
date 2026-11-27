@@ -34,13 +34,15 @@ open PRs, and any discoveries from implementation or review. Prioritize fixes
 that protect admitted guarantees first, then missing evidence, then dependencies
 blocking the next smallest learning feature. Assign one bounded item at a time
 to a Luna implementation agent and keep the number of active agents small.
-Commit the spec first, review the implementation and evidence, and run the
-repository's security review for the exact head before pushing. Monitor the
+Commit the spec first and review database correctness and evidence at the
+exact head before pushing. Monitor the
 required PR checks, resolve failures and conflicts, arm auto-merge for the
-reviewed head when checks are healthy, and confirm the exact head merged before
-selecting the next item. Record local verification separately from a verified
-merge. Split new findings into their own backlog rows unless they block the
-current item's acceptance.
+reviewed head when checks are healthy, and confirm the exact head merged. When
+CI is backlogged, continue preparing one bounded item at a time on local
+branches and hold new pushes until capacity returns. Reconcile each local
+branch against the eventual merged base before pushing. Record local
+verification separately from a verified merge. Split new findings into their
+own backlog rows unless they block the current item's acceptance.
 
 **Every existing package starts as a candidate.** This includes every tree
 port, log reader or writer, LSM package, SQL frontend or runtime, media and
@@ -79,7 +81,7 @@ check what the transistor packages can actually establish.
 
 | Item | Priority trigger | Acceptance |
 |---|---|---|
-| DB-E01 Shared fixture CI routing | Once the first two media packages declare their fixture readers | Register exact fixture-to-consumer dependencies for test selection and cache keys. A fixture-only edit selects all current readers and no unrelated package; verify that selection in the native CI tooling. Extend the registry as new lanes land. |
+| DB-E01 Shared fixture CI routing | Local checks passed for Python and TypeScript readers | Exact fixture dependencies select the matching readers and change their cache keys. Extend the registry as new lanes land. [Spec](DB-E01-media-fixture-routing.md) |
 | DB-E02 Media claim and mutation corpus | Before accepting the first higher-layer use of a media guarantee | Give state transitions stable claim IDs and add representative negative controls for illegal programming, block isolation, elapsed timing and rejected-operation atomicity. Keep generated evidence and proof migration separate from native test results. |
 | DB-E03 Lane admission inventory | Before the first medium port to each constrained or unbootstrapped lane | Record available toolchain, binary data representation, integer bounds, test runner, and native-vs-host runtime scope. Add small enabling items for gaps discovered during porting. |
 | DB-E04 TypeScript project inventory | With every new TypeScript port | Run the tracked-project portability audit and reconcile its exact counters with the new package's compiler inputs. The NAND PR exposed this gate at [metadata job 139543001686](https://github.com/adhithyan15/coding-adventures/actions/runs/45709375026/job/139543001686). Keep the portability check active. |
@@ -172,7 +174,9 @@ teaches the storage-engine tradeoff.
 | DB33 SQLite-style embedded profile | DB13, DB30–DB32 | First-class file and SQL profiles, pager/rollback and WAL modes, snapshots, one-writer discipline, import/export and integrity checking. Cross-check files and queries independently, with published coverage boundaries. |
 | DB34 PostgreSQL-style server profile | DB15, DB16, DB31, DB32 | Client protocol, concurrent sessions and worker pools, shared buffers, MVCC, vacuum, checkpoint/restart, authentication/authorization and query cancellation. Add WAL archiving, point-in-time restore and replication as separately qualified capabilities. |
 | DB35 LMDB-style embedded profile | DB10, DB13, DB14 | Copy-on-write B+ tree, dual metadata pages, reader snapshots, page reclamation and single-writer contention. Check crash publication and reader reclamation independently. |
-| DB36 DuckDB-style analytical profile | DB11, DB31, DB32 | Columnar row groups, encoding/compression, vectorized scans, predicate pushdown, parallel operators, spill and analytical file integration. Compare fixed analytical results and track I/O and memory costs. |
+| DB36 Columnar storage and pruning | DB10, DB11, DB-A03 | Build column vectors, null bitmaps and row groups. Add dictionary, run-length and bit-packed encodings, compression, zone maps and projection pruning in separate slices. Compare reconstruction to a row oracle and measure bytes decoded per query. |
+| DB36a DuckDB-style analytical engine | DB31, DB32, DB36 | Build vectorized scans, filter/projection, grouped aggregation and joins, then parallel execution and spill. Compare row and vector results under the same query semantics. Add Parquet read/write as a separate interoperability target with independent file fixtures. |
+| DB36b ClickHouse-style columnar server | DB36a, DB14, DB24 | Insert immutable sorted columnar parts, add sparse indexes and merge parts in the background. Check deterministic merge results, partition pruning, concurrent reads and publication across crashes. Add sharding and replication through DB40–DB42 after the single-node contract. |
 | DB37 Redis-style profile | DB-A02, DB-A04, DB14 | Audit the existing datastore and protocol, then qualify commands, expiration, eviction, snapshots, append-only recovery and concurrency. Keep this track separate from relational compatibility. |
 | DB39 Production readiness | Each engine profile | Workload-based throughput and latency, metrics and tracing, quotas, disk-full and corruption handling, safe upgrades, offline repair, backup drills and long-running threaded tests. Record operating limits and hardware assumptions per profile. |
 
@@ -201,19 +205,19 @@ model, query language or distributed design.
 
 ## Polyglot delivery
 
-Use one contract, fixture vocabulary, and acceptance matrix per package. Track
-every lane present at the initial audit (`c`, `cpp`, `csharp`, `dart`, `elixir`,
-`fsharp`, `go`, `haskell`, `java`, `kotlin`, `lua`, `mosaic`, `ocaml`, `perl`,
-`python`, `ruby`, `rust`, `starlark`, `swift`, `twig`, `typescript`, `wasm`) and
-inventory new lanes as the repo grows. Record spec, implementation, conformance,
-evidence, and execution status separately. The initial lanes use shared JSON
-fixtures with exact errors, bytes, and observable state; adapt those into the
-repo's evidence machinery as the corresponding Warrant contracts land.
+Use one contract, fixture vocabulary, and acceptance matrix per package. The
+database project covers 20 repository lanes: `c`, `cpp`, `csharp`, `dart`,
+`elixir`, `fsharp`, `go`, `haskell`, `java`, `kotlin`, `lua`, `ocaml`, `perl`,
+`python`, `ruby`, `rust`, `swift`, `twig`, `typescript`, and `wasm`. Record
+spec, implementation, conformance, evidence, and execution status separately.
+Use shared JSON fixtures with exact errors, bytes, and observable state.
+Adapt those into the repo's evidence machinery as the corresponding Warrant
+contracts land.
 
 1. Start with Python and TypeScript media leaves and shared fixtures. Port to
    C and another available native lane next, then qualify the remaining lanes
    against the same cases. Advance in small batches and retain one backlog row
-   per port until its manual validation is complete. Every lane is in scope.
+   per port until its manual validation is complete.
 2. Port each graduated contract before using that guarantee in the same lane's
    next package. Keep backend tests interoperable in both directions where a
    file or wire format is promised. An FFI binding and an independent
@@ -249,16 +253,14 @@ layers can be implemented natively. A host binding remains a separate result.
 | Java | Queued | Queued |
 | Kotlin | Queued | Queued |
 | Lua | Queued | Queued |
-| Mosaic | Queued | Queued |
 | OCaml | Queued | Queued |
 | Perl | Queued | Queued |
-| Python | Local checks passed | Locally implemented |
+| Python | Local checks passed | Local checks passed |
 | Ruby | Queued | Queued |
 | Rust | Queued | Queued |
-| Starlark | Queued | Queued |
 | Swift | Queued | Queued |
 | Twig | Queued | Queued |
-| TypeScript | Local checks passed | Locally implemented |
+| TypeScript | Local checks passed | Local checks passed |
 | WebAssembly | Queued | Queued |
 
 **Next handoff:** Qualify DB01 and DB02 lane by lane, specify DB04's crash/fault

@@ -1,0 +1,114 @@
+warrant tuples v1
+  error E = BAD | WORSE
+  model pk(t: (U8,Bool)) -> U8 = t.0
+  model pk3(t: (U8,U8,Bool)) -> U8 = t.0 + t.1
+  model nk(t: ((Bool,Bool),(U8,Bool))) -> U8 = t.1.0
+  model mk(a: U8, t: (Bool,Bool)) -> Bool = t.0 and t.1
+  model rk(r: Result<(Bool,Bool),E>) -> Bool = match r with Ok((a, b)) -> a and b | Err(_) -> false
+  model eqk(a: (Bool,Bool), b: (Bool,Bool)) -> Bool = a == b
+  op pop(t: (U8,Bool)) -> U8
+  op pop3(t: (U8,U8,Bool)) -> U8
+  op pnest(t: ((Bool,Bool),(U8,Bool))) -> U8
+  op pmix(a: U8, t: (Bool,Bool)) -> Bool
+  op prk(r: Result<(Bool,Bool),E>) -> Bool
+  op peq(a: (Bool,Bool), b: (Bool,Bool)) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels pop:
+    t secret
+
+  labels pop3:
+    t secret
+
+  labels pnest:
+    t secret
+
+  labels pmix:
+    a secret
+    t secret
+
+  labels prk:
+    r secret
+
+  labels peq:
+    a secret
+    b secret
+
+  input pop.t:
+    hostile
+    ensures no_panic, terminates
+
+  input pop3.t:
+    hostile
+    ensures no_panic, terminates
+
+  input pnest.t:
+    hostile
+    ensures no_panic, terminates
+
+  input pmix.a:
+    hostile
+    ensures no_panic, terminates
+
+  input pmix.t:
+    hostile
+    ensures no_panic, terminates
+
+  input prk.r:
+    hostile
+    ensures no_panic, terminates
+
+  input peq.a:
+    hostile
+    ensures no_panic, terminates
+
+  input peq.b:
+    hostile
+    ensures no_panic, terminates
+
+  bound pop:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound pop3:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound pnest:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound pmix:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound prk:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound peq:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  claim pairs:
+    forall t: (U8,Bool). pop(t) == pk(t)
+  claim triples:
+    forall t: (U8,U8,Bool). pop3(t) == pk3(t)
+  claim nested:
+    forall t: ((Bool,Bool),(U8,Bool)). pnest(t) == nk(t)
+  claim mixed:
+    forall a: U8, t: (Bool,Bool). pmix(a, t) == mk(a, t)
+  claim result_of_tuple:
+    forall r: Result<(Bool,Bool),E>. prk(r) == rk(r)
+  claim two_pairs:
+    forall a: (Bool,Bool), b: (Bool,Bool). peq(a, b) == eqk(a, b)

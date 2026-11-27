@@ -1,4 +1,4 @@
-"""Fault wrappers at ``ir.core`` (VER04r section 8).
+"""Fault wrappers (VER04r section 8) over the levels this lane implements.
 
 A *negative control* is how a runner proves it can fail: break exactly one
 operation of the library -- not by editing the library, but by wrapping the
@@ -28,6 +28,15 @@ kind       effect
 uses only the tags of its declared level and **never** a ``subject_op``: a fault
 that called the library would not be a fault of one operation.
 
+**Typing a fault row** (sections 16.17 R67 and 16.18 R94, 16.20 R96 to R98, slice
+S10e).  A fault changes values on purpose, so its expression need only have a
+*common type* with what it replaces, not flow to it: ``Bytes`` against
+``Bytes<32>``, ``Int`` against ``Nat``, and -- for the ``off-by-one-consumed``
+template -- a tuple ``(Bytes,Int)`` against ``(Bytes,Nat)``.  The declared type is
+handed down to every branch of an ``if``, every arm of a ``match``, the payload of
+an ``ok`` and each component of a ``tuple`` (the last under a narrower relation),
+and a bytes literal where a plain ``Bytes`` is expected has the type ``Bytes``.
+
 Why one op at a time?  Take ``mul(a, b) == mul(b, a)``.  Break *every* op by
 XOR-ing the low bit of its result and the claim still holds (``mul(a,b)^1 ==
 mul(b,a)^1``): the suite looks insensitive when it is not.  Scoping a fault to
@@ -46,13 +55,14 @@ from .ir import (
     Program,
     check_requires,
     evaluate,
+    is_node,
     scan_tags,
     tag_level,
     walk,
 )
 from .semantics import STANDARD, Semantics
 from .values import decode_value, value_to_json
-from .wtypes import Ty, check_types_table, unify
+from .wtypes import BYTES, Ty, check_types_table, fault_unify
 
 KINDS = ("pre", "post", "replace")
 
@@ -177,18 +187,115 @@ def _check_rewrite_rows(
     return pairs
 
 
-def _may_replace(produced: Ty, wanted: Ty) -> bool:
-    """May an expression of type ``produced`` stand where a ``wanted`` value goes?
+def _common(produced: Ty, declared: Ty, narrow: bool) -> bool:
+    """Do ``produced`` and ``declared`` have a common type? (R94, R96, R97)
 
-    A fault changes values on purpose, and sometimes their length: dropping the
-    last byte of a ``Bytes<32>`` result yields a plain ``Bytes``, and ``Nat + 1``
-    is an ``Int`` (section 3.2).  So the test is the weaker one the checker uses
-    for two branches, that the two types have a *common* type (R51), not that one
-    flows into the other.  The value is held to the declared type when it is
-    written, so an out-of-range or wrong-length one is refused there, never
-    truncated.
+    The relation of a fault row, :func:`~.wtypes.fault_unify`: at the top
+    (``narrow`` false) R51's ``common_type`` (equal types; ``Nat`` and ``Int``;
+    two ``Bytes`` of different or forgotten width, because a fault may change a
+    length by design; ``Option`` and ``Result`` of types that relate, with one
+    error type); an undetermined ``?`` (a bare ``ok`` or ``err``) relates to
+    anything (R97); and below a **tuple** the narrower relation of R96.
     """
-    return unify(produced, wanted) is not None
+    return fault_unify(produced, declared, narrow) is not None
+
+
+def _positions(expr: object, declared: Ty) -> list[tuple[object, Ty, bool]]:
+    """Every ``(node, expected type, narrow)`` the declared type is handed down to.
+
+    R98 / R67: the declared type goes to the expression itself, to each branch of
+    an ``if`` and each arm of a ``match``, to the payload of an ``ok`` and to
+    component ``i`` of a ``tuple`` (the last one with the narrow relation, and so
+    does everything below it).  Only the *shape* of the declared type is read, so
+    this runs before the expression is typed.  A malformed node simply hands
+    nothing down: the compile that follows refuses it.
+    """
+    found: list[tuple[object, Ty, bool]] = []
+    pending: list[tuple[object, Ty, bool]] = [(expr, declared, False)]
+    while pending:
+        node, expected, narrow = pending.pop()
+        found.append((node, expected, narrow))
+        if not is_node(node):
+            continue
+        tag = node[0]  # type: ignore[index]
+        if tag == "if" and len(node) == 4:  # type: ignore[arg-type]
+            pending += [(node[2], expected, narrow), (node[3], expected, narrow)]  # type: ignore[index]
+        elif tag == "match" and len(node) == 3 and type(node[2]) is list:  # type: ignore[arg-type]
+            pending += [
+                (arm[1], expected, narrow)
+                for arm in node[2]  # type: ignore[index]
+                if type(arm) is list and len(arm) == 2
+            ]
+        elif tag == "ok" and len(node) == 2 and expected.head == "Result":  # type: ignore[arg-type]
+            pending.append((node[1], expected.args[0], narrow))  # type: ignore[index]
+        elif (
+            tag == "tuple"
+            and len(node) == 2  # type: ignore[arg-type]
+            and type(node[1]) is list  # type: ignore[index]
+            and expected.head == "()"
+            and len(node[1]) == len(expected.args)  # type: ignore[index]
+        ):
+            pending += [
+                (part, wanted, True)
+                for part, wanted in zip(node[1], expected.args, strict=True)  # type: ignore[index]
+            ]
+    return found
+
+
+def _mark_plain_bytes(
+    program: Program, positions: list[tuple[object, Ty, bool]]
+) -> None:
+    """R67: a bytes literal where a plain ``Bytes`` is expected has the type ``Bytes``.
+
+    Also records which ``if`` and ``match`` nodes sit at a position the declared
+    type is handed to: their branches are typed with the fault relation (R98),
+    and every other ``if`` or ``match`` by R51 alone.
+    """
+    for node, expected, narrow in positions:
+        if is_node(node) and node[0] in ("if", "match"):  # type: ignore[index]
+            program.handed[id(node)] = narrow
+        if (
+            expected == BYTES
+            and is_node(node)
+            and node[0] == "lit"  # type: ignore[index]
+            and len(node) == 2  # type: ignore[arg-type]
+            and type(node[1]) is dict  # type: ignore[index]
+            and node[1].get("type") == "Bytes"  # type: ignore[index]
+        ):
+            program.plain_bytes.add(id(node))
+
+
+def _check_positions(
+    program: Program, positions: list[tuple[object, Ty, bool]]
+) -> None:
+    """Every position of a compiled fault expression has a common declared type.
+
+    The positions that only *pass the declared type down* (an ``if``, a ``match``,
+    an ``ok`` against a ``Result``, a ``tuple`` against a tuple of the same arity)
+    are compared through their branches, arms, payload and components, not by
+    their own type: the type the typer builds for them may take one branch's
+    shape (R98).  Every other position is compared by its own static type.
+    """
+    assert program.recorded is not None
+    for node, expected, narrow in positions:
+        if not is_node(node):  # pragma: no cover - compile refused it already
+            continue
+        tag = node[0]  # type: ignore[index]
+        if (
+            tag in ("if", "match")
+            or (tag == "ok" and expected.head == "Result")
+            or (
+                tag == "tuple"
+                and expected.head == "()"
+                and len(node[1]) == len(expected.args)  # type: ignore[index]
+            )
+        ):
+            continue
+        if not _common(program.recorded[id(node)], expected, narrow):
+            raise Refusal(
+                "ill-typed",
+                "a fault expression has no common type with what it replaces",
+            )
 
 
 def _static_order(exprs: list[object], available: frozenset[str]) -> None:
@@ -253,27 +360,29 @@ def compile_fault(
     scope = dict(params)
     if "result" in scope:
         raise Refusal("ill-typed", "an op with a parameter named result")
+    program.recorded = {}
     if row["kind"] == "pre":
         rows = _check_rewrite_rows(row["rewrites"], scope)
         # Orders 2 to 4 for every rewrite before any rewrite is compiled, so a
         # typing defect in one never hides a static code in another.
         _static_order([expr for _param, expr in rows], available)
+        placed = [(_positions(expr, scope[param])) for param, expr in rows]
+        for positions in placed:
+            _mark_plain_bytes(program, positions)
         rewrites = [
             (param, program.compile(expr, scope, role="fault")) for param, expr in rows
         ]
         # The typing of the row is the last step (R119 c, 5): every rewrite is
         # scanned and compiled before any rewrite's type is compared.
-        for param, compiled in rewrites:
-            if not _may_replace(compiled.ty, scope[param]):
-                raise Refusal("ill-typed", f"the rewrite of {param} has the wrong type")
+        for positions in placed:
+            _check_positions(program, positions)
         return CompiledFault("pre", params, ret, types, sem, rewrites, None)
     scope["result"] = ret
     _static_order([row["expr"]], available)
+    positions = _positions(row["expr"], ret)
+    _mark_plain_bytes(program, positions)
     expr = program.compile(row["expr"], scope, role="fault")
-    if not _may_replace(expr.ty, ret):
-        raise Refusal(
-            "ill-typed", "the fault expression is not of the op's result type"
-        )
+    _check_positions(program, positions)
     return CompiledFault(row["kind"], params, ret, types, sem, [], expr)
 
 

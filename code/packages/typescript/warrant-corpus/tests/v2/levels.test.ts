@@ -25,8 +25,10 @@ describe("the tag registry", () => {
     for (const tag of ["frobnicate", "NOT", "Lit", "", "try_nat"]) expect(levelOfTag(tag), tag).toBeUndefined();
   });
 
-  it("implements ir.core only and knows the name of every defined level", () => {
-    expect(IMPLEMENTED_LEVELS).toEqual(["ir.core"]);
+  it("implements ir.core, ir.fixed and ir.tuple (S10f) and knows the name of every defined level", () => {
+    expect(IMPLEMENTED_LEVELS).toEqual(["ir.core", "ir.fixed", "ir.tuple"]);
+    // a reserved level or ir.data is never implemented ([D63], [D66])
+    for (const level of ["ir.data", "ir.list", "ir.seq", "ir.inout.records"]) expect(IMPLEMENTED_LEVELS.includes(level), level).toBe(false);
     for (const level of ["ir.core", "ir.fixed", "ir.tuple", "ir.data", "ir.list", "ir.seq", "ir.inout.records"]) expect(DEFINED_LEVELS.has(level), level).toBe(true);
     expect(DEFINED_LEVELS.has("ir.fancy")).toBe(false);
   });

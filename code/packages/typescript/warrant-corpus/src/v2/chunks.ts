@@ -51,7 +51,7 @@ import { KitError, type KitCode } from "./errors.ts";
 import { type Domain, buildDomain } from "./domains.ts";
 import { type Compiled, type Param, Program } from "./ir.ts";
 import { DEFINED_LEVELS } from "./levels.ts";
-import { type Ty, checkNames, flows, parseType, typeLevels } from "./types.ts";
+import { type Ty, checkNames, flows, parseType, typeLevels, unify } from "./types.ts";
 import { type StreamSink, StreamSink as Sink, makeWriter, type Value } from "./values.ts";
 
 /** `MAX_SUITE_PRODUCT`, `MAX_CHUNKS`, `MAX_SLIM_CHUNKS` and the binder bound (section 14, R75). */
@@ -354,7 +354,10 @@ function loadSuiteUnchecked(part: CorpusPart, raw: unknown): Suite {
   let irCost = admit.cost + body.cost;
   if (reference) {
     expected = program.compileExpr(oracleRecord["expected"], vars, "pure");
-    if (!flows(expected.ty, resultTy)) refuse("corpus", "expected does not fit result_type");
+    // `expected` and `result_type` need a common type (R51's `unify`), not a flow: `Nat` arithmetic has the type `Int` (R42),
+    // and the committed wasm-leb128 suites compare a `Nat` result with an `imax` or an `Int`-typed model.  The value is what
+    // matters, and the stream writer of `result_type` refuses one that is not a value of it (a negative `Nat`).
+    if (unify(expected.ty, resultTy) === null) refuse("corpus", "expected does not fit result_type");
     irCost += expected.cost;
     // The subject side is a body expression too: it must compile, may call the subject, and has the result type (section 4.3).
     const subject = program.compileExpr(oracleRecord["subject"], vars, "body");

@@ -41,8 +41,6 @@ pub struct Command {
     pub root: Option<PathBuf>,
     /// `--emit-drat` (only `check`).
     pub emit_drat: Option<PathBuf>,
-    /// `--allow-missing-sat-key` (gen and check): do not require `sat = "model"` in vos.toml.
-    pub allow_missing_sat_key: bool,
 }
 
 /// Parse `args` (without the program name); `None` is a usage error.
@@ -57,10 +55,8 @@ pub fn parse(args: &[String]) -> Option<Command> {
     let mut dir = None;
     let mut root = None;
     let mut emit_drat = None;
-    let mut allow = false;
     while let Some(a) = it.next() {
         match a.as_str() {
-            "--allow-missing-sat-key" if verb != Verb::CrossCheck => allow = true,
             "--root" => root = Some(PathBuf::from(it.next()?)),
             "--emit-drat" if verb == Verb::Check => emit_drat = Some(PathBuf::from(it.next()?)),
             _ if dir.is_none() && !a.starts_with("--") => dir = Some(PathBuf::from(a)),
@@ -72,7 +68,6 @@ pub fn parse(args: &[String]) -> Option<Command> {
         dir: dir?,
         root,
         emit_drat,
-        allow_missing_sat_key: allow,
     })
 }
 
@@ -82,9 +77,6 @@ fn finding_lines(findings: &[Finding]) -> Vec<String> {
         .map(|f| format!("{}: {}", f.code, f.message))
         .collect()
 }
-
-/// The warning printed on standard error whenever the opt-in bridge is used.
-pub const BRIDGE_WARNING: &str = "WARNING: MS01 opt-in check skipped (--allow-missing-sat-key bridge, VOS-040b; removed by VOS-040c)";
 
 /// Create `dir` (and any missing ancestors) for `--emit-drat`, one component at a time.  The
 /// deepest directory that already exists must be plain (no `..`, no symlink in its path: the
@@ -145,8 +137,7 @@ fn emit(dir: &Path, proofs: &[(String, String, String)]) -> Result<(), String> {
     Ok(())
 }
 
-/// Perform `cmd`: `(exit code, stdout lines, stderr lines)`.  A run that used the
-/// `--allow-missing-sat-key` bridge always starts its standard error with [`BRIDGE_WARNING`].
+/// Perform `cmd`: `(exit code, stdout lines, stderr lines)`.
 pub fn run(cmd: &Command) -> (u8, Vec<String>, Vec<String>) {
     run_with(cmd, None)
 }
@@ -156,11 +147,7 @@ pub fn run_with(
     cmd: &Command,
     evidence: Option<&crate::crosscheck::Evidence>,
 ) -> (u8, Vec<String>, Vec<String>) {
-    let (code, out, mut err) = run_inner(cmd, evidence);
-    if cmd.allow_missing_sat_key {
-        err.insert(0, BRIDGE_WARNING.to_string());
-    }
-    (code, out, err)
+    run_inner(cmd, evidence)
 }
 
 fn run_inner(
@@ -187,9 +174,6 @@ fn run_inner(
         };
     }
     let mut cfg = LaneConfig::real();
-    if cmd.allow_missing_sat_key {
-        cfg = cfg.bridge_missing_sat_key();
-    }
     if cmd.emit_drat.is_some() {
         cfg = cfg.keep_proofs();
     }

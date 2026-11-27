@@ -1,10 +1,11 @@
-"""Run the whole v2 conformance kit through this lane's own library (slice S6a).
+"""Run the whole v2 conformance kit through this lane's own library (slices S6a, S10e).
 
-``code/specs/fixtures/warrant-corpus-conformance-v1`` holds 958 v2 cases at
-``ir.core`` (VER04r section 11): 782 in the six categories this lane runs, and the 176 of ``v2-binding`` (S5d),
-which it indexes and digest-checks but skips whole until S6b.  This lane runs every case whose ``requires`` it
-implements, in a category it knows, and skips the rest; per category, **run plus skipped equals the index
-count**, and every case of the six runs: 782 run, 0 failed.  The ``also_sequential`` chunk
+``code/specs/fixtures/warrant-corpus-conformance-v1`` holds 1,628 v2 cases (VER04r section 11): 1,452 in the six
+categories this lane runs, and the 176 of ``v2-binding`` (S5d), which it indexes and digest-checks but skips whole
+until S6b.  The lane implements ``ir.core``, ``ir.fixed`` and ``ir.tuple`` (S10e), so **every** case of the six runs
+-- 1,452 run, 0 skipped, 0 failed (S10d's 613 cases at ``ir.fixed`` and ``ir.tuple`` were skipped by their
+``requires`` before S10e: 839 ran).  A lane runs every case whose ``requires`` it implements, in a category it
+knows, and skips the rest; per category, **run plus skipped equals the index count**.  The ``also_sequential`` chunk
 cases are walked sequentially too ("chunk ``c`` alone equals sequential").
 
 The harness itself is tested here (digests, accounting, skipping, failure
@@ -48,8 +49,21 @@ def full_report():
 def test_every_case_runs_and_passes(full_report):
     assert full_report.ok, full_report.lines()
     assert list(full_report.categories) == list(V2_INDEXED)
-    assert sum(c.run for c in full_report.categories.values()) == 782
-    assert all(not c.failed and not c.skipped for c in (full_report.categories[n] for n in V2))
+    assert sum(c.run for c in full_report.categories.values()) == 1452
+    assert all(not c.failed for c in (full_report.categories[n] for n in V2))
+    # S10e: the lane implements ir.fixed and ir.tuple, so nothing of the six is skipped any more
+    # (S10d's 613 cases that need them used to be: 839 ran).  Only v2-binding is skipped whole.
+    skipped = {n: len(full_report.categories[n].skipped) for n in V2}
+    assert skipped == {n: 0 for n in V2}
+    ran = {n: full_report.categories[n].run for n in V2}
+    assert ran == {
+        "v2-value": 177,
+        "v2-arith": 129,
+        "v2-ir": 717,
+        "v2-domain": 219,
+        "v2-chunk": 97,
+        "v2-fault": 113,
+    }
     binding = full_report.categories[BINDING]
     assert (binding.indexed, binding.run, len(binding.skipped), binding.failed) == (176, 0, 176, {})
     assert binding.accounted and binding.ok
@@ -67,7 +81,7 @@ def test_run_plus_skipped_equals_the_index_count(full_report, category):
 
 def test_report_lines_summarise_each_category(full_report):
     lines = full_report.lines()
-    assert lines[0] == "v2-value: run 128, skipped 0, failed 0 (indexed 128)"
+    assert lines[0] == "v2-value: run 177, skipped 0, failed 0 (indexed 177)"
     assert all(not line.startswith("not ok") for line in lines)
 
 
@@ -114,9 +128,9 @@ def test_a_case_that_needs_a_missing_level_is_skipped_not_dropped(tmp_path):
             "v2-arith": [
                 arith_case("core", {"type": "U8", "value": "0"}),
                 arith_case(
-                    "fixed",
+                    "data",
                     {"type": "U8", "value": "0"},
-                    requires=("ir.core", "ir.fixed"),
+                    requires=("ir.core", "ir.data"),
                 ),
             ],
             "v2-binding": [
@@ -126,7 +140,7 @@ def test_a_case_that_needs_a_missing_level_is_skipped_not_dropped(tmp_path):
     )
     report = run_kit(family)
     arith, binding = report.categories["v2-arith"], report.categories["v2-binding"]
-    assert (arith.run, arith.skipped, arith.accounted) == (1, ["v2-arith/fixed"], True)
+    assert (arith.run, arith.skipped, arith.accounted) == (1, ["v2-arith/data"], True)
     # a category this runner does not know is skipped whole, never run
     assert (binding.run, binding.skipped, binding.accounted) == (
         0,

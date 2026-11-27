@@ -27,6 +27,11 @@ def all_cases(kit):
     return {c: cases_of(kit, c) for c in C.CATEGORIES}
 
 
+def s5_cases(kit, category):
+    """The cases of S5 (a row that states no ``requires``): S10d's own rows are checked by ``test_s10d_vectors.py``."""
+    return [c for c, row in zip(cases_of(kit, category), kit.tables[category]) if row.requires is None]
+
+
 def test_the_kit_has_six_files_in_the_fixed_order(kit):
     assert list(kit.files) == [f"{c}.json" for c in C.CATEGORIES]
     assert [r["category"] for r in kit.rows] == list(C.CATEGORIES)
@@ -63,18 +68,19 @@ def test_ids_are_unique_prefixed_slugged_and_in_table_order(kit):
 
 
 def test_every_s5_case_requires_exactly_ir_core(kit):
-    for cases in all_cases(kit).values():
-        for case in cases:
-            assert case["requires"] == ["ir.core"], case["id"]
+    """An S5 row states no ``requires`` and must compute ``["ir.core"]`` (R24); a row of S10d states the one it computes
+    (``Row.requires``, tests/test_s10d_vectors.py), and the build has already refused any row whose computed value differs."""
+    for category, cases in all_cases(kit).items():
+        for case, row in zip(cases, kit.tables[category]):
+            assert case["requires"] == (["ir.core"] if row.requires is None else row.requires), case["id"]
 
 
 def test_error_codes_stay_in_the_closed_sets_and_every_code_is_used(kit):
     for category, cases in all_cases(kit).items():
         used = {c["expect"]["error"] for c in cases if "error" in c["expect"]}
-        # [D74] (16.22) adds ``ill-typed`` to ``v2-fault``; its kit vectors are S10d's and S11d's, so the committed
-        # kit does not use it yet.  [D77] (16.23) adds ``unknown-tag``, ``depth`` and ``model-order``, likewise.
-        pending = {"ill-typed", "unknown-tag", "depth", "model-order"} if category == "v2-fault" else set()
-        assert used == C.ERROR_CODES[category] - pending, (category, used ^ C.ERROR_CODES[category])
+        # S10d uses every code of every closed set: [D74] (16.22) ``ill-typed`` and [D77] (16.23) ``unknown-tag``, ``depth`` and
+        # ``model-order`` in ``v2-fault``, which S5 could not use.
+        assert used == C.ERROR_CODES[category], (category, used ^ C.ERROR_CODES[category])
         for case in cases:
             if category in ("v2-value",):
                 assert case["expect"]["outcome"] in ("accept", "reject")
@@ -123,7 +129,7 @@ def test_level_missing_uses_only_fixed_and_tuple_tags_and_unknown_tag_avoids_res
     reach may hold a tag of a missing level in a case that derives a value.
     """
     reserved = {"some", "none", "ctor", "field", "list", *L.SEQ_TAGS}
-    for case in cases_of(kit, "v2-ir"):
+    for case in s5_cases(kit, "v2-ir"):
         tags = tags_of(case["ir"]).union(*(tags_of(m["body"]) for m in case["models"].values()))
         reached = set().union(*(tags_of(t) for t in C.reach(case)[0]))
         if case["expect"].get("error") == "level-missing":
@@ -159,7 +165,7 @@ def kind_of(case):
 
 
 def test_every_ir_core_leaf_descriptor_is_present_and_probed_at_the_ends(kit):
-    cases = cases_of(kit, "v2-domain")
+    cases = s5_cases(kit, "v2-domain")
     valid = {}  # the descriptors that are accepted: json text -> descriptor
     for c in cases:
         if c["expect"].get("error") != "descriptor" and isinstance(c["descriptor"], dict):
@@ -241,6 +247,7 @@ def test_the_fault_cases_use_the_oracles_own_templates(kit):
             "ignore-last-byte", "xor-lsb"} <= names & set(REGISTRY) | names
     for case in cases_of(kit, "v2-fault"):
         assert set(case) == {"id", "summary", "requires", "fault", "op", "types", "levels", "args", "result", "expect"}
+    for case in s5_cases(kit, "v2-fault"):
         assert case["levels"] == ["ir.core"]
 
 

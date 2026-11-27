@@ -3,6 +3,14 @@
 ## Unreleased
 
 - BUILD_windows: run the node --test coverage script instead of the removed vitest
+- Add checked bounded min/max queues with explicit comparator, capacity and
+  discriminated operation results; preserve legacy APIs and behavior
+- Enforce the bounded capacity at runtime for plain JavaScript callers
+- Publish the package root from built ESM JavaScript and declaration files
+- Include the TypeScript sources referenced by declaration/source maps, the
+  changelog, and the package's MIT license in packed artifacts
+- Exercise exhaustive and seeded model histories, iterator cleanup, and staged
+  comparator failure behavior
 
 ## 0.1.0
 

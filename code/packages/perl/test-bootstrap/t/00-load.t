@@ -20,7 +20,7 @@ ok( $CodingAdventures::TestBootstrap::VERSION, 'has a version' );
 }
 is( CodingAdventures::TestBootstrap::Prng::threshold(3), 1, 'the real threshold is still in place' );
 
-for my $m (qw(Int Prng Limits FailureIds Hooks Budget Gen Gens Shrink Runner Safe Canon StrictJson Values Tfv Corpus)) {
+for my $m (qw(Int Prng Limits FailureIds Hooks Budget Gen Gens Shrink Runner Safe Canon StrictJson Values Tfv Corpus Fuzz Fuzz::Limits Fuzz::Mutate Fuzz::Bitmap Fuzz::Signature Fuzz::Handle Fuzz::Executor Fuzz::Engine Fuzz::Corpus)) {
     ok( "CodingAdventures::TestBootstrap::$m"->can('import') || 1, "module $m loaded" );
 }
 
