@@ -233,6 +233,33 @@ void main() {
       expect(tryParseLispTokens(const []), equals([]));
     });
 
+    test('missing EOF fails before the engine can repeat the last token', () {
+      for (final token in const [
+        lisp.Token(lisp.TokenType.symbol, 'x'),
+        lisp.Token(lisp.TokenType.lParen, '('),
+      ]) {
+        expect(() => parseLispTokens([token]), throwsA(isA<LispParseError>()));
+        expect(tryParseLispTokens([token]), isNull);
+      }
+    });
+
+    test('embedded and repeated EOF cannot hide trailing tokens', () {
+      const eof = lisp.Token(lisp.TokenType.eof, '');
+      for (final tokens in const [
+        [eof, lisp.Token(lisp.TokenType.symbol, 'hidden'), eof],
+        [eof, eof],
+      ]) {
+        expect(() => parseLispTokens(tokens), throwsA(isA<LispParseError>()));
+        expect(tryParseLispTokens(tokens), isNull);
+      }
+    });
+
+    test('EOF-only and lexer-produced token streams remain valid', () {
+      const eof = lisp.Token(lisp.TokenType.eof, '');
+      expect(parseLispTokens(const [eof]), isEmpty);
+      expect(parseLispTokens(lisp.tokenize('x')), equals(parseLisp('x')));
+    });
+
     test('spec accessor exposes grammar', () {
       final names = lispParserGrammar().ruleNames();
       expect(names, contains('program'));

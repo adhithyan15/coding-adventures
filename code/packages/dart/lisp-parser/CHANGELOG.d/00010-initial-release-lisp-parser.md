@@ -1,5 +1,9 @@
 ## 0.1.0
 
+- Reject missing or embedded EOF tokens at the direct-token API boundary
+  before invoking the shared parser, preventing repeated-token CPU/memory
+  exhaustion and recursion beyond the nesting prescan. Keep empty streams
+  and the lexer's correctly terminated streams compatible.
 - Initial Dart lane of the lisp-parser identity: `parseLisp` /
   `tryParseLisp` / `parseLispTokens` / `tryParseLispTokens` over the
   compiled `lisp.grammar` grammar (`lib/src/_grammar.dart`, generated

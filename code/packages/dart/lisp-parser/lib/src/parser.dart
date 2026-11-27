@@ -140,12 +140,26 @@ List<SExpr> parseLisp(String source) {
 /// Parse a pre-tokenized token stream into S-expressions.
 ///
 /// Use this when you already have tokens from the lexer and want to
-/// skip re-tokenization.
+/// skip re-tokenization. A nonempty stream must contain exactly one
+/// EOF token, at the end, just like [lisp.tokenize] produces.
 List<SExpr> parseLispTokens(List<lisp.Token> tokens) {
   if (tokens.isEmpty) {
     // `program = { sexpr }` matches empty input. (The hand reader
     // indexed past the end here — a panic this migration retires.)
     return [];
+  }
+  // The shared engine repeats its last token after exhaustion. Without
+  // a terminal EOF, a final atom can therefore match forever inside
+  // `program = { sexpr }`; a final opening paren can recurse forever.
+  // Validate before either the nesting scan or the engine sees caller
+  // tokens. An embedded EOF would also hide otherwise unparsed input.
+  if (tokens.last.tokenType != lisp.TokenType.eof) {
+    throw LispParseError('Token stream must end with EOF');
+  }
+  for (var i = 0; i < tokens.length - 1; i++) {
+    if (tokens[i].tokenType == lisp.TokenType.eof) {
+      throw LispParseError('EOF may only occur at the end of the token stream');
+    }
   }
   _checkNestingDepth(tokens);
   final engineTokens = _toEngineTokens(tokens);
