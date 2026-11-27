@@ -1,0 +1,5 @@
+{
+  "package": "go/memory-block-device",
+  "capabilities": [],
+  "justification": "The memory block device uses only Go maps and owned byte slices."
+}
