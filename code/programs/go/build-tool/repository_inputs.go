@@ -136,6 +136,9 @@ var (
 	historicalUnixBuildDotnetPath   = "code/specs/fixtures/historical-unix-v1/build_dotnet.py"
 	historicalUnixDartAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/dart/fixture_cli.dart"
 	historicalUnixKotlinAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/kotlin/FixtureReplayTest.kt"
+	historicalUnixElixirAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/elixir/fixture_cli.exs"
+	historicalUnixHaskellCabalPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/haskell/historical-unix-fixture-cli.cabal"
+	historicalUnixHaskellMainPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/haskell/Main.hs"
 	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
 	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
 	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
@@ -629,9 +632,11 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("cpp"),
 	historicalUnixFixtureRow("csharp"),
 	historicalUnixFixtureRow("dart"),
+	historicalUnixFixturePackageRow("elixir/unix_history_simulator", "elixir"),
 	historicalUnixFixtureRow("fsharp"),
 	historicalUnixFixtureRow("go"),
 	historicalUnixFixtureRow("java"),
+	historicalUnixFixtureRow("haskell"),
 	historicalUnixFixtureRow("kotlin"),
 	historicalUnixFixtureRow("lua"),
 	historicalUnixFixtureRow("perl"),
@@ -649,6 +654,9 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixAdapterRow("fsharp", historicalUnixFsharpProjectPath),
 	historicalUnixAdapterRow("dart", historicalUnixDartAdapterPath),
 	historicalUnixAdapterRow("kotlin", historicalUnixKotlinAdapterPath),
+	historicalUnixAdapterPackageRow("elixir/unix_history_simulator", "elixir", historicalUnixElixirAdapterPath),
+	historicalUnixAdapterRow("haskell", historicalUnixHaskellCabalPath),
+	historicalUnixAdapterRow("haskell", historicalUnixHaskellMainPath),
 	historicalUnixReplayRow("c"),
 	historicalUnixReplayRow("cpp"),
 	historicalUnixReplayRow("java"),
@@ -656,6 +664,8 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixReplayRow("csharp"),
 	historicalUnixReplayRow("fsharp"),
 	historicalUnixReplayRow("dart"),
+	historicalUnixReplayPackageRow("elixir/unix_history_simulator", "elixir"),
+	historicalUnixReplayRow("haskell"),
 	historicalUnixBuildNativeRow("c"),
 	historicalUnixBuildNativeRow("cpp"),
 	historicalUnixBuildNativeRow("java"),
@@ -1798,6 +1808,10 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 
 func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 	name := language + "/unix-history-simulator"
+	return historicalUnixFixturePackageRow(name, language)
+}
+
+func historicalUnixFixturePackageRow(name, language string) repositoryInputConsumer {
 	return repositoryInputConsumer{
 		name: name, language: language,
 		inputs:  "the shared HOS-002 historical Unix replay fixture",
@@ -1807,8 +1821,12 @@ func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 }
 
 func historicalUnixAdapterRow(language, adapterPath string) repositoryInputConsumer {
+	return historicalUnixAdapterPackageRow(language+"/unix-history-simulator", language, adapterPath)
+}
+
+func historicalUnixAdapterPackageRow(name, language, adapterPath string) repositoryInputConsumer {
 	return repositoryInputConsumer{
-		name: language + "/unix-history-simulator", language: language,
+		name: name, language: language,
 		inputs:  "the external historical Unix fixture adapter used by this package recipe",
 		matches: exactRepositoryPath(adapterPath),
 		paths:   []string{adapterPath},
@@ -1816,8 +1834,12 @@ func historicalUnixAdapterRow(language, adapterPath string) repositoryInputConsu
 }
 
 func historicalUnixReplayRow(language string) repositoryInputConsumer {
+	return historicalUnixReplayPackageRow(language+"/unix-history-simulator", language)
+}
+
+func historicalUnixReplayPackageRow(name, language string) repositoryInputConsumer {
 	return repositoryInputConsumer{
-		name: language + "/unix-history-simulator", language: language,
+		name: name, language: language,
 		inputs:  "the shared historical Unix replay helper invoked by this package BUILD",
 		matches: exactRepositoryPath(historicalUnixReplayPath),
 		paths:   []string{historicalUnixReplayPath},
@@ -1878,6 +1900,9 @@ func repositoryInputsForPackage(packageName string) []string {
 			osMachineRiscvPath, osMachineRiscvVerifyPath,
 		}
 	}
+	if packageName == "elixir/unix_history_simulator" {
+		return []string{historicalUnixFixturePath, historicalUnixReplayPath, historicalUnixElixirAdapterPath}
+	}
 	if strings.HasSuffix(packageName, "/unix-history-simulator") {
 		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
 		inputs := []string{historicalUnixFixturePath}
@@ -1899,6 +1924,8 @@ func repositoryInputsForPackage(packageName string) []string {
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
 		case "kotlin":
 			inputs = append(inputs, historicalUnixKotlinAdapterPath)
+		case "haskell":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixHaskellCabalPath, historicalUnixHaskellMainPath)
 		case "csharp":
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath)
 		case "fsharp":
