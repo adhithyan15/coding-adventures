@@ -1,5 +1,8 @@
 # Changelog
 
+- Declare macOS 10.15.4 as the minimum for this Swift package and both of its
+  products, preserving throwing CLI output semantics with FileHandle.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.1.0] - 2026-11-25
