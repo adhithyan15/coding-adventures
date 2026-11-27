@@ -78,17 +78,21 @@ because the ready response is visible before arbitration. During a held cycle:
    values; keep the fetch PC unchanged and do not fetch or decode younger work.
 2. Keep the pending request and MEM token unchanged except for its service
    progress. Do not invoke MEM read/store effects again.
-3. Allow the older WB token present on the first wait cycle to run its normal
-   WB callback and retire/commit once. The WB slot becomes a bubble for later
-   wait cycles; it is never held or replayed. WB processing of a token must
-   not repeat merely because a younger MEM request remains pending.
+3. The token in WB at the end of issue cycle `M` has already run its WB
+   callback and retired/committed once in `M`. It remains in the pre-state WB
+   slot when the first wait cycle `M + 1` begins. The wait transition clears
+   that already-retired token to a bubble without invoking WB again. No token
+   enters WB while MEM is held, so there is no WB callback or retirement in
+   any MEM wait cycle. On the release cycle, the held MEM token advances to WB
+   and receives its normal WB callback once at cycle end.
 4. On the release cycle, expose the response before hazard selection, then
    release the held stages through the ordinary pipeline transition. Do not
    insert an additional bubble beyond the `L - 1` wait cycles defined above.
 
 A dedicated additive wait/backpressure action is required if the existing
 pipeline stall action cannot hold the MEM token and freeze every younger
-stage while draining WB once. Do not redefine the behavior of existing
+stage while clearing the already-retired WB token and preventing a repeated
+WB callback. Do not redefine the behavior of existing
 `HazardStall` callers.
 
 ### Load response and typed forwarding
@@ -125,11 +129,12 @@ younger EX fault:
   token, issue younger memory work, or fetch a replacement.
 - On the older request's ready cycle, expose its response and let the older
   MEM token advance toward WB. The existing precise-fault action may then
-  select/squash the younger fault according to D05 ordering while allowing the
-  older token to drain.
-- The older instruction's GPR/store effect must commit once before the
-  terminal fault outcome. The younger fault remains absent from successful
-  retirement and has no memory request or architectural effect.
+  select/squash the younger fault according to D05 ordering. The older token
+  receives its WB callback once at the end of this release cycle.
+- The older instruction's GPR/store effect must commit once on that release
+  cycle, before the later terminal fault outcome. The younger fault remains
+  absent from successful retirement and has no memory request or architectural
+  effect.
 
 This ordering applies to an already detected D05 EX preflight fault; D-MEM
 readiness does not create new fault classes or defer address validation.
@@ -146,9 +151,13 @@ Validation must use two references with separate responsibilities:
    `(M, [M+1], completion end M+1, release M+2)`, and
    `(M, [M+1,M+2], completion end M+2, release M+3)`. The test compares token identities
    and per-cycle IF/ID/EX/MEM/WB observations, fetch-PC stability, issue/complete
-   counts, wait-cycle evidence, and exactly-once WB retirement/commit. It also
-   exercises at least one latency greater than three and a second memory
-   instruction to prove the single-outstanding in-order rule.
+   counts, wait-cycle evidence, and exactly-once WB retirement/commit. It must
+   show that the issue-cycle older MEM token retires at the end of `M`, that
+   its stale pre-state WB copy is cleared without a callback in `M + 1`, that
+   no WB callback occurs in held cycles, and that the held MEM token retires
+   once on release. It also exercises at least one latency greater than three
+   and a second memory instruction to prove the single-outstanding in-order
+   rule.
 2. **Independent sequential architectural oracle.** Run each guest program
    through a fresh sequential `RiscVSimulator`, then compare the precise
    pipeline's successfully retired PCs, all architectural registers, and all
@@ -174,12 +183,15 @@ published 16-cycle/9-retirement fixture unchanged as a compatibility check.
    Add a larger deterministic latency and show total cycles increase by
    exactly `L - 1` for one isolated memory operation, with all other expected
    pipeline events unchanged.
-3. **Stage hold and WB drain.** While pending, assert stable IF/ID/EX/MEM token
-   identities, stable fetch PC, no fetch/decode/execute/MEM callback replay,
-   and no duplicate retirement or store receipt. A valid older WB operation
-   retires/commits once on the first wait cycle; later wait cycles see an empty
-   WB slot. Deliberately repeat a callback or WB completion in a negative
-   test seam and demonstrate the evidence detects it.
+3. **Stage hold and WB handling.** While pending, assert stable IF/ID/EX/MEM
+   token identities, stable fetch PC, no fetch/decode/execute/MEM callback
+   replay, and no duplicate retirement or store receipt. The older token
+   advanced from MEM to WB during issue cycle `M` retires/commits at the end
+   of `M`; its pre-state WB copy is cleared without callback on the first
+   wait cycle `M + 1`. No WB callback or retirement occurs in any held cycle.
+   The held MEM token enters WB and commits/retires once on release. Deliberately
+   repeat a callback or WB completion in a negative test seam and demonstrate
+   the evidence detects it.
 4. **Delayed typed load forwarding.** Use an `LW` followed by a dependent ALU
    instruction. Assert the data hazard behavior before the load result is
    ready, the load value appears as a typed MEM result before release-cycle
@@ -194,7 +206,8 @@ published 16-cycle/9-retirement fixture unchanged as a compatibility check.
 6. **Older wait before younger fault.** Hold a valid older load or store in
    MEM while a younger EX token carries a D05 fault. Assert no fault selection
    before the older response is ready, no younger fetch/effect, older effect
-   exactly once, then the selected younger fault and exact successful prefix.
+   exactly once at WB on the release cycle, then the selected younger fault
+   and exact successful prefix.
 7. **Wrong-path suppression.** A redirected/squashed memory token never issues
    a request or contributes latency/wait events. Existing D05 wrong-path fault
    behavior remains unchanged.
