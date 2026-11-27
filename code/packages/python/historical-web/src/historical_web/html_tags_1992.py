@@ -180,17 +180,16 @@ def _anchor_attributes(source: str) -> dict[str, str | None]:
     attributes: dict[str, str | None] = {}
     cursor = 0
     while (match := _attribute_at(source, cursor)) is not None:
-        name, forms, cursor = match
+        name, value, cursor = match
         name = name.lower()
         if name in {"href", "name", "type"} and name not in attributes:
-            value = next((form for form in forms if form is not None), None)
             attributes[name] = _decode(value) if value is not None else None
     return attributes
 
 
 def _attribute_at(
     source: str, cursor: int
-) -> tuple[str, tuple[str | None, ...], int] | None:
+) -> tuple[str, str | None, int] | None:
     start = cursor
     while cursor < len(source) and _is_space(source[cursor]):
         cursor += 1
@@ -205,12 +204,12 @@ def _attribute_at(
     while cursor < len(source) and _is_space(source[cursor]):
         cursor += 1
     if cursor >= len(source) or source[cursor] != "=":
-        return name, (None,), value_start
+        return name, None, value_start
     cursor += 1
     while cursor < len(source) and _is_space(source[cursor]):
         cursor += 1
     if cursor >= len(source):
-        return name, (None,), value_start
+        return name, None, value_start
     if source[cursor] in "\"'":
         quote = source[cursor]
         cursor += 1
@@ -218,8 +217,8 @@ def _attribute_at(
         while cursor < len(source) and source[cursor] != quote:
             cursor += 1
         if cursor >= len(source):
-            return name, (None,), value_start
-        return name, (source[value_start:cursor], None, None), cursor + 1
+            return name, None, value_start
+        return name, source[value_start:cursor], cursor + 1
     value_start = cursor
     while (
         cursor < len(source)
@@ -228,8 +227,8 @@ def _attribute_at(
     ):
         cursor += 1
     if cursor == value_start:
-        return name, (None,), value_start
-    return name, (None, None, source[value_start:cursor]), cursor
+        return name, None, value_start
+    return name, source[value_start:cursor], cursor
 
 
 def _closing_index(
