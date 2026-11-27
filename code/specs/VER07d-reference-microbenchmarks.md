@@ -78,8 +78,13 @@ Order values are `baseline-first` and `candidate-first`. Each duration is a
 positive signed 64-bit integer. Convert both durations to binary64 before
 dividing the candidate duration by the baseline duration. The analysis API
 accepts these raw pairs and the confidence and factor. It returns the VER07b result and rejects missing
-pairs or invalid observations or parameters. A JSON round trip must preserve
-the raw pairs and support replaying the same verdict, ratio and interval.
+pairs or invalid observations or parameters. The public Go `Analyze` and
+Python `analyze` entry points accept at most 10,000 pairs and reject a larger
+input before allocating or transforming per-pair ratios. This matches the
+collector and report limits. The generic rank-statistics APIs remain
+independent and do not inherit this microbenchmark-specific cap. A JSON round
+trip must preserve the raw pairs and support replaying the same verdict, ratio
+and interval.
 
 ## Indexed-array driver
 
