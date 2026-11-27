@@ -960,8 +960,11 @@ misread as a deletion, and package-tree bindings include same-package changes co
 from both sides of the merge. A dedicated PR job performs this check without running
 repository Python code beforehand in that job. Its isolated interpreter uses only the base-pinned
 dependencies and verifier source extracted from the exact pull-request base; it treats
-the checkout as untrusted Git data. The owner proposal command uses the same
-base-extracted checker and isolated dependency installation. It loads the signer chain and prior
+the checkout as untrusted Git data. It installs only wheel artifacts constrained by
+the Python dependency pins from the PR base; the constraint file, like the verifier,
+workflow, schemas, and signer chain, is covered by the existing capability trust
+CODEOWNERS rule. The owner proposal command uses the same base-extracted checker and
+isolated dependency installation. It loads the signer chain and prior
 manifest from that same base, then checks canonical payload bytes, hashes, package
 tree, package name/path, exact profile arrays/status, principal, signature namespace,
 and hardware user-presence and user-verification flags. The verified principal must

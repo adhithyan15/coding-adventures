@@ -1,5 +1,6 @@
-# VER31 section 9.6: the files that decide what a release may claim, what the
-# release workflow runs, or who may authorize it. A `main` ruleset requiring
+# VER31 section 9.6: the files that decide what a release or capability profile
+# may claim, which trusted dependencies the capability verifier installs, what
+# the workflows run, or who may authorize it. A `main` ruleset requiring
 # code-owner review makes a PR that touches one wait for the owner, even when
 # auto-merge is set.
 /.github/CODEOWNERS @adhithyan15
@@ -9,6 +10,7 @@
 /.github/workflows/ci.yml @adhithyan15
 /code/scripts/release_gate.py @adhithyan15
 /code/scripts/capability_approval_gate.py @adhithyan15
+/code/specs/data/third-party-dependencies/python-constraints.txt @adhithyan15
 /code/specs/13-capability-security.md @adhithyan15
 /code/specs/schemas/required_capabilities.schema.json @adhithyan15
 /code/specs/schemas/capability-approval.schema.json @adhithyan15
