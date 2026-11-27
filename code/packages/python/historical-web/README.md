@@ -30,3 +30,9 @@ that relationship and defines the recovery rules for this teaching profile.
 Run `sh BUILD` to check the reference on Unix, or run `BUILD_windows` commands
 in `cmd.exe` on Windows. Future ports can replay the same
 [language-neutral vectors](../../../specs/fixtures/historical-web-v1/vectors.json).
+
+The BUILD check also runs the bounded VER05c/VER06d assurance suite: independent
+wire acceptance/output models, generated omitted-`LI` semantics, and an
+instrumented 2,048-iteration campaign over all public exports. Its contract,
+explicit limits, and evidence boundary are recorded in
+[HWEB01](../../../specs/HWEB01-historical-web-assurance.md).

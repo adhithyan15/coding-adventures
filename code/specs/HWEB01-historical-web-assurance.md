@@ -26,9 +26,10 @@ cases, with non-ASCII negatives). PBT runs 256 deterministic cases for each
 of three properties: wire acceptance/output, request round trips, and omitted
 `LI` semantics (768 property cases total). The wire property uses an
 independent acceptance model for arbitrary 0–32-byte inputs and checks exact
-outputs and refusals. Fuzz runs 512 iterations, with initial seeds no longer than 64
-bytes and `max_input_len=128`; these bounds are campaign receipts, not claims
-about unbounded inputs. Tree-depth checks cap generated nesting at 12.
+outputs and refusals. Fuzz runs 2,048 iterations, with initial seeds no longer
+than 64 bytes and `max_input_len=128`; these bounds are campaign receipts, not claims
+about unbounded inputs. Tree validation is iterative and checks acyclicity and
+single ownership without imposing a smaller artificial depth limit.
 
 The profile intentionally ignores unmatched recognized end tags, preserves
 non-matching `<` text, decodes only the three archived entities once, and

@@ -36,16 +36,21 @@ def _addresses() -> list[str]:
     ]
 
 
-def _tree_shape(nodes: list[object], depth: int = 0) -> None:
-    """Check shape without using the parser's tokenizer, stack, or regexes."""
-    assert depth <= 12
-    for node in nodes:
+def _tree_shape(nodes: list[object]) -> None:
+    """Iteratively check shape, ownership, and acyclicity independently."""
+    pending = list(nodes)
+    seen: set[int] = set()
+    while pending:
+        node = pending.pop()
         if isinstance(node, str):
             continue
         assert isinstance(node, Element)
+        identity = id(node)
+        assert identity not in seen
+        seen.add(identity)
         assert node.tag.isascii() and node.tag == node.tag.lower()
         assert isinstance(node.attributes, dict)
-        _tree_shape(node.children, depth + 1)
+        pending.extend(node.children)
 
 
 def test_exhaustive_small_http_address_domain() -> None:
@@ -229,8 +234,8 @@ def test_fuzz_real_tree_export_is_crash_clean() -> None:
     report = fuzz_function(
         _fuzz_exports,
         [b"<UL><LI>x<LI>y</UL>", b"<PLAINTEXT>", b"&lt;"],
-        FuzzOptions(max_iterations=512, seed=0x19921103, max_input_len=128),
+        FuzzOptions(max_iterations=2048, seed=0x19921103, max_input_len=128),
     )
-    assert report.iterations == 512
+    assert report.iterations == 2048
     assert report.is_clean
     assert not report.crashes and not report.timeouts and not report.ooms
