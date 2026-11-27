@@ -92,7 +92,6 @@ all possible histories.
 
 The package supplies POSIX and Windows build entries using the repository's
 native C harness where available, a README with ownership and usage guidance,
-and a changelog. Fixture reader registration in canonical DB-E01 generators
-and ledgers is a separate follow-up if the existing registry requires broad
-generated edits; the package-local test invocation must still consume the
-canonical trace directly.
+and a changelog. DB-E05 gives the package an exact dependency on the NAND
+fixture for selection, hashing, and the exported build graph. The native
+test runner reads that same canonical trace. [Fixture routing](DB-E01-media-fixture-routing.md)
