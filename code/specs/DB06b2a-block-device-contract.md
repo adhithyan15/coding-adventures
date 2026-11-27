@@ -60,3 +60,19 @@ sizes with unit tests and a finite independent table. Use generated
 signed boundaries and guided input, race, vet and controls for an
 upper-bound address error and premature length validation. Record
 that both command lists compile and run the public package.
+
+
+## Local verification
+
+The implementation is in `4767a24749c`. An independent Go caller matched
+40,960 signed geometry, address and payload decisions. It verified the
+maximum logical capacity and zero validation allocations. Compile-time
+checks confirmed the exact public interface. The caller passed race and
+vet.
+
+The emitted recipe passed at 100% statement coverage, with race and
+vet. Both command lists ran on Linux, module tidy passed, and the
+package passed 100,000 guided inputs and both mutation controls.
+Linux/386 passed under QEMU and the Windows/amd64 test binary compiled.
+The build graph and emitted recipe inventory gained this package alone,
+with no module or repository fixture dependencies.

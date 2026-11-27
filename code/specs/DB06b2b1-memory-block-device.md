@@ -44,3 +44,19 @@ logical geometries with a small number of populated blocks. Cross
 bad addresses and payload sizes for exact refusal order. Run both
 command lists, race, vet, bounded guided histories and mutation
 controls for persisting before flush and sharing caller buffers.
+
+
+## Local verification
+
+The implementation is in `77aeeb048fc`. An independent caller matched
+84,035 visible-byte and refusal decisions over 16,807 histories
+through the public interface. It checked source and output ownership,
+the maximum logical geometry, nil and zero values, and durable
+images retained across later writes. The caller passed race and vet.
+
+The emitted recipe passed at 95.0% statement coverage with race and
+vet. Both command lists ran on Linux and module tidy passed. The
+package tested 625 bounded histories and 65,536 seeded commands,
+passed a 100,000-input guided campaign and detected both mutation
+controls. The graph and Linux recipe inventory gained only this
+package, with the Go logical block contract as its sole dependency.

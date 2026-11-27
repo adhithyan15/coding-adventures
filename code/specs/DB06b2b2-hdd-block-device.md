@@ -44,3 +44,17 @@ leave pending bytes visible. Exercise the public interface,
 both build lists, race, vet, guided histories and controlled failures
 for flushing only the first dirty sector or retaining volatile
 bytes during restart.
+
+## Local verification
+
+The adapter is in `72304c3d0ea`. An independent public caller matched
+65,536 seeded block decisions on HDD and memory and all 30 barrier
+cuts across three dirty blocks. It checked exact persisted bytes,
+restart lineage, detached buffers, and nil and zero receivers.
+Restart uses the admitted cache's value-returning power-loss operation.
+
+Both command lists passed on Linux at 93.1% statement coverage, with
+race and vet. Module tidy passed. The 100,000-input guided campaign
+passed, and both negative controls reached their designated assertions.
+The export added only the adapter and its recipe. All 6,006 earlier
+package rows and 6,005 earlier recipes were unchanged.
