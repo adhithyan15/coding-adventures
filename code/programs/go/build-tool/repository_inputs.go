@@ -129,6 +129,10 @@ var (
 	historicalUnixCppAdapterPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
 	historicalUnixJavaAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
 	historicalUnixLuaAdapterPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
+	osArchitectureProfilesPath    = "code/specs/fixtures/os-architecture-v1/profiles.json"
+	osArchitectureVerifyPath      = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
+	osMachineBoardsPath           = "code/specs/fixtures/os-machine-v1/boards.json"
+	osMachineVerifyPath           = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
 	// kilnToolchainPinPaths are the pin sources Kiln's committed
 	// code/kiln/legacy/toolchains.json is checked against by its drift test
 	// (realpolicy_test.go). A toolchain bump that edits only these files must
@@ -586,6 +590,15 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	// HOS-ARCH-b: the architecture package BUILD validates both canonical
+	// architecture profiles and machine-board fixtures, plus their exact
+	// verifier scripts. Keep selection and cache inputs in lockstep.
+	{
+		name: "typescript/os-architecture-simulator", language: "typescript",
+		inputs:  "the canonical OS architecture and machine-board fixtures and their BUILD verifiers",
+		matches: isOSArchitectureFixtureInput,
+		paths:   []string{osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath},
+	},
 	// HOS-002b: every native port replays the canonical shared trace. The
 	// adjacent helper/build driver and external adapters are narrower inputs
 	// read only by the four package recipes that compile those adapters.
@@ -1790,9 +1803,21 @@ func isHistoricalUnixFixture(changed string) bool {
 	return changed == historicalUnixFixturePath
 }
 
+func isOSArchitectureFixtureInput(changed string) bool {
+	switch changed {
+	case osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath:
+		return true
+	default:
+		return false
+	}
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
+	if packageName == "typescript/os-architecture-simulator" {
+		return []string{osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath}
+	}
 	if strings.HasSuffix(packageName, "/unix-history-simulator") {
 		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
 		inputs := []string{historicalUnixFixturePath}
