@@ -1641,7 +1641,11 @@ func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
 		{Name: "go/os-architecture-simulator", Language: "go"},
 		{Name: "typescript/adjacent", Language: "typescript"},
 	}
-	exactInputs := []string{osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath}
+	exactInputs := []string{
+		osArchitectureProfilesPath, osArchitectureVerifyPath,
+		osMachineBoardsPath, osMachineVerifyPath,
+		osMachineRiscvPath, osMachineRiscvVerifyPath,
+	}
 	for _, changed := range exactInputs {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
 		want := map[string]bool{"typescript/os-architecture-simulator": true}
@@ -1663,6 +1667,9 @@ func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
 		"code/specs/fixtures/os-architecture-v1/README.md",
 		"code/specs/fixtures/os-machine-v1/boards.json/child",
 		"code/specs/fixtures/os-machine-v1/verify_boards.mjs.bak",
+		osMachineRiscvPath + ".bak",
+		"code/specs/fixtures/os-machine-v1/verify_riscv.test.ts.bak",
+		"code/specs/fixtures/os-machine-v1/README.md",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{unrelated}, packages, "all")
 		if err != nil || len(got) != 0 {
@@ -1672,9 +1679,11 @@ func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
 	// Git reports the removed side of a rename alongside the new path. The
 	// old exact fixture still selects this consumer even when the new name is
 	// outside the fixture tree.
-	got, err := repositoryInputConsumersForChange([]string{osArchitectureProfilesPath, "docs/renamed-profiles.json"}, packages, "all")
-	if err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/os-architecture-simulator": true}) {
-		t.Fatalf("rename paths selected %v, err %v", got, err)
+	for _, renamedInput := range []string{osArchitectureProfilesPath, osMachineRiscvPath} {
+		got, err := repositoryInputConsumersForChange([]string{renamedInput, "docs/renamed-fixture.json"}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/os-architecture-simulator": true}) {
+			t.Errorf("rename paths for %s selected %v, err %v", renamedInput, got, err)
+		}
 	}
 	if got := repositoryInputsForPackage("typescript/os-architecture-simulator"); !reflect.DeepEqual(got, exactInputs) {
 		t.Fatalf("package hash inputs = %v, want exactly %v", got, exactInputs)
