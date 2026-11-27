@@ -37,3 +37,12 @@ Bisect coverage Dune context. The nonempty native exception still requires the
 separate Spec 13 owner authorization before merge.
 
 For the focused unit suite, run `opam exec -- dune runtest` from this directory.
+
+Run `BUILD` (or `BUILD_windows`) from this directory. It applies pinned Bisect
+PPX instrumentation to the OCaml library and CLI, reports expected per-file
+coverage for the library/workload/CLI, and explicitly excludes the native clock
+binding. It also runs strict schema mutations, native report replay, and an
+installed external consumer. The C clock shim is reviewed separately by its
+capability exception, so this report is not evidence of C-source coverage.
+Tests use fake clocks, the shared fixture, generated order properties, and
+full-width replay checks.

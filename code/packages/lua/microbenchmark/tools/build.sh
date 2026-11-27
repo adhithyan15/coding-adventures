@@ -33,3 +33,7 @@ else
   export LUA_CPATH="$(luarocks path --lr-cpath)"
 fi
 lua tests/run.lua
+report=$(mktemp)
+trap 'rm -f "$report"' EXIT HUP INT TERM
+env GIT_REVISION= GITHUB_SHA= lua script/array-microbenchmark --pairs 40 > "$report"
+lua tests/installed-consumer/Consumer.lua "$report"

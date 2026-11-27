@@ -171,12 +171,31 @@ replayTests = do
     forM_ invalidWorkloads $ \token ->
         assert ("invalid workload rejected: " ++ token) (isLeft (replayReport (withWorkload token)))
     assert "metadata-free report roundtrip" (isRight (replayReport (encodeReport (report { reportMetadata = Nothing }))))
+    let emptyArg = report { reportMetadata = Just metadata { metadataInvocation = [""] } }
+        nulMetadata = report { reportMetadata = Just metadata { metadataRevision = "bad\0value" } }
+        nulArg = report { reportMetadata = Just metadata { metadataInvocation = ["bad\0value"] } }
+        nulProfile = report { reportMetadata = Just metadata { metadataProfile = Just "bad\0value" } }
+        emptyProfile = report { reportMetadata = Just metadata { metadataProfile = Just "" } }
+        whitespaceRevision = report { reportMetadata = Just metadata { metadataRevision = " " } }
+    assert "empty argv element is valid" (isRight (replayReport (encodeReport emptyArg)))
+    assert "NUL in descriptive metadata rejected" (isLeft (replayReport (encodeReport nulMetadata)))
+    assert "NUL in invocation rejected" (isLeft (replayReport (encodeReport nulArg)))
+    assert "NUL in profile rejected" (isLeft (replayReport (encodeReport nulProfile)))
+    assert "empty profile rejected" (isLeft (replayReport (encodeReport emptyProfile)))
+    assert "whitespace-only descriptive string remains valid" (isRight (replayReport (encodeReport whitespaceRevision)))
     let unknownField = BSC.pack (replaceOnce "\"batch_size\":1" "\"extra\":1,\"batch_size\":1" (BSC.unpack bytes))
         oversized = BS.replicate (4 * 1024 * 1024 + 1) 32
         tooDeep = BSC.pack (replicate 129 '[' ++ replicate 129 ']')
     assert "unknown field rejected" (isLeft (replayReport unknownField))
     assert "size limit enforced" (isLeft (replayReport oversized))
     assert "nesting bound checked before JSON parse" (isLeft (replayReport tooDeep))
+    let maximumPairs =
+            [ Pair 1 1 (if even index then BaselineFirst else CandidateFirst)
+            | index <- [0..9999]
+            ]
+    assert "analysis accepts 10000 pairs" (isRight (analyze maximumPairs 95 1.05))
+    assert "analysis rejects 10001 pairs" (isLeft (analyze (maximumPairs ++ [pair]) 95 1.05))
+    assert "analysis rejects infinite input after a bounded prefix" (isLeft (analyze (repeat pair) 95 1.05))
     let unbalancedConfig = config { configPairs = 2 }
         unbalancedPairs = [pair, pair { pairOrder = BaselineFirst }]
     unbalancedAnalysis <- right (analyze unbalancedPairs 95 1.05)

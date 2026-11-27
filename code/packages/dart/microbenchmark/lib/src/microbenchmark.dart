@@ -6,6 +6,8 @@ import 'package:coding_adventures_rank_statistics/coding_adventures_rank_statist
 
 final BigInt _minI64 = -(BigInt.one << 63);
 final BigInt _maxI64 = (BigInt.one << 63) - BigInt.one;
+const int _maxPairs = 10000;
+const int _maxJsonBytes = 4 * 1024 * 1024;
 
 BigInt signed64(Object? value, String field) {
   if (value is! BigInt || value < _minI64 || value > _maxI64) {
@@ -32,7 +34,7 @@ class Config {
   final BigInt targetNs;
   final BigInt maxBatch;
   void validate() {
-    if (pairs < 1 || pairs > 10000)
+    if (pairs < 1 || pairs > _maxPairs)
       throw ArgumentError('pairs must be 1..10000');
     if (confidencePercent < 1 || confidencePercent > 99)
       throw ArgumentError('confidence must be 1..99');
@@ -88,10 +90,18 @@ class Report {
       };
   String toJson() => _writeJson(toMap());
   static Report fromJson(String text) => _decodeReport(text);
-  static Report fromBytes(List<int> bytes) => _decodeReport(utf8.decode(bytes));
+  static Report fromBytes(List<int> bytes) {
+    if (bytes.length > _maxJsonBytes) {
+      throw FormatException('input exceeds 4 MiB');
+    }
+    return _decodeReport(utf8.decode(bytes));
+  }
 }
 
 Analysis analyze(List<Pair> pairs, int confidencePercent, double factor) {
+  if (pairs.length > _maxPairs) {
+    throw ArgumentError('at most 10000 pairs are supported');
+  }
   if (pairs.isEmpty ||
       confidencePercent < 1 ||
       confidencePercent > 99 ||
@@ -313,7 +323,7 @@ String _decodeJsonStringToken(String raw) {
 // Lexer tokens preserve the original numeric spelling; no large integer is
 // ever decoded through a JavaScript Number.
 dynamic _decodeReport(String source) {
-  if (utf8.encode(source).length > 4 * 1024 * 1024)
+  if (utf8.encode(source).length > _maxJsonBytes)
     throw FormatException('input exceeds 4 MiB');
   final tokens = tokenizeJson(source);
   var index = 0, nodes = 0, depth = 0;
@@ -495,22 +505,41 @@ Report _reportFromMap(Map<String, dynamic> map) {
   }
   if (!_sameInterval(interval, recomputed.interval))
     throw FormatException('interval does not match observations');
+  const metadataKeys = [
+    'workload',
+    'invocation',
+    'revision',
+    'runtime',
+    'os',
+    'arch'
+  ];
+  final presentMetadata = metadataKeys.where(map.containsKey).length;
+  final hasProfile = map.containsKey('profile');
+  if (presentMetadata == 0) {
+    if (hasProfile) throw FormatException('profile requires complete metadata');
+    return Report(config, batch, List.unmodifiable(pairs), recomputed);
+  }
+  if (presentMetadata != metadataKeys.length)
+    throw FormatException('standard metadata must be complete or absent');
+
   final metadata = <String, Object?>{};
   for (final key in ['workload', 'revision', 'runtime', 'os', 'arch']) {
     final v = map[key];
-    if (v is! String) throw FormatException('missing metadata $key');
+    if (v is! String || v.isEmpty || v.contains(String.fromCharCode(0)))
+      throw FormatException('invalid metadata $key');
     if (key == 'workload' && !_validWorkloadIdentifier(v))
       throw FormatException('workload must be nonblank and contain no NUL');
-    if (v.isEmpty) throw FormatException('missing metadata $key');
     metadata[key] = v;
   }
   final invocation = map['invocation'];
-  if (invocation is! List || invocation.any((e) => e is! String))
+  if (invocation is! List ||
+      invocation.any((e) => e is! String || e.contains(String.fromCharCode(0))))
     throw FormatException('invalid invocation');
   metadata['invocation'] = invocation;
-  if (map.containsKey('profile')) {
+  if (hasProfile) {
     final v = map['profile'];
-    if (v is! String) throw FormatException('invalid profile');
+    if (v is! String || v.isEmpty || v.contains(String.fromCharCode(0)))
+      throw FormatException('invalid profile');
     metadata['profile'] = v;
   }
   return Report(config, batch, List.unmodifiable(pairs), recomputed, metadata);

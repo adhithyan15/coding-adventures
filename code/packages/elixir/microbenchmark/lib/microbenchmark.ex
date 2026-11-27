@@ -8,6 +8,7 @@ defmodule CodingAdventures.Microbenchmark do
   alias CodingAdventures.RankStatistics, as: Stats
   @min_i64 -(1 <<< 63)
   @max_i64 (1 <<< 63) - 1
+  @max_pairs 10_000
   def defaults,
     do: %{
       pairs: 40,
@@ -18,8 +19,9 @@ defmodule CodingAdventures.Microbenchmark do
       max_batch: 65_536
     }
 
-  def analyze(pairs, confidence, factor) when is_list(pairs) and pairs != [] do
-    with :ok <- validate_analysis_parameters(confidence, factor),
+  def analyze(pairs, confidence, factor) when is_list(pairs) do
+    with :ok <- validate_pair_count(pairs),
+         :ok <- validate_analysis_parameters(confidence, factor),
          :ok <- validate_pairs(pairs),
          :ok <- validate_balance(pairs),
          ratios <- Enum.map(pairs, fn p -> p.candidate_ns / p.baseline_ns end),
@@ -93,8 +95,8 @@ defmodule CodingAdventures.Microbenchmark do
   end
 
   defp validate_report(report) when is_map(report) do
-    required = ~w(config batch_size pairs analysis workload invocation revision runtime os arch)
-    allowed = required ++ ["profile"]
+    required = ~w(config batch_size pairs analysis)
+    allowed = required ++ ~w(workload invocation revision runtime os arch profile)
 
     if Enum.any?(Map.keys(report), &(not is_binary(&1) or &1 not in allowed)) do
       {:error, :unknown_field}
@@ -202,15 +204,37 @@ defmodule CodingAdventures.Microbenchmark do
   defp compare_analysis(_, _), do: {:error, :analysis_mismatch}
 
   defp validate_metadata(m) do
-    strings = ~w(revision runtime os arch)
+    keys = ~w(workload invocation revision runtime os arch)
+    present = Enum.filter(keys, &Map.has_key?(m, &1))
+    has_profile = Map.has_key?(m, "profile")
 
-    if valid_workload?(m["workload"]) and Enum.all?(strings, &(is_binary(m[&1]) and m[&1] != "")) and
-         is_list(m["invocation"]) and
-         Enum.all?(m["invocation"], &is_binary/1) and
-         (not Map.has_key?(m, "profile") or is_binary(m["profile"])),
-       do: :ok,
-       else: {:error, :metadata}
+    cond do
+      present == [] and not has_profile ->
+        :ok
+
+      length(present) != length(keys) ->
+        {:error, :metadata_group}
+
+      not valid_workload?(m["workload"]) ->
+        {:error, :metadata}
+
+      not Enum.all?(~w(revision runtime os arch), &valid_nonempty_string?(m[&1])) ->
+        {:error, :metadata}
+
+      not is_list(m["invocation"]) or
+          not Enum.all?(m["invocation"], &(is_binary(&1) and not String.contains?(&1, <<0>>))) ->
+        {:error, :metadata}
+
+      has_profile and not valid_nonempty_string?(m["profile"]) ->
+        {:error, :metadata}
+
+      true ->
+        :ok
+    end
   end
+
+  defp valid_nonempty_string?(value),
+    do: is_binary(value) and value != "" and not String.contains?(value, <<0>>)
 
   defp valid_workload?(value) when is_binary(value) and byte_size(value) > 0 do
     not String.contains?(value, <<0>>) and
@@ -268,11 +292,27 @@ defmodule CodingAdventures.Microbenchmark do
         else: {:error, :analysis_parameters}
       )
 
+  defp validate_pair_count([]), do: {:error, :empty_pairs}
+
+  defp validate_pair_count(pairs) do
+    if at_most_pair_limit?(pairs, @max_pairs),
+      do: :ok,
+      else: {:error, :too_many_pairs}
+  end
+
+  defp at_most_pair_limit?([], _remaining), do: true
+  defp at_most_pair_limit?([_ | _], 0), do: false
+
+  defp at_most_pair_limit?([_ | rest], remaining),
+    do: at_most_pair_limit?(rest, remaining - 1)
+
   defp validate_pairs(pairs) do
     if Enum.all?(pairs, fn p ->
          is_map(p) and i64?(p[:baseline_ns]) and i64?(p[:candidate_ns]) and p.baseline_ns > 0 and
            p.candidate_ns > 0 and p[:order] in ["baseline-first", "candidate-first"]
-       end), do: :ok, else: {:error, :invalid_pair}
+       end),
+       do: :ok,
+       else: {:error, :invalid_pair}
   end
 
   defp validate_balance(pairs) do

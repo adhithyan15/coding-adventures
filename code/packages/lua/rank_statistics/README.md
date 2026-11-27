@@ -33,3 +33,8 @@ the hook is disabled only while the independent sign-enumeration oracle counts
 sign assignments, then restored before every `median_interval` call. That
 oracle block makes no calls into this library, so every library call remains
 instrumented.
+
+`BUILD` measures LuaCov 0.17.0-1 executable-line coverage for
+`src/coding_adventures/rank_statistics/init.lua` only and requires more than
+80% with a nonzero denominator. Test, sibling dependency, and C-source files
+are outside this library metric.

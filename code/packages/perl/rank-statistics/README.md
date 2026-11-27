@@ -30,3 +30,9 @@ module; test-harness and sibling-dependency rows are excluded from these
 percentages using `-select_re 'RankStatistics\.pm$'`. Devel::Cover used a
 task-local database and text reporter. The production module is unchanged from
 snapshot `d98f0030a92e6002a4eef47a982770985f58ff20`.
+
+`BUILD` measures Devel::Cover 1.52 statement coverage for
+`lib/CodingAdventures/RankStatistics.pm` only and requires more than 80% with a
+nonzero denominator. The test harness and sibling modules are outside that
+production-library metric; branch, condition, and subroutine figures are
+reported separately.

@@ -28,7 +28,6 @@ PowerShell/cmd. Load the rock tree paths with `eval "$(luarocks path)"` on
 POSIX; on Windows, set `LUA_PATH` and `LUA_CPATH` from `luarocks path --lr-path`
 and `--lr-cpath`. Then invoke `lua script/array-microbenchmark --pairs 40`.
 `tests/installed-consumer/Consumer.lua` is the external consumer smoke test.
-
 ## Coverage evidence
 
 On Windows x64 with Lua 5.4.5, LuaCov 0.17.0-1 and its Cluacov 1.0.0-1 C hook,
@@ -44,5 +43,15 @@ fake-clock, strict replay, 40-pair CLI, native QPC, array traversal, and
 signed-64-bit underflow checks. A separate installed CLI replay accepted a
 generated 40-pair report. The LuaCov result does not measure the native C clock
 module; that source needs a native C coverage tool.
+
+Benchmark analysis accepts at most 10,000 pairs while rank statistics remain
+uncapped. The CLI reads at most 4 MiB plus one byte from a replay path before
+UTF-8 validation and JSON parsing.
 Report replay preserves any nonblank producer-supplied workload ID; the native
 array CLI continues to emit `indexed-array-sum-4096`.
+
+`BUILD` measures LuaCov 0.17.0-1 executable-line coverage for
+`src/coding_adventures/microbenchmark/init.lua` only and requires more than
+80% with a nonzero denominator. The native C clock shim, test/CLI wrapper files,
+and sibling dependency modules are excluded; their native and installed
+consumer checks still run separately.

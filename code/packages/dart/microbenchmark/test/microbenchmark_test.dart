@@ -37,6 +37,20 @@ void main() {
     }
   });
 
+  test('analysis accepts 10000 pairs and refuses 10001 before statistics', () {
+    final maximum = List<Pair>.generate(
+      10000,
+      (index) => Pair(BigInt.one, BigInt.one,
+          index.isEven ? 'baseline-first' : 'candidate-first'),
+    );
+    expect(analyze(maximum, 95, 1.05).ratio, 1.0);
+    expect(
+      () => analyze(
+          [...maximum, Pair(BigInt.one, BigInt.one, 'invalid')], 95, 1.05),
+      throwsArgumentError,
+    );
+  });
+
   test('both public workload variants read every caller value', () {
     final values = makeValues();
     expect(indexedBatch(values, BigInt.one), BigInt.from(511533));
@@ -370,6 +384,11 @@ void main() {
     expect(() => Report.fromJson('{"config":1,"pairs":[],"analysis":{}}'),
         throwsFormatException);
     expect(() => Report.fromBytes([0xff]), throwsFormatException);
+    expect(
+      () => Report.fromBytes(List<int>.filled(4 * 1024 * 1024 + 1, 0xff)),
+      throwsFormatException,
+      reason: 'byte bound is checked before UTF-8 decoding',
+    );
     final tooDeep =
         '${List<String>.filled(129, '[').join()}0${List<String>.filled(129, ']').join()}';
     expect(() => Report.fromJson(tooDeep), throwsFormatException);
@@ -465,6 +484,46 @@ void main() {
         });
     expect(report.analysis.interval, [1.0, 1.0]);
     expect(Report.fromJson(report.toJson()).metadata['profile'], 'debug');
+    final decoded = jsonDecode(report.toJson()) as Map<String, dynamic>;
+    final core = Map<String, dynamic>.from(decoded)
+      ..removeWhere((key, _) => [
+            'workload',
+            'invocation',
+            'revision',
+            'runtime',
+            'os',
+            'arch',
+            'profile'
+          ].contains(key));
+    expect(Report.fromJson(jsonEncode(core)).metadata, isEmpty);
+    expect(() => Report.fromJson(jsonEncode({...core, 'profile': 'debug'})),
+        throwsFormatException);
+    final emptyArg = Map<String, dynamic>.from(decoded)..['invocation'] = [''];
+    expect(Report.fromJson(jsonEncode(emptyArg)).metadata['invocation'], ['']);
+    final whitespaceRevision = Map<String, dynamic>.from(decoded)
+      ..['revision'] = ' ';
+    expect(Report.fromJson(jsonEncode(whitespaceRevision)).metadata['revision'],
+        ' ');
+    for (final key in [
+      'workload',
+      'revision',
+      'runtime',
+      'os',
+      'arch',
+      'profile'
+    ]) {
+      final nul = Map<String, dynamic>.from(decoded)..[key] = 'bad\u0000value';
+      expect(() => Report.fromJson(jsonEncode(nul)), throwsFormatException);
+    }
+    final nulArg = Map<String, dynamic>.from(decoded)
+      ..['invocation'] = ['bad\u0000value'];
+    expect(() => Report.fromJson(jsonEncode(nulArg)), throwsFormatException);
+    final partial = Map<String, dynamic>.from(core)..['workload'] = 'test';
+    expect(() => Report.fromJson(jsonEncode(partial)), throwsFormatException);
+    expect(
+        () => Report.fromJson(
+            report.toJson().replaceFirst('"profile":"debug"', '"profile":""')),
+        throwsFormatException);
     expect(
         () => Report.fromJson(
             report.toJson().replaceFirst('"profile":"debug"', '"profile":1')),

@@ -17,10 +17,17 @@ defmodule CodingAdventures.ArrayMicrobenchmark do
            clock
          ) do
       {:ok, report} ->
+        revision =
+          case System.get_env("GIT_REVISION") do
+            nil -> "unknown"
+            "" -> "unknown"
+            value -> value
+          end
+
         metadata = %{
           "workload" => "indexed-array-sum-4096",
           "invocation" => ["array-microbenchmark" | args],
-          "revision" => System.get_env("GIT_REVISION", "unknown"),
+          "revision" => revision,
           "runtime" => System.version(),
           "os" => :os.type() |> Tuple.to_list() |> Enum.join("-"),
           "arch" => :erlang.system_info(:system_architecture) |> List.to_string()

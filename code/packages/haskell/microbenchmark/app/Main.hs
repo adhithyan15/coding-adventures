@@ -12,7 +12,7 @@ import Microbenchmark
 import System.Environment (getArgs, getProgName, lookupEnv)
 import System.Exit (exitFailure)
 import System.Info (arch, compilerName, compilerVersion, os)
-import System.IO (hFlush, stdout)
+import System.IO (IOMode(ReadMode), hFlush, stdout, withBinaryFile)
 import Text.Read (readMaybe)
 
 main :: IO ()
@@ -31,7 +31,7 @@ run ["--help"] = do
     hFlush stdout
     pure True
 run ["--replay", path] = do
-    content <- BS.readFile path
+    content <- withBinaryFile path ReadMode (\handle -> BS.hGet handle (4 * 1024 * 1024 + 1))
     case replayReport content of
         Left err -> putStrLn ("error: " ++ err) >> pure False
         Right report -> putStrLn ("replay valid: " ++ show (length (reportPairs report)) ++ " pairs, ratio=" ++ show (analysisRatio (reportAnalysis report))) >> hFlush stdout >> pure True

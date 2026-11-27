@@ -7,3 +7,4 @@
 - Add bounded sign-enumeration oracle, wide reference vectors, and generated tests.
 - Record Windows Devel::Cover evidence for the production module: 100.0% statement,
   72.7% branch, 33.3% condition, and 100.0% subroutine coverage.
+- Declare the pure in-memory runtime capability profile.

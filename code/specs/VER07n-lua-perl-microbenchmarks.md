@@ -33,6 +33,10 @@ shape, signed-64-bit integer bounds, baseline-first count, pair count, and
 analysis recomputed from raw observations. JSON readers must preserve integer
 tokens exactly; Lua JSON numbers remain signed 64-bit integers or binary64
 floats, and Perl uses native signed 64-bit integers with checked conversions.
+The public benchmark-analysis boundary accepts at most 10,000 pairs and rejects
+an oversized collection before traversing it to validate, map, or sort
+observations. This limit belongs to the benchmark consumer; reusable
+rank-statistics APIs remain uncapped as required by VER07c.
 
 ## Collection and workload
 
@@ -79,6 +83,9 @@ otherwise-valid report at the supported 10,000-pair maximum; the caps bound
 pathological JSON overhead, not valid workload size. Token preflight must be
 linear and quote/escape aware so punctuation inside strings is not counted as
 JSON structure, and it must run before AST allocation.
+Command-line replay adapters enforce the package's 4 MiB report limit while
+reading the file, before allocating the whole report or decoding it. A
+parser-level limit alone does not bound the path adapter's allocation.
 
 ## Build and package validation
 
@@ -92,3 +99,37 @@ test execution, and failure exit codes; their working paths are relative to the
 package directory.
 Unix package commands must use POSIX path separators; a backslash in an
 unquoted shell argument is an escape, not a directory separator.
+
+Command capability profiles describe runtime calls made by each lane:
+monotonic time, the named revision variables actually read, standard output,
+the Lua monotonic-clock FFI call, and replay-file reads. Rank-statistics APIs
+are pure in-memory libraries. Package tests and build tooling that read fixtures
+or install dependencies are separate from installed runtime effects.
+
+## Library coverage contract
+
+Both libraries keep the complete public test suite as the ordinary BUILD check.
+A deterministic coverage run may omit only explicitly identified stress vectors
+whose cost is dominated by line instrumentation; it must retain representative
+validation and boundary paths. The report denominator is limited to the
+production library source file for that package. The build fails if its measured
+coverage is not strictly greater than 80% or if the expected production file has
+no measurable statements/lines.
+
+- Lua uses pinned LuaCov 0.17.0-1 and executable-line coverage. Measure only
+  `src/coding_adventures/rank_statistics/init.lua` in rank-statistics and
+  `src/coding_adventures/microbenchmark/init.lua` in microbenchmark. Run each
+  package's deterministic coverage test mode through the coverage preloader;
+  normal BUILD separately runs the full suite without instrumentation. The C monotonic
+  clock shim, package scripts, tests, sibling dependencies, and installed
+  consumer are outside this Lua-source denominator; native and installed
+  consumer checks still run as ordinary non-instrumented BUILD steps.
+- Perl uses pinned Devel::Cover 1.52 and statement coverage. Measure only
+  `lib/CodingAdventures/RankStatistics.pm` and
+  `lib/CodingAdventures/Microbenchmark.pm` in their respective packages. The
+  coverage process must use the package test suite and an interpreter built
+  for the declared Perl version; it must not load XS modules built for a
+  different Perl ABI. The CLI wrapper, tests, JSON sibling dependencies, and
+  runtime/tooling code outside the measured module are not in the denominator.
+  Branch, condition, and subroutine percentages are reported as diagnostics,
+  not substituted for the statement-coverage acceptance threshold.

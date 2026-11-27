@@ -51,6 +51,18 @@ for _, case in ipairs(fixture_data.cases) do
     end
 end
 
+local maximum_pairs = {}
+for index = 1, 10000 do
+    maximum_pairs[index] = {
+        baseline_ns = 1,
+        candidate_ns = 1,
+        order = index % 2 == 1 and "baseline-first" or "candidate-first",
+    }
+end
+equal(benchmark.analyze(maximum_pairs, 95, 1.05).ratio, 1.0, "analysis accepts 10000 pairs")
+maximum_pairs[10001] = false
+rejects(function() benchmark.analyze(maximum_pairs, 0, 1) end, "at most 10000 pairs")
+
 local config = { pairs = 5, confidence_percent = 95, minimum_factor = 1.05, seed = -5, target_ns = 100, max_batch = 16 }
 local first_tick = 0
 local function work_clock() local old = first_tick; first_tick = first_tick + 100; return old end
@@ -130,6 +142,24 @@ local function with_workload(token)
     equal(count, 1, "replace workload token")
     return text
 end
+local empty_invocation = with_metadata:gsub('"invocation":%b[]', '"invocation":[]', 1)
+equal(#benchmark.from_json(empty_invocation).invocation, 0, "empty invocation array is valid")
+local empty_argument = with_metadata:gsub('"invocation":%b[]', '"invocation":[""]', 1)
+equal(benchmark.from_json(empty_argument).invocation[1], "", "empty argv element is valid")
+local whitespace_revision = with_metadata:gsub('"revision":"abc"', '"revision":" "', 1)
+equal(benchmark.from_json(whitespace_revision).revision, " ", "whitespace-only revision remains valid metadata")
+rejects(function() benchmark.from_json(with_metadata:gsub('"invocation":%b[]', '"invocation":{}', 1)) end, "invocation must be an array")
+for _, field in ipairs({ "revision", "runtime", "os", "arch" }) do
+    local nul_value = with_metadata:gsub('"' .. field .. '":"[^"]*"', '"' .. field .. '":"\\u0000"', 1)
+    rejects(function() benchmark.from_json(nul_value) end, "NUL")
+end
+local nul_invocation = with_metadata:gsub('"invocation":%b[]', '"invocation":["\\u0000"]', 1)
+rejects(function() benchmark.from_json(nul_invocation) end, "without NUL")
+local nul_profile = generic_with_profile:gsub('"profile":"[^"]*"', '"profile":"\\u0000"', 1)
+rejects(function() benchmark.from_json(nul_profile) end, "without NUL")
+local empty_profile = generic_with_profile:gsub('"profile":"[^"]*"', '"profile":""', 1)
+rejects(function() benchmark.from_json(empty_profile) end, "non-empty string")
+
 local accepted_workloads = {
     { '"indexed-array-sum-4096"', "indexed-array-sum-4096" },
     { '"dependent-link-order"', "dependent-link-order" },
@@ -181,6 +211,8 @@ rejects(function() benchmark.indexed_batch({ maxint }, 2) end, "array checksum o
 local underflow_values = { math.mininteger, -1 }
 rejects(function() benchmark.indexed_batch(underflow_values, 1) end, "array checksum overflows")
 rejects(function() benchmark.iterated_batch(underflow_values, 1) end, "array checksum overflows")
+rejects(function() benchmark.indexed_batch({ -1, math.mininteger }, 1) end, "array checksum overflows")
+rejects(function() benchmark.iterated_batch({ -1, math.mininteger }, 1) end, "array checksum overflows")
 values[1] = 50
 equal(benchmark.indexed_batch(values, 1), 63, "indexed helper reads actual mutable input")
 equal(benchmark.iterated_batch(values, 1), 63, "iterator helper reads same mutable input")
@@ -198,6 +230,14 @@ equal(#cli_report.pairs, 40, "native CLI has 40 pairs")
 equal(cli_report.revision, "test", "explicit CLI revision")
 equal(benchmark.run({ "--revision", " " }, writer, error_writer, fake_clock(1000)), 1, "blank revision rejected")
 equal(benchmark.run({ "--unknown", "x" }, writer, error_writer, fake_clock(1000)), 1, "unknown option rejected")
+local oversized_path = os.tmpname()
+local oversized_file = assert(io.open(oversized_path, "wb"))
+assert(oversized_file:write(string.rep("x", 4 * 1024 * 1024 + 1)))
+assert(oversized_file:close())
+equal(benchmark.run({ "--replay", oversized_path }, writer, error_writer, fake_clock(1000)), 1,
+    "CLI refuses a path above the parser limit while reading")
+assert(error_writer.text:find("report exceeds JSON byte limit", 1, true))
+assert(os.remove(oversized_path))
 local broken_write = { write = function() return nil, "broken sink" end, flush = function() return true end }
 equal(benchmark.run({ "--help" }, broken_write, error_writer, fake_clock(1000)), 1, "write failure propagated")
 local broken_flush = { write = function() return true end, flush = function() return nil, "flush failed" end }

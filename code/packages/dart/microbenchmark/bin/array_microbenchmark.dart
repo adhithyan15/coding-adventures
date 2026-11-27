@@ -14,7 +14,9 @@ Future<void> main(List<String> args) async {
   final metadata = <String, Object?>{
     'workload': 'indexed-array-sum-4096',
     'invocation': ['array-microbenchmark', ...args],
-    'revision': Platform.environment['GIT_REVISION'] ?? 'unknown',
+    'revision': (Platform.environment['GIT_REVISION']?.isNotEmpty ?? false)
+        ? Platform.environment['GIT_REVISION']!
+        : 'unknown',
     'runtime': 'Dart ${Platform.version.split(' ').take(3).join(' ')}',
     'os': Platform.operatingSystem,
     'arch': version,

@@ -356,6 +356,61 @@ let test_replay () =
   in
   ignore (unwrap (replay_report (encode_report many_report)))
 
+let test_metadata_contract () =
+  let config =
+    {
+      pairs = 1;
+      confidence_percent = 95;
+      minimum_factor = 1.05;
+      seed = 0L;
+      target_ns = 1L;
+      max_batch = 1L;
+    }
+  in
+  let pair = { baseline_ns = 1L; candidate_ns = 1L; order = Baseline_first } in
+  let analysis = unwrap (analyze [ pair ] 95 1.05) in
+  let metadata = default_metadata [ "" ] "rev" "OCaml" "test" "x64" in
+  let report =
+    {
+      config;
+      batch_size = 1L;
+      pairs = [ pair ];
+      analysis;
+      metadata = Some metadata;
+    }
+  in
+  ignore (unwrap (replay_report (encode_report report)));
+  let whitespace_revision =
+    { report with metadata = Some { metadata with revision = " " } }
+  in
+  ignore (unwrap (replay_report (encode_report whitespace_revision)));
+  let nul_revision =
+    { report with metadata = Some { metadata with revision = "bad\000value" } }
+  in
+  assert_error "NUL descriptive metadata rejected"
+    (replay_report (encode_report nul_revision));
+  let nul_invocation =
+    {
+      report with
+      metadata = Some { metadata with invocation = [ "bad\000value" ] };
+    }
+  in
+  assert_error "NUL invocation rejected"
+    (replay_report (encode_report nul_invocation));
+  let nul_profile =
+    {
+      report with
+      metadata = Some { metadata with profile = Some "bad\000value" };
+    }
+  in
+  assert_error "NUL profile rejected"
+    (replay_report (encode_report nul_profile));
+  let empty_profile =
+    { report with metadata = Some { metadata with profile = Some "" } }
+  in
+  assert_error "empty profile rejected"
+    (replay_report (encode_report empty_profile))
+
 let test_workload () =
   let custom = [| 21; -3; 8; 19 |] in
   check Alcotest.int64 "indexed custom array" 90L
@@ -630,7 +685,7 @@ let test_schema_mutations () =
         (fun wrong ->
           reject "metadata value type" (set_json key wrong with_meta))
         [ `Null; `Int 1; `String "" ])
-    [ "workload"; "revision"; "runtime"; "os"; "arch" ];
+    [ "workload"; "invocation"; "revision"; "runtime"; "os"; "arch" ];
   List.iter
     (fun wrong ->
       reject "invocation shape" (set_json "invocation" wrong with_meta))
@@ -639,6 +694,11 @@ let test_schema_mutations () =
     (unwrap
        (replay_report
           (Yojson.Safe.to_string (set_json "invocation" (`List []) with_meta))));
+  ignore
+    (unwrap
+       (replay_report
+          (Yojson.Safe.to_string
+             (set_json "invocation" (`List [ `String "" ]) with_meta))));
   reject "profile without metadata"
     (set_json "profile" (`String "release") base);
   reject "null profile" (set_json "profile" `Null with_meta)
@@ -654,6 +714,8 @@ let () =
       ( "replay",
         [
           Alcotest.test_case "full-width strict report" `Quick test_replay;
+          Alcotest.test_case "portable metadata contract" `Quick
+            test_metadata_contract;
           Alcotest.test_case "complete schema mutations" `Quick
             test_schema_mutations;
         ] );

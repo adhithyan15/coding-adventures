@@ -236,6 +236,20 @@ defmodule CodingAdventures.MicrobenchmarkTest do
 
     assert {:error, :empty_pairs} = Microbenchmark.analyze([], 95, 1.05)
 
+    maximum_pairs =
+      Enum.map(0..9_999, fn index ->
+        %{
+          baseline_ns: 1,
+          candidate_ns: 1,
+          order: if(rem(index, 2) == 0, do: "baseline-first", else: "candidate-first")
+        }
+      end)
+
+    assert {:ok, %{ratio: 1.0}} = Microbenchmark.analyze(maximum_pairs, 95, 1.05)
+
+    assert {:error, :too_many_pairs} =
+             Microbenchmark.analyze(maximum_pairs ++ [%{}], :invalid, :invalid)
+
     assert {:error, :invalid_pair} =
              Microbenchmark.analyze([%{baseline_ns: 1, candidate_ns: 1, order: "bad"}], 95, 1.05)
 
@@ -364,6 +378,59 @@ defmodule CodingAdventures.MicrobenchmarkTest do
                  encoded,
                  "\"workload\":\"fake\"",
                  "\"workload\":\"fake\",\"profile\":1"
+               )
+             )
+
+    assert {:ok, _} =
+             Microbenchmark.decode_report(
+               String.replace(encoded, "\"invocation\":[]", "\"invocation\":[\"\"]")
+             )
+
+    assert {:ok, _} = Microbenchmark.decode_report(Microbenchmark.encode_report(report))
+
+    assert {:ok, _} =
+             Microbenchmark.decode_report(
+               String.replace(encoded, "\"revision\":\"r\"", "\"revision\":\" \"", global: false)
+             )
+
+    for {field, value} <- [
+          {"revision", "r"},
+          {"runtime", "Elixir"},
+          {"os", "test"},
+          {"arch", "test"}
+        ] do
+      nul =
+        String.replace(encoded, "\"#{field}\":\"#{value}\"", "\"#{field}\":\"\\u0000\"",
+          global: false
+        )
+
+      assert {:error, _} = Microbenchmark.decode_report(nul)
+    end
+
+    assert {:error, _} =
+             Microbenchmark.decode_report(
+               String.replace(
+                 encoded,
+                 "\"workload\":\"fake\"",
+                 "\"workload\":\"fake\",\"profile\":\"\\u0000\"",
+                 global: false
+               )
+             )
+
+    assert {:error, _} =
+             Microbenchmark.decode_report(
+               String.replace(
+                 encoded,
+                 "\"workload\":\"fake\"",
+                 "\"workload\":\"fake\",\"profile\":\"\"",
+                 global: false
+               )
+             )
+
+    assert {:error, _} =
+             Microbenchmark.decode_report(
+               String.replace(encoded, "\"invocation\":[]", "\"invocation\":[\"\\u0000\"]",
+                 global: false
                )
              )
   end

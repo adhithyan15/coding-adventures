@@ -5,7 +5,7 @@ defmodule CodingAdventures.Microbenchmark.MixProject do
     [
       app: :coding_adventures_microbenchmark,
       version: "0.1.0",
-      elixir: "~> 1.20",
+      elixir: "~> 1.18.4",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       escript: [main_module: CodingAdventures.ArrayMicrobenchmark],

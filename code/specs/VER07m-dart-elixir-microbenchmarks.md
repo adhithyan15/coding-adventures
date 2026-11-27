@@ -58,7 +58,10 @@ Analysis validates every pair's positive durations and order label, converts
 each positive duration to binary64 before candidate-to-baseline division, and
 uses the exact median interval. Apply the strict `faster` and `slower` bounds
 and inclusive `equivalent` range from VER07b. Empty, malformed, out-of-range,
-or unbalanced inputs fail closed.
+or unbalanced inputs fail closed. The public benchmark-analysis boundary accepts
+at most 10,000 pairs and rejects an oversized collection before traversing it
+to validate, map, or sort observations. This limit belongs to the benchmark
+consumer; reusable rank-statistics APIs remain uncapped as required by VER07c.
 
 ## JSON and exact integer tokens
 
@@ -91,7 +94,10 @@ Elixir uses OTP 29's built-in `:json` module and arbitrary-precision integers;
 validate integer tokens as integers in the signed-64-bit domain before
 serializing to the shared contract. Test both signed endpoints and reject
 float/exponent forms for integer fields. Both profiles bound replay to 10,000
-pairs, 4 MiB of UTF-8 JSON, nesting depth 128, and 65,536 JSON values.
+pairs, 4 MiB of UTF-8 JSON, nesting depth 128, and 65,536 JSON values. The
+command-line replay adapters enforce the 4 MiB file limit while reading,
+before allocating the complete file or decoding UTF-8. A parser-level limit
+alone does not bound the path adapter's allocation.
 
 ## Indexed-array workload and CLI
 
@@ -140,5 +146,14 @@ subnormal/normal-boundary/maximum-finite medians, caller-input preservation,
 seeded properties, fake-clock calibration and order, callbacks, checksum and
 clock failures, overflow, output errors, replay tampering, and no-partial-report
 behavior. Dart tests run on both the Dart VM and compiled Node target. Elixir
-tests use the pinned OTP 29 runtime. Installed consumers exercise the packaged
-products rather than importing repository source paths.
+tests use the repository CI runtime Elixir 1.18.4 / OTP 27.3.4.11. Installed
+consumers exercise the packaged products rather than importing repository
+source paths. Package BUILD fronts run those consumers, each 40-pair native
+command and replay of its output, and the documented coverage gates so normal
+package validation reproduces this evidence.
+
+Runtime capability profiles describe only effects of the command:
+monotonic time reads, the named `GIT_REVISION` metadata variable, and standard
+output/error. Injected-clock collection and analysis libraries have no runtime
+capabilities. Fixture and replay-file reads performed by tests/tools are not
+attributed to the reusable runtime library.
