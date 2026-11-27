@@ -8,7 +8,7 @@ CI uses canonical `https://hackage.haskell.org/` while retaining Cabal's built-i
 
 ## Workflow behavior
 
-Before `haskell-actions/setup`, a short Bash block in `.github/workflows/ci.yml` creates a unique directory with `mktemp -d` beneath `RUNNER_TEMP`. It writes the config at that directory's `config` path using `printf`, with exactly these UTF-8/LF bytes:
+The `haskell-actions/setup` step sets `cabal-update` to false. Immediately after that setup step and before any package-index query, a short Bash block in `.github/workflows/ci.yml` creates a unique directory with `mktemp -d` beneath `RUNNER_TEMP`. It writes the config at that directory's `config` path using `printf`, with exactly these UTF-8/LF bytes:
 
 ```
 repository hackage.haskell.org
@@ -18,7 +18,7 @@ repository hackage.haskell.org
 
 The block requires nonempty `RUNNER_TEMP` and `GITHUB_ENV`, rejects CR or LF in either path and in the final config path, and runs with the workflow's fail-fast Bash settings. `mktemp` must create a new directory rather than reuse or overwrite one. The runner's native Windows temp path must remain usable from Git Bash and by later Cabal processes. Append one `CABAL_CONFIG=<native absolute path>` assignment to `GITHUB_ENV`; never replace its existing contents. The config persists for later steps. Any validation, directory creation, config write, or environment append failure fails the step; do not continue with Cabal's prior global config. Diagnostics must not print environment contents.
 
-Set the setup action's `cabal-update` input to false so it cannot contact the old mirror before the new config is active. The existing `Verify Haskell package index` step runs `cabal update` first and then retains its current `cabal list` verification. Later Cabal commands inherit the same config through `GITHUB_ENV`; do not depend on repeatedly passing `--config-file`.
+The setup action cannot contact the old mirror because its `cabal-update` input is false. After config creation, the existing `Verify Haskell package index` step runs `cabal update` first and then retains its current `cabal list` verification. Later Cabal commands inherit the same config through `GITHUB_ENV`; do not depend on repeatedly passing `--config-file`.
 
 Keep the truthful Haskell step label and existing `cabal list` check in the changed workflow hunk so the CI diff classifier recognizes the Haskell toolchain. Avoid unsafe/shared workflow controls. Verify the actual plan for the complete workflow diff: Haskell is selected, unrelated toolchains are not selected, and `full_build` remains false for an ordinary pull request. The workflow sentinel's existing required-gate behavior remains unchanged.
 
