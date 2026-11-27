@@ -35,8 +35,8 @@ beside it, measured on the same corpus, until it is at least as correct; then
 | §13.2.6.4.16 in template, §13.2.6.4.17–21 after body … after after frameset | one method each |
 | §13.2.6 dispatcher, §13.2.6.5 foreign content (SVG, MathML, integration points, CDATA) | `TreeBuilder::dispatch`, `foreign_content` |
 
-Not yet (BR03 §5): parse errors by specification code, and the switch-over
-from `html-parser`.
+BR03 §5 tracks the audit of diagnostic codes and positions, plus the
+switch-over from `html-parser`.
 
 ## Resource limits
 
@@ -64,11 +64,16 @@ positions are searched from the end, where the builder's targets are.
 
 ## Progress
 
-`tests/corpus.rs` runs html-parser's html5lib corpus (2,655 cases). **2,614
-pass**, including `template.dat:124`, which `html-parser` fails. Every failing case is listed in `tests/fixtures/expected-failures.txt`;
-the test fails on an unlisted failure and on a listed case that passes, so the
-list only shrinks. The 41 that fail are all outside this crate. Two groups are outside this crate: 31 script-data cases wait on an
-`html-lexer` fix, and 4 `<selectedcontent>` cases wait on a real DOM.
+`tests/corpus.rs` runs html-parser's html5lib tree corpus. **2,645 of 2,655
+cases pass**, including `template.dat:124`, which `html-parser` fails.
+The expected-failure list contains six cases that need script execution and
+four `<selectedcontent>` cases that need DOM insertion steps. The check fails
+when a case regresses or a listed failure starts passing.
+
+The corpus also checks the code and emission position of named trailing-solidus
+errors against upstream annotations. `tests/diagnostics.rs` checks table text
+recovery, including positions across CRLF and multibyte text. Comparing the
+remaining legacy diagnostics is still part of BR03 step 5.
 
 ## Usage
 

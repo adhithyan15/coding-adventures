@@ -2009,14 +2009,16 @@ impl TreeBuilder {
                 Flow::Done
             }
             Tok::Eof => self.in_body(token),
-            other => self.in_table_anything_else(other),
+            other => {
+                self.error("unexpected-token-in-table");
+                self.foster_parent_in_body(other)
+            }
         }
     }
 
-    /// The "anything else" entry of "in table": the in-body rules, with
-    /// foster parenting on, so content lands before the table.
-    fn in_table_anything_else(&mut self, token: Tok) -> Flow {
-        self.error("unexpected-token-in-table");
+    /// Shared by the in-table fallback and the pending table text replay.
+    /// Foster parenting makes the in-body rules insert before the table.
+    fn foster_parent_in_body(&mut self, token: Tok) -> Flow {
         self.foster_parenting = true;
         let flow = self.in_body(token);
         self.foster_parenting = false;
@@ -2043,9 +2045,11 @@ impl TreeBuilder {
                     .iter()
                     .any(|(kind, _)| *kind != TextKind::Whitespace)
                 {
-                    // Non-whitespace in a table is foster-parented, runs and all.
+                    // The token that flushes the batch triggers the error.
+                    // Replay all pending text with foster parenting enabled.
+                    self.error("non-whitespace-in-table-text");
                     for (kind, text) in pending {
-                        let flow = self.in_table_anything_else(Tok::Text(kind, text));
+                        let flow = self.foster_parent_in_body(Tok::Text(kind, text));
                         debug_assert!(matches!(flow, Flow::Done));
                     }
                 } else {

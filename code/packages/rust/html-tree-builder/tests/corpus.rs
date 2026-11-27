@@ -20,7 +20,8 @@
 use coding_adventures_html_lexer::HtmlScriptingMode;
 use coding_adventures_html_tree_builder::arena::Namespace;
 use coding_adventures_html_tree_builder::{
-    html5lib, parse_document, parse_fragment, FragmentContext, TreeBuilderOptions,
+    html5lib, parse_document, parse_fragment, FragmentContext, ParseError, TreeBuilderOptions,
+    TreeDiagnostic,
 };
 use std::collections::BTreeSet;
 
@@ -36,6 +37,7 @@ struct Case {
     /// `#document-fragment` context: `td`, or `svg desc` / `math mi`.
     fragment: Option<String>,
     document: Vec<String>,
+    new_errors: Vec<&'static str>,
 }
 
 fn cases() -> Vec<Case> {
@@ -60,9 +62,15 @@ fn cases() -> Vec<Case> {
         }
         let mut scripting = None;
         let mut fragment = None;
+        let mut new_errors = Vec::new();
         while let Some(line) = lines.next() {
             match line {
                 "#document" => break,
+                "#new-errors" => {
+                    while let Some(error) = lines.next_if(|line| !line.starts_with('#')) {
+                        new_errors.push(error);
+                    }
+                }
                 "#document-fragment" => {
                     fragment = lines.next().map(str::to_string);
                 }
@@ -87,6 +95,7 @@ fn cases() -> Vec<Case> {
             scripting,
             fragment,
             document,
+            new_errors,
         });
     }
     cases
@@ -106,26 +115,43 @@ fn fragment_context(line: &str) -> FragmentContext {
     }
 }
 
-fn tree_for(case: &Case, scripting: HtmlScriptingMode) -> Option<Vec<String>> {
+fn parse_case(
+    case: &Case,
+    scripting: HtmlScriptingMode,
+) -> Result<(Vec<String>, Vec<TreeDiagnostic>), ParseError> {
     let options = TreeBuilderOptions { scripting };
-    let lines = match &case.fragment {
-        Some(context) => parse_fragment(&case.data, &fragment_context(context), options)
-            .ok()
-            .map(|output| html5lib::node_lines(&output.nodes))?,
-        None => parse_document(&case.data, options)
-            .ok()
-            .map(|output| html5lib::document_lines(&output.document))?,
-    };
-    Some(normalized(lines))
+    match &case.fragment {
+        Some(context) => {
+            let output = parse_fragment(&case.data, &fragment_context(context), options)?;
+            Ok((html5lib::node_lines(&output.nodes), output.tree_diagnostics))
+        }
+        None => {
+            let output = parse_document(&case.data, options)?;
+            Ok((
+                html5lib::document_lines(&output.document),
+                output.tree_diagnostics,
+            ))
+        }
+    }
+}
+
+fn tree_for(case: &Case, scripting: HtmlScriptingMode) -> Option<Vec<String>> {
+    parse_case(case, scripting)
+        .ok()
+        .map(|(lines, _)| normalized(lines))
+}
+
+fn scripting_modes(case: &Case) -> &[HtmlScriptingMode] {
+    match &case.scripting {
+        Some(mode) => std::slice::from_ref(mode),
+        None => &[HtmlScriptingMode::Enabled, HtmlScriptingMode::Disabled],
+    }
 }
 
 fn passes(case: &Case) -> bool {
-    let modes = match case.scripting {
-        Some(mode) => vec![mode],
-        None => vec![HtmlScriptingMode::Enabled, HtmlScriptingMode::Disabled],
-    };
-    modes
-        .into_iter()
+    scripting_modes(case)
+        .iter()
+        .copied()
         .all(|scripting| tree_for(case, scripting).is_some_and(|tree| tree == case.document))
 }
 
@@ -148,6 +174,53 @@ fn listed() -> BTreeSet<String> {
         .filter(|line| !line.is_empty() && !line.starts_with('#'))
         .map(str::to_string)
         .collect()
+}
+
+#[test]
+fn corpus_solidus_errors_match_the_upstream_code_and_emission_position() {
+    // This is the named tree-construction error in #new-errors. The legacy
+    // #errors use a mix of historical codes and position conventions.
+    const CODE: &str = "non-void-html-element-start-tag-with-trailing-solidus";
+    let mut checked_cases = 0;
+    for case in cases() {
+        let expected: Vec<_> = case
+            .new_errors
+            .iter()
+            .filter_map(|error| {
+                let (range, code) = error.split_once(") ")?;
+                if code != CODE {
+                    return None;
+                }
+                let (_, end) = range.split_once('-').expect("solidus errors span a tag");
+                let (line, column) = end.split_once(':').expect("line and column");
+                // Upstream ends the range after `>`. The builder reports
+                // the point at which `>` emitted the token.
+                Some((
+                    code,
+                    line.parse::<usize>().expect("line number"),
+                    column.parse::<usize>().expect("column number") - 1,
+                ))
+            })
+            .collect();
+        if expected.is_empty() {
+            continue;
+        }
+        checked_cases += 1;
+        for &scripting in scripting_modes(&case) {
+            let (_, diagnostics) = parse_case(&case, scripting)
+                .unwrap_or_else(|error| panic!("{} with {scripting:?}: {error}", case.source));
+            let actual: Vec<_> = diagnostics
+                .iter()
+                .filter(|error| error.code == CODE)
+                .map(|error| (error.code, error.position.line, error.position.column))
+                .collect();
+            assert_eq!(actual, expected, "{} with {scripting:?}", case.source);
+        }
+    }
+    assert!(
+        checked_cases >= 6,
+        "only checked {checked_cases} solidus cases"
+    );
 }
 
 #[test]

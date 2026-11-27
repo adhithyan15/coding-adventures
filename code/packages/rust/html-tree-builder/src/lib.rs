@@ -21,9 +21,11 @@
 //! | §13.2.6 tree construction | [`tree_builder::TreeBuilder`], one method per mode |
 //! | §13.2.6.4.7 adoption agency algorithm | `TreeBuilder::adoption_agency` |
 //!
-//! **Not written yet** (BR03 §5): parse errors by specification code.
-//! [`parse_fragment`] is §13.4, what `innerHTML` does. The corpus cases that need them are
-//! listed in `tests/fixtures/expected-failures.txt`.
+//! [`parse_fragment`] implements §13.4, the algorithm used by `innerHTML`.
+//! [`TreeDiagnostic`] reports the code and tokenizer emission position of
+//! tree-construction errors. BR03 §5 tracks the diagnostic audit and the
+//! switch-over. The outstanding corpus cases are listed in
+//! `tests/fixtures/expected-failures.txt`.
 //!
 //! ```
 //! use coding_adventures_html_tree_builder::{parse_document, html5lib, TreeBuilderOptions};

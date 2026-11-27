@@ -5,6 +5,11 @@ documented in this file.
 
 ## Unreleased
 
+- **BR03 step 5 diagnostic checks.** The corpus checks the code and position
+  of annotated trailing-solidus errors in both scripting modes where
+  applicable. Mixed table text reports one `non-whitespace-in-table-text`
+  diagnostic at the tag or EOF that flushes it. Text recovery and the
+  resulting tree are preserved.
 - `tests/raw_text_end_tags.rs` pins that hidden-`<img>` payloads around
   raw-text end tags (`</</style>`, quoted `>` in end-tag attributes) produce
   no element.
