@@ -32,13 +32,12 @@ def _cnf(length: int, mutant: bool = False) -> str:
     else:
         clauses.append(tuple(bad))
         if mutant:
-            # Pin byte zero to zero so the SAT control has a concrete
-            # forbidden witness, not merely an existential SAT result.
+            # Pin selector zero and byte zero to a concrete forbidden witness.
+            clauses.append((bad[0],))
             clauses.extend((-literal,) for literal in byte_clause(0, 0))
-        if not mutant:
-            for position, selector in enumerate(bad):
-                for value in range(0x21, 0x7F):
-                    clauses.append((-selector, *byte_clause(position, value)))
+        for position, selector in enumerate(bad):
+            for value in range(0x21, 0x7F):
+                clauses.append((-selector, *byte_clause(position, value)))
     variable_count = bits + length
     body = [f"p cnf {variable_count} {len(clauses)}"]
     body.extend(" ".join(map(str, clause)) + " 0" for clause in clauses)
@@ -68,18 +67,21 @@ def _replay() -> int:
                 # With a bare LF terminator, a final CR is consumed as the
                 # optional CR of CRLF.  This is the historical parser's exact
                 # framing semantics, not an admission-model claim.
-                expected = length > 0 and all(0x21 <= item <= 0x7E for item in payload)
+                expected_payload = payload
                 if terminator == b"\n" and payload and payload[-1] == 0x0D:
-                    expected = bool(payload[:-1]) and all(
-                        0x21 <= item <= 0x7E for item in payload[:-1]
-                    )
+                    expected_payload = payload[:-1]
+                expected_bytes = bytes(expected_payload)
+                expected = (
+                    expected_bytes.decode("ascii")
+                    if expected_bytes
+                    and all(0x21 <= item <= 0x7E for item in expected_bytes)
+                    else None
+                )
                 try:
-                    parse_http09_request(b"GET " + bytes(payload) + terminator)
+                    actual = parse_http09_request(b"GET " + bytes(payload) + terminator)
                 except ValueError:
-                    actual = False
-                else:
-                    actual = True
-                assert actual is expected, (payload, terminator)
+                    actual = None
+                assert actual == expected, (payload, terminator, actual, expected)
                 checked += 1
     return checked
 

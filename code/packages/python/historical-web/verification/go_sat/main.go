@@ -1,6 +1,6 @@
 // The opt-in bridge keeps the Python package free of solver runtime imports.
 // It reads strict DIMACS from stdin and delegates solving to the repository's
-// Go CDCL solver (VER09), returning only SAT/UNSAT and a witness when SAT.
+// Go CDCL solver (VER09), returning only its SAT/UNSAT result.
 package main
 
 import (
@@ -12,9 +12,13 @@ import (
 )
 
 func main() {
-	data, err := io.ReadAll(os.Stdin)
+	const maxInput = 64 * 1024
+	data, err := io.ReadAll(io.LimitReader(os.Stdin, maxInput+1))
 	if err != nil {
 		fatal(err)
+	}
+	if len(data) > maxInput {
+		fatal(fmt.Errorf("DIMACS input exceeds %d-byte limit", maxInput))
 	}
 	formula, err := satsolver.ParseDimacs(string(data))
 	if err != nil {
