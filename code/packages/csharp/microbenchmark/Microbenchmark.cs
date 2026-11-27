@@ -292,6 +292,8 @@ public static class Microbenchmark
     {
         ArgumentNullException.ThrowIfNull(pairs);
         if (pairs.Count == 0) throw new ArgumentException("pairs must not be empty", nameof(pairs));
+        if (pairs.Count > MaximumPairs)
+            throw new ArgumentOutOfRangeException(nameof(pairs), "pairs must be from 1 through 10000");
         if (confidencePercent is < 1 or > 99) throw new ArgumentOutOfRangeException(nameof(confidencePercent));
         if (!double.IsFinite(minimumFactor) || minimumFactor <= 1.0)
             throw new ArgumentOutOfRangeException(nameof(minimumFactor));

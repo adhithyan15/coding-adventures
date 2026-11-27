@@ -167,6 +167,8 @@ type MicrobenchmarkTests() =
         Assert.Equal(Slower, slower.verdict)
         Assert.Equal(Inconclusive, insufficient.verdict)
         Assert.True((Microbenchmark.analyze [] 95 1.05).IsError)
+        let tooManyPairs = List.replicate (Microbenchmark.maximumPairs + 1) (Helpers.pair 1L 1L)
+        Assert.Equal(InvalidConfiguration "pairs must be from 1 through 10000", Helpers.error (Microbenchmark.analyze tooManyPairs 95 1.05))
         Assert.True((Microbenchmark.analyze [ Helpers.pair 0L 1L ] 95 1.05).IsError)
 
     [<Fact>]

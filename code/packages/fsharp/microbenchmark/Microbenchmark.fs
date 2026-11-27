@@ -129,6 +129,7 @@ module Microbenchmark =
     /// Analyzes existing positive signed-64-bit observations.
     let analyze (pairs: Pair list) (confidencePercent: int) (minimumFactor: float) : Result<Analysis, BenchmarkError> =
         if List.isEmpty pairs then Error(InvalidObservation "pairs must not be empty")
+        elif pairs |> Seq.truncate (maximumPairs + 1) |> Seq.length > maximumPairs then Error(InvalidConfiguration "pairs must be from 1 through 10000")
         elif confidencePercent < 1 || confidencePercent > 99 then Error(InvalidConfiguration "confidence must be from 1 through 99")
         elif not (Double.IsFinite minimumFactor) || minimumFactor <= 1.0 then Error(InvalidConfiguration "minimum factor must be finite and greater than 1")
         elif pairs |> List.exists (fun pair -> pair.baselineNs <= 0L || pair.candidateNs <= 0L) then Error(InvalidObservation "pair durations must be positive")

@@ -2,9 +2,8 @@ package com.codingadventures.kotlin.microbenchmark
 
 import java.io.OutputStream
 import java.io.PrintStream
-import java.nio.charset.StandardCharsets
-import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.charset.StandardCharsets
 import kotlin.system.exitProcess
 
 /** Native Kotlin driver for the VER07 indexed-array workload. */
@@ -46,7 +45,7 @@ object ArrayMicrobenchmark {
             i++
         }
         if (replayPath != null) {
-            val report = ReportCodec.replay(Files.readString(Path.of(replayPath!!), StandardCharsets.UTF_8))
+            val report = ReportCodec.replay(ReportCodec.readFile(Path.of(replayPath!!)))
             write(stdout, "replay valid: ${report.pairs.size} pairs, ${report.analysis.verdict}\n".toByteArray(StandardCharsets.UTF_8))
             return 0
         }

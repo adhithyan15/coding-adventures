@@ -166,6 +166,8 @@ public sealed class MicrobenchmarkTests
         Assert.Equal("slower", Microbenchmark.Analyze(Enumerable.Repeat(Make(100, 120), 6).ToArray(), 95, 1.0625).Verdict);
         Assert.Equal("inconclusive", Microbenchmark.Analyze([Make(long.MaxValue, long.MaxValue)], 95, 1.05).Verdict);
         Assert.Throws<ArgumentException>(() => Microbenchmark.Analyze(Array.Empty<Pair>()));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Microbenchmark.Analyze(
+            Enumerable.Repeat(Make(1, 1), Microbenchmark.MaximumPairs + 1).ToArray()));
         Assert.Throws<ArgumentException>(() => Microbenchmark.Analyze([Make(0, 1)]));
         Assert.Throws<ArgumentException>(() => Microbenchmark.Analyze([new Pair { BaselineNs = 1, CandidateNs = 1, Order = "x" }]));
     }

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "java/microbenchmark",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The public default clock reads System.nanoTime for native benchmark collection."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "The CLI replay option reads a report file selected by its caller."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The CLI writes reports, replay summaries, and diagnostics to standard streams."
+    }
+  ],
+  "justification": "The library exposes an injectable clock and a System.nanoTime default; the CLI reads caller-selected replay files and writes reports or diagnostics to standard output and standard error."
+}

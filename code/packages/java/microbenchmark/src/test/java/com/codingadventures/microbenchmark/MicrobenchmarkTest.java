@@ -31,6 +31,24 @@ final class MicrobenchmarkTest {
         assertThrows(IllegalArgumentException.class, () -> Microbenchmark.analyze(List.of(new Pair(1, 1, "unknown")), 95, 1.05));
         assertThrows(IllegalArgumentException.class, () -> Microbenchmark.analyze(fast, 100, 1.05));
         assertThrows(IllegalArgumentException.class, () -> Microbenchmark.analyze(fast, 95, Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> Microbenchmark.analyze(
+                java.util.Collections.nCopies(10_001, new Pair(1, 1, "baseline-first")), 95, 1.05));
+    }
+
+    @Test void replayEnforcesTextTreeAndFileBudgetsBeforePairConversion() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(" ".repeat(ReportCodec.MAXIMUM_JSON_BYTES + 1)));
+        String tooDeep = "[".repeat(129) + "0" + "]".repeat(129);
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(tooDeep));
+        String tooManyValues = "{\"x\":[" + "0,".repeat(65_535) + "0]}";
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(tooManyValues));
+
+        Path oversized = Files.createTempFile("java-microbenchmark-replay", ".json");
+        try {
+            Files.write(oversized, new byte[ReportCodec.MAXIMUM_JSON_BYTES + 1]);
+            assertThrows(IllegalArgumentException.class, () -> ReportCodec.readFile(oversized));
+        } finally {
+            Files.deleteIfExists(oversized);
+        }
     }
 
     @Test void configValidatesEveryPublicRange() {

@@ -1,15 +1,30 @@
 package com.codingadventures.kotlin.microbenchmark
 
 import com.fasterxml.jackson.core.JsonFactory
+import com.fasterxml.jackson.core.StreamReadConstraints
 import com.fasterxml.jackson.core.StreamReadFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.IOException
+import java.io.InputStream
+import java.nio.ByteBuffer
+import java.nio.CharBuffer
+import java.nio.charset.CharacterCodingException
+import java.nio.charset.CodingErrorAction
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.ArrayDeque
 
 /** JSON report codec that accepts only exact signed 64-bit integral tokens. */
 object ReportCodec {
-    private val json = ObjectMapper(JsonFactory.builder().enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION).build())
+    private const val maximumJsonBytes = 4 * 1024 * 1024
+    private const val maximumJsonNodes = 65_536
+    private val json = ObjectMapper(JsonFactory.builder()
+        .streamReadConstraints(StreamReadConstraints.builder()
+            .maxNestingDepth(128).maxStringLength(maximumJsonBytes).build())
+        .enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION).build())
         .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
     private val topKeys = setOf("workload", "invocation", "revision", "runtime", "os", "arch", "config", "batch_size", "pairs", "analysis")
     private val configKeys = setOf("pairs", "confidence_percent", "minimum_factor", "seed", "target_ns", "max_batch")
@@ -31,10 +46,12 @@ object ReportCodec {
     }
 
     fun replay(text: String): Report {
+        checkTextSize(text)
         val root = try { json.readTree(text) } catch (error: IOException) {
             throw IllegalArgumentException("invalid JSON report", error)
         }
         require(root != null && root.isObject) { "report must be an object" }
+        validateNodeBudget(root)
         val fields = names(root)
         require(fields == topKeys || fields == topKeys + "profile") { "report fields do not match portable schema" }
         val workload = string(root, "workload")
@@ -62,6 +79,49 @@ object ReportCodec {
         val analysis = Microbenchmark.analyze(pairs, config.confidencePercent, config.minimumFactor)
         checkAnalysis(root.path("analysis"), analysis)
         return Report(config, batchSize, pairs, analysis)
+    }
+
+    /** Reads no more than the replay byte budget from a caller-selected report path. */
+    internal fun readFile(path: Path): String {
+        val bytes = Files.newInputStream(path).use { input: InputStream -> input.readNBytes(maximumJsonBytes + 1) }
+        require(bytes.size <= maximumJsonBytes) { "report exceeds the 4 MiB JSON limit" }
+        return try {
+            StandardCharsets.UTF_8.newDecoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT)
+                .decode(ByteBuffer.wrap(bytes)).toString()
+        } catch (error: CharacterCodingException) {
+            throw IllegalArgumentException("report must be valid UTF-8", error)
+        }
+    }
+
+    private fun checkTextSize(text: String) {
+        if (text.length > maximumJsonBytes) throw IllegalArgumentException("report exceeds the 4 MiB JSON limit")
+        try {
+            val encoded = StandardCharsets.UTF_8.newEncoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT)
+                .encode(CharBuffer.wrap(text))
+            require(encoded.remaining() <= maximumJsonBytes) { "report exceeds the 4 MiB JSON limit" }
+        } catch (error: CharacterCodingException) {
+            throw IllegalArgumentException("report JSON must be valid Unicode", error)
+        }
+    }
+
+    private fun validateNodeBudget(root: JsonNode) {
+        val pending = ArrayDeque<JsonNode>()
+        pending.addLast(root)
+        var nodes = 0
+        while (pending.isNotEmpty()) {
+            val node = pending.removeLast()
+            nodes++
+            require(nodes <= maximumJsonNodes) { "report exceeds the JSON value limit" }
+            val children = node.elements()
+            while (children.hasNext()) {
+                require(nodes + pending.size < maximumJsonNodes) { "report exceeds the JSON value limit" }
+                pending.addLast(children.next())
+            }
+        }
     }
 
     private fun checkAnalysis(node: JsonNode, want: Analysis) {
