@@ -23,3 +23,9 @@ Benchmark analysis accepts at most 10,000 pairs and inspects no more than
 10,001 list cells before refusing excess input. The reusable rank-statistics
 API remains uncapped. The replay command reads no more than 4 MiB plus one byte
 before JSON parsing.
+
+`BUILD` uses HPC with GHC 9.4.8 to require more than 80% expression coverage
+for the `Microbenchmark` and `ArrayWorkload` production modules. Test/Main
+modules, the executable, and dependencies are excluded; each module must have
+a nonzero expression denominator. Cabal keeps coverage enabled only for this
+named package stanza.

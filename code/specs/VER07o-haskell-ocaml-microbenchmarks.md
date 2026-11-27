@@ -104,3 +104,16 @@ packages; fixture I/O belongs to tests. Haskell Cabal commands on macOS select
 `DEVELOPER_DIR=/Library/Developer/CommandLineTools` for GHC 9.4.8's hardcoded
 SDK; other platforms retain their inherited toolchain environment. Build
 scripts must propagate failures and run from the package directory.
+
+## Haskell library coverage contract
+
+Use the pinned GHC 9.4.8 / Cabal 3.10.3.0 HPC instrumentation on the package's
+real Cabal test suite. Require expression coverage strictly greater than 80%
+for `RankStatistics` in rank-statistics and for both `Microbenchmark` and
+`ArrayWorkload` in microbenchmark; each required module must have a nonzero
+expression denominator. Keep the Cabal `coverage: True` setting in the named
+target package stanza, rather than applying a global coverage flag that changes
+dependency planning under Cabal 3.10. Report the module-level HPC totals and
+exclude test/Main modules, executables, and dependency packages from the
+library denominator. Ordinary test, native CLI, replay, and installed-consumer
+checks remain separate BUILD steps and must still pass.

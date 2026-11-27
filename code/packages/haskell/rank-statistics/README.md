@@ -14,3 +14,7 @@ medianInterval [1, 2, 3, 4] 95    -- Right Nothing
 
 The cutoff compares arbitrary-precision integers, not rounded probabilities.
 Run `cabal test` from this directory.
+
+`BUILD` uses HPC with GHC 9.4.8 to require more than 80% expression coverage
+for the `RankStatistics` production module. Test modules and dependencies are
+excluded, and the report must contain a nonzero expression denominator.

@@ -105,3 +105,27 @@ monotonic time, the named revision variables actually read, standard output,
 the Lua monotonic-clock FFI call, and replay-file reads. Rank-statistics APIs
 are pure in-memory libraries. Package tests and build tooling that read fixtures
 or install dependencies are separate from installed runtime effects.
+
+## Library coverage contract
+
+Both libraries use the package's real public tests under coverage instrumentation;
+the report denominator is limited to the production library source file for that
+package. The build fails if its measured coverage is not strictly greater than
+80% or if the expected production file has no measurable statements/lines.
+
+- Lua uses pinned LuaCov 0.17.0-1 and executable-line coverage. Measure only
+  `src/coding_adventures/rank_statistics/init.lua` in rank-statistics and
+  `src/coding_adventures/microbenchmark/init.lua` in microbenchmark. Run each
+  package's full test suite through the coverage preloader. The C monotonic
+  clock shim, package scripts, tests, sibling dependencies, and installed
+  consumer are outside this Lua-source denominator; native and installed
+  consumer checks still run as ordinary non-instrumented BUILD steps.
+- Perl uses pinned Devel::Cover 1.52 and statement coverage. Measure only
+  `lib/CodingAdventures/RankStatistics.pm` and
+  `lib/CodingAdventures/Microbenchmark.pm` in their respective packages. The
+  coverage process must use the package test suite and an interpreter built
+  for the declared Perl version; it must not load XS modules built for a
+  different Perl ABI. The CLI wrapper, tests, JSON sibling dependencies, and
+  runtime/tooling code outside the measured module are not in the denominator.
+  Branch, condition, and subroutine percentages are reported as diagnostics,
+  not substituted for the statement-coverage acceptance threshold.

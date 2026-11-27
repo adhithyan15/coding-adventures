@@ -19,3 +19,9 @@ enumeration, frozen wide cutoffs, finite-value boundaries, and seeded generated
 arrays. The package depends only on core Perl modules plus `Test2::V0` for its
 test suite.
 `tests/installed-consumer/Consumer.pl` checks the installed package surface.
+
+`BUILD` measures Devel::Cover 1.52 statement coverage for
+`lib/CodingAdventures/RankStatistics.pm` only and requires more than 80% with a
+nonzero denominator. The test harness and sibling modules are outside that
+production-library metric; branch, condition, and subroutine figures are
+reported separately.

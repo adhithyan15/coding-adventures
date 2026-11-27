@@ -33,3 +33,9 @@ uncapped. The CLI reads at most 4 MiB plus one byte from a replay path before
 UTF-8 validation and JSON parsing.
 Report replay preserves any nonblank producer-supplied workload ID; the native
 array CLI continues to emit `indexed-array-sum-4096`.
+
+`BUILD` measures LuaCov 0.17.0-1 executable-line coverage for
+`src/coding_adventures/microbenchmark/init.lua` only and requires more than
+80% with a nonzero denominator. The native C clock shim, test/CLI wrapper files,
+and sibling dependency modules are excluded; their native and installed
+consumer checks still run separately.

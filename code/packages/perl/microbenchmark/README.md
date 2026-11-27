@@ -28,3 +28,9 @@ runtime behavior, not measurements of physical CPU cycles.
 The benchmark analysis entry point accepts at most 10,000 pairs before pair
 validation and ratio creation. `rank-statistics` remains uncapped. CLI replay
 reads no more than 4 MiB plus one byte before decoding or parsing the report.
+
+`BUILD` measures Devel::Cover 1.52 statement coverage for
+`lib/CodingAdventures/Microbenchmark.pm` only and requires more than 80% with a
+nonzero denominator. It runs with the package's declared Perl 5.38.2
+interpreter; coverage is not reused across Perl ABIs. Tests, the script wrapper,
+JSON sibling dependencies, and native/tooling code are outside this metric.
