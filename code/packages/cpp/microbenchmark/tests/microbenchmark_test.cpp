@@ -247,15 +247,18 @@ static void failures_and_replay_validation() {
         reject_report(replace_top_level_value(text, field_name, "\"\""));
         reject_report(replace_top_level_value(text, field_name, "\"bad\\u0000value\""));
         reject_report(replace_top_level_value(text, field_name, "null"));
+        (void)mb::replay_json(replace_top_level_value(text, field_name, "\" \""));
     }
     for (const auto* invalid : {"\"\"", "\" \\t\\n\\r\\f\\u000b\"", "\"bad\\u0000value\""})
         reject_report(replace_top_level_value(text, "workload", invalid));
     for (const auto* invalid : {"null", "[1]", "[\"bad\\u0000arg\"]"})
         reject_report(replace_top_level_value(text, "invocation", invalid));
     ISO_CHECK(mb::replay_json(replace_top_level_value(text, "invocation", "[]"))
-                  .metadata.invocation == std::optional<std::vector<std::string>>({}));
+                  .metadata.invocation == std::optional<std::vector<std::string>>(
+                      std::vector<std::string>{}));
     ISO_CHECK(mb::replay_json(replace_top_level_value(text, "invocation", "[\"\"]"))
-                  .metadata.invocation == std::optional<std::vector<std::string>>({""}));
+                  .metadata.invocation == std::optional<std::vector<std::string>>(
+                      std::vector<std::string>{""}));
     ISO_CHECK(mb::replay_json(replace_top_level_value(text, "revision", "\" \""))
                   .metadata.revision == std::optional<std::string>(" "));
     ISO_CHECK(mb::replay_json(replace_top_level_value(text, "workload", "\"\\u2003\""))

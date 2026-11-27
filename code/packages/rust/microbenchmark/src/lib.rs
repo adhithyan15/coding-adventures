@@ -35,6 +35,88 @@ fn valid_workload_identifier(value: &str) -> bool {
             .all(|byte| byte == 0x20 || (0x09..=0x0d).contains(&byte))
 }
 
+fn valid_metadata_text(value: &str) -> bool {
+    !value.is_empty() && !value.contains('\0')
+}
+
+fn validate_projected_metadata(
+    object: &serde_json::Map<String, serde_json::Value>,
+) -> Result<(), Error> {
+    const GROUP: [&str; 6] = [
+        "workload",
+        "invocation",
+        "revision",
+        "runtime",
+        "os",
+        "arch",
+    ];
+    let present = GROUP
+        .iter()
+        .filter(|key| object.contains_key(**key))
+        .count();
+    let has_profile = object.contains_key("profile");
+    if present == 0 {
+        return if has_profile {
+            Err(error(
+                "profile metadata requires the complete metadata group",
+            ))
+        } else {
+            Ok(())
+        };
+    }
+    if present != GROUP.len() {
+        return Err(error("report metadata group must contain all six fields"));
+    }
+
+    let workload = object
+        .get("workload")
+        .and_then(serde_json::Value::as_str)
+        .ok_or_else(|| error("workload metadata must be a string"))?;
+    if !valid_workload_identifier(workload) {
+        return Err(error(
+            "workload must be a nonblank UTF-8 identifier without NUL",
+        ));
+    }
+
+    for key in ["revision", "runtime", "os", "arch"] {
+        let value = object
+            .get(key)
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(|| error(format!("{key} metadata must be a string")))?;
+        if !valid_metadata_text(value) {
+            return Err(error(format!(
+                "{key} metadata must be non-empty and contain no NUL"
+            )));
+        }
+    }
+
+    let invocation = object
+        .get("invocation")
+        .and_then(serde_json::Value::as_array)
+        .ok_or_else(|| error("invocation metadata must be an array of strings"))?;
+    if invocation.iter().any(|item| match item.as_str() {
+        Some(value) => value.contains('\0'),
+        None => true,
+    }) {
+        return Err(error(
+            "invocation metadata must contain UTF-8 strings without NUL",
+        ));
+    }
+
+    if has_profile {
+        let profile = object
+            .get("profile")
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(|| error("profile metadata must be a string"))?;
+        if !valid_metadata_text(profile) {
+            return Err(error(
+                "profile metadata must be non-empty and contain no NUL",
+            ));
+        }
+    }
+    Ok(())
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
@@ -179,29 +261,7 @@ impl Report {
         // The executable adds descriptive metadata to the same report object.
         // Remove only those documented fields; serde rejects everything else.
         if let Some(object) = document.as_object_mut() {
-            if let Some(workload) = object.get("workload") {
-                let identifier = workload
-                    .as_str()
-                    .ok_or_else(|| error("workload metadata must be a string"))?;
-                if !valid_workload_identifier(identifier) {
-                    return Err(error(
-                        "workload must be a nonblank UTF-8 identifier without NUL",
-                    ));
-                }
-            }
-            if let Some(invocation) = object.get("invocation") {
-                if !invocation
-                    .as_array()
-                    .is_some_and(|items| items.iter().all(serde_json::Value::is_string))
-                {
-                    return Err(error("invocation metadata must be an array of strings"));
-                }
-            }
-            for key in ["revision", "runtime", "profile", "os", "arch"] {
-                if object.get(key).is_some_and(|value| !value.is_string()) {
-                    return Err(error(format!("{key} metadata must be a string")));
-                }
-            }
+            validate_projected_metadata(object)?;
             if object
                 .get("pairs")
                 .and_then(serde_json::Value::as_array)
@@ -817,7 +877,10 @@ mod tests {
         empty_invocation["os"] = serde_json::json!("test");
         empty_invocation["arch"] = serde_json::json!("test");
         empty_invocation["profile"] = serde_json::json!("release");
-        assert_eq!(Report::from_json(&empty_invocation.to_string()).unwrap(), report);
+        assert_eq!(
+            Report::from_json(&empty_invocation.to_string()).unwrap(),
+            report
+        );
 
         for value in [
             serde_json::Value::String(String::new()),
@@ -858,26 +921,58 @@ mod tests {
         complete["arch"] = serde_json::json!("test");
         assert!(Report::from_json(&complete.to_string()).is_ok());
 
-        for field in ["workload", "invocation", "revision", "runtime", "os", "arch"] {
+        for field in [
+            "workload",
+            "invocation",
+            "revision",
+            "runtime",
+            "os",
+            "arch",
+        ] {
             let mut partial = complete.clone();
             partial.as_object_mut().unwrap().remove(field);
-            assert!(Report::from_json(&partial.to_string()).is_err(), "accepted missing {field}");
+            assert!(
+                Report::from_json(&partial.to_string()).is_err(),
+                "accepted missing {field}"
+            );
         }
         let mut profile_only = core.clone();
         profile_only["profile"] = serde_json::json!("release");
         assert!(Report::from_json(&profile_only.to_string()).is_err());
 
         for field in ["revision", "runtime", "os", "arch"] {
-            for invalid in ["", "bad\0value"] {
+            for invalid in [
+                serde_json::Value::Null,
+                serde_json::json!(""),
+                serde_json::json!("bad\0value"),
+            ] {
                 let mut malformed = complete.clone();
-                malformed[field] = serde_json::json!(invalid);
-                assert!(Report::from_json(&malformed.to_string()).is_err(), "accepted {field}={invalid:?}");
+                malformed[field] = invalid.clone();
+                assert!(
+                    Report::from_json(&malformed.to_string()).is_err(),
+                    "accepted {field}={invalid:?}"
+                );
             }
         }
-        for invalid in ["", "bad\0value"] {
+        for field in ["revision", "runtime", "os", "arch", "profile"] {
+            let mut whitespace = complete.clone();
+            whitespace[field] = serde_json::json!(" ");
+            assert!(
+                Report::from_json(&whitespace.to_string()).is_ok(),
+                "rejected non-empty whitespace {field}"
+            );
+        }
+        for invalid in [
+            serde_json::Value::Null,
+            serde_json::json!(""),
+            serde_json::json!("bad\0value"),
+        ] {
             let mut malformed = complete.clone();
-            malformed["profile"] = serde_json::json!(invalid);
-            assert!(Report::from_json(&malformed.to_string()).is_err(), "accepted profile={invalid:?}");
+            malformed["profile"] = invalid.clone();
+            assert!(
+                Report::from_json(&malformed.to_string()).is_err(),
+                "accepted profile={invalid:?}"
+            );
         }
         let mut nul_arg = complete.clone();
         nul_arg["invocation"] = serde_json::json!(["bad\0arg"]);

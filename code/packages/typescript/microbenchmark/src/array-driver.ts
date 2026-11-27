@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** The shared indexed traversal workload: indexed baseline vs native iterator. */
-import { collect, defaults, stringifyLosslessJson, type Config } from "./index.js";
+import { collect, defaults, replayReport, stringifyLosslessJson, type Config } from "./index.js";
 
 declare const process: {
   argv: string[];
@@ -76,7 +76,10 @@ function revisionFrom(args: readonly string[]): string {
     if (index + 1 >= args.length || args[index + 1].startsWith("--")) throw new Error("invalid argument: --revision");
     return args[index + 1];
   }
-  return process.env.GIT_REVISION ?? process.env.GITHUB_SHA ?? "unknown";
+  const primary = process.env.GIT_REVISION;
+  if (primary !== undefined && primary.length > 0) return primary;
+  const fallback = process.env.GITHUB_SHA;
+  return fallback !== undefined && fallback.length > 0 ? fallback : "unknown";
 }
 
 export function runArrayBenchmark(config: Config, invocation: readonly string[], revision = "unknown") {
@@ -88,7 +91,7 @@ export function runArrayBenchmark(config: Config, invocation: readonly string[],
     perOperation,
     config,
   );
-  return {
+  const result = {
     workload: WORKLOAD_ID,
     invocation: [...invocation],
     revision,
@@ -97,6 +100,8 @@ export function runArrayBenchmark(config: Config, invocation: readonly string[],
     arch: process.arch,
     ...report,
   };
+  replayReport(result);
+  return result;
 }
 
 if (process.argv[1]?.endsWith("array-driver.js") || process.argv[1]?.endsWith("array-driver.ts")) {

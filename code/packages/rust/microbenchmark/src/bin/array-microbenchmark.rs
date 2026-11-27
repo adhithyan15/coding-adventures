@@ -104,6 +104,9 @@ fn run(
     );
     object.insert("os".to_owned(), json!(env::consts::OS));
     object.insert("arch".to_owned(), json!(env::consts::ARCH));
+    let candidate = serde_json::to_string(&document).map_err(|error| error.to_string())?;
+    coding_adventures_microbenchmark::Report::from_json(&candidate)
+        .map_err(|error| error.to_string())?;
     serde_json::to_writer_pretty(&mut *stdout, &document).map_err(|error| error.to_string())?;
     writeln!(stdout).map_err(|error| error.to_string())?;
     Ok(())
@@ -222,6 +225,25 @@ mod tests {
         )
         .unwrap();
         assert!(String::from_utf8(output).unwrap().contains("Usage:"));
+    }
+
+    #[test]
+    fn command_rejects_empty_explicit_revision_without_emitting_json() {
+        let args = [
+            "bench".into(),
+            "--pairs".into(),
+            "1".into(),
+            "--target-ns".into(),
+            "1".into(),
+            "--max-batch".into(),
+            "1".into(),
+            "--revision".into(),
+            "".into(),
+        ];
+        let mut ticks = [0, 2, 3, 5, 6, 8, 9, 11].into_iter();
+        let mut output = Vec::new();
+        assert!(run(&args, &mut output, &mut || ticks.next().unwrap()).is_err());
+        assert!(output.is_empty());
     }
 
     #[test]

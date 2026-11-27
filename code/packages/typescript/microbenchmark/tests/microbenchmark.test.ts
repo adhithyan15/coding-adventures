@@ -115,6 +115,31 @@ describe("paired microbenchmarks", () => {
     expect(replayed.pairs.every((pair) => BigInt(pair.baseline_ns) > 0n && BigInt(pair.candidate_ns) > 0n)).toBe(true);
   });
 
+  it("falls through empty ambient revision labels and rejects an empty explicit label", () => {
+    const cliPath = fileURLToPath(new URL("../dist/array-driver.js", import.meta.url));
+    const args = [cliPath, "--pairs", "1", "--target-ns", "1", "--max-batch", "1"];
+    for (const [environment, expected] of [
+      [{ GIT_REVISION: "", GITHUB_SHA: "fallback" }, "fallback"],
+      [{ GIT_REVISION: "", GITHUB_SHA: "" }, "unknown"],
+      [{ GIT_REVISION: "primary", GITHUB_SHA: "secondary" }, "primary"],
+    ] as const) {
+      const child = spawnSync(process.execPath, args, {
+        encoding: "utf8",
+        env: { ...process.env, ...environment },
+      });
+      expect(child.status, child.stderr).toBe(0);
+      expect((parseLosslessJson(child.stdout) as Record<string, unknown>).revision).toBe(expected);
+      expect(replayJson(child.stdout).pairs).toHaveLength(1);
+    }
+
+    const invalid = spawnSync(process.execPath, [...args, "--revision", ""], {
+      encoding: "utf8",
+      env: { ...process.env, GIT_REVISION: "", GITHUB_SHA: "" },
+    });
+    expect(invalid.status).not.toBe(0);
+    expect(invalid.stdout).toBe("");
+  });
+
   it("validates complete metadata before projecting it from core replay", () => {
     let tick = 0n;
     const report = collect((n) => n, (n) => n, 1n,
@@ -146,13 +171,14 @@ describe("paired microbenchmarks", () => {
     expect(() => replayJson(stringifyLosslessJson(profileOnly))).toThrow();
 
     for (const field of ["revision", "runtime", "os", "arch", "profile"]) {
-      for (const invalid of ["", "bad\0value"]) {
+      for (const invalid of [null, "", "bad\0value"]) {
         const malformed = { ...complete, profile: "release", [field]: invalid };
         expect(() => replayReport(malformed)).toThrow();
         expect(() => replayJson(stringifyLosslessJson(malformed))).toThrow();
       }
+      replayBoth({ ...complete, profile: "release", [field]: " " });
     }
-    for (const invalid of ["", " \t\n\r\f\v", "\0", "x\0y", "\ud800", "\udfff"]) {
+    for (const invalid of [null, "", " \t\n\r\f\v", "\0", "x\0y", "\ud800", "\udfff"]) {
       const malformed = { ...complete, workload: invalid };
       expect(() => replayReport(malformed)).toThrow();
       expect(() => replayJson(stringifyLosslessJson(malformed))).toThrow();

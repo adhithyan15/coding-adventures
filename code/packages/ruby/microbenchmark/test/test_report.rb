@@ -62,7 +62,14 @@ class MicrobenchmarkReportTest < Minitest::Test
   end
 
   def test_cli_metadata_survives_as_json_while_replay_checks_report
-    raw = simple_report.to_h.merge("workload" => "example", "revision" => "abc")
+    raw = simple_report.to_h.merge(
+      "workload" => "example",
+      "invocation" => [],
+      "revision" => "abc",
+      "runtime" => "Ruby",
+      "os" => "test",
+      "arch" => "test"
+    )
     parsed = MB.replay_json(JSON.generate(raw))
     assert_equal simple_report.pairs, parsed.pairs
   end
@@ -93,13 +100,16 @@ class MicrobenchmarkReportTest < Minitest::Test
     assert_raises(ArgumentError) { MB.replay_json(JSON.generate(profile_only)) }
 
     %w[revision runtime os arch profile].each do |field|
-      ["", "bad\0value"].each do |invalid|
+      [nil, "", "bad\0value"].each do |invalid|
         malformed = complete.merge("profile" => "release", field => invalid)
         assert_raises(ArgumentError, "accepted #{field}=#{invalid.inspect}") { MB.replay_report(malformed) }
         assert_raises(ArgumentError, "accepted #{field}=#{invalid.inspect}") { MB.replay_json(JSON.generate(malformed)) }
       end
+      whitespace = complete.merge("profile" => "release", field => " ")
+      assert_equal report, MB.replay_report(whitespace)
+      assert_equal report, MB.replay_json(JSON.generate(whitespace))
     end
-    ["", " \t\n\r\f\v", "\0", "x\0y"].each do |invalid|
+    [nil, "", " \t\n\r\f\v", "\0", "x\0y"].each do |invalid|
       malformed = complete.merge("workload" => invalid)
       assert_raises(ArgumentError) { MB.replay_report(malformed) }
       assert_raises(ArgumentError) { MB.replay_json(JSON.generate(malformed)) }

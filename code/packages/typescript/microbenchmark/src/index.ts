@@ -221,23 +221,56 @@ export function monotonicClock(): bigint {
   return process.hrtime.bigint();
 }
 
-function validateWorkloadMetadata(raw: Record<string, unknown>): void {
-  if (!Object.prototype.hasOwnProperty.call(raw, "workload")) return;
-  const workload = raw.workload;
-  if (typeof workload !== "string") throw new TypeError("workload must be a string");
-  if (workload.length === 0 || /^[ \t\n\r\v\f]*$/.test(workload) || workload.includes("\0")) {
-    throw new RangeError("workload must be nonblank and contain no NUL");
-  }
-  for (let index = 0; index < workload.length; index += 1) {
-    const unit = workload.charCodeAt(index);
+function validateUnicodeScalars(value: string, field: string): void {
+  for (let index = 0; index < value.length; index += 1) {
+    const unit = value.charCodeAt(index);
     if (unit >= 0xd800 && unit <= 0xdbff) {
-      const next = workload.charCodeAt(index + 1);
-      if (!(next >= 0xdc00 && next <= 0xdfff)) throw new RangeError("workload contains an unpaired surrogate");
+      const next = value.charCodeAt(index + 1);
+      if (!(next >= 0xdc00 && next <= 0xdfff)) throw new RangeError(`${field} contains an unpaired surrogate`);
       index += 1;
     } else if (unit >= 0xdc00 && unit <= 0xdfff) {
-      throw new RangeError("workload contains an unpaired surrogate");
+      throw new RangeError(`${field} contains an unpaired surrogate`);
     }
   }
+}
+
+function validateNonEmptyMetadataString(value: unknown, field: string): asserts value is string {
+  if (typeof value !== "string") throw new TypeError(`${field} metadata must be a string`);
+  if (value.length === 0 || value.includes("\0")) {
+    throw new RangeError(`${field} metadata must be non-empty and contain no NUL`);
+  }
+  validateUnicodeScalars(value, field);
+}
+
+function validateWorkloadMetadata(raw: Record<string, unknown>): void {
+  const group = ["workload", "invocation", "revision", "runtime", "os", "arch"];
+  const present = group.filter((key) => Object.prototype.hasOwnProperty.call(raw, key));
+  const hasProfile = Object.prototype.hasOwnProperty.call(raw, "profile");
+  if (present.length === 0) {
+    if (hasProfile) throw new TypeError("profile metadata requires the complete metadata group");
+    return;
+  }
+  if (present.length !== group.length) {
+    throw new TypeError("report metadata group must contain all six fields");
+  }
+
+  const workload = raw.workload;
+  validateNonEmptyMetadataString(workload, "workload");
+  if (/^[ \t\n\r\v\f]*$/.test(workload)) {
+    throw new RangeError("workload must not be blank ASCII whitespace");
+  }
+
+  for (const field of ["revision", "runtime", "os", "arch"] as const) {
+    validateNonEmptyMetadataString(raw[field], field);
+  }
+  if (!Array.isArray(raw.invocation) || raw.invocation.some((item) => typeof item !== "string")) {
+    throw new TypeError("invocation metadata must be an array of strings");
+  }
+  for (const item of raw.invocation) {
+    if (item.includes("\0")) throw new RangeError("invocation metadata must not contain NUL");
+    validateUnicodeScalars(item, "invocation element");
+  }
+  if (hasProfile) validateNonEmptyMetadataString(raw.profile, "profile");
 }
 
 /** Recompute analysis from the report's raw observations and reject tampering. */
