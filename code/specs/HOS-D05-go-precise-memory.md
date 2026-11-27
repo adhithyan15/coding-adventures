@@ -46,8 +46,10 @@ leaving the old callback signatures and constructors intact. Address
 validation is a pure EX-stage preflight. A detected fault is carried by its
 token; the following cycle selects it before younger work enters EX, squashes
 younger IF/ID tokens without fetching a replacement, and lets older MEM/WB
-tokens drain. The faulting token itself advances to WB without executing a
-memory callback or GPR write; only then does the new step outcome become
+tokens drain. The faulting token advances to WB as the ordered fault-selection
+point, but it is not a successful retirement: it does not increment the
+retired-instruction count or appear in the retired-PC list, and causes no
+memory receipt or GPR write. Only then does the new step outcome become
 terminal. Older WB GPR writes and stores remain committed.
 
 ## Ordered store/load behavior
@@ -63,10 +65,14 @@ at most one MEM callback per cycle; transient pending state is bounded to the
 store already in WB plus a possible new store in MEM. A faulting or squashed
 store never enters the commit queue.
 
-Preflight checks a 32-bit effective address without signed overflow, requires
-four-byte alignment, and verifies `address + 4 <= RAM size` using widened
-arithmetic. Exact-end access is allowed. The fault records instruction PC,
-raw instruction identity, load/store kind, address, and width. A faulting load
+RV32I computes the effective address with 32-bit modulo arithmetic:
+`effective = uint32(base) + uint32(sign_extend_32(immediate))`. Alignment is
+checked on that wrapped effective address. The RAM bounds check then widens the
+already-wrapped address and verifies `uint64(effective) + 4 <= uint64(RAM size)`;
+it must not use host `int` overflow or treat a carry past `2^32` as an address
+above the RV32 address space. Exact-end access is allowed. The fault records
+instruction PC, raw instruction identity, load/store kind, wrapped address,
+and width. A faulting load
 does not update its destination; a faulting store changes no byte. The first
 mode reports one terminal typed outcome and does not retry the faulting
 instruction. Repeated calls after terminal selection return the stable outcome
@@ -85,7 +91,10 @@ without advancing another pipeline cycle or re-emitting the commit receipt.
    `RiscVSimulator`.
 3. **Older state survives.** A valid older GPR write and an older valid store
    followed by an invalid load both commit before the selected fault outcome.
-   The faulting load's destination retains its old value.
+   The faulting load's destination retains its old value. Assert the exact
+   retired-PC sequence and count: older successful instructions appear once;
+   the faulting PC is reported only in the fault outcome, never as a retired
+   PC or completed instruction.
 4. **Faulting effects are atomic.** Test an out-of-range and an unaligned
    `LW`; neither changes a register. Test an unaligned/out-of-range `SW` over
    preinitialized bytes; no byte changes and no store receipt is emitted.
@@ -96,6 +105,12 @@ without advancing another pipeline cycle or re-emitting the commit receipt.
 6. **One terminal selection.** Assert exact selected PC/address/kind, older
    retirement ordering, no extra post-terminal cycle, and no duplicate store
    receipt or fault outcome.
+7. **RV32 effective-address wrap.** In 256-byte RAM, set a base register to
+   `0xffffffff` and access `LW` at offset `+1`; the effective address wraps to
+   aligned address `0`, succeeds, and compares with the sequential simulator.
+   Separately access aligned address `0xfffffffc`; it remains a high RV32
+   address after wrapping and selects a precise load fault. Assert the reported
+   wrapped address and that no high address is narrowed through host `int`.
 
 All test programs use the published Go RV32I adapter, a classic five-stage
 configuration, at most 32 instructions, and 200 cycles. The current
