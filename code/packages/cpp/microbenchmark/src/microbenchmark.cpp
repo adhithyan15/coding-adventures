@@ -184,6 +184,51 @@ void validate_workload_identifier(std::string_view value) {
         throw std::invalid_argument("workload must be a nonblank UTF-8 identifier without NUL");
 }
 
+void validate_nonempty_metadata_string(std::string_view value, const char* field) {
+    if (value.empty() || value.find('\0') != std::string_view::npos)
+        throw std::invalid_argument(std::string(field) + " metadata must be non-empty and contain no NUL");
+}
+
+void validate_metadata(const Metadata& metadata) {
+    const bool any_group_field = metadata.workload || metadata.invocation || metadata.revision ||
+                                 metadata.runtime || metadata.os || metadata.arch;
+    const bool complete_group = metadata.workload && metadata.invocation && metadata.revision &&
+                                metadata.runtime && metadata.os && metadata.arch;
+    if (!any_group_field) {
+        if (metadata.profile) throw std::invalid_argument("profile metadata requires the complete metadata group");
+        return;
+    }
+    if (!complete_group) throw std::invalid_argument("report metadata group must contain all six fields");
+
+    validate_workload_identifier(*metadata.workload);
+    validate_nonempty_metadata_string(*metadata.revision, "revision");
+    validate_nonempty_metadata_string(*metadata.runtime, "runtime");
+    validate_nonempty_metadata_string(*metadata.os, "os");
+    validate_nonempty_metadata_string(*metadata.arch, "arch");
+    for (const auto& argument : *metadata.invocation)
+        if (argument.find('\0') != std::string::npos)
+            throw std::invalid_argument("invocation metadata must not contain NUL");
+    if (metadata.profile) validate_nonempty_metadata_string(*metadata.profile, "profile");
+}
+
+Metadata decode_metadata(const bj::Value& root) {
+    Metadata metadata;
+    if (const auto* value = optional_member(root, "workload")) metadata.workload = string_value(*value, "workload");
+    if (const auto* value = optional_member(root, "invocation")) {
+        if (value->kind() != bj::Kind::array) throw std::invalid_argument("invocation must be an array of strings");
+        metadata.invocation.emplace();
+        for (std::size_t i = 0; i < value->size(); ++i)
+            metadata.invocation->push_back(string_value(value->at(i), "invocation item"));
+    }
+    optional_string(root, "revision", metadata.revision);
+    optional_string(root, "runtime", metadata.runtime);
+    optional_string(root, "os", metadata.os);
+    optional_string(root, "arch", metadata.arch);
+    optional_string(root, "profile", metadata.profile);
+    validate_metadata(metadata);
+    return metadata;
+}
+
 void append_optional(std::string& output, std::string_view key, const std::optional<std::string>& value) {
     if (value) output += ",\n  " + quote(key) + ": " + quote(*value);
 }
@@ -288,6 +333,7 @@ Report collect(const Batch& baseline, const Batch& candidate, Int64 expected_che
 
 std::string to_json(const Report& report) {
     validate_config(report.config);
+    validate_metadata(report.metadata);
     std::string output = "{\n  \"config\": {\n    \"pairs\": " + std::to_string(report.config.pairs) +
         ",\n    \"confidence_percent\": " + std::to_string(report.config.confidence_percent) +
         ",\n    \"minimum_factor\": " + number(report.config.minimum_factor) +
@@ -327,6 +373,7 @@ Report replay_json(const std::string& json) {
     if (!parsed) throw std::invalid_argument("invalid or over-limit JSON report");
     const auto& root = parsed.document->root();
     allowed_members(root, {"config", "batch_size", "pairs", "analysis", "workload", "invocation", "revision", "runtime", "os", "arch", "profile"});
+    Metadata metadata = decode_metadata(root);
 
     Report report{};
     const auto& config = required_member(root, "config");
@@ -379,21 +426,7 @@ Report replay_json(const std::string& json) {
         throw std::invalid_argument("reported analysis does not match raw observations");
     report.analysis = expected;
 
-    if (const auto* workload = optional_member(root, "workload")) {
-        report.metadata.workload = string_value(*workload, "workload");
-        validate_workload_identifier(*report.metadata.workload);
-    }
-    if (const auto* invocation = optional_member(root, "invocation")) {
-        if (invocation->kind() != bj::Kind::array) throw std::invalid_argument("invocation must be an array of strings");
-        report.metadata.invocation.emplace();
-        for (std::size_t i = 0; i < invocation->size(); ++i)
-            report.metadata.invocation->push_back(string_value(invocation->at(i), "invocation item"));
-    }
-    optional_string(root, "revision", report.metadata.revision);
-    optional_string(root, "runtime", report.metadata.runtime);
-    optional_string(root, "os", report.metadata.os);
-    optional_string(root, "arch", report.metadata.arch);
-    optional_string(root, "profile", report.metadata.profile);
+    report.metadata = std::move(metadata);
     return report;
 }
 

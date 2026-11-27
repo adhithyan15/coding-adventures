@@ -84,6 +84,9 @@ func Analyze(pairs []Pair, confidence int, factor float64) (Analysis, error) {
 	if len(pairs) == 0 {
 		return Analysis{}, errors.New("at least one pair is required")
 	}
+	if len(pairs) > 10_000 {
+		return Analysis{}, errors.New("at most 10000 pairs are supported")
+	}
 	if confidence < 1 || confidence > 99 {
 		return Analysis{}, errors.New("confidence must be from 1 to 99")
 	}

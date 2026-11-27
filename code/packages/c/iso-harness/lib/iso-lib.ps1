@@ -28,9 +28,9 @@
     Environment knobs (same names as iso-lib.sh):
         ISO_REQUIRE, ISO_CLANG_CL, ISO_INCLUDE, ISO_LINK_ARGS,
         ISO_BUILD_DIR (default _build), ISO_CSTD, ISO_CXXSTD.
-        ISO_CLANG_CL pins the selected clang-cl.exe; ISO_LINK_ARGS is a
-        space-separated list of linker arguments appended after `/link`.
-        Leave ISO_LINK_ARGS empty for MSVC math APIs supplied by the C runtime.
+        ISO_CLANG_CL is an optional absolute path pin for the selected clang-cl.exe.
+        ISO_LINK_ARGS is a space-separated list of linker arguments appended
+        after `/link` (leave empty for MSVC math APIs supplied by the C runtime).
 
     `cl.exe` must already be on PATH — in CI the msvc-dev-cmd action puts it
     there; locally, run from a "Developer Command Prompt" / after vcvars64.bat.

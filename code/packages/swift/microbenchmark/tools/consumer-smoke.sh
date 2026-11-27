@@ -72,7 +72,7 @@ env -u GIT_REVISION GITHUB_SHA=github-sha-smoke \
 empty_primary_report="$scratch/empty-primary-report.json"
 env GIT_REVISION= GITHUB_SHA=github-sha-smoke \
   "$bin_path/array-microbenchmark" --pairs 40 --target-ns 1000 > "$empty_primary_report"
-"$consumer_bin_path/Consumer" "$empty_primary_report" --expect-empty
+"$consumer_bin_path/Consumer" "$empty_primary_report" unknown
 
 override_report="$scratch/override-report.json"
 env GIT_REVISION=git-revision-smoke GITHUB_SHA=github-sha-smoke \

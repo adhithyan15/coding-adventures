@@ -26,7 +26,7 @@ impl fmt::Display for Error {
 
 impl std::error::Error for Error {}
 
-/// A JSON value decoded with duplicate object member detection.
+/// A JSON value decoded while rejecting duplicate decoded object member names.
 struct UniqueJsonValue(Value);
 
 impl<'de> Deserialize<'de> for UniqueJsonValue {
@@ -122,6 +122,88 @@ fn valid_workload_identifier(value: &str) -> bool {
             .all(|byte| byte == 0x20 || (0x09..=0x0d).contains(&byte))
 }
 
+fn valid_metadata_text(value: &str) -> bool {
+    !value.is_empty() && !value.contains('\0')
+}
+
+fn validate_projected_metadata(
+    object: &serde_json::Map<String, serde_json::Value>,
+) -> Result<(), Error> {
+    const GROUP: [&str; 6] = [
+        "workload",
+        "invocation",
+        "revision",
+        "runtime",
+        "os",
+        "arch",
+    ];
+    let present = GROUP
+        .iter()
+        .filter(|key| object.contains_key(**key))
+        .count();
+    let has_profile = object.contains_key("profile");
+    if present == 0 {
+        return if has_profile {
+            Err(error(
+                "profile metadata requires the complete metadata group",
+            ))
+        } else {
+            Ok(())
+        };
+    }
+    if present != GROUP.len() {
+        return Err(error("report metadata group must contain all six fields"));
+    }
+
+    let workload = object
+        .get("workload")
+        .and_then(serde_json::Value::as_str)
+        .ok_or_else(|| error("workload metadata must be a string"))?;
+    if !valid_workload_identifier(workload) {
+        return Err(error(
+            "workload must be a nonblank UTF-8 identifier without NUL",
+        ));
+    }
+
+    for key in ["revision", "runtime", "os", "arch"] {
+        let value = object
+            .get(key)
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(|| error(format!("{key} metadata must be a string")))?;
+        if !valid_metadata_text(value) {
+            return Err(error(format!(
+                "{key} metadata must be non-empty and contain no NUL"
+            )));
+        }
+    }
+
+    let invocation = object
+        .get("invocation")
+        .and_then(serde_json::Value::as_array)
+        .ok_or_else(|| error("invocation metadata must be an array of strings"))?;
+    if invocation.iter().any(|item| match item.as_str() {
+        Some(value) => value.contains('\0'),
+        None => true,
+    }) {
+        return Err(error(
+            "invocation metadata must contain UTF-8 strings without NUL",
+        ));
+    }
+
+    if has_profile {
+        let profile = object
+            .get("profile")
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(|| error("profile metadata must be a string"))?;
+        if !valid_metadata_text(profile) {
+            return Err(error(
+                "profile metadata must be non-empty and contain no NUL",
+            ));
+        }
+    }
+    Ok(())
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
@@ -210,6 +292,9 @@ pub fn analyze(
     if !minimum_factor.is_finite() || minimum_factor <= 1.0 {
         return Err(error("factor must be finite and greater than 1"));
     }
+    if pairs.len() > MAX_PAIRS {
+        return Err(error("pairs must contain at most 10000 observations"));
+    }
 
     let mut ratios = Vec::with_capacity(pairs.len());
     for (index, pair) in pairs.iter().enumerate() {
@@ -263,35 +348,13 @@ impl Report {
         // The executable adds descriptive metadata to the same report object.
         // Remove only those documented fields; serde rejects everything else.
         if let Some(object) = document.as_object_mut() {
+            validate_projected_metadata(object)?;
             if object
                 .get("pairs")
                 .and_then(serde_json::Value::as_array)
                 .is_some_and(|pairs| pairs.len() > MAX_PAIRS)
             {
                 return Err(error("report pair count exceeds 10000"));
-            }
-            if let Some(workload) = object.get("workload") {
-                let identifier = workload
-                    .as_str()
-                    .ok_or_else(|| error("workload metadata must be a string"))?;
-                if !valid_workload_identifier(identifier) {
-                    return Err(error(
-                        "workload must be a nonblank UTF-8 identifier without NUL",
-                    ));
-                }
-            }
-            if let Some(invocation) = object.get("invocation") {
-                if !invocation
-                    .as_array()
-                    .is_some_and(|items| items.iter().all(serde_json::Value::is_string))
-                {
-                    return Err(error("invocation metadata must be an array of strings"));
-                }
-            }
-            for key in ["revision", "runtime", "profile", "os", "arch"] {
-                if object.get(key).is_some_and(|value| !value.is_string()) {
-                    return Err(error(format!("{key} metadata must be a string")));
-                }
             }
             for key in [
                 "workload",
@@ -856,15 +919,6 @@ mod tests {
     }
 
     #[test]
-    fn report_replay_rejects_oversized_raw_pair_array_before_typed_conversion() {
-        let document = serde_json::json!({
-            "pairs": vec![serde_json::Value::Null; MAX_PAIRS + 1]
-        });
-        let error = Report::from_json(&document.to_string()).unwrap_err();
-        assert!(error.to_string().contains("pair count exceeds 10000"));
-    }
-
-    #[test]
     fn report_round_trip_replays_and_rejects_forged_analysis() {
         let config = Config {
             pairs: 1,
@@ -882,42 +936,6 @@ mod tests {
         .unwrap();
         let json = report.to_json().unwrap();
         assert_eq!(Report::from_json(&json).unwrap(), report);
-        let with_repeated_values = format!(
-            "{},\n  \"runtime\": \"shared\",\n  \"revision\": \"shared\"\n}}\n",
-            json.trim_end().strip_suffix('}').unwrap()
-        );
-        assert!(Report::from_json(&with_repeated_values).is_ok());
-
-        let duplicate_config = json.replacen("\"pairs\": 1,", "\"pairs\": 1, \"pairs\": 1,", 1);
-        let duplicate_pair = json.replacen(
-            "\"baseline_ns\": 2,",
-            "\"baseline_ns\": 2, \"baseline_ns\": 2,",
-            1,
-        );
-        let duplicate_analysis = json.replacen(
-            "\"verdict\": \"inconclusive\"",
-            "\"verdict\": \"inconclusive\", \"verdict\": \"inconclusive\"",
-            1,
-        );
-        let duplicate_metadata = format!(
-            "{},\n  \"revision\": \"first\",\n  \"revision\": \"second\"\n}}\n",
-            json.trim_end().strip_suffix('}').unwrap()
-        );
-        let escaped_alias = json.replacen("\"pairs\": 1,", "\"pairs\": 1, \"pa\\u0069rs\": 1,", 1);
-        for (name, duplicate) in [
-            ("config", duplicate_config),
-            ("pair", duplicate_pair),
-            ("analysis", duplicate_analysis),
-            ("metadata", duplicate_metadata),
-            ("escaped alias", escaped_alias),
-        ] {
-            assert!(
-                Report::from_json(&duplicate).is_err(),
-                "{name}: {duplicate}"
-            );
-        }
-        assert!(Report::from_json(&format!("{} trailing", json.trim_end())).is_err());
-
         let mut forged: serde_json::Value = serde_json::from_str(&json).unwrap();
         forged["analysis"]["verdict"] = serde_json::Value::String("faster".to_owned());
         assert!(Report::from_json(&forged.to_string()).is_err());
@@ -928,8 +946,26 @@ mod tests {
 
         let mut generic_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
         generic_metadata["workload"] = serde_json::Value::String("dependent-link-order".to_owned());
+        generic_metadata["invocation"] = serde_json::json!([""]);
+        generic_metadata["revision"] = serde_json::json!("r");
+        generic_metadata["runtime"] = serde_json::json!("Rust");
+        generic_metadata["os"] = serde_json::json!("test");
+        generic_metadata["arch"] = serde_json::json!("test");
         assert_eq!(
             Report::from_json(&generic_metadata.to_string()).unwrap(),
+            report
+        );
+
+        let mut empty_invocation: serde_json::Value = serde_json::from_str(&json).unwrap();
+        empty_invocation["workload"] = serde_json::json!("dependent-link-order");
+        empty_invocation["invocation"] = serde_json::json!([]);
+        empty_invocation["revision"] = serde_json::json!("r");
+        empty_invocation["runtime"] = serde_json::json!("Rust");
+        empty_invocation["os"] = serde_json::json!("test");
+        empty_invocation["arch"] = serde_json::json!("test");
+        empty_invocation["profile"] = serde_json::json!("release");
+        assert_eq!(
+            Report::from_json(&empty_invocation.to_string()).unwrap(),
             report
         );
 
@@ -943,7 +979,7 @@ mod tests {
             serde_json::json!([]),
             serde_json::json!({}),
         ] {
-            let mut malformed_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
+            let mut malformed_metadata = empty_invocation.clone();
             malformed_metadata["workload"] = value;
             assert!(Report::from_json(&malformed_metadata.to_string()).is_err());
         }
@@ -955,30 +991,203 @@ mod tests {
     }
 
     #[test]
-    fn raw_json_keeps_signed_64_bit_endpoints_and_accepts_ten_thousand_pairs() {
-        let extreme = r#"{"config":{"pairs":1,"confidence_percent":95,"minimum_factor":1.05,"seed":-9223372036854775808,"target_ns":9223372036854775807,"max_batch":1},"batch_size":1,"pairs":[{"baseline_ns":9223372036854775807,"candidate_ns":9223372036854775807,"order":"baseline-first"}],"analysis":{"ratio":1.0,"interval":null,"verdict":"inconclusive"}}"#;
-        let replayed = Report::from_json(extreme).unwrap();
-        assert_eq!(replayed.config.seed, i64::MIN);
-        assert_eq!(replayed.config.target_ns, i64::MAX);
-        assert_eq!(replayed.pairs[0].baseline_ns, i64::MAX);
+    fn raw_json_rejects_duplicate_decoded_members_but_allows_distinct_scopes() {
+        let core = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" },
+            "workload": "generic-workload", "invocation": [], "revision": "shared",
+            "runtime": "shared", "os": "test", "arch": "test"
+        });
+        let valid = core.to_string();
+        assert!(Report::from_json(&valid).is_ok());
+        // The same member name appears in root and config scopes (`pairs`).
 
+        let invalid = [
+            valid.replace("\"pairs\":1", "\"pairs\":1,\"pairs\":1"),
+            valid.replace("\"baseline_ns\":1", "\"baseline_ns\":1,\"baseline_ns\":1"),
+            valid.replace(
+                "\"verdict\":\"inconclusive\"",
+                "\"verdict\":\"inconclusive\",\"verdict\":\"inconclusive\"",
+            ),
+            valid.replace(
+                "\"revision\":\"shared\"",
+                "\"revision\":\"shared\",\"revision\":\"other\"",
+            ),
+            valid.replace("\"pairs\":1", "\"pairs\":1,\"pa\\u0069rs\":1"),
+        ];
+        for duplicate in invalid {
+            assert!(
+                Report::from_json(&duplicate).is_err(),
+                "accepted duplicate: {duplicate}"
+            );
+        }
+    }
+
+    #[test]
+    fn raw_json_requires_one_complete_document() {
+        let valid = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" }
+        })
+        .to_string();
+        assert!(Report::from_json(&valid).is_ok());
+
+        let truncated = &valid[..valid.len() - 1];
+        for invalid in [
+            truncated.to_owned(),
+            format!("{valid} trailing"),
+            format!("{valid} {{}}"),
+        ] {
+            assert!(
+                Report::from_json(&invalid).is_err(),
+                "accepted incomplete or multiple JSON values: {invalid}"
+            );
+        }
+    }
+
+    #[test]
+    fn raw_json_accepts_maximum_balanced_report_with_reused_pair_member_names() {
         let config = Config {
             pairs: MAX_PAIRS,
             target_ns: 1,
             max_batch: 1,
             ..Config::default()
         };
-        let mut baseline = |operations: usize| Ok(operations as i64);
-        let mut candidate = |operations: usize| Ok(operations as i64);
-        let mut tick = 0_i64;
-        let mut clock = || {
-            tick += 1;
-            tick
+        let pairs = (0..MAX_PAIRS)
+            .map(|index| Pair {
+                baseline_ns: 1,
+                candidate_ns: 1,
+                order: if index % 2 == 0 {
+                    "baseline-first".to_owned()
+                } else {
+                    "candidate-first".to_owned()
+                },
+            })
+            .collect::<Vec<_>>();
+        let analysis = analyze(&pairs, config.confidence_percent, config.minimum_factor).unwrap();
+        let report = Report {
+            config,
+            batch_size: 1,
+            pairs,
+            analysis,
         };
-        let report = collect(config, 1, &mut baseline, &mut candidate, &mut clock).unwrap();
-        assert_eq!(report.pairs.len(), MAX_PAIRS);
+
         let text = report.to_json().unwrap();
-        assert_eq!(Report::from_json(&text).unwrap().pairs.len(), MAX_PAIRS);
+        let replayed = Report::from_json(&text).unwrap();
+        assert_eq!(replayed, report);
+        assert_eq!(replayed.pairs.len(), MAX_PAIRS);
+    }
+
+    #[test]
+    fn raw_json_keeps_signed_64_bit_endpoints() {
+        let extreme = r#"{"config":{"pairs":1,"confidence_percent":95,"minimum_factor":1.05,"seed":-9223372036854775808,"target_ns":9223372036854775807,"max_batch":1},"batch_size":1,"pairs":[{"baseline_ns":9223372036854775807,"candidate_ns":9223372036854775807,"order":"baseline-first"}],"analysis":{"ratio":1.0,"interval":null,"verdict":"inconclusive"}}"#;
+        let replayed = Report::from_json(extreme).unwrap();
+        assert_eq!(replayed.config.seed, i64::MIN);
+        assert_eq!(replayed.config.target_ns, i64::MAX);
+        assert_eq!(replayed.pairs[0].baseline_ns, i64::MAX);
+    }
+
+    #[test]
+    fn raw_json_rejects_oversized_pair_array_before_typed_conversion() {
+        let document = serde_json::json!({
+            "pairs": vec![serde_json::Value::Null; MAX_PAIRS + 1]
+        });
+        let error = Report::from_json(&document.to_string()).unwrap_err();
+        assert!(error.to_string().contains("pair count exceeds 10000"));
+    }
+
+    #[test]
+    fn report_replay_validates_optional_metadata_as_a_complete_group() {
+        let core = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" }
+        });
+        let mut complete = core.clone();
+        complete["workload"] = serde_json::json!("generic-workload");
+        complete["invocation"] = serde_json::json!([]);
+        complete["revision"] = serde_json::json!("r");
+        complete["runtime"] = serde_json::json!("Rust");
+        complete["os"] = serde_json::json!("test");
+        complete["arch"] = serde_json::json!("test");
+        assert!(Report::from_json(&complete.to_string()).is_ok());
+
+        for field in [
+            "workload",
+            "invocation",
+            "revision",
+            "runtime",
+            "os",
+            "arch",
+        ] {
+            let mut partial = complete.clone();
+            partial.as_object_mut().unwrap().remove(field);
+            assert!(
+                Report::from_json(&partial.to_string()).is_err(),
+                "accepted missing {field}"
+            );
+        }
+        let mut profile_only = core.clone();
+        profile_only["profile"] = serde_json::json!("release");
+        assert!(Report::from_json(&profile_only.to_string()).is_err());
+
+        for field in ["revision", "runtime", "os", "arch"] {
+            for invalid in [
+                serde_json::Value::Null,
+                serde_json::json!(""),
+                serde_json::json!("bad\0value"),
+            ] {
+                let mut malformed = complete.clone();
+                malformed[field] = invalid.clone();
+                assert!(
+                    Report::from_json(&malformed.to_string()).is_err(),
+                    "accepted {field}={invalid:?}"
+                );
+            }
+        }
+        for field in ["revision", "runtime", "os", "arch", "profile"] {
+            let mut whitespace = complete.clone();
+            whitespace[field] = serde_json::json!(" ");
+            assert!(
+                Report::from_json(&whitespace.to_string()).is_ok(),
+                "rejected non-empty whitespace {field}"
+            );
+        }
+        for invalid in [
+            serde_json::Value::Null,
+            serde_json::json!(""),
+            serde_json::json!("bad\0value"),
+        ] {
+            let mut malformed = complete.clone();
+            malformed["profile"] = invalid.clone();
+            assert!(
+                Report::from_json(&malformed.to_string()).is_err(),
+                "accepted profile={invalid:?}"
+            );
+        }
+        let mut nul_arg = complete.clone();
+        nul_arg["invocation"] = serde_json::json!(["bad\0arg"]);
+        assert!(Report::from_json(&nul_arg.to_string()).is_err());
+        let mut empty_arg = complete;
+        empty_arg["invocation"] = serde_json::json!([""]);
+        assert!(Report::from_json(&empty_arg.to_string()).is_ok());
+    }
+
+    #[test]
+    fn report_replay_rejects_oversized_raw_pair_array_before_typed_conversion() {
+        let document = serde_json::json!({
+            "pairs": vec![serde_json::Value::Null; MAX_PAIRS + 1]
+        });
+        let error = Report::from_json(&document.to_string()).unwrap_err();
+        assert!(error.to_string().contains("pair count exceeds 10000"));
     }
 
     #[test]
@@ -1042,6 +1251,25 @@ mod tests {
         assert!(analyze(&[pair(1, 1)], 100, 1.05).is_err());
         assert!(analyze(&[pair(1, 1)], 95, f64::NAN).is_err());
         assert!(analyze(&[pair(1, 1)], 95, 1.0).is_err());
+    }
+
+    #[test]
+    fn analysis_accepts_maximum_pairs_and_rejects_excess_before_pair_validation() {
+        let maximum = vec![pair(1, 1); MAX_PAIRS];
+        assert!(analyze(&maximum, 95, 1.05).is_ok());
+
+        let oversized = vec![
+            Pair {
+                baseline_ns: 0,
+                candidate_ns: 0,
+                order: "invalid".to_owned(),
+            };
+            MAX_PAIRS + 1
+        ];
+        let error = analyze(&oversized, 95, 1.05).unwrap_err();
+        assert!(error.to_string().contains("at most 10000"));
+        let invalid_confidence = analyze(&oversized, 0, 1.05).unwrap_err();
+        assert!(invalid_confidence.to_string().contains("confidence"));
     }
 
     #[test]

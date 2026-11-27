@@ -66,11 +66,11 @@ private func windowsEnvironmentValue(named name: String) -> String? {
         let variableMissingCode = DWORD(bitPattern: ERROR_ENVVAR_NOT_FOUND)
         SetLastError(successCode)
         let required = GetEnvironmentVariableW(nameAddress, nil, 0)
+        let queryError = GetLastError()
         if required == 0 {
-            let errorCode = GetLastError()
-            if errorCode == variableMissingCode {
+            if queryError == variableMissingCode {
                 return nil
-            } else if errorCode == successCode {
+            } else if queryError == successCode {
                 return ""
             }
             return nil
@@ -84,15 +84,17 @@ private func windowsEnvironmentValue(named name: String) -> String? {
         }
         var valueBuffer = [WCHAR](repeating: 0, count: Int(required))
         for _ in 0..<2 {
-            SetLastError(successCode)
-            let copied = valueBuffer.withUnsafeMutableBufferPointer { buffer in
-                GetEnvironmentVariableW(nameAddress, buffer.baseAddress, DWORD(buffer.count))
-            }
-            if copied == 0 {
+            let result = valueBuffer.withUnsafeMutableBufferPointer { buffer -> (DWORD, DWORD) in
+                SetLastError(successCode)
+                let copied = GetEnvironmentVariableW(nameAddress, buffer.baseAddress, DWORD(buffer.count))
                 let errorCode = GetLastError()
-                if errorCode == variableMissingCode {
+                return (copied, errorCode)
+            }
+            let (copied, copyError) = result
+            if copied == 0 {
+                if copyError == variableMissingCode {
                     return nil
-                } else if errorCode == successCode {
+                } else if copyError == successCode {
                     return ""
                 }
                 return nil

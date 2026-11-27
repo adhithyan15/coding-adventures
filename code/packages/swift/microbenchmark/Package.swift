@@ -14,6 +14,7 @@ import PackageDescription
 
 let package = Package(
     name: "microbenchmark",
+    platforms: [.macOS("10.15.4")],
     products: [
         .library(name: "Microbenchmark", targets: ["Microbenchmark"]),
         .executable(name: "array-microbenchmark", targets: ["ArrayMicrobenchmark"]),

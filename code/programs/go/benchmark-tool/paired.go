@@ -267,6 +267,19 @@ func readPairedReport(data []byte) (pairedSummary, error) {
 			}
 		}
 	}
+	driverMetadata := []string{"workload", "invocation", "revision", "runtime", "os", "arch"}
+	metadataPresent := 0
+	for _, key := range driverMetadata {
+		if _, ok := root[key]; ok {
+			metadataPresent++
+		}
+	}
+	if metadataPresent != 0 && metadataPresent != len(driverMetadata) {
+		return summary, fmt.Errorf("driver metadata group must contain workload, invocation, revision, runtime, os, and arch")
+	}
+	if _, ok := root["profile"]; ok && metadataPresent != len(driverMetadata) {
+		return summary, fmt.Errorf("profile requires the complete driver metadata group")
+	}
 	for _, key := range []string{"workload", "revision", "runtime", "os", "arch", "profile"} {
 		if raw, ok := root[key]; ok {
 			var s string
@@ -275,7 +288,7 @@ func readPairedReport(data []byte) (pairedSummary, error) {
 			if key == "workload" {
 				invalid = invalid || strings.Trim(s, " \t\n\r\v\f") == "" || strings.ContainsRune(s, '\x00') || !validWorkloadUnicodeEscapes(raw)
 			} else {
-				invalid = invalid || strings.TrimSpace(s) == ""
+				invalid = invalid || s == "" || strings.ContainsRune(s, '\x00')
 			}
 			if invalid {
 				return summary, fmt.Errorf("invalid metadata %s", key)
@@ -288,8 +301,8 @@ func readPairedReport(data []byte) (pairedSummary, error) {
 			return summary, fmt.Errorf("invalid invocation")
 		}
 		for _, rawArg := range args {
-			var arg string
-			if err := json.Unmarshal(rawArg, &arg); err != nil || strings.TrimSpace(arg) == "" {
+			var arg *string
+			if err := json.Unmarshal(rawArg, &arg); err != nil || arg == nil || strings.ContainsRune(*arg, '\x00') {
 				return summary, fmt.Errorf("invalid invocation entry")
 			}
 		}

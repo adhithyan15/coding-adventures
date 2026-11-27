@@ -1,6 +1,7 @@
 # Changelog
 
-- Reject duplicate JSON object members in raw report ingress, including escaped aliases.
+- Reject duplicate decoded JSON object members during raw report replay and
+  reject unknown top-level report members while retaining the object-based API.
 
 ## 0.1.0
 
@@ -13,3 +14,5 @@
   `--rustc-version` label; remove the compiler-querying Cargo build script so
   library consumers do not trigger that extra subprocess.
 - Accept any nonblank workload producer identifier during single-report replay while keeping the array CLI workload unchanged.
+- Require complete optional report metadata, reject empty/NUL descriptive and profile strings, and preserve empty invocation arguments during replay.
+- Validate CLI report metadata before output so empty explicit revision labels cannot emit invalid reports.

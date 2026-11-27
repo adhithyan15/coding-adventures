@@ -24,7 +24,21 @@ func pairedTestReport() []byte {
 		}
 		rows = append(rows, fmt.Sprintf(`{"baseline_ns":9223372036854775807,"candidate_ns":9223372036854775807,"order":%q}`, order))
 	}
-	return []byte(`{"config":{"pairs":6,"confidence_percent":95,"minimum_factor":2,"seed":-9223372036854775808,"target_ns":9223372036854775807,"max_batch":9223372036854775807},"batch_size":9007199254740993,"pairs":[` + strings.Join(rows, ",") + `],"analysis":{"ratio":1,"interval":[1,1],"verdict":"equivalent"},"invocation":["native-driver"],"runtime":"test","profile":"release"}`)
+	return []byte(`{"config":{"pairs":6,"confidence_percent":95,"minimum_factor":2,"seed":-9223372036854775808,"target_ns":9223372036854775807,"max_batch":9223372036854775807},"batch_size":9007199254740993,"pairs":[` + strings.Join(rows, ",") + `],"analysis":{"ratio":1,"interval":[1,1],"verdict":"equivalent"},"workload":"native-test","invocation":["native-driver"],"revision":"test-revision","runtime":"test-runtime","os":"test-os","arch":"test-arch","profile":"release"}`)
+}
+
+func pairedReportWithMetadata(t *testing.T, edit func(map[string]json.RawMessage)) []byte {
+	t.Helper()
+	var object map[string]json.RawMessage
+	if err := json.Unmarshal(pairedTestReport(), &object); err != nil {
+		t.Fatal(err)
+	}
+	edit(object)
+	data, err := json.Marshal(object)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return data
 }
 
 func TestPairedReplayLosslessIntegersAndExport(t *testing.T) {
@@ -102,15 +116,15 @@ func TestPairedReplayInvalidReportsProduceNoSuccess(t *testing.T) {
 		"null endpoint":         strings.Replace(base, `[1,1]`, `[1,null]`, 1),
 		"absent interval":       strings.Replace(base, `"interval":[1,1],`, "", 1),
 		"null interval":         strings.Replace(base, `[1,1]`, `null`, 1),
-		"blank metadata":        strings.Replace(base, `"runtime":"test"`, `"runtime":" "`, 1),
-		"null metadata":         strings.Replace(base, `"runtime":"test"`, `"runtime":null`, 1),
+		"empty metadata":        strings.Replace(base, `"runtime":"test-runtime"`, `"runtime":""`, 1),
+		"null metadata":         strings.Replace(base, `"runtime":"test-runtime"`, `"runtime":null`, 1),
 		"null invocation":       strings.Replace(base, `["native-driver"]`, `null`, 1),
 		"bad invocation entry":  strings.Replace(base, `["native-driver"]`, `[null]`, 1),
 		"duplicate root":        strings.Replace(base, `{"config":`, `{"config":{},"config":`, 1),
 		"duplicate config":      strings.Replace(base, `"pairs":6`, `"pairs":6,"pa\u0069rs":6`, 1),
 		"duplicate pair":        strings.Replace(base, `"baseline_ns":`, `"order":"candidate-first","baseline_ns":`, 1),
 		"duplicate analysis":    strings.Replace(base, `"ratio":1`, `"ratio":1,"ratio":1`, 1),
-		"duplicate metadata":    strings.Replace(base, `"runtime":"test"`, `"runtime":"test","runtime":"test"`, 1),
+		"duplicate metadata":    strings.Replace(base, `"runtime":"test-runtime"`, `"runtime":"test-runtime","runtime":"test-runtime"`, 1),
 		"trailing value":        base + ` {}`,
 		"malformed":             base[:len(base)-1],
 		"not object":            `[]`,
@@ -128,17 +142,90 @@ func TestPairedReplayInvalidReportsProduceNoSuccess(t *testing.T) {
 	}
 }
 
-func TestPairedReplayEmptyArgumentVector(t *testing.T) {
-	// A producer that records argv[1:] can legitimately run with no arguments.
-	data := bytes.Replace(pairedTestReport(), []byte(`["native-driver"]`), []byte(`[]`), 1)
-	if _, err := readPairedReport(data); err != nil {
-		t.Fatal(err)
+func TestPairedReplayMetadataGroup(t *testing.T) {
+	group := []string{"workload", "invocation", "revision", "runtime", "os", "arch"}
+	core := pairedReportWithMetadata(t, func(object map[string]json.RawMessage) {
+		for _, key := range append(append([]string(nil), group...), "profile") {
+			delete(object, key)
+		}
+	})
+	if _, err := readPairedReport(core); err != nil {
+		t.Fatalf("portable core report rejected: %v", err)
+	}
+	for _, missing := range group {
+		t.Run("partial missing "+missing, func(t *testing.T) {
+			data := pairedReportWithMetadata(t, func(object map[string]json.RawMessage) {
+				delete(object, missing)
+			})
+			if _, err := readPairedReport(data); err == nil {
+				t.Fatalf("accepted metadata group missing %s", missing)
+			}
+		})
+	}
+	profileOnly := pairedReportWithMetadata(t, func(object map[string]json.RawMessage) {
+		for _, key := range group {
+			delete(object, key)
+		}
+	})
+	if _, err := readPairedReport(profileOnly); err == nil {
+		t.Fatal("accepted profile without the complete driver metadata group")
+	}
+}
+
+func TestPairedReplayAcceptsWhitespaceOnlyDescriptiveMetadata(t *testing.T) {
+	for _, key := range []string{"revision", "runtime", "os", "arch", "profile"} {
+		t.Run(key, func(t *testing.T) {
+			data := pairedReportWithMetadata(t, func(object map[string]json.RawMessage) {
+				object[key] = json.RawMessage(`" \t "`)
+			})
+			if _, err := readPairedReport(data); err != nil {
+				t.Fatalf("nonempty whitespace-only %s rejected: %v", key, err)
+			}
+		})
+	}
+}
+
+func TestPairedReplayMetadataRejectsNULInEveryString(t *testing.T) {
+	for _, key := range []string{"workload", "revision", "runtime", "os", "arch", "profile"} {
+		t.Run(key, func(t *testing.T) {
+			data := pairedReportWithMetadata(t, func(object map[string]json.RawMessage) {
+				object[key] = json.RawMessage(`"metadata\u0000value"`)
+			})
+			if _, err := readPairedReport(data); err == nil {
+				t.Fatalf("accepted U+0000 in %s", key)
+			}
+		})
+	}
+	t.Run("invocation entry", func(t *testing.T) {
+		data := pairedReportWithMetadata(t, func(object map[string]json.RawMessage) {
+			object["invocation"] = json.RawMessage(`["driver\u0000argument"]`)
+		})
+		if _, err := readPairedReport(data); err == nil {
+			t.Fatal("accepted U+0000 in invocation entry")
+		}
+	})
+}
+
+func TestPairedReplayPreservesEmptyInvocationAndArguments(t *testing.T) {
+	for name, invocation := range map[string]string{
+		"empty vector":       `[]`,
+		"empty argv element": `["", "native-driver"]`,
+		"whitespace argv":    `[" ", "native-driver"]`,
+	} {
+		t.Run(name, func(t *testing.T) {
+			data := pairedReportWithMetadata(t, func(object map[string]json.RawMessage) {
+				object["invocation"] = json.RawMessage(invocation)
+			})
+			if _, err := readPairedReport(data); err != nil {
+				t.Fatalf("valid invocation rejected: %v", err)
+			}
+		})
 	}
 }
 
 func TestPairedReplayGenericWorkloadRejectsEscapedNUL(t *testing.T) {
 	base := string(pairedTestReport())
-	valid := strings.Replace(base, `"invocation":`, `"workload":"dependent-link-order","invocation":`, 1)
+	valid := strings.Replace(base, `"workload":"native-test"`, `"workload":"dependent-link-order"`, 1)
 	if _, err := readPairedReport([]byte(valid)); err != nil {
 		t.Fatalf("valid generic workload rejected: %v", err)
 	}

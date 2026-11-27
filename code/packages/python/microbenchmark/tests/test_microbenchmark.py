@@ -47,6 +47,13 @@ def test_calibration_balanced_schedule_replay_and_seed_reproducibility():
     assert replay.to_dict() == first.to_dict()
 
 
+def test_analyze_pair_limit_before_ratio_work():
+    pair = Observation(1, 1, "baseline-first")
+    with pytest.raises(ValueError, match="10000"):
+        analyze([pair] * 10_001)
+    assert analyze([pair] * 10_000).ratio == 1.0
+
+
 @pytest.mark.parametrize(
     "workload",
     ["indexed-array-sum-4096", "dependent-link-order", " \tx", "\u2003", "\xa0", "🚀"],
@@ -97,8 +104,128 @@ def test_report_replay_rejects_invalid_workload_metadata(workload):
     raw = collect(
         good, good, ONE_PASS, Config(pairs=2, target_ns=5), fixed_clock([5] * 6)
     ).to_dict()
-    raw["workload"] = workload
+    raw.update(
+        {
+            "workload": workload,
+            "invocation": [],
+            "revision": "revision",
+            "runtime": "runtime",
+            "os": "linux",
+            "arch": "x86_64",
+        }
+    )
     with pytest.raises(ValueError, match="workload"):
+        Report.from_dict(raw)
+
+
+def core_report_mapping(pairs=2):
+    return collect(
+        good,
+        good,
+        ONE_PASS,
+        Config(pairs=pairs, target_ns=5),
+        fixed_clock([5] * (2 * (pairs + 1))),
+    ).to_dict()
+
+
+@pytest.mark.parametrize(
+    "path,key",
+    [
+        ((), "unexpected"),
+        (("config",), "unexpected"),
+        (("pairs", 0), "unexpected"),
+        (("analysis",), "unexpected"),
+    ],
+)
+def test_report_replay_rejects_unknown_fields_at_each_object_depth(path, key):
+    raw = core_report_mapping()
+    target = raw
+    for component in path:
+        target = target[component]
+    target[key] = 1
+    with pytest.raises(ValueError, match="unknown fields"):
+        Report.from_dict(raw)
+
+
+def test_report_replay_rejects_unbalanced_pair_orders():
+    raw = core_report_mapping(3)
+    for pair in raw["pairs"]:
+        pair["order"] = "candidate-first"
+    with pytest.raises(ValueError, match="unbalanced"):
+        Report.from_dict(raw)
+
+
+@pytest.mark.parametrize(
+    "metadata",
+    [
+        {"workload": "other"},
+        {"profile": "native"},
+        {"workload": "other", "invocation": []},
+        {
+            "workload": "other",
+            "invocation": [],
+            "revision": "rev",
+            "runtime": "runtime",
+            "os": "linux",
+            "arch": "x86_64",
+            "profile": "",
+        },
+    ],
+)
+def test_report_replay_rejects_partial_or_invalid_metadata_group(metadata):
+    raw = core_report_mapping()
+    raw.update(metadata)
+    with pytest.raises(ValueError):
+        Report.from_dict(raw)
+
+
+def test_report_replay_accepts_empty_invocation_and_empty_arguments():
+    raw = core_report_mapping()
+    raw.update(
+        {
+            "workload": "producer-workload",
+            "invocation": ["", "  "],
+            "revision": "revision",
+            "runtime": "runtime",
+            "os": "linux",
+            "arch": "x86_64",
+            "profile": "profile",
+        }
+    )
+    assert Report.from_dict(raw).to_dict() == {
+        key: raw[key] for key in ("config", "batch_size", "pairs", "analysis")
+    }
+    raw["invocation"] = []
+    assert Report.from_dict(raw).to_dict()["pairs"] == raw["pairs"]
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("revision", "rev\0ision"),
+        ("runtime", "runtime\0"),
+        ("os", "linux\0"),
+        ("arch", "x86_64\0"),
+        ("profile", "profile\0"),
+        ("invocation", ["ok", "bad\0arg"]),
+        ("invocation", ["\ud800"]),
+    ],
+)
+def test_report_replay_rejects_nul_or_malformed_unicode_in_metadata(field, value):
+    raw = core_report_mapping()
+    raw.update(
+        {
+            "workload": "producer-workload",
+            "invocation": [],
+            "revision": "revision",
+            "runtime": "runtime",
+            "os": "linux",
+            "arch": "x86_64",
+            "profile": "profile",
+        }
+    )
+    raw[field] = value
+    with pytest.raises(ValueError):
         Report.from_dict(raw)
 
 
@@ -415,7 +542,7 @@ def test_report_from_dict_rejects_malformed_json_shapes(mutation):
 
 
 def test_report_from_dict_rejects_non_object_and_wrong_pair_count():
-    with pytest.raises(ValueError, match="malformed"):
+    with pytest.raises(ValueError, match="object"):
         Report.from_dict(None)
     report = collect(
         good, good, ONE_PASS, Config(pairs=1, target_ns=1), fixed_clock([1] * 4)

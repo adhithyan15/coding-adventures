@@ -40,6 +40,17 @@ and `arch`), every `invocation` element, and `profile` when present. Empty
 `invocation` elements remain valid because invocation values preserve the
 driver's argument vector exactly.
 
+For the Swift command-line producer, `GIT_REVISION` takes precedence over
+`GITHUB_SHA` by key presence. If `GIT_REVISION` is present with an empty value,
+it suppresses the fallback and the report records `unknown`; it must not emit
+an empty `revision`, which is invalid metadata. A missing primary key permits
+the fallback, and if both keys are missing the report also records `unknown`.
+The Windows consumer smoke test must construct a genuinely present empty
+process environment value and verify from the resulting report that it
+suppresses the nonempty fallback. A PowerShell environment-provider assignment
+that removes the variable does not test the present-empty case on older
+PowerShell versions.
+
 These rules preserve strict schemas while allowing readers to accept valid
 core reports from all producers. Guest-envelope reports remain ordinary core
 reports: host/runtime boundary probes belong in the sidecar and are not
@@ -59,3 +70,17 @@ Validation uses minimal reports, all four retained guest reports, complete
 native reports, a generic workload identifier, metadata mutations, and
 allocator accounting. GCC, Clang, and clang-cl suites must pass, with the
 native forty-pair producer/replay and installed-consumer checks intact.
+Descriptive strings other than `workload` need only be nonempty and NUL-free;
+Unicode whitespace is valid content for these fields and for `profile`.
+`workload` retains its explicit ASCII-whitespace-only rejection rule.
+
+## Swift reader validation
+
+The Swift reader enforces the same all-or-none six-member metadata group and
+the `profile` dependency. Presence is distinct from `null`: any explicit-null
+metadata member is rejected, while a report with no metadata remains a valid
+four-member core report. Required descriptive values and a present profile are
+nonempty and NUL-free; invocation is required with the group, may be an empty
+array, and each argument may be empty but not contain NUL. Tests cover the
+empty argument vector, empty argument values, escaped NUL, missing members,
+profile without the group, and explicit nulls.

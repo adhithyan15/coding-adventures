@@ -115,68 +115,126 @@ describe("paired microbenchmarks", () => {
     expect(replayed.pairs.every((pair) => BigInt(pair.baseline_ns) > 0n && BigInt(pair.candidate_ns) > 0n)).toBe(true);
   });
 
-  it("rejects duplicate JSON member names after escape decoding", () => {
-    let tick = 0n;
-    const report = collect(
-      (n) => n,
-      (n) => n,
-      1n,
-      { ...defaults(), pairs: 2, target_ns: 1n, max_batch: 1n },
-      () => tick++,
-    );
-    const valid = stringifyLosslessJson({ ...report, revision: "shared", runtime: "shared" });
-    expect(replayJson(valid).pairs).toHaveLength(2);
+  it("falls through empty ambient revision labels and rejects an empty explicit label", () => {
+    const cliPath = fileURLToPath(new URL("../dist/array-driver.js", import.meta.url));
+    const args = [cliPath, "--pairs", "1", "--target-ns", "1", "--max-batch", "1"];
+    for (const [environment, expected] of [
+      [{ GIT_REVISION: "", GITHUB_SHA: "fallback" }, "fallback"],
+      [{ GIT_REVISION: "", GITHUB_SHA: "" }, "unknown"],
+      [{ GIT_REVISION: "primary", GITHUB_SHA: "secondary" }, "primary"],
+    ] as const) {
+      const child = spawnSync(process.execPath, args, {
+        encoding: "utf8",
+        env: { ...process.env, ...environment },
+      });
+      expect(child.status, child.stderr).toBe(0);
+      expect((parseLosslessJson(child.stdout) as Record<string, unknown>).revision).toBe(expected);
+      expect(replayJson(child.stdout).pairs).toHaveLength(1);
+    }
 
-    const invalid = [
-      valid.replace('"pairs":2', '"pairs":2,"pairs":2'),
-      valid.replace('"baseline_ns":1', '"baseline_ns":1,"baseline_ns":1'),
-      valid.replace('"verdict":"inconclusive"', '"verdict":"inconclusive","verdict":"inconclusive"'),
-      valid.replace('"revision":"shared"', '"revision":"shared","revision":"shared"'),
-      valid.replace('"pairs":2', '"pairs":2,"pa\\u0069rs":2'),
-    ];
-    for (const text of invalid) expect(() => replayJson(text)).toThrow(/duplicate JSON object member/);
-    expect(() => replayJson(`${valid.slice(0, -1)},}`)).toThrow();
+    const invalid = spawnSync(process.execPath, [...args, "--revision", ""], {
+      encoding: "utf8",
+      env: { ...process.env, GIT_REVISION: "", GITHUB_SHA: "" },
+    });
+    expect(invalid.status).not.toBe(0);
+    expect(invalid.stdout).toBe("");
   });
 
-  it("validates workload metadata before projecting it from core replay", () => {
+  it("validates complete metadata before projecting it from core replay", () => {
     let tick = 0n;
     const report = collect((n) => n, (n) => n, 1n,
       { ...defaults(), pairs: 1, target_ns: 1n }, () => (tick += 1n));
-    const base = stringifyLosslessJson(report).slice(0, -1);
-    const withWorkload = (token: string) => `${base},"workload":${token}}`;
-    for (const accepted of ["\"dependent-link-order\"", "\"\\u2003\"", "\"\\ud83d\\ude00\"", "\"\\ufffd\"", "\"\\\\uD800\""]) {
-      expect(replayJson(withWorkload(accepted)).pairs).toHaveLength(1);
+    const core = parseLosslessJson(stringifyLosslessJson(report)) as Record<string, unknown>;
+    const complete = {
+      ...core,
+      workload: "dependent-link-order",
+      invocation: [] as string[],
+      revision: "r",
+      runtime: "Node.js",
+      os: "test",
+      arch: "test",
+    };
+    const replayBoth = (value: Record<string, unknown>) => {
+      expect(replayReport(value)).toEqual(report);
+      expect(replayJson(stringifyLosslessJson(value))).toEqual(report);
+    };
+    replayBoth(complete);
+    replayBoth({ ...complete, invocation: [""] });
+    for (const field of ["workload", "invocation", "revision", "runtime", "os", "arch"]) {
+      const partial = { ...complete };
+      delete (partial as Record<string, unknown>)[field];
+      expect(() => replayReport(partial)).toThrow();
+      expect(() => replayJson(stringifyLosslessJson(partial))).toThrow();
     }
-    for (const rejected of ["\"\"", "\" \\t\\n\\r\\f\\u000b\"", "\"\\u0000\"", "\"x\\u0000y\"", "null", "17", "true", "[]", "\"\\ud800\"", "\"\\udfff\""]) {
-      expect(() => replayJson(withWorkload(rejected)), `accepted ${rejected}`).toThrow();
+    const profileOnly = { ...core, profile: "release" } as Record<string, unknown>;
+    expect(() => replayReport(profileOnly)).toThrow();
+    expect(() => replayJson(stringifyLosslessJson(profileOnly))).toThrow();
+
+    for (const field of ["revision", "runtime", "os", "arch", "profile"]) {
+      for (const invalid of [null, "", "bad\0value"]) {
+        const malformed = { ...complete, profile: "release", [field]: invalid };
+        expect(() => replayReport(malformed)).toThrow();
+        expect(() => replayJson(stringifyLosslessJson(malformed))).toThrow();
+      }
+      replayBoth({ ...complete, profile: "release", [field]: " " });
     }
-    expect(() => replayJson(withWorkload("\"example\"").replace("\"workload\":\"example\"", "\"workload\":\"example\",\"workload\":\"other\""))).toThrow(/duplicate JSON object member/);
+    for (const invalid of [null, "", " \t\n\r\f\v", "\0", "x\0y", "\ud800", "\udfff"]) {
+      const malformed = { ...complete, workload: invalid };
+      expect(() => replayReport(malformed)).toThrow();
+      expect(() => replayJson(stringifyLosslessJson(malformed))).toThrow();
+    }
+    for (const invalid of [["bad\0arg"], [1], null]) {
+      const malformed = { ...complete, invocation: invalid };
+      expect(() => replayReport(malformed)).toThrow();
+      expect(() => replayJson(stringifyLosslessJson(malformed))).toThrow();
+    }
+    for (const accepted of ["\u2003", "\ud83d\ude00", "\ufffd", "\\uD800"]) {
+      replayBoth({ ...complete, workload: accepted });
+    }
   });
 
-  it("replays full signed-64-bit endpoints and a maximum-size report", () => {
-    const minimum = -(1n << 63n);
-    const maximum = (1n << 63n) - 1n;
-    const extremePairs = [{ baseline_ns: maximum, candidate_ns: maximum, order: "baseline-first" as const }];
-    const extreme = {
-      config: { ...defaults(), pairs: 1, seed: minimum, target_ns: maximum, max_batch: 1n },
-      batch_size: 1n,
-      pairs: extremePairs,
-      analysis: analyze(extremePairs),
-    };
-    const replayedExtreme = replayJson(stringifyLosslessJson(extreme));
-    expect(replayedExtreme.config.seed).toBe(minimum);
-    expect(replayedExtreme.config.target_ns).toBe(maximum);
-    expect(replayedExtreme.pairs[0].baseline_ns).toBe(maximum);
-
+  it("rejects duplicate decoded JSON members while allowing separate object scopes", () => {
     let tick = 0n;
-    const large = collect(
-      (n) => n,
-      (n) => n,
-      1n,
-      { ...defaults(), pairs: 10_000, target_ns: 1n, max_batch: 1n },
-      () => tick++,
-    );
-    expect(replayJson(stringifyLosslessJson(large)).pairs).toHaveLength(10_000);
+    const report = collect((n) => n, (n) => n, 1n,
+      { ...defaults(), pairs: 1, target_ns: 1n }, () => (tick += 1n));
+    const valid = stringifyLosslessJson({
+      ...report, workload: "generic-workload", invocation: [], revision: "shared",
+      runtime: "shared", os: "test", arch: "test",
+    });
+    expect(replayJson(valid)).toEqual(report);
+    // The same member name appears in the root and config objects, not one scope.
+
+    const invalid = [
+      valid.replace('"pairs":1', '"pairs":1,"pairs":1'),
+      valid.replace('"baseline_ns":1', '"baseline_ns":1,"baseline_ns":1'),
+      valid.replace('"verdict":"inconclusive"', '"verdict":"inconclusive","verdict":"inconclusive"'),
+      valid.replace('"revision":"shared"', '"revision":"shared","revision":"other"'),
+      valid.replace('"pairs":1', '"pairs":1,"pa\\u0069rs":1'),
+    ];
+    for (const text of invalid) expect(() => replayJson(text)).toThrow(/duplicate JSON object member/);
+    expect(() => replayJson(`${valid.slice(0, -1)},}`)).toThrow();
+
+    const unknown = { ...report, extra: true };
+    expect(() => replayReport(unknown)).toThrow(/unknown report member/);
+    expect(() => replayJson(stringifyLosslessJson(unknown))).toThrow(/unknown report member/);
+  });
+
+  it("replays a maximum-size balanced raw report with repeated row member names", () => {
+    const pairs = Array.from({ length: 10_000 }, (_, index) => ({
+      baseline_ns: 1n,
+      candidate_ns: 1n,
+      order: index % 2 === 0 ? "baseline-first" as const : "candidate-first" as const,
+    }));
+    const config = { ...defaults(), pairs: 10_000 };
+    const report = {
+      config,
+      batch_size: 1n,
+      pairs,
+      analysis: analyze(pairs, config.confidence_percent, config.minimum_factor),
+    };
+    const replayed = replayJson(stringifyLosslessJson(report));
+    expect(replayed.pairs).toHaveLength(10_000);
+    expect(replayed.analysis).toEqual(report.analysis);
   });
 
   it("preserves signed-64-bit JSON integer tokens above 2^53", () => {

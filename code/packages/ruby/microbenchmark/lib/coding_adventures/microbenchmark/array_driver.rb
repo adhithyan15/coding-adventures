@@ -110,7 +110,12 @@ module CodingAdventures
 
       def run(arguments = ARGV, output: $stdout, error_output: $stderr, environment: ENV, program: $PROGRAM_NAME)
         config, selected_revision = parse_arguments(arguments)
-        revision = selected_revision || environment["GIT_REVISION"] || environment["GITHUB_SHA"] || "unknown"
+        revision = selected_revision
+        if revision.nil?
+          revision = [environment["GIT_REVISION"], environment["GITHUB_SHA"]].find do |candidate|
+            candidate.is_a?(String) && !candidate.empty?
+          end || "unknown"
+        end
         result = ArrayDriver.run(
           config,
           invocation: [File.basename(program), *arguments],
@@ -119,6 +124,7 @@ module CodingAdventures
           os: RbConfig::CONFIG.fetch("host_os"),
           machine: RbConfig::CONFIG.fetch("host_cpu")
         )
+        CodingAdventures::Microbenchmark.replay_report(result)
         output.write(JSON.generate(result))
         output.write("\n")
         0

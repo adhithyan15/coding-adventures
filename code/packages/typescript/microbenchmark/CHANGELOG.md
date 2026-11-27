@@ -1,12 +1,14 @@
 # Changelog
 
-- Reject duplicate JSON object members in raw report ingress, including escaped aliases.
-
+- Reject duplicate decoded JSON object members during raw replay and reject
+  unknown top-level report members while retaining the object-based API.
 - Reject more than 10,000 pairs in public analysis before mapping pair fields.
 - Reject inherited Object member names as CLI options; only explicitly
   declared flags may update benchmark configuration.
-- Validate present workload metadata, including NUL and Unicode scalar
-  boundaries, before projecting it from core report replay.
+- Validate the complete optional metadata group, descriptive/profile strings,
+  and invocation strings before projecting core report replay.
+- Fall through empty ambient revision labels using the existing GIT_REVISION,
+  GITHUB_SHA, unknown precedence; validate produced reports before output.
 
 ## 0.1.0
 
