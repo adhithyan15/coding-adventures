@@ -106,7 +106,7 @@ void Device::erase_block(std::int64_t block) {
     const std::size_t first_byte = first_page * page_size_bytes_;
     const std::size_t byte_end = page_end * page_size_bytes_;
     std::fill(pages_.begin() + static_cast<std::ptrdiff_t>(first_byte),
-              pages_.begin() + static_cast<std::ptrdiff_t>(byte_end), UINT8_C(0xFF));
+              pages_.begin() + static_cast<std::ptrdiff_t>(byte_end), std::uint8_t{0xFF});
     std::fill(programmed_.begin() + static_cast<std::ptrdiff_t>(first_page),
               programmed_.begin() + static_cast<std::ptrdiff_t>(page_end), 0);
     erase_counts_[index] = count + 1;
