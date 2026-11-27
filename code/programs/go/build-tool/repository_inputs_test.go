@@ -97,21 +97,23 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestMicrobenchmarkPairsFixtureSelectsFourConsumers(t *testing.T) {
+func TestMicrobenchmarkPairsFixtureSelectsFiveConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/microbenchmark", Language: "go"},
 		{Name: "go/rank-statistics", Language: "go"},
 		{Name: "python/microbenchmark", Language: "python"},
 		{Name: "python/rank-statistics", Language: "python"},
+		{Name: "typescript/rank-statistics", Language: "typescript"},
 	}
 	fixture := []string{microbenchmarkPairsFixturePath}
-	want := map[string]bool{"go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
+	want := map[string]bool{"go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true, "typescript/rank-statistics": true}
 	if got, err := repositoryInputConsumersForChange(fixture, packages, "all"); err != nil || !reflect.DeepEqual(got, want) {
 		t.Fatalf("all-language fixture selection got %v, err %v; want %v", got, err, want)
 	}
 	for language, expected := range map[string]map[string]bool{
-		"go":     {"go/microbenchmark": true, "go/rank-statistics": true},
-		"python": {"python/microbenchmark": true, "python/rank-statistics": true},
+		"go":         {"go/microbenchmark": true, "go/rank-statistics": true},
+		"python":     {"python/microbenchmark": true, "python/rank-statistics": true},
+		"typescript": {"typescript/rank-statistics": true},
 	} {
 		if got, err := repositoryInputConsumersForChange(fixture, packages, language); err != nil || !reflect.DeepEqual(got, expected) {
 			t.Errorf("%s fixture selection got %v, err %v; want %v", language, got, err, expected)

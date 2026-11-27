@@ -15,6 +15,7 @@ func TestMicrobenchmarkPairsFixtureChangesFallbackPackageHash(t *testing.T) {
 		{Name: "go/rank-statistics", Language: "go"},
 		{Name: "python/microbenchmark", Language: "python"},
 		{Name: "python/rank-statistics", Language: "python"},
+		{Name: "typescript/rank-statistics", Language: "typescript"},
 	}
 	wantInputs := []string{microbenchmarkPairsFixturePath}
 

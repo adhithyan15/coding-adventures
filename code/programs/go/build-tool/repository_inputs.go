@@ -608,6 +608,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    []string{microbenchmarkPairsFixturePath},
 	},
 	{
+		name:     "typescript/rank-statistics",
+		language: "typescript",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
 		name:     "dart/hash-map",
 		language: "dart",
 		inputs:   "the shared DT18 hash-map contract and v1 fixture",
@@ -1717,7 +1724,7 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
 	switch packageName {
-	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics", "typescript/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths
