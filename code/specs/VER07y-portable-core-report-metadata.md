@@ -41,9 +41,10 @@ it suppresses the fallback and the report records `unknown`; it must not emit
 an empty `revision`, which is invalid metadata. A missing primary key permits
 the fallback, and if both keys are missing the report also records `unknown`.
 The Windows consumer smoke test must construct a genuinely present empty
-process environment value and verify it before launching the executable; a
-PowerShell environment-provider assignment that removes the variable does not
-test the present-empty case.
+process environment value and verify from the resulting report that it
+suppresses the nonempty fallback. A PowerShell environment-provider assignment
+that removes the variable does not test the present-empty case on older
+PowerShell versions.
 
 These rules preserve strict schemas while allowing readers to accept valid
 core reports from all producers. Guest-envelope reports remain ordinary core
