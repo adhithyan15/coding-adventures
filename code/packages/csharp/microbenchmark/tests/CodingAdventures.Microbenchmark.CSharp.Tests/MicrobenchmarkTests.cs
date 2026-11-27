@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using CodingAdventures.Microbenchmark;
 
@@ -266,6 +267,29 @@ public sealed class MicrobenchmarkTests
         }
         Assert.Throws<ArgumentException>(() => Report.FromJson(json.Replace("\"profile\": \"release\"", "\"profile\": null", StringComparison.Ordinal)));
         Assert.Throws<ArgumentException>(() => Report.FromJson(json.Replace("\"analysis\":", "\"invocation\": [null],\n  \"analysis\":", StringComparison.Ordinal)));
+        foreach (var field in new[] { "workload", "revision", "runtime", "os", "arch", "profile", "invocation" })
+        {
+            var withNul = JsonNode.Parse(json)!.AsObject();
+            if (field == "invocation") withNul[field]!.AsArray()[0] = "argument\0with-nul";
+            else withNul[field] = "metadata\0with-nul";
+            Assert.Throws<ArgumentException>(() => Report.FromJson(withNul.ToJsonString()));
+        }
+        foreach (var field in new[] { "workload", "revision", "runtime", "os", "arch", "profile" })
+        {
+            var withEmptyMetadata = JsonNode.Parse(json)!.AsObject();
+            withEmptyMetadata[field] = "";
+            Assert.Throws<ArgumentException>(() => Report.FromJson(withEmptyMetadata.ToJsonString()));
+        }
+        var withEmptyArgument = JsonNode.Parse(json)!.AsObject();
+        withEmptyArgument["invocation"]!.AsArray().Insert(1, "");
+        var emptyArgumentReport = Report.FromJson(withEmptyArgument.ToJsonString());
+        Assert.Equal("", emptyArgumentReport.Invocation![1]);
+        Assert.Equal("", Report.FromJson(emptyArgumentReport.ToJson()).Invocation![1]);
+        var withEmptyInvocation = JsonNode.Parse(json)!.AsObject();
+        withEmptyInvocation["invocation"] = new JsonArray();
+        var emptyInvocationReport = Report.FromJson(withEmptyInvocation.ToJsonString());
+        Assert.Empty(emptyInvocationReport.Invocation!);
+        Assert.Empty(Report.FromJson(emptyInvocationReport.ToJson()).Invocation!);
         Assert.DoesNotContain("\"workload\": null", Report.FromJson(maxReport).ToJson());
         Assert.Null(Report.FromJson(maxReport).Analysis.Interval);
     }

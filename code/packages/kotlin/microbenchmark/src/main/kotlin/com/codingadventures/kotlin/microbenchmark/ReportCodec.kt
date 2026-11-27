@@ -54,12 +54,13 @@ object ReportCodec {
         validateNodeBudget(root)
         val fields = names(root)
         require(fields == topKeys || fields == topKeys + "profile") { "report fields do not match portable schema" }
-        val workload = string(root, "workload")
+        val workload = metadataString(root, "workload")
         require(isValidWorkload(workload)) { "workload must contain a non-ASCII-whitespace character and no NUL" }
         val invocation = root.path("invocation")
         require(invocation.isArray && invocation.all { it.isTextual }) { "invocation must contain strings" }
-        listOf("revision", "runtime", "os", "arch").forEach { string(root, it) }
-        if ("profile" in fields) string(root, "profile")
+        require(invocation.all { '\u0000' !in it.textValue() }) { "invocation entries must not contain NUL" }
+        listOf("revision", "runtime", "os", "arch").forEach { metadataString(root, it) }
+        if ("profile" in fields) metadataString(root, "profile")
         val cfg = root.path("config")
         require(cfg.isObject && names(cfg) == configKeys) { "invalid config fields" }
         val config = Config(
@@ -159,6 +160,12 @@ object ReportCodec {
         val value = node.path(name)
         require(value.isTextual) { "$name must be a string" }
         return value.textValue()
+    }
+    private fun metadataString(node: JsonNode, name: String): String {
+        val value = string(node, name)
+        require(value.isNotEmpty()) { "$name must not be empty" }
+        require('\u0000' !in value) { "$name must not contain NUL" }
+        return value
     }
     private fun long(node: JsonNode, name: String, min: Long, max: Long): Long {
         val value = node.path(name)

@@ -74,12 +74,15 @@ public final class ReportCodec {
             Set<String> expected = new LinkedHashSet<>(TOP_KEYS);
             if (keys.contains("profile")) expected.add("profile");
             require(keys.equals(expected), "report fields do not match the portable schema");
-            String workload = string(root, "workload");
+            String workload = metadataString(root, "workload");
             require(isValidWorkload(workload), "workload must contain a non-ASCII-whitespace character and no NUL");
             require(root.path("invocation").isArray(), "invocation must be an array");
-            for (JsonNode item : root.path("invocation")) require(item.isTextual(), "invocation entries must be strings");
-            for (String name : List.of("revision", "runtime", "os", "arch")) string(root, name);
-            if (keys.contains("profile")) string(root, "profile");
+            for (JsonNode item : root.path("invocation")) {
+                require(item.isTextual(), "invocation entries must be strings");
+                require(!item.textValue().contains("\0"), "invocation entries must not contain NUL");
+            }
+            for (String name : List.of("revision", "runtime", "os", "arch")) metadataString(root, name);
+            if (keys.contains("profile")) metadataString(root, "profile");
 
             JsonNode cfg = root.path("config");
             require(cfg.isObject() && fieldNames(cfg).equals(CONFIG_KEYS), "invalid config fields");
@@ -181,6 +184,12 @@ public final class ReportCodec {
         return hasNonWhitespace;
     }
     private static String string(JsonNode node, String key) { JsonNode value = node.path(key); require(value.isTextual(), key + " must be a string"); return value.textValue(); }
+    private static String metadataString(JsonNode node, String key) {
+        String value = string(node, key);
+        require(!value.isEmpty(), key + " must not be empty");
+        require(!value.contains("\0"), key + " must not contain NUL");
+        return value;
+    }
     private static long integer64(JsonNode node, String key, long min, long max) {
         JsonNode value = node.path(key);
         require(value.isIntegralNumber() && value.canConvertToLong(), key + " must be an exact signed 64-bit integer");

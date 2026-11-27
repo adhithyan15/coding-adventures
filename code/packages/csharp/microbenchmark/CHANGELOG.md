@@ -12,3 +12,4 @@
 - Declare the actual clock, revision environment, and standard-stream capabilities; bound direct analysis inputs to the documented pair limit.
 - Invoke the installed consumer verifier with `pwsh` from the POSIX BUILD recipe.
 - Replay the native 40-pair CLI report through the separately installed NuGet consumer.
+- Reject NUL in every metadata value and preserve empty invocation arguments during replay.

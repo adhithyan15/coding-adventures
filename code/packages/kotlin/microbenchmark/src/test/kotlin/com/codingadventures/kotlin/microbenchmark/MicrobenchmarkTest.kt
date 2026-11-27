@@ -148,6 +148,28 @@ class MicrobenchmarkTest {
         val withProfile = ObjectMapper().readTree(validJson) as ObjectNode
         withProfile.put("profile", "portable")
         assertTrue(ReportCodec.replay(withProfile.toString()).analysis.verdict.isNotEmpty())
+        val withEmptyArgument = mapper.readTree(validJson) as ObjectNode
+        (withEmptyArgument.path("invocation") as com.fasterxml.jackson.databind.node.ArrayNode).insert(1, "")
+        assertEquals(ReportCodec.replay(validJson).pairs, ReportCodec.replay(withEmptyArgument.toString()).pairs)
+        withEmptyArgument.remove("invocation")
+        withEmptyArgument.putArray("invocation")
+        assertEquals(ReportCodec.replay(validJson).pairs, ReportCodec.replay(withEmptyArgument.toString()).pairs)
+        val metadataBase = mapper.readTree(validJson) as ObjectNode
+        metadataBase.put("profile", "portable")
+        listOf("workload", "revision", "runtime", "os", "arch", "profile", "invocation").forEach { field ->
+            val withNul = metadataBase.deepCopy()
+            if (field == "invocation") {
+                (withNul.path(field) as com.fasterxml.jackson.databind.node.ArrayNode).set(0, "argument\u0000with-nul")
+            } else {
+                withNul.put(field, "metadata\u0000with-nul")
+            }
+            assertFailsWith<IllegalArgumentException>(field) { ReportCodec.replay(withNul.toString()) }
+        }
+        listOf("workload", "revision", "runtime", "os", "arch", "profile").forEach { field ->
+            val withEmptyMetadata = metadataBase.deepCopy()
+            withEmptyMetadata.put(field, "")
+            assertFailsWith<IllegalArgumentException>(field) { ReportCodec.replay(withEmptyMetadata.toString()) }
+        }
         assertRejected(validJson) { it.put("extra", true) }
         assertRejected(validJson) { it.putNull("invocation") }
         assertRejected(validJson) { it.putNull("revision") }

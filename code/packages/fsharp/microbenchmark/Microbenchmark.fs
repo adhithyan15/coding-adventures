@@ -330,6 +330,13 @@ module Microbenchmark =
         if element.ValueKind <> JsonValueKind.String then invalidOp (name + " must be a string")
         let value = element.GetString()
         if String.IsNullOrEmpty value then invalidOp (name + " must not be empty")
+        if value.Contains('\000') then invalidOp (name + " must not contain NUL")
+        value
+
+    let private readInvocationString (element: JsonElement) : string =
+        if element.ValueKind <> JsonValueKind.String then invalidOp "invocation entry must be a string"
+        let value = element.GetString()
+        if value.Contains('\000') then invalidOp "invocation entry must not contain NUL"
         value
 
     let private isValidWorkload (value: string) : bool =
@@ -409,7 +416,7 @@ module Microbenchmark =
                 else
                     let invocationElement = required "invocation" root
                     if invocationElement.ValueKind <> JsonValueKind.Array then invalidOp "invocation must be an array"
-                    let invocation = invocationElement.EnumerateArray() |> Seq.map (readString "invocation entry") |> Seq.toArray
+                    let invocation = invocationElement.EnumerateArray() |> Seq.map readInvocationString |> Seq.toArray
                     let profile = if root.TryGetProperty("profile") |> fst then Some(required "profile" root |> readString "profile") else None
                     let workload = required "workload" root |> readString "workload"
                     if not (isValidWorkload workload) then invalidOp "workload must contain a non-ASCII-whitespace character and no NUL"
