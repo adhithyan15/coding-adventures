@@ -137,15 +137,16 @@ describe("B1: checkWork is part of the run and validates what it adds", () => {
   const base = (corpus.suites.find((s) => s.state === "live") as { suite: Json }).suite;
   const fake = (suite: Json, controls: Json[] = []): never => ({ ...corpus, suites: [{ id: suite.id, state: "live", suite }], controls }) as never;
 
-  it("is exported from the package index and called by runSuite before anything runs", () => {
+  it("is exported from the package index; runSuite charges its own suite only and the whole-run planner counts the controls", () => {
     expect(api.checkWork).toBe(checkWork);
-    // a corpus whose controls re-run the same suite until the slim total is exceeded is refused by runSuite itself
+    // a corpus whose controls re-run the same suite until the slim total is exceeded is refused by the planner, not by runSuite
     const record = corpus.suites.find((s) => s.state === "live") as (typeof corpus.suites)[number];
     const slim = (record.suite?.slimChunks ?? []).length;
     expect(slim).toBeGreaterThan(0);
     const reruns = Math.ceil(MAX_TOTAL_WORK_SLIM / (record.suite?.chunkSize ?? 1)) + 1;
     const crowded = { ...corpus, controls: Array.from({ length: reruns * 2 }, (_u, i) => ({ id: `c${i}`, op: "x", fault: "y", state: "ok", requiredClaims: [record.id] })) };
-    expect(() => runSuite(crowded as never, record, "slim")).toThrow(/total work/);
+    expect(() => checkWork(crowded as never, "slim")).toThrow(/total work/);
+    expect(runSuite(crowded as never, record, "slim").chunks).toBe(slim);
   });
 
   it("refuses a slim chunk that is not a chunk, an unknown depth and any NaN total, instead of passing a limit", () => {

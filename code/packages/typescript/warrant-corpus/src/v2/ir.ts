@@ -448,7 +448,11 @@ export interface RunState {
  * Ops, models and types, validated.  Building one **is** the "verify before
  * run" of section 14 for the part of a corpus that is shared by every suite.
  */
+/** Steps of the usefulness check one `match` may spend: far above any kit case or adopter match, far below a hostile one. */
+export const MATCH_BUDGET = 200_000;
+
 export class Program {
+  private matchSteps = MATCH_BUDGET;
   readonly table: TypeTable;
   readonly ops = new Map<string, OpSig>();
   readonly levels: ReadonlySet<string>;
@@ -1115,7 +1119,8 @@ export class Program {
    * the level never gets here with one.  Every other mistake is `ill-typed` (a corpus error at source).
    */
   private typePattern(pat: unknown, ty: Ty, binds: Map<string, { slot: number; ty: Ty }>, seen: Set<string>, depth: number): TPat {
-    if (depth > 8) return fail("ill-typed", "a pattern nests at most 8 deep");
+    // The outermost pattern is level 1: a pattern nests at most 8 deep (VER04j section 4.3), so a ninth level is refused.
+    if (depth > 8) return fail("depth", "a pattern nests at most 8 deep");
     if (!Array.isArray(pat) || typeof pat[0] !== "string") return fail("ill-typed", "a pattern is an array that starts with a pattern word");
     const head = pat[0];
     switch (head) {
@@ -1172,7 +1177,17 @@ export class Program {
    * that can fall through is one where a wildcard is useful against all of its arms.  `tys` are the types of the columns,
    * `null` for a payload that is undetermined (only a wildcard can stand there).
    */
+  /** One usefulness question with a fresh budget (an inner `match` typed in between cannot spend the outer one's). */
+  private usefulWithin(rows: readonly (readonly TPat[])[], vec: readonly TPat[], tys: readonly (Ty | null)[]): boolean {
+    this.matchSteps = MATCH_BUDGET;
+    return this.useful(rows, vec, tys);
+  }
+
   private useful(rows: readonly (readonly TPat[])[], vec: readonly TPat[], tys: readonly (Ty | null)[]): boolean {
+    // A work budget (section 14: a corpus is hostile): the check is exponential in the worst case, and a match that needs more
+    // than MATCH_BUDGET steps is refused, as a corpus error, rather than left to run.
+    this.matchSteps -= 1;
+    if (this.matchSteps < 0) fail("ill-typed", "a match is too costly to check");
     if (vec.length === 0) return rows.length === 0;
     const head = vec[0] as TPat;
     const ty = tys[0] ?? null;
@@ -1258,16 +1273,16 @@ export class Program {
     for (const arm of armsRaw) {
       if (!Array.isArray(arm) || arm.length !== 2) return fail("ill-typed", "an arm is [pattern, body]");
       const binds = new Map(scope);
-      const pat = this.typePattern(arm[0], scrutinee.ty, binds, new Set(), 0);
+      const pat = this.typePattern(arm[0], scrutinee.ty, binds, new Set(), 1);
       // An arm no value can reach: every value it matches is matched by an earlier arm.
-      if (!this.useful(pats.map((p) => [p]), [pat], [scrutinee.ty])) fail("ill-typed", "an arm no value can reach");
+      if (!this.usefulWithin(pats.map((p) => [p]), [pat], [scrutinee.ty])) fail("ill-typed", "an arm no value can reach");
       pats.push(pat);
       const body = this.typeExpr(arm[1], binds, expected);
       if (expected !== undefined && faultCommon(body.ty, expected.ty, expected.narrow) === null) fail("ill-typed", "an arm shares no type with the declared one");
       bodies.push(body);
     }
     // Exhaustive: a wildcard must not be useful against the arms.
-    if (this.useful(pats.map((p) => [p]), [{ k: "wild" }], [scrutinee.ty])) fail("ill-typed", "a match that can fall through");
+    if (this.usefulWithin(pats.map((p) => [p]), [{ k: "wild" }], [scrutinee.ty])) fail("ill-typed", "a match that can fall through");
     const common = this.branchType(bodies.map((b) => b.ty), expected);
     if (common === null) return fail("ill-typed", "the arms of a match share no type");
     if (scrutinee.sub && bodies.some((b) => b.sub)) fail("impure-guard", "a subject call under a guard that contains a subject call");

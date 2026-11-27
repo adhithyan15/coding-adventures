@@ -332,6 +332,39 @@ describe("match on a Result (R76; Appendix A.1)", () => {
     expect(Date.now() - started).toBeLessThan(5000);
   });
 
+  it("refuses an 18-column, 38-arm match by its work budget, in under a second", () => {
+    // 18 columns: two nested tuples of 8 Results and two more Results
+    const col = "Result<U8,E>";
+    const inner = `(${Array.from({ length: 8 }, () => col).join(",")})`;
+    const wide = `(${inner},${inner},${col},${col})`;
+    const full = `Result<${wide},E>`;
+    const wildTuple = (n: number, at: number, p: Json): Json[] => Array.from({ length: n }, (_u, k) => (k === at ? p : ["wild"]));
+    const arms: Json[] = [];
+    for (let i = 0; i < 19; i += 1) {
+      const place = (p: Json): Json => ["ok", ["tuple", [["tuple", wildTuple(8, i % 8, p)], ["tuple", wildTuple(8, (i + 1) % 8, p)], ["wild"], ["wild"]]]];
+      arms.push(arm(place(["ok", ["wild"]]), U8(i)), arm(place(["err_any"]), U8(i)));
+    }
+    const started = Date.now();
+    const value = { ok: [Array.from({ length: 8 }, () => ({ ok: "1" })), Array.from({ length: 8 }, () => ({ ok: "1" })), { ok: "1" }, { ok: "1" }] };
+    expect(outcome(() => evaluate(["match", ["var", "r"], arms], [["r", full, value]]))).toBe("ill-typed");
+    expect(Date.now() - started).toBeLessThan(1000);
+  });
+
+  it("counts the outermost pattern as level 1: a ninth level is refused as depth", () => {
+    const nest = (levels: number): [Json, string] => {
+      let pat: Json = ["wild"];
+      let type = "U8";
+      for (let i = 1; i < levels; i += 1) { pat = ["ok", pat]; type = `Result<${type},E>`; }
+      return [pat, `Result<${type},E>`];
+    };
+    const run = (levels: number): string => {
+      const [pat, type] = nest(levels);
+      return outcome(() => evaluate(["match", ["var", "r"], [arm(["ok", pat], U8(0)), arm(["wild"], U8(0))]], [["r", type, { err: "BAD" }]]));
+    };
+    expect(run(7)).toBe("ok");
+    expect(run(8)).toBe("depth");
+  });
+
   it("refuses malformed matches and patterns as ill-typed", () => {
     const vars: [string, string, Json][] = [["r", "Result<(U8,U8),E>", { ok: ["1", "2"] }]];
     const ok = arm(["ok", ["wild"]], U8(0));
@@ -349,12 +382,6 @@ describe("match on a Result (R76; Appendix A.1)", () => {
     ]) {
       expect(outcome(() => E(bad, vars)), JSON.stringify(bad)).toBe("ill-typed");
     }
-    // a pattern nested deeper than 8 is refused too
-    let deep: Json = ["wild"];
-    for (let i = 0; i < 9; i += 1) deep = ["ok", deep];
-    let type = "U8";
-    for (let i = 0; i < 9; i += 1) type = `Result<${type},E>`;
-    expect(outcome(() => E(["match", ["var", "r"], [arm(deep, U8(0)), arm(["err_any"], U8(0))]], [["r", type, { err: "BAD" }]]))).toBe("ill-typed");
   });
 
   it("is ir.data when the scrutinee is not a Result or a pattern is a data pattern: level-missing, naming ir.data (R76)", () => {

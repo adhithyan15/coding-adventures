@@ -17,7 +17,6 @@ import { describe, expect, it } from "vitest";
 import { parseTfv } from "../../src/tfv.ts";
 import { KitError } from "../../src/v2/errors.ts";
 import { MAX_IR_WORK_SLIM, MAX_TOTAL_WORK_SLIM, checkWork, chunkFileName, loadV2Corpus, runSuite } from "../../src/v2/corpus.ts";
-import { enumerateChunk, readChunkFile } from "../../src/v2/chunks.ts";
 import { type OpSig, readOp } from "../../src/v2/ir.ts";
 import { parseType, readTypeTable, typeLevels } from "../../src/v2/types.ts";
 import { decodeJson, decodeTfv } from "../../src/v2/values.ts";
@@ -76,25 +75,12 @@ describe.each(CORPORA.flatMap((c) => LANES.map((lane) => ({ ...c, lane }))))("$n
   }, 900_000);
 
   it("runs only the corpus-chosen slim chunks at slim depth", () => {
-    // The lane's pre-flight meter counts the worst case of section 14: every `ok` control re-runs the whole slim set of every
-    // claim in its `required_claims`.  wasm-leb128 has 172 `unproven` entries (no stand-in, so no witness chunk to stop at) and
-    // so counts 37,782,980 ordinals against the 32,000,000 limit once every suite is live: the meter refuses it before any case.
-    // (Section 5.6 has a control stop at its first failure; counting that precisely is the corpus runner's, S7b.)  The slim
-    // chunks themselves are enumerated directly here, against the file, so that they are checked all the same.
-    const overMeter = name === "wasm-leb128" && lane.levels.includes("ir.tuple");
+    // runSuite charges one suite its own work only; the control re-run accounting belongs to the whole-run planner, checkWork.
+    // Under the current reading (every ok control re-runs the whole slim set of each required claim) the planner refuses
+    // wasm-leb128 at slim once every suite is live: 37,782,980 ordinals against 32,000,000.  That is PENDING AN ERRATUM on how
+    // section 14 counts control re-runs (section 5.6 stops a control at its first failure); the assertion records the reading.
     const slim = corpus.suites.filter((s) => s.state === "live");
-    if (overMeter) {
-      expect(() => checkWork(corpus, "slim")).toThrow(/total work limit/);
-      for (const record of slim) {
-        const suite = record.suite as NonNullable<typeof record.suite>;
-        const rows = readChunkFile(readFileSync(join(dir, "chunks", chunkFileName(suite.claim))), suite);
-        for (const index of suite.slimChunks) {
-          const result = enumerateChunk(suite, index);
-          expect([result.cases, result.calls, result.inputs, result.expected]).toEqual([rows[index]?.cases, rows[index]?.calls, rows[index]?.inputs, rows[index]?.expected]);
-        }
-      }
-      return;
-    }
+    if (name === "wasm-leb128" && lane.levels.includes("ir.tuple")) expect(() => checkWork(corpus, "slim")).toThrow(/total work limit/);
     for (const record of slim) {
       const run = runSuite(corpus, record, "slim");
       expect(run.chunks).toBe(record.suite?.slimChunks.length);
