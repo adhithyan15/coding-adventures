@@ -3,6 +3,14 @@
 Paired native timing, exact median-ratio analysis, JSON report replay, and an
 indexed-array benchmark executable for the VER07 contract.
 
+This Swift package declares macOS 10.15.4 as its minimum deployment version.
+The floor applies to both the `Microbenchmark` library product and the
+`array-microbenchmark` executable because Package.swift platform declarations
+are package-wide. The CLI uses Foundation's throwing
+`FileHandle.write(contentsOf:)` API, which requires macOS 10.15.4. Linux and
+Windows builds are unaffected; the separate `rank-statistics` package retains
+its own platform contract.
+
 ## Dependencies
 
 - `RankStatistics` local Swift package product.

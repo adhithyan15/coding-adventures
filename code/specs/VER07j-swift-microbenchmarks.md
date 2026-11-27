@@ -13,7 +13,13 @@ Provide two independently buildable Swift packages:
   `RankStatistics` library product.
 - `Microbenchmark` under `code/packages/swift/microbenchmark`, exporting the
   `Microbenchmark` library product and `array-microbenchmark` executable, with
-  a local SwiftPM dependency on `../rank-statistics`.
+  a local SwiftPM dependency on `../rank-statistics`. The complete
+  `microbenchmark` Swift package declares macOS 10.15.4 as its minimum
+  deployment version because the CLI's throwing
+  `FileHandle.write(contentsOf:)` output API requires that version. The
+  Package.swift platform declaration applies to both the library and
+  executable products; it does not change Linux or Windows support. The
+  standalone `rank-statistics` package keeps its existing platform contract.
 
 Both libraries use Foundation and Swift standard-library types only. The
 microbenchmark package uses the sibling rank-statistics library, not a Warrant
