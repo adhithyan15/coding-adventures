@@ -33,6 +33,14 @@ generic pipeline callbacks. The RISC-V decoder uses typed records for `rs1` and
 `rs2` before arithmetic, branch comparison, address calculation, or store-data
 selection; the generic pipeline does not interpret instruction operands.
 
+The Core adapter must report structural resource use for the stage that uses
+the resource. In particular, decode does not occupy the EX-stage ALU while an
+older token is executing. The current adapter marks both ID and EX tokens as
+`UsesALU`, which can make the single-ALU structural detector serialize every
+adjacent arithmetic pair and hide the typed forwarding path. This slice marks
+the resource only on the actual execute-stage slot; the detector's behavior
+for direct clients and genuine shared-resource conflicts is unchanged.
+
 ## Bounded acceptance evidence
 
 Use real RV32I instruction words on `core.Core` configured with the classic
@@ -46,6 +54,8 @@ five stages and the existing hazard detector. A dependent guest must exercise:
 - a store whose base and data operands are forwarded, with the expected word
   visible in flat RAM; and
 - x0 reads and writes without a forwarded nonzero value.
+- adjacent arithmetic instructions progress through ID/EX without a false
+  structural stall.
 
 Compare the final architectural registers, word memory, and retired instruction
 PC sequence with a separately instantiated sequential `RiscVSimulator` running
