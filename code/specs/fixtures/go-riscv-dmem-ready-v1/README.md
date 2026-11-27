@@ -26,7 +26,7 @@ Content identity:
 - `expected_oracle.json`: `3b49a95bc30a02a95cebd64f811419229c6e69c23f314d751a1298d69751d700`
 - `expected_oracle.schema.json`: `b607659809f7edc9b36ca92614ab8776bab1e54c8b30f8db9a7bc7236e2e371b`
 - `expected_trace.json`: `dc9ef0278603b9b17273df5b3aa236a8c7f3460b20660b8a551366965c075bc4`
-- `expected_trace.schema.json`: `725664e52c27b65b46b25d55adba05775bb9006a6ef6f0f2fb47ad8f95dcaf9f`
+- `expected_trace.schema.json`: `191837c7ccd4c6d2084705c169583f29abdaba991adcacc74555cdc005547175`
 
 Before recording the pipeline trace, the adapter validates the pinned input
 and oracle content identities and the strict case bounds. A native sequential

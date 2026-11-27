@@ -44,7 +44,7 @@
         "operand": {"enum": ["rs1", "rs2"]},
         "register": {"type": "integer", "minimum": 0, "maximum": 31},
         "value": {"type": "integer", "minimum": -9007199254740991, "maximum": 9007199254740991},
-        "source_stage": {"enum": ["EX", "MEM", "WB"]}
+        "source_stage": {"enum": ["EX", "MEM"]}
       },
       "required": ["operand", "register", "value", "source_stage"],
       "additionalProperties": false
