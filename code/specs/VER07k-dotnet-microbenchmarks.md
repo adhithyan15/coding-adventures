@@ -20,6 +20,13 @@ Reports retain raw pairs and use only the shared JSON fields: `config` (`pairs`,
 
 For predictable replay costs, the collector and report parser accept at most 10,000 pairs, 4 MiB of UTF-8 JSON, 128 levels of nesting, and 65,536 JSON values. These bounds allow replay of any report produced by the collector.
 
+The benchmark-specific analyzer also accepts at most 10,000 pairs and checks
+that bound before materializing the ratio sample. This limit applies to
+`microbenchmark.analyze` and report replay; it does not impose a size ceiling
+on the reusable rank-statistics functions, which retain their generic
+non-empty-sample contract. `max_batch` remains any positive signed 64-bit
+value, subject to checked workload arithmetic and the supplied callbacks.
+
 Both analyzers convert each positive duration to binary64 before candidate/baseline division and apply the exact threshold rules: `faster` when the upper endpoint is strictly below `1/factor`, `slower` when the lower endpoint is strictly above `factor`, `equivalent` when the complete interval is within the closed band, otherwise `inconclusive`.
 
 ## Indexed-array programs and packaging
@@ -29,6 +36,16 @@ Each native CLI builds the 4,096-element array before timing, with value `(17*i 
 Every library is packable as a separate NuGet package with a versioned package identity and XML/readme documentation. Both language lanes include package-local copies of the canonical fixture; repository tests compare each copy byte-for-byte to `code/specs/fixtures/microbenchmark-pairs-v1.json`. Installed-package consumer tests reference each NuGet artifact and exercise public APIs without repository source paths. C# and F# BUILD files run tests and package/consumer validation. No Warrant dependency is added.
 
 Windows `BUILD_windows` files are interpreted as individual `cmd /C` commands. A PowerShell helper must therefore be launched explicitly with `powershell -NoProfile -File <script.ps1>`; the consumer scripts use Windows PowerShell 5-compatible syntax. Installed-consumer validation packs the two packages into a temporary local feed and restores through a temporary `NuGet.Config` that explicitly lists that feed and the public NuGet v3 source. Package-source mapping sends `CodingAdventures.*` packages only to the local feed, while other dependencies use nuget.org. This avoids machine-level NuGet configuration and source-argument parsing differences and proves the consumer uses the just-packed artifacts. Temporary recursive cleanup is limited to the script's canonical GUID-named child of the canonical temp directory and rejects a reparse-point target.
+
+The explicit package capability profiles are pure empty profiles for both
+rank-statistics packages. Each microbenchmark package declares `time:read:*`
+for its reusable default clock, `env:read:GIT_REVISION` and
+`env:read:GITHUB_SHA` for revision fallback, and `stdout:write:*` for the
+command's report and diagnostics. The `stdout` capability covers stderr too.
+Command-line arguments are not environment access. The CLI uses no filesystem
+replay path and no foreign-function interface. Returning an exit status from
+the current command does not invoke or signal another process and does not add
+a `proc` capability.
 
 ## Validation limits
 
