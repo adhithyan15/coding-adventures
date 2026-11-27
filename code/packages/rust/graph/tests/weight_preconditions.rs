@@ -41,6 +41,19 @@ fn invalid_self_loop_weights_are_checked_before_same_node_shortcut() {
 }
 
 #[test]
+fn invalid_weight_error_endpoints_are_lexical_in_both_representations() {
+    for repr in representations() {
+        let mut graph = Graph::new(repr);
+        // Insert the lexically larger endpoint first so matrix storage visits
+        // the edge in reverse lexical order.
+        graph.add_edge("Z", "A", -1.0);
+
+        let error = try_shortest_path(&graph, "Z", "A").unwrap_err();
+        assert_eq!((error.left.as_str(), error.right.as_str()), ("A", "Z"));
+    }
+}
+
+#[test]
 fn property_bearing_add_rejects_invalid_weight_at_query_time() {
     for repr in representations() {
         let mut graph = Graph::new(repr);

@@ -33,6 +33,8 @@ added or its canonical `weight` property is changed. It does not rewrite the gra
 Add a public `InvalidPathWeight` error type with the offending canonical endpoint
 pair and a useful `Display` implementation. It is separate from `GraphError`, so
 adding it does not make existing exhaustive matches on `GraphError` fail to compile.
+The error's `left` and `right` fields are always in lexical order, regardless of
+graph representation or the order in which endpoints were inserted.
 
 Add:
 

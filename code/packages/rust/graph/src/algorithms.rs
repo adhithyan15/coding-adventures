@@ -127,6 +127,11 @@ pub fn try_shortest_path(
 ) -> Result<Vec<String>, InvalidPathWeight> {
     for (left, right, weight) in graph.edges() {
         if !weight.is_finite() || weight < 0.0 {
+            let (left, right) = if left <= right {
+                (left, right)
+            } else {
+                (right, left)
+            };
             return Err(InvalidPathWeight { left, right });
         }
     }
