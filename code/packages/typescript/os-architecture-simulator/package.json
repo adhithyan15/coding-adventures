@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/os-architecture-simulator",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/core.ts",
+  "types": "src/core.ts",
+  "exports": {
+    ".": "./src/core.ts",
+    "./profiles": "./src/profiles.ts",
+    "./bus": "./src/bus.ts",
+    "./cpu": "./src/cpu.ts",
+    "./devices": "./src/devices.ts",
+    "./board": "./src/board.ts",
+    "./board-machine": "./src/board-machine.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/core.test.ts tests/machine.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.7",
+    "typescript": "~5.9.3"
+  }
+}
