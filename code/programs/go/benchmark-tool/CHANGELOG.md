@@ -18,8 +18,9 @@
   comparisons retain their existing behavior.
 - Add an unsigned whole-program capability profile for caller-selected files and
   commands, measured time, child-process control, loopback-only TCP, the Windows
-  kernel32 process-tree calls, and three scoped goroutine/channel roles for Unix
-  signal forwarding, service waits, and bounded benchmark clients. It is a review
+  kernel32 process-tree calls, and three named production goroutine/channel
+  roles for Unix signal forwarding, service waits, and bounded benchmark clients.
+  It is a review
   proposal, not an approval.
 
 - **Fix: bound benchmark trial counts before slice allocation (`go/allocation-size-overflow`,
