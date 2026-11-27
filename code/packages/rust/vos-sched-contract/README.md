@@ -42,6 +42,7 @@ most-general scheduler) is the safety tier's witness.
 | `warrant/contract.part` | the contract block (models only): M, abstract operations, `inv`, tier relations, `pre_` models |
 | `warrant/lemmas.part` | the ten model-level lemmas (nine of VOS10 section 9.2 and `config_n_is_the_id_range`): **not embedded** in any document, evaluated by `vos-link check-contract` (VOS02 R1.4, VOS04 5.6) |
 | `warrant/mutants/<lemma>.part` | one `model` per lemma: the deliberately wrong version of a contract model that the lemma must catch (replaced by span) |
+| `warrant/lemmas.sat` | **generated** by `vos-model-sat gen .` and byte-compared by `vos-model-sat check .` (the contract's BUILD runs it; `vos.toml` says `sat = "model"`, VOS31): one row per lemma at N = 8, 16, 32 and 64, labelled as lemma certificates, never as evidence about a scheduler; checked as files by `vos-link check-contract` rule `CK11` |
 | `warrant/lemmas.table` | **generated** by `vos-link gen-contract` and byte-compared by `check-contract`: cases per lemma, kills per mutant, the config mutants |
 | `warrant/obligations-{safety,policy,canonical,representation,any}.part` | the claims an implementation of that tier must carry, character for character |
 | `contract.vos` | ceilings (steps, heap, depth per operation) and the instance, `N 8` |

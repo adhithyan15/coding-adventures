@@ -22,7 +22,7 @@ from test_v2_ir import bump, case, u8, var
 
 from coding_adventures_warrant_corpus.v2 import STANDARD, Program
 from coding_adventures_warrant_corpus.v2 import chunks as C
-from coding_adventures_warrant_corpus.v2.errors import Refusal
+from coding_adventures_warrant_corpus.v2.errors import KitError, Refusal
 from coding_adventures_warrant_corpus.v2.faults import compile_fault
 from coding_adventures_warrant_corpus.v2.ir import DEFINED_LEVELS, check_requires
 from coding_adventures_warrant_corpus.v2.kit import (
@@ -470,9 +470,12 @@ def test_a_suite_requires_with_a_defined_but_missing_level_is_unchanged():
 
 
 @pytest.mark.parametrize("levels", [["ir.bogus"], ["ir.core", "ir.bogus"]])
-def test_a_fault_requires_with_an_undefined_level_is_corpus_never_level_missing(levels):
-    got = outcome_fault(fault_case(fault=fault_row(requires=levels)), STANDARD)
-    assert got == {"error": "corpus"}
+def test_a_fault_requires_with_an_undefined_level_is_a_kit_error_never_level_missing(
+    levels,
+):
+    # R126: a schema break of the case, not an outcome and not `level-missing`.
+    with pytest.raises(KitError):
+        outcome_fault(fault_case(fault=fault_row(requires=levels)), STANDARD)
     # `level-missing` is for a defined level the runner lacks
     got = outcome_fault(fault_case(fault=fault_row(requires=["ir.fixed"])), STANDARD)
     assert got == {"error": "level-missing"}
@@ -491,9 +494,8 @@ def test_an_op_requires_with_an_undefined_level_is_refused():
 
 def test_compile_fault_refuses_an_undefined_level_before_the_level_check():
     op = {"params": [["a", "U8"]], "ret": "U8", "requires": ["ir.core"]}
-    with pytest.raises(Refusal) as caught:
+    with pytest.raises(KitError):
         compile_fault(fault_row(requires=["ir.nope"]), op, {})
-    assert caught.value.code == "corpus"
 
 
 # -- disagreement 10: claim names (section 5.5) ---------------------------------------------------

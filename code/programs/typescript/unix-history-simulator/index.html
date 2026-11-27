@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Step through a First Edition Unix-inspired file read.">
+  <title>Unix File Read · Historical OS Simulator</title>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="edition">Historical OS Simulator <span>1971</span></p>
+      <h1>Inside a Unix file read</h1>
+      <p class="summary">Follow a path from directory entry to inode, then watch each read move the file descriptor’s byte offset.</p>
+    </header>
+    <section class="workbench" aria-label="Unix simulator">
+      <div class="console">
+        <h2>Console</h2>
+        <form id="command-form">
+          <label for="command">Command</label>
+          <div class="command-line">
+            <span aria-hidden="true">$</span>
+            <input id="command" value="cat /hello" maxlength="256" spellcheck="false" autocomplete="off">
+            <button type="submit">Load</button>
+          </div>
+        </form>
+        <div class="examples" aria-label="Example commands">
+          <button type="button" data-command="cat /hello">cat /hello</button>
+          <button type="button" data-command="ls /etc">ls /etc</button>
+          <button type="button" data-command="cat /empty">cat /empty</button>
+        </div>
+        <div class="output">
+          <p id="prompt"></p>
+          <pre id="output" aria-label="Console output" aria-live="polite"></pre>
+        </div>
+        <div class="controls">
+          <button id="step" type="button">Step</button>
+          <button id="run" type="button">Run</button>
+          <button id="reset" type="button">Reset</button>
+          <span id="status" role="status"></span>
+        </div>
+      </div>
+      <div class="inspection">
+        <h2>Kernel trace</h2>
+        <p id="trace-empty">Step to see the next kernel operation.</p>
+        <ol id="trace" aria-label="Kernel operations"></ol>
+        <h3>Open descriptors</h3>
+        <ul id="descriptors" aria-label="Open file descriptors"></ul>
+      </div>
+    </section>
+    <footer>
+      Original teaching model based on
+      <a href="https://www.nokia.com/bell-labs/about/dennis-m-ritchie/1stEdman.html">First Edition Unix</a>.
+      The shell and disk image are simplified. This simulation runs in your browser.
+    </footer>
+  </main>
+  <script type="module" src="/src/index.ts"></script>
+</body>
+</html>

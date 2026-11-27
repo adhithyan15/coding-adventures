@@ -47,6 +47,11 @@ identical `BUILD` and `BUILD_windows` (tests, shape check, capability analyzer, 
 `check-component`; no environment variable, no python), and `check-component` judges its file set (`CC02`),
 the BUILD files byte for byte (`CC03`) and the `vosContractRow` build-tool row (`CC05`).  Fixtures and other
 kinds stay out of scope (`CC01`).
+Since VOS-040c a contract whose `vos.toml` says `sat = "model"` gets one more generated line, `vos-model-sat check .`
+(release), between `check-contract` and `check-component`; `CK11` (in `check-contract`) checks that line and a
+well-formed, current `warrant/lemmas.sat` with one row per lemma per width and at least one counted obligation (files only: the lane
+depends on this crate, so it cannot be called from here, and the BUILD line does the solving), and the absent key is clean.
+An implementation that makes any SAT claim fails `CC12` (`sat` key, `warrant/lemmas.sat`, or a BUILD line naming the lane).
 
 ## Bounds against ceilings, contract-crate closure and the publish sweep (VOS-039b-2b, VOS-D112)
 
@@ -76,7 +81,7 @@ Warrant parser reports, with the single `model` of `warrant/mutants/<lemma>.part
 `gen-contract` into `warrant/lemmas.table` and compared byte for byte (`CK09`); the table is never parsed.
 Codes: `CK01` inputs, `CK02` type check, `CK03` budget and domain, `CK04` a lemma fails, `CK05` mutant set,
 `CK06` mutant form, `CK07` a lemma survives, `CK08` config, `CK09` the table, `CK10` a Rust enum and its Warrant
-`variant` render to different lines (generated from both sides and compared; the lines are rows of the table).  On the real scheduler contract
+`variant` render to different lines (generated from both sides and compared; the lines are rows of the table), `CK11` the model-SAT lane's files (VOS-040c; see below).  On the real scheduler contract
 (N = 8, ten lemmas) it takes about 10 s wall (57 s CPU, 8 workers) in a debug build; this crate's tests use a toy contract with two
 threads (`tests/fixtures/contracts/vos-fixture-contract`) so they stay fast.
 

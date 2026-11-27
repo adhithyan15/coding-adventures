@@ -465,8 +465,10 @@ warrant arithmetic v1
     forall a0: Bool, a1: Bool, a2: Bool, b0: Bool, b1: Bool, b2: Bool, c: Bool. ripple_carry_adder_with_carry(bv3(pk3(a0, a1, a2)), bv3(pk3(b0, b1, b2)), b2u(c)) == Ok(rc_model(pk3(a0, a1, a2), pk3(b0, b1, b2), b2u(c), 3))
   claim ripple_carry_adder_4_bit_exhaustive:
     forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. ripple_carry_adder(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3))) == Ok(rc_model(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 0u8, 4))
-  claim ripple_carry_adder_with_carry_4_bit_exhaustive:
-    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool, c: Bool. ripple_carry_adder_with_carry(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), b2u(c)) == Ok(rc_model(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), b2u(c), 4))
+  claim ripple_carry_adder_with_carry_4_bit_exhaustive_cin_0:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. ripple_carry_adder_with_carry(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), 0u8) == Ok(rc_model(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 0u8, 4))
+  claim ripple_carry_adder_with_carry_4_bit_exhaustive_cin_1:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. ripple_carry_adder_with_carry(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), 1u8) == Ok(rc_model(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 1u8, 4))
   claim ripple_carry_adder_8_bit_exhaustive:
     forall a: U8, b: U8. ripple_carry_adder(bv8(a), bv8(b)) == Ok(rc_model(a, b, 0u8, 8))
   claim ripple_carry_adder_with_carry_8_bit_exhaustive:

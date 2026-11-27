@@ -13,6 +13,12 @@ import { KIT_DIR, kitWithExtraCategory, tamperedKit } from "./support.ts";
 
 const index = JSON.parse(readFileSync(join(KIT_DIR, "index.json"), "utf8")) as { files: { category: string; cases: number }[]; total_cases: number };
 const indexed = (category: string): number => index.files.find((row) => row.category === category)?.cases ?? 0;
+// S10d added 670 cases at ir.fixed and ir.tuple; 613 of them were skipped by their requires while this lane implemented ir.core
+// alone (value 39, ir 458, domain 44, chunk 15, fault 57).  S10f implements both levels, so nothing of the six categories is
+// skipped now: every case's requires is inside ir.core, ir.fixed and ir.tuple (no case of the kit needs ir.data, ir.list or ir.seq).
+const SKIPPED: Record<string, number> = { "v2-value": 0, "v2-arith": 0, "v2-ir": 0, "v2-domain": 0, "v2-chunk": 0, "v2-fault": 0 };
+const SKIPPED_BEFORE_S10F = 613;
+const SKIPPED_TOTAL = Object.values(SKIPPED).reduce((sum, n) => sum + n, 0);
 
 describe("the committed kit", () => {
   // The sequential walk of the three 2^24-case chunk cases is the slow part (about 5 s locally; CI is several times slower).
@@ -21,28 +27,31 @@ describe("the committed kit", () => {
     report = runKit(KIT_DIR, { sequential: true });
   }, 600_000);
 
-  it("passes every case of the six known categories: 0 failed, 0 skipped", () => {
+  it("passes every case of the six known categories whose requires it implements: 0 failed", () => {
     expect(report.failed).toBe(0);
     for (const category of KNOWN_CATEGORIES) {
       const row = report.categories.find((r) => r.category === category);
       expect(row, category).toBeDefined();
       expect(row?.failed, category).toEqual([]);
-      expect(row?.skipped, category).toBe(0);
-      expect(row?.run, category).toBe(indexed(category));
+      expect(row?.skipped, category).toBe(SKIPPED[category]);
+      expect(row?.run, category).toBe(indexed(category) - SKIPPED[category]);
       expect((row?.run ?? 0) + (row?.skipped ?? 0), category).toBe(indexed(category));
-      expect(row?.passed, category).toBe(indexed(category));
+      expect(row?.passed, category).toBe(indexed(category) - SKIPPED[category]);
     }
   });
 
-  it("holds at least the 782 cases S5b and S5e committed", () => {
+  it("holds at least the 782 cases S5b and S5e committed, and runs the 613 that S10d added at the two levels", () => {
     const known = KNOWN_CATEGORIES.reduce((sum, category) => sum + indexed(category), 0);
     expect(known).toBeGreaterThanOrEqual(782);
-    expect(report.run).toBe(known);
+    expect(known).toBe(1452);
+    expect(report.run).toBe(known - SKIPPED_TOTAL);
+    // 839 ran at ir.core alone; the other 613 are the ones S10f turns from skipped to run.
+    expect(report.run).toBe(839 + SKIPPED_BEFORE_S10F);
   });
 
   it("treats a category it does not know (v2-binding) as digest-checked and skipped whole", () => {
     const unknown = index.files.filter((row) => row.category.startsWith("v2-") && !(KNOWN_CATEGORIES as readonly string[]).includes(row.category));
-    expect(report.skipped).toBe(unknown.reduce((sum, row) => sum + row.cases, 0));
+    expect(report.skipped).toBe(unknown.reduce((sum, row) => sum + row.cases, 0) + SKIPPED_TOTAL);
   });
 });
 
@@ -66,21 +75,21 @@ describe("the harness", () => {
       .filter((row) => row.category !== "v2-binding-x")
       .reduce((sum, row) => sum + row.unrunnable, 0);
     expect(report.unrunnable).toBe(others + 3);
-    const needsMore = runKit(kitWithExtraCategory("v2-binding-x", 2, ["ir.core", "ir.fixed"]), { sequential: false });
+    const needsMore = runKit(kitWithExtraCategory("v2-binding-x", 2, ["ir.core", "ir.data"]), { sequential: false });
     expect(needsMore.categories.find((row) => row.category === "v2-binding-x")?.unrunnable).toBe(0);
     expect(needsMore.unrunnable).toBe(others);
   });
 
   it("skips a case whose requires names a level the runner lacks", () => {
     const dir = tamperedKit("v2-arith", (cases) => {
-      (cases[0] as { requires: string[] }).requires = ["ir.core", "ir.fixed"];
+      (cases[0] as { requires: string[] }).requires = ["ir.core", "ir.data"];
     });
     const arith = runKit(dir, { sequential: false, only: ["v2-arith"] }).categories.find((row) => row.category === "v2-arith");
     expect(arith?.skipped).toBe(1);
     expect(arith?.run).toBe(indexed("v2-arith") - 1);
     expect(arith?.failed).toEqual([]);
-    // A runner that implemented ir.fixed would run it.
-    const wider = runKit(dir, { sequential: false, only: ["v2-arith"], levels: ["ir.core", "ir.fixed"] }).categories.find((row) => row.category === "v2-arith");
+    // A runner that implemented ir.data would run it.
+    const wider = runKit(dir, { sequential: false, only: ["v2-arith"], levels: ["ir.core", "ir.data"] }).categories.find((row) => row.category === "v2-arith");
     expect(wider?.skipped).toBe(0);
   });
 
@@ -141,7 +150,7 @@ describe("the harness", () => {
 
   it("reports a value case whose type needs a level this runner lacks as a harness error", () => {
     const dir = tamperedKit("v2-value", (cases) => {
-      Object.assign(cases[0] as object, { type: "(U8,U8)", input_hex: "5b5d" });
+      Object.assign(cases[0] as object, { type: "Option<U8>", input_hex: "5b5d" });
     });
     const value = runKit(dir, { sequential: false, only: ["v2-value"] }).categories.find((row) => row.category === "v2-value");
     expect(value?.failed[0]?.note).toMatch(/harness error/);

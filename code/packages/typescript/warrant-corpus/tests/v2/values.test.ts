@@ -95,9 +95,10 @@ describe("decodeJson", () => {
   });
 
   it("names the level a type of another level would need", () => {
-    for (const [ty, level] of [["(U8,U8)", "ir.tuple"], ["Option<U8>", "ir.data"], ["List<U8>", "ir.list"], ["Rec", "ir.data"]] as const) {
+    // A tuple is held (S10f), so the level a tuple needs is only named when something *inside* it lacks one.
+    for (const [ty, level] of [["Option<U8>", "ir.data"], ["List<U8>", "ir.list"], ["Rec", "ir.data"], ["(U8,Option<U8>)", "ir.data"], ["(U8,List<U8>)", "ir.list"]] as const) {
       try {
-        decodeJson([], t(ty), table);
+        decodeJson(ty.startsWith("(") ? ["1", []] : [], t(ty), table);
         expect.unreachable();
       } catch (error) {
         expect(error).toBeInstanceOf(KitError);
@@ -117,7 +118,9 @@ describe("encodeJson and equality", () => {
     expect(encodeJson({ ok: 7 }, t("Result<U8,E>"))).toEqual({ ok: "7" });
     expect(encodeJson({ err: "BAD" }, t("Result<U8,E>"))).toEqual({ err: "BAD" });
     expect(encodeJson({ ok: 1 }, { k: "Result", ok: null, err: "E" })).toEqual({ ok: null });
-    expect(code(() => encodeJson([], t("(U8,U8)")))).toBe("level-missing");
+    expect(encodeJson([7, true], t("(U8,Bool)"))).toEqual(["7", true]);
+    expect(encodeJson([[1n, 2n], { ok: [3, 4] }], t("((U64,I64),Result<(U8,U8),E>)"))).toEqual([["1", "2"], { ok: ["3", "4"] }]);
+    expect(code(() => encodeJson(null, t("Option<U8>")))).toBe("level-missing");
   });
 
   it("compares structurally: order matters, errors are nominal, bytes by content", () => {
@@ -162,7 +165,7 @@ describe("the canonical stream, version 2 (section 2.4)", () => {
   it("refuses a Nat outside 0..=2^64-1 and a type of a level it lacks", () => {
     expect(code(() => streamBytes(-1n, t("Nat")))).toBe("value");
     expect(code(() => streamBytes(2n ** 64n, t("Nat")))).toBe("value");
-    expect(code(() => makeWriter(t("(U8,U8)")))).toBe("level-missing");
+    expect(code(() => makeWriter(t("(U8,Option<U8>)")))).toBe("level-missing");
     expect(code(() => makeWriter(t("Option<U8>")))).toBe("level-missing");
   });
 
@@ -222,6 +225,8 @@ describe("TFV values (section 2.5)", () => {
     expect(code(() => decodeTfv(["map", [[["text", "ok"], ["int", 1n]]]], { k: "Result", ok: null, err: "E" }, table))).toBe("value");
     expect(code(() => decodeTfv(["map", [[["text", "err"], ["text", "BAD"]]]], { k: "Result", ok: t("U8"), err: null }, table))).toBe("value");
     expect(decodeTfv(["int", -3n], parseType("Int", { allowInt: true }), table)).toBe(-3n);
-    expect(code(() => one("I1", "(U8,U8)"))).toBe("level-missing");
+    expect(code(() => one("I1", "(U8,U8)"))).toBe("value");
+    expect(code(() => one("L1 I1", "(U8,U8)"))).toBe("value");
+    expect(code(() => one("L2 I1 I2", "(U8,Option<U8>)"))).toBe("level-missing");
   });
 });

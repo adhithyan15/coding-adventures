@@ -16,3 +16,9 @@ $harness = Join-Path $d 'code\packages\c\iso-harness'
 $env:ISO_INCLUDE = "include $harness\include"
 . (Join-Path $harness 'lib\iso-lib.ps1')
 Iso-BuildAndRun -Lang cpp -Name heap-tests -Sources @("tests\heap_test.cpp")
+Iso-ExpectCompileFail -Lang cpp -Source 'tests\member_pointer_comparator_rejected.cpp'
+Iso-ExpectCompileFail -Lang cpp -Source 'tests\throwing_comparator_destructor_rejected.cpp'
+& (Join-Path $self 'tools\installed-smoke.ps1')
+if ($LASTEXITCODE -ne 0) {
+    throw "Installed CMake consumer failed with exit code $LASTEXITCODE"
+}

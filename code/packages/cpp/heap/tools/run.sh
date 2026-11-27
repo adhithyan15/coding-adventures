@@ -29,3 +29,6 @@ fi
 
 . "$HARNESS/lib/iso-lib.sh"
 iso_build_and_run cpp heap-tests tests/heap_test.cpp
+iso_expect_compile_fail cpp tests/member_pointer_comparator_rejected.cpp
+iso_expect_compile_fail cpp tests/throwing_comparator_destructor_rejected.cpp
+sh "$SELF/tools/installed-smoke.sh"

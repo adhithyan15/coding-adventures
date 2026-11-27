@@ -80,11 +80,14 @@ def test_a_file_whose_calls_sum_to_the_row_is_accepted():
 
 
 # -- R107 (d) ---------------------------------------------------------------------------
-FIXED_TAG = ["bit_not", ["var", "b"]]  # ir.fixed: a level this runner lacks
+FIXED_TAG = [
+    "some",
+    ["var", "b"],
+]  # ir.data: a level this runner lacks (it implements ir.fixed since S10e)
 BINDER = [("b", "U8", {"d": "u8_all", "size": 256})]
 BINDER_U8 = BINDER
 LIVE_ELSEWHERE = ["eq", FIXED_TAG, lit_u8(0)]
-NEEDS_FIXED = ["ir.core", "ir.fixed"]
+NEEDS_FIXED = ["ir.core", "ir.data"]
 
 
 def build(**edits):
@@ -94,9 +97,9 @@ def build(**edits):
 
 
 def test_a_level_missing_tag_alone_is_still_level_missing():
-    # the row says it needs ir.fixed, so the lane records it not-live
+    # the row says it needs ir.data, so the lane records it not-live
     with pytest.raises(Refusal) as caught:
-        build(admit=["eq", FIXED_TAG, lit_u8(0)], requires=["ir.core", "ir.fixed"])
+        build(admit=["eq", FIXED_TAG, lit_u8(0)], requires=NEEDS_FIXED)
     assert caught.value.code == "level-missing"
 
 
