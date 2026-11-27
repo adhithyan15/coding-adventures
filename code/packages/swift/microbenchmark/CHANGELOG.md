@@ -14,3 +14,4 @@ All notable changes to this package will be documented in this file.
 ### Fixed
 
 - Run the Windows Swift availability guard and checks in one batch process so the skip covers the full sequence and failures propagate.
+- Keep the reusable command-line helper's environment injectable and empty by default; let the executable select only the two revision keys and report a compile-time OS family label instead of querying the host version string.

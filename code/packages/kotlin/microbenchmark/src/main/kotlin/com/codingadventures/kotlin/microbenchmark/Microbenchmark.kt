@@ -4,6 +4,8 @@ import com.codingadventures.rankstatistics.RankStatistics
 import java.util.Collections
 import java.util.Random
 
+private const val MAXIMUM_PAIRS = 10_000
+
 data class Config(
     val pairs: Int = 40,
     val confidencePercent: Int = 95,
@@ -13,7 +15,7 @@ data class Config(
     val maxBatch: Long = 65_536,
 ) {
     fun validate() {
-        require(pairs in 1..10_000) { "pairs must be from 1 through 10000" }
+        require(pairs in 1..MAXIMUM_PAIRS) { "pairs must be from 1 through 10000" }
         require(confidencePercent in 1..99) { "confidence must be from 1 through 99" }
         require(minimumFactor.isFinite() && minimumFactor > 1.0) { "factor must be finite and greater than 1" }
         require(targetNs > 0 && maxBatch > 0) { "target and max batch must be positive signed 64-bit integers" }
@@ -39,6 +41,7 @@ object Microbenchmark {
 
     fun analyze(pairs: List<Observation>, confidencePercent: Int, factor: Double): Analysis {
         require(pairs.isNotEmpty()) { "at least one pair is required" }
+        require(pairs.size <= MAXIMUM_PAIRS) { "pairs must be from 1 through 10000" }
         require(confidencePercent in 1..99) { "confidence must be from 1 through 99" }
         require(factor.isFinite() && factor > 1.0) { "factor must be finite and greater than 1" }
         val ratios = pairs.map { pair ->

@@ -123,6 +123,9 @@ pub fn analyze(
     if !minimum_factor.is_finite() || minimum_factor <= 1.0 {
         return Err(error("factor must be finite and greater than 1"));
     }
+    if pairs.len() > MAX_PAIRS {
+        return Err(error("pairs must contain at most 10000 observations"));
+    }
 
     let mut ratios = Vec::with_capacity(pairs.len());
     for (index, pair) in pairs.iter().enumerate() {
@@ -198,6 +201,13 @@ impl Report {
                 if object.get(key).is_some_and(|value| !value.is_string()) {
                     return Err(error(format!("{key} metadata must be a string")));
                 }
+            }
+            if object
+                .get("pairs")
+                .and_then(serde_json::Value::as_array)
+                .is_some_and(|pairs| pairs.len() > MAX_PAIRS)
+            {
+                return Err(error("report pair count exceeds 10000"));
             }
             for key in [
                 "workload",
@@ -816,6 +826,15 @@ mod tests {
     }
 
     #[test]
+    fn report_replay_rejects_oversized_raw_pair_array_before_typed_conversion() {
+        let document = serde_json::json!({
+            "pairs": vec![serde_json::Value::Null; MAX_PAIRS + 1]
+        });
+        let error = Report::from_json(&document.to_string()).unwrap_err();
+        assert!(error.to_string().contains("pair count exceeds 10000"));
+    }
+
+    #[test]
     fn rejects_config_pairs_and_observation_boundaries() {
         for config in [
             Config {
@@ -876,6 +895,25 @@ mod tests {
         assert!(analyze(&[pair(1, 1)], 100, 1.05).is_err());
         assert!(analyze(&[pair(1, 1)], 95, f64::NAN).is_err());
         assert!(analyze(&[pair(1, 1)], 95, 1.0).is_err());
+    }
+
+    #[test]
+    fn analysis_accepts_maximum_pairs_and_rejects_excess_before_pair_validation() {
+        let maximum = vec![pair(1, 1); MAX_PAIRS];
+        assert!(analyze(&maximum, 95, 1.05).is_ok());
+
+        let oversized = vec![
+            Pair {
+                baseline_ns: 0,
+                candidate_ns: 0,
+                order: "invalid".to_owned(),
+            };
+            MAX_PAIRS + 1
+        ];
+        let error = analyze(&oversized, 95, 1.05).unwrap_err();
+        assert!(error.to_string().contains("at most 10000"));
+        let invalid_confidence = analyze(&oversized, 0, 1.05).unwrap_err();
+        assert!(invalid_confidence.to_string().contains("confidence"));
     }
 
     #[test]

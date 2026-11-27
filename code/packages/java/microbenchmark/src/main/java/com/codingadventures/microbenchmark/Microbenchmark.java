@@ -9,6 +9,7 @@ import java.util.Random;
 /** Paired collector and VER07b analysis. Timing thresholds never decide tests. */
 public final class Microbenchmark {
     private Microbenchmark() {}
+    private static final int MAXIMUM_PAIRS = 10_000;
     private static final String BASE_FIRST = "baseline-first";
     private static final String CANDIDATE_FIRST = "candidate-first";
 
@@ -19,6 +20,7 @@ public final class Microbenchmark {
      */
     public static Analysis analyze(List<Pair> pairs, int confidencePercent, double factor) {
         if (pairs == null || pairs.isEmpty()) throw new IllegalArgumentException("at least one pair is required");
+        if (pairs.size() > MAXIMUM_PAIRS) throw new IllegalArgumentException("pairs must be from 1 through 10000");
         if (confidencePercent < 1 || confidencePercent > 99) throw new IllegalArgumentException("confidence must be from 1 through 99");
         if (!Double.isFinite(factor) || factor <= 1.0) throw new IllegalArgumentException("factor must be finite and greater than 1");
         double[] ratios = new double[pairs.size()];

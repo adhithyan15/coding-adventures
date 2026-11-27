@@ -468,13 +468,15 @@ console.log(prose, nested);
         # +1: unix-history-simulator, the reusable First Edition Unix kernel model.
         # +1: unix-history-simulator browser program, which exercises shared
         # trace fixtures through the simulator's public API.
+        # +2: rank-statistics and microbenchmark, the VER07c/VER07f TypeScript
+        # packages with explicit src/dist roots.
         # -4 shared_projects: note-frequency, audio-device-sink, pcm-audio, and
         # web-audio-sink migrated from tsconfig.base.json to standalone configs
         # (TS-W7-A; total_projects unchanged because they already had build scripts).
         # -3 shared_projects: wave, analog-waveform, and discrete-waveform
         # migrated from tsconfig.base.json to standalone configs (PHY-W8-E).
         # +1: os-architecture-simulator is a standalone noEmit semantic package.
-        self.assertEqual(summary.total_projects, 522)
+        self.assertEqual(summary.total_projects, 524)
         self.assertEqual(summary.shared_projects, 305)
         self.assertEqual(summary.inherited_root_dir, 136)
         self.assertEqual(summary.inherited_out_dir, 139)
@@ -494,8 +496,9 @@ console.log(prose, nested);
         # are isolated standalone emitters (TS-W7-A).
         # +3: wave, analog-waveform, and discrete-waveform are isolated
         # standalone emitters (PHY-W8-E).
-        self.assertEqual(summary.standalone_emit_projects, 183)
-        self.assertEqual(summary.isolated_standalone_projects, 183)
+        # +2: TypeScript rank-statistics and microbenchmark emit into dist.
+        self.assertEqual(summary.standalone_emit_projects, 185)
+        self.assertEqual(summary.isolated_standalone_projects, 185)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -550,8 +553,9 @@ console.log(prose, nested);
         # -1: the retired checklist-app (its Electron shell used Node APIs).
         # +1: neural-framework reads fixtures and checkpoint stdin in tests/CLI.
         # +1: ca-capability-analyzer reads TypeScript packages off disk via Node APIs.
+        # +1: microbenchmark's shipped CLI/collector uses Node APIs in src.
         # +1: os-architecture-simulator uses node:test and node:assert in its inline tests; shipped src stays Node-API-free.
-        self.assertEqual(summary.node_api_projects, 90)
+        self.assertEqual(summary.node_api_projects, 91)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -585,8 +589,9 @@ console.log(prose, nested);
         # -1: the retired checklist-app (its Electron shell used Node APIs).
         # +1: neural-framework directly owns its test/CLI Node type provider.
         # +1: ca-capability-analyzer owns `@types/node` directly.
+        # +1: microbenchmark directly owns its shipped CLI/collector Node types.
         # +1: os-architecture-simulator directly owns @types/node for those test compiler inputs.
-        self.assertEqual(summary.node_provider_projects, 90)
+        self.assertEqual(summary.node_provider_projects, 91)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         # 0: matrix-rust-napi's lock exemption is retired; it commits a lock.
@@ -661,8 +666,10 @@ console.log(prose, nested);
         # +1: hdd-simulator locks its compiler, Node test types, and Vitest.
         # +1: unix-history-simulator locks its standalone compiler and test graph.
         # +1: the browser program locks its standalone compiler and test graph.
+        # +2: TypeScript rank-statistics and microbenchmark lock their compiler
+        # and test toolchains.
         # +1: os-architecture-simulator locks its standalone TypeScript compiler.
-        self.assertEqual(summary.locked_compilers, 535)
+        self.assertEqual(summary.locked_compilers, 537)
 
 
 if __name__ == "__main__":

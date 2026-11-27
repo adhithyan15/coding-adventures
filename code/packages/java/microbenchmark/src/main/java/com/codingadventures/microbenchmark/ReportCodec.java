@@ -1,11 +1,20 @@
 package com.codingadventures.microbenchmark;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.core.StreamReadFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -16,7 +25,11 @@ import java.util.Set;
 /** Exact signed-64-bit JSON encoder and defensive report replay validator. */
 public final class ReportCodec {
     private ReportCodec() {}
+    static final int MAXIMUM_JSON_BYTES = 4 * 1024 * 1024;
+    private static final int MAXIMUM_JSON_NODES = 65_536;
     private static final ObjectMapper JSON = new ObjectMapper(JsonFactory.builder()
+            .streamReadConstraints(StreamReadConstraints.builder()
+                    .maxNestingDepth(128).maxStringLength(MAXIMUM_JSON_BYTES).build())
             .enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION).build())
             .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
     private static final Set<String> TOP_KEYS = Set.of("workload", "invocation", "revision", "runtime", "os", "arch", "config", "batch_size", "pairs", "analysis");
@@ -53,18 +66,23 @@ public final class ReportCodec {
     /** Validates metadata, exact integer ranges, schedule balance, and recomputed analysis. */
     public static Report replay(String text) {
         try {
+            checkTextSize(text);
             JsonNode root = JSON.readTree(text);
             require(root != null && root.isObject(), "report must be an object");
+            validateNodeBudget(root);
             Set<String> keys = fieldNames(root);
             Set<String> expected = new LinkedHashSet<>(TOP_KEYS);
             if (keys.contains("profile")) expected.add("profile");
             require(keys.equals(expected), "report fields do not match the portable schema");
-            String workload = string(root, "workload");
+            String workload = metadataString(root, "workload");
             require(isValidWorkload(workload), "workload must contain a non-ASCII-whitespace character and no NUL");
             require(root.path("invocation").isArray(), "invocation must be an array");
-            for (JsonNode item : root.path("invocation")) require(item.isTextual(), "invocation entries must be strings");
-            for (String name : List.of("revision", "runtime", "os", "arch")) string(root, name);
-            if (keys.contains("profile")) string(root, "profile");
+            for (JsonNode item : root.path("invocation")) {
+                require(item.isTextual(), "invocation entries must be strings");
+                require(!item.textValue().contains("\0"), "invocation entries must not contain NUL");
+            }
+            for (String name : List.of("revision", "runtime", "os", "arch")) metadataString(root, name);
+            if (keys.contains("profile")) metadataString(root, "profile");
 
             JsonNode cfg = root.path("config");
             require(cfg.isObject() && fieldNames(cfg).equals(CONFIG_KEYS), "invalid config fields");
@@ -88,6 +106,52 @@ public final class ReportCodec {
             validateAnalysis(root.path("analysis"), expectedAnalysis);
             return new Report(config, batchSize, pairs, expectedAnalysis);
         } catch (IOException e) { throw new IllegalArgumentException("invalid JSON report", e); }
+    }
+
+    /** Reads at most the replay byte budget from a caller-selected report path. */
+    static String readFile(Path path) throws IOException {
+        try (InputStream input = Files.newInputStream(path)) {
+            byte[] bytes = input.readNBytes(MAXIMUM_JSON_BYTES + 1);
+            require(bytes.length <= MAXIMUM_JSON_BYTES, "report exceeds the 4 MiB JSON limit");
+            try {
+                return StandardCharsets.UTF_8.newDecoder()
+                        .onMalformedInput(CodingErrorAction.REPORT)
+                        .onUnmappableCharacter(CodingErrorAction.REPORT)
+                        .decode(ByteBuffer.wrap(bytes)).toString();
+            } catch (CharacterCodingException e) {
+                throw new IllegalArgumentException("report must be valid UTF-8", e);
+            }
+        }
+    }
+
+    private static void checkTextSize(String text) {
+        require(text != null, "report JSON must not be null");
+        if (text.length() > MAXIMUM_JSON_BYTES) throw new IllegalArgumentException("report exceeds the 4 MiB JSON limit");
+        try {
+            ByteBuffer encoded = StandardCharsets.UTF_8.newEncoder()
+                    .onMalformedInput(CodingErrorAction.REPORT)
+                    .onUnmappableCharacter(CodingErrorAction.REPORT)
+                    .encode(CharBuffer.wrap(text));
+            require(encoded.remaining() <= MAXIMUM_JSON_BYTES, "report exceeds the 4 MiB JSON limit");
+        } catch (CharacterCodingException e) {
+            throw new IllegalArgumentException("report JSON must be valid Unicode", e);
+        }
+    }
+
+    private static void validateNodeBudget(JsonNode root) {
+        List<JsonNode> pending = new ArrayList<>();
+        pending.add(root);
+        int nodes = 0;
+        while (!pending.isEmpty()) {
+            JsonNode node = pending.remove(pending.size() - 1);
+            if (++nodes > MAXIMUM_JSON_NODES) throw new IllegalArgumentException("report exceeds the JSON value limit");
+            var children = node.elements();
+            while (children.hasNext()) {
+                if (nodes + pending.size() >= MAXIMUM_JSON_NODES)
+                    throw new IllegalArgumentException("report exceeds the JSON value limit");
+                pending.add(children.next());
+            }
+        }
     }
 
     private static void validateAnalysis(JsonNode node, Analysis want) {
@@ -120,6 +184,12 @@ public final class ReportCodec {
         return hasNonWhitespace;
     }
     private static String string(JsonNode node, String key) { JsonNode value = node.path(key); require(value.isTextual(), key + " must be a string"); return value.textValue(); }
+    private static String metadataString(JsonNode node, String key) {
+        String value = string(node, key);
+        require(!value.isEmpty(), key + " must not be empty");
+        require(!value.contains("\0"), key + " must not contain NUL");
+        return value;
+    }
     private static long integer64(JsonNode node, String key, long min, long max) {
         JsonNode value = node.path(key);
         require(value.isIntegralNumber() && value.canConvertToLong(), key + " must be an exact signed 64-bit integer");

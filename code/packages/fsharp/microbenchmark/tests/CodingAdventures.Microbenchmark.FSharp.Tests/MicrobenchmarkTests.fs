@@ -4,6 +4,7 @@ open System
 open System.Collections.Generic
 open System.IO
 open System.Text.Json
+open System.Text.Json.Nodes
 open Xunit
 open CodingAdventures.Microbenchmark
 
@@ -167,6 +168,8 @@ type MicrobenchmarkTests() =
         Assert.Equal(Slower, slower.verdict)
         Assert.Equal(Inconclusive, insufficient.verdict)
         Assert.True((Microbenchmark.analyze [] 95 1.05).IsError)
+        let tooManyPairs = List.replicate (Microbenchmark.maximumPairs + 1) (Helpers.pair 1L 1L)
+        Assert.Equal(InvalidConfiguration "pairs must be from 1 through 10000", Helpers.error (Microbenchmark.analyze tooManyPairs 95 1.05))
         Assert.True((Microbenchmark.analyze [ Helpers.pair 0L 1L ] 95 1.05).IsError)
 
     [<Fact>]
@@ -199,6 +202,26 @@ type MicrobenchmarkTests() =
             Assert.True((Microbenchmark.fromJson (json.Replace("indexed-array-sum-4096", surrogate, StringComparison.Ordinal))).IsError)
         Assert.True((Microbenchmark.fromJson (json.Replace("\"workload\": \"indexed-array-sum-4096\"", "\"workload\": null", StringComparison.Ordinal))).IsError)
         Assert.True((Microbenchmark.fromJson (json.Replace("\"workload\": \"indexed-array-sum-4096\"", "\"workload\": 7", StringComparison.Ordinal))).IsError)
+
+        for field in [ "workload"; "revision"; "runtime"; "os"; "arch"; "profile"; "invocation" ] do
+            let withNul = JsonNode.Parse(json).AsObject()
+            if field = "invocation" then withNul["invocation"].AsArray()[0] <- JsonValue.Create("argument\000with-nul")
+            else withNul[field] <- JsonValue.Create("metadata\000with-nul")
+            Assert.True((Microbenchmark.fromJson (withNul.ToJsonString())).IsError, field)
+        for field in [ "workload"; "revision"; "runtime"; "os"; "arch"; "profile" ] do
+            let withEmptyMetadata = JsonNode.Parse(json).AsObject()
+            withEmptyMetadata[field] <- JsonValue.Create("")
+            Assert.True((Microbenchmark.fromJson (withEmptyMetadata.ToJsonString())).IsError, field)
+        let withEmptyArgument = JsonNode.Parse(json).AsObject()
+        withEmptyArgument["invocation"].AsArray().Insert(1, JsonValue.Create(""))
+        let emptyArgumentReport = Microbenchmark.fromJson (withEmptyArgument.ToJsonString()) |> Helpers.unwrap
+        Assert.Equal("", emptyArgumentReport.metadata.Value.invocation[1])
+        Assert.Equal("", (Microbenchmark.fromJson (Microbenchmark.toJson emptyArgumentReport) |> Helpers.unwrap).metadata.Value.invocation[1])
+        let withEmptyInvocation = JsonNode.Parse(json).AsObject()
+        withEmptyInvocation["invocation"] <- JsonArray()
+        let emptyInvocationReport = Microbenchmark.fromJson (withEmptyInvocation.ToJsonString()) |> Helpers.unwrap
+        Assert.Empty(emptyInvocationReport.metadata.Value.invocation)
+        Assert.Empty((Microbenchmark.fromJson (Microbenchmark.toJson emptyInvocationReport) |> Helpers.unwrap).metadata.Value.invocation)
 
         let maximum = """{"config":{"pairs":1,"confidence_percent":95,"minimum_factor":1.05,"seed":0,"target_ns":1,"max_batch":9223372036854775807},"batch_size":1,"pairs":[{"baseline_ns":9223372036854775807,"candidate_ns":9223372036854775807,"order":"baseline-first"}],"analysis":{"ratio":1,"interval":null,"verdict":"inconclusive"}}"""
         let parsed = Microbenchmark.fromJson maximum |> Helpers.unwrap

@@ -49,16 +49,25 @@ Use Ruby's arbitrary-precision integers for the binomial coefficients and
 cutoff comparison; no floating-point probability or machine-word overflow may
 choose the rank. Confidence is an integer percentage from 1 through 99. Return
 `nil` if no rank qualifies. Preserve ties and return endpoints from the input.
+This generic API does not impose an application-level sample-size cap; callers
+are responsible for choosing resource-appropriate input sizes.
 
 ## Paired analysis and collection
 
-Expose a Ruby API for `analyze`, `collect`, and replaying a report. Match the
+Expose a Ruby API for `analyze`, `collect`, and replaying a report. `analyze`
+accepts at most 10,000 pairs; after checking a nonempty array and valid
+confidence/factor scalars, it rejects an oversized input before mapping or
+validating pair members. The size error takes precedence over malformed pair
+contents, while invalid scalar arguments take precedence over a size error.
+Match the
 VER07b defaults and validation bounds in VER07d: 40 pairs, 95 percent
 confidence, minimum factor 1.05, seed 0, target 100,000 ns, a default maximum
 batch of 65,536, and pair counts from 1 through 10,000. The maximum batch is a
 positive signed-64-bit value with no extra 65,536 hard cap. Reject invalid
 confidence/factor/configuration, malformed pairs, nonpositive durations, and
 missing pairs.
+Report replay validates the bounded config and matches the raw pair array size
+before mapping pair rows or recomputing analysis.
 
 Ruby integers remain exact in memory and in JSON. Seed, expected and observed
 checksums, clock ticks, batch size, target, maximum batch, and pair durations use

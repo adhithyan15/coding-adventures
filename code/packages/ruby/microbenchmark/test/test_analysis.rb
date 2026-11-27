@@ -45,6 +45,17 @@ class MicrobenchmarkAnalysisTest < Minitest::Test
     assert_equal "equivalent", MB.analyze(pairs).verdict
   end
 
+  def test_analysis_bounds_pair_count_before_mapping_pair_members
+    pair = MB::Pair.new(baseline_ns: 1, candidate_ns: 1, order: "baseline-first")
+    assert_equal 1.0, MB.analyze(Array.new(MB::MAX_PAIRS, pair)).ratio
+    error = assert_raises(ArgumentError) { MB.analyze(Array.new(MB::MAX_PAIRS + 1, :invalid)) }
+    assert_match(/at most 10000/, error.message)
+    confidence_error = assert_raises(ArgumentError) do
+      MB.analyze(Array.new(MB::MAX_PAIRS + 1, :invalid), confidence_percent: 0)
+    end
+    assert_match(/confidence_percent/, confidence_error.message)
+  end
+
   def test_analysis_rejects_invalid_pairs_and_options
     assert_raises(ArgumentError) { MB.analyze([]) }
     assert_raises(ArgumentError) { MB.analyze([:not_a_pair]) }

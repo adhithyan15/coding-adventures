@@ -31,6 +31,24 @@ final class MicrobenchmarkTest {
         assertThrows(IllegalArgumentException.class, () -> Microbenchmark.analyze(List.of(new Pair(1, 1, "unknown")), 95, 1.05));
         assertThrows(IllegalArgumentException.class, () -> Microbenchmark.analyze(fast, 100, 1.05));
         assertThrows(IllegalArgumentException.class, () -> Microbenchmark.analyze(fast, 95, Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> Microbenchmark.analyze(
+                java.util.Collections.nCopies(10_001, new Pair(1, 1, "baseline-first")), 95, 1.05));
+    }
+
+    @Test void replayEnforcesTextTreeAndFileBudgetsBeforePairConversion() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(" ".repeat(ReportCodec.MAXIMUM_JSON_BYTES + 1)));
+        String tooDeep = "[".repeat(129) + "0" + "]".repeat(129);
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(tooDeep));
+        String tooManyValues = "{\"x\":[" + "0,".repeat(65_535) + "0]}";
+        assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(tooManyValues));
+
+        Path oversized = Files.createTempFile("java-microbenchmark-replay", ".json");
+        try {
+            Files.write(oversized, new byte[ReportCodec.MAXIMUM_JSON_BYTES + 1]);
+            assertThrows(IllegalArgumentException.class, () -> ReportCodec.readFile(oversized));
+        } finally {
+            Files.deleteIfExists(oversized);
+        }
     }
 
     @Test void configValidatesEveryPublicRange() {
@@ -103,6 +121,11 @@ final class MicrobenchmarkTest {
         catch (Exception e) { throw new AssertionError(e); }
         genericNode.put("profile", "native-go");
         assertEquals(decoded.pairs(), ReportCodec.replay(genericNode.toString()).pairs());
+        genericNode.withArray("invocation").insert(1, "");
+        assertDoesNotThrow(() -> ReportCodec.replay(genericNode.toString()));
+        genericNode.remove("invocation");
+        genericNode.putArray("invocation");
+        assertDoesNotThrow(() -> ReportCodec.replay(genericNode.toString()));
         genericNode.put("workload", "\u2003");
         assertDoesNotThrow(() -> ReportCodec.replay(genericNode.toString()));
         genericNode.put("workload", new String(Character.toChars(0x1F680)));
@@ -137,6 +160,22 @@ final class MicrobenchmarkTest {
         try { profileNode = JSON.readTree(balanced); } catch (Exception e) { throw new AssertionError(e); }
         ((com.fasterxml.jackson.databind.node.ObjectNode) profileNode).put("profile", "portable");
         assertDoesNotThrow(() -> ReportCodec.replay(profileNode.toString()));
+
+        com.fasterxml.jackson.databind.node.ObjectNode metadataBase;
+        try { metadataBase = (com.fasterxml.jackson.databind.node.ObjectNode) JSON.readTree(balanced); }
+        catch (Exception e) { throw new AssertionError(e); }
+        metadataBase.put("profile", "portable");
+        for (String field : List.of("workload", "revision", "runtime", "os", "arch", "profile", "invocation")) {
+            com.fasterxml.jackson.databind.node.ObjectNode withNul = metadataBase.deepCopy();
+            if (field.equals("invocation")) withNul.withArray(field).set(0, "argument\0with-nul");
+            else withNul.put(field, "metadata\0with-nul");
+            assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(withNul.toString()), field);
+        }
+        for (String field : List.of("workload", "revision", "runtime", "os", "arch", "profile")) {
+            com.fasterxml.jackson.databind.node.ObjectNode withEmptyMetadata = metadataBase.deepCopy();
+            withEmptyMetadata.put(field, "");
+            assertThrows(IllegalArgumentException.class, () -> ReportCodec.replay(withEmptyMetadata.toString()), field);
+        }
     }
 
     @Test void fixtureCopyAndAllPortableCasesConform() throws Exception {

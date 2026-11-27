@@ -134,11 +134,14 @@ public sealed class Report
     private void ValidateMetadata()
     {
         foreach (var text in new[] { Workload, Revision, Runtime, Os, Arch, Profile })
+        {
             if (text is not null && text.Length == 0) throw new ArgumentException("metadata strings must not be empty");
+            if (text is not null && text.Contains('\0')) throw new ArgumentException("metadata strings must not contain NUL");
+        }
         if (Workload is not null && !IsValidWorkload(Workload))
             throw new ArgumentException("workload must contain a non-ASCII-whitespace character and no NUL");
-        if (Invocation is not null && Invocation.Any(string.IsNullOrEmpty))
-            throw new ArgumentException("invocation entries must be nonempty strings");
+        if (Invocation is not null && Invocation.Any(argument => argument is null || argument.Contains('\0')))
+            throw new ArgumentException("invocation entries must be strings without NUL");
         var anyStandardMetadata = Workload is not null || Invocation is not null || Revision is not null ||
             Runtime is not null || Os is not null || Arch is not null;
         var hasAllStandardMetadata = Workload is not null && Invocation is not null && Revision is not null &&
@@ -292,6 +295,8 @@ public static class Microbenchmark
     {
         ArgumentNullException.ThrowIfNull(pairs);
         if (pairs.Count == 0) throw new ArgumentException("pairs must not be empty", nameof(pairs));
+        if (pairs.Count > MaximumPairs)
+            throw new ArgumentOutOfRangeException(nameof(pairs), "pairs must be from 1 through 10000");
         if (confidencePercent is < 1 or > 99) throw new ArgumentOutOfRangeException(nameof(confidencePercent));
         if (!double.IsFinite(minimumFactor) || minimumFactor <= 1.0)
             throw new ArgumentOutOfRangeException(nameof(minimumFactor));

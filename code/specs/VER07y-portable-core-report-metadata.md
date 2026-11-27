@@ -31,9 +31,14 @@ not be empty or consist only of ASCII whitespace (U+0020 or U+0009 through
 U+000D); other Unicode whitespace alone is a valid producer identifier.
 `invocation` is an array
 of UTF-8 strings and may be empty when the driver was run with no explicit
-flags. `profile` is an optional non-empty UTF-8 string and is valid only
-alongside the complete metadata group. `null`, wrong types, empty required
-strings, invalid UTF-8, and NUL characters in strings are invalid.
+flags; individual invocation elements may also be empty strings. `profile` is
+an optional non-empty UTF-8 string and is valid only alongside the complete
+metadata group. `null`, wrong types, empty required descriptive strings,
+invalid UTF-8, and NUL characters in any metadata string are invalid. This NUL
+rule applies to each descriptive value (`workload`, `revision`, `runtime`, `os`,
+and `arch`), every `invocation` element, and `profile` when present. Empty
+`invocation` elements remain valid because invocation values preserve the
+driver's argument vector exactly.
 
 These rules preserve strict schemas while allowing readers to accept valid
 core reports from all producers. Guest-envelope reports remain ordinary core

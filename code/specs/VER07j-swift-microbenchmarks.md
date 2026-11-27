@@ -99,6 +99,23 @@ revision, Swift runtime/compiler, operating system, and architecture. A native
 40-pair smoke run must produce positive raw durations and replay successfully;
 there is no speed threshold.
 
+Revision metadata is explicit input to the reusable API:
+`runCommandLine(arguments:environment:clock:)` accepts an injected environment
+map and defaults it to empty. The packaged CLI reads only `GIT_REVISION` and
+`GITHUB_SHA` through key-scoped platform APIs (`getenv` on POSIX and
+`GetEnvironmentVariableW` on Windows), then passes those selected values to the
+API. A present `GIT_REVISION` takes precedence, including when its value is the
+empty string; otherwise a present `GITHUB_SHA` is used, and if neither key is
+available the revision is `unknown`. The explicit `--revision` argument
+overrides environment metadata. A missing or invalid platform value is treated
+as unavailable. The Windows reader retries one buffer growth and treats a
+second growth or OS error as unavailable rather than looping indefinitely.
+
+The `os` report field is the compile-time operating-system family label:
+`windows`, `macos`, `linux`, or `unknown`. It identifies the OS family and does
+not include the host OS version string. This keeps the report's standard OS
+identity field while avoiding a runtime host-version query.
+
 ## Validation
 
 Test every shared fixture case and assert each package fixture copy equals the
