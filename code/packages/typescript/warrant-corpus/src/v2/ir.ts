@@ -451,6 +451,9 @@ export interface RunState {
 /** Steps of the usefulness check one `match` may spend: far above any kit case or adopter match, far below a hostile one. */
 export const MATCH_BUDGET = 200_000;
 
+/** The type of a name bound to an undetermined payload: it may be ignored, never used. */
+const UNDETERMINED: Ty = { k: "Option", of: null };
+
 export class Program {
   private matchSteps = MATCH_BUDGET;
   readonly table: TypeTable;
@@ -783,6 +786,7 @@ export class Program {
         sized(1);
         const found = typeof ir[1] === "string" ? scope.get(ir[1]) : undefined;
         if (found === undefined) return fail("ill-typed", "a var names nothing in scope");
+        if (found.ty === UNDETERMINED) return fail("ill-typed", "a bind of an undetermined payload is used");
         return { tag, ty: found.ty, kids: [], sub: false, cost: 1, slot: found.slot };
       }
       case "err": {
@@ -1139,8 +1143,9 @@ export class Program {
         return { k: "bind", slot };
       }
       case "ok": {
-        if (pat.length !== 2 || ty.k !== "Result" || ty.ok === null) return fail("ill-typed", "ok matches a Result with a known payload");
-        return { k: "ok", p: this.typePattern(pat[1], ty.ok, binds, seen, depth + 1) };
+        if (pat.length !== 2 || ty.k !== "Result") return fail("ill-typed", "ok matches a Result");
+        // An undetermined payload (a bare `err`) can only be bound or ignored; a body that *uses* the bind is ill-typed (see `var`).
+        return { k: "ok", p: this.typePattern(pat[1], ty.ok ?? UNDETERMINED, binds, seen, depth + 1) };
       }
       case "err": {
         if (pat.length !== 2 || typeof pat[1] !== "string" || ty.k !== "Result") return fail("ill-typed", "err matches a Result and names a case");
@@ -1177,16 +1182,23 @@ export class Program {
    * that can fall through is one where a wildcard is useful against all of its arms.  `tys` are the types of the columns,
    * `null` for a payload that is undetermined (only a wildcard can stand there).
    */
-  /** One usefulness question with a fresh budget (an inner `match` typed in between cannot spend the outer one's). */
-  private usefulWithin(rows: readonly (readonly TPat[])[], vec: readonly TPat[], tys: readonly (Ty | null)[]): boolean {
-    this.matchSteps = MATCH_BUDGET;
-    return this.useful(rows, vec, tys);
+  /**
+   * One usefulness question, spending the `match`'s one budget: `budget.left` is loaded into the counter and taken back, so an
+   * inner `match` typed in between cannot spend (or refill) the outer one's.
+   */
+  private usefulWithin(budget: { left: number }, rows: readonly (readonly TPat[])[], vec: readonly TPat[], tys: readonly (Ty | null)[]): boolean {
+    this.matchSteps = budget.left;
+    try {
+      return this.useful(rows, vec, tys);
+    } finally {
+      budget.left = this.matchSteps;
+    }
   }
 
   private useful(rows: readonly (readonly TPat[])[], vec: readonly TPat[], tys: readonly (Ty | null)[]): boolean {
     // A work budget (section 14: a corpus is hostile): the check is exponential in the worst case, and a match that needs more
-    // than MATCH_BUDGET steps is refused, as a corpus error, rather than left to run.
-    this.matchSteps -= 1;
+    // than MATCH_BUDGET steps (one budget per `match`; a step costs 1 plus the rows it looks at) is refused, as a corpus error, rather than left to run.
+    this.matchSteps -= 1 + rows.length;
     if (this.matchSteps < 0) fail("ill-typed", "a match is too costly to check");
     if (vec.length === 0) return rows.length === 0;
     const head = vec[0] as TPat;
@@ -1270,19 +1282,20 @@ export class Program {
     if (armsRaw.length < 1 || armsRaw.length > 256) return fail("ill-typed", "a match has 1 to 256 arms");
     const pats: TPat[] = [];
     const bodies: T[] = [];
+    const budget = { left: MATCH_BUDGET };
     for (const arm of armsRaw) {
       if (!Array.isArray(arm) || arm.length !== 2) return fail("ill-typed", "an arm is [pattern, body]");
       const binds = new Map(scope);
       const pat = this.typePattern(arm[0], scrutinee.ty, binds, new Set(), 1);
       // An arm no value can reach: every value it matches is matched by an earlier arm.
-      if (!this.usefulWithin(pats.map((p) => [p]), [pat], [scrutinee.ty])) fail("ill-typed", "an arm no value can reach");
+      if (!this.usefulWithin(budget, pats.map((p) => [p]), [pat], [scrutinee.ty])) fail("ill-typed", "an arm no value can reach");
       pats.push(pat);
       const body = this.typeExpr(arm[1], binds, expected);
       if (expected !== undefined && faultCommon(body.ty, expected.ty, expected.narrow) === null) fail("ill-typed", "an arm shares no type with the declared one");
       bodies.push(body);
     }
     // Exhaustive: a wildcard must not be useful against the arms.
-    if (this.usefulWithin(pats.map((p) => [p]), [{ k: "wild" }], [scrutinee.ty])) fail("ill-typed", "a match that can fall through");
+    if (this.usefulWithin(budget, pats.map((p) => [p]), [{ k: "wild" }], [scrutinee.ty])) fail("ill-typed", "a match that can fall through");
     const common = this.branchType(bodies.map((b) => b.ty), expected);
     if (common === null) return fail("ill-typed", "the arms of a match share no type");
     if (scrutinee.sub && bodies.some((b) => b.sub)) fail("impure-guard", "a subject call under a guard that contains a subject call");

@@ -350,6 +350,38 @@ describe("match on a Result (R76; Appendix A.1)", () => {
     expect(Date.now() - started).toBeLessThan(1000);
   });
 
+  it("an unused bind on an undetermined payload is fine; a used one is ill-typed", () => {
+    const arms = (body: Json): Json[] => [arm(["ok", ["bind", "x"]], body), arm(["err_any"], lit("Nat", 2))];
+    expect(E(["match", ["err", "BAD"], arms(lit("Nat", 1))], [])).toBe("2");
+    expect(outcome(() => E(["match", ["err", "BAD"], arms(["var", "x"])], []))).toBe("ill-typed");
+    expect(outcome(() => E(["match", ["err", "BAD"], [arm(["ok", ["ok", ["wild"]]], lit("Nat", 1)), arm(["wild"], lit("Nat", 2))]], []))).toBe("ill-typed");
+  });
+
+  it("spends one budget per match, a step costing 1 plus its rows", () => {
+    // 16 columns of data-free Results, many arms: refused quickly, not 257 budgets' worth of time later
+    const col = (n: number): string => `(${Array.from({ length: n }, () => "Result<U8,E>").join(",")})`;
+    const type = `Result<${col(8)},E>`;
+    const arms: Json[] = [];
+    for (let i = 0; i < 40; i += 1) arms.push(arm(["ok", ["tuple", Array.from({ length: 8 }, (_u, k) => (k === i % 8 ? ["ok", ["wild"]] : ["wild"]))]], U8(i)), arm(["ok", ["tuple", Array.from({ length: 8 }, (_u, k) => (k === i % 8 ? ["err_any"] : ["wild"]))]], U8(i)));
+    const started = Date.now();
+    outcome(() => evaluate(["match", ["var", "r"], arms], [["r", type, { err: "BAD" }]]));
+    expect(Date.now() - started).toBeLessThan(2000);
+  });
+
+  it("accepts an exhaustive 8- and 10-column match within the budget", () => {
+    for (const n of [8, 10]) {
+      const comps = Array.from({ length: n }, () => "Result<U8,E>");
+      // columns beyond 8 sit in a nested tuple (a tuple has at most 8 components)
+      const type = n === 8 ? `Result<(${comps.join(",")}),E>` : `Result<((${comps.slice(0, 5).join(",")}),(${comps.slice(5).join(",")})),E>`;
+      const shape = (f: (k: number) => Json): Json => (n === 8 ? ["tuple", Array.from({ length: 8 }, (_u, k) => f(k))] : ["tuple", [["tuple", Array.from({ length: 5 }, (_u, k) => f(k))], ["tuple", Array.from({ length: 5 }, (_u, k) => f(k + 5))]]]);
+      const arms: Json[] = [arm(["ok", shape(() => ["ok", ["wild"]])], U8(0))];
+      for (let i = 0; i < n; i += 1) arms.push(arm(["ok", shape((k) => (k === i ? ["err_any"] : ["wild"]))], U8(i)));
+      arms.push(arm(["err_any"], U8(9)));
+      const value = { ok: n === 8 ? Array.from({ length: 8 }, () => ({ ok: "1" })) : [Array.from({ length: 5 }, () => ({ ok: "1" })), Array.from({ length: 5 }, () => ({ ok: "1" }))] };
+      expect(outcome(() => evaluate(["match", ["var", "r"], arms], [["r", type, value]])), `${n} columns`).toBe("ok");
+    }
+  });
+
   it("counts the outermost pattern as level 1: a ninth level is refused as depth", () => {
     const nest = (levels: number): [Json, string] => {
       let pat: Json = ["wild"];
