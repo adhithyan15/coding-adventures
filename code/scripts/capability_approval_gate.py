@@ -121,7 +121,29 @@ def git_blob(
     *,
     max_size: int = MAX_APPROVAL_BYTES,
 ) -> bytes | None:
-    """Read one bounded Git blob; only a confirmed missing path means absent."""
+    """Read one bounded regular-file blob; only a confirmed missing path is absent."""
+    tree = _git(root, "ls-tree", "-z", revision, "--", path)
+    exact_entries: list[tuple[bytes, bytes, bytes]] = []
+    for record in (item for item in tree.stdout.split(b"\0") if item):
+        if b"\t" not in record:
+            raise GateError("GIT_TREE_ENTRY", f"git returned a malformed tree entry for {path}")
+        metadata, raw_path = record.split(b"\t", 1)
+        if raw_path.decode("utf-8", "strict") != path:
+            continue
+        fields = metadata.split()
+        if len(fields) != 3:
+            raise GateError("GIT_TREE_ENTRY", f"git returned a malformed tree entry for {path}")
+        exact_entries.append((fields[0], fields[1], fields[2]))
+    if len(exact_entries) > 1:
+        raise GateError("GIT_TREE_ENTRY", f"git returned duplicate tree entries for {path}")
+    if exact_entries:
+        mode, object_type, _oid = exact_entries[0]
+        if mode not in {b"100644", b"100755"} or object_type != b"blob":
+            raise GateError(
+                "UNSAFE_FILE_MODE",
+                f"{path} must be a regular Git file (mode 100644 or 100755), got {mode.decode('ascii', 'replace')} {object_type.decode('ascii', 'replace')}",
+            )
+
     object_name = f"{revision}:{path}"
     kind = _git(root, "cat-file", "-t", object_name, check=False)
     if kind.returncode != 0:

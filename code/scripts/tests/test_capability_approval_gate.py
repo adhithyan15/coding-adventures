@@ -207,6 +207,67 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "INPUT_TOO_LARGE")
         self.assertFalse(any(args[:2] == ("cat-file", "blob") for args in commands))
 
+    def test_mode_only_symlink_manifest_with_same_blob_is_rejected(self) -> None:
+        empty_profile = json.dumps(
+            {
+                "version": 1,
+                "package": PACKAGE,
+                "capabilities": [],
+                "justification": "Pure computation only.",
+            },
+            separators=(",", ":"),
+        ).encode("utf-8")
+        self.write(MANIFEST, empty_profile)
+        base = self.commit("regular empty profile")
+
+        # A symlink's blob is the link target bytes. Make those bytes exactly
+        # equal to the valid empty profile, while that unusual path resolves to
+        # a nonempty manifest. update-index sets mode 120000 directly so this
+        # regression does not depend on platform symlink privileges.
+        link_target = empty_profile.decode("utf-8")
+        target_parts = link_target.split("/")
+        self.assertEqual(len(target_parts), 2)
+        package_root = self.root / "code/packages/rust/demo"
+        target_file = package_root / target_parts[0] / target_parts[1]
+        target_file.parent.mkdir(parents=True)
+        target_file.write_bytes(manifest([CAPABILITY]))
+        subprocess.run(["git", "add", "--", str(target_file.relative_to(self.root))], cwd=self.root, check=True)
+        blob = subprocess.run(
+            ["git", "hash-object", "-w", "--stdin"],
+            cwd=self.root,
+            input=empty_profile,
+            capture_output=True,
+            check=True,
+        ).stdout.decode("ascii").strip()
+        self.git("update-index", "--cacheinfo", f"120000,{blob},{MANIFEST}")
+        self.git("commit", "-m", "replace manifest file with symlink mode")
+        head = self.git("rev-parse", "HEAD")
+
+        self.assertIn("100644 blob", self.git("ls-tree", base, MANIFEST))
+        self.assertIn("120000 blob", self.git("ls-tree", head, MANIFEST))
+        base_bytes = subprocess.run(
+            ["git", "show", f"{base}:{MANIFEST}"], cwd=self.root, capture_output=True, check=True
+        ).stdout
+        head_bytes = subprocess.run(
+            ["git", "show", f"{head}:{MANIFEST}"], cwd=self.root, capture_output=True, check=True
+        ).stdout
+        self.assertEqual(base_bytes, head_bytes)
+
+        self.git("checkout-index", "--force", "--", MANIFEST)
+        self.assertTrue((self.root / MANIFEST).is_symlink())
+        self.assertEqual((self.root / MANIFEST).resolve(), target_file.resolve())
+        self.assertEqual((self.root / MANIFEST).read_bytes(), manifest([CAPABILITY]))
+
+        with self.assertRaises(gate.GateError) as caught:
+            gate.verify_changes(
+                str(self.root),
+                base_ref="main",
+                base_commit=base,
+                head_commit=head,
+                trusted_schema_validators=self.validators(),
+            )
+        self.assertEqual(caught.exception.code, "UNSAFE_FILE_MODE")
+
     def test_duplicate_principal_entries_choose_explicit_namespace(self) -> None:
         entries = [
             {"principal": "owner@example.test", "options": 'namespaces="release"'},
