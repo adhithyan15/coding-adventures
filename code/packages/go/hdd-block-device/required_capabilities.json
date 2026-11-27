@@ -1,0 +1,5 @@
+{
+  "package": "go/hdd-block-device",
+  "capabilities": [],
+  "justification": "The HDD block adapter composes local value-model packages and needs no external capability."
+}
