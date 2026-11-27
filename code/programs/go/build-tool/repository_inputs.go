@@ -121,7 +121,14 @@ var (
 		"code/scripts/ct_compare_conformance.py",
 		"code/scripts/tfv.py",
 	}
-	ctCompareCorpusPaths = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
+	ctCompareCorpusPaths          = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
+	historicalUnixFixturePath     = "code/specs/fixtures/historical-unix-v1/file-read.json"
+	historicalUnixReplayPath      = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
+	historicalUnixBuildNativePath = "code/specs/fixtures/historical-unix-v1/build_native.py"
+	historicalUnixCAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
+	historicalUnixCppAdapterPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
+	historicalUnixJavaAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
+	historicalUnixLuaAdapterPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
 	// kilnToolchainPinPaths are the pin sources Kiln's committed
 	// code/kiln/legacy/toolchains.json is checked against by its drift test
 	// (realpolicy_test.go). A toolchain bump that edits only these files must
@@ -579,6 +586,31 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	// HOS-002b: every native port replays the canonical shared trace. The
+	// adjacent helper/build driver and external adapters are narrower inputs
+	// read only by the four package recipes that compile those adapters.
+	historicalUnixFixtureRow("c"),
+	historicalUnixFixtureRow("cpp"),
+	historicalUnixFixtureRow("go"),
+	historicalUnixFixtureRow("java"),
+	historicalUnixFixtureRow("lua"),
+	historicalUnixFixtureRow("perl"),
+	historicalUnixFixtureRow("python"),
+	historicalUnixFixtureRow("ruby"),
+	historicalUnixFixtureRow("rust"),
+	historicalUnixFixtureRow("typescript"),
+	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
+	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
+	historicalUnixAdapterRow("java", historicalUnixJavaAdapterPath),
+	historicalUnixAdapterRow("lua", historicalUnixLuaAdapterPath),
+	historicalUnixReplayRow("c"),
+	historicalUnixReplayRow("cpp"),
+	historicalUnixReplayRow("java"),
+	historicalUnixReplayRow("lua"),
+	historicalUnixBuildNativeRow("c"),
+	historicalUnixBuildNativeRow("cpp"),
+	historicalUnixBuildNativeRow("java"),
+	historicalUnixBuildNativeRow("lua"),
 	{
 		name:     "go/microbenchmark",
 		language: "go",
@@ -1720,9 +1752,76 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 	return changed == microbenchmarkPairsFixturePath
 }
 
+func historicalUnixFixtureRow(language string) repositoryInputConsumer {
+	name := language + "/unix-history-simulator"
+	return repositoryInputConsumer{
+		name: name, language: language,
+		inputs:  "the shared HOS-002 historical Unix replay fixture",
+		matches: isHistoricalUnixFixture,
+		paths:   []string{historicalUnixFixturePath},
+	}
+}
+
+func historicalUnixAdapterRow(language, adapterPath string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the external historical Unix fixture adapter compiled by this package",
+		matches: exactRepositoryPath(adapterPath),
+		paths:   []string{adapterPath},
+	}
+}
+
+func historicalUnixReplayRow(language string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the shared historical Unix replay helper invoked by this package BUILD",
+		matches: exactRepositoryPath(historicalUnixReplayPath),
+		paths:   []string{historicalUnixReplayPath},
+	}
+}
+
+func historicalUnixBuildNativeRow(language string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the shared historical Unix native build driver invoked by this package",
+		matches: exactRepositoryPath(historicalUnixBuildNativePath),
+		paths:   []string{historicalUnixBuildNativePath},
+	}
+}
+
+func exactRepositoryPath(expected string) func(string) bool {
+	return func(changed string) bool { return changed == expected }
+}
+
+func isHistoricalUnixFixture(changed string) bool {
+	return changed == historicalUnixFixturePath
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
+	if strings.HasSuffix(packageName, "/unix-history-simulator") {
+		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
+		inputs := []string{historicalUnixFixturePath}
+		switch language {
+		case "c", "cpp", "java", "lua":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildNativePath)
+			switch language {
+			case "c":
+				inputs = append(inputs, historicalUnixCAdapterPath)
+			case "cpp":
+				inputs = append(inputs, historicalUnixCppAdapterPath)
+			case "java":
+				inputs = append(inputs, historicalUnixJavaAdapterPath)
+			case "lua":
+				inputs = append(inputs, historicalUnixLuaAdapterPath)
+			}
+		case "go", "perl", "python", "ruby", "rust", "typescript":
+		default:
+			return nil
+		}
+		return inputs
+	}
 	switch packageName {
 	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics", "typescript/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
