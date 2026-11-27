@@ -22,6 +22,7 @@ func databaseMediaPackages(root string) []discovery.Package {
 		{Name: "python/hdd-simulator", Language: "python"},
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 		{Name: "c/hdd-simulator", Language: "c"},
+		{Name: "go/hdd-simulator", Language: "go"},
 	}
 	for index := range packages {
 		packages[index].Path = filepath.Join(root, filepath.FromSlash("code/packages/"+packages[index].Name))
@@ -53,9 +54,10 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		{
 			fixture:          hddSimulatorFixturePath,
 			predicate:        isHDDSimulatorFixture,
-			readers:          map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true},
+			readers:          map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true, "go/hdd-simulator": true},
 			pythonReader:     "python/hdd-simulator",
 			typescriptReader: "typescript/hdd-simulator",
+			goReader:         "go/hdd-simulator",
 			inputs:           hddSimulatorFixtureInputs,
 		},
 	}
@@ -109,10 +111,13 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"code/specs/fixtures/database-media-v1/nand-flash.json/",
 		"code/specs/fixtures/database-media-v1ish/nand-flash.json",
 		"code/specs/fixtures/database-media-v1/hdd-simulator.json.bak",
+		"code/specs/fixtures/database-media-v2/hdd-simulator.json",
+		"code/specs/fixtures/database-media-v1/hdd-simulator.json/extra",
 		"code/specs/fixtures/database-media-v2/nand-flash.json",
 		"code/specs/fixtures/database-media-v1",
 		"code/specs/fixtures/other-database-media-v1/nand-flash.json",
 		`code\specs\fixtures\database-media-v1\nand-flash.json`,
+		`code\specs\fixtures\database-media-v1\hdd-simulator.json`,
 	}
 	for _, changed := range negativeControls {
 		if isNANDFlashFixture(changed) || isHDDSimulatorFixture(changed) {
@@ -136,6 +141,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"python/hdd-simulator":     {hddSimulatorFixturePath},
 		"typescript/hdd-simulator": {hddSimulatorFixturePath},
 		"c/hdd-simulator":          {hddSimulatorFixturePath},
+		"go/hdd-simulator":         {hddSimulatorFixturePath},
 	} {
 		var got []string
 		for _, pkg := range graph.Packages {
@@ -153,6 +159,35 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 	}
 }
 
+func TestDeletedHDDSimulatorFixtureStillSelectsEachReader(t *testing.T) {
+	root := t.TempDir()
+	packages := databaseMediaPackages(root)
+	missing := filepath.Join(root, filepath.FromSlash(hddSimulatorFixturePath))
+	if _, err := os.Stat(missing); !os.IsNotExist(err) {
+		t.Fatalf("fixture should be absent for deletion case: %v", err)
+	}
+	for _, language := range []string{"c", "go", "python", "typescript", "all"} {
+		got, err := repositoryInputConsumersForChange([]string{hddSimulatorFixturePath}, packages, language)
+		want := map[string]bool{"go/hdd-simulator": true}
+		switch language {
+		case "c":
+			want = map[string]bool{"c/hdd-simulator": true}
+		case "python":
+			want = map[string]bool{"python/hdd-simulator": true}
+		case "typescript":
+			want = map[string]bool{"typescript/hdd-simulator": true}
+		case "all":
+			want = map[string]bool{
+				"c/hdd-simulator": true, "go/hdd-simulator": true,
+				"python/hdd-simulator": true, "typescript/hdd-simulator": true,
+			}
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("deleted HDD timing fixture %s selection = %v, err %v; want %v", language, got, err, want)
+		}
+	}
+}
+
 func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T) {
 	fixtures := []struct {
 		path    string
@@ -164,7 +199,7 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 		},
 		{
 			path:    hddSimulatorFixturePath,
-			readers: map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true},
+			readers: map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true, "go/hdd-simulator": true},
 		},
 	}
 	for _, fixture := range fixtures {
@@ -254,7 +289,7 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 		{
 			id:      "repository-database-media-hdd-fixture-inputs",
 			fixture: hddSimulatorFixturePath,
-			roots:   []string{"code/packages/c/hdd-simulator", "code/packages/python/hdd-simulator", "code/packages/typescript/hdd-simulator"},
+			roots:   []string{"code/packages/c/hdd-simulator", "code/packages/go/hdd-simulator", "code/packages/python/hdd-simulator", "code/packages/typescript/hdd-simulator"},
 		},
 	} {
 		found := false

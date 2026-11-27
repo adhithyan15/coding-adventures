@@ -1,0 +1,4 @@
+(library
+ (name coding_adventures_unix_history_simulator)
+ (public_name coding-adventures-unix-history-simulator)
+ (wrapped false))
