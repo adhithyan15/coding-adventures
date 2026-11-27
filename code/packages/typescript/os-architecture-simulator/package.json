@@ -2,6 +2,9 @@
   "name": "@coding-adventures/os-architecture-simulator",
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": ">=22.23.5"
+  },
   "main": "src/core.ts",
   "types": "src/core.ts",
   "exports": {
@@ -11,14 +14,20 @@
     "./cpu": "./src/cpu.ts",
     "./devices": "./src/devices.ts",
     "./board": "./src/board.ts",
-    "./board-machine": "./src/board-machine.ts"
+    "./board-machine": "./src/board-machine.ts",
+    "./riscv-adapter": "./src/riscv-adapter.ts"
   },
   "scripts": {
     "build": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/core.test.ts tests/machine.test.ts"
+    "test": "node --experimental-strip-types --test tests/core.test.ts tests/machine.test.ts && vitest run tests/isa-adapter.test.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.7",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "vitest": "~4.1.11"
+  },
+  "dependencies": {
+    "@coding-adventures/cpu-simulator": "file:../cpu-simulator",
+    "@coding-adventures/riscv-simulator": "file:../riscv-simulator"
   }
 }
