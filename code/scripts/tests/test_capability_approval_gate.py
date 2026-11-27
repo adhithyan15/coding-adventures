@@ -215,6 +215,15 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.assertIs(gate._authorized_signer(entries, "owner@example.test"), entries[1])
         self.assertIsNone(gate._authorized_signer(entries[:1], "owner@example.test"))
 
+    def test_manifest_path_must_match_build_discovery_shape(self) -> None:
+        for path in (
+            "code/packages/rust/demo/tests/fixtures/required_capabilities.json",
+            "code/packages/rust/demo\n/required_capabilities.json",
+            "code/other/rust/demo/required_capabilities.json",
+        ):
+            with self.subTest(path=path), self.assertRaises(gate.GateError):
+                gate._manifest_path(path)
+
     def test_safe_proposal_output_rejects_symlinks_and_overwrite(self) -> None:
         outside = self.root.parent / f"{self.root.name}-outside"
         outside.mkdir()

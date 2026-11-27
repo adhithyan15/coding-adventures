@@ -39,6 +39,9 @@ MAX_MANIFEST_BYTES = 256 * 1024
 MAX_APPROVAL_BYTES = 256 * 1024
 MAX_SIGNATURE_BYTES = 64 * 1024
 HEX_OBJECT_ID = re.compile(r"^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
+MANIFEST_PATH_PATTERN = re.compile(
+    r"^code/(?:packages|programs)/[a-z0-9_-]+/[a-z0-9][a-z0-9._-]*/required_capabilities\.json$"
+)
 
 
 class GateError(Exception):
@@ -196,7 +199,8 @@ def _profile(raw: bytes | None, validator: Draft202012Validator, label: str) -> 
 def _manifest_path(path: str) -> PurePosixPath:
     parsed = PurePosixPath(path)
     if (
-        parsed.is_absolute()
+        MANIFEST_PATH_PATTERN.fullmatch(path) is None
+        or parsed.is_absolute()
         or ".." in parsed.parts
         or "\\" in path
         or parsed.name != "required_capabilities.json"
@@ -407,7 +411,9 @@ def _load_candidate_approval(
     approval_validator: Draft202012Validator,
 ) -> tuple[dict[str, Any], str]:
     raw = git_blob(root, head_commit, approval_path)
-    signature_raw = git_blob(root, head_commit, approval_path + ".sig")
+    signature_raw = git_blob(
+        root, head_commit, approval_path + ".sig", max_size=MAX_SIGNATURE_BYTES
+    )
     if raw is None or signature_raw is None:
         raise GateError("MISSING_APPROVAL", f"expected approval JSON and detached signature at {approval_path}")
     if len(raw) > MAX_APPROVAL_BYTES or len(signature_raw) > MAX_SIGNATURE_BYTES:
