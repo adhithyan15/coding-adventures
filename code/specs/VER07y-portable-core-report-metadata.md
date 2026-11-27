@@ -51,17 +51,6 @@ suppresses the nonempty fallback. A PowerShell environment-provider assignment
 that removes the variable does not test the present-empty case on older
 PowerShell versions.
 
-For the Swift command-line producer, `GIT_REVISION` takes precedence over
-`GITHUB_SHA` by key presence. If `GIT_REVISION` is present with an empty value,
-it suppresses the fallback and the report records `unknown`; it must not emit
-an empty `revision`, which is invalid metadata. A missing primary key permits
-the fallback, and if both keys are missing the report also records `unknown`.
-The Windows consumer smoke test must construct a genuinely present empty
-process environment value and verify from the resulting report that it
-suppresses the nonempty fallback. A PowerShell environment-provider assignment
-that removes the variable does not test the present-empty case on older
-PowerShell versions.
-
 These rules preserve strict schemas while allowing readers to accept valid
 core reports from all producers. Guest-envelope reports remain ordinary core
 reports: host/runtime boundary probes belong in the sidecar and are not
