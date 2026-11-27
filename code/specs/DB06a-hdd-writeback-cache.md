@@ -65,3 +65,19 @@ The later block interface defines multi-sector flush ordering,
 capabilities, and adapter behavior across this profile and other
 media. The fixed geometry keeps the first write/flush/power-loss
 traces small enough to enumerate.
+
+
+## Local verification
+
+The implementation is in `7bb11760452`. An independent map-based oracle
+matched 44,135 short-history decisions and 65,536 seeded operations
+across all sectors, including buffer ownership and retained states.
+The oracle passed under the race detector and vet.
+
+The fresh emitted recipe passed with 100% statement coverage, race
+and vet. The native package suite matched 3,262 bounded transitions,
+102,400 seeded commands and 100,000 guided inputs. All three mutation
+controls passed. Both command lists ran on Linux. Linux/386 executed
+under QEMU and a Windows/amd64 test binary compiled. Go module tidy
+passed. The build graph and emitted Linux recipes gained this package
+alone. Its only module dependency is the admitted HDD cut model.

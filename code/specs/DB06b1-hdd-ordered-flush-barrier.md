@@ -68,3 +68,18 @@ durable neighbors and the full 32-sector dirty set. Check error
 precedence, zero receipts, race, vet, guided histories and mutation
 controls for a reversed flush order and acknowledgement before the
 entire set reaches durable media.
+
+
+## Local verification
+
+The implementation is in `2d063064747`. An independent sector oracle
+matched 10,275 complete and interrupted barrier decisions and their
+restart retries. It checked 12 exact refusal and rollback cases.
+The independent caller passed race and vet.
+
+The emitted recipe passed at 100% statement coverage, with race and
+vet. Both command lists ran on Linux. The package passed 100,000 guided
+inputs on each of its two targets and all five named mutation controls.
+Linux/386 passed under QEMU, and the Windows/amd64 test binary compiled.
+Module tidy passed. All 6,004 build graph rows and 6,003 emitted recipe
+rows matched the previous export byte for byte.
