@@ -258,6 +258,7 @@ enum RepositorySourceInputBoundaryProjection {
               "input_origin": "repository",
               "applies_to": {
                 "exact_roots": [
+                  "code/packages/c/hdd-simulator",
                   "code/packages/python/hdd-simulator",
                   "code/packages/typescript/hdd-simulator"
                 ],
@@ -270,7 +271,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "role": "cross_package_exact"
                 }
               ],
-              "reason": "The Python and TypeScript hdd-simulator tests read only their exact shared DB media vector from the repository fixtures.",
+              "reason": "The C, Python and TypeScript hdd-simulator tests read only their exact shared DB media vector from the repository fixtures.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
@@ -279,6 +280,7 @@ enum RepositorySourceInputBoundaryProjection {
               "applies_to": {
                 "exact_roots": [
                   "code/packages/c/nand-flash",
+                  "code/packages/go/nand-flash",
                   "code/packages/python/nand-flash",
                   "code/packages/typescript/nand-flash"
                 ],
@@ -291,7 +293,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "role": "cross_package_exact"
                 }
               ],
-              "reason": "The C, Python and TypeScript nand-flash tests read only their exact shared DB media vector from the repository fixtures.",
+              "reason": "The C, Go, Python and TypeScript nand-flash tests read only their exact shared DB media vector from the repository fixtures.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {

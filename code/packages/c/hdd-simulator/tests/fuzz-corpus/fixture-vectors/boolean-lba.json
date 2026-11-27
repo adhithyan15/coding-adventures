@@ -1,0 +1,179 @@
+{
+  "schema": "coding-adventures.database-media.hdd-simulator.v1",
+  "profile": {
+    "surfaces": 2,
+    "tracks_per_surface": 4,
+    "sectors_per_track": 4,
+    "bytes_per_sector": 8,
+    "seek_ticks_per_track": 3,
+    "transfer_ticks_per_sector": 1
+  },
+  "initial_state": {
+    "tick": 0,
+    "head_track": 0,
+    "sector_count": 32,
+    "sector_fill_byte": 0
+  },
+  "cases": [
+    {
+      "name": "read-initial-lba-zero",
+      "operations": [
+        {
+          "op": "read",
+          "lba": true,
+          "data_hex": "0000000000000000",
+          "timing": {
+            "start_tick": 0,
+            "seek_ticks": 0,
+            "rotation_ticks": 0,
+            "transfer_ticks": 1,
+            "total_ticks": 1,
+            "end_tick": 1
+          },
+          "state": {
+            "tick": 1,
+            "head_track": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "seek-and-rotation-advance-together",
+      "operations": [
+        {
+          "op": "read",
+          "lba": 11,
+          "data_hex": "0000000000000000",
+          "timing": {
+            "start_tick": 0,
+            "seek_ticks": 3,
+            "rotation_ticks": 0,
+            "transfer_ticks": 1,
+            "total_ticks": 4,
+            "end_tick": 4
+          },
+          "state": {
+            "tick": 4,
+            "head_track": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "phase-wait-and-write-read-back",
+      "operations": [
+        {
+          "op": "write",
+          "lba": 3,
+          "data_hex": "0102030405060708",
+          "timing": {
+            "start_tick": 0,
+            "seek_ticks": 0,
+            "rotation_ticks": 3,
+            "transfer_ticks": 1,
+            "total_ticks": 4,
+            "end_tick": 4
+          },
+          "state": {
+            "tick": 4,
+            "head_track": 0
+          }
+        },
+        {
+          "op": "read",
+          "lba": 3,
+          "data_hex": "0102030405060708",
+          "timing": {
+            "start_tick": 4,
+            "seek_ticks": 0,
+            "rotation_ticks": 3,
+            "transfer_ticks": 1,
+            "total_ticks": 4,
+            "end_tick": 8
+          },
+          "state": {
+            "tick": 8,
+            "head_track": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "write-boundary-last-lba",
+      "operations": [
+        {
+          "op": "write",
+          "lba": 31,
+          "data_hex": "ffffffffffffffff",
+          "timing": {
+            "start_tick": 0,
+            "seek_ticks": 9,
+            "rotation_ticks": 2,
+            "transfer_ticks": 1,
+            "total_ticks": 12,
+            "end_tick": 12
+          },
+          "state": {
+            "tick": 12,
+            "head_track": 3
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid-requests-preserve-state",
+      "operations": [
+        {
+          "op": "read",
+          "lba": -1,
+          "error": "InvalidLbaError",
+          "state_unchanged": true
+        },
+        {
+          "op": "read",
+          "lba": 32,
+          "error": "InvalidLbaError",
+          "state_unchanged": true
+        },
+        {
+          "op": "read",
+          "lba": true,
+          "error": "InvalidLbaError",
+          "state_unchanged": true
+        },
+        {
+          "op": "write",
+          "lba": 0,
+          "data_hex": "00",
+          "error": "InvalidSectorDataError",
+          "state_unchanged": true
+        }
+      ]
+    }
+  ],
+  "timing_probes": [
+    {
+      "name": "one-transfer-from-portable-maximum-overflows",
+      "start_tick": 9007199254740991,
+      "head_track": 0,
+      "target_track": 0,
+      "target_sector": 3,
+      "error": "ClockOverflowError"
+    },
+    {
+      "name": "operation-ending-at-portable-maximum-is-valid",
+      "start_tick": 9007199254740990,
+      "head_track": 0,
+      "target_track": 0,
+      "target_sector": 2,
+      "timing": {
+        "start_tick": 9007199254740990,
+        "seek_ticks": 0,
+        "rotation_ticks": 0,
+        "transfer_ticks": 1,
+        "total_ticks": 1,
+        "end_tick": 9007199254740991
+      }
+    }
+  ]
+}
