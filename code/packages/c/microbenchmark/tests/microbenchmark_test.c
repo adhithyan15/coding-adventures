@@ -431,6 +431,14 @@ static void test_portable_core_report_metadata(void) {
   ISO_CHECK(mb_replay_json(complete, sizeof(complete) - 1, &report) == MB_OK);
   mb_report_free(&report);
   {
+    char empty_argument[1024];
+    ISO_CHECK(replace_once(complete, "\"invocation\":[]",
+                           "\"invocation\":[\"\"]", empty_argument,
+                           sizeof(empty_argument)));
+    ISO_CHECK(mb_replay_json(empty_argument, strlen(empty_argument), &report) == MB_OK);
+    mb_report_free(&report);
+  }
+  {
     char profiled[1024];
     ISO_CHECK(replace_once(complete, "\"arch\":\"test\"",
                            "\"arch\":\"test\",\"profile\":\"release\"",
