@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/heap-construction-benchmark",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The CLI supplies time.monotonic_ns as the collector clock."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The CLI emits a JSON report to stdout and argparse diagnostics to stderr."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "On Windows, Python 3.13 platform.system() may use platform._syscmd_ver(), which invokes the COMSPEC-selected command interpreter through subprocess with a fixed version query. The process target is environment-selected."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "COMSPEC",
+      "justification": "On Windows, subprocess uses COMSPEC to locate the shell for platform._syscmd_ver()."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "SystemRoot",
+      "justification": "On Windows, subprocess may use SystemRoot as its fallback shell location when COMSPEC is unset."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "PROCESSOR_ARCHITEW6432",
+      "justification": "On Windows, platform.machine() checks this variable when native WMI architecture data is unavailable."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "PROCESSOR_ARCHITECTURE",
+      "justification": "On Windows, platform.machine() falls back to this variable when native WMI architecture data is unavailable."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "advapi32.dll",
+      "justification": "On Windows, Python's platform.win32_ver() may query the Windows registry through winreg, whose native API is provided by advapi32.dll."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "*",
+      "justification": "platform.system() and platform.machine() obtain OS identity and architecture through platform-specific native APIs such as os.uname(); schema v1 has no narrower system-information category or cross-platform native-library target."
+    }
+  ],
+  "justification": "The program parses argv, uses the Python microbenchmark collector, and writes JSON or CLI diagnostics to standard streams. Input generation uses random.Random with an explicit seed. Platform metadata calls introduce conditional native OS, environment, and Windows shell effects through Python 3.13's platform module; the scoped entries document those effects as an unsigned proposal, not an approval."
+}

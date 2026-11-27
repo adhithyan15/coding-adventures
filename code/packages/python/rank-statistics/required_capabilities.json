@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/rank-statistics",
+  "capabilities": [],
+  "justification": "Proposal for the shipped library runtime: it checks numeric inputs, converts them to finite floats, sorts, and computes order statistics using Python numeric and sequence protocols; it performs no direct OS operation. The pytest harness reads the shared fixture from disk, which is test-only I/O. Caller-supplied protocol methods may execute caller code, so this profile is not a sandbox boundary or an analyzer result."
+}
