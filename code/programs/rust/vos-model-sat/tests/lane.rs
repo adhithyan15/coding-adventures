@@ -12,8 +12,8 @@ use cdcl_sat::{Cnf, Var};
 use common::{contract_dir, evidence, files};
 use vos_model_sat::labels::{FORBIDDEN_WORDS, LABEL_TRIVIAL, NO_SHIPPED_PHRASE};
 use vos_model_sat::lane::{
-    analyse_with, case_number, check_with, first_difference, recorded_collapses, replay,
-    says_sat_model, Analysis, LaneConfig, LADDER,
+    analyse_with, case_number, check_with, first_difference, recorded_collapses, replay, Analysis,
+    LaneConfig, LADDER,
 };
 use vos_model_sat::lemmas::LemmaId;
 use vos_model_sat::model::{Encoder, SchedModel};
@@ -30,8 +30,7 @@ fn fresh() -> ContractFiles {
 }
 
 fn real_cfg() -> LaneConfig<'static> {
-    // The real contract's vos.toml cannot carry `sat` until VOS-040c teaches vos-link the key.
-    LaneConfig::real().bridge_missing_sat_key()
+    LaneConfig::real()
 }
 
 /// The real lane, once per binary.
@@ -363,29 +362,49 @@ fn an_over_budget_obligation_is_ms05() {
 #[test]
 fn ms01_vos_toml_must_opt_in() {
     let c = LaneConfig::real();
-    // The real contract's vos.toml has no `sat` key.
-    let a = analyse_with(files(), &c, Some(evidence())).unwrap();
-    assert_eq!(codes(&a), ["MS01"]);
-    assert!(a.table.is_none());
-    // A wrong value, and a missing file, are MS01 too; the right value is not.
+    // The real contract's vos.toml carries `sat = "model"` (VOS-040c), so it passes MS01.
+    assert!(real().findings.is_empty(), "{:?}", real().findings);
+    // A missing key, a wrong value, a duplicate, a non-string and a missing file are MS01 too;
+    // the right value (with a comment) is not.  The parser is the kit's own.
     let mut f = fresh();
-    f.vos_toml = Some("class = \"K\"\nsat = \"none\"\n".to_string());
-    assert_eq!(
-        codes(&analyse_with(&f, &c, Some(evidence())).unwrap()),
-        ["MS01"]
-    );
+    for toml in [
+        "class = \"K\"
+",
+        "class = \"K\"
+sat = \"none\"
+",
+        "class = \"K\"
+sat = \"models\"
+",
+        "sat = \"model\"
+sat = \"model\"
+",
+        "sat = true
+",
+        "# sat = \"model\"
+",
+        "unknown = 1
+sat = \"model\"
+",
+    ] {
+        f.vos_toml = Some(toml.to_string());
+        let a = analyse_with(&f, &c, Some(evidence())).unwrap();
+        assert_eq!(codes(&a), ["MS01"], "{toml:?}");
+        assert!(a.table.is_none());
+    }
     f.vos_toml = None;
     let a = analyse_with(&f, &c, Some(evidence())).unwrap();
     assert!(a.findings[0].message.contains("not found"));
-    f.vos_toml = Some("class = \"K\"\nsat = \"model\" # opt in\n".to_string());
+    f.vos_toml = Some(
+        "class = \"K\"
+sat = \"model\" # opt in
+"
+        .to_string(),
+    );
     assert!(analyse_with(&f, &c, Some(evidence()))
         .unwrap()
         .findings
         .is_empty());
-    assert!(says_sat_model("sat=\"model\""));
-    assert!(!says_sat_model("# sat = \"model\""));
-    assert!(!says_sat_model("sat = \"models\""));
-    assert!(!says_sat_model("no equals"));
 }
 
 #[test]
@@ -873,14 +892,6 @@ fn ms10_a_duplicate_claim_name_is_refused() {
 }
 
 #[test]
-fn a_bridged_run_says_so_in_its_report_and_the_table_carries_no_marker() {
-    let a = real();
-    assert_eq!(a.report[0], vos_model_sat::lane::BRIDGED_REPORT_LINE);
-    // The table is pinned byte for byte (VOS31 8.2): it carries no marker.
-    assert!(!a.table.as_ref().unwrap().contains("BRIDGED"));
-}
-
-#[test]
 fn dimacs_and_drat_are_kept_only_when_asked() {
     assert!(
         real().proofs.is_empty(),
@@ -896,9 +907,9 @@ fn dimacs_and_drat_are_kept_only_when_asked() {
 }
 
 #[test]
-fn the_bridge_flag_is_wired_into_no_build_workflow_or_toml_file() {
-    // CI must fail if anyone passes the bridge flag from a BUILD file, a workflow or a .toml
-    // (VOS-040c deletes the flag).  `git grep --untracked` from the repository root.
+fn the_deleted_bridge_flag_is_wired_into_no_build_workflow_or_toml_file() {
+    // VOS-040c deleted the 040b `--allow-missing-sat-key` bridge; this guards against its
+    // reintroduction: CI fails if a BUILD file, a workflow or a .toml spells the flag.  `git grep --untracked` from the repository root.
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .ancestors()
         .nth(4)
@@ -953,4 +964,39 @@ fn the_budget_pin_is_anchored_to_exact_unique_lines() {
         ..Budget::ROUTE
     };
     assert!(spec_states_budget(&spec, not_power).is_err());
+}
+
+#[test]
+fn the_kit_and_the_lane_agree_on_the_ladder() {
+    // `vos-link` cannot depend on the lane (the Cargo edge runs the other way), so CK11 keeps
+    // its own copy of the ladder; this is the test that ties the two.
+    let lane: Vec<u64> = LADDER.iter().map(|&n| n as u64).collect();
+    assert_eq!(lane, vos_link::sat_lane::SAT_LADDER);
+    assert_eq!(
+        vos_model_sat::labels::LABEL_TRIVIAL.replace(' ', "_"),
+        vos_link::sat_lane::SAT_TRIVIAL_LABEL,
+        "the trivial label token CK11 does not count"
+    );
+}
+
+#[test]
+fn the_committed_table_of_the_real_contract_is_current_and_ck11_accepts_it() {
+    // The committed `warrant/lemmas.sat` is what `gen` writes now (MS09 would say otherwise)...
+    let a = check_with(files(), &real_cfg(), Some(evidence())).unwrap();
+    assert!(a.findings.is_empty(), "{:?}", a.findings);
+    // ...and the kit's files-only rule accepts it with 36 counted rows and 4 trivial ones.
+    let table = std::fs::read_to_string(contract_dir().join("warrant").join("lemmas.sat")).unwrap();
+    let claims: Vec<String> = vos_model_sat::oracle::claims_of(&files().base_document())
+        .unwrap()
+        .into_iter()
+        .map(|(n, _)| n)
+        .collect();
+    let (bad, facts) = vos_link::sat_lane::judge_sat_table(
+        &table,
+        &claims,
+        &coding_adventures_sha256::sha256_hex(files().contract_text.as_bytes()),
+        &coding_adventures_sha256::sha256_hex(files().lemmas_text.as_bytes()),
+    );
+    assert!(bad.is_empty(), "{bad:?}");
+    assert_eq!((facts.rows, facts.counted), (40, 36));
 }

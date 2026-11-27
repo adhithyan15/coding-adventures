@@ -4,6 +4,19 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Changed (VOS-040c, VOS31 section 10)
+
+- `vos.toml` is read by the kit's shared parser (`vos-shape-check`, new path dependency), replacing
+  the flat-file `says_sat_model`. MS01's opt-in (`sat = "model"`) is unconditional; a malformed
+  `vos.toml` is an MS01 finding.
+- **Removed the `--allow-missing-sat-key` bridge** of 040b: the flag, `BRIDGE_WARNING`,
+  `BRIDGED_REPORT_LINE`, `LaneConfig::bridge_missing_sat_key` and the `require_opt_in` path and
+  hook. The flag is now an unknown argument (usage error, exit 2); a test keeps it rejected and a
+  scan test keeps it out of every `BUILD*`, workflow and `.toml`.
+- `vos-sched-contract` now opts in and commits `warrant/lemmas.sat` (36 counted obligations and 4
+  trivial rows); tests assert the committed table is current and that CK11 of `vos-link` accepts
+  it, and that the kit's ladder and trivial label equal this crate's.
+
 ### Added (VOS-040b, VOS31 sections 7 to 9)
 
 - **The solve loop** (`src/solve.rs`): `solve_cnf` (conflict-bounded, optional DRAT),
@@ -21,8 +34,7 @@ All notable changes to this package are documented here.
 - **The table** `warrant/lemmas.sat` (`render_table`): solver-independent fields only; conflicts,
   `check_work` and acceptance are gated and printed, never committed.
 - **CLI**: `gen`, `check` (with `--emit-drat <dir>`) beside `cross-check`; `check` also runs the
-  three cross-checks (`MS02`). `--allow-missing-sat-key` bridges the gap until VOS-040c teaches
-  `vos-link` the `sat` key (its loader rejects an unknown `vos.toml` key).
+  three cross-checks (`MS02`). (040b bridged the missing `sat` key with a flag; 040c deleted it.)
 - Labels: the "SAT-certified" strings are chosen in exactly one function, reached only after an
   accepted proof and a passing control; a test scans the sources to keep it so.
 - Dependencies: `cdcl-sat`, `drat-check`, `coding_adventures_sha256` (path; none edited).

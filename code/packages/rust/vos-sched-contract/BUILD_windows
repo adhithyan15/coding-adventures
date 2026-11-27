@@ -6,5 +6,7 @@ cargo test -p vos-sched-contract --doc
 cargo run -q -p vos-shape-check -- .
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
 cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-contract .
+# VOS31 10.1: the host model-SAT lane (sat = "model" in vos.toml). It certifies the LEMMAS of this contract's model, not any implementation.
+cargo run -q --release --manifest-path ../../../programs/rust/vos-model-sat/Cargo.toml -- check .
 cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-component .
 # --- crate-specific (run, but never counted as evidence) ---

@@ -85,5 +85,8 @@ pub fn temp_contract(tag: &str) -> (PathBuf, PathBuf) {
         .join("rust")
         .join("vos-sched-contract");
     copy(&contract_dir(), &krate);
+    // The real contract commits its table; a temporary copy starts without one, so a test can
+    // watch `gen` write it and `check` find it absent.
+    let _ = std::fs::remove_file(krate.join("warrant").join("lemmas.sat"));
     (root, krate)
 }

@@ -194,6 +194,21 @@ var (
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
 	}
+	// vosContractSatPaths are what a contract crate's BUILD runs ONLY when its vos.toml says
+	// `sat = "model"` (VOS-040c, VOS31 10.1 and 10.4): the host model-SAT lane,
+	// `cargo run --release --manifest-path ../../../programs/rust/vos-model-sat/Cargo.toml -- check .`,
+	// and the three crates it solves and checks with.  They are NOT Cargo edges of the contract
+	// crate, so without them a solver edit never re-runs the lane's check (a "selection gap").
+	// They are a SEPARATE list used only by vosContractRow, never appended to vosToolPaths: the
+	// implementation crates and vos-probe-ready run no SAT line, and a solver edit must not
+	// reselect them.  Their other crates (sha256, warrant-grammar, vos-link, vos-manifest,
+	// vos-shape-check) are already in vosToolPaths, which the contract row keeps.
+	vosContractSatPaths = []string{
+		"code/programs/rust/vos-model-sat",
+		"code/packages/rust/bit-blaster",
+		"code/packages/rust/cdcl-sat",
+		"code/packages/rust/drat-check",
+	}
 	// vosCapacityProbePaths are the files the capacity probe's BUILD reads outside its Cargo
 	// edges (VOS-028b): `check` re-runs and validates the committed results file, `table --check`
 	// compares the generated block of the VOS30 spec with it, and the two Warrant documents
@@ -2177,6 +2192,23 @@ func logicGatesBasicRow() repositoryInputConsumer {
 	}
 }
 
+// isVosContractInput reports whether a changed path selects a VOS contract crate: a source of
+// a VOS tool (isVosToolInput) or of the model-SAT lane (vosContractSatPaths, VOS-040c).
+//
+//	code/packages/rust/cdcl-sat/src/lib.rs  → true  (contract rows only)
+//	code/packages/rust/cdcl-sat-x/src/a.rs  → false
+func isVosContractInput(changed string) bool {
+	if isVosToolInput(changed) {
+		return true
+	}
+	for _, d := range vosContractSatPaths {
+		if strings.HasPrefix(changed, d+"/") {
+			return true
+		}
+	}
+	return false
+}
+
 // vosContractRow is the row of one VOS contract crate (`code/packages/rust/<crate>`, kind
 // contract, VOS-039b-1).  Its BUILD runs `vos-link check-contract` and `check-component` outside
 // Cargo (the generated Rust of the contract crate does not depend on them), so a change to a VOS
@@ -2187,9 +2219,9 @@ func vosContractRow(crate string) repositoryInputConsumer {
 	return repositoryInputConsumer{
 		name:     "rust/" + crate,
 		language: "rust",
-		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer)",
-		matches:  isVosToolInput,
-		paths:    append([]string{}, vosToolPaths...),
+		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer) and the host model-SAT lane (vos-model-sat with bit-blaster, cdcl-sat and drat-check; VOS-040c)",
+		matches:  isVosContractInput,
+		paths:    append(append([]string{}, vosToolPaths...), vosContractSatPaths...),
 	}
 }
 
