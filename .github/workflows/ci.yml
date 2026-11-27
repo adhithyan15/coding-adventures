@@ -21,6 +21,7 @@ jobs:
       - name: Checkout diagnostic tree
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: 9085ce28006719f60a8d1d58f8f5a7e718e216c5
           persist-credentials: false
           fetch-depth: 1
 
@@ -35,16 +36,22 @@ jobs:
           out="$RUNNER_TEMP/kiln-record-macos-timing"
           mkdir -p "$out"
           printf 'NOT_RUN\n' > "$out/go-test.exit"
+          actual_head="$(git rev-parse HEAD)"
+          actual_tree="$(git rev-parse HEAD^{tree})"
           actual_code="$(git rev-parse HEAD:code)"
           actual_kiln="$(git rev-parse HEAD:code/programs/go/kiln)"
           {
-            printf 'diagnostic_workflow_commit=%s\n' "$(git rev-parse HEAD)"
+            printf 'diagnostic_workflow_commit=%s\n' "$GITHUB_SHA"
+            printf 'checked_out_source_head=%s\n' "$actual_head"
+            printf 'checked_out_source_tree=%s\n' "$actual_tree"
             printf 'expected_source_head=%s\n' "$EXPECTED_SOURCE_HEAD"
             printf 'code_tree=%s\n' "$actual_code"
             printf 'kiln_tree=%s\n' "$actual_kiln"
             printf 'git_version=%s\n' "$(git --version)"
             printf 'python_version=%s\n' "$(python3 --version 2>&1)"
           } > "$out/source-and-host.txt"
+          test "$actual_head" = "$EXPECTED_SOURCE_HEAD"
+          test "$actual_tree" = "f19c63a4492297015c1c000bfc6a6b0b1c212b68"
           test "$actual_code" = "$EXPECTED_CODE_TREE"
           test "$actual_kiln" = "$EXPECTED_KILN_TREE"
           printf '%s\n' 'source tree checks passed' >> "$out/source-and-host.txt"
