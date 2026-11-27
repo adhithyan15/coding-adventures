@@ -32,12 +32,12 @@ public sealed class HasherConformanceTests
         Assert.True(JsonElement.DeepEquals(checkedLanguage.RootElement, productionLanguage.RootElement));
         Assert.True(JsonElement.DeepEquals(checkedBoundary.RootElement, productionBoundary.RootElement));
         Assert.Equal(23, checkedLanguage.RootElement.GetProperty("languages").GetArrayLength());
-        Assert.Equal(27, checkedBoundary.RootElement.GetProperty("boundaries").GetArrayLength());
+        Assert.Equal(29, checkedBoundary.RootElement.GetProperty("boundaries").GetArrayLength());
         Assert.Equal(
             "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2",
             Hasher.LanguageSourceInputRegistryDigest);
         Assert.Equal(
-            "07de6d0f3a3e3ee571af7300cfbcf5247c670f7190162d0c604ca86ac327e1bf",
+            "f56c96801253599a93aaf1a8602d5c69ccc6dbb3aef8cd38af2e59353c88d968",
             Hasher.RepositorySourceInputBoundaryDigest);
         Assert.Equal(
             Hasher.LanguageSourceInputRegistryDigest,
