@@ -141,6 +141,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"python/hdd-simulator":     {hddSimulatorFixturePath},
 		"typescript/hdd-simulator": {hddSimulatorFixturePath},
 		"c/hdd-simulator":          {hddSimulatorFixturePath},
+		"go/hdd-simulator":         {hddSimulatorFixturePath},
 	} {
 		var got []string
 		for _, pkg := range graph.Packages {

@@ -954,8 +954,18 @@ func TestFixtureModelAdmissionAcceptsConsistentEditAndSavedFuzzInput(t *testing.
 }
 
 func TestFixtureReaderRejectsMalformedDocuments(t *testing.T) {
+	const expectedDepthLimit = 64
 	valid := readSharedFixture(t)
-	deep := append(bytes.Repeat([]byte{'['}, maxJSONDepth+2), bytes.Repeat([]byte{']'}, maxJSONDepth+2)...)
+	nestedScalar := func(depth int) []byte {
+		return append(append(bytes.Repeat([]byte{'['}, depth), '0'), bytes.Repeat([]byte{']'}, depth)...)
+	}
+	if err := rejectDuplicateKeysAndTrailingJSON(nestedScalar(expectedDepthLimit)); err != nil {
+		t.Fatalf("depth-%d nested scalar refused: %v", expectedDepthLimit, err)
+	}
+	if err := rejectDuplicateKeysAndTrailingJSON(nestedScalar(expectedDepthLimit + 1)); err == nil {
+		t.Fatalf("depth-%d nested scalar was accepted", expectedDepthLimit+1)
+	}
+	deep := append(bytes.Repeat([]byte{'['}, expectedDepthLimit+2), bytes.Repeat([]byte{']'}, expectedDepthLimit+2)...)
 	for name, input := range map[string][]byte{
 		"truncated":        []byte(`{"schema":"`),
 		"trailing":         append(append([]byte(nil), valid...), []byte(` {}`)...),
