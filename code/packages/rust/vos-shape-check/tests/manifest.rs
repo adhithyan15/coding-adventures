@@ -1,7 +1,7 @@
 //! The TOML-subset reader, the `Cargo.toml` facts and the `vos.toml` grammar.
 
 use std::collections::BTreeSet;
-use vos_shape_check::manifest::{parse_cargo, parse_vos_toml, Class, Kind};
+use vos_shape_check::manifest::{parse_cargo, parse_vos_toml, Class, Kind, SatLane};
 use vos_shape_check::toml::{parse, Value};
 
 fn paths(text: &str) -> Vec<(String, Value)> {
@@ -370,4 +370,29 @@ fn excused_controls_are_whole_plain_ids_with_a_backlog_reason() {
         .collect();
     let e = parse_vos_toml(&format!("excused-controls = [{}]", many.join(","))).unwrap_err();
     assert!(e.1.contains("more than 16"), "{e:?}");
+}
+
+#[test]
+fn sat_key_is_a_closed_enum_with_one_member() {
+    // Absent means off (VOS31 section 10.3: opt-in per contract).
+    assert_eq!(parse_vos_toml("kind = \"contract\"").unwrap().sat, None);
+    let v = parse_vos_toml("kind = \"contract\"\nsat = \"model\"\n").unwrap();
+    assert_eq!(v.sat, Some(SatLane::Model));
+    assert_eq!(SatLane::Model.name(), "model");
+    for (text, want) in [
+        ("sat = \"Model\"", "sat must be"),
+        ("sat = \"\"", "sat must be"),
+        ("sat = \"model \"", "sat must be"),
+        ("sat = \"none\"", "sat must be"),
+        ("sat = \"model\"\nsat = \"model\"", "duplicate key"),
+        ("sat = true", "wrong type"),
+        ("sat = 1", "wrong type"),
+        ("sat = [\"model\"]", "wrong type"),
+    ] {
+        let e = parse_vos_toml(text).unwrap_err();
+        assert!(e.1.contains(want), "{text}: {e:?}");
+    }
+    // The rejection message of an unknown key names the new key.
+    let e = parse_vos_toml("bogus = \"x\"").unwrap_err();
+    assert!(e.1.contains(", sat)"), "{e:?}");
 }

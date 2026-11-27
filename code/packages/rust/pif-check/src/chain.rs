@@ -33,9 +33,11 @@
 use crate::control::{ChainEntry, Role};
 use crate::digest::Digest;
 use crate::error::CheckError;
+use crate::printcheck::check_reviewed_file;
+use crate::registry::Registry;
 use crate::resolver::Resolver;
 use lean_kernel::pif::{read, Accepted, GateInputs, Goal};
-use lean_kernel::{Environment, Name};
+use lean_kernel::{Environment, Expr, ExprStore, Name};
 use std::collections::{BTreeSet, HashSet};
 
 /// What the gate hands the loader besides the chain itself.
@@ -50,6 +52,9 @@ pub struct LoadOptions<'a> {
     /// R-GOL-4 (gate-fed): the constants that occur in the goal terms of the claims, taken
     /// from the goals list. Only the claim file is read with it.
     pub goal_constants: HashSet<Name>,
+    /// R-AX-1 (gate-fed): the axiom registry the claim file's axioms are matched against.
+    /// `None` rejects every axiom of a claim file.
+    pub registry: Option<&'a Registry>,
 }
 
 /// One file of the chain, as accepted.
@@ -103,6 +108,13 @@ pub fn load_chain(
                 digest: entry.digest.hex(),
             });
         }
+        // A2: a registered statement matches only under the environment prefix it was
+        // registered in, so the registry predicate is built per file with that file's prefix.
+        let prefix_now = state;
+        let registry_check = |name: &Name, ps: &[Name], ty: Expr, st: &ExprStore| {
+            opts.registry
+                .is_some_and(|r| r.matches_term(name, ps, ty, st, &prefix_now))
+        };
         let gate = GateInputs {
             expected_imports: prior.clone(),
             class: entry.role.class(),
@@ -113,12 +125,21 @@ pub fn load_chain(
             } else {
                 opts.goal_constants.clone()
             },
+            axiom_registry: if is_base { None } else { Some(&registry_check) },
             ..GateInputs::default()
         };
         let role = entry.role.word();
         let report =
             read(env, &bytes, &gate).map_err(|error| CheckError::Read { index, role, error })?;
         env = report.env;
+        // Files a person reviews are read through the printer: `parse(print(F)) = F`, and the
+        // decoded file must agree with what the kernel accepted (VER32 N5).
+        if !matches!(entry.role, Role::Claim | Role::Library) {
+            check_reviewed_file(&bytes, &env, &report.decls).map_err(|e| CheckError::Printer {
+                subject: format!("file {index} ({role})"),
+                why: format!("{e:?}"),
+            })?;
+        }
         let prefix = state;
         state = state.fold(&entry.digest);
         if is_base {

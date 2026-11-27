@@ -138,11 +138,12 @@ var (
 	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
 	// FuzzReferenceVectorsTests (VER06h), ruby/test_bootstrap's
 	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
-	// (VER06j, scans it line by line), lua/test_bootstrap's test_fuzz_vectors.lua
-	// (VER06p) and elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it
-	// the same way; so does cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k),
-	// through the C++ API, and swift/test-bootstrap's FuzzReferenceVectorsTests
-	// (VER06l) reads it too.
+	// (VER06j, scans it line by line), perl/test-bootstrap's t/11-fuzz-mutate.t
+	// (VER06q), lua/test_bootstrap's test_fuzz_vectors.lua (VER06p) and
+	// elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it the same way;
+	// so does cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k), through the
+	// C++ API, and swift/test-bootstrap's FuzzReferenceVectorsTests (VER06l)
+	// reads it too.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -192,6 +193,21 @@ var (
 		"code/scripts/warrant_negctl.py",
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
+	}
+	// vosContractSatPaths are what a contract crate's BUILD runs ONLY when its vos.toml says
+	// `sat = "model"` (VOS-040c, VOS31 10.1 and 10.4): the host model-SAT lane,
+	// `cargo run --release --manifest-path ../../../programs/rust/vos-model-sat/Cargo.toml -- check .`,
+	// and the three crates it solves and checks with.  They are NOT Cargo edges of the contract
+	// crate, so without them a solver edit never re-runs the lane's check (a "selection gap").
+	// They are a SEPARATE list used only by vosContractRow, never appended to vosToolPaths: the
+	// implementation crates and vos-probe-ready run no SAT line, and a solver edit must not
+	// reselect them.  Their other crates (sha256, warrant-grammar, vos-link, vos-manifest,
+	// vos-shape-check) are already in vosToolPaths, which the contract row keeps.
+	vosContractSatPaths = []string{
+		"code/programs/rust/vos-model-sat",
+		"code/packages/rust/bit-blaster",
+		"code/packages/rust/cdcl-sat",
+		"code/packages/rust/drat-check",
 	}
 	// vosCapacityProbePaths are the files the capacity probe's BUILD reads outside its Cargo
 	// edges (VOS-028b): `check` re-runs and validates the committed results file, `table --check`
@@ -244,8 +260,9 @@ var (
 	// java/test-bootstrap, kotlin/test-bootstrap, csharp/test-bootstrap and
 	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), cpp/test-bootstrap
 	// (test_fuzz_corpus.cpp, VER06k), ruby/test_bootstrap (VER06i),
-	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n) and lua/test_bootstrap
-	// (test_fuzz_corpus.lua, VER06p).
+	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n), lua/test_bootstrap
+	// (test_fuzz_corpus.lua, VER06p) and perl/test-bootstrap (t/12-fuzz-corpus.t,
+	// VER06q).
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
@@ -1415,6 +1432,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "perl/test-bootstrap",
+		language: "perl",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
 		name:     "lua/test_bootstrap",
 		language: "lua",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1436,6 +1460,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    fuzzV1CorpusPaths,
 	},
 	{
+		name:     "perl/test-bootstrap",
+		language: "perl",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
 		name:     "lua/test_bootstrap",
 		language: "lua",
 		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
@@ -1469,6 +1500,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
 		matches:  isGoFuzzReferenceVectors,
 		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
+		name:     "haskell/test-bootstrap",
+		language: "haskell",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
 	},
 	{
 		name:     "elixir/test_bootstrap",
@@ -2154,6 +2192,23 @@ func logicGatesBasicRow() repositoryInputConsumer {
 	}
 }
 
+// isVosContractInput reports whether a changed path selects a VOS contract crate: a source of
+// a VOS tool (isVosToolInput) or of the model-SAT lane (vosContractSatPaths, VOS-040c).
+//
+//	code/packages/rust/cdcl-sat/src/lib.rs  → true  (contract rows only)
+//	code/packages/rust/cdcl-sat-x/src/a.rs  → false
+func isVosContractInput(changed string) bool {
+	if isVosToolInput(changed) {
+		return true
+	}
+	for _, d := range vosContractSatPaths {
+		if strings.HasPrefix(changed, d+"/") {
+			return true
+		}
+	}
+	return false
+}
+
 // vosContractRow is the row of one VOS contract crate (`code/packages/rust/<crate>`, kind
 // contract, VOS-039b-1).  Its BUILD runs `vos-link check-contract` and `check-component` outside
 // Cargo (the generated Rust of the contract crate does not depend on them), so a change to a VOS
@@ -2164,9 +2219,9 @@ func vosContractRow(crate string) repositoryInputConsumer {
 	return repositoryInputConsumer{
 		name:     "rust/" + crate,
 		language: "rust",
-		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer)",
-		matches:  isVosToolInput,
-		paths:    append([]string{}, vosToolPaths...),
+		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer) and the host model-SAT lane (vos-model-sat with bit-blaster, cdcl-sat and drat-check; VOS-040c)",
+		matches:  isVosContractInput,
+		paths:    append(append([]string{}, vosToolPaths...), vosContractSatPaths...),
 	}
 }
 

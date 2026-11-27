@@ -34,6 +34,8 @@ coding_adventures_warrant_grammar = { path = "../../../packages/rust/warrant-gra
 # very document `check-contract` evaluates.
 vos-link = { path = "../vos-link" }
 vos-manifest = { path = "../../../packages/rust/vos-manifest" }
+# VOS-040c: the shared `vos.toml` parser (the `sat` key), the one `vos-link` uses.
+vos-shape-check = { path = "../../../packages/rust/vos-shape-check" }
 
 # A test-only edge (VOS-D058): the cross-checks read the real contract package's files, and the
 # build tool selects a package's tests by its Cargo dependency edges, so an edit to a `.part`

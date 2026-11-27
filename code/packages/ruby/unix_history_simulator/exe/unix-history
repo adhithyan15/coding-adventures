@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+require_relative "../lib/unix_history"
+
+puts JSON.pretty_generate(UnixHistory.run_command(ARGV.empty? ? "cat /hello" : ARGV.join(" ")))
