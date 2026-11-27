@@ -1812,6 +1812,9 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 
 func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 	name := language + "/unix-history-simulator"
+	if language == "ruby" {
+		name = "ruby/unix_history_simulator"
+	}
 	return repositoryInputConsumer{
 		name: name, language: language,
 		inputs:  "the shared HOS-002 historical Unix replay fixture",
@@ -1882,6 +1885,9 @@ func isGoOSArchitectureFixtureInput(changed string) bool {
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
+	if packageName == "ruby/unix_history_simulator" {
+		return []string{historicalUnixFixturePath}
+	}
 	if packageName == "go/os-architecture-simulator" {
 		return []string{osArchitectureProfilesPath, osArchitectureGoConformancePath}
 	}
@@ -1908,7 +1914,7 @@ func repositoryInputsForPackage(packageName string) []string {
 			case "lua":
 				inputs = append(inputs, historicalUnixLuaAdapterPath)
 			}
-		case "go", "perl", "python", "ruby", "rust", "typescript":
+		case "go", "perl", "python", "rust", "typescript":
 		case "dart":
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
 		case "kotlin":
