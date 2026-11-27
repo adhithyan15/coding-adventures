@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import itertools
+from collections.abc import Callable
 
 import pytest
 from coding_adventures_test_bootstrap import (
@@ -62,6 +63,79 @@ def test_exhaustive_small_http_address_domain() -> None:
     assert valid == 84
 
 
+def _expected_request(wire: bytes) -> tuple[bool, str | None]:
+    """Independent request model; deliberately avoids production regexes."""
+    suffix = b"\r\n" if wire.endswith(b"\r\n") else b"\n"
+    if not wire.startswith(b"GET ") or not wire.endswith(suffix):
+        return False, None
+    address = wire[4 : -len(suffix)]
+    if not address or any(byte < 33 or byte > 126 for byte in address):
+        return False, None
+    return True, address.decode("ascii")
+
+
+def _check_http_wire_oracle(
+    parse_fn: Callable[[bytes], str],
+    encode_fn: Callable[[str], bytes],
+    decode_fn: Callable[[bytes], str],
+    wires: list[bytes],
+) -> None:
+    """Check acceptance and exact output, including documented refusals."""
+    for wire in wires:
+        accepted, address = _expected_request(wire)
+        try:
+            observed = parse_fn(wire)
+        except ValueError:
+            assert not accepted
+        else:
+            assert accepted and observed == address
+    for address in ("", "a", "/x?y", "a b", "é"):
+        accepted = bool(address) and all(33 <= ord(char) <= 126 for char in address)
+        try:
+            observed = encode_fn(address)
+        except ValueError:
+            assert not accepted
+        else:
+            assert accepted and observed == b"GET " + address.encode("ascii") + b"\r\n"
+    for body in wires:
+        if all(byte < 128 for byte in body):
+            assert decode_fn(body) == body.decode("ascii")
+        else:
+            with pytest.raises(UnicodeDecodeError):
+                decode_fn(body)
+
+
+def test_http_checker_rejects_wrong_implementation() -> None:
+    wires = [b"GET /\r\n", b"GET /x\n", b"POST /\r\n", b"\xff"]
+
+    def wrong_parse(_: bytes) -> str:
+        return "/"
+
+    with pytest.raises(AssertionError):
+        _check_http_wire_oracle(
+            wrong_parse, encode_http09_request, decode_http09_response, wires
+        )
+
+
+def test_pbt_arbitrary_wire_acceptance_and_outputs() -> None:
+    def property_for_wire(wire: bytes) -> None:
+        _check_http_wire_oracle(
+            parse_http09_request,
+            encode_http09_request,
+            decode_http09_response,
+            [wire],
+        )
+
+    verdict = check_property(
+        0xBADC0DE,
+        gen_bytes(0, 32),
+        property_for_wire,
+        PbtOptions(num_tests=256, ci=False),
+    )
+    assert verdict.passed, verdict.message
+    assert verdict.cases_run == 256
+
+
 @pytest.mark.parametrize(
     "wire",
     [b"GET / x\r\n", b"GET /\r\nextra", b"POST /\r\n", b"GET \xff\r\n"],
@@ -107,6 +181,37 @@ def test_pbt_real_tree_invariants() -> None:
     )
     assert verdict.passed, verdict.message
     assert verdict.cases_run == 256
+
+
+def _list_semantic_oracle(
+    parse_fn: Callable[[str], list[object]], left: str, right: str
+) -> None:
+    """Independent semantic oracle for omitted list-item end tags."""
+    tree = parse_fn(f"<UL><LI>{left}<LI>{right}</UL>")
+    explicit = parse_fn(f"<UL><LI>{left}</LI><LI>{right}</LI></UL>")
+    assert len(tree) == len(explicit) == 1
+    assert isinstance(tree[0], Element) and isinstance(explicit[0], Element)
+    assert tree[0].tag == explicit[0].tag == "ul"
+    assert [child.children for child in tree[0].children] == [[left], [right]]
+    assert [child.children for child in explicit[0].children] == [[left], [right]]
+
+
+def test_generated_html_omitted_li_semantics_and_wrong_control() -> None:
+    text_gen = gen_list(gen_choice(list("ab01")), 1, 8).map("".join)
+    pair_gen = text_gen.flat_map(
+        lambda left: text_gen.map(lambda right: (left, right))
+    )
+    verdict = check_property(
+        0x1A2B,
+        pair_gen,
+        lambda pair: _list_semantic_oracle(parse_html_tags_1992, *pair),
+        PbtOptions(num_tests=256, ci=False),
+    )
+    assert verdict.passed, verdict.message
+    assert verdict.cases_run == 256
+
+    with pytest.raises(AssertionError):
+        _list_semantic_oracle(lambda _: [], "a", "b")
 
 
 def _fuzz_exports(data: bytes) -> None:

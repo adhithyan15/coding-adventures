@@ -5,7 +5,7 @@ public exports of the `historical-web` Python reference. It is an assurance
 slice, not a universal proof and not a SAT certificate. The independent model
 is deliberately smaller than the implementation: it checks wire framing,
 ASCII admission, response decoding, and structural tree invariants without
-reusing the parser's regular expressions or stack.
+reusing the parser's explicit byte/token scanning or stack.
 
 ## Threat classes and controls
 
@@ -22,8 +22,11 @@ reusing the parser's regular expressions or stack.
 The exhaustive slice enumerates all HTTP addresses of length 0–3 over the
 ASCII alphabet `a`, `/`, `?`, and `0` (85 cases including invalid empties),
 and all response byte strings of length 0–2 over `{0x00, 0x41, 0x7f}` (13
-cases, with non-ASCII negatives). PBT runs 256 deterministic cases per
-property. Fuzz runs 512 iterations, with initial seeds no longer than 64
+cases, with non-ASCII negatives). PBT runs 256 deterministic cases for each
+of three properties: wire acceptance/output, request round trips, and omitted
+`LI` semantics (768 property cases total). The wire property uses an
+independent acceptance model for arbitrary 0–32-byte inputs and checks exact
+outputs and refusals. Fuzz runs 512 iterations, with initial seeds no longer than 64
 bytes and `max_input_len=128`; these bounds are campaign receipts, not claims
 about unbounded inputs. Tree-depth checks cap generated nesting at 12.
 
