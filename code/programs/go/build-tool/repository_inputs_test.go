@@ -1549,6 +1549,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"Dart adapter", historicalUnixDartAdapterPath, map[string]bool{"dart/unix-history-simulator": true}},
 		{"Kotlin adapter", historicalUnixKotlinAdapterPath, map[string]bool{"kotlin/unix-history-simulator": true}},
 		{"Elixir adapter", historicalUnixElixirAdapterPath, map[string]bool{"elixir/unix_history_simulator": true}},
+		{"Elixir build and replay driver", historicalUnixElixirBuildPath, map[string]bool{"elixir/unix_history_simulator": true}},
 		{"Haskell adapter Cabal file", historicalUnixHaskellCabalPath, map[string]bool{"haskell/unix-history-simulator": true}},
 		{"Haskell adapter source", historicalUnixHaskellMainPath, map[string]bool{"haskell/unix-history-simulator": true}},
 		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
@@ -1631,7 +1632,10 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		}
 	}
 	elixirInputs := repositoryInputsForPackage("elixir/unix_history_simulator")
-	elixirWant := []string{historicalUnixFixturePath, historicalUnixReplayPath, historicalUnixElixirAdapterPath}
+	elixirWant := []string{
+		historicalUnixFixturePath, historicalUnixReplayPath,
+		historicalUnixElixirBuildPath, historicalUnixElixirAdapterPath,
+	}
 	if !reflect.DeepEqual(elixirInputs, elixirWant) {
 		t.Errorf("Elixir package repository inputs = %v, want %v", elixirInputs, elixirWant)
 	}

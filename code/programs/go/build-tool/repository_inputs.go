@@ -124,6 +124,7 @@ var (
 	ctCompareCorpusPaths            = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
 	historicalUnixFixturePath       = "code/specs/fixtures/historical-unix-v1/file-read.json"
 	historicalUnixReplayPath        = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
+	historicalUnixElixirBuildPath   = "code/specs/fixtures/historical-unix-v1/build_elixir.py"
 	historicalUnixBuildNativePath   = "code/specs/fixtures/historical-unix-v1/build_native.py"
 	historicalUnixCAdapterPath      = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
 	historicalUnixCppAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
@@ -654,6 +655,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixAdapterRow("dart", historicalUnixDartAdapterPath),
 	historicalUnixAdapterRow("kotlin", historicalUnixKotlinAdapterPath),
 	historicalUnixAdapterPackageRow("elixir/unix_history_simulator", "elixir", historicalUnixElixirAdapterPath),
+	historicalUnixElixirDriverRow(),
 	historicalUnixAdapterRow("haskell", historicalUnixHaskellCabalPath),
 	historicalUnixAdapterRow("haskell", historicalUnixHaskellMainPath),
 	historicalUnixReplayRow("c"),
@@ -1852,6 +1854,15 @@ func historicalUnixReplayPackageRow(name, language string) repositoryInputConsum
 	}
 }
 
+func historicalUnixElixirDriverRow() repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: "elixir/unix_history_simulator", language: "elixir",
+		inputs:  "the Elixir fixture build and replay driver",
+		matches: exactRepositoryPath(historicalUnixElixirBuildPath),
+		paths:   []string{historicalUnixElixirBuildPath},
+	}
+}
+
 func historicalUnixBuildNativeRow(language string) repositoryInputConsumer {
 	return repositoryInputConsumer{
 		name: language + "/unix-history-simulator", language: language,
@@ -1907,7 +1918,10 @@ func repositoryInputsForPackage(packageName string) []string {
 		}
 	}
 	if packageName == "elixir/unix_history_simulator" {
-		return []string{historicalUnixFixturePath, historicalUnixReplayPath, historicalUnixElixirAdapterPath}
+		return []string{
+			historicalUnixFixturePath, historicalUnixReplayPath,
+			historicalUnixElixirBuildPath, historicalUnixElixirAdapterPath,
+		}
 	}
 	if strings.HasSuffix(packageName, "/unix-history-simulator") {
 		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
