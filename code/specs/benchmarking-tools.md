@@ -797,6 +797,7 @@ these budgets; it never truncates a file or silently drops rows:
 | Summary-document JSON values | 2,000,005 |
 | `trials.jsonl` bytes, per result directory | 512 MiB |
 | Nonblank trial records, per result directory | 2,000,000 |
+| Distinct measurement groups, per result directory | 10,000 |
 | One JSONL record | 64 KiB |
 | JSON values in one imported document or trial record | 200,000 |
 | RESP nesting depth | 64 values, with the top-level value at depth 1 |
@@ -840,8 +841,9 @@ not exceed 100,000,000 units. For one side with `n` successful measurements,
 its estimate is zero when `n = 0`, otherwise `1,000 * n * (1 + ceil(log2(n)))`;
 the `+1` charges the sample draw and ensures a one-sample group has nonzero
 cost. Sum both sides for each group, then sum all common groups using checked
-arithmetic. At most 10,000
-common groups may be compared. A comparison above any budget returns a clear
+arithmetic. At most 10,000 measurement groups per input file may be indexed,
+and at most 10,000 common
+groups may be compared. A comparison above any budget returns a clear
 error before the bootstrap arrays or Cliff's delta pair loop are allocated or
 run. These budgets cover import and statistical comparison only; they do not
 bound manifest growth, command output, total run time, or the resource use of a
