@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "program": "rv32i-console-demo-v1",
+  "instructionSet": "RV32I",
+  "instructions": [
+    16515,
+    1065219,
+    8458515,
+    2130099,
+    82837907,
+    3178531,
+    78643603,
+    3178531,
+    10486163,
+    3178531,
+    115
+  ],
+  "budget": 16,
+  "expect": [
+    {
+      "board": "museum-board-16k",
+      "halted": true,
+      "cycles": 11,
+      "pc": 296,
+      "consoleBytes": [
+        79,
+        75,
+        10
+      ],
+      "consoleText": "OK\n",
+      "deviceEffectAddresses": [
+        65280,
+        65280,
+        65280
+      ],
+      "instructions": [
+        "lbu",
+        "lbu",
+        "slli",
+        "add",
+        "addi",
+        "sb",
+        "addi",
+        "sb",
+        "addi",
+        "sb",
+        "ecall"
+      ],
+      "registers": {
+        "R0": 0,
+        "R1": 65280,
+        "R2": 65280,
+        "R3": 10
+      },
+      "deviceEffects": [
+        {
+          "kind": "console.byte-written",
+          "byte": "79",
+          "character": "O",
+          "address": "65280",
+          "region": "console"
+        },
+        {
+          "kind": "console.byte-written",
+          "byte": "75",
+          "character": "K",
+          "address": "65280",
+          "region": "console"
+        },
+        {
+          "kind": "console.byte-written",
+          "byte": "10",
+          "character": "\n",
+          "address": "65280",
+          "region": "console"
+        }
+      ]
+    },
+    {
+      "board": "compact-board-8k",
+      "halted": true,
+      "cycles": 11,
+      "pc": 296,
+      "consoleBytes": [
+        79,
+        75,
+        10
+      ],
+      "consoleText": "OK\n",
+      "deviceEffectAddresses": [
+        57344,
+        57344,
+        57344
+      ],
+      "instructions": [
+        "lbu",
+        "lbu",
+        "slli",
+        "add",
+        "addi",
+        "sb",
+        "addi",
+        "sb",
+        "addi",
+        "sb",
+        "ecall"
+      ],
+      "registers": {
+        "R0": 0,
+        "R1": 57344,
+        "R2": 57344,
+        "R3": 10
+      },
+      "deviceEffects": [
+        {
+          "kind": "console.byte-written",
+          "byte": "79",
+          "character": "O",
+          "address": "57344",
+          "region": "console"
+        },
+        {
+          "kind": "console.byte-written",
+          "byte": "75",
+          "character": "K",
+          "address": "57344",
+          "region": "console"
+        },
+        {
+          "kind": "console.byte-written",
+          "byte": "10",
+          "character": "\n",
+          "address": "57344",
+          "region": "console"
+        }
+      ]
+    }
+  ]
+}
