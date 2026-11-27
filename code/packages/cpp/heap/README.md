@@ -150,6 +150,22 @@ and exact pinned license bytes without using the source tree or original
 install path. This is local installed-artifact validation, not a registry
 publication claim.
 
+To install a local build and use it from another CMake project, choose an
+install prefix and pass that same prefix when configuring the consumer:
+
+```sh
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/tmp/ca-heap-install
+cmake --build build --config Release
+cmake --install build --config Release
+cmake -S /path/to/consumer -B consumer-build \
+  -DCMAKE_PREFIX_PATH=/tmp/ca-heap-install
+cmake --build consumer-build --config Release
+```
+
+The consumer project links `ca::heap` after calling
+`find_package(ca_heap CONFIG REQUIRED)`. Replace the example paths with paths
+valid for your shell and platform.
+
 ## Development
 
 Run `BUILD` on Unix or `BUILD_windows` on Windows. Both use the shared pure-ISO
