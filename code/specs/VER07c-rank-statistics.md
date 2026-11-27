@@ -45,25 +45,35 @@ The package does not read fixtures, access the filesystem, collect timings, or
 apply benchmark verdict thresholds; those belong to its tests and consumers.
 
 Validation is deterministic and does not coerce values. `median` first requires
-an actual JavaScript array (`TypeError` otherwise), then requires a nonempty
-array (`RangeError`). It captures the array length once and reads indexed slots
+an actual JavaScript array (`TypeError` otherwise), then captures its `length`
+exactly once. The captured value must have primitive type `number` (`TypeError`
+otherwise), be an integer from 0 through `2^32 - 1` (`RangeError` otherwise),
+and be nonzero (`RangeError` for an empty array). This is the native array
+length domain, not an application sample-size cap. It then reads indexed slots
 from left to right exactly once. Every index must be an own property; a hole,
 inherited-only index or non-number is `TypeError`, and a numeric `NaN` or
 infinity is `RangeError`. It copies validated primitive numbers to a fresh
-ordinary array before sorting. Sorting and rank selection use only that
-snapshot; the caller array is not mutated and its iterator or sort method is
-never invoked.
-Exceptions thrown by a caller-owned proxy/getter while reading a slot propagate
-before sorting; side effects inside that caller code are outside this
-nonmutation guarantee.
+ordinary array before sorting.
 
-`medianInterval` validates confidence before touching the sample. A non-number
-confidence is `TypeError`; a number that is non-integral or outside 1 through
-99 is `RangeError`. It then applies the same actual-array, nonempty-array, and
-left-to-right snapshot rules as `median`. Thus invalid confidence wins when
-both confidence and sample are invalid, while the first invalid sample slot
-wins among sample errors. An interval's endpoints are original finite numeric
-observations selected from the validated snapshot.
+Sorting uses an internal ascending numeric comparator (`a < b`, `a > b`,
+otherwise equal), never JavaScript's default lexicographic sort. In particular,
+`median([2, 10, 3])` is `3`, and `median([2, 10, 3, 20])` is `6.5`. The
+comparator treats `-0` and `+0` as equal. Sorting and rank selection use only
+the validated snapshot; the caller array is not mutated and its iterator or
+sort method is never invoked. Exceptions from array branding, the one length
+read, own-property checks, or slot reads (including Proxy traps and getters)
+propagate unchanged before sorting. Side effects inside caller code are
+outside the library's no-write guarantee.
+
+`medianInterval` validates confidence before any sample check, including array
+branding. A non-number confidence is `TypeError`; a number that is non-integral
+or outside 1 through 99 is `RangeError`. It then applies the same array-brand,
+single captured-length, length-domain, nonempty, and left-to-right snapshot
+rules as `median`. Thus invalid confidence wins when confidence and any sample
+property are invalid. Within the sample, invalid length wins before slot
+inspection, and the first invalid slot wins among slot errors. An interval's
+endpoints are original finite numeric observations selected from the validated
+snapshot.
 
 Comparisons treat `-0` and `+0` as equal. JavaScript's stable array sort keeps
 the input order of equal values, so a selected zero endpoint retains whichever
@@ -79,15 +89,27 @@ The oracle's generator, version and input/output hash are recorded with the
 fixture; a formula copied from the production implementation is not an
 independent oracle.
 
-The TypeScript conformance suite keeps the existing 2,048-case seeded median
-permutation/range campaign (`0x4d454449`) and 2,048-case interval endpoint
-campaign (`0x494e5445`). Add a separate reproducible finite-binary64 campaign
-of 2,048 accepted arrays, seeded with `0x52414e4b`, with lengths 1 through 32;
-the bit generator must deterministically reject and count any non-finite
-candidate rather than silently shrinking the declared accepted count. Preserve
-the canonical fixture replay and input-snapshot checks. Do not invent a fixed
-minimum count of midpoint vectors: declare the semantic edge classes they
-cover and report the actual vector count and provenance.
+The TypeScript package and these campaigns are new at the selected main base;
+the held First candidate is a prototype, not an existing implementation or
+validation baseline. Add a 2,048-case seeded median permutation/range campaign
+(`0x4d454449`) whose expected median bits come from the independent
+exact-rational oracle; use declared nonempty lengths up to 32 and assert
+permutation invariance and nonmutation for every case. Add a 2,048-case seeded
+interval campaign (`0x494e5445`) with declared lengths up to 32 and confidence
+values spanning 1 through 99. Calculate the expected qualifying rank and exact
+endpoints with sign enumeration for `n <= 12` and the separate Pascal
+differential above for larger `n`; do not check only that a result contains
+observations. Add a reproducible
+finite-binary64 campaign of 2,048 accepted arrays, seeded with `0x52414e4b`,
+with lengths 1 through 32. For every generated array, check median output bits
+against the exact-rational oracle and interval ranks/endpoints for every
+confidence 1 through 99, using sign enumeration for `n <= 12` and the distinct
+Pascal differential for larger `n`. The bit generator deterministically
+rejects and counts non-finite candidates rather than silently shrinking the
+declared accepted count. Record each seed, accepted and rejected counts,
+assertion totals, oracle/vector identities and hashes, and fixture provenance.
+Do not invent a fixed minimum count of midpoint vectors: declare the semantic
+edge classes they cover and report the actual vector count and provenance.
 
 The independent mathematical interval oracle enumerates all `2^n` sign
 assignments for each `n` from 1 through 12, builds the signed-sum histogram,
@@ -97,11 +119,22 @@ separate test-only Pascal-triangle `BigInt` implementation differentially
 checks the production multiplicative recurrence at `n = 63, 64, 65, 127, 128,
 129, 257` for every confidence and exact-cutoff neighbors. This is an
 implementation differential, not a second independent mathematical oracle.
-Selected deliberately faulty off-by-one, naive-midpoint, and mutated-input
-controls must be rejected by the same assertions used for the real package.
+Selected deliberately faulty lexicographic-sort, off-by-one, naive-midpoint,
+and mutated-input controls must be rejected by the same assertions used for
+the real package. Include array Proxy controls for a length trap that returns
+`NaN`, infinity, a string, a fraction, a negative number, and a value above
+`2^32 - 1`, plus the valid zero length; assert the specified error class and
+precedence. Verify the length is read once. Also cover throwing length,
+own-property and indexed-value traps, inherited-only indices, and proof that
+the library never invokes the input iterator or `sort` method. These errors do
+not authorize a smaller application sample limit.
 The deterministic campaigns, finite enumeration, exact vectors, controls,
 and fixture replay establish only their declared bounded coverage, not a
-universal proof.
+universal proof. VER07b's confidence interpretation assumes independent pairs
+from a stable sampling process; exact cutoff arithmetic does not establish
+that an arbitrary benchmark dataset satisfies that sampling model. The signed
+zero tie behavior above is specific to this TypeScript/ECMAScript profile and
+must not be read as verified Go/Python bit-sign behavior.
 
 The package identity is `@coding-adventures/rank-statistics`, version `0.1.0`,
 using the repository's TypeScript/Vitest conventions and no production
