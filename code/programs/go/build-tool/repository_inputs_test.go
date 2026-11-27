@@ -1635,30 +1635,52 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	}
 }
 
-func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
+func TestOSArchitectureFixtureRoutesGoAndTypescriptConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "typescript/os-architecture-simulator", Language: "typescript"},
 		{Name: "go/os-architecture-simulator", Language: "go"},
 		{Name: "typescript/adjacent", Language: "typescript"},
 	}
-	exactInputs := []string{
+	tsInputs := []string{
 		osArchitectureProfilesPath, osArchitectureVerifyPath,
 		osMachineBoardsPath, osMachineVerifyPath,
 		osMachineRiscvPath, osMachineRiscvVerifyPath,
 	}
-	for _, changed := range exactInputs {
+	for _, changed := range tsInputs {
+		tsWant := map[string]bool{"typescript/os-architecture-simulator": true}
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
 		want := map[string]bool{"typescript/os-architecture-simulator": true}
+		if changed == osArchitectureProfilesPath {
+			want["go/os-architecture-simulator"] = true
+		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Errorf("%s selected %v, err %v; want %v", changed, got, err, want)
 		}
 		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "typescript")
-		if err != nil || !reflect.DeepEqual(got, want) {
-			t.Errorf("typescript-only %s selected %v, err %v; want %v", changed, got, err, want)
+		if err != nil || !reflect.DeepEqual(got, tsWant) {
+			t.Errorf("typescript-only %s selected %v, err %v; want %v", changed, got, err, tsWant)
 		}
 		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "go")
+		goWant := map[string]bool{}
+		if changed == osArchitectureProfilesPath {
+			goWant["go/os-architecture-simulator"] = true
+		}
+		if err != nil || !reflect.DeepEqual(got, goWant) {
+			t.Errorf("go-only %s selected %v, err %v; want %v", changed, got, err, goWant)
+		}
+	}
+	for _, changed := range []string{osArchitectureGoConformancePath, osArchitectureGoConformancePath + ".bak"} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		want := map[string]bool{}
+		if changed == osArchitectureGoConformancePath {
+			want["go/os-architecture-simulator"] = true
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("Go verifier path %s selected %v, err %v; want %v", changed, got, err, want)
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "typescript")
 		if err != nil || len(got) != 0 {
-			t.Errorf("go-only %s selected %v, err %v; want none", changed, got, err)
+			t.Errorf("Go verifier path %s selected TypeScript consumers %v, err %v", changed, got, err)
 		}
 	}
 	for _, unrelated := range []string{
@@ -1681,12 +1703,20 @@ func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
 	// outside the fixture tree.
 	for _, renamedInput := range []string{osArchitectureProfilesPath, osMachineRiscvPath} {
 		got, err := repositoryInputConsumersForChange([]string{renamedInput, "docs/renamed-fixture.json"}, packages, "all")
-		if err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/os-architecture-simulator": true}) {
-			t.Errorf("rename paths for %s selected %v, err %v", renamedInput, got, err)
+		want := map[string]bool{"typescript/os-architecture-simulator": true}
+		if renamedInput == osArchitectureProfilesPath {
+			want["go/os-architecture-simulator"] = true
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("rename paths for %s selected %v, err %v; want %v", renamedInput, got, err, want)
 		}
 	}
-	if got := repositoryInputsForPackage("typescript/os-architecture-simulator"); !reflect.DeepEqual(got, exactInputs) {
-		t.Fatalf("package hash inputs = %v, want exactly %v", got, exactInputs)
+	if got := repositoryInputsForPackage("typescript/os-architecture-simulator"); !reflect.DeepEqual(got, tsInputs) {
+		t.Fatalf("TypeScript package hash inputs = %v, want exactly %v", got, tsInputs)
+	}
+	goInputs := []string{osArchitectureProfilesPath, osArchitectureGoConformancePath}
+	if got := repositoryInputsForPackage("go/os-architecture-simulator"); !reflect.DeepEqual(got, goInputs) {
+		t.Fatalf("Go package hash inputs = %v, want exactly %v", got, goInputs)
 	}
 }
 
@@ -1728,6 +1758,45 @@ func TestOSArchitectureRepositoryInputsHashEveryExactFile(t *testing.T) {
 		}
 		if err := os.WriteFile(path, []byte("initial\n"), 0o644); err != nil {
 			t.Fatal(err)
+		}
+	}
+}
+
+func TestGoOSArchitectureRepositoryInputsHashEveryExactFile(t *testing.T) {
+	root := t.TempDir()
+	inputs := repositoryInputsForPackage("go/os-architecture-simulator")
+	packageRoot := filepath.Join(root, "code", "packages", "go", "os-architecture-simulator")
+	if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(packageRoot, "core.go"), []byte("package simulator\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, input := range inputs {
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("initial\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "go/os-architecture-simulator", Language: "go", Path: packageRoot}
+	for _, input := range inputs {
+		before, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash before editing %s: %v", input, err)
+		}
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.WriteFile(path, []byte("changed\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash after editing %s: %v", input, err)
+		}
+		if before == after {
+			t.Errorf("editing declared Go input %s did not change package hash", input)
 		}
 	}
 }
