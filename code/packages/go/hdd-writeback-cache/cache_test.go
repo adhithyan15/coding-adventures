@@ -495,6 +495,8 @@ func errorName(err error) string {
 		return "invalid_prefix"
 	case errors.Is(err, ErrSectorClean):
 		return "sector_clean"
+	case errors.Is(err, ErrInvalidBarrierCut):
+		return "invalid_barrier_cut"
 	default:
 		return "unexpected_error"
 	}

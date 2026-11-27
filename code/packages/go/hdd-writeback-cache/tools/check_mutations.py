@@ -14,6 +14,7 @@ LOWER = ROOT.parent / "hdd-write-crash-cuts"
 MUTATIONS = (
     (
         "persist-pending-data-early",
+        "cache.go",
         "copy(next.pending[index][:], data)",
         "copy(next.pending[index][:], data)\n\tcopy(next.durable[index][:], data)",
         "TestWriteVisibilityOverwriteAndPowerLoss",
@@ -21,17 +22,35 @@ MUTATIONS = (
     ),
     (
         "retain-unrelated-pending-after-crash",
-		"next = next.PowerLoss()",
+        "cache.go",
+        "next = next.PowerLoss()",
 		"next.pending[index] = [BytesPerSector]byte{}\n\t\tnext.dirty[index] = false",
         "TestFlushAcknowledgesOnlySelectedEntryAndCrashDropsAll",
         "unacknowledged flush did not drop all volatile writes",
     ),
     (
         "acknowledge-before-response",
-		"Acknowledged: result.Receipt != nil",
+        "cache.go",
+        "Acknowledged: result.Receipt != nil",
 		"Acknowledged: result.PersistedPrefixBytes == BytesPerSector",
         "TestEveryCutPreservesExactPrefixAndReceipt",
         "acknowledgement=true for cut",
+    ),
+    (
+        "flushes-barrier-in-reverse-lba-order",
+        "barrier.go",
+        "for ordinal, lba := range dirtyLBAs {",
+        "for ordinal := len(dirtyLBAs) - 1; ordinal >= 0; ordinal-- {\n\t\tlba := dirtyLBAs[ordinal]",
+        "TestFlushDirtyMatchesIndependentArrayModelAcrossSubsetsAndCuts",
+        "FlushDirty(",
+    ),
+    (
+        "acknowledges-before-entire-dirty-set-is-durable",
+        "barrier.go",
+        "for ordinal, lba := range dirtyLBAs {",
+        "if cut.Kind == BarrierComplete && len(dirtyLBAs) > 1 {\n\t\tdirtyLBAs = dirtyLBAs[:1]\n\t}\n\tfor ordinal, lba := range dirtyLBAs {",
+        "TestFlushDirtyFullSetUsesAscendingLBARegardlessOfArrivalOrder",
+        "FlushDirty(",
     ),
 )
 
@@ -56,8 +75,8 @@ def main() -> int:
         lower = root / "hdd-write-crash-cuts"
         shutil.copytree(ROOT, package, ignore=shutil.ignore_patterns("bin", "obj", ".git"))
         shutil.copytree(LOWER, lower, ignore=shutil.ignore_patterns("bin", "obj", ".git"))
-        for name, old, new, test_name, expected in MUTATIONS:
-            source = package / "cache.go"
+        for name, filename, old, new, test_name, expected in MUTATIONS:
+            source = package / filename
             text = source.read_text()
             if text.count(old) != 1:
                 raise RuntimeError(f"{name}: mutation anchor is not unique")
