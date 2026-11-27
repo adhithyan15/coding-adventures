@@ -18,6 +18,7 @@ func databaseMediaPackages(root string) []discovery.Package {
 		{Name: "python/nand-flash", Language: "python"},
 		{Name: "typescript/nand-flash", Language: "typescript"},
 		{Name: "c/nand-flash", Language: "c"},
+		{Name: "go/nand-flash", Language: "go"},
 		{Name: "python/hdd-simulator", Language: "python"},
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 		{Name: "c/hdd-simulator", Language: "c"},
@@ -37,14 +38,16 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		readers          map[string]bool
 		pythonReader     string
 		typescriptReader string
+		goReader         string
 		inputs           []string
 	}{
 		{
 			fixture:          nandFlashFixturePath,
 			predicate:        isNANDFlashFixture,
-			readers:          map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true},
+			readers:          map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true, "go/nand-flash": true},
 			pythonReader:     "python/nand-flash",
 			typescriptReader: "typescript/nand-flash",
+			goReader:         "go/nand-flash",
 			inputs:           nandFlashFixtureInputs,
 		},
 		{
@@ -68,10 +71,15 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 				cReaders[packageName] = true
 			}
 		}
+		goReaders := map[string]bool{}
+		if tc.goReader != "" {
+			goReaders[tc.goReader] = true
+		}
 		for language, expected := range map[string]map[string]bool{
 			"python":     {tc.pythonReader: true},
 			"typescript": {tc.typescriptReader: true},
 			"c":          cReaders,
+			"go":         goReaders,
 		} {
 			got, err := repositoryInputConsumersForChange([]string{tc.fixture}, packages, language)
 			if err != nil || !reflect.DeepEqual(got, expected) {
@@ -81,7 +89,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		if !tc.predicate(tc.fixture) {
 			t.Errorf("exact predicate rejected %s", tc.fixture)
 		}
-		for _, packageName := range []string{tc.pythonReader, tc.typescriptReader, "c/nand-flash", "c/hdd-simulator"} {
+		for _, packageName := range []string{tc.pythonReader, tc.typescriptReader, tc.goReader, "c/nand-flash", "c/hdd-simulator"} {
 			if !tc.readers[packageName] {
 				continue
 			}
@@ -124,6 +132,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"python/nand-flash":        {nandFlashFixturePath},
 		"typescript/nand-flash":    {nandFlashFixturePath},
 		"c/nand-flash":             {nandFlashFixturePath},
+		"go/nand-flash":            {nandFlashFixturePath},
 		"python/hdd-simulator":     {hddSimulatorFixturePath},
 		"typescript/hdd-simulator": {hddSimulatorFixturePath},
 		"c/hdd-simulator":          {hddSimulatorFixturePath},
@@ -151,7 +160,7 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 	}{
 		{
 			path:    nandFlashFixturePath,
-			readers: map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true},
+			readers: map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true, "go/nand-flash": true},
 		},
 		{
 			path:    hddSimulatorFixturePath,
@@ -171,6 +180,8 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 					sourcePath += ".ts"
 				case "c":
 					sourcePath += ".c"
+				case "go":
+					sourcePath += ".go"
 				}
 				if err := os.MkdirAll(filepath.Dir(sourcePath), 0o755); err != nil {
 					t.Fatal(err)
@@ -238,7 +249,7 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 		{
 			id:      "repository-database-media-nand-fixture-inputs",
 			fixture: nandFlashFixturePath,
-			roots:   []string{"code/packages/c/nand-flash", "code/packages/python/nand-flash", "code/packages/typescript/nand-flash"},
+			roots:   []string{"code/packages/c/nand-flash", "code/packages/go/nand-flash", "code/packages/python/nand-flash", "code/packages/typescript/nand-flash"},
 		},
 		{
 			id:      "repository-database-media-hdd-fixture-inputs",
