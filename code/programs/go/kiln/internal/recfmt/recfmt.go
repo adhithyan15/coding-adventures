@@ -151,6 +151,40 @@ type Binding struct {
 	// those bindings keep their bytes and their ids; not a schema bump, because
 	// the accept set of the recorder is unchanged.
 	ExecHead bool `json:"exec_head,omitempty"`
+	// Language is the recording selection `prepare --language L` sealed: the
+	// plan holds only the language-L packages whose every prerequisite is also L
+	// (build-tool -plan-closed-language L).  Empty means ALL languages, the
+	// default, and the key is then absent (omitempty), so a default binding keeps
+	// the exact bytes and the exact id it had before the field existed; "all" is
+	// therefore never a legal value here (it would be a second spelling of the
+	// same selection, hence a second id).  The merge job does NOT take the
+	// selection from here: it declares its own (record-merge --language) and
+	// requires every binding to equal it.
+	Language string `json:"language,omitempty"`
+}
+
+// MaxLanguageBytes bounds a binding's language name.
+const MaxLanguageBytes = 32
+
+// CheckLanguage is the form of Binding.Language: empty (all languages) or a
+// short lowercase token other than "all".
+func CheckLanguage(l string) error {
+	if l == "" {
+		return nil
+	}
+	if l == "all" {
+		return fmt.Errorf("binding: language \"all\" is spelled by leaving the field out")
+	}
+	if len(l) > MaxLanguageBytes {
+		return fmt.Errorf("binding: language is %d bytes, limit %d", len(l), MaxLanguageBytes)
+	}
+	for i := 0; i < len(l); i++ {
+		c := l[i]
+		if !(c >= 'a' && c <= 'z' || i > 0 && (c >= '0' && c <= '9' || c == '-')) {
+			return fmt.Errorf("binding: language %q is not a lowercase language name", short(l))
+		}
+	}
+	return nil
 }
 
 // HostFacts is pre/host-facts.json: the machine facts the weak key hashes and
@@ -436,6 +470,9 @@ func (b *Binding) Validate() error {
 		return fmt.Errorf("binding: job_start %d", b.JobStart)
 	case b.PreparedTicks < 1 || b.PreparedTicks > MaxClockTicks:
 		return fmt.Errorf("binding: prepared_ticks %d", b.PreparedTicks)
+	}
+	if err := CheckLanguage(b.Language); err != nil {
+		return err
 	}
 	// Ordered slices, not maps: the FIRST failure is the one reported, and a
 	// cause text must be the same bytes on every run (merge output is compared

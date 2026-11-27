@@ -38,6 +38,25 @@ class MicrobenchmarkTest {
         assertFailsWith<IllegalArgumentException> { Microbenchmark.analyze(listOf(Observation(1, 1, "bad")), 95, 1.05) }
         assertFailsWith<IllegalArgumentException> { Microbenchmark.analyze(faster, 100, 1.05) }
         assertFailsWith<IllegalArgumentException> { Microbenchmark.analyze(faster, 95, Double.POSITIVE_INFINITY) }
+        assertFailsWith<IllegalArgumentException> {
+            Microbenchmark.analyze(List(10_001) { Observation(1, 1, Microbenchmark.BASELINE_FIRST) }, 95, 1.05)
+        }
+    }
+
+    @Test fun replayEnforcesTextTreeAndFileBudgetsBeforePairConversion() {
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(" ".repeat(4 * 1024 * 1024 + 1)) }
+        val tooDeep = "[".repeat(129) + "0" + "]".repeat(129)
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(tooDeep) }
+        val tooManyValues = "{\"x\":[" + "0,".repeat(65_535) + "0]}"
+        assertFailsWith<IllegalArgumentException> { ReportCodec.replay(tooManyValues) }
+
+        val oversized = Files.createTempFile("kotlin-microbenchmark-replay", ".json")
+        try {
+            Files.write(oversized, ByteArray(4 * 1024 * 1024 + 1))
+            assertFailsWith<IllegalArgumentException> { ReportCodec.readFile(oversized) }
+        } finally {
+            Files.deleteIfExists(oversized)
+        }
     }
 
     @Test fun collectorScheduleAndFailures() {
@@ -129,6 +148,28 @@ class MicrobenchmarkTest {
         val withProfile = ObjectMapper().readTree(validJson) as ObjectNode
         withProfile.put("profile", "portable")
         assertTrue(ReportCodec.replay(withProfile.toString()).analysis.verdict.isNotEmpty())
+        val withEmptyArgument = mapper.readTree(validJson) as ObjectNode
+        (withEmptyArgument.path("invocation") as com.fasterxml.jackson.databind.node.ArrayNode).insert(1, "")
+        assertEquals(ReportCodec.replay(validJson).pairs, ReportCodec.replay(withEmptyArgument.toString()).pairs)
+        withEmptyArgument.remove("invocation")
+        withEmptyArgument.putArray("invocation")
+        assertEquals(ReportCodec.replay(validJson).pairs, ReportCodec.replay(withEmptyArgument.toString()).pairs)
+        val metadataBase = mapper.readTree(validJson) as ObjectNode
+        metadataBase.put("profile", "portable")
+        listOf("workload", "revision", "runtime", "os", "arch", "profile", "invocation").forEach { field ->
+            val withNul = metadataBase.deepCopy()
+            if (field == "invocation") {
+                (withNul.path(field) as com.fasterxml.jackson.databind.node.ArrayNode).set(0, "argument\u0000with-nul")
+            } else {
+                withNul.put(field, "metadata\u0000with-nul")
+            }
+            assertFailsWith<IllegalArgumentException>(field) { ReportCodec.replay(withNul.toString()) }
+        }
+        listOf("workload", "revision", "runtime", "os", "arch", "profile").forEach { field ->
+            val withEmptyMetadata = metadataBase.deepCopy()
+            withEmptyMetadata.put(field, "")
+            assertFailsWith<IllegalArgumentException>(field) { ReportCodec.replay(withEmptyMetadata.toString()) }
+        }
         assertRejected(validJson) { it.put("extra", true) }
         assertRejected(validJson) { it.putNull("invocation") }
         assertRejected(validJson) { it.putNull("revision") }

@@ -1,2 +1,2 @@
-cargo build
-cargo test
+cargo build --locked
+cargo test --locked

@@ -1,1 +1,1 @@
-cargo test -p huffman-compression -- --nocapture
+cargo test --locked -p huffman-compression -- --nocapture

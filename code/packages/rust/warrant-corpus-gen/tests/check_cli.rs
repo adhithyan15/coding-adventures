@@ -634,14 +634,14 @@ fn exit_status_table_success_drift_refusal_usage() {
     fs::write(&corpus, &good).unwrap();
     fs::remove_file(out.join("cases.tfv")).unwrap();
     assert_eq!(run_in(here, ok, &out, &["--check"]).0, 1, "a missing file is listed as drift");
-    // refusal: a level beyond what is evaluated (arithmetic.warrant: its `ir.seq` constructs are
-    // reserved), write and --check
-    let fixed = "code/specs/arithmetic.warrant";
+    // refusal: a bound the document breaks (a claim with more than 8 binders: the fixture has nine; it
+    // replaced arithmetic.warrant, whose nine-binder claim VER04r D76 split), write and --check
+    let fixed = "tests/fixtures/nine_binders.warrant";
     let o9 = d.join("o9");
     for extra in [&[][..], &["--check"][..]] {
-        let (c, e) = run_in(&root(), fixed, &o9, extra);
-        assert_eq!(c, 2, "a level refusal {extra:?}: {e}");
-        assert!(e.contains("level"), "{e}");
+        let (c, e) = run_in(here, fixed, &o9, extra);
+        assert_eq!(c, 2, "a refusal {extra:?}: {e}");
+        assert!(e.contains("limit"), "{e}");
     }
     assert!(!o9.exists(), "nothing is written for a refusal");
     // refusal: a profile error, in write and in --check mode (a refusal, never a drift)

@@ -389,10 +389,12 @@ fn root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../..")
 }
 
-/// The real binary, on a document beyond what is generated (`arithmetic.warrant`: `ir.data` lowers since
-/// S11b, all 63 claims, and `generate` refuses it until S11c-2): refused naming the level, nothing is
-/// written.  (`vos-sched-any.warrant`, which this test used while `ir.data` was a lowering refusal, is refused
-/// by the `W0701` rule of an example now that it lowers.)  (A refusal exits 2, the oracle's convention; 1 is reserved for a `--check` drift.)
+/// The real binary, on a document the generator refuses (`tests/fixtures/nine_binders.warrant`: one claim with nine
+/// binders, and a suite has at most eight, VER04r 5.3): refused, nothing is written.  (This test used
+/// `arithmetic.warrant` while its `ripple_carry_adder_with_carry_4_bit_exhaustive` claim had nine binders; VER04r
+/// D76 split that claim, so the refusal is pinned on a small fixture.  Before that it used `vos-sched-any.warrant`,
+/// refused for `ir.data` while that was a lowering refusal.)  (A refusal exits 2, the oracle's convention; 1 is
+/// reserved for a `--check` drift.)
 #[test]
 fn the_binary_refuses_a_document_beyond_the_evaluated_levels_and_writes_nothing() {
     let bin = env!("CARGO_BIN_EXE_warrant-corpus-gen");
@@ -406,7 +408,7 @@ fn the_binary_refuses_a_document_beyond_the_evaluated_levels_and_writes_nothing(
         let mut cmd = Command::new(bin);
         cmd.current_dir(root()).args([
             "--warrant",
-            "code/specs/arithmetic.warrant",
+            "code/packages/rust/warrant-corpus-gen/tests/fixtures/nine_binders.warrant",
             "--profile",
             profile.to_str().unwrap(),
             "--out",
@@ -423,7 +425,8 @@ fn the_binary_refuses_a_document_beyond_the_evaluated_levels_and_writes_nothing(
             String::from_utf8_lossy(&r.stderr)
         );
         let e = String::from_utf8_lossy(&r.stderr);
-        assert!(e.contains("level [ir.data]"), "{e}");
+        // refused for the bound its nine-binder claim breaks (VER04r 5.3)
+        assert!(e.contains("more than 8 binders"), "{e}");
         assert!(!out.exists(), "nothing is written for a refused document");
     }
     let _ = fs::remove_dir_all(dir);

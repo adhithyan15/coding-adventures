@@ -1,1 +1,1 @@
-cargo test -p wasm-opcodes -- --nocapture
+cargo test --locked -p wasm-opcodes -- --nocapture

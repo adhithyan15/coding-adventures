@@ -19,8 +19,9 @@
 //! The 16.2 scan is independent of lowering on purpose: a claim over a `List<Bytes>` is
 //! the reserved `ir.list` and is refused at lowering (S11b; it was `ir.data` before), but S10 still
 //! needs to know it also touches item 1/2.  Since S11b the census counts what **lowers**: the
-//! `ir.data` adopters (arithmetic, logic-gates) are `ok` here although `generate` still refuses them
-//! (VER04r 16.14 R37, until S11c-2).  [`render`] prints the report as text; `tests/census.rs` prints it for the eleven
+//! `ir.data` adopters (arithmetic, logic-gates) are `ok` here (S11c-2 evaluates `ir.data`, VER04r 16.14 R37; arithmetic
+//! used to break the eight-binder bound).  Arithmetic was `emittable()` by census, and `generate` refused it until the
+//! adopter split its nine-binder claim (VER04r D76, R75), so arithmetic generates now.  [`render`] prints the report as text; `tests/census.rs` prints it for the eleven
 //! adopters that bind `gen_evidence` and pins the facts the README quotes.
 
 use std::collections::BTreeMap;

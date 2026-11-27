@@ -309,13 +309,10 @@ pub fn parse_ruby_at(
         .with_max_depth(depth)
         .parse()
         .map_err(|error| {
-            // The parser reports its depth guard as an ordinary error: either
-            // its dedicated message, or (when an enclosing optional or
-            // repetition backtracked past the refusal) a furthest-failure
-            // message whose expected terminal is the guard's marker. Both
-            // are the budget, not a syntax error.
-            if error.message.starts_with("input nests deeper than the supported limit")
-                || error.message.contains("input within the supported nesting limit")
+            // Depth exhaustion is fail-closed in the parser and flagged
+            // structurally (never by matching the message, which echoes
+            // untrusted source text). It is the budget, not a syntax error.
+            if error.is_depth_exceeded()
             {
                 RubyFrontendError::Budget {
                     release: release.to_string(),

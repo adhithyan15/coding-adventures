@@ -85,6 +85,7 @@ Iso-BuildAndRun -Lang c -Name ring-tests -Sources @('tests\ring_test.c', 'src\ri
 | Variable        | Meaning                                                        | Default |
 | --------------- | ------------------------------------------------------------- | ------- |
 | `ISO_REQUIRE`   | space-separated compilers that MUST be present (else fail)     | *(none)* |
+| `ISO_CLANG_CL`  | selected absolute `clang-cl.exe` from MSVC setup; invalid explicit paths fail | PATH lookup |
 | `ISO_INCLUDE`   | space-separated include dirs (each becomes `-I`/`/I`)          | *(none)* |
 | `ISO_LINK_ARGS` | space-separated linker args; POSIX args follow source inputs, Windows args follow `/link` | *(none)* |
 | `ISO_CSTD`      | C standard                                                     | `c17`   |

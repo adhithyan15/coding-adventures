@@ -1,1 +1,1 @@
-cargo test --manifest-path ..\Cargo.toml -p md5-c
+cargo test --locked --manifest-path ..\Cargo.toml -p md5-c

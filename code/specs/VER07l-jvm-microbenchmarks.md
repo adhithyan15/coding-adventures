@@ -37,6 +37,13 @@ The default maximum batch is 65,536, not an upper bound: every positive signed
 allocation limits. Pair counts are 1 through 10,000. The clock and checksum
 domain is signed 64-bit; all JSON integer fields preserve exact source values.
 
+The benchmark-specific analyzer accepts at most 10,000 pairs and checks the
+bound before materializing the ratio sample. This limit applies to
+`microbenchmark.analyze` and report replay; it does not impose a size ceiling
+on the reusable rank-statistics functions, which retain their generic
+non-empty-sample contract. `max_batch` remains any positive signed 64-bit
+value, subject to checked workload arithmetic and the supplied callbacks.
+
 Analysis converts both integer durations to binary64 before division and uses
 the shared rank-statistics package. Reports contain only the portable fields
 from VER07d (`config`, `batch_size`, `pairs`, `analysis`) and its documented
@@ -47,6 +54,10 @@ U+000D); Unicode whitespace such as U+2003 is allowed. Replay accepts such
 identifiers as metadata and rejects all-ASCII-whitespace or NUL-containing
 identifiers, while validating the report without dispatching or executing the
 workload.
+Replay input is at most 4 MiB of UTF-8, 128 levels deep, and 65,536 JSON
+values. Reject oversized replay files before reading their contents and reject
+oversized strings before parsing. Enforce the pair-count bound before
+materializing ratios or report rows.
 The included CLI continues to run and label only its indexed-array workload.
 Replay validates the complete report, recomputes analysis, and rejects
 unbalanced pair-order schedules. JSON integer tokens must round-trip through the
@@ -73,3 +84,12 @@ published to a registry as part of this work.
 Java targets JDK 21. Kotlin targets JVM 21. Both use the repository's Gradle
 package conventions, including redirected Gradle output directories so the
 lowercase output directory does not collide with the required `BUILD` script.
+
+The explicit package capability profiles are pure empty profiles for both
+rank-statistics packages. Each microbenchmark package declares
+`time:read:*` for its public default clock, `fs:read:*` for file-based report
+replay, and `stdout:write:*` for command output and diagnostics. The `stdout`
+capability covers stderr too. Command-line arguments are not environment
+access; JVM system properties used to describe the runtime are not environment
+variables. `System.exit` and `exitProcess` end the current CLI process; they do
+not execute or signal another process and do not add a `proc` capability.

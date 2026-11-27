@@ -1,1 +1,1 @@
-cargo test -p executor-protocol -- --nocapture
+cargo test --locked -p executor-protocol -- --nocapture

@@ -21,6 +21,17 @@ Both durations are converted to binary64 only when forming their ratio, as
 VER07d requires. Statistical samples remain finite binary64 values as specified
 by VER07c.
 
+The generic rank-statistics API follows VER07c's native-input length contract
+and does not impose an application-level sample-size cap; callers are
+responsible for choosing resource-appropriate input sizes. The public
+microbenchmark `analyze` API accepts at most 10,000 pairs; after checking that
+the input is a nonempty array and that confidence and factor are valid, it
+rejects excess length before mapping or validating pair members. A size error
+therefore takes precedence over malformed members, while invalid scalar
+arguments take precedence over a size error.
+Report replay validates the bounded config and checks the raw pair array length
+against it before traversing pair fields or recomputing analysis.
+
 ## Repository dependency identity
 
 `microbenchmark` is independently publishable and declares an exact semver
@@ -47,3 +58,14 @@ including ties and confidence cutoffs. Generated property tests use fixed seeds
 and bounded local generators. Collector tests inject a clock and check warmup,
 calibration, balanced order, checksum validation, errors, and report replay.
 The array command checks its known checksum without a timing threshold.
+
+## Repository compiler inventory
+
+Both VER07c and VER07f TypeScript packages are standalone emitting projects
+with explicit `src` and `dist` roots, so together they add two projects and two
+isolated emitters to the repository's exact TypeScript portability census. The
+microbenchmark's shipped CLI and collector under `src` use Node APIs, so it
+also adds one Node API/provider project; its tests are outside the compiler's
+`rootDir`. Each package contributes one compiler lock. The repository
+portability test owns the exact aggregate totals and must be updated when the
+tracked TypeScript project set changes.

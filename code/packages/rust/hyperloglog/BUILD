@@ -1,1 +1,1 @@
-cargo test -p hyperloglog -- --nocapture
+cargo test --locked -p hyperloglog -- --nocapture

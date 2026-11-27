@@ -2,6 +2,8 @@
 
 - Reject duplicate JSON object members in raw report ingress across JSON gem versions, including escaped aliases.
 - Exclude only StandardRB Layout/EndOfLine in the Windows build front to match the repository LF policy.
+
+- Reject more than 10,000 pairs in public analysis before mapping pair fields.
 - Use the shared `arch` metadata field and omit private checksum metadata so
   native CLI reports replay in the other language implementations.
 - Validate present workload metadata before projecting it from core report

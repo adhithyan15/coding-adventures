@@ -1,1 +1,1 @@
-cargo test -p board-vm-device -- --nocapture
+cargo test --locked -p board-vm-device -- --nocapture

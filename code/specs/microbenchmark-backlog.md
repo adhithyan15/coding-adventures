@@ -12,7 +12,7 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB00 | P0 | Establish shared pairing and verdict semantics and the portable fixture. Land reusable Go and Python `rank-statistics` packages with independent exact validation and fuzz coverage. | None | Merged in [#20004](https://github.com/adhithyan15/coding-adventures/pull/20004) |
 | MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
 | MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Merged in [#20064](https://github.com/adhithyan15/coding-adventures/pull/20064) |
-| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01, MB03 | Reviewed locally; [#20073](https://github.com/adhithyan15/coding-adventures/pull/20073) awaiting current-head CI |
+| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01, MB03 | [#20073](https://github.com/adhithyan15/coding-adventures/pull/20073) current-head CI blocked by Rust capability manifests: rank-statistics is schema-v1; microbenchmark awaits signed approval for CLI time/stdout capabilities before its package-wide profile can be declared. |
 | MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Reviewed locally; draft [#20080](https://github.com/adhithyan15/coding-adventures/pull/20080) awaits parent integration |
 | MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Implemented and locally validated; review corrections completed |
 | MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | POSIX BUILD portability repair implemented; Windows BUILD and wide-cutoff tests validated locally; Linux validation awaits CI |
@@ -80,6 +80,19 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
   the fixture without the repository fixture directory.
 - MB02 is the active item. Its four native ports extend the fixture
   registration and replay checks. MB04 remains queued behind MB02.
+- Rust `rank-statistics` uses only caller-provided in-memory values and has an
+  explicit empty schema-v1 profile. The Rust `microbenchmark` package also ships
+  a CLI that reads the host clock and writes stdout. Its package-root profile
+  therefore needs `time.read` and `stdout.write` declarations with scope settled
+  by capability review; schema policy requires
+  hardware-key-signed approval for non-empty profiles. No matching approval is
+  present in the repository. Do not declare the package empty or add unsigned
+  grants; resolve the approval before the [full-schema CI gate](https://github.com/adhithyan15/coding-adventures/actions/runs/45807004828/job/139875431748) can pass.
+- The [Windows Venture acceptance step](https://github.com/adhithyan15/coding-adventures/actions/runs/45807004828/job/139875432412) in CI failed to resolve
+  `vitest` after npm installed 118 packages. The preceding Windows run passed
+  that same step with the same install count. The available logs do not
+  establish the reason for the missing command. Recheck the step on the next
+  CI run before changing Venture or shared toolchain setup.
 
 - MB03 and the Windows native clock repair [#20061](https://github.com/adhithyan15/coding-adventures/pull/20061)
   merged with their required CI gates passing on November 25, 2026. The local

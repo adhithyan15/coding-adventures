@@ -18,6 +18,9 @@ and `JSON.rawJSON` to preserve signed-64-bit integer fields exactly; batch
 counts, checksums, clock ticks, and raw pair durations use `bigint` in memory.
 Only candidate and baseline durations are converted to binary64 for ratio
 analysis.
+The public `analyze` API accepts at most 10,000 pairs. It checks input shape
+and scalar options before rejecting an oversized list, and does so before
+mapping or validating pair members.
 
 The portable pair-analysis fixture is included under `testdata/` so packaged
 conformance tools can replay the same cases. The published manifest declares

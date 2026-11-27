@@ -1,1 +1,1 @@
-cargo test -p image-codec-raf -- --nocapture
+cargo test --locked -p image-codec-raf -- --nocapture

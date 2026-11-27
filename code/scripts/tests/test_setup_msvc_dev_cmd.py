@@ -139,6 +139,16 @@ class GitHubEnvironmentFileTests(unittest.TestCase):
 
 
 class ClangClSelectionTests(unittest.TestCase):
+    def test_selected_executable_is_absolute_and_preserves_spaces(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="Visual Studio LLVM ") as directory:
+            selected = msvc.selected_clang_cl_executable((directory, (22, 1, 3)))
+            self.assertEqual(str((Path(directory) / "clang-cl.exe").resolve()), selected)
+            with tempfile.TemporaryDirectory() as output_directory:
+                destination = Path(output_directory) / "github-env"
+                msvc.append_github_environment(destination, {"ISO_CLANG_CL": selected})
+                self.assertEqual(f"ISO_CLANG_CL={selected}\n", destination.read_text())
+        self.assertIsNone(msvc.selected_clang_cl_executable(None))
+
     def test_parses_clang_version_output(self) -> None:
         self.assertEqual(
             (22, 1, 0),
@@ -230,6 +240,46 @@ class ClangClSelectionTests(unittest.TestCase):
                     has_clang_cl=lambda _: True,
                     probe_version=lambda _: (21, 1, 3),
                 )
+
+
+class WindowsMixedToolchainWorkflowTests(unittest.TestCase):
+    def test_swift_paths_are_appended_without_preempting_msvc_or_llvm(self) -> None:
+        repository = Path(__file__).resolve().parents[3]
+        workflow = (repository / ".github/workflows/ci.yml").read_text(
+            encoding="utf-8"
+        )
+        marker = "      - name: Set up Swift (Windows)\n"
+        self.assertIn(marker, workflow)
+        swift_step = workflow.split(marker, 1)[1].split("\n      - name:", 1)[0]
+
+        # GITHUB_PATH prepends paths in subsequent steps. Swift's installer
+        # therefore updates the existing ordered PATH through GITHUB_ENV,
+        # keeping MSVC bin and the selected LLVM bin ahead of Swift.
+        self.assertNotIn("$env:GITHUB_PATH", swift_step)
+        self.assertIn('$env:Path = "$env:Path;$($newPathEntries -join \';\')"', swift_step)
+        self.assertIn('$env:Path = "$env:Path;$toolchainBin"', swift_step)
+        self.assertIn('"PATH=$env:Path" | Out-File -FilePath $env:GITHUB_ENV', swift_step)
+        self.assertLess(
+            swift_step.index('$env:Path = "$env:Path;$($newPathEntries -join \';\')"'),
+            swift_step.index('"PATH=$env:Path" | Out-File'),
+        )
+        self.assertLess(
+            swift_step.index('$env:Path = "$env:Path;$toolchainBin"'),
+            swift_step.index('"PATH=$env:Path" | Out-File'),
+        )
+
+        # The dedicated Swift build, affected package build, and full build
+        # all observe the exported PATH. MSVC setup occurs earlier and its
+        # precedence is preserved because Swift no longer writes GITHUB_PATH.
+        msvc_setup = workflow.index("- name: Set up MSVC (Lua + C/C++ + Venture + LANG)")
+        swift_setup = workflow.index(marker)
+        swift_build = workflow.index("- name: Build and test affected Swift packages on Windows")
+        affected_build = workflow.index("- name: Build and test affected packages")
+        full_build = workflow.index("- name: Full build on main merge")
+        self.assertLess(msvc_setup, swift_setup)
+        self.assertLess(swift_setup, swift_build)
+        self.assertLess(swift_setup, affected_build)
+        self.assertLess(swift_setup, full_build)
 
 
 if __name__ == "__main__":

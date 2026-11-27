@@ -112,6 +112,7 @@ class Work:
 
 DEFAULT_CHUNK_SIZE = 1 << 16
 MAX_CHUNKS = 4096
+MAX_BINDERS = 8  # VER04r 5.3 and 14: a claim has 0 to 8 binders (R75)
 DEFAULT_BUDGET = 1 << 24
 
 
@@ -215,6 +216,8 @@ class SuitePlan:
         self.prog = prog
         self.suite = suite
         self.chunk_size = chunk_size
+        if len(suite.binders) > MAX_BINDERS:  # VER04r 5.3, 14 "0 to 8", R75: before any descriptor
+            raise OracleError("limit", "a claim has more than 8 binders (VER04r 5.3)")
         descs = [descriptor_for(spec, ty) for _, ty in suite.binders]
         # [D26], R10: a ``Nat`` binder that is directly a shift count has the 73-value ``nat_shift``
         # leaf; decided from the claim *body* (never ``admit``), before any budget demotion.

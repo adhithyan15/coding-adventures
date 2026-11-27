@@ -3,9 +3,8 @@ package com.codingadventures.microbenchmark;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +48,7 @@ public final class ArrayMicrobenchmark {
                 }
             }
             if (replayPath != null) {
-                Report report = ReportCodec.replay(Files.readString(Path.of(replayPath), StandardCharsets.UTF_8));
+                Report report = ReportCodec.replay(ReportCodec.readFile(Path.of(replayPath)));
                 write(stdout, ("replay valid: " + report.pairs().size() + " pairs, " + report.analysis().verdict() + "\n").getBytes(StandardCharsets.UTF_8));
                 return 0;
             }

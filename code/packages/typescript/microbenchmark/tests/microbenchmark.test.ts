@@ -22,6 +22,14 @@ describe("paired microbenchmarks", () => {
     }
   });
 
+  it("bounds public analysis before inspecting an oversized pair list", () => {
+    const pair = { baseline_ns: 1, candidate_ns: 1, order: "baseline-first" as const };
+    expect(analyze(Array(10_000).fill(pair)).ratio).toBe(1);
+    const malformed = { baseline_ns: 0, candidate_ns: 0, order: "invalid" as const };
+    expect(() => analyze(Array(10_001).fill(malformed))).toThrow(/at most 10000/);
+    expect(() => analyze(Array(10_001).fill(malformed), 0)).toThrow(/confidence_percent/);
+  });
+
   it("collects a seeded, balanced schedule and replays losslessly", () => {
     let tick = 0n;
     const config: Config = { ...defaults(), pairs: 7, target_ns: 1n, max_batch: 8n, seed: 71n };

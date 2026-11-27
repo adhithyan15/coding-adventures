@@ -1,1 +1,1 @@
-cargo test -p image-codec-bmp -- --nocapture
+cargo test --locked -p image-codec-bmp -- --nocapture

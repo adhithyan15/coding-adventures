@@ -37,7 +37,11 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'microbenchmark pack failed' }
     dotnet restore consumer/Consumer.csproj --configfile $config --packages $packages --verbosity quiet
     if ($LASTEXITCODE -ne 0) { throw 'installed consumer restore failed' }
-    dotnet run --project consumer/Consumer.csproj --no-restore --verbosity quiet
+    $nativeReport = & dotnet run --project cli/CodingAdventures.ArrayMicrobenchmark.CSharp.csproj --verbosity quiet -- --pairs 40 --revision installed-consumer
+    if ($LASTEXITCODE -ne 0) { throw 'native 40-pair benchmark failed' }
+    $nativeJson = [string]::Join([Environment]::NewLine, [string[]]$nativeReport)
+    if ([string]::IsNullOrWhiteSpace($nativeJson)) { throw 'native benchmark returned no report' }
+    dotnet run --project consumer/Consumer.csproj --no-restore --verbosity quiet -- $nativeJson
     if ($LASTEXITCODE -ne 0) { throw 'installed consumer execution failed' }
 }
 finally {

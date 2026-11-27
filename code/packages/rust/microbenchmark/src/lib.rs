@@ -263,6 +263,13 @@ impl Report {
         // The executable adds descriptive metadata to the same report object.
         // Remove only those documented fields; serde rejects everything else.
         if let Some(object) = document.as_object_mut() {
+            if object
+                .get("pairs")
+                .and_then(serde_json::Value::as_array)
+                .is_some_and(|pairs| pairs.len() > MAX_PAIRS)
+            {
+                return Err(error("report pair count exceeds 10000"));
+            }
             if let Some(workload) = object.get("workload") {
                 let identifier = workload
                     .as_str()
@@ -846,6 +853,15 @@ mod tests {
             !calls.borrow().contains(&2),
             "overflow must be detected before the oversized batch runs"
         );
+    }
+
+    #[test]
+    fn report_replay_rejects_oversized_raw_pair_array_before_typed_conversion() {
+        let document = serde_json::json!({
+            "pairs": vec![serde_json::Value::Null; MAX_PAIRS + 1]
+        });
+        let error = Report::from_json(&document.to_string()).unwrap_err();
+        assert!(error.to_string().contains("pair count exceeds 10000"));
     }
 
     #[test]

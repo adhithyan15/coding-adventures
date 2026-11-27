@@ -1,1 +1,1 @@
-cargo test -p brotli -- --nocapture
+cargo test --locked -p brotli -- --nocapture

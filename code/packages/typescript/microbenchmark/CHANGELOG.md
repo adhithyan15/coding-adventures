@@ -1,6 +1,8 @@
 # Changelog
 
 - Reject duplicate JSON object members in raw report ingress, including escaped aliases.
+
+- Reject more than 10,000 pairs in public analysis before mapping pair fields.
 - Reject inherited Object member names as CLI options; only explicitly
   declared flags may update benchmark configuration.
 - Validate present workload metadata, including NUL and Unicode scalar

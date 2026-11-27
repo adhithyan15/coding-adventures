@@ -1,1 +1,1 @@
-cargo test -p affine2d -- --nocapture
+cargo test --locked -p affine2d -- --nocapture
