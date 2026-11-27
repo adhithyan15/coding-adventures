@@ -669,7 +669,7 @@ func NewRiscVCore(config core.CoreConfig, memorySize int) (*core.Core, error) {
 // reports selected data faults as terminal outcomes; it does not enter a
 // privileged trap handler or model MMIO.
 func NewRiscVCoreWithPreciseMemory(config core.CoreConfig, memorySize int) (*core.Core, error) {
-	res, _ := StartNew[riscvCoreResult]("riscv-simulator.NewRiscVCoreWithPreciseMemory", riscvCoreResult{},
+	res, err := StartNew[riscvCoreResult]("riscv-simulator.NewRiscVCoreWithPreciseMemory", riscvCoreResult{},
 		func(op *Operation[riscvCoreResult], rf *ResultFactory[riscvCoreResult]) *OperationResult[riscvCoreResult] {
 			c, err := NewRiscVCore(config, memorySize)
 			if err != nil {
@@ -680,7 +680,7 @@ func NewRiscVCoreWithPreciseMemory(config core.CoreConfig, memorySize int) (*cor
 			}
 			return rf.Generate(true, false, riscvCoreResult{c: c})
 		}).GetResult()
-	return res.c, res.err
+	return res.c, err
 }
 
 // NewRiscVCoreWithSparseMemory creates a D05 Core configured for RISC-V with

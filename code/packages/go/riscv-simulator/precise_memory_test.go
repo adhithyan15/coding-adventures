@@ -181,6 +181,24 @@ func TestPreciseWordMemoryMustBeEnabledBeforeStepping(t *testing.T) {
 	}
 }
 
+func TestPreciseWordMemoryRequiresHazardDetection(t *testing.T) {
+	config := core.SimpleConfig()
+	config.HazardDetection = false
+	legacy, err := NewRiscVCore(config, 256)
+	if err != nil {
+		t.Fatalf("legacy constructor rejected hazard-disabled config: %v", err)
+	}
+	if legacy.Config().HazardDetection {
+		t.Fatal("legacy constructor changed hazard-disabled config")
+	}
+	if err := legacy.EnablePreciseWordMemory(); err == nil {
+		t.Fatal("Core.EnablePreciseWordMemory accepted a config without hazard detection")
+	}
+	if _, err := NewRiscVCoreWithPreciseMemory(config, 256); err == nil {
+		t.Fatal("precise-memory constructor accepted a config without fault-selection hazards")
+	}
+}
+
 func TestPreciseFaultPreservesOlderEffectsAndDoesNotRetireFaultToken(t *testing.T) {
 	program := Assemble([]uint32{
 		EncodeAddi(3, 0, 42),

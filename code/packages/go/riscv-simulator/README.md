@@ -26,9 +26,9 @@ after older instructions drain. The selected fault token is not counted as a
 successful retirement. Effective addresses wrap modulo 2^32 before alignment
 and bounds checks.
 
-This mode is opt-in and requires the classic IF/ID/EX/MEM/WB stage order. It
-does not implement privileged traps, MMIO, byte/halfword operations, fetch
-faults, or general rollback. Existing constructors retain their existing
+This mode is opt-in and requires hazard detection and the classic
+IF/ID/EX/MEM/WB stage order. It does not implement privileged traps, MMIO,
+byte/halfword operations, fetch faults, or general rollback. Existing constructors retain their existing
 MEM-time store behavior. `Core.PreciseStoreReceipts()` returns copies of
 successful WB store commits; `Core.PreciseFaultOutcome()` returns the terminal
 fault identity when one was selected.

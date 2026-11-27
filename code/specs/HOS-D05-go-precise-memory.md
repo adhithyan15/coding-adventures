@@ -3,8 +3,8 @@
 ## Purpose and boundary
 
 This proposal adds a second, explicit execution mode to the Go RV32I classic
-five-stage core for synchronous data-memory faults and retirement-ordered
-effects. The existing constructors and default pipeline keep their current
+five-stage core, with hazard detection enabled, for synchronous data-memory
+faults and retirement-ordered effects. The existing constructors and default pipeline keep their current
 behavior. The initial mode covers aligned, in-range `LW` and `SW` to flat RAM
 and terminal access-fault outcomes. It does not implement privileged traps,
 CSR changes, device/MMIO rollback, interrupt delivery, instruction-fetch
@@ -42,8 +42,11 @@ Three minimal-looking alternatives were considered:
 
 The selected direction is an additive opt-in precise-memory path on the
 classic Go RV32I adapter, using an additive pipeline fault action/outcome and
-leaving the old callback signatures and constructors intact. Address
-validation is a pure EX-stage preflight. A detected fault is carried by its
+leaving the old callback signatures and constructors intact. The mode requires
+hazard detection because the selected-fault transition uses that callback to
+suppress younger work; the constructor rejects precise mode when it is disabled,
+while legacy constructors continue to accept hazard-disabled configurations.
+Address validation is a pure EX-stage preflight. A detected fault is carried by its
 token; the following cycle selects it before younger work enters EX, squashes
 younger IF/ID tokens without fetching a replacement, and lets older MEM/WB
 tokens drain. The faulting token advances to WB as the ordered fault-selection

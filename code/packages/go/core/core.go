@@ -221,6 +221,9 @@ func (c *Core) EnablePreciseWordMemory() error {
 			if c.cycle != 0 || c.pipeline.Stats().TotalCycles != 0 {
 				return rf.Fail(struct{}{}, errors.New("precise word memory must be enabled before stepping the core"))
 			}
+			if !c.config.HazardDetection {
+				return rf.Fail(struct{}{}, errors.New("precise word memory requires hazard detection to be enabled"))
+			}
 			pipelineConfig := c.config.Pipeline
 			if len(pipelineConfig.Stages) == 0 {
 				pipelineConfig = cpupipeline.Classic5Stage()
