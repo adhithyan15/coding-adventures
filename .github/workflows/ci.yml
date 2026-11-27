@@ -745,79 +745,6 @@ jobs:
       - name: Install Python contract dependencies
         run: python3 -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
 
-      # Load the verifier implementation from the PR base, never from the
-      # candidate checkout. On the infrastructure's first rollout, the base
-      # has no verifier yet; that path is deliberately only a diagnostic and
-      # rejects every canonical manifest change until a later PR can use the
-      # trusted base implementation.
-      - name: Verify capability profile approvals
-        if: github.event_name == 'pull_request'
-        env:
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          python3 - "$PR_BASE_SHA" "$PR_HEAD_SHA" <<'PY'
-          import os
-          import subprocess
-          import sys
-          import tempfile
-
-          base, head = sys.argv[1:]
-          verifier = "code/scripts/capability_approval_gate.py"
-          present = subprocess.run(
-              ["git", "cat-file", "-e", f"{base}:{verifier}"],
-              stdout=subprocess.DEVNULL,
-              stderr=subprocess.DEVNULL,
-              check=False,
-          ).returncode == 0
-          if present:
-              source = subprocess.run(
-                  ["git", "show", f"{base}:{verifier}"], check=True, capture_output=True
-              ).stdout
-              with tempfile.NamedTemporaryFile(prefix="capability-gate-", suffix=".py") as trusted:
-                  trusted.write(source)
-                  trusted.flush()
-                  subprocess.run(
-                      [
-                          sys.executable, trusted.name, "verify", "--repo-root", ".",
-                          "--base-ref", os.environ.get("GITHUB_BASE_REF", "main"),
-                          "--base-commit", base, "--head-commit", head,
-                      ],
-                      check=True,
-                  )
-              raise SystemExit(0)
-
-          changed = subprocess.run(
-              ["git", "diff", "--no-renames", "--name-only", "-z", base, head,
-               "--", "code/packages", "code/programs"],
-              check=True,
-              capture_output=True,
-          ).stdout
-          canonical_manifests = []
-          for raw_path in changed.split(b"\0"):
-              if not raw_path:
-                  continue
-              path = raw_path.decode("utf-8", "strict")
-              parts = path.split("/")
-              if (len(parts) == 5 and parts[0] == "code"
-                      and parts[1] in {"packages", "programs"}
-                      and parts[4] == "required_capabilities.json"):
-                  canonical_manifests.append(path)
-          if canonical_manifests:
-              print(
-                  "::error title=Capability approval bootstrap::The PR base has no trusted "
-                  "capability verifier yet; capability manifests cannot change in this rollout: "
-                  + ", ".join(sorted(canonical_manifests)),
-                  file=sys.stderr,
-              )
-              raise SystemExit(1)
-          print(
-              "::notice title=Capability approval bootstrap::No capability manifest changed. "
-              "This first-rollout diagnostic is not an enforced approval gate; repository "
-              "owners must configure the stable CI check as required."
-          )
-          PY
-
       # The repository-source-input boundary lists every package with some
       # property (every Rust crate that loads rust_library.star, every
       # TypeScript workspace root, ...), and its digest is pinned in about 27
@@ -1207,6 +1134,125 @@ jobs:
           python -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
           python code/scripts/language_frontend_fixtures.py
           python -m unittest discover -s code/scripts/tests -p 'test_language_frontend_fixtures.py'
+
+  # This PR-only job runs before any repository Python code. The checkout is
+  # treated as untrusted Git data; isolated Python loads only base-pinned
+  # dependencies and the verifier source extracted from the exact PR base.
+  capability-approval:
+    name: Capability profile approvals
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout the exact tested merge candidate
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: Set up trusted Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13.17'
+
+      - name: Install base-pinned verifier dependencies into runner temp
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          base_constraints="$RUNNER_TEMP/capability-python-constraints.txt"
+          git show "$PR_BASE_SHA:code/specs/data/third-party-dependencies/python-constraints.txt" > "$base_constraints"
+          python3 -I -m pip install \
+            --disable-pip-version-check --quiet --no-cache-dir --isolated --require-hashes \
+            --constraint "$base_constraints" \
+            --target "$RUNNER_TEMP/capability-deps" \
+            jsonschema==4.26.0
+
+      - name: Verify capability profile approvals in isolated Python
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_TESTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python3 -I - "$PR_BASE_SHA" "$PR_HEAD_SHA" "$PR_BASE_REF" "$PR_TESTED_SHA" "$RUNNER_TEMP/capability-deps" <<'PY'
+          import runpy
+          import subprocess
+          import sys
+          import tempfile
+
+          base, pr_head, base_ref, tested, dependencies = sys.argv[1:]
+          checked_out = subprocess.run(
+              ["git", "rev-parse", "HEAD"], check=True, capture_output=True, text=True
+          ).stdout.strip()
+          if checked_out != tested:
+              raise SystemExit("checked-out commit does not match the tested PR merge candidate")
+          parents = subprocess.run(
+              ["git", "rev-list", "--parents", "-n", "1", tested],
+              check=True,
+              capture_output=True,
+              text=True,
+          ).stdout.split()
+          if parents != [tested, base, pr_head]:
+              raise SystemExit("tested candidate parents do not match the exact PR base and head")
+
+          verifier = "code/scripts/capability_approval_gate.py"
+          present = subprocess.run(
+              ["git", "cat-file", "-e", f"{base}:{verifier}"],
+              stdout=subprocess.DEVNULL,
+              stderr=subprocess.DEVNULL,
+              check=False,
+          ).returncode == 0
+          if present:
+              source = subprocess.run(
+                  ["git", "show", f"{base}:{verifier}"], check=True, capture_output=True
+              ).stdout
+              sys.path.insert(0, dependencies)
+              with tempfile.NamedTemporaryFile(prefix="capability-gate-", suffix=".py") as trusted:
+                  trusted.write(source)
+                  trusted.flush()
+                  sys.argv = [
+                      trusted.name, "verify", "--repo-root", ".", "--base-ref", base_ref,
+                      "--base-commit", base, "--pr-head-commit", pr_head,
+                      "--candidate-commit", tested,
+                  ]
+                  runpy.run_path(trusted.name, run_name="__main__")
+              raise SystemExit(0)
+
+          changed = subprocess.run(
+              ["git", "diff", "--no-renames", "--name-only", "-z", base, tested,
+               "--", "code/packages", "code/programs"],
+              check=True,
+              capture_output=True,
+          ).stdout
+          canonical_manifests = []
+          for raw_path in changed.split(b"\0"):
+              if not raw_path:
+                  continue
+              path = raw_path.decode("utf-8", "strict")
+              parts = path.split("/")
+              if (len(parts) == 5 and parts[0] == "code"
+                      and parts[1] in {"packages", "programs"}
+                      and parts[4] == "required_capabilities.json"):
+                  canonical_manifests.append(path)
+          if canonical_manifests:
+              print(
+                  "::error title=Capability approval bootstrap::The PR base has no trusted "
+                  "capability verifier yet; capability manifests cannot change in this rollout: "
+                  + ", ".join(sorted(canonical_manifests)),
+                  file=sys.stderr,
+              )
+              raise SystemExit(1)
+          print(
+              "::notice title=Capability approval bootstrap::No capability manifest changed. "
+              "This first-rollout diagnostic is not an enforced approval gate; repository "
+              "owners must configure the stable CI check as required."
+          )
+          PY
 
   # This gate is independent of package BUILD files. A package cannot silence
   # capability enforcement by editing its own build recipe.
@@ -6643,7 +6689,7 @@ jobs:
   # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, kiln-sandbox, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, swift-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
+    needs: [detect, contracts, capability-approval, ocaml-capability-gate, phy00-phy01-fixture-consumers, kiln-sandbox, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, swift-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -6661,6 +6707,7 @@ jobs:
           EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           DETECT_RESULT: ${{ needs.detect.result }}
           CONTRACTS_RESULT: ${{ needs.contracts.result }}
+          CAPABILITY_APPROVAL_RESULT: ${{ needs['capability-approval'].result }}
           NEURAL_FRAMEWORK_REQUIRED: ${{ needs.detect.outputs.run_neural_framework_conformance }}
           NEURAL_FRAMEWORK_RESULT: ${{ needs['neural-framework-conformance'].result }}
           OCAML_CAPABILITY_RESULT: ${{ needs['ocaml-capability-gate'].result }}
@@ -6712,7 +6759,7 @@ jobs:
             fi
           fi
 
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT kiln_sandbox=$KILN_SANDBOX_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT swift_grammar_regen=$SWIFT_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT capability_approval=$CAPABILITY_APPROVAL_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT kiln_sandbox=$KILN_SANDBOX_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT swift_grammar_regen=$SWIFT_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
           fail=0
           # A selected conformance job may not silently skip: missing training
           # evidence must not become a green required check.
@@ -6720,7 +6767,11 @@ jobs:
             true:success|false:success|false:skipped) ;;
             *) echo "::error::neural framework conformance did not pass (required: $NEURAL_FRAMEWORK_REQUIRED, result: $NEURAL_FRAMEWORK_RESULT)"; fail=1 ;;
           esac
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$KILN_SANDBOX_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$SWIFT_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
+          if [ "$EVENT_NAME" = "pull_request" ] && [ "$CAPABILITY_APPROVAL_RESULT" != "success" ]; then
+            echo "::error::capability approval job must pass for every pull request (result: $CAPABILITY_APPROVAL_RESULT)"
+            fail=1
+          fi
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$CAPABILITY_APPROVAL_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$KILN_SANDBOX_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$SWIFT_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

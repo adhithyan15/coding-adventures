@@ -31,6 +31,10 @@ from referencing import Registry, Resource
 REQUIRED_SCHEMA_PATH = "code/specs/schemas/required_capabilities.schema.json"
 APPROVAL_SCHEMA_PATH = "code/specs/schemas/capability-approval.schema.json"
 RELEASE_GATE_PATH = "code/scripts/release_gate.py"
+CAPABILITY_GATE_PATH = "code/scripts/capability_approval_gate.py"
+PYTHON_CONSTRAINTS_PATH = (
+    "code/specs/data/third-party-dependencies/python-constraints.txt"
+)
 MANIFEST_PREFIXES = ("code/packages/", "code/programs/")
 APPROVAL_PREFIX = "code/specs/capability-approvals/"
 SIGNATURE_NAMESPACE = "coding-adventures-capabilities"
@@ -277,7 +281,7 @@ def approval_path_for_manifest(manifest_path: str) -> str:
 
 
 def _changed_paths(
-    root: str, base_commit: str, head_commit: str, pathspec: str
+    root: str, base_commit: str, candidate_commit: str, pathspec: str
 ) -> set[str]:
     result = _git(
         root,
@@ -286,7 +290,7 @@ def _changed_paths(
         "--name-only",
         "-z",
         base_commit,
-        head_commit,
+        candidate_commit,
         "--",
         pathspec,
     )
@@ -322,6 +326,35 @@ def _tree_oid(root: str, revision: str, package_root: str) -> str | None:
             f"git returned an invalid package tree id for {package_root}",
         )
     return oid
+
+
+def _validate_merge_candidate(
+    repo_root: str,
+    *,
+    base_commit: str,
+    pr_head_commit: str,
+    candidate_commit: str,
+) -> None:
+    """Require GitHub's tested pull-request merge commit with the event parents."""
+    for label, commit in (
+        ("base", base_commit),
+        ("PR head", pr_head_commit),
+        ("tested candidate", candidate_commit),
+    ):
+        if not HEX_OBJECT_ID.fullmatch(commit):
+            raise GateError("REVISION", f"{label} must be a full Git object ID")
+        _git(repo_root, "cat-file", "-e", f"{commit}^{{commit}}")
+    parents_line = (
+        _git(repo_root, "rev-list", "--parents", "-n", "1", candidate_commit)
+        .stdout.decode("ascii", "strict")
+        .split()
+    )
+    expected = [candidate_commit, base_commit, pr_head_commit]
+    if parents_line != expected:
+        raise GateError(
+            "MERGE_CANDIDATE",
+            "tested candidate must be the two-parent merge commit for the exact PR base and head",
+        )
 
 
 def _requires_approval(old: Profile, new: Profile) -> bool:
@@ -489,13 +522,13 @@ def _validate_profile_package(
 
 def _load_candidate_approval(
     root: str,
-    head_commit: str,
+    candidate_commit: str,
     approval_path: str,
     approval_validator: Draft202012Validator,
 ) -> tuple[dict[str, Any], str]:
-    raw = git_blob(root, head_commit, approval_path)
+    raw = git_blob(root, candidate_commit, approval_path)
     signature_raw = git_blob(
-        root, head_commit, approval_path + ".sig", max_size=MAX_SIGNATURE_BYTES
+        root, candidate_commit, approval_path + ".sig", max_size=MAX_SIGNATURE_BYTES
     )
     if raw is None or signature_raw is None:
         raise GateError(
@@ -538,11 +571,34 @@ def _proposal_instructions(
     approval_path: str,
     base_ref: str,
     base_commit: str,
-    head_commit: str,
+    pr_head_commit: str,
+    candidate_commit: str,
 ) -> str:
+    trusted_command = """set -euo pipefail
+temporary="$(mktemp -d)"
+trap 'rm -rf "$temporary"' EXIT
+git show "$1" > "$temporary/capability_approval_gate.py"
+git show "$2" > "$temporary/python-constraints.txt"
+shift 2
+python3 -I -m pip install --disable-pip-version-check --quiet --no-cache-dir \\
+  --isolated --require-hashes --constraint "$temporary/python-constraints.txt" \\
+  --target "$temporary/deps" jsonschema==4.26.0
+python3 -I - "$temporary/deps" "$temporary/capability_approval_gate.py" "$@" <<'PY'
+import runpy
+import sys
+
+dependencies, checker = sys.argv[1:3]
+sys.path.insert(0, dependencies)
+sys.argv = [checker, *sys.argv[3:]]
+runpy.run_path(checker, run_name="__main__")
+PY"""
     command = [
-        "python3",
-        "code/scripts/capability_approval_gate.py",
+        "bash",
+        "-c",
+        trusted_command,
+        "capability-approval-propose",
+        f"{base_commit}:{CAPABILITY_GATE_PATH}",
+        f"{base_commit}:{PYTHON_CONSTRAINTS_PATH}",
         "propose",
         "--repo-root",
         ".",
@@ -552,14 +608,16 @@ def _proposal_instructions(
         base_ref,
         "--base-commit",
         base_commit,
-        "--head-commit",
-        head_commit,
+        "--pr-head-commit",
+        pr_head_commit,
+        "--candidate-commit",
+        candidate_commit,
         "--reason",
         "REPLACE WITH REVIEWED CAPABILITY JUSTIFICATION",
         "--output",
         approval_path,
     ]
-    return " ".join(shlex.quote(part) for part in command)
+    return shlex.join(command)
 
 
 def verify_changes(
@@ -567,18 +625,19 @@ def verify_changes(
     *,
     base_ref: str,
     base_commit: str,
-    head_commit: str,
+    pr_head_commit: str,
+    candidate_commit: str,
     trusted_release_gate: ModuleType | None = None,
     trusted_schema_validators: tuple[Draft202012Validator, Draft202012Validator]
     | None = None,
 ) -> list[str]:
     """Verify changed profiles. Returns a concise list of verified packages."""
-    if not HEX_OBJECT_ID.fullmatch(base_commit) or not HEX_OBJECT_ID.fullmatch(
-        head_commit
-    ):
-        raise GateError("REVISION", "base and head must be full Git object IDs")
-    _git(repo_root, "cat-file", "-e", f"{base_commit}^{{commit}}")
-    _git(repo_root, "cat-file", "-e", f"{head_commit}^{{commit}}")
+    _validate_merge_candidate(
+        repo_root,
+        base_commit=base_commit,
+        pr_head_commit=pr_head_commit,
+        candidate_commit=candidate_commit,
+    )
     if not base_ref or "\n" in base_ref or "\0" in base_ref:
         raise GateError("BASE_REF", "invalid base ref")
 
@@ -589,8 +648,8 @@ def verify_changes(
     else:
         required_validator, approval_validator = trusted_schema_validators
 
-    changed = _changed_paths(repo_root, base_commit, head_commit, "code/packages")
-    changed |= _changed_paths(repo_root, base_commit, head_commit, "code/programs")
+    changed = _changed_paths(repo_root, base_commit, candidate_commit, "code/packages")
+    changed |= _changed_paths(repo_root, base_commit, candidate_commit, "code/programs")
     manifest_paths = sorted(
         path
         for path in changed
@@ -599,7 +658,7 @@ def verify_changes(
         and any(path.startswith(prefix) for prefix in MANIFEST_PREFIXES)
     )
     changed_approval_paths = _changed_paths(
-        repo_root, base_commit, head_commit, APPROVAL_PREFIX.rstrip("/")
+        repo_root, base_commit, candidate_commit, APPROVAL_PREFIX.rstrip("/")
     )
     expected_approval_paths: set[str] = set()
     verified: list[str] = []
@@ -609,7 +668,9 @@ def verify_changes(
         parsed = _manifest_path(path)
         package = _package_name(parsed)
         base_raw = git_blob(repo_root, base_commit, path, max_size=MAX_MANIFEST_BYTES)
-        head_raw = git_blob(repo_root, head_commit, path, max_size=MAX_MANIFEST_BYTES)
+        head_raw = git_blob(
+            repo_root, candidate_commit, path, max_size=MAX_MANIFEST_BYTES
+        )
         if base_raw == head_raw:
             continue
         old = _profile(base_raw, required_validator, f"base {path}")
@@ -622,7 +683,7 @@ def verify_changes(
         _validate_profile_package(old, parsed, f"base {path}")
         _validate_profile_package(new, parsed, f"candidate {path}")
         package_root = _package_root(parsed)
-        package_tree = _tree_oid(repo_root, head_commit, package_root)
+        package_tree = _tree_oid(repo_root, candidate_commit, package_root)
         if new.status == "valid" and package_tree is None:
             raise GateError(
                 "PACKAGE_TREE",
@@ -646,7 +707,7 @@ def verify_changes(
         approval_path = approval_path_for_manifest(path)
         try:
             approval, signature = _load_candidate_approval(
-                repo_root, head_commit, approval_path, approval_validator
+                repo_root, candidate_commit, approval_path, approval_validator
             )
         except GateError as exc:
             if exc.code == "MISSING_APPROVAL":
@@ -655,7 +716,8 @@ def verify_changes(
                     approval_path=approval_path,
                     base_ref=base_ref,
                     base_commit=base_commit,
-                    head_commit=head_commit,
+                    pr_head_commit=pr_head_commit,
+                    candidate_commit=candidate_commit,
                 )
                 raise GateError(
                     exc.code,
@@ -737,12 +799,19 @@ def propose_approval(
     manifest_path: str,
     base_ref: str,
     base_commit: str,
-    head_commit: str,
+    pr_head_commit: str,
+    candidate_commit: str,
     reason: str,
     approved_by: str = "UNSIGNED-PROPOSAL",
     approved_at: str = "1970-01-01T00:00:00Z",
 ) -> bytes:
     """Build canonical unsigned approval bytes for human review and signing."""
+    _validate_merge_candidate(
+        repo_root,
+        base_commit=base_commit,
+        pr_head_commit=pr_head_commit,
+        candidate_commit=candidate_commit,
+    )
     parsed = _manifest_path(manifest_path)
     required_raw = git_blob(
         repo_root, base_commit, REQUIRED_SCHEMA_PATH, max_size=MAX_MANIFEST_BYTES
@@ -758,7 +827,7 @@ def propose_approval(
         f"base {manifest_path}",
     )
     new = _profile(
-        git_blob(repo_root, head_commit, manifest_path),
+        git_blob(repo_root, candidate_commit, manifest_path),
         validator,
         f"candidate {manifest_path}",
     )
@@ -773,7 +842,7 @@ def propose_approval(
             "NO_APPROVAL_REQUIRED",
             "this profile change does not require a signed approval",
         )
-    package_tree = _tree_oid(repo_root, head_commit, _package_root(parsed))
+    package_tree = _tree_oid(repo_root, candidate_commit, _package_root(parsed))
     if new.status == "valid" and package_tree is None:
         raise GateError("PACKAGE_TREE", "candidate package tree is absent")
     document = _expected_approval(
@@ -868,7 +937,8 @@ def _parser() -> argparse.ArgumentParser:
     verify.add_argument("--repo-root", required=True)
     verify.add_argument("--base-ref", required=True)
     verify.add_argument("--base-commit", required=True)
-    verify.add_argument("--head-commit", required=True)
+    verify.add_argument("--pr-head-commit", required=True)
+    verify.add_argument("--candidate-commit", required=True)
     propose = subparsers.add_parser(
         "propose", help="write unsigned approval payload bytes"
     )
@@ -876,7 +946,8 @@ def _parser() -> argparse.ArgumentParser:
     propose.add_argument("--manifest-path", required=True)
     propose.add_argument("--base-ref", required=True)
     propose.add_argument("--base-commit", required=True)
-    propose.add_argument("--head-commit", required=True)
+    propose.add_argument("--pr-head-commit", required=True)
+    propose.add_argument("--candidate-commit", required=True)
     propose.add_argument("--reason", required=True)
     propose.add_argument("--approved-by", default="UNSIGNED-PROPOSAL")
     propose.add_argument("--approved-at", default="1970-01-01T00:00:00Z")
@@ -892,7 +963,8 @@ def main(argv: list[str] | None = None) -> int:
                 args.repo_root,
                 base_ref=args.base_ref,
                 base_commit=args.base_commit,
-                head_commit=args.head_commit,
+                pr_head_commit=args.pr_head_commit,
+                candidate_commit=args.candidate_commit,
             )
             if packages:
                 print(
@@ -909,7 +981,8 @@ def main(argv: list[str] | None = None) -> int:
             manifest_path=args.manifest_path,
             base_ref=args.base_ref,
             base_commit=args.base_commit,
-            head_commit=args.head_commit,
+            pr_head_commit=args.pr_head_commit,
+            candidate_commit=args.candidate_commit,
             reason=args.reason,
             approved_by=args.approved_by,
             approved_at=args.approved_at,

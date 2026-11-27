@@ -951,11 +951,21 @@ that exact invalid file's raw digest and labels its profile status `invalid`. Th
 never supplies guessed previous capabilities. Repairing an invalid base manifest into
 any valid profile requires a signed approval.
 
-CI loads the verifier from the exact pull-request base and supplies candidate artifacts
-as untrusted data. It loads the signer chain and prior manifest from that same base,
-then checks canonical payload bytes, hashes, package tree, package name/path, exact
-profile arrays/status, principal, signature namespace, and hardware user-presence and
-user-verification flags. The verified principal must equal `approved_by`. A missing
+On a pull request, CI uses GitHub's tested merge candidate, not the PR branch head, as
+the candidate tree. It checks that the candidate commit is checked out and has exactly
+the event's base commit and PR head as its ordered parents. It diffs the exact base
+against this tested merge tree for both normal verification and first-rollout
+diagnostics. This means a profile added on the base after the PR branch point is not
+misread as a deletion, and package-tree bindings include same-package changes composed
+from both sides of the merge. A dedicated PR job performs this check without running
+repository Python code beforehand in that job. Its isolated interpreter uses only the base-pinned
+dependencies and verifier source extracted from the exact pull-request base; it treats
+the checkout as untrusted Git data. The owner proposal command uses the same
+base-extracted checker and isolated dependency installation. It loads the signer chain and prior
+manifest from that same base, then checks canonical payload bytes, hashes, package
+tree, package name/path, exact profile arrays/status, principal, signature namespace,
+and hardware user-presence and user-verification flags. The verified principal must
+equal `approved_by`. A missing
 signer registry/key, absent approval pair, malformed or stale payload, namespace
 mismatch, invalid signature, or invalid hardware flags fails closed with a distinct
 diagnostic and an unsigned proposal command. The gate does not bootstrap a key or
@@ -964,11 +974,16 @@ create a signature.
 CI checks only changed profiles and their approval artifacts. Schema-valid changes
 that do not alter a nonempty capability profile or exception need no new signature.
 For an invalid base profile, only a valid repair with a signed approval passes. The
-gate's pull-request workflow step is a required-check candidate, not a protection
+gate's pull-request job is a required-check candidate, not a protection
 against workflow deletion by itself: GitHub owner review for the workflow and an
-externally configured required stable CI check are part of the trust boundary. Until
-those settings are verified, CI output is diagnostic rather than an enforced hardware
-key gate.
+externally configured required stable CI check are part of the trust boundary. The
+owner must also require PR branches to be up to date or use a merge queue that runs this
+check on the current merge candidate before merging. The payload binds the exact base
+commit and candidate package tree; after a base advance, approval payloads are stale,
+CI must rerun, and any still-pending profile transition needs a fresh signature. This
+preserves replay protection even when the base update was unrelated. Until these
+settings are verified, CI output is diagnostic rather than an enforced hardware-key
+gate.
 
 The deterministic proposal generator emits unsigned payload bytes only. The owner
 reviews the exact proposal and uses a key authorized for

@@ -147,13 +147,78 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.git("commit", "-m", message)
         return self.git("rev-parse", "HEAD")
 
+    def merge_candidate(
+        self, pr_head_commit: str, *, base_commit: str | None = None
+    ) -> str:
+        base = base_commit or self.base
+        tree = self.git(
+            "merge-tree", "--write-tree", base, pr_head_commit
+        ).splitlines()[0]
+        return self.git(
+            "commit-tree",
+            tree,
+            "-p",
+            base,
+            "-p",
+            pr_head_commit,
+            "-m",
+            "synthetic pull request merge candidate",
+        )
+
+    def verify_changes(
+        self,
+        repo_root: str | None = None,
+        *,
+        base_ref: str,
+        base_commit: str,
+        head_commit: str,
+        candidate_commit: str | None = None,
+        **kwargs: Any,
+    ) -> list[str]:
+        if repo_root is not None:
+            self.assertEqual(Path(repo_root), self.root)
+        candidate = candidate_commit or self.merge_candidate(
+            head_commit, base_commit=base_commit
+        )
+        return gate.verify_changes(
+            str(self.root),
+            base_ref=base_ref,
+            base_commit=base_commit,
+            pr_head_commit=head_commit,
+            candidate_commit=candidate,
+            **kwargs,
+        )
+
+    def propose_approval(
+        self,
+        repo_root: str | None = None,
+        *,
+        base_ref: str,
+        base_commit: str,
+        head_commit: str,
+        candidate_commit: str | None = None,
+        **kwargs: Any,
+    ) -> bytes:
+        if repo_root is not None:
+            self.assertEqual(Path(repo_root), self.root)
+        candidate = candidate_commit or self.merge_candidate(
+            head_commit, base_commit=base_commit
+        )
+        return gate.propose_approval(
+            str(self.root),
+            base_ref=base_ref,
+            base_commit=base_commit,
+            pr_head_commit=head_commit,
+            candidate_commit=candidate,
+            **kwargs,
+        )
+
     def add_approval(
         self, reason: str = "Approve the monotonic clock requirement."
     ) -> str:
         # Commit the package change first so the approval signs its stable tree.
         package_head = self.commit("change package profile")
-        payload = gate.propose_approval(
-            str(self.root),
+        payload = self.propose_approval(
             manifest_path=MANIFEST,
             base_ref="main",
             base_commit=self.base,
@@ -176,7 +241,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         )
         head = self.commit("add empty profile")
         self.assertEqual(
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -186,12 +251,190 @@ class CapabilityApprovalGateTests(unittest.TestCase):
             [],
         )
 
+    def test_profile_added_only_on_advanced_base_is_not_a_pr_deletion(self) -> None:
+        ancestor = self.base
+        self.git("branch", "pr-head", ancestor)
+        self.git("checkout", "-b", "target", ancestor)
+        self.write(
+            "code/packages/rust/new-profile/required_capabilities.json",
+            manifest([CAPABILITY]).replace(b"rust/demo", b"rust/new-profile"),
+        )
+        advanced_base = self.commit("base adds an unrelated nonempty profile")
+
+        self.git("checkout", "pr-head")
+        self.write("code/packages/rust/demo/PR_CHANGE.md", b"branch-only change\n")
+        pr_head = self.commit("PR changes a different package")
+        self.base = advanced_base
+        candidate = self.merge_candidate(pr_head, base_commit=advanced_base)
+
+        changed = gate._changed_paths(
+            str(self.root), advanced_base, candidate, "code/packages"
+        )
+        self.assertNotIn(
+            "code/packages/rust/new-profile/required_capabilities.json", changed
+        )
+        self.assertEqual(
+            gate.verify_changes(
+                str(self.root),
+                base_ref="main",
+                base_commit=advanced_base,
+                pr_head_commit=pr_head,
+                candidate_commit=candidate,
+                trusted_schema_validators=self.validators(),
+            ),
+            [],
+        )
+
+    def test_same_package_merge_composition_binds_merged_tree_and_survives_approval_commit(
+        self,
+    ) -> None:
+        ancestor = self.base
+        self.git("branch", "pr-head", ancestor)
+        self.git("checkout", "-b", "target", ancestor)
+        self.write(
+            "code/packages/rust/demo/BASE_CHANGE.md", b"target-side package change\n"
+        )
+        advanced_base = self.commit("base updates package source")
+
+        self.git("checkout", "pr-head")
+        self.write(MANIFEST, manifest([CAPABILITY]))
+        self.write(
+            "code/packages/rust/demo/PR_CHANGE.md", b"branch-side package change\n"
+        )
+        pr_head = self.commit("PR changes profile and package source")
+        self.base = advanced_base
+        candidate_before_approval = self.merge_candidate(
+            pr_head, base_commit=advanced_base
+        )
+        candidate_tree = self.git(
+            "rev-parse", f"{candidate_before_approval}:code/packages/rust/demo"
+        )
+        pr_tree = self.git("rev-parse", f"{pr_head}:code/packages/rust/demo")
+        self.assertNotEqual(candidate_tree, pr_tree)
+
+        payload = self.propose_approval(
+            manifest_path=MANIFEST,
+            base_ref="main",
+            base_commit=advanced_base,
+            head_commit=pr_head,
+            candidate_commit=candidate_before_approval,
+            reason="Approve the merged monotonic clock profile.",
+            approved_by="owner@example.test",
+            approved_at="2026-11-27T12:00:00Z",
+        )
+        approval = gate.strict_json_loads(payload, "merged package approval")
+        self.assertEqual(approval["package_tree"], candidate_tree)
+        self.assertIn(
+            "BASE_CHANGE.md", self.git("ls-tree", "-r", candidate_before_approval)
+        )
+        self.assertIn(
+            "PR_CHANGE.md", self.git("ls-tree", "-r", candidate_before_approval)
+        )
+
+        self.write(APPROVAL, payload)
+        self.write(APPROVAL + ".sig", b"test-signature\n")
+        approved_pr_head = self.commit("add approval outside package tree")
+        candidate_after_approval = self.merge_candidate(
+            approved_pr_head, base_commit=advanced_base
+        )
+        self.assertEqual(
+            candidate_tree,
+            self.git(
+                "rev-parse", f"{candidate_after_approval}:code/packages/rust/demo"
+            ),
+        )
+        self.assertEqual(
+            gate.verify_changes(
+                str(self.root),
+                base_ref="main",
+                base_commit=advanced_base,
+                pr_head_commit=approved_pr_head,
+                candidate_commit=candidate_after_approval,
+                trusted_release_gate=StubTrustedReleaseGate(),
+                trusted_schema_validators=self.validators(),
+            ),
+            [PACKAGE],
+        )
+
+    def test_base_advance_makes_existing_profile_approval_stale(self) -> None:
+        ancestor = self.base
+        self.git("branch", "pr-head", ancestor)
+        self.git("checkout", "-b", "target", ancestor)
+        self.write("code/packages/rust/demo/BASE_CHANGE.md", b"base advanced\n")
+        advanced_base = self.commit("advance base after approval proposal")
+        self.git("checkout", "pr-head")
+        self.write(MANIFEST, manifest([CAPABILITY]))
+        pr_head = self.commit("PR adds capability profile")
+
+        original_candidate = self.merge_candidate(pr_head, base_commit=ancestor)
+        payload = self.propose_approval(
+            manifest_path=MANIFEST,
+            base_ref="main",
+            base_commit=ancestor,
+            head_commit=pr_head,
+            candidate_commit=original_candidate,
+            reason="Approve the monotonic clock profile.",
+            approved_by="owner@example.test",
+            approved_at="2026-11-27T12:00:00Z",
+        )
+        self.write(APPROVAL, payload)
+        self.write(APPROVAL + ".sig", b"test-signature\n")
+        approved_pr_head = self.commit("add approval for original base")
+        self.base = advanced_base
+        new_candidate = self.merge_candidate(
+            approved_pr_head, base_commit=advanced_base
+        )
+        with self.assertRaises(gate.GateError) as caught:
+            gate.verify_changes(
+                str(self.root),
+                base_ref="main",
+                base_commit=advanced_base,
+                pr_head_commit=approved_pr_head,
+                candidate_commit=new_candidate,
+                trusted_release_gate=StubTrustedReleaseGate(),
+                trusted_schema_validators=self.validators(),
+            )
+        self.assertEqual(caught.exception.code, "STALE_APPROVAL")
+
+    def test_stale_or_mismatched_merge_parents_are_rejected(self) -> None:
+        ancestor = self.base
+        self.git("branch", "pr-head", ancestor)
+        self.git("checkout", "-b", "target", ancestor)
+        self.write("code/packages/rust/demo/BASE_CHANGE.md", b"base-side change\n")
+        advanced_base = self.commit("advance target after PR branches")
+        self.git("checkout", "pr-head")
+        self.write("code/packages/rust/demo/PR_CHANGE.md", b"branch-side change\n")
+        pr_head = self.commit("ordinary PR head")
+        stale_candidate = self.merge_candidate(pr_head, base_commit=ancestor)
+
+        with self.assertRaises(gate.GateError) as stale:
+            gate.verify_changes(
+                str(self.root),
+                base_ref="main",
+                base_commit=advanced_base,
+                pr_head_commit=pr_head,
+                candidate_commit=stale_candidate,
+                trusted_schema_validators=self.validators(),
+            )
+        self.assertEqual(stale.exception.code, "MERGE_CANDIDATE")
+
+        with self.assertRaises(gate.GateError) as mismatched_head:
+            gate.verify_changes(
+                str(self.root),
+                base_ref="main",
+                base_commit=ancestor,
+                pr_head_commit=advanced_base,
+                candidate_commit=stale_candidate,
+                trusted_schema_validators=self.validators(),
+            )
+        self.assertEqual(mismatched_head.exception.code, "MERGE_CANDIDATE")
+
     def test_nested_fixture_manifest_is_not_a_package_profile(self) -> None:
         fixture = "code/packages/rust/demo/tests/fixtures/required_capabilities.json"
         self.write(fixture, b"fixture data\n")
         head = self.commit("edit nested fixture")
         self.assertEqual(
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -299,7 +542,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.assertEqual((self.root / MANIFEST).read_bytes(), manifest([CAPABILITY]))
 
         with self.assertRaises(gate.GateError) as caught:
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=base,
@@ -355,7 +598,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(MANIFEST, manifest([CAPABILITY]))
         head = self.commit("add clock profile")
         with self.assertRaises(gate.GateError) as caught:
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -364,14 +607,19 @@ class CapabilityApprovalGateTests(unittest.TestCase):
                 trusted_schema_validators=self.validators(),
             )
         self.assertEqual(caught.exception.code, "MISSING_APPROVAL")
-        self.assertIn("capability_approval_gate.py propose", caught.exception.message)
+        self.assertIn('git show "$1"', caught.exception.message)
+        self.assertIn("python3 -I -m pip install", caught.exception.message)
+        self.assertIn("--candidate-commit", caught.exception.message)
+        self.assertNotIn(
+            "python3 code/scripts/capability_approval_gate.py", caught.exception.message
+        )
 
     def test_signed_profile_addition_checks_exact_payload(self) -> None:
         self.write(MANIFEST, manifest([CAPABILITY]))
         head = self.add_approval()
         trusted = StubTrustedReleaseGate()
         self.assertEqual(
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -383,9 +631,10 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         )
         self.assertEqual(trusted.verified[0][2], gate.SIGNATURE_NAMESPACE)
         approval = gate.strict_json_loads(trusted.verified[0][0], "captured approval")
+        candidate = self.merge_candidate(head)
         self.assertEqual(
             approval["package_tree"],
-            self.git("rev-parse", f"{head}:code/packages/rust/demo"),
+            self.git("rev-parse", f"{candidate}:code/packages/rust/demo"),
         )
 
     def test_profile_reductions_require_signature(self) -> None:
@@ -395,7 +644,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(MANIFEST, manifest([]))
         head = self.add_approval("Approve removal of the clock capability.")
         self.assertEqual(
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -418,7 +667,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         else:
             self.write(MANIFEST, manifest([]))
         package_head = self.commit("repair invalid manifest")
-        payload = gate.propose_approval(
+        payload = self.propose_approval(
             str(self.root),
             manifest_path=MANIFEST,
             base_ref="main",
@@ -442,7 +691,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
     def test_invalid_base_to_valid_empty_profile_requires_signed_repair(self) -> None:
         head = self._invalid_base_repair()
         self.assertEqual(
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -458,7 +707,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.base = self.commit("valid nonempty profile")
         self.remove(MANIFEST)
         package_head = self.commit("delete manifest")
-        payload = gate.propose_approval(
+        payload = self.propose_approval(
             str(self.root),
             manifest_path=MANIFEST,
             base_ref="main",
@@ -477,7 +726,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(APPROVAL + ".sig", b"test-signature\n")
         head = self.commit("approve manifest deletion")
         self.assertEqual(
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -493,7 +742,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.base = self.commit("valid nonempty profile")
         self.remove("code/packages/rust/demo")
         package_head = self.commit("delete whole package")
-        payload = gate.propose_approval(
+        payload = self.propose_approval(
             str(self.root),
             manifest_path=MANIFEST,
             base_ref="main",
@@ -510,7 +759,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(APPROVAL + ".sig", b"test-signature\n")
         head = self.commit("approve package deletion")
         self.assertEqual(
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -529,7 +778,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         )
         head = self.commit("change package tree after approval")
         with self.assertRaises(gate.GateError) as caught:
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -546,7 +795,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(APPROVAL, raw.rstrip()[:-1] + b',"version":1}\n')
         head = self.commit("duplicate approval field")
         with self.assertRaises(gate.GateError) as caught:
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -565,7 +814,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(APPROVAL, json.dumps(approval, indent=2).encode() + b"\n")
         head = self.commit("noncanonical approval")
         with self.assertRaises(gate.GateError) as caught:
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -584,7 +833,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(APPROVAL, gate.canonical_json_bytes(approval))
         final = self.commit("invent old profile")
         with self.assertRaises(gate.GateError) as caught:
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -607,7 +856,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
             b'# revision: 1\nattacker namespaces="coding-adventures-capabilities" sk-ssh-ed25519@openssh.com AAAA\n',
         )
         candidate = self.commit("tamper with candidate trust files")
-        proposal = gate.propose_approval(
+        proposal = self.propose_approval(
             str(self.root),
             manifest_path=MANIFEST,
             base_ref="main",
@@ -619,7 +868,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(APPROVAL + ".sig", b"made-up-signature\n")
         head = self.commit("add unsigned approval-shaped input")
         with self.assertRaises(gate.GateError) as caught:
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -635,7 +884,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         )
         self.write(MANIFEST, manifest([CAPABILITY]))
         candidate = self.commit("candidate adds profile and its own helper")
-        proposal = gate.propose_approval(
+        proposal = self.propose_approval(
             str(self.root),
             manifest_path=MANIFEST,
             base_ref="main",
@@ -647,7 +896,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(APPROVAL + ".sig", b"made-up-signature\n")
         head = self.commit("candidate adds an unsigned approval")
         with self.assertRaises(gate.GateError) as caught:
-            gate.verify_changes(
+            self.verify_changes(
                 str(self.root),
                 base_ref="main",
                 base_commit=self.base,
@@ -658,7 +907,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
     def test_unsigned_proposal_command_writes_no_signature(self) -> None:
         self.write(MANIFEST, manifest([CAPABILITY]))
         head = self.commit("profile for unsigned proposal")
-        raw = gate.propose_approval(
+        raw = self.propose_approval(
             str(self.root),
             manifest_path=MANIFEST,
             base_ref="main",
@@ -749,14 +998,18 @@ class SSHSignatureBoundaryTests(unittest.TestCase):
 
 
 class CapabilityBootstrapWorkflowTests(unittest.TestCase):
-    def test_actual_first_rollout_block_never_executes_candidate_verifier(self) -> None:
+    @staticmethod
+    def workflow_script() -> str:
         workflow = WORKFLOW.read_text(encoding="utf-8")
-        marker = "      - name: Verify capability profile approvals\n"
+        marker = (
+            "      - name: Verify capability profile approvals in isolated Python\n"
+        )
         start = workflow.index(marker)
         run_marker = "        run: |\n"
         run_start = workflow.index(run_marker, start) + len(run_marker)
         end = workflow.find("\n      - name:", run_start)
-        self.assertNotEqual(end, -1, "workflow step must have a following step")
+        if end == -1:
+            raise AssertionError("workflow step must have a following step")
         block = workflow[run_start:end]
         script_lines = []
         for line in block.splitlines():
@@ -764,7 +1017,127 @@ class CapabilityBootstrapWorkflowTests(unittest.TestCase):
                 script_lines.append(line[10:])
             elif line:
                 break
-        script = "\n".join(script_lines) + "\n"
+        return "\n".join(script_lines) + "\n"
+
+    def test_actual_workflow_executes_base_checker_in_isolation(self) -> None:
+        script = self.workflow_script()
+        with tempfile.TemporaryDirectory(
+            prefix="capability-isolation-workflow-"
+        ) as temp:
+            root = Path(temp)
+            subprocess.run(
+                ["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "Isolation test"], cwd=root, check=True
+            )
+            subprocess.run(
+                ["git", "config", "user.email", "isolation@example.test"],
+                cwd=root,
+                check=True,
+            )
+
+            def commit(message: str) -> str:
+                subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+                subprocess.run(
+                    ["git", "commit", "-m", message],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                )
+                return subprocess.run(
+                    ["git", "rev-parse", "HEAD"],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                ).stdout.strip()
+
+            trusted_checker = root / gate.CAPABILITY_GATE_PATH
+            trusted_checker.parent.mkdir(parents=True)
+            trusted_checker.write_text(
+                "from pathlib import Path\n"
+                "Path('trusted-checker-ran').write_text('yes')\n"
+                "raise SystemExit('trusted-base-checker-ran')\n",
+                encoding="utf-8",
+            )
+            base = commit("trusted base checker")
+            candidate_checker = root / gate.CAPABILITY_GATE_PATH
+            candidate_checker.write_text(
+                "from pathlib import Path\n"
+                "Path('candidate-checker-ran').write_text('bad')\n",
+                encoding="utf-8",
+            )
+            for module in ("subprocess", "sitecustomize", "pip", "jsonschema"):
+                (root / f"{module}.py").write_text(
+                    "from pathlib import Path\n"
+                    f"Path('candidate-{module}-ran').write_text('bad')\n",
+                    encoding="utf-8",
+                )
+            head = commit("candidate replaces checker and adds import traps")
+            tree = subprocess.run(
+                ["git", "merge-tree", "--write-tree", base, head],
+                cwd=root,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.splitlines()[0]
+            tested = subprocess.run(
+                [
+                    "git",
+                    "commit-tree",
+                    tree,
+                    "-p",
+                    base,
+                    "-p",
+                    head,
+                    "-m",
+                    "merge candidate",
+                ],
+                cwd=root,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            subprocess.run(
+                ["git", "checkout", "--force", "--detach", tested],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+            runner_temp = root / "runner-temp"
+            runner_temp.mkdir()
+            deps = runner_temp / "capability-deps"
+            deps.mkdir()
+            env = dict(os.environ)
+            env.update(
+                {
+                    "PR_BASE_SHA": base,
+                    "PR_HEAD_SHA": head,
+                    "PR_BASE_REF": "main",
+                    "PR_TESTED_SHA": tested,
+                    "RUNNER_TEMP": str(runner_temp),
+                    "PYTHONPATH": str(root),
+                    "PYTHONUSERBASE": str(root / "user-site"),
+                }
+            )
+            result = subprocess.run(
+                ["bash", "-e", "-u", "-o", "pipefail", "-c", script],
+                cwd=root,
+                env=env,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("trusted-base-checker-ran", result.stderr)
+            self.assertTrue((root / "trusted-checker-ran").exists())
+            self.assertFalse((root / "candidate-checker-ran").exists())
+            for module in ("subprocess", "sitecustomize", "pip", "jsonschema"):
+                self.assertFalse((root / f"candidate-{module}-ran").exists())
+
+    def test_actual_first_rollout_block_never_executes_candidate_verifier(self) -> None:
+        script = self.workflow_script()
 
         with tempfile.TemporaryDirectory(
             prefix="capability-bootstrap-workflow-"
@@ -798,6 +1171,32 @@ class CapabilityBootstrapWorkflowTests(unittest.TestCase):
                     text=True,
                 ).stdout.strip()
 
+            def merge_candidate(base: str, pr_head: str) -> str:
+                tree = subprocess.run(
+                    ["git", "merge-tree", "--write-tree", base, pr_head],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                ).stdout.splitlines()[0]
+                return subprocess.run(
+                    [
+                        "git",
+                        "commit-tree",
+                        tree,
+                        "-p",
+                        base,
+                        "-p",
+                        pr_head,
+                        "-m",
+                        "synthetic pull request merge candidate",
+                    ],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                ).stdout.strip()
+
             (root / "README.md").write_text("base\n", encoding="utf-8")
             base = commit("base without verifier")
             candidate_script = root / gate.RELEASE_GATE_PATH.replace(
@@ -808,18 +1207,73 @@ class CapabilityBootstrapWorkflowTests(unittest.TestCase):
                 "from pathlib import Path\nPath('candidate-verifier-ran').write_text('bad')\n",
                 encoding="utf-8",
             )
+            for module in ("subprocess", "sitecustomize", "pip", "jsonschema"):
+                (root / f"{module}.py").write_text(
+                    "from pathlib import Path\n"
+                    f"Path('candidate-{module}-ran').write_text('bad')\n",
+                    encoding="utf-8",
+                )
             head_without_profile = commit("candidate adds verifier")
+            subprocess.run(
+                ["git", "branch", "pr-head", head_without_profile],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+            subprocess.run(
+                ["git", "checkout", "-b", "target", base],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+            base_profile = (
+                root / "code/packages/rust/base-only/required_capabilities.json"
+            )
+            base_profile.parent.mkdir(parents=True)
+            base_profile.write_bytes(
+                manifest([CAPABILITY]).replace(b"rust/demo", b"rust/base-only")
+            )
+            advanced_base = commit("base adds a profile after branch point")
+            subprocess.run(
+                ["git", "checkout", "pr-head"],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+            base = advanced_base
 
-            def run_block(head: str) -> subprocess.CompletedProcess[str]:
+            def run_block(
+                pr_head: str, *, event_head_override: str | None = None
+            ) -> subprocess.CompletedProcess[str]:
+                tested = merge_candidate(base, pr_head)
+                original_checkout = subprocess.run(
+                    ["git", "rev-parse", "HEAD"],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                ).stdout.strip()
+                subprocess.run(
+                    ["git", "checkout", "--force", "--detach", tested],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                )
                 env = dict(os.environ)
+                runner_temp = root / "runner-temp"
+                runner_temp.mkdir(exist_ok=True)
                 env.update(
                     {
-                        "GITHUB_BASE_REF": "main",
                         "PR_BASE_SHA": base,
-                        "PR_HEAD_SHA": head,
+                        "PR_HEAD_SHA": event_head_override or pr_head,
+                        "PR_BASE_REF": "main",
+                        "PR_TESTED_SHA": tested,
+                        "RUNNER_TEMP": str(runner_temp),
+                        "PYTHONPATH": str(root),
+                        "PYTHONUSERBASE": str(root / "user-site"),
                     }
                 )
-                return subprocess.run(
+                result = subprocess.run(
                     [
                         "bash",
                         "-e",
@@ -830,7 +1284,8 @@ class CapabilityBootstrapWorkflowTests(unittest.TestCase):
                         script,
                         "workflow-step",
                         base,
-                        head,
+                        pr_head,
+                        tested,
                     ],
                     cwd=root,
                     env=env,
@@ -838,11 +1293,34 @@ class CapabilityBootstrapWorkflowTests(unittest.TestCase):
                     capture_output=True,
                     text=True,
                 )
+                subprocess.run(
+                    ["git", "checkout", "--force", "--detach", original_checkout],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                )
+                return result
 
             first = run_block(head_without_profile)
             self.assertEqual(first.returncode, 0, first.stderr)
             self.assertIn("not an enforced approval gate", first.stdout)
             self.assertFalse((root / "candidate-verifier-ran").exists())
+            isolated_pip = subprocess.run(
+                [sys.executable, "-I", "-m", "pip", "--version"],
+                cwd=root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertIn("pip", isolated_pip.stdout)
+            for module in ("subprocess", "sitecustomize", "pip", "jsonschema"):
+                self.assertFalse((root / f"candidate-{module}-ran").exists())
+            wrong_parent = run_block(head_without_profile, event_head_override=base)
+            self.assertNotEqual(wrong_parent.returncode, 0)
+            self.assertIn("parents do not match", wrong_parent.stderr)
+            self.assertFalse((root / "candidate-verifier-ran").exists())
+            for module in ("subprocess", "sitecustomize", "pip", "jsonschema"):
+                self.assertFalse((root / f"candidate-{module}-ran").exists())
 
             profile = root / "code/packages/rust/demo/required_capabilities.json"
             profile.parent.mkdir(parents=True)
