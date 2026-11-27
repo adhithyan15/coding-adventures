@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- ADL-001a (VER33 4.9): a `profile NAME` clause in a document header is refused by name (`UnsupportedProfile`, still W0001) instead of failing as a generic unexpected token; this compiler implements the v0 pure profile only. The syntax-corpus test now counts 61 cases and expects that refusal for the profile-header cases.
+
 ### Fixed
 - The canonical `ct-compare.warrant` tests asserted 1 claim and 13 results, but the spec now has 9 claims (VER-P030), so they failed on `main`. They now expect 9 claims and 21 results (12 examples + 9 claims).
 - Claim refinements such as `len(a) == len(b)` over two independent `Bytes` binders (accepted ~1 time in 33) exhausted the generator's 100-attempt rejection-sampling cap, which with a fixed seed made `select_picks` fail deterministically with "Generator filter exhausted". The cap is now 1000 (still a hard bound; failure probability ~4e-14 per sample).

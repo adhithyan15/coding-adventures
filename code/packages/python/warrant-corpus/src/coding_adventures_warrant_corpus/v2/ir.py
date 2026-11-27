@@ -234,16 +234,24 @@ def walk(root: object) -> Iterator[tuple[list, int]]:
         pending.extend((child, depth + 1) for child in reversed(operands(item)))  # type: ignore[arg-type]
 
 
-def scan_tags(root: object, role: str, models: Collection[str] | None = None) -> None:
+def scan_tags(
+    root: object,
+    role: str,
+    models: Collection[str] | None = None,
+    subjects: bool = True,
+) -> None:
     """The checks that read tag names alone, for one top-level expression.
 
     In the order :meth:`Program.scan` uses: ``depth`` (a path of more than
-    :data:`MAX_DEPTH` nodes), ``unknown-tag`` over every node, then per node
+    :data:`MAX_DEPTH` nodes), ``unknown-tag`` over every node, ``model-order`` (a
+    ``model_call`` to a name not in ``models``, when given) and then
     ``subject-forbidden`` (a ``subject_op`` outside a claim body, ``role`` other
-    than ``"body"``) and ``model-order`` (a ``model_call`` to a name not in
-    ``models``, when given).  No level is consulted, so a suite can run this
+    than ``"body"``): R119 (c) puts the three codes before it wherever they
+    stand.  No level is consulted, so a suite can run this
     over each expression it holds before it is recorded as needing a level the
-    runner lacks (R107 d, R69 c tier 2).
+    runner lacks (R107 d, R69 c tier 2).  With ``subjects=False`` the
+    ``subject-forbidden`` pass is left to the caller, which runs it over every
+    expression of a row after this one has read them all (R119 c).
     """
     nodes = []
     for node, depth in walk(root):
@@ -253,17 +261,20 @@ def scan_tags(root: object, role: str, models: Collection[str] | None = None) ->
     for node in nodes:
         if tag_level(node[0]) is None:
             raise Refusal("unknown-tag", node[0])
-    for node in nodes:
-        if node[0] == "subject_op" and role != "body":
-            raise Refusal(
-                "subject-forbidden", "subject calls may appear only in a claim body"
-            )
+    for node in nodes:  # model-order wherever it stands (R119 c)
         if node[0] == "model_call" and models is not None:
             callee = node[1] if len(node) > 1 else None
             if type(callee) is not str or callee not in models:
                 raise Refusal(
                     "model-order", "a model_call names a model that does not exist"
                 )
+    if not subjects:  # the caller runs the subject pass itself, after other rows
+        return
+    for node in nodes:
+        if node[0] == "subject_op" and role != "body":
+            raise Refusal(
+                "subject-forbidden", "subject calls may appear only in a claim body"
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -431,6 +442,10 @@ class Program:
         self._impure_guards = 0  # enclosing guards whose condition calls the subject
         self.models: dict[str, ModelDef] = {}  # the ones compiled so far
         self.reached_ops: dict[str, OpSig] = {}  # the ops whose signature was read
+        # The ops a compiled tree *calls* (`subject_op` nodes).  Reading a
+        # signature (the line above) is not reaching: the corpus check reads every
+        # op's.  Only a called op has a stand-in that counts (R100).
+        self.called_ops: set[str] = set()
         self.not_live_models: dict[str, str] = {}  # name -> why (a missing level)
         self.not_live_ops: dict[str, str] = {}
         self.errors: dict[str, tuple[str, ...]] = {
@@ -652,11 +667,7 @@ class Program:
         for node in nodes:
             if levels and tag_level(node[0]) not in self.levels:
                 raise Refusal("level-missing", node[0])
-        for node in nodes:
-            if node[0] == "subject_op" and (owner is not None or role != "body"):
-                raise Refusal(
-                    "subject-forbidden", "subject calls may appear only in a claim body"
-                )
+        for node in nodes:  # model-order wherever it stands, before subject-forbidden
             if node[0] == "model_call":
                 callee = node[1] if len(node) > 1 else None
                 if type(callee) is not str or callee not in self._position:
@@ -664,6 +675,11 @@ class Program:
                         "model-order", "a model_call names a model that does not exist"
                     )
                 callees.append(callee)
+        for node in nodes:
+            if node[0] == "subject_op" and (owner is not None or role != "body"):
+                raise Refusal(
+                    "subject-forbidden", "subject calls may appear only in a claim body"
+                )
         return callees
 
     # -- compiling ---------------------------------------------------------------
@@ -1123,6 +1139,7 @@ class Program:
         a list given to an op that has no ``width_params`` are all ``ill-typed``.
         """
         sig = self.op(name)
+        self.called_ops.add(name)
         given = node[3] if len(node) == 4 else None
         if len(node) == 4 and not sig.width_params:
             raise Refusal("ill-typed", f"{name} has no static widths to bind")
@@ -1237,7 +1254,11 @@ class SubjectTable:
     wrong evaluator -- one that evaluates an untaken branch -- be caught.
 
     Only the ops the program's expressions actually call have stand-ins that
-    matter; an entry for any other op is ignored, as an unused binding is.
+    matter; an entry for any other op is ignored, as an unused binding is: it is
+    not compiled and its signature is not compared (R100, R124).  An op whose
+    signature was merely *read* (the corpus check reads every op's) is not
+    called.  A called op whose stand-in needs a missing level, or has the wrong
+    signature, fails the kit build: a :class:`KitError`, never ``level-missing``.
     """
 
     program: Program
@@ -1245,7 +1266,8 @@ class SubjectTable:
     calls: int = field(default=0)
 
     def __post_init__(self) -> None:
-        for op, sig in self.program.reached_ops.items():
+        for op in sorted(self.program.called_ops):
+            sig = self.program.reached_ops[op]
             model = self.subjects.get(op)
             if model is None:
                 continue

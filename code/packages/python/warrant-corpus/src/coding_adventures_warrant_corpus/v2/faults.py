@@ -39,8 +39,17 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from .errors import Refusal
-from .ir import IMPLEMENTED_LEVELS, Compiled, Program, check_requires, evaluate
+from .errors import KitError, Refusal
+from .ir import (
+    IMPLEMENTED_LEVELS,
+    Compiled,
+    Program,
+    check_requires,
+    evaluate,
+    scan_tags,
+    tag_level,
+    walk,
+)
 from .semantics import STANDARD, Semantics
 from .values import decode_value, value_to_json
 from .wtypes import Ty, check_types_table, unify
@@ -106,12 +115,22 @@ _KEYS_OF_A_FAULT = {
 }
 
 
-def _ill_formed(why: str) -> Refusal:
-    return Refusal("ill-typed", f"a fault row is malformed: {why}")
+def _ill_formed(why: str) -> KitError:
+    """A malformed fault row breaks the case's own schema: a kit error (R126, R45 f).
+
+    It is never an outcome: ``ill-typed`` covers the types table and the typing
+    of the row's expressions, not the shape of the row itself.
+    """
+    return KitError(f"a fault row is malformed: {why}")
 
 
 def _check_fault_shape(fault: object) -> dict:
-    """The fault row, if it is a closed object of one of the three kinds (8.1)."""
+    """The fault row, if it is a closed object of one of the three kinds (8.1).
+
+    Every defect is a :class:`KitError` (R126), the undefined level name of
+    ``requires`` included (section 4.2 rule 7 makes it a corpus error in a
+    corpus, but a schema break in a kit case).  This is read before the table.
+    """
     if not isinstance(fault, dict) or fault.get("kind") not in KINDS:
         raise _ill_formed("its kind is pre, post or replace")
     if set(fault) != _KEYS_OF_A_FAULT[fault["kind"]]:
@@ -122,15 +141,24 @@ def _check_fault_shape(fault: object) -> dict:
     if type(requires) is not list or not all(type(level) is str for level in requires):
         raise _ill_formed("requires is a list of level names")
     # An undefined level name is a corpus error, never `level-missing` (4.2 rule 7).
-    check_requires(requires, "corpus", "a fault's requires")
+    try:
+        check_requires(requires, "corpus", "a fault's requires")
+    except Refusal as refusal:
+        raise _ill_formed(str(refusal)) from refusal
+    if fault["kind"] == "pre":
+        _check_rewrite_rows(fault["rewrites"], None)
     return fault
 
 
-def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, object]]:
+def _check_rewrite_rows(
+    rows: object, scope: dict[str, Ty] | None
+) -> list[tuple[str, object]]:
     """The ``(parameter, expression)`` pairs of a ``pre`` fault, each row checked.
 
     A rewrite names a parameter that exists, at most one rewrite names it, and
-    the row has exactly the two keys ``param`` and ``expr``.
+    the row has exactly the two keys ``param`` and ``expr``.  With ``scope``
+    ``None`` only the shape is read (before the table); the parameter's
+    existence needs the op row.  Both are kit errors (R126).
     """
     if type(rows) is not list or not rows:
         raise _ill_formed("a pre fault must rewrite something")
@@ -140,7 +168,7 @@ def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, o
         if type(row) is not dict or set(row) != {"param", "expr"}:
             raise _ill_formed("a rewrite is {param, expr}")
         param = row["param"]
-        if type(param) is not str or param not in scope:
+        if type(param) is not str or (scope is not None and param not in scope):
             raise _ill_formed("a rewrite targets a parameter missing from the op")
         if param in seen:
             raise _ill_formed("a parameter is rewritten twice")
@@ -163,6 +191,31 @@ def _may_replace(produced: Ty, wanted: Ty) -> bool:
     return unify(produced, wanted) is not None
 
 
+def _static_order(exprs: list[object], available: frozenset[str]) -> None:
+    """Orders 2 to 4 of R119 (c), over **every** expression of the row.
+
+    ``level-missing`` for a tag whose level the runner lacks (a tag of no level
+    is not a level question), then ``depth``, ``unknown-tag`` and ``model-order``
+    (a fault case has no models, so every ``model_call`` is one), then
+    ``subject-forbidden``.  Each step reads all the expressions before the next
+    begins, so one rewrite's ``subject_op`` never hides another rewrite's static
+    code.  The row's ``requires`` is checked by the caller, before this.
+    """
+    for expr in exprs:
+        for node, _depth in walk(expr):
+            level = tag_level(node[0])
+            if level is not None and level not in available:
+                raise Refusal("level-missing", str(node[0]))
+    for expr in exprs:
+        scan_tags(expr, "body", models=(), subjects=False)
+    for expr in exprs:
+        for node, _depth in walk(expr):
+            if node[0] == "subject_op":
+                raise Refusal(
+                    "subject-forbidden", "a fault expression calls no subject"
+                )
+
+
 def compile_fault(
     fault: object,
     op_row: object,
@@ -172,38 +225,50 @@ def compile_fault(
 ) -> CompiledFault:
     """Check a fault row against its op's section 6 row and compile its expressions.
 
-    Refusals (the kit's ``v2-fault`` codes, in this order: R110 (b)): ``ill-typed``
-    for a ``types`` table that breaks section 2.2 (read whole, before any
-    expression), then ``level-missing`` when the row's
-    ``requires`` (or a tag in its expressions) is a level this runner lacks -- a
-    lane records such a control ``not-live``, it is not an error of the lane --
-    and ``subject-forbidden`` for a ``subject_op`` in a fault expression.  A row
-    that is not a well-formed fault, or whose expressions do not produce the type
-    of what they replace, is ``ill-typed`` (F6).
+    A row that is not a well-formed fault is a :class:`KitError` (R126), read
+    before anything else.  Refusals (the kit's ``v2-fault`` codes, in this order:
+    R110 (b), R119 (c), R121): ``ill-typed`` for a ``types`` table that breaks
+    section 2.2 or an op row whose parameter or result type is refused (order
+    1); ``level-missing`` when the row's ``requires`` (or a tag in its
+    expressions) is a level this runner lacks (2) -- a lane records such a
+    control ``not-live``, it is not an error of the lane; ``unknown-tag``,
+    ``depth`` and ``model-order`` (3, no order among them: a fault case has no
+    models, so every ``model_call`` is one); ``subject-forbidden`` for a
+    ``subject_op`` in a fault expression (4); and ``ill-typed`` when the
+    expressions do not produce the type of what they replace (5, F6).
     """
     row = _check_fault_shape(fault)
-    # Section 2.2, again by every consumer: the table is read whole, and first
-    # after the row's own shape.  Its code in a fault case is `ill-typed`
-    # ([D74], R110 (b)); `corpus` is not in the closed set of `v2-fault`.
+    # Order 1 (R110 (b), R121): the table, then the op row's parameter and
+    # result types, both `ill-typed`; [D74], and `corpus` is not in the closed
+    # set of `v2-fault`.  The Program reads the op row, so it is built here,
+    # before the `requires` check.
     check_types_table(types, "ill-typed")
+    program = Program(types=types, ops={row["op"]: op_row}, levels=levels, sem=sem)
+    declared = program.op(row["op"])
+    # Order 2: `level-missing`, from the row's `requires`, before any expression.
     available = frozenset(levels) & IMPLEMENTED_LEVELS
     if not set(row["requires"]) <= available:
         raise Refusal("level-missing", "the fault needs a level this runner lacks")
-    program = Program(types=types, ops={row["op"]: op_row}, levels=levels, sem=sem)
-    declared = program.op(row["op"])
     params, ret = declared.unbound()
     scope = dict(params)
     if "result" in scope:
         raise Refusal("ill-typed", "an op with a parameter named result")
     if row["kind"] == "pre":
-        rewrites = []
-        for param, expr in _check_rewrite_rows(row["rewrites"], scope):
-            compiled = program.compile(expr, scope, role="fault")
+        rows = _check_rewrite_rows(row["rewrites"], scope)
+        # Orders 2 to 4 for every rewrite before any rewrite is compiled, so a
+        # typing defect in one never hides a static code in another.
+        _static_order([expr for _param, expr in rows], available)
+        rewrites = [
+            (param, program.compile(expr, scope, role="fault")) for param, expr in rows
+        ]
+        # The typing of the row is the last step (R119 c, 5): every rewrite is
+        # scanned and compiled before any rewrite's type is compared.
+        for param, compiled in rewrites:
             if not _may_replace(compiled.ty, scope[param]):
                 raise Refusal("ill-typed", f"the rewrite of {param} has the wrong type")
-            rewrites.append((param, compiled))
         return CompiledFault("pre", params, ret, types, sem, rewrites, None)
     scope["result"] = ret
+    _static_order([row["expr"]], available)
     expr = program.compile(row["expr"], scope, role="fault")
     if not _may_replace(expr.ty, ret):
         raise Refusal(

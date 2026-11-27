@@ -72,8 +72,8 @@ def test_error_codes_stay_in_the_closed_sets_and_every_code_is_used(kit):
     for category, cases in all_cases(kit).items():
         used = {c["expect"]["error"] for c in cases if "error" in c["expect"]}
         # [D74] (16.22) adds ``ill-typed`` to ``v2-fault``; its kit vectors are S10d's and S11d's, so the committed
-        # kit does not use it yet.
-        pending = {"ill-typed"} if category == "v2-fault" else set()
+        # kit does not use it yet.  [D77] (16.23) adds ``unknown-tag``, ``depth`` and ``model-order``, likewise.
+        pending = {"ill-typed", "unknown-tag", "depth", "model-order"} if category == "v2-fault" else set()
         assert used == C.ERROR_CODES[category] - pending, (category, used ^ C.ERROR_CODES[category])
         for case in cases:
             if category in ("v2-value",):

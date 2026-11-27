@@ -135,7 +135,7 @@ Records, variants (with and without a payload), `Option<T>` as a real type, the 
 * **The committed dumps** (`tests/fixtures/data-eval-v1/`, `make_data_eval.py`, a new directory on purpose): the lowering, evaluation,
   fault, value, domain and refusal dumps of a synthetic data document with a suite on each stream header, which the generator's slice
   S11c-2 must reproduce byte for byte (every file: the typing rows of the refusals dump too). Its README records the oracle's derive time for both adopters (logic-gates about 60 s (60.1 to 61.6 s measured),
-  3,770,123 cases; arithmetic about 36 s, 2,654,925 cases since CV2-F17 refuses its 9-binder claim, was 2,655,437) and arithmetic's largest `ir_cost` (1,524, under the default 2,000).
+  3,770,123 cases; arithmetic about 36 s, 2,655,437 cases in 64 suites since the adopter split its 9-binder claim into two of 8 binders, VER04r D76; it was 2,654,925 in 62 suites between CV2-F17 and the split) and arithmetic's largest `ir_cost` (1,524, under the default 2,000).
 
 ### Domain and binder fixes (CV2-F17)
 
@@ -152,8 +152,8 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   `> 16`, accepting 17 nodes; it now agrees with the consumer check `descriptor_size`: 16 nodes are accepted, 17 are refused `limit`
   (tested for nested records and nested `Option`).
 * **A claim has at most 8 binders** (sections 5.3 and 14, R75). `SuitePlan` refuses a ninth with `limit` before any descriptor is
-  built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` has nine, so
-  `emit-v2` lists 62 arithmetic suites and 2,654,925 cases (was 63 and 2,655,437); the adopter splits the claim, not this package.
+  built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` had nine, so
+  `emit-v2` listed 62 arithmetic suites and 2,654,925 cases (was 63 and 2,655,437). The adopter has since split it (VER04r D76: two claims of 8 binders, `_cin_0` and `_cin_1`), so `emit-v2` lists 64 suites and 2,655,437 cases.
 
 * **`tuple` and `variant` descriptors are checked as a consumer must (VER04r 16.20 R103).** `descriptor_size` refuses (`generation`,
   kit code `descriptor`, as `errs` of R72 does) a `tuple` whose `of` has none or more than 32 entries, and a `variant` with fewer than 2
@@ -183,6 +183,20 @@ Three defects found when the generator's S11c-2 slice was reviewed; in each the 
   `compile_ir_case` checks the bound on `max_ir_cost` before the table. (5) **R117**: an error type is not a value type: `check_type_table`,
   `parse_type` and `lower._resolve` refuse an error name anywhere but the second argument of `Result`; the table is read whole (every member text is
   parsed, rules 2 to 4 of section 2.2 are enforced). No committed byte moves. Tests: `tests/test_cv2_16_22_checks.py`.
+* **The oracle's share of VER04r 16.23 (CV2-F17).** (1) **[D77], R119**: `v2-fault`'s closed set gains `unknown-tag`, `depth` and `model-order`.
+  `derive_fault` reads the fault row's schema (R126), then the table and the op row (`ill-typed`), then `level-missing` (levelling only the tags it
+  knows), then the three new codes (`fault_static_refusal`: a tag of no level, a nesting over 64, a `model_call`), then `subject-forbidden`, then the
+  typing of the row. `requires_of` gives a `unknown-tag` case its `levels`. (2) **R120**: any refusal of an `env` type text is `ill-typed` in `v2-ir`;
+  an entry that is not `[name, {"type": text, "value": V}]` is a kit error. (3) **R122**: `compile_ir_case` reads every op signature right after the
+  table (so an unused bad op row precedes a tree defect); model signatures are left open. (4) **R123**: the consumer-side `check_type_table` reserves
+  `TABLE_RESERVED` (`V0_BUILTINS` plus `U16 U32 I8 I16 I32 I64`) for row and constructor names; lowering keeps its version-scoped set. (5) **R124**: an
+  unreached model that needs a level outside `levels` is not compiled (`_models`, `_uncompiled_models`); the tag-name checks, the expression depth and
+  the chain depth of R77 still apply to it. (6) **R125**: `check_corpus_and_row` reads `corpus.ops`, `corpus.models` and `model_order`
+  (`check_corpus_ops_models`) and refuses their defects as `corpus` (`Int` model parameters stay accepted, [D75]). (7) **R126**: a malformed fault row
+  or an undefined level in `fault.requires` is a `KitError` (`check_fault_row`), read before the table. No committed byte moves. Tests:
+  `tests/test_cv2_16_23_checks.py`. Review fixes: the tag `list` is `ir.list` (R57), a stand-in never causes `level-missing` and counts for
+  `requires` only for a reached op (R100), R125 reads models in full, the implicit `ir.core` of a fault row, an undecodable `env` value is a
+  kit error, a malformed op row is `ill-typed` / kit error / `corpus`.
 * **Three checks of VER04r 16.21 (CV2-F17).** (1) **[D73]**: `conformance.check_chunk_file` refuses `chunk-file` a chunk file whose
   `calls` do not sum to the row's `expected_calls` (so every `v2-chunk` and `verify-v2`-adjacent reader path refuses it); `verify-v2` already
   compared the file byte for byte. (2) **R106**: a value written for a `Bytes<N>` position whose length is not `N` (`N` after static-width
