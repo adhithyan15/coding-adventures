@@ -839,33 +839,37 @@ possession of a hardware security key (YubiKey, SoloKey, or any FIDO2-compatible
 Two operations require hardware-key signatures:
 
 1. **Merging to main.** GitHub branch protection is configured to require signed commits.
-   Only commits signed with SSH keys listed in `CAPABILITY_SIGNERS` can be merged.
+   Only commits signed with SSH keys listed in the trusted VER31 signer chain at
+   `.github/release-signers` can be merged.
 
 2. **Publishing a package.** Every publish requires a hardware-key-signed approval file
    committed to the repository. For Go packages (which require git tags), the tag itself
    must be signed.
 
-### CAPABILITY_SIGNERS
+### Trusted signer registry
 
-A file at the repository root listing the SSH public keys authorized to approve publishes
-and capability escalations:
+`.github/release-signers` is the repository's single canonical SSH allowed-signers
+registry. Its first-parent history is a signed chain: later revisions are signed by a
+hardware key trusted by the previous revision. The chain and the `release_gate.py`
+verification implementation are read from a trusted ref, never from the candidate
+package or approval. The current registry is an uninitialized placeholder until the
+owner adds its first key and revision-1 trust anchor through the owner-reviewed VER31
+bootstrap. Until a key is registered, capability approvals cannot validate.
 
-```
-# CAPABILITY_SIGNERS
-# Each line is an SSH public key authorized to sign publish approvals.
-# Keys should be backed by FIDO2 hardware (YubiKey, SoloKey).
-# Changes to this file require a signature from an existing key.
+Signer entries list the namespaces they may authorize. A signer can approve a
+capability change only when its trusted registry line explicitly includes the
+`coding-adventures-capabilities` namespace. Adding that namespace grants a new signing
+authority and must be part of the separately reviewed signer-chain update; the
+capability gate does not infer or silently add it. Existing release approvals retain
+their own namespaces. SSHSIG verification requires a security-key signature with both
+user-presence and user-verification flags.
 
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG... maintainer-1@yubikey
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH... maintainer-2@yubikey
-```
-
-This file is protected by:
-- **CODEOWNERS:** Changes require review from an existing signer.
-- **Circular verification:** CI checks that any modification to `CAPABILITY_SIGNERS` is
-  itself signed by a key that was in the file before the modification.
-
-An attacker cannot add their own key without an existing signer's physical YubiKey touch.
+The repository `CODEOWNERS` file and GitHub ruleset/branch protection govern who may
+change the signer chain and CI trust boundary. The owner must require review for those
+paths and keep the stable `CI gate` required. A verifier loaded from a trusted base
+protects the verifier code, but cannot prevent a candidate-edited workflow from
+deleting the verifier step unless workflow protection is configured outside that
+candidate change.
 
 ### Publish Approval Flow
 
@@ -895,33 +899,65 @@ Go modules resolve versions via git tags (`go get pkg@v1.2.3`). Tags cannot be e
 but they can be secured:
 
 - GitHub repository rulesets protect tag patterns (`go/**`)
-- Tags must be signed with a key from `CAPABILITY_SIGNERS`
+- Tags must be signed with a key from the trusted `.github/release-signers` chain
 - Tagged commit must pass all CI status checks
 - "Do not allow bypass" is enabled — even admins cannot create unsigned tags
 
-### Capability Escalation
+### Capability escalation approval
 
-Adding a new capability to a package is a **stricter sub-category** of publish approval.
-The escalation approval includes additional fields:
+Adding a capability is a **stricter sub-category** of publish approval. Changing or
+removing an existing nonempty capability profile, or changing a nonempty
+`banned_construct_exceptions` list, is security-relevant and also requires an approval.
+An absent manifest is the default-deny profile; adding a valid empty profile does not
+grant authority. This gate is incremental: it verifies profile changes in a pull request
+and does not turn every untouched legacy manifest into a new baseline blocker.
 
-```json
-{
-  "type": "capability_escalation",
-  "package": "python/lexer",
-  "previous_capabilities": [],
-  "new_capabilities": [
-    {"category": "fs", "action": "read", "target": "../../grammars/*.tokens"}
-  ],
-  "reason": "Lexer needs to read grammar definition files to build the DFA.",
-  "approved_by": "maintainer-1@yubikey",
-  "approved_at": "2026-03-19T10:00:00Z"
-}
-```
+Each approval is a strict versioned JSON document under
+`code/specs/capability-approvals/`, outside the package tree, with a detached `.sig`.
+The exact payload contract is in
+[`capability-approval.schema.json`](schemas/capability-approval.schema.json). The
+UTF-8 signature bytes are canonical JSON: object keys sorted lexicographically,
+compact separators, non-ASCII emitted directly, and one trailing LF. Duplicate JSON
+members and noncanonical byte encodings are rejected. The payload binds:
 
-CI verifies:
-1. The approval's `new_capabilities` match the package's current `required_capabilities.json`.
-2. The approval's `previous_capabilities` match what was on main before this change.
-3. The signature is valid against a key in `CAPABILITY_SIGNERS`.
+- the qualified package and exact `required_capabilities.json` path;
+- the pull request's exact base ref and commit;
+- the old and new manifest SHA-256 digests (null only when the old manifest is absent);
+- the previous profile status (`absent`, `valid`, or `invalid`), exact prior and new
+  capabilities, and exact prior and new banned-construct exceptions;
+- the Git tree object ID of the candidate package directory, including its source and
+  manifest but excluding the approval files stored outside that directory;
+- reason, signing principal and UTC approval time.
+
+An approval-only commit does not change the package tree object ID and cannot invalidate
+its own signature. A package source, manifest, or base change does. The previous
+capability arrays are null for an invalid base manifest; the approval binds that exact
+invalid file's raw digest and labels its profile status `invalid`. The signer never
+supplies guessed previous capabilities. Repairing an invalid base manifest into any
+valid profile requires a signed approval.
+
+CI loads the verifier from the exact pull-request base and supplies candidate artifacts
+as untrusted data. It loads the signer chain and prior manifest from that same base,
+then checks canonical payload bytes, hashes, package tree, package name/path, exact
+profile arrays/status, principal, signature namespace, and hardware user-presence and
+user-verification flags. The verified principal must equal `approved_by`. A missing
+signer registry/key, absent approval pair, malformed or stale payload, namespace
+mismatch, invalid signature, or invalid hardware flags fails closed with a distinct
+diagnostic and an unsigned proposal command. The gate does not bootstrap a key or
+create a signature.
+
+CI checks only changed profiles and their approval artifacts. Schema-valid changes
+that do not alter a nonempty capability profile or exception need no new signature.
+For an invalid base profile, only a valid repair with a signed approval passes. The
+gate's pull-request workflow step is a required-check candidate, not a protection
+against workflow deletion by itself: GitHub owner review for the workflow and an
+externally configured required stable CI check are part of the trust boundary. Until
+those settings are verified, CI output is diagnostic rather than an enforced hardware
+key gate.
+
+The deterministic proposal generator emits unsigned payload bytes only. The owner
+reviews the exact proposal and uses a key authorized for
+`coding-adventures-capabilities` to sign it; signatures are never generated by CI.
 
 ---
 
@@ -1123,9 +1159,9 @@ the Layer 5 hardware key. Neither claim covers the other's ground.
 
 **Outcome:** Tags not on main are rejected.
 
-### Scenario 8: Add attacker's signing key to CAPABILITY_SIGNERS
+### Scenario 8: Add attacker's signing key to `.github/release-signers`
 
-**Attack vector:** Add attacker's SSH public key to `CAPABILITY_SIGNERS`.
+**Attack vector:** Add attacker's SSH public key to `.github/release-signers`.
 
 | Step | Attacker Action | Layer Hit | Result |
 |------|----------------|-----------|--------|
@@ -1155,7 +1191,7 @@ publish_approvals/
 The CI workflow detects new files in `publish_approvals/` on each push to main. For each
 new approval file:
 
-1. Verify the signature against `CAPABILITY_SIGNERS`.
+1. Verify the signature against the trusted `.github/release-signers` chain.
 2. Verify the commit SHA in the approval matches what's on main.
 3. Run the capability gate (static analysis + sandbox fuzz).
 4. If all checks pass, publish to the registry.
@@ -1227,7 +1263,7 @@ All security packages use the `ca_` prefix:
 
 ### Phase 5: Hardware-Key Approval
 - Build `publish-approve` CLI tool
-- Set up `CAPABILITY_SIGNERS`
+- Bootstrap `.github/release-signers` with its first hardware-backed key
 - Add approval verification to CI
 
 ### Phase 6: Sandbox Fuzz Verification
