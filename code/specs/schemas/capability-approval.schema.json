@@ -13,8 +13,8 @@
     "base_commit",
     "package_tree",
     "previous_profile_status",
+    "new_profile_status",
     "previous_manifest_sha256",
-    "new_manifest_sha256",
     "previous_capabilities",
     "new_capabilities",
     "previous_banned_construct_exceptions",
@@ -46,13 +46,19 @@
       "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
     },
     "package_tree": {
-      "type": "string",
-      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$",
-      "description": "Git tree object ID of the candidate package directory. The approval files are outside this tree, so committing them does not change this value."
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$" }
+      ],
+      "description": "Git tree object ID of the candidate package directory. Null only if the whole package directory is deleted. Approval files are outside this tree."
     },
     "previous_profile_status": {
       "type": "string",
       "enum": ["absent", "valid", "invalid"]
+    },
+    "new_profile_status": {
+      "type": "string",
+      "enum": ["valid", "absent"]
     },
     "previous_manifest_sha256": {
       "anyOf": [
@@ -61,8 +67,10 @@
       ]
     },
     "new_manifest_sha256": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      ]
     },
     "previous_capabilities": {
       "anyOf": [
@@ -130,6 +138,32 @@
           "previous_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
           "previous_capabilities": { "type": "null" },
           "previous_banned_construct_exceptions": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "new_profile_status": { "const": "absent" } },
+        "required": ["new_profile_status"]
+      },
+      "then": {
+        "properties": {
+          "new_manifest_sha256": { "type": "null" },
+          "package_tree": { "anyOf": [{ "type": "null" }, { "type": "string" }] },
+          "new_capabilities": { "type": "array", "maxItems": 0 },
+          "new_banned_construct_exceptions": { "type": "array", "maxItems": 0 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "new_profile_status": { "const": "valid" } },
+        "required": ["new_profile_status"]
+      },
+      "then": {
+        "properties": {
+          "new_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "package_tree": { "type": "string", "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$" }
         }
       }
     }

@@ -838,9 +838,10 @@ possession of a hardware security key (YubiKey, SoloKey, or any FIDO2-compatible
 
 Two operations require hardware-key signatures:
 
-1. **Merging to main.** GitHub branch protection is configured to require signed commits.
-   Only commits signed with SSH keys listed in the trusted VER31 signer chain at
-   `.github/release-signers` can be merged.
+1. **Merging to main.** The required security policy is that GitHub branch protection
+   require signed commits from authorized maintainers. The repository's current
+   configuration must be verified by the owner; this specification does not claim that
+   every merge path currently enforces it.
 
 2. **Publishing a package.** Every publish requires a hardware-key-signed approval file
    committed to the repository. For Go packages (which require git tags), the tag itself
@@ -922,19 +923,24 @@ members and noncanonical byte encodings are rejected. The payload binds:
 
 - the qualified package and exact `required_capabilities.json` path;
 - the pull request's exact base ref and commit;
-- the old and new manifest SHA-256 digests (null only when the old manifest is absent);
+- the old and new manifest SHA-256 digests (null only when the corresponding manifest
+  is absent);
 - the previous profile status (`absent`, `valid`, or `invalid`), exact prior and new
   capabilities, and exact prior and new banned-construct exceptions;
 - the Git tree object ID of the candidate package directory, including its source and
-  manifest but excluding the approval files stored outside that directory;
+  manifest but excluding the approval files stored outside that directory; it is null
+  only when the whole package directory is deleted;
 - reason, signing principal and UTC approval time.
 
 An approval-only commit does not change the package tree object ID and cannot invalidate
-its own signature. A package source, manifest, or base change does. The previous
-capability arrays are null for an invalid base manifest; the approval binds that exact
-invalid file's raw digest and labels its profile status `invalid`. The signer never
-supplies guessed previous capabilities. Repairing an invalid base manifest into any
-valid profile requires a signed approval.
+its own signature. A package source, manifest, or base change does. A deleted manifest
+has `new_profile_status: absent`, null new manifest hash, and empty new capability and
+exception arrays; when the entire package directory is also deleted, its package tree is
+null. This authorizes no capability because an absent manifest is default deny. The
+previous capability arrays are null for an invalid base manifest; the approval binds
+that exact invalid file's raw digest and labels its profile status `invalid`. The signer
+never supplies guessed previous capabilities. Repairing an invalid base manifest into
+any valid profile requires a signed approval.
 
 CI loads the verifier from the exact pull-request base and supplies candidate artifacts
 as untrusted data. It loads the signer chain and prior manifest from that same base,
