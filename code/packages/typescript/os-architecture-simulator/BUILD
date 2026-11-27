@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eu
 npm ci --quiet
 npm run build
 node --experimental-strip-types --test tests/core.test.ts
