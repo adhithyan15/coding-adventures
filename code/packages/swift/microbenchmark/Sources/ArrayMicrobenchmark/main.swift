@@ -57,7 +57,7 @@ private func platformEnvironmentValue(named name: String) -> String? {
 #if os(Windows)
 private func windowsEnvironmentValue(named name: String) -> String? {
     let nameBuffer = Array(name.utf16) + [0]
-    return nameBuffer.withUnsafeBufferPointer { namePointer in
+    return nameBuffer.withUnsafeBufferPointer { namePointer -> String? in
         guard let nameAddress = namePointer.baseAddress else {
             return nil
         }
