@@ -143,6 +143,44 @@ func TestPreciseMemoryForwardsAdjacentStoreToLoad(t *testing.T) {
 	}
 }
 
+func TestPreciseMemoryAllowsWordAccessAtExactRAMEnd(t *testing.T) {
+	program := Assemble([]uint32{
+		EncodeAddi(1, 0, 73),
+		EncodeSw(1, 0, 252),
+		EncodeLw(2, 0, 252),
+		EncodeEcall(),
+	})
+	c, err := NewRiscVCoreWithPreciseMemory(core.SimpleConfig(), 256)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c.LoadProgram(program, 0)
+	_, retired := runPreciseCore(t, c, 100)
+	if fault, ok := c.PreciseFaultOutcome(); ok {
+		t.Fatalf("exact-end access faulted: %+v", fault)
+	}
+	if !reflect.DeepEqual(retired, []int{0, 4, 8, 12}) {
+		t.Fatalf("retired PCs=%v, want all four instructions", retired)
+	}
+	if got := c.MemoryController().ReadWord(252); got != 73 {
+		t.Fatalf("exact-end store=%d, want 73", got)
+	}
+	if got := c.ReadRegister(2); got != 73 {
+		t.Fatalf("exact-end load=%d, want 73", got)
+	}
+}
+
+func TestPreciseWordMemoryMustBeEnabledBeforeStepping(t *testing.T) {
+	c, err := NewRiscVCore(core.SimpleConfig(), 256)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c.Step()
+	if err := c.EnablePreciseWordMemory(); err == nil {
+		t.Fatal("enabled precise memory after execution began")
+	}
+}
+
 func TestPreciseFaultPreservesOlderEffectsAndDoesNotRetireFaultToken(t *testing.T) {
 	program := Assemble([]uint32{
 		EncodeAddi(3, 0, 42),

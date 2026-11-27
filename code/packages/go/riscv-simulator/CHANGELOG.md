@@ -3,6 +3,8 @@
 ## [0.4.0] - Unreleased
 
 ### Added
+- Added `NewRiscVCoreWithPreciseMemory` for opt-in classic-pipeline aligned
+  `LW`/`SW` bounds checking, WB store commits, and terminal data-fault results.
 - Opted the RV32I core adapter into typed source-operand forwarding and added
   a dependent pipeline-vs-sequential regression including load-use, branch,
   and store-register operands.
