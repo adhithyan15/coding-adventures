@@ -4,6 +4,7 @@ use feature 'state';
 use Test2::V0;
 use JSON::PP ();
 use File::Spec;
+use File::Temp qw(tempfile);
 use lib 'lib', '../rank-statistics/lib', '../grammar-tools/lib', '../json-lexer/lib', '../json-parser/lib';
 use CodingAdventures::Microbenchmark qw(defaults analyze collect report_from_json report_to_json indexed_batch iterated_batch array_cli monotonic_clock);
 
@@ -27,6 +28,16 @@ subtest 'fixture remains canonical and all analysis cases conform' => sub {
         is($result->{verdict}, $case->{verdict}, "$case->{name} verdict");
         is($result->{interval}, $case->{interval}, "$case->{name} interval");
     }
+};
+
+subtest 'analysis accepts the supported maximum and rejects excess before pair inspection' => sub {
+    my @maximum = map {
+        { baseline_ns => 1, candidate_ns => 1, order => $_ % 2 ? 'baseline-first' : 'candidate-first' }
+    } 1 .. 10_000;
+    is(analyze(\@maximum, 95, 1.05)->{ratio}, 1, '10000 pairs are accepted');
+    push @maximum, undef;
+    like dies { analyze(\@maximum, 'invalid confidence', 'invalid factor') },
+        qr/at most 10000 pairs/, '10001 pairs are rejected before pair and parameter validation';
 };
 
 subtest 'collector calibrates, balances and reproduces its schedule' => sub {
@@ -116,6 +127,20 @@ subtest 'strict report replay preserves signed 64-bit integer tokens' => sub {
     like dies { report_from_json($encoded =~ s/("config"\s*:\s*\{)/$1"seed": 1,/r) }, qr/duplicate/;
     like dies { report_from_json($encoded =~ s/"revision"\s*:\s*"rev"/"revision": null/r) }, qr/(?:metadata|revision)/;
     like dies { report_from_json($encoded =~ s/"baseline_ns"\s*:\s*9223372036854775807/"baseline_ns": 1.5/r) }, qr/integer/;
+    my $empty_invocation = { %$generic, invocation => [] };
+    ok(report_from_json(report_to_json($empty_invocation)), 'empty invocation array is valid');
+    my $empty_argument = { %$generic, invocation => [''] };
+    is(report_from_json(report_to_json($empty_argument))->{invocation}[0], '', 'empty argv element is valid');
+    my $whitespace_revision = { %$generic, revision => ' ' };
+    is(report_from_json(report_to_json($whitespace_revision))->{revision}, ' ', 'whitespace-only revision remains valid metadata');
+    for my $field (qw(revision runtime os arch profile)) {
+        my $nul = { %$generic, $field => "bad\0value" };
+        like dies { report_from_json(report_to_json($nul)) }, qr/NUL|metadata|profile/,
+            "$field rejects NUL";
+    }
+    my $nul_invocation = { %$generic, invocation => ["bad\0value"] };
+    like dies { report_from_json(report_to_json($nul_invocation)) }, qr/NUL|invocation/;
+    like dies { report_from_json(report_to_json({ %$generic, profile => '' })) }, qr/profile/;
     my $without_metadata = { %$report };
     delete @{$without_metadata}{qw(workload invocation revision runtime os arch)};
     ok(report_from_json(report_to_json($without_metadata)), 'complete metadata absence is valid');
@@ -133,6 +158,21 @@ subtest 'strict report replay preserves signed 64-bit integer tokens' => sub {
     }
     my $bad_balance = { %$report, pairs => [ { %$pair, order => 'candidate-first' } ] };
     like dies { report_from_json(report_to_json($bad_balance)) }, qr/unbalanced/;
+};
+
+subtest 'CLI bounds replay reads before full-file allocation' => sub {
+    my ($fh, $path) = tempfile();
+    binmode $fh, ':raw';
+    print {$fh} 'x' x (4 * 1024 * 1024 + 1) or die "write oversized report: $!";
+    close $fh or die "close oversized report: $!";
+    my ($out, $err) = ('', '');
+    open my $out_fh, '>', \$out or die "open output scalar: $!";
+    open my $err_fh, '>', \$err or die "open error scalar: $!";
+    like dies { array_cli(['--replay', $path], $out_fh, $err_fh, sub { 0 }) },
+        qr/report exceeds JSON byte limit/, 'oversized replay path is refused before parser allocation';
+    close $out_fh;
+    close $err_fh;
+    unlink $path or die "remove oversized report: $!";
 };
 
 subtest 'array helpers use the same actual input and checked counts' => sub {

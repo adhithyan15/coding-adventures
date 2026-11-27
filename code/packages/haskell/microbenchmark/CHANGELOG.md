@@ -6,3 +6,5 @@
 
 - Add paired collection, exact-rank analysis, strict report replay, and an indexed-array CLI.
 - Select the Command Line Tools SDK explicitly for Darwin Cabal build and smoke commands.
+- Bound public benchmark analysis after inspecting at most 10,001 list elements, and read CLI replay paths through a 4 MiB plus one byte limit.
+- Declare the monotonic-time, named revision, output, and replay-file runtime effects in the capability profile.

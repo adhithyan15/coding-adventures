@@ -52,7 +52,7 @@ validateConfig c
 analyze :: [Pair] -> Int -> Double -> Either String Analysis
 analyze pairs confidence factor = do
     if null pairs then Left "at least one pair is required" else Right ()
-    if length pairs > 10000 then Left "at most 10000 pairs are supported" else Right ()
+    if not (atMostPairLimit pairs) then Left "at most 10000 pairs are supported" else Right ()
     if confidence < 1 || confidence > 99 then Left "confidence must be from 1 to 99" else Right ()
     if not (isFinite factor) || factor <= 1 then Left "factor must be finite and greater than 1" else Right ()
     ratios <- mapM ratio pairs
@@ -69,6 +69,14 @@ analyze pairs confidence factor = do
     ratio p | baselineNs p <= 0 || candidateNs p <= 0 = Left "pair durations must be positive"
             | pairOrder p `notElem` [BaselineFirst, CandidateFirst] = Left "invalid pair order"
             | otherwise = Right (fromIntegral (candidateNs p) / fromIntegral (baselineNs p))
+
+-- Inspect no more than 10,001 cons cells, even for an infinite input list.
+atMostPairLimit :: [a] -> Bool
+atMostPairLimit = go 0
+  where
+    go count _ | count > 10000 = False
+    go _ [] = True
+    go count (_:rest) = go (count + 1) rest
 
 collect :: Config -> Int64 -> Batch -> Batch -> Clock -> IO (Either String Report)
 collect config checksum baseline candidate clock = case validateConfig config of
@@ -340,7 +348,7 @@ decodeMetadata fields = do
         else if length present /= length names then Left "standard metadata must be complete" else do
             workload <- required "workload" fields >>= validWorkloadText "workload"
             rawInvocation <- required "invocation" fields >>= asArray "invocation"
-            invocation <- mapM (nonemptyText "invocation entry") rawInvocation
+            invocation <- mapM (textWithoutNul "invocation entry") rawInvocation
             revision <- required "revision" fields >>= nonemptyText "revision"
             runtime <- required "runtime" fields >>= nonemptyText "runtime"
             os <- required "os" fields >>= nonemptyText "os"
@@ -372,8 +380,13 @@ validWorkloadText name value = do
         else Right result
 nonemptyText :: String -> Value -> Either String String
 nonemptyText name value = do
-    result <- readText name value
+    result <- textWithoutNul name value
     if null result then Left (name ++ " must not be empty") else Right result
+
+textWithoutNul :: String -> Value -> Either String String
+textWithoutNul name value = do
+    result <- readText name value
+    if '\0' `elem` result then Left (name ++ " must not contain NUL") else Right result
 nonnegativeInt :: String -> Value -> Either String Int
 nonnegativeInt name value = do
     result <- readInt64 name value

@@ -28,5 +28,8 @@ PowerShell/cmd. Load the rock tree paths with `eval "$(luarocks path)"` on
 POSIX; on Windows, set `LUA_PATH` and `LUA_CPATH` from `luarocks path --lr-path`
 and `--lr-cpath`. Then invoke `lua script/array-microbenchmark --pairs 40`.
 `tests/installed-consumer/Consumer.lua` is the external consumer smoke test.
+Benchmark analysis accepts at most 10,000 pairs while rank statistics remain
+uncapped. The CLI reads at most 4 MiB plus one byte from a replay path before
+UTF-8 validation and JSON parsing.
 Report replay preserves any nonblank producer-supplied workload ID; the native
 array CLI continues to emit `indexed-array-sum-4096`.

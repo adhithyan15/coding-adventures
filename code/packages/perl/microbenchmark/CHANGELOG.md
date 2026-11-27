@@ -12,3 +12,5 @@
 - Bound JSON token density before allocating the report AST, while retaining quote-aware strings and the 10,000-pair limit.
 - Use a POSIX test path in the Unix BUILD entrypoint so the test file is found under `sh -c`.
 - Accept producer-supplied nonblank workload identifiers during strict report replay; the array CLI retains its own workload ID.
+- Reject benchmark analysis above 10,000 pairs before pair inspection and read CLI replay paths with a bounded 4 MiB plus one byte.
+- Declare the monotonic-time, named revision, output, and replay-file runtime effects in the capability profile.

@@ -1,6 +1,9 @@
 path = hd(System.argv())
+max_report_bytes = 4 * 1024 * 1024
 
-with {:ok, bytes} <- File.read(path),
+with {:ok, bytes} <-
+       File.open(path, [:read, :binary], fn io -> IO.binread(io, max_report_bytes + 1) end),
+     true <- is_binary(bytes) and byte_size(bytes) <= max_report_bytes,
      {:ok, report} <- CodingAdventures.Microbenchmark.decode_report(bytes),
      true <- length(report.pairs) == 40,
      true <-

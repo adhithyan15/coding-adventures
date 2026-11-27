@@ -18,3 +18,8 @@ integer tokens. Timings are advisory, with no speed threshold.
 Run `cabal test` from this directory. The test suite exercises fake-clock
 calibration, scheduling and failure paths; CLI acceptance should run the
 native command for 40 pairs and replay its JSON.
+
+Benchmark analysis accepts at most 10,000 pairs and inspects no more than
+10,001 list cells before refusing excess input. The reusable rank-statistics
+API remains uncapped. The replay command reads no more than 4 MiB plus one byte
+before JSON parsing.

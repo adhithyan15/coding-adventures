@@ -11,6 +11,7 @@ local M = { VERSION = "0.1.0" }
 local I64_MIN, I64_MAX = math.mininteger, math.maxinteger
 local MAX_PAIRS, MAX_JSON_BYTES, MAX_JSON_DEPTH, MAX_JSON_NODES, MAX_JSON_TOKENS = 10000, 4 * 1024 * 1024, 256, 100000, 200000
 local NULL = setmetatable({}, { __tostring = function() return "null" end })
+local JSON_ARRAY = {}
 M.null = NULL
 local base_first, candidate_first = "baseline-first", "candidate-first"
 
@@ -100,6 +101,7 @@ end
 
 function M.analyze(observations, confidence_percent, minimum_factor)
     assert(type(observations) == "table" and #observations > 0, "at least one pair is required")
+    assert(#observations <= MAX_PAIRS, "at most 10000 pairs are supported")
     integer64(confidence_percent, "confidence_percent", 1, 99)
     minimum_factor = factor(minimum_factor)
     local ratios = {}
@@ -306,7 +308,7 @@ local function decode_ast(node, state)
         for _, child in ipairs(node.children) do
             if child.rule_name == "value" then out[#out + 1] = decode_ast(child, state) end
         end
-        return out
+        return setmetatable(out, JSON_ARRAY)
     end
     error("unknown JSON AST node " .. tostring(rule))
 end
@@ -367,12 +369,21 @@ local function replay(text)
         assert(valid_workload_identifier(document.workload), "workload must be nonblank and contain no NUL")
         for _, key in ipairs(metadata_keys) do
             if key == "invocation" then
-                assert(type(document.invocation) == "table" and #document.invocation > 0, "invocation must be a non-empty array")
-                for _, item in ipairs(document.invocation) do assert(type(item) == "string" and #item > 0, "invocation entries must be non-empty strings") end
-            else assert(type(document[key]) == "string" and #document[key] > 0, key .. " must be a non-empty string") end
+                assert(type(document.invocation) == "table" and getmetatable(document.invocation) == JSON_ARRAY,
+                    "invocation must be an array")
+                for _, item in ipairs(document.invocation) do
+                    assert(type(item) == "string" and not item:find("%z"), "invocation entries must be strings without NUL")
+                end
+            else
+                assert(type(document[key]) == "string" and #document[key] > 0 and not document[key]:find("%z"),
+                    key .. " must be a non-empty string without NUL")
+            end
         end
     end
-    if document.profile ~= nil then assert(type(document.profile) == "string" and #document.profile > 0, "profile must be a non-empty string") end
+    if document.profile ~= nil then
+        assert(type(document.profile) == "string" and #document.profile > 0 and not document.profile:find("%z"),
+            "profile must be a non-empty string without NUL")
+    end
 
     exact_keys(document.config, { "pairs", "confidence_percent", "minimum_factor", "seed", "target_ns", "max_batch" }, "config")
     local config = document.config
@@ -437,7 +448,8 @@ local function json_encode(value)
     assert(kind == "table", "unsupported JSON value")
     local count, array = #value, true
     for key in pairs(value) do if math.type(key) ~= "integer" or key < 1 or key > count then array = false; break end end
-    if array and count > 0 then
+    if getmetatable(value) == JSON_ARRAY then array = true end
+    if array then
         local items = {}; for i = 1, count do items[i] = json_encode(value[i]) end
         return "[" .. table.concat(items, ",") .. "]"
     end
@@ -449,6 +461,7 @@ end
 
 function M.to_json(report)
     local document = {}; for key, value in pairs(report) do if value ~= nil then document[key] = value end end
+    if type(document.invocation) == "table" then setmetatable(document.invocation, JSON_ARRAY) end
     return json_encode(document) .. "\n"
 end
 
@@ -506,7 +519,10 @@ local function run_impl(argv, output, error_output, now)
     if help then write_checked(output, "Usage: array-microbenchmark [--pairs N] [--confidence N] [--factor F] [--seed I64] [--target-ns N] [--max-batch N] [--revision REV] | --replay FILE\n"); return 0 end
     if replay_path then
         local file, err = io.open(replay_path, "rb"); assert(file, "cannot read replay file: " .. tostring(err))
-        local text = file:read("*a"); local closed, close_error = file:close(); assert(closed, "cannot close replay file: " .. tostring(close_error))
+        local text = file:read(MAX_JSON_BYTES + 1)
+        local closed, close_error = file:close()
+        assert(closed, "cannot close replay file: " .. tostring(close_error))
+        assert(text and #text <= MAX_JSON_BYTES, "report exceeds JSON byte limit")
         local report = replay(text)
         write_checked(output, "replay valid: " .. #report.pairs .. " pairs, " .. report.analysis.verdict .. "\n")
         return 0

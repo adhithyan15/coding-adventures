@@ -6,3 +6,5 @@
 
 - Add paired collection and replay, exact JSON integer preservation, the indexed-array CLI, and packaged fixture checks.
 - Normalize zero only for the internal xorshift state so default seeded orders shuffle reproducibly; accept integer-token representations of finite `minimum_factor` values during report replay.
+- Reject benchmark analysis above 10,000 pairs before ratio construction and reject oversized byte input before UTF-8 decoding.
+- Read replay paths in bounded chunks and exercise both native report replay and the 4 MiB refusal in BUILD.

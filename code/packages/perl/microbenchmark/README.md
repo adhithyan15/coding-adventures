@@ -24,3 +24,7 @@ overflow checks. Lua/Perl report readers share the canonical fixture at
 `testdata/microbenchmark-pairs-v1.json`; BUILD tests verify it has not drifted.
 Native timings use `Time::HiRes::CLOCK_MONOTONIC` and are observations of
 runtime behavior, not measurements of physical CPU cycles.
+
+The benchmark analysis entry point accepts at most 10,000 pairs before pair
+validation and ratio creation. `rank-statistics` remains uncapped. CLI replay
+reads no more than 4 MiB plus one byte before decoding or parsing the report.

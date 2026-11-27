@@ -41,6 +41,16 @@ if defined CA_LUAROCKS_TREE (
 lua tests\run.lua
 set "build_status=%ERRORLEVEL%"
 if not "%build_status%"=="0" goto :failed
+set "native_report=%TEMP%\lua-microbenchmark-%RANDOM%.json"
+set "GIT_REVISION="
+set "GITHUB_SHA="
+lua script\array-microbenchmark --pairs 40 > "%native_report%"
+set "build_status=%ERRORLEVEL%"
+if not "%build_status%"=="0" goto :failed
+lua tests\installed-consumer\Consumer.lua "%native_report%"
+set "build_status=%ERRORLEVEL%"
+del /q "%native_report%" 2>nul
+if not "%build_status%"=="0" goto :failed
 popd
 exit /b 0
 
@@ -56,5 +66,6 @@ popd
 exit /b %rock_status%
 
 :failed
+if defined native_report del /q "%native_report%" 2>nul
 popd
 exit /b %build_status%

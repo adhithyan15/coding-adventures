@@ -1,2 +1,3 @@
 cabal test
-cabal run array-microbenchmark -- --pairs 40
+powershell -NoProfile -File tools\native-smoke.ps1
+powershell -NoProfile -File tools\installed-consumer-smoke.ps1

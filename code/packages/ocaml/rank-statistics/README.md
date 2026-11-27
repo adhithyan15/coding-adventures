@@ -12,5 +12,6 @@ median [| 1.; 2.; 3.; 4. |]  (* Ok 2.5 *)
 median_interval [| 1.; 2.; 3.; 4. |] 95
 ```
 
-Run `opam exec -- dune runtest` from this directory. The package depends on
-OCaml 5.2 and Dune 3.17 and has no benchmark or Warrant dependency.
+Run `BUILD` (or `BUILD_windows`) from this directory for pinned formatting,
+instrumented tests, and an expected-source coverage summary. The package
+depends on OCaml 5.2 and Dune 3.17 and has no benchmark or Warrant dependency.

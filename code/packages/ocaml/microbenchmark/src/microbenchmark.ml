@@ -367,8 +367,13 @@ let workload_text label value =
   then Error (label ^ " must be nonblank and contain no NUL")
   else Ok result
 
-let nonempty_text label value =
+let text_without_nul label value =
   let* result = text label value in
+  if String.contains result '\000' then Error (label ^ " must not contain NUL")
+  else Ok result
+
+let nonempty_text label value =
+  let* result = text_without_nul label value in
   if result = "" then Error (label ^ " must not be empty") else Ok result
 
 let array label = function
@@ -493,7 +498,7 @@ let decode_metadata fields =
       List.fold_left
         (fun result item ->
           let* sofar = result in
-          let* item = nonempty_text "invocation entry" item in
+          let* item = text_without_nul "invocation entry" item in
           Ok (item :: sofar))
         (Ok []) invocation_json
     in

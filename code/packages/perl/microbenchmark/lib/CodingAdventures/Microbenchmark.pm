@@ -80,6 +80,7 @@ sub _config {
 sub analyze {
     my ($pairs, $confidence, $factor) = @_;
     die "pairs must be a non-empty array reference" unless ref($pairs) eq 'ARRAY' && @$pairs;
+    die "at most 10000 pairs are supported" if @$pairs > MAX_PAIRS;
     $confidence = _i64($confidence, 'confidence_percent', 1, 99);
     $factor = _factor($factor);
     my @ratios;
@@ -259,6 +260,23 @@ sub _json_text {
     return $text;
 }
 
+sub _read_bounded_report {
+    my ($fh) = @_;
+    my @chunks;
+    my $total = 0;
+    while ($total <= MAX_JSON_BYTES) {
+        my $remaining = MAX_JSON_BYTES + 1 - $total;
+        my $chunk = '';
+        my $read = sysread($fh, $chunk, $remaining);
+        die "cannot read report: $!" unless defined $read;
+        last if $read == 0;
+        push @chunks, $chunk;
+        $total += $read;
+    }
+    die "report exceeds JSON byte limit" if $total > MAX_JSON_BYTES;
+    return join('', @chunks);
+}
+
 sub _fields {
     my ($object, $expected, $label) = @_;
     die "$label must be an object" unless ref($object) eq 'HASH';
@@ -272,6 +290,16 @@ sub _json_number {
     my $number = _numeric_value($value, $label);
     die "$label must be a finite JSON number" unless isfinite($number);
     return $number;
+}
+
+sub _metadata_text {
+    my ($value, $label, $allow_empty) = @_;
+    die "$label must be a string" if !defined($value) || ref($value);
+    my $flags = svref_2object(\$value)->FLAGS;
+    die "$label must be a string" if $flags & (SVf_IOK() | SVf_NOK());
+    die "$label must not be empty" if !$allow_empty && !length($value);
+    die "$label must not contain NUL" if index($value, "\0") >= 0;
+    return $value;
 }
 
 sub report_from_json {
@@ -290,9 +318,10 @@ sub report_from_json {
     if ($present) {
         for my $field (@metadata) {
             if ($field eq 'invocation') {
-                die "invocation must be a non-empty string array" unless ref($doc->{invocation}) eq 'ARRAY' && @{$doc->{invocation}} && !grep { !defined($_) || ref($_) || !length($_) } @{$doc->{invocation}};
+                die "invocation must be a string array" unless ref($doc->{invocation}) eq 'ARRAY';
+                _metadata_text($_, "invocation entry", 1) for @{$doc->{invocation}};
             } else {
-                die "$field must be a non-empty string" if !defined($doc->{$field}) || ref($doc->{$field}) || !length($doc->{$field});
+                _metadata_text($doc->{$field}, $field, 0);
                 if ($field eq 'workload') {
                     my $workload = $doc->{$field};
                     my $flags = svref_2object(\$workload)->FLAGS;
@@ -303,7 +332,7 @@ sub report_from_json {
             }
         }
     }
-    die "profile must be a non-empty string" if exists($doc->{profile}) && (!defined($doc->{profile}) || ref($doc->{profile}) || !length($doc->{profile}));
+    _metadata_text($doc->{profile}, "profile", 0) if exists($doc->{profile});
     _fields($doc->{config}, [qw(pairs confidence_percent minimum_factor seed target_ns max_batch)], 'config');
     my $config = _config($doc->{config});
     my $batch_size = _i64($doc->{batch_size}, 'batch_size', 1, $config->{max_batch});
@@ -427,7 +456,7 @@ sub array_cli {
     $revision = _revision($explicit_revision ? $revision : undef);
     if (defined $replay) {
         open my $fh, '<:raw', $replay or die "cannot read report: $!";
-        local $/; my $raw = <$fh>; close $fh or die "cannot close report: $!";
+        my $raw = _read_bounded_report($fh); close $fh or die "cannot close report: $!";
         my $report = report_from_json($raw);
         _write_checked($stdout, "replay valid: " . scalar(@{$report->{pairs}}) . " pairs, $report->{analysis}{verdict}\n");
         return 0;
