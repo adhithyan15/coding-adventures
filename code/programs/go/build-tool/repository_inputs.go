@@ -1487,6 +1487,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
+		name:     "haskell/test-bootstrap",
+		language: "haskell",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "elixir/test_bootstrap",
 		language: "elixir",
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
