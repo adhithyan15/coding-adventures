@@ -96,7 +96,7 @@ func TestRealBuildToolExportsAreWhatPrepareReads(t *testing.T) {
 	if err != nil {
 		t.Fatalf("graph and steps export: %v", err)
 	}
-	if err := execTool(ToolRun{Path: exe, Args: PlanArgs(root, 3, planPath), Dir: out, Env: env, Timeout: 10 * time.Minute}); err != nil {
+	if err := execTool(ToolRun{Path: exe, Args: PlanArgs(root, 3, planPath, ""), Dir: out, Env: env, Timeout: 10 * time.Minute}); err != nil {
 		t.Fatalf("plan export: %v", err)
 	}
 

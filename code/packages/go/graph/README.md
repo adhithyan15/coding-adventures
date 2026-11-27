@@ -26,6 +26,14 @@ same-node query. It returns an error if any weight is negative, NaN, or infinite
 `AddEdge` retains its existing zero-means-default behavior and permits finite
 negative weights for algorithms such as `MinimumSpanningTree`.
 
+Call `AddEdgeChecked` and `SetEdgePropertyChecked` when an application wants
+mutation-time validation of the effective edge weight. They reject negative,
+NaN, or infinite canonical weights with `ErrInvalidEdgeWeight` and leave graph
+state unchanged. Zero retains its existing default-to-one behavior. A
+`weight` value inside `AddEdgeChecked`'s property bag does not override its
+positional weight; legacy `AddEdge` and `SetEdgeProperty` retain their existing
+storage semantics.
+
 If a target is topologically reachable but every computed path distance
 overflows `float64`, `ShortestPath` returns `graph.ErrPathDistanceOverflow`.
 Disconnected targets keep the existing empty-path result; a finite alternative
@@ -47,6 +55,7 @@ go test -run=^$ -fuzz=FuzzShortestPathWeightPreconditions -fuzztime=5s -parallel
 go test -run=^$ -fuzz=FuzzConcurrentGraphModelHistories -fuzztime=5s -parallel=1 .
 go test -run=^$ -fuzz=FuzzEdgeIdentityModel -fuzztime=5s -parallel=1 .
 go test -run=^$ -fuzz=FuzzShortestPathDistanceOverflow -fuzztime=5s -parallel=1 .
+go test -run=^$ -fuzz=FuzzCheckedEdgeMutationClasses -fuzztime=5s -parallel=1 .
 ```
 
 ## Concurrent use

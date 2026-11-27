@@ -49,6 +49,7 @@ type prep struct {
 	roots     []string // extra host-roots.json entries, as JSON objects
 	allowPre  bool     // Options.AllowPreloadedState (census only)
 	execHead  bool     // Options.ExecHead (D48 step 6: sealed into the binding)
+	language  string   // Options.Language (KILN04 7.3: the recording selection)
 	steps     string   // the steps export (default: built from the graph)
 	graph     string   // the graph export (default: the three fixture packages)
 	toolErr   map[string]error
@@ -304,7 +305,7 @@ var fixedNow = time.Date(2026, 11, 13, 2, 3, 4, 0, time.UTC)
 func (p *prep) options() Options {
 	return Options{
 		Root: p.root, Dir: p.dir, BuildTool: p.bt, KilnExe: p.kiln, Strace: p.strace, Git: p.gitBin,
-		ShardIndex: 0, ShardCount: 2, JobStart: 1794000000, AllowPreloadedState: p.allowPre, ExecHead: p.execHead,
+		ShardIndex: 0, ShardCount: 2, JobStart: 1794000000, AllowPreloadedState: p.allowPre, ExecHead: p.execHead, Language: p.language,
 		Image:   "github/linux/amd64/ubuntu24/20260101.1",
 		Getenv:  func(k string) string { return p.getenv[k] },
 		Environ: p.env,

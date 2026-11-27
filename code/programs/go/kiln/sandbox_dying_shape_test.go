@@ -13,6 +13,7 @@ import (
 
 var (
 	bareOpenatUnknownResume = regexp.MustCompile(`^([0-9]+) +<\.\.\. openat resumed>\) = \?$`)
+	bareGetdentsUnknown     = regexp.MustCompile(`^([0-9]+) +getdents64\(.*\) = \? <unavailable>$`)
 	traceSpawnResult        = regexp.MustCompile(`^([0-9]+) +(clone3?|fork|vfork)\(.*\) = ([0-9]+)(?: /\* ([0-9]+) in strace's PID NS \*/)?$`)
 	traceSpawnStart         = regexp.MustCompile(`^([0-9]+) +(clone3?|fork|vfork)\(.* <unfinished \.\.\.>$`)
 	traceSpawnResume        = regexp.MustCompile(`^([0-9]+) +<\.\.\. (clone3?|fork|vfork) resumed>(.*)$`)
@@ -25,13 +26,30 @@ var (
 // process's terminal event. This is a test oracle only; the production parser
 // still refuses the incomplete trace.
 func laterBareOpenatExit(raw []byte, refusal *trace.Error) int {
+	return laterUnknownCallExit(raw, refusal, bareOpenatUnknownResume)
+}
+
+// laterBareGetdentsExit returns the line number of a parsed terminal exit for
+// the exact refused getdents64 PID. This is a test oracle only: directory
+// reads remain refused by the production parser because the trace omits their
+// result and directory contents affect the package's observed inputs.
+func laterBareGetdentsExit(raw []byte, refusal *trace.Error) int {
+	return laterUnknownCallExit(raw, refusal, bareGetdentsUnknown)
+}
+
+// laterUnknownCallExit returns a later parsed terminal event only when it
+// belongs to the exact PID generation whose unknown call was refused. The
+// narrow target pattern is supplied by the caller; all process-generation
+// checks are shared so this test oracle cannot accept an unrelated or reused
+// numeric PID.
+func laterUnknownCallExit(raw []byte, refusal *trace.Error, targetPattern *regexp.Regexp) int {
 	if refusal == nil || (refusal.Reason != "unresumed-call" && refusal.Reason != "unparsable-line" && refusal.Reason != "result") || len(raw) == 0 {
 		return 0
 	}
 	if refusal.Line < 1 {
 		return 0
 	}
-	target := bareOpenatUnknownResume.FindSubmatch(traceLineAt(raw, refusal.Line))
+	target := targetPattern.FindSubmatch(traceLineAt(raw, refusal.Line))
 	if target == nil {
 		return 0
 	}
@@ -202,15 +220,21 @@ func parsedTerminalTracePID(line []byte) int {
 	return parsed.Exits[0].Pid
 }
 
-// dyingRefusalDiagnostic prints only the refused line and the first later
-// same-PID terminal candidate. Each line and the overall output are bounded.
+// dyingRefusalDiagnostic prints the refused line and a bounded sequence of
+// later events for the same numeric PID, including any parsed direct spawn
+// that could make a later terminal candidate belong to a reused generation.
 func dyingRefusalDiagnostic(raw []byte, refusalLine, pid int) string {
 	var out strings.Builder
+	shown := 0
 	appendLine := func(i int, line []byte) {
+		if shown >= 24 {
+			return
+		}
 		if len(line) > 300 {
 			line = append(bytes.Clone(line[:300]), []byte("...")...)
 		}
 		fmt.Fprintf(&out, "%d: %s\n", i+1, line)
+		shown++
 	}
 	if refusalLine > 0 {
 		if line := traceLineAt(raw, refusalLine); line != nil {
@@ -218,11 +242,10 @@ func dyingRefusalDiagnostic(raw []byte, refusalLine, pid int) string {
 		}
 	}
 	visitTraceLines(raw, refusalLine+1, func(lineNo int, line []byte) bool {
-		if traceTerminalPrefix.Match(line) && linePID(line) == pid {
+		if linePID(line) == pid || spawnedTracePID(line) == pid {
 			appendLine(lineNo-1, line)
-			return false
 		}
-		return true
+		return shown < 24
 	})
 	if out.Len() == 0 {
 		return "no refusal/terminal context available"
@@ -418,5 +441,55 @@ func TestLaterBareOpenatExitDiagnosticsAreBounded(t *testing.T) {
 	diagnostic := dyingRefusalDiagnostic(raw, 1, 202)
 	if len(diagnostic) > 700 || !strings.Contains(diagnostic, "1: ") || !strings.Contains(diagnostic, "2: ") || !strings.Contains(diagnostic, "...") {
 		t.Fatalf("diagnostic was not bounded refusal/terminal context: %q", diagnostic)
+	}
+}
+
+func TestLaterBareGetdentsExitRequiresExactRefusalAndPID(t *testing.T) {
+	const (
+		pid      = 202
+		otherPID = 303
+	)
+	unknown := fmt.Sprintf("%d getdents64(9</tmp/pkg>) = ? <unavailable>\n", pid)
+	valid := unknown + fmt.Sprintf("%d +++ exited with 0 +++\n", pid)
+	reused := unknown + fmt.Sprintf("101 fork() = %d\n%d +++ exited with 0 +++\n", pid, pid)
+	cases := []struct {
+		name     string
+		raw      string
+		reason   string
+		line     int
+		wantLine int
+	}{
+		{name: "later same-pid parsed exit", raw: valid, reason: "unresumed-call", line: 1, wantLine: 2},
+		{name: "later same-pid parsed signal exit", raw: unknown + fmt.Sprintf("%d +++ killed by SIGKILL +++\n", pid), reason: "unresumed-call", line: 1, wantLine: 2},
+		{name: "different pid exit", raw: unknown + fmt.Sprintf("%d +++ exited with 0 +++\n", otherPID), reason: "unresumed-call", line: 1},
+		{name: "missing terminal", raw: unknown, reason: "unresumed-call", line: 1},
+		{name: "same numeric pid reused after refusal", raw: reused, reason: "unresumed-call", line: 1},
+		{name: "prior terminal is not evidence", raw: fmt.Sprintf("%d +++ exited with 0 +++\n", pid) + unknown, reason: "unresumed-call", line: 2},
+		{name: "successful resumed getdents is not the unknown shape", raw: fmt.Sprintf("%d <... getdents64 resumed>) = 4\n%d +++ exited with 0 +++\n", pid, pid), reason: "unresumed-call", line: 1},
+		{name: "wrong refusal reason", raw: valid, reason: "size", line: 1},
+		{name: "malformed terminal", raw: unknown + fmt.Sprintf("%d +++ exited with nonsense +++\n", pid), reason: "unresumed-call", line: 1},
+		{name: "terminal trailing junk", raw: unknown + fmt.Sprintf("%d +++ exited with 0 +++ extra\n", pid), reason: "unresumed-call", line: 1},
+		{name: "trailing text on unknown result", raw: fmt.Sprintf("%d getdents64(9</tmp/pkg>) = ? <unavailable> extra\n%d +++ exited with 0 +++\n", pid, pid), reason: "unresumed-call", line: 1},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := laterBareGetdentsExit([]byte(tc.raw), &trace.Error{Reason: tc.reason, Line: tc.line})
+			if got != tc.wantLine {
+				t.Fatalf("laterBareGetdentsExit() = %d, want %d", got, tc.wantLine)
+			}
+		})
+	}
+}
+
+func TestUnavailableGetdentsStillFailsClosedInProductionParser(t *testing.T) {
+	const pid = 202
+	raw := []byte(fmt.Sprintf("%d getdents64(9</tmp/pkg>) = ? <unavailable>\n%d +++ exited with 0 +++\n", pid, pid))
+	_, err := trace.Parse(bytes.NewReader(raw), "/", trace.Limits{})
+	refusal, ok := err.(*trace.Error)
+	if !ok || refusal.Reason != "unresumed-call" || refusal.Line != 1 {
+		t.Fatalf("production parser error = %#v, want unresumed-call at line 1", err)
+	}
+	if got := laterBareGetdentsExit(raw, refusal); got != 2 {
+		t.Fatalf("test-only same-PID oracle = %d, want parsed terminal line 2", got)
 	}
 }
