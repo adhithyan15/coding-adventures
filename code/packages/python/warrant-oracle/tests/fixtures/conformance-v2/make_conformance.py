@@ -47,6 +47,7 @@ KITS = (
     ("kit", "kit.warrant", "kit.profile"),
     ("small", "kit-small.warrant", "kit-small.profile"),
     ("width", "kit-width.warrant", "kit-width.profile"),
+    ("tuple", "kit-tuple.warrant", "kit-tuple.profile"),
 )
 
 

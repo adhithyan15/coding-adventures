@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import re
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -529,6 +530,85 @@ class CiWiring(unittest.TestCase):
             json.dumps({"Action": "pass", "Test": "TestSandboxFilesystem"}),
         ]
         self.assertEqual(mod.failing_output(lines), {"TestSandboxNoHostIPC": ["  boom: exit 125"]})
+
+    def test_repeat_step_prints_every_failed_run_in_full(self) -> None:
+        body = self.job().split("      - name: Repeat the restart and signal real-strace tests\n", 1)[1].split("\n      - name:", 1)[0]
+        self.assertIn("go test -json -timeout 12m -count=20", body)
+        self.assertIn("go test -json -timeout 10m -count=5", body)
+        self.assertIn('--failures "$json1"', body)
+        self.assertIn('--failures "$json2"', body)
+        self.assertIn("STRACE_LISTEN_RETRIES", body)
+        self.assertIn("::notice::", body)
+        self.assertNotIn("tail -n 200", body)
+
+    def test_failed_runs_keeps_each_failed_iteration_of_a_repeated_test(self) -> None:
+        def ev(action: str, test: str | None = None, text: str | None = None) -> str:
+            event = {"Action": action}
+            if test:
+                event["Test"] = test
+            if text is not None:
+                event["Output"] = text
+            return json.dumps(event)
+
+        lines = []
+        for i, final in enumerate(["pass", "fail", "pass", "fail", "pass"]):
+            lines += [ev("run", "TestD"), ev("output", "TestD", f"msg {i}\n"), ev(final, "TestD")]
+        lines += [ev("output", None, "FAIL\n"), ev("fail")]
+        self.assertEqual(
+            mod.failed_runs(lines),
+            [("TestD", ["  msg 1"]), ("TestD", ["  msg 3"]), ("(package)", ["  FAIL"])],
+        )
+        # All green: nothing to print.
+        self.assertEqual(mod.failed_runs([ev("run", "T"), ev("pass", "T"), ev("pass")]), [])
+
+    def test_failed_runs_is_not_truncated_and_cannot_inject(self) -> None:
+        text = "".join(f"line {i}\n" for i in range(500)) + "::error::x\n"
+        lines = [
+            json.dumps({"Action": "run", "Test": "T"}),
+            json.dumps({"Action": "output", "Test": "T", "Output": text}),
+            json.dumps({"Action": "fail", "Test": "T"}),
+        ]
+        [(name, out), (package, _)] = mod.failed_runs(lines)
+        self.assertEqual(package, "(package)")
+        self.assertEqual(name, "T")
+        self.assertEqual(len(out), 501)
+        self.assertFalse([line for line in out if line.startswith("::")])
+
+    def test_stray_json_values_do_not_crash_the_repeat_helpers(self) -> None:
+        stray = ["0\n", "null\n", "[1]\n", '"s"\n']
+        good = [
+            json.dumps({"Action": "run", "Test": "T"}),
+            json.dumps({"Action": "output", "Test": "T", "Output": "x\n"}),
+            json.dumps({"Action": "fail", "Test": "T"}),
+        ]
+        self.assertEqual(mod.failed_runs(stray + good)[0], ("T", ["  x"]))
+        self.assertEqual(mod.plain_text(stray + [good[1]]), '0\nnull\n[1]\n"s"\nx\n')
+
+    def test_repeat_step_neutralises_and_warns(self) -> None:
+        body = self.job().split("      - name: Repeat the restart and signal real-strace tests\n", 1)[1].split("\n      - name:", 1)[0]
+        # Behavioural: run the exact filter text from the step on hostile lines.
+        filters = re.findall(r"\| (tr -d '\\r' \| sed 's/\^/\| /')$", body, re.M)
+        self.assertEqual(len(filters), 2, filters)
+        hostile = "::error::x\n  ::error::x\n\t::add-mask::y\nx\r::error::z\n"
+        for command in filters:
+            out = subprocess.run(["bash", "-c", command], input=hostile, capture_output=True, text=True, check=True).stdout
+            self.assertEqual(len(out.splitlines()), 4, out)
+            self.assertFalse([ln for ln in out.splitlines() if re.match(r"^\s*::", ln)], out)
+        self.assertIn('[ "$listen_retries" -gt 5 ]', body)
+        self.assertIn("::warning::strace's PTRACE_LISTEN race", body)
+
+    def test_failing_output_ignores_stray_json_values(self) -> None:
+        lines = ["0\n", "null\n", json.dumps({"Action": "output", "Test": "T", "Output": "x\n"}), json.dumps({"Action": "fail", "Test": "T"})]
+        self.assertEqual(mod.failing_output(lines), {"T": ["  x"]})
+
+    def test_plain_text_rebuilds_the_verbose_log(self) -> None:
+        lines = [
+            json.dumps({"Action": "output", "Test": "T", "Output": "    f.go:1: STRACE_LISTEN_RETRIES=2\n"}),
+            json.dumps({"Action": "pass", "Test": "T"}),
+            "# build failure text",
+            json.dumps({"Action": "output", "Output": "FAIL\tkiln\n"}),
+        ]
+        self.assertEqual(mod.plain_text(lines), "    f.go:1: STRACE_LISTEN_RETRIES=2\n# build failure text\nFAIL\tkiln\n")
 
     def test_passing_facts_are_surfaced_and_bounded(self) -> None:
         def out(test: str, text: str) -> str:

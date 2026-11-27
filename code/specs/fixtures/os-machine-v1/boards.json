@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "program": "ascii-console-demo-v1",
+  "programBytes": [16, 0, 0, 32, 79, 48, 32, 75, 48, 32, 10, 48, 255],
+  "budgets": [1, 4, 2, 1],
+  "cases": [
+    {
+      "board": { "id": "museum-board-16k", "ramEnd": 16640, "consoleAddress": 65280 },
+      "expected": {
+        "cpu": { "pc": 269, "accumulator": 10, "addressRegister": 65280, "halted": true, "instructions": 8 },
+        "consoleBytes": [79, 75, 10],
+        "consoleText": "OK\n",
+        "instructions": ["LDX_ABS", "LDA_IMM", "STAX", "LDA_IMM", "STAX", "LDA_IMM", "STAX", "HALT"],
+        "consoleWrites": [
+          { "step": 3, "address": "65280", "byte": "79", "character": "O", "region": "console" },
+          { "step": 5, "address": "65280", "byte": "75", "character": "K", "region": "console" },
+          { "step": 7, "address": "65280", "byte": "10", "character": "\n", "region": "console" }
+        ]
+      }
+    },
+    {
+      "board": { "id": "compact-board-8k", "ramEnd": 8448, "consoleAddress": 57344 },
+      "expected": {
+        "cpu": { "pc": 269, "accumulator": 10, "addressRegister": 57344, "halted": true, "instructions": 8 },
+        "consoleBytes": [79, 75, 10],
+        "consoleText": "OK\n",
+        "instructions": ["LDX_ABS", "LDA_IMM", "STAX", "LDA_IMM", "STAX", "LDA_IMM", "STAX", "HALT"],
+        "consoleWrites": [
+          { "step": 3, "address": "57344", "byte": "79", "character": "O", "region": "console" },
+          { "step": 5, "address": "57344", "byte": "75", "character": "K", "region": "console" },
+          { "step": 7, "address": "57344", "byte": "10", "character": "\n", "region": "console" }
+        ]
+      }
+    }
+  ]
+}

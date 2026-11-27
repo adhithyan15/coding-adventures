@@ -123,7 +123,8 @@ describe("refusals", () => {
       return undefined;
     };
     expect(level({ d: "list", of: { d: "bool", size: 2 }, size: 7 })).toBe("ir.list");
-    expect(level({ d: "tuple", of: [], size: 1 })).toBe("ir.tuple");
+    // a tuple descriptor is held now (S10f); it is `ir.data` only when its binder is a record
+    expect(level({ d: "tuple", of: [], size: 1 })).toBeUndefined();
     expect(level({ d: "variant", ctors: [], size: 1 })).toBe("ir.data");
     expect(level({ d: "option", of: { d: "bool", size: 2 }, size: 3 })).toBe("ir.data");
   });

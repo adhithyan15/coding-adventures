@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
@@ -198,6 +199,23 @@ func TestVosToolPathsExist(t *testing.T) {
 	}
 }
 
+// VOS-040c: the model-SAT lane's directories exist, so a rename cannot orphan the contract row.
+func TestVosContractSatPathsExist(t *testing.T) {
+	if len(vosContractSatPaths) != 4 {
+		t.Fatalf("vosContractSatPaths = %v, want the lane and its three solver crates", vosContractSatPaths)
+	}
+	for _, p := range vosContractSatPaths {
+		if _, err := os.Stat(filepath.Join("..", "..", "..", "..", p)); err != nil {
+			t.Errorf("vosContractSatPaths: %s: %v", p, err)
+		}
+		for _, q := range vosToolPaths {
+			if p == q {
+				t.Errorf("%s is in both vosToolPaths and vosContractSatPaths: the SAT paths must stay contract-only", p)
+			}
+		}
+	}
+}
+
 // The registered row of a contract crate (VOS-039b-1): present, selects the VOS tools and
 // grammars its BUILD runs outside Cargo, and nothing else (no document of its own, no lookalike).
 func TestVosContractRowSelectsTheVosTools(t *testing.T) {
@@ -215,14 +233,53 @@ func TestVosContractRowSelectsTheVosTools(t *testing.T) {
 		"code/packages/rust/vos-manifest/src/warrant.rs":    true,
 		"code/packages/rust/vos-shape-check/src/a.rs":       true,
 		"code/packages/rust/warrant-grammar/src/a.rs":       true,
-		"code/specs/vos-sched-any.warrant":                  false,
-		"code/specs/vos-sched-contract.warrant":             false,
-		"code/packages/rust/vos-manifest-x/src/a.rs":        false,
-		"code/programs/rust/vos-linker/src/a.rs":            false,
+		// VOS-040c: the model-SAT lane and the solver crates it runs with select the contract
+		// row (they are not Cargo edges of the crate), as lookalikes and neighbours do not.
+		"code/programs/rust/vos-model-sat/src/lane.rs":  true,
+		"code/programs/rust/vos-model-sat/Cargo.toml":   true,
+		"code/packages/rust/bit-blaster/src/aig.rs":     true,
+		"code/packages/rust/cdcl-sat/src/lib.rs":        true,
+		"code/packages/rust/drat-check/src/lib.rs":      true,
+		"code/packages/rust/cdcl-sat-extra/src/lib.rs":  false,
+		"code/packages/rust/bit-blaster2/src/lib.rs":    false,
+		"code/programs/rust/vos-model-sat-x/src/lib.rs": false,
+		"code/specs/vos-sched-any.warrant":              false,
+		"code/specs/vos-sched-contract.warrant":         false,
+		"code/packages/rust/vos-manifest-x/src/a.rs":    false,
+		"code/programs/rust/vos-linker/src/a.rs":        false,
 	} {
 		if got := row.matches(path); got != want {
 			t.Errorf("rust/vos-sched-contract matches(%q) = %v, want %v", path, got, want)
 		}
+	}
+}
+
+// VOS-040c: the SAT paths select ONLY the contract row.  Every implementation row and the
+// vos-probe-ready fixture row must ignore a solver edit, or each one would be re-run for it.
+func TestVosContractSatPathsSelectNoImplementationRow(t *testing.T) {
+	probes := []string{
+		"code/programs/rust/vos-model-sat/src/lane.rs",
+		"code/packages/rust/bit-blaster/src/aig.rs",
+		"code/packages/rust/cdcl-sat/src/lib.rs",
+		"code/packages/rust/drat-check/src/lib.rs",
+	}
+	checked := 0
+	for _, row := range repositoryInputConsumers {
+		if !strings.HasPrefix(row.name, "rust/vos-") || row.name == "rust/vos-sched-contract" {
+			continue
+		}
+		if strings.HasPrefix(row.name, "rust/vos-capacity-probe") || row.name == "rust/vos-link" {
+			continue // their own rows: not VOS implementation rows
+		}
+		for _, p := range probes {
+			if row.matches != nil && row.matches(p) {
+				t.Errorf("%s matches the SAT-lane path %s; it runs no SAT line", row.name, p)
+			}
+		}
+		checked++
+	}
+	if checked == 0 {
+		t.Fatal("no VOS implementation row was checked")
 	}
 }
 

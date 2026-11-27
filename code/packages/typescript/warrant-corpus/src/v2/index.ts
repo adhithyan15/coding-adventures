@@ -1,5 +1,5 @@
 /**
- * # The v2 runner library at `ir.core` (VER04r, slice S7a)
+ * # The v2 runner library at `ir.core`, `ir.fixed` and `ir.tuple` (VER04r, slices S7a and S10f)
  *
  * The TypeScript lane's second reading of the Warrant corpus v2 profile.  It is
  * a *library*: values, the IR typer and evaluator, domains, chunks and fault
@@ -8,7 +8,7 @@
  *
  * Reading order for newcomers:
  *
- *     levels -> types -> values -> domains -> ir -> chunks -> faults
+ *     levels -> types -> values -> domains -> fixed -> ir -> chunks -> faults
  *            -> corpus -> kit
  *
  * **On independence.**  This lane is meant to be a *second, independent
@@ -23,12 +23,13 @@
 export { KitError } from "./errors.ts";
 export type { KitCode, OverflowClass } from "./errors.ts";
 export { DEFINED_LEVELS, IMPLEMENTED_LEVELS, levelOfTag } from "./levels.ts";
-export { parseType, readTypeTable, showType, flows, unify } from "./types.ts";
+export { parseType, readTypeTable, showType, flows, unify, faultCommon } from "./types.ts";
 export type { Ty, TypeTable } from "./types.ts";
 export { decodeJson, decodeTfv, encodeJson, makeWriter, streamBytes } from "./values.ts";
 export type { Value } from "./values.ts";
 export { buildDomain } from "./domains.ts";
 export type { Domain } from "./domains.ts";
+export { binaryFixed, boundValue, unaryFixed } from "./fixed.ts";
 export { Program, readOp, COST_CEILING, DEFAULT_MAX_COST, MAX_DEPTH, MAX_IR_VALUE } from "./ir.ts";
 export type { Compiled, OpSig, Param, Role } from "./ir.ts";
 export { enumerateChunk, enumerateChunks, framedDigest, loadSuite, readChunkFile, readCorpusPart } from "./chunks.ts";

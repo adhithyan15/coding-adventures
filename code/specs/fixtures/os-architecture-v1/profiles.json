@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "profile": "synthetic-batch-monitor-v1",
+      "stimuli": [
+        { "kind": "job.submit", "data": { "id": "compile", "serviceTicks": "2" } },
+        { "kind": "job.submit", "data": { "id": "archive", "serviceTicks": "1" } }
+      ],
+      "budgets": [2, 1, 2, 1],
+      "expectedTick": 6,
+      "expectedState": { "active": null, "completed": ["compile", "archive"], "queued": [] },
+      "expectedEffects": [
+        { "tick": 1, "profile": "synthetic-batch-monitor-v1", "kind": "job.accepted", "data": { "id": "compile", "queuePosition": "1" } },
+        { "tick": 2, "profile": "synthetic-batch-monitor-v1", "kind": "job.accepted", "data": { "id": "archive", "queuePosition": "2" } },
+        { "tick": 3, "profile": "synthetic-batch-monitor-v1", "kind": "job.started", "data": { "id": "compile" } },
+        { "tick": 3, "profile": "synthetic-batch-monitor-v1", "kind": "job.serviced", "data": { "id": "compile", "remaining": "1" } },
+        { "tick": 4, "profile": "synthetic-batch-monitor-v1", "kind": "job.serviced", "data": { "id": "compile", "remaining": "0" } },
+        { "tick": 4, "profile": "synthetic-batch-monitor-v1", "kind": "job.completed", "data": { "id": "compile" } },
+        { "tick": 5, "profile": "synthetic-batch-monitor-v1", "kind": "job.started", "data": { "id": "archive" } },
+        { "tick": 5, "profile": "synthetic-batch-monitor-v1", "kind": "job.serviced", "data": { "id": "archive", "remaining": "0" } },
+        { "tick": 5, "profile": "synthetic-batch-monitor-v1", "kind": "job.completed", "data": { "id": "archive" } }
+      ]
+    },
+    {
+      "profile": "synthetic-protected-message-scheduler-v1",
+      "stimuli": [
+        { "kind": "task.create", "data": { "id": "worker", "quantum": "2" } },
+        { "kind": "task.create", "data": { "id": "client", "quantum": "1" } },
+        { "kind": "message.send", "data": { "to": "worker", "capability": "wrong", "body": "not delivered" } },
+        { "kind": "message.send", "data": { "to": "worker", "capability": "cap:worker", "body": "ping" } }
+      ],
+      "budgets": [3, 1, 2, 2],
+      "expectedTick": 8,
+      "expectedState": {
+        "cursor": 0,
+        "messages": [],
+        "tasks": [
+          { "id": "worker", "quantum": 2, "remaining": 1, "capability": "cap:worker" },
+          { "id": "client", "quantum": 1, "remaining": 1, "capability": "cap:client" }
+        ]
+      },
+      "expectedEffects": [
+        { "tick": 1, "profile": "synthetic-protected-message-scheduler-v1", "kind": "task.created", "data": { "id": "worker", "quantum": "2" } },
+        { "tick": 2, "profile": "synthetic-protected-message-scheduler-v1", "kind": "task.created", "data": { "id": "client", "quantum": "1" } },
+        { "tick": 3, "profile": "synthetic-protected-message-scheduler-v1", "kind": "ipc.denied", "data": { "to": "worker", "reason": "capability-check-failed" } },
+        { "tick": 4, "profile": "synthetic-protected-message-scheduler-v1", "kind": "ipc.enqueued", "data": { "to": "worker", "body": "ping" } },
+        { "tick": 5, "profile": "synthetic-protected-message-scheduler-v1", "kind": "scheduler.dispatched", "data": { "id": "worker", "quantumRemaining": "2" } },
+        { "tick": 5, "profile": "synthetic-protected-message-scheduler-v1", "kind": "ipc.delivered", "data": { "to": "worker", "body": "ping" } },
+        { "tick": 6, "profile": "synthetic-protected-message-scheduler-v1", "kind": "scheduler.dispatched", "data": { "id": "worker", "quantumRemaining": "1" } },
+        { "tick": 6, "profile": "synthetic-protected-message-scheduler-v1", "kind": "scheduler.preempted", "data": { "id": "worker" } },
+        { "tick": 7, "profile": "synthetic-protected-message-scheduler-v1", "kind": "scheduler.dispatched", "data": { "id": "client", "quantumRemaining": "1" } },
+        { "tick": 7, "profile": "synthetic-protected-message-scheduler-v1", "kind": "scheduler.preempted", "data": { "id": "client" } },
+        { "tick": 8, "profile": "synthetic-protected-message-scheduler-v1", "kind": "scheduler.dispatched", "data": { "id": "worker", "quantumRemaining": "2" } }
+      ]
+    }
+  ]
+}

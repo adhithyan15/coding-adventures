@@ -121,7 +121,28 @@ var (
 		"code/scripts/ct_compare_conformance.py",
 		"code/scripts/tfv.py",
 	}
-	ctCompareCorpusPaths = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
+	ctCompareCorpusPaths            = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
+	historicalUnixFixturePath       = "code/specs/fixtures/historical-unix-v1/file-read.json"
+	historicalUnixReplayPath        = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
+	historicalUnixBuildNativePath   = "code/specs/fixtures/historical-unix-v1/build_native.py"
+	historicalUnixCAdapterPath      = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
+	historicalUnixCppAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
+	historicalUnixJavaAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
+	historicalUnixLuaAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
+	historicalUnixCsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.cs"
+	historicalUnixCsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.csproj"
+	historicalUnixFsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fs"
+	historicalUnixFsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fsproj"
+	historicalUnixBuildDotnetPath   = "code/specs/fixtures/historical-unix-v1/build_dotnet.py"
+	historicalUnixDartAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/dart/fixture_cli.dart"
+	historicalUnixKotlinAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/kotlin/FixtureReplayTest.kt"
+	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
+	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
+	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
+	osMachineBoardsPath             = "code/specs/fixtures/os-machine-v1/boards.json"
+	osMachineVerifyPath             = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
+	osMachineRiscvPath              = "code/specs/fixtures/os-machine-v1/riscv.json"
+	osMachineRiscvVerifyPath        = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
 	// kilnToolchainPinPaths are the pin sources Kiln's committed
 	// code/kiln/legacy/toolchains.json is checked against by its drift test
 	// (realpolicy_test.go). A toolchain bump that edits only these files must
@@ -138,9 +159,12 @@ var (
 	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
 	// FuzzReferenceVectorsTests (VER06h), ruby/test_bootstrap's
 	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
-	// (VER06j, scans it line by line), lua/test_bootstrap's test_fuzz_vectors.lua
-	// (VER06p) and elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it
-	// the same way.
+	// (VER06j, scans it line by line), perl/test-bootstrap's t/11-fuzz-mutate.t
+	// (VER06q), lua/test_bootstrap's test_fuzz_vectors.lua (VER06p) and
+	// elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it the same way;
+	// so does cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k), through the
+	// C++ API, and swift/test-bootstrap's FuzzReferenceVectorsTests (VER06l)
+	// reads it too.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -191,6 +215,21 @@ var (
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
 	}
+	// vosContractSatPaths are what a contract crate's BUILD runs ONLY when its vos.toml says
+	// `sat = "model"` (VOS-040c, VOS31 10.1 and 10.4): the host model-SAT lane,
+	// `cargo run --release --manifest-path ../../../programs/rust/vos-model-sat/Cargo.toml -- check .`,
+	// and the three crates it solves and checks with.  They are NOT Cargo edges of the contract
+	// crate, so without them a solver edit never re-runs the lane's check (a "selection gap").
+	// They are a SEPARATE list used only by vosContractRow, never appended to vosToolPaths: the
+	// implementation crates and vos-probe-ready run no SAT line, and a solver edit must not
+	// reselect them.  Their other crates (sha256, warrant-grammar, vos-link, vos-manifest,
+	// vos-shape-check) are already in vosToolPaths, which the contract row keeps.
+	vosContractSatPaths = []string{
+		"code/programs/rust/vos-model-sat",
+		"code/packages/rust/bit-blaster",
+		"code/packages/rust/cdcl-sat",
+		"code/packages/rust/drat-check",
+	}
 	// vosCapacityProbePaths are the files the capacity probe's BUILD reads outside its Cargo
 	// edges (VOS-028b): `check` re-runs and validates the committed results file, `table --check`
 	// compares the generated block of the VOS30 spec with it, and the two Warrant documents
@@ -225,21 +264,26 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// swift/test-bootstrap's CorpusConformanceTests (VER05k),
+	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
 	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
 	// elixir/test_bootstrap's corpus_conformance_test.exs (VER05m) and
 	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too.
 	// fuzz-v1 is read by ruby/test_bootstrap's test_fuzz_corpus.rb (VER06i) and
 	// lua/test_bootstrap's test_fuzz_corpus.lua (VER06p) and elixir/test_bootstrap's
-	// fuzz_corpus_test.exs (VER06n).
+	// fuzz_corpus_test.exs (VER06n) and
+	// swift/test-bootstrap's FuzzCorpusConformanceTests (VER06l).
 	pbtV1CorpusPaths = []string{"code/specs/fixtures/pbt-v1"}
 	// fuzzV1CorpusPaths is the shared fuzz-engine conformance corpus (VER06
 	// section 8). python/test-bootstrap's tests/test_fuzz_corpus.py and
 	// go/test-bootstrap's fuzz/corpus_test.go read cases.json from the
 	// repository root, so an edit selects those packages; so do
 	// java/test-bootstrap, kotlin/test-bootstrap, csharp/test-bootstrap and
-	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), ruby/test_bootstrap (VER06i),
-	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n) and lua/test_bootstrap
-	// (test_fuzz_corpus.lua, VER06p).
+	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), cpp/test-bootstrap
+	// (test_fuzz_corpus.cpp, VER06k), ruby/test_bootstrap (VER06i),
+	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n), lua/test_bootstrap
+	// (test_fuzz_corpus.lua, VER06p) and perl/test-bootstrap (t/12-fuzz-corpus.t,
+	// VER06q).
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
@@ -317,6 +361,10 @@ var (
 	}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
+	nandFlashFixturePath           = "code/specs/fixtures/database-media-v1/nand-flash.json"
+	hddSimulatorFixturePath        = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
+	nandFlashFixtureInputs         = []string{nandFlashFixturePath}
+	hddSimulatorFixtureInputs      = []string{hddSimulatorFixturePath}
 	typescriptGameInputFrameInputs = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -552,6 +600,67 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	// HOS03d: the native Go semantic simulator replays both canonical OS
+	// profiles through its external fixture verifier.
+	{
+		name: "go/os-architecture-simulator", language: "go",
+		inputs:  "the canonical OS architecture profiles and Go conformance verifier",
+		matches: isGoOSArchitectureFixtureInput,
+		paths:   []string{osArchitectureProfilesPath, osArchitectureGoConformancePath},
+	},
+	// HOS-ARCH-b/c: the architecture package BUILD validates canonical
+	// architecture profiles, machine-board fixtures, and the RV32I board
+	// fixture, plus their exact verifier scripts. Keep selection and cache
+	// inputs in lockstep.
+	{
+		name: "typescript/os-architecture-simulator", language: "typescript",
+		inputs:  "the canonical OS architecture, machine-board, and RV32I fixtures and their BUILD verifiers",
+		matches: isOSArchitectureFixtureInput,
+		paths: []string{
+			osArchitectureProfilesPath, osArchitectureVerifyPath,
+			osMachineBoardsPath, osMachineVerifyPath,
+			osMachineRiscvPath, osMachineRiscvVerifyPath,
+		},
+	},
+	// HOS-002b: each reusable port replays the canonical shared trace. The
+	// helper/build drivers and external adapters are narrower inputs read only
+	// by the package recipes that compile those adapters.
+	historicalUnixFixtureRow("c"),
+	historicalUnixFixtureRow("cpp"),
+	historicalUnixFixtureRow("csharp"),
+	historicalUnixFixtureRow("dart"),
+	historicalUnixFixtureRow("fsharp"),
+	historicalUnixFixtureRow("go"),
+	historicalUnixFixtureRow("java"),
+	historicalUnixFixtureRow("kotlin"),
+	historicalUnixFixtureRow("lua"),
+	historicalUnixFixtureRow("perl"),
+	historicalUnixFixtureRow("python"),
+	historicalUnixFixtureRow("rust"),
+	historicalUnixFixtureRow("typescript"),
+	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
+	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
+	historicalUnixAdapterRow("java", historicalUnixJavaAdapterPath),
+	historicalUnixAdapterRow("lua", historicalUnixLuaAdapterPath),
+	historicalUnixAdapterRow("csharp", historicalUnixCsharpAdapterPath),
+	historicalUnixAdapterRow("csharp", historicalUnixCsharpProjectPath),
+	historicalUnixAdapterRow("fsharp", historicalUnixFsharpAdapterPath),
+	historicalUnixAdapterRow("fsharp", historicalUnixFsharpProjectPath),
+	historicalUnixAdapterRow("dart", historicalUnixDartAdapterPath),
+	historicalUnixAdapterRow("kotlin", historicalUnixKotlinAdapterPath),
+	historicalUnixReplayRow("c"),
+	historicalUnixReplayRow("cpp"),
+	historicalUnixReplayRow("java"),
+	historicalUnixReplayRow("lua"),
+	historicalUnixReplayRow("csharp"),
+	historicalUnixReplayRow("fsharp"),
+	historicalUnixReplayRow("dart"),
+	historicalUnixBuildNativeRow("c"),
+	historicalUnixBuildNativeRow("cpp"),
+	historicalUnixBuildNativeRow("java"),
+	historicalUnixBuildNativeRow("lua"),
+	historicalUnixBuildDotnetRow("csharp"),
+	historicalUnixBuildDotnetRow("fsharp"),
 	{
 		name:     "go/microbenchmark",
 		language: "go",
@@ -844,6 +953,41 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared GAME input action frame v1 cases and exact TypeScript/Rust proof-tool configuration inputs",
 		matches:  isTypeScriptGameInputFrameInput,
 		paths:    typescriptGameInputFrameInputs,
+	},
+	{
+		name:     "python/nand-flash",
+		language: "python",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
+		name:     "typescript/nand-flash",
+		language: "typescript",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
+		name:     "c/nand-flash",
+		language: "c",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
+		name:     "python/hdd-simulator",
+		language: "python",
+		inputs:   "the exact DB02 shared HDD simulator vector",
+		matches:  isHDDSimulatorFixture,
+		paths:    hddSimulatorFixtureInputs,
+	},
+	{
+		name:     "typescript/hdd-simulator",
+		language: "typescript",
+		inputs:   "the exact DB02 shared HDD simulator vector",
+		matches:  isHDDSimulatorFixture,
+		paths:    hddSimulatorFixtureInputs,
 	},
 	{
 		name:     "python/trig",
@@ -1367,6 +1511,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
+		name:     "cpp/test-bootstrap",
+		language: "cpp",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "cpp/test-bootstrap",
+		language: "cpp",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
 		name:     "csharp/test-bootstrap",
 		language: "csharp",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1379,6 +1537,27 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
 		matches:  isPbtV1Corpus,
 		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "perl/test-bootstrap",
+		language: "perl",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
+		name:     "perl/test-bootstrap",
+		language: "perl",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
 	},
 	{
 		name:     "lua/test_bootstrap",
@@ -1402,6 +1581,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    fuzzV1CorpusPaths,
 	},
 	{
+		name:     "perl/test-bootstrap",
+		language: "perl",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
 		name:     "lua/test_bootstrap",
 		language: "lua",
 		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
@@ -1416,11 +1602,32 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    fuzzV1CorpusPaths,
 	},
 	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "swift/test-bootstrap",
+		language: "swift",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
 		name:     "ruby/test_bootstrap",
 		language: "ruby",
 		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
 		matches:  isGoFuzzReferenceVectors,
 		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
+		name:     "haskell/test-bootstrap",
+		language: "haskell",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
 	},
 	{
 		name:     "elixir/test_bootstrap",
@@ -1595,9 +1802,118 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 	return changed == microbenchmarkPairsFixturePath
 }
 
+func historicalUnixFixtureRow(language string) repositoryInputConsumer {
+	name := language + "/unix-history-simulator"
+	return repositoryInputConsumer{
+		name: name, language: language,
+		inputs:  "the shared HOS-002 historical Unix replay fixture",
+		matches: isHistoricalUnixFixture,
+		paths:   []string{historicalUnixFixturePath},
+	}
+}
+
+func historicalUnixAdapterRow(language, adapterPath string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the external historical Unix fixture adapter used by this package recipe",
+		matches: exactRepositoryPath(adapterPath),
+		paths:   []string{adapterPath},
+	}
+}
+
+func historicalUnixReplayRow(language string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the shared historical Unix replay helper invoked by this package BUILD",
+		matches: exactRepositoryPath(historicalUnixReplayPath),
+		paths:   []string{historicalUnixReplayPath},
+	}
+}
+
+func historicalUnixBuildNativeRow(language string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the shared historical Unix native build driver invoked by this package",
+		matches: exactRepositoryPath(historicalUnixBuildNativePath),
+		paths:   []string{historicalUnixBuildNativePath},
+	}
+}
+
+func historicalUnixBuildDotnetRow(language string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the shared .NET historical Unix adapter build driver invoked by this package",
+		matches: exactRepositoryPath(historicalUnixBuildDotnetPath),
+		paths:   []string{historicalUnixBuildDotnetPath},
+	}
+}
+
+func exactRepositoryPath(expected string) func(string) bool {
+	return func(changed string) bool { return changed == expected }
+}
+
+func isHistoricalUnixFixture(changed string) bool {
+	return changed == historicalUnixFixturePath
+}
+
+func isOSArchitectureFixtureInput(changed string) bool {
+	switch changed {
+	case osArchitectureProfilesPath, osArchitectureVerifyPath,
+		osMachineBoardsPath, osMachineVerifyPath,
+		osMachineRiscvPath, osMachineRiscvVerifyPath:
+		return true
+	default:
+		return false
+	}
+}
+
+func isGoOSArchitectureFixtureInput(changed string) bool {
+	return changed == osArchitectureProfilesPath || changed == osArchitectureGoConformancePath
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
+	if packageName == "go/os-architecture-simulator" {
+		return []string{osArchitectureProfilesPath, osArchitectureGoConformancePath}
+	}
+	if packageName == "typescript/os-architecture-simulator" {
+		return []string{
+			osArchitectureProfilesPath, osArchitectureVerifyPath,
+			osMachineBoardsPath, osMachineVerifyPath,
+			osMachineRiscvPath, osMachineRiscvVerifyPath,
+		}
+	}
+	if strings.HasSuffix(packageName, "/unix-history-simulator") {
+		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
+		inputs := []string{historicalUnixFixturePath}
+		switch language {
+		case "c", "cpp", "java", "lua":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildNativePath)
+			switch language {
+			case "c":
+				inputs = append(inputs, historicalUnixCAdapterPath)
+			case "cpp":
+				inputs = append(inputs, historicalUnixCppAdapterPath)
+			case "java":
+				inputs = append(inputs, historicalUnixJavaAdapterPath)
+			case "lua":
+				inputs = append(inputs, historicalUnixLuaAdapterPath)
+			}
+		case "go", "perl", "python", "rust", "typescript":
+		case "dart":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
+		case "kotlin":
+			inputs = append(inputs, historicalUnixKotlinAdapterPath)
+		case "csharp":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath)
+		case "fsharp":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixFsharpAdapterPath, historicalUnixFsharpProjectPath)
+		default:
+			return nil
+		}
+		return inputs
+	}
 	switch packageName {
 	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
@@ -1605,6 +1921,10 @@ func repositoryInputsForPackage(packageName string) []string {
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
 		return typescriptGameInputFrameInputs
+	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash":
+		return nandFlashFixtureInputs
+	case "python/hdd-simulator", "typescript/hdd-simulator":
+		return hddSimulatorFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
 	default:
@@ -2106,6 +2426,23 @@ func logicGatesBasicRow() repositoryInputConsumer {
 	}
 }
 
+// isVosContractInput reports whether a changed path selects a VOS contract crate: a source of
+// a VOS tool (isVosToolInput) or of the model-SAT lane (vosContractSatPaths, VOS-040c).
+//
+//	code/packages/rust/cdcl-sat/src/lib.rs  → true  (contract rows only)
+//	code/packages/rust/cdcl-sat-x/src/a.rs  → false
+func isVosContractInput(changed string) bool {
+	if isVosToolInput(changed) {
+		return true
+	}
+	for _, d := range vosContractSatPaths {
+		if strings.HasPrefix(changed, d+"/") {
+			return true
+		}
+	}
+	return false
+}
+
 // vosContractRow is the row of one VOS contract crate (`code/packages/rust/<crate>`, kind
 // contract, VOS-039b-1).  Its BUILD runs `vos-link check-contract` and `check-component` outside
 // Cargo (the generated Rust of the contract crate does not depend on them), so a change to a VOS
@@ -2116,9 +2453,9 @@ func vosContractRow(crate string) repositoryInputConsumer {
 	return repositoryInputConsumer{
 		name:     "rust/" + crate,
 		language: "rust",
-		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer)",
-		matches:  isVosToolInput,
-		paths:    append([]string{}, vosToolPaths...),
+		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer) and the host model-SAT lane (vos-model-sat with bit-blaster, cdcl-sat and drat-check; VOS-040c)",
+		matches:  isVosContractInput,
+		paths:    append(append([]string{}, vosToolPaths...), vosContractSatPaths...),
 	}
 }
 
@@ -2268,6 +2605,16 @@ func isTypeScriptGameInputFrameInput(changed string) bool {
 		}
 	}
 	return false
+}
+
+// The DB media packages read one exact shared vector each. Keep the predicates
+// file-exact so sibling devices and similarly named vectors stay independent.
+func isNANDFlashFixture(changed string) bool {
+	return changed == nandFlashFixturePath
+}
+
+func isHDDSimulatorFixture(changed string) bool {
+	return changed == hddSimulatorFixturePath
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while

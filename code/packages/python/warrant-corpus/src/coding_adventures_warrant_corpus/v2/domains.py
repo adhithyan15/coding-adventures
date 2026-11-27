@@ -249,7 +249,7 @@ def _build_composite(node: dict, kind: str, sem: Semantics, depth: int) -> Desc:
         parts = [build(p, sem, depth + 1) for p in _children(node, "of")]
         if not 2 <= len(parts) <= 8:
             raise _refuse("a tuple descriptor has too few or too many components")
-        return _product(parts)
+        return _product(parts, sem)
     if kind == "option":
         _need_keys(node, {"of"})
         inner = build(node["of"], sem, depth + 1)
@@ -283,18 +283,21 @@ def _build_composite(node: dict, kind: str, sem: Semantics, depth: int) -> Desc:
     raise _refuse("no descriptor of that kind exists")
 
 
-def _product(parts: list[Desc]) -> Desc:
-    """The Cartesian product of ``parts``, **last component varying fastest**."""
+def _product(parts: list[Desc], sem: Semantics) -> Desc:
+    """The Cartesian product of ``parts``, **last component varying fastest**.
+
+    The mixed-radix split of an index into one digit per component is the
+    :meth:`~.semantics.Semantics.component_digits` seam: it is the rule a
+    reordered tuple enumeration would get wrong (slice S10e).
+    """
     size = 1
-    for part in parts:
-        size *= part.size
+    sizes = [part.size for part in parts]
+    for part_size in sizes:
+        size *= part_size
 
     def nth(index: int) -> tuple:
-        values: list[object] = [None] * len(parts)
-        for position in range(len(parts) - 1, -1, -1):
-            index, digit = divmod(index, parts[position].size)
-            values[position] = parts[position].nth(digit)
-        return tuple(values)
+        digits = sem.component_digits(index, sizes)
+        return tuple(part.nth(digit) for part, digit in zip(parts, digits, strict=True))
 
     return Desc(size, nth)
 
@@ -308,7 +311,9 @@ def _variant(node: dict, sem: Semantics, depth: int) -> Desc:
                 "a constructor entry is a name plus a list of field descriptors"
             )
         fields = [build(f, sem, depth + 1) for f in _children({"x": entry[1]}, "x")]
-        rows.append((entry[0], _product(fields) if fields else Desc(1, lambda _i: ())))
+        rows.append(
+            (entry[0], _product(fields, sem) if fields else Desc(1, lambda _i: ()))
+        )
     if not 2 <= len(rows) <= 64:
         raise _refuse("a variant descriptor has too few or too many constructors")
 

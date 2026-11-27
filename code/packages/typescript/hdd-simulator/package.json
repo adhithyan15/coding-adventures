@@ -1,0 +1,27 @@
+{
+  "name": "@coding-adventures/hdd-simulator",
+  "version": "0.1.0",
+  "description": "Deterministic educational HDD geometry, sector I/O, and timing model",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "education",
+    "database",
+    "storage",
+    "simulator",
+    "hdd"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.20.7",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

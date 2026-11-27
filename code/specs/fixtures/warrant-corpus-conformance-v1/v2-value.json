@@ -2037,6 +2037,816 @@
       "summary": "a malformed document is malformed-json and nothing else",
       "type": "Bool",
       "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640200000010010000000000000001",
+        "stream_sha256": "a5c372294ee0fc57b614838292da4e635fb57a20027e4a33eb8a1b3c4768b7b5"
+      },
+      "id": "v2-value/tuple-pair",
+      "input_hex": "5b2231222c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a pair of a U8 and a Bool: 64, a count of 2, then each component",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640200000010010000000000000001",
+        "stream_sha256": "a5c372294ee0fc57b614838292da4e635fb57a20027e4a33eb8a1b3c4768b7b5"
+      },
+      "id": "v2-value/tuple-pair-with-json-whitespace",
+      "input_hex": "205b20223122202c0a2074727565205d20",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "JSON whitespace between the components",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "6403000000010001",
+        "stream_sha256": "0228f17e1bfc9ff3a39835ff838cf335e4c864520004a602e29c9c41eb7f14c3"
+      },
+      "id": "v2-value/tuple-arity-3",
+      "input_hex": "5b747275652c66616c73652c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a triple of Bool",
+      "type": "(Bool,Bool,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "6404000000100100000000000000100200000000000000100300000000000000100400000000000000",
+        "stream_sha256": "832bb493256348b24206222708b054e46bf2bd84c8df113ae533afe78da0e0d0"
+      },
+      "id": "v2-value/tuple-arity-4",
+      "input_hex": "5b2231222c2232222c2233222c2234225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "four U8",
+      "type": "(U8,U8,U8,U8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "6405000000100000000000000000100100000000000000100200000000000000100300000000000000100400000000000000",
+        "stream_sha256": "fed11ae8cb4b867da5bbdd70f9439f8dc462039d963bfe1f3105d2c8c36e9f54"
+      },
+      "id": "v2-value/tuple-arity-5",
+      "input_hex": "5b2230222c2231222c2232222c2233222c2234225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "five Nat",
+      "type": "(Nat,Nat,Nat,Nat,Nat)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640600000011000000000000000011ffffffffffffffff11feffffffffffffff11fdffffffffffffff11fcffffffffffffff11fbffffffffffffff",
+        "stream_sha256": "4dd476841b59a9acb830635eed251a4c748c6da30d6b1d879a5a997aea0e55fd"
+      },
+      "id": "v2-value/tuple-arity-6",
+      "input_hex": "5b2230222c222d31222c222d32222c222d33222c222d34222c222d35225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "six I8",
+      "type": "(I8,I8,I8,I8,I8,I8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640700000001000100010001",
+        "stream_sha256": "307d85f2fd3bbe4b39c5dade17e47aef7ac837fc1360470c72e4e7222963d71a"
+      },
+      "id": "v2-value/tuple-arity-7",
+      "input_hex": "5b747275652c66616c73652c747275652c66616c73652c747275652c66616c73652c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "seven Bool",
+      "type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "6408000000100000000000000000100100000000000000100200000000000000100300000000000000100400000000000000100500000000000000100600000000000000100700000000000000",
+        "stream_sha256": "0ee4a35bbc1442996c6016ffe604349303c2b6a47d6597ad9143da90d7c20103"
+      },
+      "id": "v2-value/tuple-arity-8",
+      "input_hex": "5b2230222c2231222c2232222c2233222c2234222c2235222c2236222c2237225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "eight components, the most a tuple type may have (section 14)",
+      "type": "(U8,U8,U8,U8,U8,U8,U8,U8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "6402000000640200000010010000000000000010020000000000000001",
+        "stream_sha256": "e9f2670da4f37f679a5d07e0957df877636a47507d8684ab27801e7ee03beb98"
+      },
+      "id": "v2-value/tuple-nested-first",
+      "input_hex": "5b5b2231222c2232225d2c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple whose first component is a tuple: the inner one carries its own 64 and count",
+      "type": "((U8,U8),Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "6402000000016402000000100100000000000000100200000000000000",
+        "stream_sha256": "93cc98849666b7b032faaf60d0d14cba12778a1a9e2dda47cb4d0d29d45b79ef"
+      },
+      "id": "v2-value/tuple-nested-last",
+      "input_hex": "5b747275652c5b2231222c2232225d5d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple whose last component is a tuple",
+      "type": "(Bool,(U8,U8))",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640200000064020000006402000000100100000000000000100200000000000000100300000000000000100400000000000000",
+        "stream_sha256": "e3dcda0ba547a8818262786d2370f381203f9ac4dcbe8fa50fb7715ed190c1dc"
+      },
+      "id": "v2-value/tuple-nested-three-deep",
+      "input_hex": "5b5b5b2231222c2232225d2c2233225d2c2234225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple in a tuple in a tuple",
+      "type": "(((U8,U8),U8),U8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640200000010ffffffffffffffff11ffffffffffffffff",
+        "stream_sha256": "834143dce6eeca2651d83768fe6289047223ff6b5978ea9651c30d68f744cb0d"
+      },
+      "id": "v2-value/tuple-of-nat-and-signed",
+      "input_hex": "5b223138343436373434303733373039353531363135222c222d31225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "the Nat maximum and a signed -1: each component keeps its own tag (10 and 11)",
+      "type": "(Nat,I8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640200000020020000000a0b100700000000000000",
+        "stream_sha256": "e6bbe69e0e02adc16c189bac4f84d456b31b77dfd855a0bc97da5c3630962621"
+      },
+      "id": "v2-value/tuple-with-bytes-component",
+      "input_hex": "5b2230613062222c2237225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a Bytes component is 20, its length and the bytes",
+      "type": "(Bytes,U8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "64020000002000000000100700000000000000",
+        "stream_sha256": "9e4958b061cd5625a80dbfb17fae4a8db125e76aa8e1b397aa8f64403ed858a5"
+      },
+      "id": "v2-value/tuple-with-an-empty-bytes-component",
+      "input_hex": "5b22222c2237225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "an empty Bytes component",
+      "type": "(Bytes,U8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640200000020020000000a0b01",
+        "stream_sha256": "aa513f262ed25f59cff6b45d0922533831d5e4d5bc104b0a92d2ef3c354c9c44"
+      },
+      "id": "v2-value/tuple-with-a-sized-bytes-component",
+      "input_hex": "5b2230613062222c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a Bytes<2> component",
+      "type": "(Bytes<2>,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "64020000005010010000000000000000",
+        "stream_sha256": "898fa9f6964060c6da8e646a6d6c19a4c363c03c0e5410d672ff773a0595229a"
+      },
+      "id": "v2-value/tuple-with-an-ok-component",
+      "input_hex": "5b7b226f6b223a2231227d2c66616c73655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a Result component holding an Ok: 50 then the payload",
+      "type": "(Result<U8,E>,Bool)",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "6402000000510300000042414401",
+        "stream_sha256": "7a60b1eddcf08c8d8a9eb6273d64c354b3215f708fc61e3ab033ab96efbb6cb1"
+      },
+      "id": "v2-value/tuple-with-an-err-component",
+      "input_hex": "5b7b22657272223a22424144227d2c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a Result component holding an Err: 51, the length of the case name, the name",
+      "type": "(Result<U8,E>,Bool)",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "50640200000010010000000000000001",
+        "stream_sha256": "bb2d537b96677f07fc9b03eea8b9f034e246796f19476ddd608c6a9270f3f74b"
+      },
+      "id": "v2-value/tuple-as-the-payload-of-an-ok",
+      "input_hex": "7b226f6b223a5b2231222c747275655d7d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a Result whose Ok holds a tuple",
+      "type": "Result<(U8,Bool),E>",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "5105000000574f525345",
+        "stream_sha256": "da6bdbe39e5f52982f493bf4d8db5d88724c31accd73e8eb9aac80b0683a7460"
+      },
+      "id": "v2-value/tuple-under-an-err-result",
+      "input_hex": "7b22657272223a22574f525345227d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a Result<(U8,Bool),E> that is an Err has no tuple in it",
+      "type": "Result<(U8,Bool),E>",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "640200000050640200000010010000000000000010020000000000000001",
+        "stream_sha256": "9e99e6fdd2443d21bf0f6a4c8e0e21cc157c5ac3d66bf5e6d7ad51fbe8116b95"
+      },
+      "id": "v2-value/tuple-with-a-nested-result-of-a-tuple",
+      "input_hex": "5b7b226f6b223a5b2231222c2232225d7d2c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple whose component is a Result of a tuple",
+      "type": "(Result<(U8,U8),E>,Bool)",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_sha256": "1b59946d7c9dd95dff5b63cc374e75b2a94df14b8125bbd3448e3711defae100"
+      },
+      "id": "v2-value/tuple-with-a-long-bytes-component",
+      "input_hex": "5b2261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162616261626162222c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a component of 1,100 bytes makes the stream longer than 2,048 hex characters, so stream_hex is omitted and the digest stands alone",
+      "type": "(Bytes,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "6402000000640200000064020000006402000000640200000064020000006402000000640200000064020000006402000000640200000064020000006402000000640200000064020000006402000000100100000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000100200000000000000",
+        "stream_sha256": "b4f3c5dd559cd35dc5a4ee5c704231a3177b081f3f288c27783bf09ef81ccfdc"
+      },
+      "id": "v2-value/tuple-type-depth-16-nested-tuples",
+      "input_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b2231222c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "16 nested tuples are exactly at the type depth limit (section 2.2 rule 1)",
+      "type": "((((((((((((((((U8,U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-depth-17-nested-tuples",
+      "input_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b2231222c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d2c2232225d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "17 nested tuples are refused as a type",
+      "type": "(((((((((((((((((U8,U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8),U8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-depth-17-through-mixed-wrappers",
+      "input_hex": "74727565",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a tuple under 16 Result wrappers is 17 deep: refused as a type",
+      "type": "Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<(Bool,Bool),E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-too-few-components",
+      "input_hex": "5b2231225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "one component for a pair",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-too-many-components",
+      "input_hex": "5b2231222c747275652c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "three components for a pair",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-empty-array",
+      "input_hex": "5b5d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "the empty array for a pair",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-is-an-object",
+      "input_hex": "7b2230223a2231222c2231223a747275657d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple is an array, not an object of positions",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-is-a-string",
+      "input_hex": "223122",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a string for a tuple",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-is-null",
+      "input_hex": "6e756c6c",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "null for a tuple",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-component-out-of-range",
+      "input_hex": "5b22323536222c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "256 is not a U8",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-component-wrong-form",
+      "input_hex": "5b2231222c2274727565225d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a Bool component written as text",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-component-leading-zero",
+      "input_hex": "5b223031222c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "decimal text with a leading zero in a component",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-component-negative-for-unsigned",
+      "input_hex": "5b222d31222c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a negative U8 component",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-component-of-the-wrong-bytes-length",
+      "input_hex": "5b223061222c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "one byte for a Bytes<2> component",
+      "type": "(Bytes<2>,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-nested-component-wrong-arity",
+      "input_hex": "5b5b2231222c2232222c2233225d2c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "the inner pair has three components",
+      "type": "((U8,U8),Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-nested-component-not-an-array",
+      "input_hex": "5b2231222c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "the inner pair is a scalar",
+      "type": "((U8,U8),Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-err-case-not-declared",
+      "input_hex": "5b7b22657272223a224e4f5045227d2c747275655d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "an Err case in a Result component that E does not declare",
+      "type": "(Result<U8,E>,Bool)",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-ok-payload-wrong-arity",
+      "input_hex": "7b226f6b223a5b2231222c2232222c2233225d7d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "an Ok that holds a triple where a pair is declared",
+      "type": "Result<(U8,U8),E>",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-malformed-trailing-comma",
+      "input_hex": "5b2231222c747275652c5d",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a trailing comma in the array is malformed JSON, whatever the type",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-malformed-wins-over-value",
+      "input_hex": "5b2231222c",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "malformed JSON comes before the value check",
+      "type": "(U8,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-of-one-component",
+      "input_hex": "5b2231225d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a tuple type has 2 to 8 components: one is refused",
+      "type": "(U8)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-of-nine-components",
+      "input_hex": "5b747275652c747275652c747275652c747275652c747275652c747275652c747275652c747275652c747275655d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nine components",
+      "type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-empty",
+      "input_hex": "5b5d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "the empty tuple type",
+      "type": "()",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-with-int",
+      "input_hex": "5b2231222c2232225d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "Int is never a component of a value type (section 2.1)",
+      "type": "(U8,Int)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-with-an-unknown-name",
+      "input_hex": "5b2231222c2232225d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a component type that is not a type",
+      "type": "(U8,Frob)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-unclosed",
+      "input_hex": "5b2231222c2232225d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "an unclosed tuple type",
+      "type": "(U8,U8",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-trailing-comma",
+      "input_hex": "5b2231222c2232225d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a trailing comma in a tuple type",
+      "type": "(U8,U8,)",
+      "types": {}
+    },
+    {
+      "expect": {
+        "error": "type",
+        "outcome": "reject"
+      },
+      "id": "v2-value/tuple-type-with-a-space",
+      "input_hex": "5b2231222c2232225d",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "the canonical type text has no space after the comma",
+      "type": "(U8, U8)",
+      "types": {}
     }
   ],
   "category": "v2-value",

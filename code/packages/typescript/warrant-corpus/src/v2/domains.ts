@@ -26,11 +26,15 @@
  * | `nat_count` | `{"d":"nat_count","k":K,"size":S}`           | `0..=K`, `K <= 4096` |
  * | `nat_shift` | `{"d":"nat_shift","size":73}`                | `0..=64`, then `65 127 128 129 255 256 65535 65536` |
  * | `result`    | `{"d":"result","ok":D,"errs":[..],"size":S}` | `Ok(x)` for `x` in `D`, then each error case in declaration order |
+ * | `tuple`     | `{"d":"tuple","of":[D..],"size":S}`          | the Cartesian product of the components, **last component varying fastest** |
  *
- * `tuple` and `variant`/`option` are the descriptors of `ir.tuple` and
- * `ir.data`, and `list` is reserved with `ir.list`: this lane **names** them and
- * refuses each as the level it belongs to ([D63] for `list`: never as an
- * unknown `d`).
+ * `tuple` is the descriptor of `ir.tuple` (S10f): `of` holds 1 to 32 descriptors
+ * and, for a tuple binder, exactly its arity; `size` is their product, in
+ * checked arithmetic.  A `tuple` descriptor for a record type is `ir.data`
+ * (a record's descriptor is `tuple` too).  `variant` and `option` are the
+ * descriptors of `ir.data`, and `list` is reserved with `ir.list`: this lane
+ * **names** them and refuses each as the level it belongs to ([D63] for `list`:
+ * never as an unknown `d`).
  *
  * The tree is at most 16 levels deep, counted in nodes on a path: a leaf alone
  * is one level (section 16.15 R40).
@@ -146,7 +150,8 @@ type Node =
   | { readonly d: "bytes_n"; readonly n: number; readonly size: number }
   | { readonly d: "fx_full" | "fx_edge"; readonly t: Ty; readonly kind: "U" | "I"; readonly w: number; readonly size: number }
   | { readonly d: "nat_count"; readonly k: number; readonly size: number }
-  | { readonly d: "result"; readonly ok: Node; readonly errs: readonly string[]; readonly size: number };
+  | { readonly d: "result"; readonly ok: Node; readonly errs: readonly string[]; readonly size: number }
+  | { readonly d: "tuple"; readonly of: readonly Node[]; readonly size: number };
 
 /*
  * On sharing: `nth` hands out the *same* `Uint8Array` or object for one index every time it is asked, and a suite's
@@ -156,7 +161,7 @@ type Node =
  */
 /** Both tables are `Map`s: a descriptor kind read from input must not find an `Object.prototype` member. */
 const LEAF_SIZES: ReadonlyMap<string, number> = new Map([["bool", 2], ["u8_all", 256], ["u64_edge", 377], ["nat_0_64", 65], ["bytes_d1", 347], ["nat_shift", 73]]);
-const LEVEL_OF_KIND: ReadonlyMap<string, string> = new Map([["tuple", "ir.tuple"], ["variant", "ir.data"], ["option", "ir.data"], ["list", "ir.list"]]);
+const LEVEL_OF_KIND: ReadonlyMap<string, string> = new Map([["variant", "ir.data"], ["option", "ir.data"], ["list", "ir.list"]]);
 
 /** `size` must be a JSON integer (not text, not a boolean) equal to the recomputed one. */
 function declaredSize(raw: unknown, recomputed: number): void {
@@ -186,8 +191,8 @@ function readNode(raw: unknown, depth: number): Node {
   if (typeof kind !== "string") return refuse("a descriptor has no kind d");
   const reserved = LEVEL_OF_KIND.get(kind);
   if (reserved !== undefined) {
-    // [D63]: `list` is the reserved level, never an unknown kind; `tuple`, `variant`
-    // and `option` belong to levels this lane does not implement.
+    // [D63]: `list` is the reserved level, never an unknown kind; `variant` and `option`
+    // belong to a level this lane does not implement.
     throw new KitError("level-missing", `the ${kind} descriptor belongs to ${reserved}`, { level: reserved });
   }
   const sized = LEAF_SIZES.get(kind);
@@ -241,6 +246,18 @@ function readNode(raw: unknown, depth: number): Node {
       declaredSize(node["size"], size);
       return { d: "result", ok, errs: errs as string[], size };
     }
+    case "tuple": {
+      keysAre(node, ["d", "of", "size"]);
+      const of = node["of"];
+      if (!Array.isArray(of) || of.length < 1 || of.length > 32) return refuse("of holds 1 to 32 descriptors");
+      const parts = of.map((part) => readNode(part, depth + 1));
+      // Checked arithmetic: a product that a JSON integer cannot hold exactly is refused, never wrapped or rounded to zero.
+      let size = 1n;
+      for (const part of parts) size *= BigInt(part.size);
+      if (size > BigInt(Number.MAX_SAFE_INTEGER)) refuse("a tuple's size overflows");
+      declaredSize(node["size"], Number(size));
+      return { d: "tuple", of: parts, size: Number(size) };
+    }
     default:
       return refuse("the descriptor kind is not one this document defines");
   }
@@ -256,6 +273,28 @@ function mismatch(): never {
 
 function build(node: Node, ty: Ty, table: TypeTable, typesPresent: boolean): Domain {
   switch (node.d) {
+    case "tuple": {
+      // A record's descriptor is `tuple` too, but a record is `ir.data`.
+      if (ty.k === "Name") throw new KitError("level-missing", "a record's descriptor belongs to ir.data", { level: "ir.data" });
+      if (ty.k !== "Tuple" || ty.of.length !== node.of.length) mismatch();
+      const tuple = ty as Extract<Ty, { k: "Tuple" }>;
+      const parts = node.of.map((part, i) => build(part, tuple.of[i] as Ty, table, typesPresent));
+      const sizes = parts.map((part) => part.size);
+      const count = parts.length;
+      // Mixed-radix unranking, last component fastest (section 5.2's rule for binders, applied to one value).
+      return {
+        size: node.size,
+        nth: (i) => {
+          const out = new Array<unknown>(count);
+          let rest = i;
+          for (let k = count - 1; k >= 0; k -= 1) {
+            out[k] = (parts[k] as Domain).nth(rest % (sizes[k] as number));
+            rest = Math.floor(rest / (sizes[k] as number));
+          }
+          return out;
+        },
+      };
+    }
     case "bool":
       if (ty.k !== "Bool") mismatch();
       return { size: 2, nth: (i) => i === 1 };

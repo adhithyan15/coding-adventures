@@ -1,0 +1,436 @@
+{
+  "format": "coding-adventures-nand-flash-v1",
+  "description": "ÿortable logical SLC NAND page and block behavior for DB01.",
+  "geometry": {
+    "block_count": 2,
+    "pages_per_block": 2,
+    "page_size_bytes": 2,
+    "max_erase_cycles": 1
+  },
+  "initial_state": {
+    "pages": [
+      [
+        "ffff",
+        "ffff"
+      ],
+      [
+        "ffff",
+        "ffff"
+      ]
+    ],
+    "erase_counts": [
+      0,
+      0
+    ],
+    "programmed": [
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ]
+    ]
+  },
+  "operations": [
+    {
+      "op": "read",
+      "block": 0,
+      "page": 0,
+      "result": "ffff"
+    },
+    {
+      "op": "program",
+      "block": 0,
+      "page": 0,
+      "data": "f00f",
+      "result": null
+    },
+    {
+      "op": "read",
+      "block": 0,
+      "page": 0,
+      "result": "f00f"
+    },
+    {
+      "op": "program",
+      "block": 0,
+      "page": 0,
+      "data": "ffff",
+      "error": {
+        "type": "ProgramError",
+        "message": "page has already been programmed since erase"
+      }
+    },
+    {
+      "op": "erase_block",
+      "block": 0,
+      "result": null
+    },
+    {
+      "op": "program",
+      "block": 0,
+      "page": 0,
+      "data": "ffff",
+      "result": null
+    },
+    {
+      "op": "program",
+      "block": 0,
+      "page": 1,
+      "data": "0000",
+      "result": null
+    },
+    {
+      "op": "erase_block",
+      "block": 0,
+      "error": {
+        "type": "EraseLimitError",
+        "message": "block erase limit reached"
+      }
+    },
+    {
+      "op": "program",
+      "block": 1,
+      "page": 0,
+      "data": "0000",
+      "result": null
+    },
+    {
+      "op": "program",
+      "block": 1,
+      "page": 0,
+      "data": "0101",
+      "error": {
+        "type": "ProgramError",
+        "message": "page has already been programmed since erase"
+      }
+    },
+    {
+      "op": "read",
+      "block": 1,
+      "page": 0,
+      "result": "0000"
+    },
+    {
+      "op": "erase_block",
+      "block": 1,
+      "result": null
+    }
+  ],
+  "states_after_operations": [
+    {
+      "pages": [
+        [
+          "ffff",
+          "ffff"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        0,
+        0
+      ],
+      "programmed": [
+        [
+          false,
+          false
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "f00f",
+          "ffff"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        0,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          false
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "f00f",
+          "ffff"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        0,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          false
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "f00f",
+          "ffff"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        0,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          false
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "ffff",
+          "ffff"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        1,
+        0
+      ],
+      "programmed": [
+        [
+          false,
+          false
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "ffff",
+          "ffff"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        1,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          false
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "ffff",
+          "0000"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        1,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          true
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "ffff",
+          "0000"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        1,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          true
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "ffff",
+          "0000"
+        ],
+        [
+          "0000",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        1,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          true
+        ],
+        [
+          true,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "ffff",
+          "0000"
+        ],
+        [
+          "0000",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        1,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          true
+        ],
+        [
+          true,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "ffff",
+          "0000"
+        ],
+        [
+          "0000",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        1,
+        0
+      ],
+      "programmed": [
+        [
+          true,
+          true
+        ],
+        [
+          true,
+          false
+        ]
+      ]
+    },
+    {
+      "pages": [
+        [
+          "ffff",
+          "0000"
+        ],
+        [
+          "ffff",
+          "ffff"
+        ]
+      ],
+      "erase_counts": [
+        1,
+        1
+      ],
+      "programmed": [
+        [
+          true,
+          true
+        ],
+        [
+          false,
+          false
+        ]
+      ]
+    }
+  ]
+}

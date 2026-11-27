@@ -94,7 +94,7 @@ export interface KitReport {
 
 /** Options of {@link runKit}. */
 export interface KitOptions {
-  /** The levels the runner implements (default: this lane's, `ir.core`). */
+  /** The levels the runner implements (default: this lane's, `ir.core`, `ir.fixed` and `ir.tuple`). */
   readonly levels?: readonly string[];
   /** Also walk `also_sequential` chunk cases from chunk 0 (default true; the slow part of the kit). */
   readonly sequential?: boolean;
@@ -200,6 +200,23 @@ function checkStandIn(program: Program, opName: string, subjects: Record<string,
   if (!flows(sig.ty, eraseNamedWidths(op.ret))) throw new Error("a stand-in result does not fit its op's result");
 }
 
+/**
+ * R120 (b): every `env` entry is `[name, {"type": text, "value": V}]`.  Anything else (a missing `type` or `value`, a
+ * non-text type, an entry that is not a pair) breaks the case's own schema: a kit error (a harness error, never an outcome).
+ * A type text the reader refuses is another matter: `ill-typed`, a vector (R120 (a)).
+ */
+function readEnv(raw: unknown): [string, { type: string; value: unknown }][] {
+  if (!Array.isArray(raw)) throw new Error("a kit case has an env that is not a list");
+  return raw.map((item) => {
+    if (!Array.isArray(item) || item.length !== 2 || typeof item[0] !== "string") throw new Error("a kit case has an env entry that is not a name and an object");
+    const entry = item[1] as unknown;
+    if (!isRecord(entry) || typeof entry["type"] !== "string" || !Object.hasOwn(entry, "value")) {
+      throw new Error("a kit case has an env entry without a text type and a value");
+    }
+    return [item[0], entry as { type: string; value: unknown }];
+  });
+}
+
 function runIr(c: Case): Case {
   const levels = new Set((c["levels"] as string[]).filter((level) => IMPLEMENTED_LEVELS.includes(level)));
   const subjects = (c["subjects"] ?? {}) as Record<string, string>;
@@ -213,13 +230,21 @@ function runIr(c: Case): Case {
       ...(c["max_ir_cost"] === undefined ? {} : { maxIrCost: c["max_ir_cost"] as number }),
       structuralCode: "ill-typed",
     });
-    const env = c["env"] as [string, { type: string; value: unknown }][];
+    const env = readEnv(c["env"]);
     const vars: Param[] = env.map(([name, entry]) => ({ name, ty: parseType(entry.type, { code: "ill-typed" }) }));
     const compiled = program.compileExpr(c["ir"], vars, (c["role"] as "body" | "admit" | "fault" | undefined) ?? "body");
     // A kit case never has an undetermined result type (R41, R98 (b)): a row that derives one is a broken fixture, not a vector.
     if (isUndetermined(compiled.ty)) throw new Error("a kit case has an undetermined result type");
     for (const opName of compiled.ops) checkStandIn(program, opName, subjects);
-    const values: Value[] = env.map(([, entry], i) => decodeJson(entry.value, (vars[i] as Param).ty, program.table));
+    const values: Value[] = env.map(([, entry], i) => {
+      try {
+        return decodeJson(entry.value, (vars[i] as Param).ty, program.table);
+      } catch (error) {
+        // R120 (b): a value that does not decode as its type breaks the case's own schema: a kit error, never a vector.
+        if (error instanceof KitError && error.code === "value") throw new Error("a kit case has an env value that does not decode as its type");
+        throw error;
+      }
+    });
     program.state.calls = 0;
     program.state.subject = (op, args) => program.callModel(subjects[op] as string, args);
     const result = compiled.run(values);
@@ -303,7 +328,14 @@ function runFault(c: Case, runnerLevels: ReadonlySet<string>): Case {
     // The op row's types name only declared records and variants (an error type occurs only inside `Result`: R117; an
     // undeclared name is no level question, [D64]).  This is the check `v2-ir` makes, and it precedes `level-missing`.
     for (const ty of [...op.params.map((p) => p.ty), op.ret]) checkNames(ty, program.table, "ill-typed");
-    const compiled = compileFault(program, fault, op);
+    let compiled;
+    try {
+      compiled = compileFault(program, fault, op);
+    } catch (error) {
+      // R126: a malformed fault row (or an undefined level in its `requires`) is a schema break of the case: a kit error, never a vector.
+      if (error instanceof KitError && error.code === "corpus") throw new Error("a kit case has a malformed fault row");
+      throw error;
+    }
     // The wrapper has no call site and no widths: a named width is left unstated, so args and result decode as plain Bytes.
     const paramTypes = op.params.map((p) => eraseNamedWidths(p.ty));
     const retType = eraseNamedWidths(op.ret);

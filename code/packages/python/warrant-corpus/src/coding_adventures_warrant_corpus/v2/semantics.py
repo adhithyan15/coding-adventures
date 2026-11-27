@@ -23,7 +23,7 @@ from __future__ import annotations
 import re
 from collections.abc import Callable, Iterator
 
-from . import arith
+from . import arith, fixed
 from .errors import Refusal
 from .wtypes import FIXED, Ty, Value, fixed_range
 
@@ -108,6 +108,40 @@ class Semantics:
         one by its signed value (section 3.2).  Python ints already are these.
         """
         return value
+
+    # -- Appendix A.1: the ir.fixed built-ins ------------------------------------
+    def shift(self, op: str, value: int, count: int, ty: Ty) -> int:
+        """``shl``, ``shr`` or ``sar``: a count of ``w`` or more is decided *first*."""
+        return fixed.shift(op, value, count, ty)
+
+    def rotate(self, op: str, value: int, count: int, ty: Ty) -> int:
+        """``rotl`` or ``rotr``: the count is reduced modulo ``w`` first."""
+        return fixed.rotate(op, value, count, ty)
+
+    def count_zeros(self, op: str, value: int, ty: Ty) -> int:
+        """``clz`` or ``ctz``; both are ``w`` for the pattern 0."""
+        return fixed.count_zeros(op, value, ty)
+
+    def checked(self, op: str, left: int, right: int, ty: Ty) -> tuple:
+        """``checked_add``/``sub``/``mul``: ``None`` iff the result leaves ``ty``."""
+        return fixed.checked(op, left, right, ty)
+
+    def divide(self, op: str, left: int, right: int, ty: Ty | None) -> tuple:
+        """``div``/``rem`` (floor) and ``div_trunc``/``rem_trunc`` (toward zero)."""
+        return fixed.divide(op, left, right, ty)
+
+    # -- section 4.2 rule 2: `match` evaluates exactly one arm ----------------------
+    def choose_arm(self, matching: list[int]) -> int:
+        """The arm a ``match`` runs: the **first** whose pattern matches."""
+        return matching[0]
+
+    # -- section 5.1: a tuple descriptor's product ----------------------------------
+    def component_digits(self, index: int, sizes: list[int]) -> list[int]:
+        """Component indices of tuple value ``index``: the **last** varies fastest."""
+        digits = [0] * len(sizes)
+        for position in range(len(sizes) - 1, -1, -1):
+            index, digits[position] = divmod(index, sizes[position])
+        return digits
 
     # -- section 4: Bytes operators --------------------------------------------
     def take(self, data: bytes, count: int) -> bytes:

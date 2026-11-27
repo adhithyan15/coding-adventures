@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - the 9-binder claim is split in two (VER04r 16.22 D76, R109)
+
+- **`ripple_carry_adder_with_carry_4_bit_exhaustive` (9 `Bool` binders, 512 cases) is replaced by two claims of 8 binders:
+  `ripple_carry_adder_with_carry_4_bit_exhaustive_cin_0` and `_cin_1`**, each over `a0` to `a3` and `b0` to `b3` with the carry-in written as the literal `0u8`
+  or `1u8` and 256 cases. The 512 cases, the property and the fuzz suites are the same
+  property over the same inputs; the total stays 2,655,437 cases and the claim count goes from 63 to 64. Why: a claim has at most 8 binders (VER04r 5.3, R75) and both the oracle and
+  the generator refuse the nine-binder claim at derive, so `arithmetic.warrant` could not be generated. The bound of 8 stays; raising it was rejected by the owner.
+- **The old name is retired, not kept on one half.** The README called the claim names stable identifiers; a later layer that linked to the old name must now link to the two new ones.
+  `AR01-arithmetic-contract.md` and this README are updated.
+- Regenerated with the repo's tools (`gen_evidence`, the warrant_evidence run, `arithmetic_proofs`, `ca_assurance_report --generate`): `tests/generated/warrant_evidence.rs`,
+  `evidence/test-manifest.json`, `evidence/proof-manifest.json` (spec hash) and `assurance_report.json` (the three evidence rows of the claim become six; the report's static
+  weakness-reason text is the current tool's wording).
+
 ## Unreleased — regenerated evidence harness (VOS-038b)
 
 - `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the refinement sampler (a low-acceptance refinement over an enumerable domain is drawn from its admissible set; VER04h 4.1). No test, case count or recorded evidence manifest changes.
