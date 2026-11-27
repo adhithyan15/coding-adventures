@@ -322,7 +322,7 @@ struct HasherTests {
         #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 35)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "f9532f4c77016468fc638f0e3984329b9ac7be22afac2e975ce83e601348cf4e"
+                == "b8e4dcfae90884ff6a6d5da3b8751348541676c715192fdfb25109fa98f24e47"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)

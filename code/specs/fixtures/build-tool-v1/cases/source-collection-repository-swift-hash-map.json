@@ -20,7 +20,7 @@
       "mode": "repository_boundary",
       "language": "swift",
       "package_root": "code/packages/swift/hash-map",
-      "boundary_sha256": "f9532f4c77016468fc638f0e3984329b9ac7be22afac2e975ce83e601348cf4e",
+      "boundary_sha256": "b8e4dcfae90884ff6a6d5da3b8751348541676c715192fdfb25109fa98f24e47",
       "candidates": [
         {
           "path": "code/packages/swift/hash-map/Package.swift",

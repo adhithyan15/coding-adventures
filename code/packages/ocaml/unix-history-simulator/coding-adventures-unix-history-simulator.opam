@@ -1,0 +1,19 @@
+opam-version: "2.0"
+name: "coding-adventures-unix-history-simulator"
+version: "0.1.0"
+synopsis: "Reusable in-memory First Edition Unix teaching model"
+description: "Pure HOS00 filesystem, descriptor-table, and kernel components."
+maintainer: "Coding Adventures"
+authors: "Coding Adventures"
+license: "MIT"
+homepage: "https://github.com/adhithyan15/coding-adventures"
+bug-reports: "https://github.com/adhithyan15/coding-adventures/issues"
+dev-repo: "git+https://github.com/adhithyan15/coding-adventures.git"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "dune" {= "3.17.2"}
+  "ocamlformat" {with-dev-setup & = "0.27.0"}
+]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]

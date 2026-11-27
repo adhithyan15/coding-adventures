@@ -1,0 +1,1 @@
+- Registered the Go HDD simulator as an exact reader of the shared DB02 timing vector. Its source hash and Kiln inputs now include only that fixture, while timing and NAND fixture routes remain separate.
