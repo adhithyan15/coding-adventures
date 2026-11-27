@@ -7,7 +7,7 @@ current readers are exactly:
 | Changed input | Python reader | TypeScript reader | C reader |
 |---|---|---|---|
 | `code/specs/fixtures/database-media-v1/nand-flash.json` | `python/nand-flash` | `typescript/nand-flash` | `c/nand-flash` (DB-E05) |
-| `code/specs/fixtures/database-media-v1/hdd-simulator.json` | `python/hdd-simulator` | `typescript/hdd-simulator` | — |
+| `code/specs/fixtures/database-media-v1/hdd-simulator.json` | `python/hdd-simulator` | `typescript/hdd-simulator` | `c/hdd-simulator` (DB-E06) |
 
 With all languages selected, editing one vector selects only the readers in
 its row. A language-filtered build selects that fixture's reader in the
