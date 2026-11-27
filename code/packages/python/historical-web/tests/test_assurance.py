@@ -203,9 +203,7 @@ def _list_semantic_oracle(
 
 def test_generated_html_omitted_li_semantics_and_wrong_control() -> None:
     text_gen = gen_list(gen_choice(list("ab01")), 1, 8).map("".join)
-    pair_gen = text_gen.flat_map(
-        lambda left: text_gen.map(lambda right: (left, right))
-    )
+    pair_gen = text_gen.flat_map(lambda left: text_gen.map(lambda right: (left, right)))
     verdict = check_property(
         0x1A2B,
         pair_gen,

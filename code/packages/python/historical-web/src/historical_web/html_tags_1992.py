@@ -187,9 +187,7 @@ def _anchor_attributes(source: str) -> dict[str, str | None]:
     return attributes
 
 
-def _attribute_at(
-    source: str, cursor: int
-) -> tuple[str, str | None, int] | None:
+def _attribute_at(source: str, cursor: int) -> tuple[str, str | None, int] | None:
     start = cursor
     while cursor < len(source) and _is_space(source[cursor]):
         cursor += 1
