@@ -30,40 +30,8 @@ static int get_double(const BJsonValue *v, double *out) {
 static int get_string(const BJsonValue *v, const char **s, size_t *n) {
   return bj_string(v, s, n);
 }
-static uint32_t next_codepoint(const unsigned char **cursor) {
-  const unsigned char *s = *cursor;
-  uint32_t c = *s++;
-  if (c >= 0xc2u && c <= 0xdfu) {
-    c = ((c & 0x1fu) << 6) | (*s++ & 0x3fu);
-  } else if (c >= 0xe0u && c <= 0xefu) {
-    c = ((c & 0x0fu) << 12) | ((*s++ & 0x3fu) << 6);
-    c |= *s++ & 0x3fu;
-  } else if (c >= 0xf0u && c <= 0xf4u) {
-    c = ((c & 0x07u) << 18) | ((*s++ & 0x3fu) << 12);
-    c |= (*s++ & 0x3fu) << 6;
-    c |= *s++ & 0x3fu;
-  }
-  *cursor = s;
-  return c;
-}
-static int unicode_whitespace(uint32_t c) {
-  return (c >= 0x09u && c <= 0x0du) || c == 0x20u || c == 0x85u ||
-         c == 0xa0u || c == 0x1680u || (c >= 0x2000u && c <= 0x200au) ||
-         c == 0x2028u || c == 0x2029u || c == 0x202fu || c == 0x205fu ||
-         c == 0x3000u;
-}
-static int text_valid(const char *s, size_t n, int require_nonblank) {
-  const unsigned char *cursor = (const unsigned char *)s;
-  const unsigned char *end = cursor + n;
-  int nonblank = 0;
-  if (memchr(s, '\0', n))
-    return 0;
-  while (cursor < end) {
-    uint32_t c = next_codepoint(&cursor);
-    if (!unicode_whitespace(c))
-      nonblank = 1;
-  }
-  return !require_nonblank || nonblank;
+static int text_has_no_nul(const char *s, size_t n) {
+  return !memchr(s, '\0', n);
 }
 static int workload_nonblank_ascii(const char *s, size_t n) {
   size_t i;
@@ -153,10 +121,9 @@ MBStatus mb_replay_json_with_allocator(const char *json, size_t length,
       for (i = 0; i < sizeof(strings) / sizeof(strings[0]); i++) {
         v = member(root, strings[i]);
         if (v) {
-          if (!get_string(v, &s, &sl) || !text_valid(s, sl, 0))
+          if (!get_string(v, &s, &sl) || !text_has_no_nul(s, sl))
             goto done;
-          if (i == 0 ? !workload_nonblank_ascii(s, sl)
-                     : !text_valid(s, sl, 1))
+          if (i == 0 ? !workload_nonblank_ascii(s, sl) : sl == 0)
             goto done;
         } else if (i < 5)
           goto done;
@@ -165,7 +132,7 @@ MBStatus mb_replay_json_with_allocator(const char *json, size_t length,
       if (bj_kind(v) != BJ_ARRAY)
         goto done;
       for (i = 0; i < bj_size(v); i++)
-        if (!get_string(bj_at(v, i), &s, &sl) || !text_valid(s, sl, 0))
+        if (!get_string(bj_at(v, i), &s, &sl) || !text_has_no_nul(s, sl))
           goto done;
     }
   }

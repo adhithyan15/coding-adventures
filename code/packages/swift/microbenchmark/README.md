@@ -37,11 +37,17 @@ The default collector uses a monotonic `DispatchTime` clock; tests and callers
 can inject a deterministic clock. Reports retain every raw pair and replay
 recomputes analysis rather than trusting a supplied verdict. Signed `Int64`
 fields remain JSON integer tokens and are range-checked by Codable decoding.
-The optional workload field is validated as nonblank, NUL-free producer
-metadata; replay accepts other workload identifiers without executing them.
+The optional metadata group contains `workload`, `invocation`, `revision`,
+`runtime`, `os`, and `arch`; if any member is present all six are required.
+`profile` requires that complete group. Required descriptions are nonempty and
+NUL-free; only `workload` rejects ASCII-whitespace-only values. The invocation
+array and its individual arguments may be empty, but arguments cannot contain
+NUL. Replay accepts producer workload identifiers without executing them.
 The library's `runCommandLine` helper accepts revision metadata through its
 injected `environment` dictionary and defaults to no ambient variables. The
 packaged executable reads only `GIT_REVISION` and `GITHUB_SHA`, in that order.
+A present-empty primary key suppresses the fallback and records `unknown`, so
+the producer never emits an invalid empty revision.
 Its `os` report field is a compile-time operating-system family label
 (`windows`, `macos`, `linux`, or `unknown`), not a host-version string.
 The indexed-array command continues to emit `indexed-array-sum-4096`.

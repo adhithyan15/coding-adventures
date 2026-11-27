@@ -230,12 +230,12 @@ public struct Report: Codable, Equatable {
         pairs = try container.decode([Pair].self, forKey: .pairs)
         analysis = try container.decode(Analysis.self, forKey: .analysis)
         workload = container.contains(.workload) ? try container.decode(String.self, forKey: .workload) : nil
-        invocation = try container.decodeIfPresent([String].self, forKey: .invocation)
-        revision = try container.decodeIfPresent(String.self, forKey: .revision)
-        runtime = try container.decodeIfPresent(String.self, forKey: .runtime)
-        os = try container.decodeIfPresent(String.self, forKey: .os)
-        arch = try container.decodeIfPresent(String.self, forKey: .arch)
-        profile = try container.decodeIfPresent(String.self, forKey: .profile)
+        invocation = container.contains(.invocation) ? try container.decode([String].self, forKey: .invocation) : nil
+        revision = container.contains(.revision) ? try container.decode(String.self, forKey: .revision) : nil
+        runtime = container.contains(.runtime) ? try container.decode(String.self, forKey: .runtime) : nil
+        os = container.contains(.os) ? try container.decode(String.self, forKey: .os) : nil
+        arch = container.contains(.arch) ? try container.decode(String.self, forKey: .arch) : nil
+        profile = container.contains(.profile) ? try container.decode(String.self, forKey: .profile) : nil
     }
 }
 
@@ -476,8 +476,32 @@ public func validated(_ report: Report) throws -> Report {
     guard Int64(baselineFirst) == (report.config.pairs + 1) / 2 else {
         throw MicrobenchmarkError.malformedReport("report pair order counts are not balanced")
     }
+    let metadataPresence = [report.workload != nil, report.invocation != nil,
+                            report.revision != nil, report.runtime != nil,
+                            report.os != nil, report.arch != nil]
+    let metadataCount = metadataPresence.filter { $0 }.count
+    guard metadataCount == 0 || metadataCount == metadataPresence.count else {
+        throw MicrobenchmarkError.malformedReport("driver metadata must include all six fields")
+    }
     if let workload = report.workload, !isValidWorkloadIdentifier(workload) {
         throw MicrobenchmarkError.malformedReport("workload must be nonblank and contain no NUL")
+    }
+    for (name, value) in [("revision", report.revision), ("runtime", report.runtime),
+                          ("os", report.os), ("arch", report.arch)] {
+        if let value, value.isEmpty || containsNUL(value) {
+            throw MicrobenchmarkError.malformedReport("\(name) must be nonempty and contain no NUL")
+        }
+    }
+    if let invocation = report.invocation, invocation.contains(where: containsNUL) {
+        throw MicrobenchmarkError.malformedReport("invocation arguments must not contain NUL")
+    }
+    if let profile = report.profile {
+        guard metadataCount == metadataPresence.count else {
+            throw MicrobenchmarkError.malformedReport("profile requires complete driver metadata")
+        }
+        guard !profile.isEmpty, !containsNUL(profile) else {
+            throw MicrobenchmarkError.malformedReport("profile must be nonempty and contain no NUL")
+        }
     }
     let expected = try analyze(
         report.pairs,
@@ -510,6 +534,10 @@ private func isValidWorkloadIdentifier(_ workload: String) -> Bool {
         let value = scalar.value
         return value != 0x20 && !(0x09...0x0D).contains(value)
     }
+}
+
+private func containsNUL(_ value: String) -> Bool {
+    value.unicodeScalars.contains { $0.value == 0 }
 }
 
 public func encodeReport(_ report: Report) throws -> String {
@@ -750,7 +778,15 @@ public func runCommandLine(
     clock: Clock? = nil
 ) throws -> CommandLineResult {
     var config = Configuration()
-    var revision = environment["GIT_REVISION"] ?? environment["GITHUB_SHA"] ?? "unknown"
+    let environmentRevision: String
+    if let primary = environment["GIT_REVISION"] {
+        environmentRevision = primary.isEmpty ? "unknown" : primary
+    } else if let fallback = environment["GITHUB_SHA"] {
+        environmentRevision = fallback.isEmpty ? "unknown" : fallback
+    } else {
+        environmentRevision = "unknown"
+    }
+    var reportRevision = environmentRevision
     var index = 0
     while index < arguments.count {
         let flag = arguments[index]
@@ -778,7 +814,7 @@ public func runCommandLine(
         case "--max-batch":
             config.maxBatch = try parseInt64(value, flag: flag)
         case "--revision":
-            revision = value
+            reportRevision = value
         default:
             throw MicrobenchmarkError.invalidConfiguration("unknown option: \(flag)")
         }
@@ -799,7 +835,7 @@ public func runCommandLine(
     )
     report.workload = ArrayWorkload.identifier
     report.invocation = arguments
-    report.revision = revision
+    report.revision = reportRevision
     report.runtime = swiftRuntimeVersion
     report.os = operatingSystemName
     report.arch = architectureName
