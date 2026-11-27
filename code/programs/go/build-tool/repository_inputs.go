@@ -1032,6 +1032,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    hddSimulatorFixtureInputs,
 	},
 	{
+		name:     "go/hdd-simulator",
+		language: "go",
+		inputs:   "the exact DB02 shared HDD simulator vector",
+		matches:  isHDDSimulatorFixture,
+		paths:    hddSimulatorFixtureInputs,
+	},
+	{
 		name:     "python/trig",
 		language: "python",
 		inputs:   "the TRIG-REF-1 bit-exact corpus and the generator, oracle and validator its BUILD runs (--check)",
@@ -2015,7 +2022,7 @@ func repositoryInputsForPackage(packageName string) []string {
 		return typescriptGameInputFrameInputs
 	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash", "go/nand-flash":
 		return nandFlashFixtureInputs
-	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator":
+	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator", "go/hdd-simulator":
 		return hddSimulatorFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
