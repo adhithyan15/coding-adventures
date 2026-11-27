@@ -609,6 +609,7 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "MISSING_APPROVAL")
         self.assertIn('git show "$1"', caught.exception.message)
         self.assertIn("python3 -I -m pip install", caught.exception.message)
+        self.assertIn("--only-binary=:all:", caught.exception.message)
         self.assertIn("--candidate-commit", caught.exception.message)
         self.assertNotIn(
             "python3 code/scripts/capability_approval_gate.py", caught.exception.message

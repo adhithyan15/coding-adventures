@@ -581,7 +581,8 @@ git show "$1" > "$temporary/capability_approval_gate.py"
 git show "$2" > "$temporary/python-constraints.txt"
 shift 2
 python3 -I -m pip install --disable-pip-version-check --quiet --no-cache-dir \\
-  --isolated --require-hashes --constraint "$temporary/python-constraints.txt" \\
+  --isolated --require-hashes --only-binary=:all: \\
+  --constraint "$temporary/python-constraints.txt" \\
   --target "$temporary/deps" jsonschema==4.26.0
 python3 -I - "$temporary/deps" "$temporary/capability_approval_gate.py" "$@" <<'PY'
 import runpy

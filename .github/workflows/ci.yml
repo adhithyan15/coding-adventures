@@ -1167,6 +1167,7 @@ jobs:
           git show "$PR_BASE_SHA:code/specs/data/third-party-dependencies/python-constraints.txt" > "$base_constraints"
           python3 -I -m pip install \
             --disable-pip-version-check --quiet --no-cache-dir --isolated --require-hashes \
+            --only-binary=:all: \
             --constraint "$base_constraints" \
             --target "$RUNNER_TEMP/capability-deps" \
             jsonschema==4.26.0
