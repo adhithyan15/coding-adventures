@@ -13,6 +13,10 @@ path = "src/lib.rs"
 name = "pif-check"
 path = "src/main.rs"
 
+[[bin]]
+name = "pif-pp"
+path = "src/pp_main.rs"
+
 [dependencies]
 # The trusted kernel and reader, and the repository's own SHA-256. No third-party crates.
 lean-kernel = { path = "../lean-kernel" }

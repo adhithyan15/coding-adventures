@@ -3110,6 +3110,15 @@ version of this section led to these. Each is a decision, not a sketch.
   reads, no writes, no renames of a root or its anchor, a writable state root
   beneath the anchor) and `TestSandboxOutputDescriptors` (S2: output in the two
   pipes, the root's own streams empty, refusals exit 125) are in the same set.
+  **strace's own failure in these tests.** The helper behind the real-strace tests
+  (`runStracedImpl`) classifies strace's exit before asserting on the trace. When
+  strace exits 1 and its whole stderr is the known dying-thread race
+  (`ptrace(PTRACE_LISTEN...): Input/output error`, the census code
+  `ptrace-listen-eio`), it re-runs the step from a fresh fixture, at most 3 attempts
+  in all, logging each retry and `STRACE_LISTEN_RETRIES=N`; any other strace failure
+  and a third race hit still fail the test. This is test-harness behaviour only: the
+  recorder's own handling (the step is not recorded, `ptrace-listen-eio` is
+  counted) is unchanged, and no parser rule or dying shape is widened for it.
 
 **Exit status.** The root exits with the init's status (128 plus the signal if
 it was killed). A failure before the step runs exits 125, and a failed exec 127.

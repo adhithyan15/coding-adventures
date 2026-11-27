@@ -402,12 +402,22 @@ fn the_goals_list_format_is_strict() {
 fn a_goal_in_a_base_file_is_refused() {
     // A "model" file that carries a goal record: models hold definitions only.
     let p = prelude();
-    let c = claim_over_prelude(
-        &[Digest::of(&p).hex()],
-        "gates.and_comm",
-        WORKED_DIGEST,
-        "Pif.and_comm",
-    );
+    // A small printable file: theorem `Pif.t0 : Eq Bool true true := Eq.refl Bool true`.
+    let mut w = pif_writer::Writer::new("native", "model 0.1")
+        .unwrap()
+        .ascii_names_only();
+    w.import(&Digest::of(&p).hex()).unwrap();
+    let (b, tt) = (w.name("Bool").unwrap(), w.name("Bool.true").unwrap());
+    let (eq, refl) = (w.name("Eq").unwrap(), w.name("Eq.refl").unwrap());
+    let one = w.level_succ(pif_writer::Level::ZERO);
+    let (bc, ttc) = (w.constant(b, &[]), w.constant(tt, &[]));
+    let (eq1, refl1) = (w.constant(eq, &[one]), w.constant(refl, &[one]));
+    let ty = w.app_many(eq1, &[bc, ttc, ttc]);
+    let pf = w.app_many(refl1, &[bc, ttc]);
+    let t0 = w.name("Pif.t0").unwrap();
+    w.theorem(t0, &[], ty, pf).unwrap();
+    w.goal("c.t0", t0, &Digest::of(b"x").hex()).unwrap();
+    let c = w.to_text();
     let m = mem(&[&p, c.as_bytes()]);
     let chain = [entry(Role::Prelude, &p), entry(Role::Model, c.as_bytes())];
     let l = load_chain(&Resolver::new(&m), &chain, &LoadOptions::default()).unwrap();

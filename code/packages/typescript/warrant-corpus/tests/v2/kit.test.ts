@@ -13,6 +13,9 @@ import { KIT_DIR, kitWithExtraCategory, tamperedKit } from "./support.ts";
 
 const index = JSON.parse(readFileSync(join(KIT_DIR, "index.json"), "utf8")) as { files: { category: string; cases: number }[]; total_cases: number };
 const indexed = (category: string): number => index.files.find((row) => row.category === category)?.cases ?? 0;
+// S10d adds 670 cases at ir.fixed and ir.tuple; 613 of them are skipped by their requires at this lane's levels (ir.core).
+const SKIPPED: Record<string, number> = { "v2-value": 39, "v2-arith": 0, "v2-ir": 458, "v2-domain": 44, "v2-chunk": 15, "v2-fault": 57 };
+const SKIPPED_TOTAL = Object.values(SKIPPED).reduce((sum, n) => sum + n, 0);
 
 describe("the committed kit", () => {
   // The sequential walk of the three 2^24-case chunk cases is the slow part (about 5 s locally; CI is several times slower).
@@ -21,28 +24,28 @@ describe("the committed kit", () => {
     report = runKit(KIT_DIR, { sequential: true });
   }, 600_000);
 
-  it("passes every case of the six known categories: 0 failed, 0 skipped", () => {
+  it("passes every case of the six known categories whose requires it implements: 0 failed", () => {
     expect(report.failed).toBe(0);
     for (const category of KNOWN_CATEGORIES) {
       const row = report.categories.find((r) => r.category === category);
       expect(row, category).toBeDefined();
       expect(row?.failed, category).toEqual([]);
-      expect(row?.skipped, category).toBe(0);
-      expect(row?.run, category).toBe(indexed(category));
+      expect(row?.skipped, category).toBe(SKIPPED[category]);
+      expect(row?.run, category).toBe(indexed(category) - SKIPPED[category]);
       expect((row?.run ?? 0) + (row?.skipped ?? 0), category).toBe(indexed(category));
-      expect(row?.passed, category).toBe(indexed(category));
+      expect(row?.passed, category).toBe(indexed(category) - SKIPPED[category]);
     }
   });
 
   it("holds at least the 782 cases S5b and S5e committed", () => {
     const known = KNOWN_CATEGORIES.reduce((sum, category) => sum + indexed(category), 0);
     expect(known).toBeGreaterThanOrEqual(782);
-    expect(report.run).toBe(known);
+    expect(report.run).toBe(known - SKIPPED_TOTAL);
   });
 
   it("treats a category it does not know (v2-binding) as digest-checked and skipped whole", () => {
     const unknown = index.files.filter((row) => row.category.startsWith("v2-") && !(KNOWN_CATEGORIES as readonly string[]).includes(row.category));
-    expect(report.skipped).toBe(unknown.reduce((sum, row) => sum + row.cases, 0));
+    expect(report.skipped).toBe(unknown.reduce((sum, row) => sum + row.cases, 0) + SKIPPED_TOTAL);
   });
 });
 

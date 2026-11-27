@@ -13,28 +13,19 @@ fn args(a: &[&str]) -> Vec<String> {
     a.iter().map(|s| s.to_string()).collect()
 }
 
-fn cmd(verb: Verb, dir: &Path, root: &Path, flag: bool) -> Command {
+fn cmd(verb: Verb, dir: &Path, root: &Path) -> Command {
     Command {
         verb,
         dir: dir.to_path_buf(),
         root: Some(root.to_path_buf()),
         emit_drat: None,
-        allow_missing_sat_key: flag,
     }
 }
 
 #[test]
 fn parse_accepts_the_three_verbs_and_refuses_the_rest() {
-    let c = parse(&args(&[
-        "gen",
-        "d",
-        "--root",
-        "r",
-        "--allow-missing-sat-key",
-    ]))
-    .unwrap();
+    let c = parse(&args(&["gen", "d", "--root", "r"])).unwrap();
     assert_eq!(c.verb, Verb::Gen);
-    assert!(c.allow_missing_sat_key);
     assert_eq!(c.root.as_deref(), Some(Path::new("r")));
     let c = parse(&args(&["check", "d", "--emit-drat", "out"])).unwrap();
     assert_eq!(c.emit_drat.as_deref(), Some(Path::new("out")));
@@ -49,6 +40,9 @@ fn parse_accepts_the_three_verbs_and_refuses_the_rest() {
         &["gen", "a", "b"],
         &["gen", "d", "--root"],
         &["gen", "d", "--emit-drat", "x"],
+        // VOS-040c deleted the 040b bridge: the flag is an unknown argument for every verb.
+        &["gen", "d", "--allow-missing-sat-key"],
+        &["check", "d", "--allow-missing-sat-key"],
         &["cross-check", "d", "--allow-missing-sat-key"],
         &["check", "d", "--emit-drat"],
         &["check", "d", "--nope"],
@@ -61,24 +55,30 @@ fn parse_accepts_the_three_verbs_and_refuses_the_rest() {
 fn gen_then_check_then_tamper_in_process() {
     let (root, dir) = temp_contract("cli");
     let ev = Some(evidence());
-    // No `sat` key: MS01, exit 1, nothing written.
-    let (code, _, err) = run_with(&cmd(Verb::Gen, &dir, &root, false), ev);
+    // No `sat` key: MS01, exit 1, nothing written.  (The real contract now carries the key, so
+    // the copy loses it for this step.)
+    let toml = dir.join("vos.toml");
+    let with_key = std::fs::read_to_string(&toml).unwrap();
+    assert!(with_key.contains("sat = \"model\""));
+    std::fs::write(&toml, with_key.replace("sat = \"model\"", "")).unwrap();
+    let (code, _, err) = run_with(&cmd(Verb::Gen, &dir, &root), ev);
     assert_eq!(code, 1);
     assert!(err[0].starts_with("MS01"), "{err:?}");
     let table = dir.join("warrant").join("lemmas.sat");
     assert!(!table.exists());
+    std::fs::write(&toml, &with_key).unwrap();
     // `check` before `gen`: the table is absent (MS09).
-    let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root, true), ev);
+    let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root), ev);
     assert_eq!(code, 1);
-    assert!(err[1].starts_with("MS09"), "{err:?}");
+    assert!(err[0].starts_with("MS09"), "{err:?}");
     // gen writes it.
-    let (code, out, err) = run_with(&cmd(Verb::Gen, &dir, &root, true), ev);
+    let (code, out, err) = run_with(&cmd(Verb::Gen, &dir, &root), ev);
     assert_eq!(code, 0, "{err:?}");
     assert!(out.last().unwrap().starts_with("wrote "));
     let text = std::fs::read_to_string(&table).unwrap();
     assert!(text.starts_with("vos-sat 1\n") && text.ends_with("end\n"));
     // check is current, and can emit the proofs on request.
-    let mut c = cmd(Verb::Check, &dir, &root, true);
+    let mut c = cmd(Verb::Check, &dir, &root);
     c.emit_drat = Some(root.join("proofs"));
     let (code, out, err) = run_with(&c, ev);
     assert_eq!(code, 0, "{err:?}");
@@ -89,36 +89,36 @@ fn gen_then_check_then_tamper_in_process() {
     c.emit_drat = Some(root.join("a").join("..").join("b"));
     let (code, _, err) = run_with(&c, ev);
     assert_eq!(code, 2);
-    assert!(err[1].contains("no verdict"));
+    assert!(err[0].contains("no verdict"));
     // A tampered table is MS09, exit 1.
     std::fs::write(&table, text.replace("vos-sat 1", "vos-sat 2")).unwrap();
-    let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root, true), ev);
+    let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root), ev);
     assert_eq!(code, 1);
     assert!(
-        err[1].starts_with("MS09") && err[1].contains("line 1"),
+        err[0].starts_with("MS09") && err[0].contains("line 1"),
         "{err:?}"
     );
     // The table path is a symlink-free regular file; a directory in its place is refused.
     std::fs::remove_file(&table).unwrap();
     std::fs::create_dir(&table).unwrap();
-    let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root, true), ev);
+    let (code, _, err) = run_with(&cmd(Verb::Check, &dir, &root), ev);
     assert_eq!(code, 1, "{err:?}");
-    assert!(err[1].starts_with("MS01"));
+    assert!(err[0].starts_with("MS01"));
     let _ = std::fs::remove_dir_all(&root);
 }
 
 #[test]
 fn cross_check_verb_and_unloadable_crates() {
     let (root, dir) = temp_contract("cli2");
-    let (code, out, _) = run_with(&cmd(Verb::CrossCheck, &dir, &root, false), Some(evidence()));
+    let (code, out, _) = run_with(&cmd(Verb::CrossCheck, &dir, &root), Some(evidence()));
     assert_eq!(code, 0);
     assert!(out.iter().any(|l| l.contains("0 disagreements")));
     // A crate that is not there: a finding for gen and check, no verdict for cross-check.
     let missing = dir.with_file_name("no-such-crate");
-    let (code, _, err) = run_with(&cmd(Verb::Gen, &missing, &root, true), None);
+    let (code, _, err) = run_with(&cmd(Verb::Gen, &missing, &root), None);
     assert_eq!(code, 1, "{err:?}");
-    assert!(err[1].starts_with("MS01"));
-    let (code, _, err) = run_with(&cmd(Verb::CrossCheck, &missing, &root, false), None);
+    assert!(err[0].starts_with("MS01"));
+    let (code, _, err) = run_with(&cmd(Verb::CrossCheck, &missing, &root), None);
     assert_eq!(code, 2);
     assert!(err[0].contains("no verdict"));
     let _ = std::fs::remove_dir_all(&root);
@@ -134,7 +134,6 @@ fn the_binary_gens_and_checks_a_contract() {
                 dir.to_str().unwrap(),
                 "--root",
                 root.to_str().unwrap(),
-                "--allow-missing-sat-key",
             ])
             .output()
             .unwrap();
@@ -172,34 +171,12 @@ fn make_dir_symlink(target: &Path, link: &Path) -> bool {
 }
 
 #[test]
-fn the_bridge_is_loud_on_standard_error_and_in_the_report() {
-    let (root, dir) = temp_contract("bridge");
-    let ev = Some(evidence());
-    let (code, out, err) = run_with(&cmd(Verb::Gen, &dir, &root, true), ev);
-    assert_eq!(code, 0, "{err:?}");
-    assert_eq!(err[0], vos_model_sat::cli::BRIDGE_WARNING);
-    assert!(
-        err[0].starts_with("WARNING: MS01 opt-in check skipped (--allow-missing-sat-key bridge")
-    );
-    assert_eq!(out[0], vos_model_sat::lane::BRIDGED_REPORT_LINE);
-    // An unbridged run never prints the warning (it fails MS01 instead).
-    let (code, _, err) = run_with(&cmd(Verb::Gen, &dir, &root, false), ev);
-    assert_eq!(code, 1);
-    assert!(err.iter().all(|l| !l.contains("WARNING")), "{err:?}");
-    // The warning also leads a bridged run that fails.
-    let missing = dir.with_file_name("nope");
-    let (_, _, err) = run_with(&cmd(Verb::Check, &missing, &root, true), None);
-    assert_eq!(err[0], vos_model_sat::cli::BRIDGE_WARNING);
-    let _ = std::fs::remove_dir_all(&root);
-}
-
-#[test]
 fn emit_drat_refuses_to_overwrite_and_never_writes_through_a_symlink() {
     let (root, dir) = temp_contract("emit");
     let ev = Some(evidence());
-    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root, true), ev).0, 0);
+    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root), ev).0, 0);
     let proofs = root.join("proofs");
-    let mut c = cmd(Verb::Check, &dir, &root, true);
+    let mut c = cmd(Verb::Check, &dir, &root);
     c.emit_drat = Some(proofs.clone());
     assert_eq!(run_with(&c, ev).0, 0);
     // A second run into the same directory must not overwrite what is there.
@@ -248,7 +225,7 @@ fn emit_drat_refuses_to_overwrite_and_never_writes_through_a_symlink() {
 fn gen_writes_through_a_temporary_file_and_refuses_a_symlinked_warrant_dir() {
     let (root, dir) = temp_contract("genw");
     let ev = Some(evidence());
-    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root, true), ev).0, 0);
+    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root), ev).0, 0);
     let warrant = dir.join("warrant");
     let leftovers: Vec<String> = std::fs::read_dir(&warrant)
         .unwrap()
@@ -258,13 +235,13 @@ fn gen_writes_through_a_temporary_file_and_refuses_a_symlinked_warrant_dir() {
     assert!(leftovers.is_empty(), "{leftovers:?}");
     // Running gen again replaces the file (a rename over the target) with the same bytes.
     let before = std::fs::read(warrant.join("lemmas.sat")).unwrap();
-    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root, true), ev).0, 0);
+    assert_eq!(run_with(&cmd(Verb::Gen, &dir, &root), ev).0, 0);
     assert_eq!(std::fs::read(warrant.join("lemmas.sat")).unwrap(), before);
     // A symlinked warrant/ is refused as MS01 before anything is written.
     let moved = dir.join("warrant-real");
     std::fs::rename(&warrant, &moved).unwrap();
     if make_dir_symlink(&moved, &warrant) {
-        let (code, _, err) = run_with(&cmd(Verb::Gen, &dir, &root, true), ev);
+        let (code, _, err) = run_with(&cmd(Verb::Gen, &dir, &root), ev);
         assert_eq!(code, 1, "{err:?}");
         assert!(err.iter().any(|l| l.contains("MS01")), "{err:?}");
     } else {

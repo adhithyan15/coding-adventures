@@ -1,0 +1,91 @@
+cabal-version: 3.0
+name:          test-bootstrap
+version:       0.1.0
+synopsis:      Property-based testing engine and pbt-v1 conformance runner (VER05n)
+description:   Zero-dependency property-based testing engine with integrated shrinking,
+               a hierarchical STM shrink budget, strict JSON and TFV validators and the
+               shared pbt-v1 conformance corpus runner.
+category:      Testing
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+
+common shared
+    default-language:   Haskell2010
+    default-extensions: BangPatterns
+                      , LambdaCase
+                      , OverloadedStrings
+                      , ScopedTypeVariables
+    -- -fno-omit-yields: a loop that never allocates still reaches a safe point, so
+    -- System.Timeout.timeout can interrupt it (VER05n 4.2).
+    ghc-options:        -Wall -Werror -fno-omit-yields
+
+library
+    import:           shared
+    hs-source-dirs:   src
+    exposed-modules:  CodingAdventures.TestBootstrap
+                    , CodingAdventures.TestBootstrap.Error
+                    , CodingAdventures.TestBootstrap.Util
+                    , CodingAdventures.TestBootstrap.Prng
+                    , CodingAdventures.TestBootstrap.Tfv
+                    , CodingAdventures.TestBootstrap.CorpusJson.Escape
+                    , CodingAdventures.TestBootstrap.CorpusJson.Val
+                    , CodingAdventures.TestBootstrap.CorpusJson.Canon
+                    , CodingAdventures.TestBootstrap.CorpusJson.StrictJson
+                    , CodingAdventures.TestBootstrap.CorpusJson.Values
+                    , CodingAdventures.TestBootstrap.Pbt.Types
+                    , CodingAdventures.TestBootstrap.Pbt.Safe
+                    , CodingAdventures.TestBootstrap.Pbt.Budget
+                    , CodingAdventures.TestBootstrap.Pbt.Shrink
+                    , CodingAdventures.TestBootstrap.Pbt.Gen
+                    , CodingAdventures.TestBootstrap.Pbt.Runner
+                    , CodingAdventures.TestBootstrap.Pbt.Corpus
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.11 && <0.13
+                    , containers >=0.6 && <0.9
+                    , deepseq >=1.4 && <1.6
+                    , stm >=2.5 && <2.6
+                    , text >=1.2 && <2.2
+
+test-suite spec
+    import:           shared
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    hs-source-dirs:   test
+    other-modules:    Harness
+                    , Fixture
+                    , PrngSpec
+                    , CanonSpec
+                    , JsonTfvSpec
+                    , ShrinkSpec
+                    , GenSpec
+                    , RunnerSpec
+                    , BudgetSpec
+                    , HazardSpec
+                    , ApiSpec
+                    , CorpusSpec
+    build-depends:    test-bootstrap
+                    , base >=4.14 && <5
+                    , bytestring >=0.11 && <0.13
+                    , containers >=0.6 && <0.9
+                    , deepseq >=1.4 && <1.6
+                    , directory >=1.3 && <1.4
+                    , filepath >=1.4 && <1.6
+                    , stm >=2.5 && <2.6
+                    , text >=1.2 && <2.2
+
+test-suite pbt-v1-conformance
+    import:           shared
+    type:             exitcode-stdio-1.0
+    main-is:          Conformance.hs
+    hs-source-dirs:   test
+    other-modules:    Fixture
+    build-depends:    test-bootstrap
+                    , base >=4.14 && <5
+                    , bytestring >=0.11 && <0.13
+                    , directory >=1.3 && <1.4
+                    , filepath >=1.4 && <1.6
+                    , text >=1.2 && <2.2

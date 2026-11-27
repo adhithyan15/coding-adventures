@@ -35,6 +35,8 @@ use crate::control::{Role, Signoff};
 use crate::cte::{goal_digest, Dterm};
 use crate::digest::Digest;
 use crate::error::CheckError;
+use crate::names::check_goal_names;
+use crate::printcheck::check_goal;
 use lean_kernel::{Expr, ExprKind, ExprStore, Name};
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
@@ -213,6 +215,16 @@ pub fn check_goals(
             )));
         }
         let mut listed = false;
+        if list.is_none() {
+            // No display CTE: only constants and universe parameters can be checked, from the
+            // store's term (its binder names are arbitrary, so the binder rules are skipped).
+            let t = Dterm::from_store(&l.env.store, ty).map_err(cte_err)?;
+            check_goal_names(&t, &l.env, false).map_err(|v| CheckError::GoalNames {
+                claim: g.claim_id.clone(),
+                rule: v.rule.word(),
+                name: v.name,
+            })?;
+        }
         if list.is_some() {
             let line = by_id
                 .get(g.claim_id.as_str())
@@ -224,6 +236,17 @@ pub fn check_goals(
                     claim: g.claim_id.clone(),
                 });
             }
+            // G7: the names a signer reads; and `parse(print(G)) = G` with the independent parser.
+            let violation = |v: crate::names::NameViolation| CheckError::GoalNames {
+                claim: g.claim_id.clone(),
+                rule: v.rule.word(),
+                name: v.name,
+            };
+            check_goal_names(&line.term, &l.env, true).map_err(violation)?;
+            check_goal(&line.term).map_err(|e| CheckError::Printer {
+                subject: format!("claim {}", g.claim_id),
+                why: format!("{e:?}"),
+            })?;
             listed = true;
         }
         out.push(CheckedGoal {

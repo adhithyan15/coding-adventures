@@ -80,9 +80,13 @@ reads a status from the table. Exit 0 pass, 1 findings, 2 no verdict.
 | MS09 | `warrant/lemmas.sat` is absent or stale (first differing line shown) |
 | MS10 | a lemma of `lemmas.part` has no row, or none ran |
 
-`--allow-missing-sat-key` (gen and check) skips the `vos.toml` half of MS01. Until VOS-040c teaches
-`vos-link` the `sat` key, its loader refuses a `vos.toml` that carries one, so the real contract
-cannot opt in yet.
+The opt-in of MS01 is unconditional: `vos.toml` is read by the kit's shared parser
+(`vos_shape_check::manifest::parse_vos_toml`), and `sat = "model"` is the only value that opts in.
+The 040b `--allow-missing-sat-key` bridge was deleted by VOS-040c; the flag is now a usage error.
+
+`vos-sched-contract` opts in (`sat = "model"`), and its generated `BUILD` and `BUILD_windows` run
+`vos-model-sat check .` after `check-contract` (VOS31 10.1). `vos-link check-contract` rule `CK11`
+checks that line and a well-formed `warrant/lemmas.sat` (files only; this crate does the solving).
 
 **Committed fields** of `lemmas.sat` are solver-independent (sizes, CNF digest, verdicts, collapse
 reason, control, premise). **Gated, never committed**: conflicts, `check_work`, checker acceptance;
@@ -116,7 +120,6 @@ let c = lemma_circuit(LemmaId::TopIsTheMaximum, &Encoder::new(64).unwrap(), &mut
 
 The negative controls swap in a wrong encoder, budget or proof through `LaneConfig::with_*`, which
 exist only under the `test-hooks` cargo feature (enabled by this crate's own dev-dependency).
-A bridged run (`--allow-missing-sat-key`) prints a warning and a `BRIDGED RUN` report line.
 
 ## Running the tests
 
