@@ -1547,7 +1547,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	if inputs := repositoryInputsForPackage("ruby/unix-history-simulator"); inputs != nil {
 		t.Fatalf("nonexistent hyphenated Ruby package has fallback inputs %v, want none", inputs)
 	}
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "rust", "swift", "typescript"}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "rust", "swift", "typescript", "wasm"}
 	packages := make([]discovery.Package, 0, len(languages)+3)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
@@ -1576,6 +1576,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			"haskell/unix-history-simulator": true, "elixir/unix_history_simulator": true,
 			"java/unix-history-simulator": true, "lua/unix-history-simulator": true,
 			"ocaml/unix-history-simulator": true, "swift/unix-history-simulator": true,
+			"wasm/unix-history-simulator": true,
 		}},
 		{"shared native driver", historicalUnixBuildNativePath, map[string]bool{
 			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
@@ -1604,6 +1605,9 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"OCaml adapter", historicalUnixOcamlAdapterPath, map[string]bool{"ocaml/unix-history-simulator": true}},
 		{"Swift adapter project", historicalUnixSwiftPackagePath, map[string]bool{"swift/unix-history-simulator": true}},
 		{"Swift adapter source", historicalUnixSwiftMainPath, map[string]bool{"swift/unix-history-simulator": true}},
+		{"WAT fixture adapter", historicalUnixWasmAdapterPath, map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT component test", historicalUnixWasmComponentPath, map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT adapter lookalike excluded", historicalUnixWasmAdapterPath + ".bak", map[string]bool{}},
 		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
 		{"lookalike excluded", historicalUnixFixturePath + ".bak", map[string]bool{}},
 		{"unrelated README excluded", "code/packages/go/unix-history-simulator/README.md", map[string]bool{}},
@@ -1627,6 +1631,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		"dart": "dart/unix-history-simulator", "kotlin": "kotlin/unix-history-simulator",
 		"haskell": "haskell/unix-history-simulator", "ocaml": "ocaml/unix-history-simulator",
 		"swift": "swift/unix-history-simulator", "elixir": elixirPackageName,
+		"wasm": "wasm/unix-history-simulator",
 	} {
 		for _, tc := range cases {
 			want := map[string]bool{}
@@ -1690,6 +1695,9 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		if language == "swift" {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixSwiftPackagePath, historicalUnixSwiftMainPath)
 		}
+		if language == "wasm" {
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixWasmAdapterPath, historicalUnixWasmComponentPath)
+		}
 		if got := repositoryInputsForPackage(name); !reflect.DeepEqual(got, wantInputs) {
 			t.Errorf("%s hash inputs = %v, want %v", name, got, wantInputs)
 		}
@@ -1709,6 +1717,24 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	}
 }
 
+func TestWasmUnixGuestDeclaresExternalBuildToolchains(t *testing.T) {
+	packageRoot := "../../../packages/wasm/unix-history-simulator"
+	fronts := make(map[string]string, 2)
+	for _, name := range []string{"BUILD", "BUILD_windows"} {
+		content, err := os.ReadFile(filepath.Join(packageRoot, name))
+		if err != nil {
+			t.Fatalf("read WAT package %s: %v", name, err)
+		}
+		fronts[name] = string(content)
+	}
+	want := []string{"typescript", "python"}
+	for _, platform := range []string{"linux", "windows"} {
+		if got := discovery.ExtraToolchainsForSnapshot(fronts, platform); !reflect.DeepEqual(got, want) {
+			t.Errorf("%s WAT BUILD toolchains = %v, want %v", platform, got, want)
+		}
+	}
+}
+
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	root := t.TempDir()
 	packageNames := []string{
@@ -1718,7 +1744,7 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "ocaml/unix-history-simulator", "perl/unix-history-simulator",
 		"python/unix-history-simulator", "rust/unix-history-simulator",
 		"ruby/unix_history_simulator",
-		"swift/unix-history-simulator", "typescript/unix-history-simulator",
+		"swift/unix-history-simulator", "typescript/unix-history-simulator", "wasm/unix-history-simulator",
 	}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {

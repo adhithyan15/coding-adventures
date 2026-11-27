@@ -1,0 +1,7 @@
+# needs-toolchain: typescript
+# needs-toolchain: python
+npm ci --ignore-scripts --no-audit --no-fund
+mkdir -p build
+node_modules/.bin/wat2wasm src/unix_history.wat -o build/unix_history.wasm
+node ../../../specs/fixtures/historical-unix-v1/test-adapters/wasm/component.test.mjs build/unix_history.wasm
+python3 ../../../specs/fixtures/historical-unix-v1/replay_cli.py node ../../../specs/fixtures/historical-unix-v1/test-adapters/wasm/fixture_cli.mjs build/unix_history.wasm

@@ -144,6 +144,8 @@ var (
 	historicalUnixOcamlAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/ocaml/fixture_cli.ml"
 	historicalUnixSwiftPackagePath    = "code/specs/fixtures/historical-unix-v1/test-adapters/swift/Package.swift"
 	historicalUnixSwiftMainPath       = "code/specs/fixtures/historical-unix-v1/test-adapters/swift/Sources/FixtureCLI/main.swift"
+	historicalUnixWasmAdapterPath     = "code/specs/fixtures/historical-unix-v1/test-adapters/wasm/fixture_cli.mjs"
+	historicalUnixWasmComponentPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/wasm/component.test.mjs"
 	osArchitectureProfilesPath        = "code/specs/fixtures/os-architecture-v1/profiles.json"
 	osArchitectureVerifyPath          = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
 	osArchitectureGoConformancePath   = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
@@ -657,6 +659,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("rust"),
 	historicalUnixFixtureRow("swift"),
 	historicalUnixFixtureRow("typescript"),
+	historicalUnixFixtureRow("wasm"),
 	{
 		name:     "python/historical-web",
 		language: "python",
@@ -699,6 +702,8 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixElixirDriverRow(),
 	historicalUnixAdapterRow("haskell", historicalUnixHaskellCabalPath),
 	historicalUnixAdapterRow("haskell", historicalUnixHaskellMainPath),
+	historicalUnixAdapterRow("wasm", historicalUnixWasmAdapterPath),
+	historicalUnixAdapterRow("wasm", historicalUnixWasmComponentPath),
 	historicalUnixReplayRow("c"),
 	historicalUnixReplayRow("cpp"),
 	historicalUnixReplayRow("java"),
@@ -710,6 +715,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixReplayRow("haskell"),
 	historicalUnixReplayRow("ocaml"),
 	historicalUnixReplayRow("swift"),
+	historicalUnixReplayRow("wasm"),
 	historicalUnixBuildNativeRow("c"),
 	historicalUnixBuildNativeRow("cpp"),
 	historicalUnixBuildNativeRow("java"),
@@ -2061,6 +2067,8 @@ func repositoryInputsForPackage(packageName string) []string {
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixOcamlAdapterPath)
 		case "swift":
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixSwiftPackagePath, historicalUnixSwiftMainPath)
+		case "wasm":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixWasmAdapterPath, historicalUnixWasmComponentPath)
 		default:
 			return nil
 		}
