@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/microbenchmark",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The default collector clock reads Python's monotonic nanosecond clock."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The indexed-array command writes its JSON report and errors to standard output streams."
+    }
+  ],
+  "justification": "The collector reads monotonic time and the included command writes a report to standard streams. The package does not directly use files, processes, network, FFI, or environment variables."
+}

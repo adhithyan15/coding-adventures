@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/microbenchmark",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The native collector reads monotonic time; Windows uses the high-resolution counter path."
+    },
+    {
+      "category": "ffi",
+      "action": "load",
+      "target": "kernel32.dll",
+      "justification": "On Windows the collector resolves QueryPerformanceCounter and QueryPerformanceFrequency from the fixed system library."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "kernel32.dll",
+      "justification": "On Windows the collector calls QueryPerformanceCounter and QueryPerformanceFrequency to measure short intervals."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The indexed-array command writes its JSON report and errors to standard output streams."
+    }
+  ],
+  "justification": "The reusable collector reads monotonic time, uses narrowly fixed kernel32 performance-counter calls on Windows, and its included command writes a report to standard streams. It does not directly use files, processes, network, or environment variables."
+}

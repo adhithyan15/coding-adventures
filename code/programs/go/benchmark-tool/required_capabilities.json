@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/benchmark-tool",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "The CLI reads caller-selected manifests and reports plus repository metadata and source files for benchmark subjects."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "*",
+      "justification": "The CLI creates caller-selected result directories and temporary worktree and staging directories."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "The CLI writes result reports, samples, trials, logs, copied manifests, staged replay exports, and subject build outputs."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "*",
+      "justification": "The CLI removes its temporary staging and worktree directories and cleans a newly reserved replay output directory after a failed export."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "Runs git, host metadata commands, shells, and user-selected subject preparation, build, and service commands."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "*",
+      "justification": "Stops the exact child process trees it starts after commands, services, or benchmark runs finish or fail."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads clocks for timestamps, benchmark durations, deadlines, and service readiness."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "*",
+      "justification": "Sleeps for bounded readiness polling, workload hold intervals, and configured cooldowns."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "127.0.0.1:*",
+      "justification": "Allocates an ephemeral loopback port for benchmark service subjects."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "127.0.0.1:*",
+      "justification": "Probes and drives services at the address constructed from the tool's own loopback listener and allocated port."
+    },
+    {
+      "category": "ffi",
+      "action": "load",
+      "target": "kernel32.dll",
+      "justification": "On Windows the process-tree manager resolves fixed kernel32 job-object functions."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "kernel32.dll",
+      "justification": "On Windows the process-tree manager calls fixed kernel32 job-object functions to assign and stop child trees."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The CLI reports help, status, result paths, and errors to standard output streams."
+    }
+  ],
+  "justification": "The whole CLI accepts caller-selected filesystem paths and subject commands, creates benchmark and temporary outputs, measures and sleeps, and runs only its own loopback TCP services. Windows process-tree cleanup calls fixed kernel32 APIs. No direct environment-variable read or non-loopback network destination is present in the Go implementation."
+}
