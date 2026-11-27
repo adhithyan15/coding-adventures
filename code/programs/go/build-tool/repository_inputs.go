@@ -134,6 +134,8 @@ var (
 	historicalUnixFsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fs"
 	historicalUnixFsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fsproj"
 	historicalUnixBuildDotnetPath   = "code/specs/fixtures/historical-unix-v1/build_dotnet.py"
+	historicalUnixDartAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/dart/fixture_cli.dart"
+	historicalUnixKotlinAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/kotlin/FixtureReplayTest.kt"
 	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
 	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
 	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
@@ -626,9 +628,11 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("c"),
 	historicalUnixFixtureRow("cpp"),
 	historicalUnixFixtureRow("csharp"),
+	historicalUnixFixtureRow("dart"),
 	historicalUnixFixtureRow("fsharp"),
 	historicalUnixFixtureRow("go"),
 	historicalUnixFixtureRow("java"),
+	historicalUnixFixtureRow("kotlin"),
 	historicalUnixFixtureRow("lua"),
 	historicalUnixFixtureRow("perl"),
 	historicalUnixFixtureRow("python"),
@@ -643,12 +647,15 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixAdapterRow("csharp", historicalUnixCsharpProjectPath),
 	historicalUnixAdapterRow("fsharp", historicalUnixFsharpAdapterPath),
 	historicalUnixAdapterRow("fsharp", historicalUnixFsharpProjectPath),
+	historicalUnixAdapterRow("dart", historicalUnixDartAdapterPath),
+	historicalUnixAdapterRow("kotlin", historicalUnixKotlinAdapterPath),
 	historicalUnixReplayRow("c"),
 	historicalUnixReplayRow("cpp"),
 	historicalUnixReplayRow("java"),
 	historicalUnixReplayRow("lua"),
 	historicalUnixReplayRow("csharp"),
 	historicalUnixReplayRow("fsharp"),
+	historicalUnixReplayRow("dart"),
 	historicalUnixBuildNativeRow("c"),
 	historicalUnixBuildNativeRow("cpp"),
 	historicalUnixBuildNativeRow("java"),
@@ -1802,7 +1809,7 @@ func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 func historicalUnixAdapterRow(language, adapterPath string) repositoryInputConsumer {
 	return repositoryInputConsumer{
 		name: language + "/unix-history-simulator", language: language,
-		inputs:  "the external historical Unix fixture adapter compiled by this package",
+		inputs:  "the external historical Unix fixture adapter used by this package recipe",
 		matches: exactRepositoryPath(adapterPath),
 		paths:   []string{adapterPath},
 	}
@@ -1888,6 +1895,10 @@ func repositoryInputsForPackage(packageName string) []string {
 				inputs = append(inputs, historicalUnixLuaAdapterPath)
 			}
 		case "go", "perl", "python", "ruby", "rust", "typescript":
+		case "dart":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
+		case "kotlin":
+			inputs = append(inputs, historicalUnixKotlinAdapterPath)
 		case "csharp":
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath)
 		case "fsharp":

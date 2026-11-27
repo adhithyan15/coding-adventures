@@ -1497,7 +1497,7 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 }
 
 func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
-	languages := []string{"c", "cpp", "csharp", "fsharp", "go", "java", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
 	packages := make([]discovery.Package, 0, len(languages)+1)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
@@ -1516,6 +1516,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"replay helper", historicalUnixReplayPath, map[string]bool{
 			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
 			"csharp/unix-history-simulator": true, "fsharp/unix-history-simulator": true,
+			"dart/unix-history-simulator": true,
 			"java/unix-history-simulator": true, "lua/unix-history-simulator": true,
 		}},
 		{"shared native driver", historicalUnixBuildNativePath, map[string]bool{
@@ -1533,6 +1534,8 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"C# adapter project", historicalUnixCsharpProjectPath, map[string]bool{"csharp/unix-history-simulator": true}},
 		{"F# adapter source", historicalUnixFsharpAdapterPath, map[string]bool{"fsharp/unix-history-simulator": true}},
 		{"F# adapter project", historicalUnixFsharpProjectPath, map[string]bool{"fsharp/unix-history-simulator": true}},
+		{"Dart adapter", historicalUnixDartAdapterPath, map[string]bool{"dart/unix-history-simulator": true}},
+		{"Kotlin adapter", historicalUnixKotlinAdapterPath, map[string]bool{"kotlin/unix-history-simulator": true}},
 		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
 		{"lookalike excluded", historicalUnixFixturePath + ".bak", map[string]bool{}},
 		{"unrelated README excluded", "code/packages/go/unix-history-simulator/README.md", map[string]bool{}},
@@ -1551,7 +1554,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			})
 		}
 	}
-	for _, language := range []string{"csharp", "fsharp"} {
+	for _, language := range []string{"csharp", "fsharp", "dart", "kotlin"} {
 		wantConsumer := language + "/unix-history-simulator"
 		for _, tc := range cases {
 			want := map[string]bool{}
@@ -1588,6 +1591,10 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath)
 		case "fsharp":
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixFsharpAdapterPath, historicalUnixFsharpProjectPath)
+		case "dart":
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
+		case "kotlin":
+			wantInputs = append(wantInputs, historicalUnixKotlinAdapterPath)
 		case "java":
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixJavaAdapterPath)
 		case "lua":
@@ -1602,7 +1609,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	root := t.TempDir()
-	languages := []string{"c", "cpp", "csharp", "fsharp", "go", "java", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
 		t.Fatal(err)
@@ -1675,6 +1682,16 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 		if !reflect.DeepEqual(got, want) {
 			t.Errorf("%s package repository inputs = %v, want %v", test.language, got, want)
 		}
+	}
+	dartInputs := repositoryInputsForPackage("dart/unix-history-simulator")
+	dartWant := []string{historicalUnixFixturePath, historicalUnixReplayPath, historicalUnixDartAdapterPath}
+	if !reflect.DeepEqual(dartInputs, dartWant) {
+		t.Errorf("Dart package repository inputs = %v, want %v", dartInputs, dartWant)
+	}
+	kotlinInputs := repositoryInputsForPackage("kotlin/unix-history-simulator")
+	kotlinWant := []string{historicalUnixFixturePath, historicalUnixKotlinAdapterPath}
+	if !reflect.DeepEqual(kotlinInputs, kotlinWant) {
+		t.Errorf("Kotlin package repository inputs = %v, want %v", kotlinInputs, kotlinWant)
 	}
 }
 
