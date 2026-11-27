@@ -138,7 +138,7 @@ static void test_fixture_decoder_classes(void) {
         memcpy(changed, text, (size_t)file_length + 1);
         description = strstr(changed, "\"description\": \"");
         ISO_CHECK(description != NULL);
-        if (description != NULL) ((char *)description)[16] = (char)0xFF;
+        if (description != NULL) ((unsigned char *)description)[16] = 0xFFu;
         fixture_rejected(changed);
         free(changed);
     }
