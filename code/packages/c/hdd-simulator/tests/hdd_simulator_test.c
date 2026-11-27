@@ -428,14 +428,14 @@ static HddFuzzResult process_fixture_bytes(const char *text, size_t length) {
     for (i = 0; i < bj_size(cases); i++) if (!fixture_case(bj_at(cases, i))) goto done;
     for (i = 0; i < bj_size(probes); i++) {
         const BJsonValue *probe = bj_at(probes, i);
-        const BJsonValue *error = member(probe, "error");
+        const BJsonValue *probe_error = member(probe, "error");
         int64_t start, head, target, sector;
         HddSimulator *simulator = NULL;
         HddTiming actual, expected;
         uint8_t bytes[HDD_SECTOR_BYTES];
         HddTiming untouched;
         HddSnapshot before, after;
-        int should_overflow = error != NULL;
+        int should_overflow = probe_error != NULL;
         if (!object_keys_are(probe, should_overflow ? probe_error_keys : probe_keys, 6) ||
             !nonempty_string(member(probe, "name")) ||
             !integer(member(probe, "start_tick"), &start) || start < 0 ||
@@ -443,7 +443,7 @@ static HddFuzzResult process_fixture_bytes(const char *text, size_t length) {
             !integer(member(probe, "target_track"), &target) || target < 0 ||
             !integer(member(probe, "target_sector"), &sector) || sector < 0 ||
             head >= 4 || target >= 4 || sector >= 4 ||
-            (should_overflow && !string_is(error, "ClockOverflowError")) ||
+            (should_overflow && !string_is(probe_error, "ClockOverflowError")) ||
             (!should_overflow && !parse_timing(member(probe, "timing"), &expected)) ||
             hdd_create(&simulator) != HDD_OK) { hdd_destroy(simulator); goto done; }
         if (!hdd_test_set_state(simulator, (uint64_t)start, (size_t)head)) {
@@ -527,7 +527,7 @@ static HddFuzzResult process_history(const uint8_t *bytes, size_t length) {
     /* Reject malformed records before opening a device or executing a prefix. */
     for (i = 0; i < count; i++) {
         const uint8_t *record = bytes + 11 + i * 8;
-        if (record[0] > 1U || (record[2] & (uint8_t)~3U) != 0) return HDD_FUZZ_MALFORMED;
+        if (record[0] > 1U || (record[2] & 0xFCU) != 0) return HDD_FUZZ_MALFORMED;
     }
     model.tick = tick;
     model.head = head;
@@ -624,14 +624,14 @@ static void test_public_basics(void) {
     ISO_CHECK_EQ_INT(hdd_create(&simulator), HDD_OK);
     ISO_CHECK(simulator != NULL);
     ISO_CHECK_EQ_INT(hdd_get_snapshot(simulator, &snap), HDD_OK);
-    ISO_CHECK_EQ_UINT(snap.tick, 0);
+    ISO_CHECK(snap.tick == 0);
     ISO_CHECK_EQ_UINT(snap.head_track, 0);
     memset(output, 0xA5, sizeof output);
     ISO_CHECK_EQ_INT(hdd_read_sector(simulator, 31, output, sizeof output, &timing), HDD_OK);
-    ISO_CHECK_EQ_UINT(timing.seek_ticks, 9);
-    ISO_CHECK_EQ_UINT(timing.rotation_ticks, 2);
-    ISO_CHECK_EQ_UINT(timing.total_ticks, 12);
-    ISO_CHECK_EQ_UINT(timing.end_tick, 12);
+    ISO_CHECK(timing.seek_ticks == 9);
+    ISO_CHECK(timing.rotation_ticks == 2);
+    ISO_CHECK(timing.total_ticks == 12);
+    ISO_CHECK(timing.end_tick == 12);
     ISO_CHECK_MEM_EQ(output, snap.sectors[31], sizeof output);
     ISO_CHECK_EQ_INT(hdd_get_snapshot(simulator, &saved), HDD_OK);
     ISO_CHECK_EQ_INT(hdd_write_sector(simulator, 3, source, sizeof source, &timing), HDD_OK);
@@ -672,16 +672,16 @@ static void test_precedence_atomicity_and_clock(void) {
     ISO_CHECK_EQ_INT(hdd_read_sector(simulator, 0, out, sizeof out, &timing), HDD_CLOCK_OVERFLOW);
     ISO_CHECK(memcmp(&timing, &original, sizeof timing) == 0);
     ISO_CHECK_EQ_INT(hdd_get_snapshot(simulator, &after), HDD_OK);
-    ISO_CHECK_EQ_UINT(after.tick, HDD_MAX_TICK);
+    ISO_CHECK(after.tick == HDD_MAX_TICK);
     ISO_CHECK_EQ_UINT(after.head_track, 0);
     ISO_CHECK_MEM_EQ(after.sectors, before.sectors, sizeof after.sectors);
     ISO_CHECK(hdd_test_set_state(simulator, HDD_MAX_TICK - 1, 0));
     ISO_CHECK_EQ_INT(hdd_read_sector(simulator, 2, out, sizeof out, &timing), HDD_OK);
-    ISO_CHECK_EQ_UINT(timing.end_tick, HDD_MAX_TICK);
+    ISO_CHECK(timing.end_tick == HDD_MAX_TICK);
     ISO_CHECK(hdd_test_set_state(simulator, HDD_MAX_TICK - 2, 0));
     ISO_CHECK_EQ_INT(hdd_read_sector(simulator, 31, out, sizeof out, &timing), HDD_CLOCK_OVERFLOW);
     ISO_CHECK_EQ_INT(hdd_get_snapshot(simulator, &after), HDD_OK);
-    ISO_CHECK_EQ_UINT(after.tick, HDD_MAX_TICK - 2);
+    ISO_CHECK(after.tick == HDD_MAX_TICK - 2);
     memset(data, 0xC7, sizeof data);
     memset(sentinel, 0xC7, sizeof sentinel);
     memset(&timing, 0x5A, sizeof timing); original = timing;
@@ -689,7 +689,7 @@ static void test_precedence_atomicity_and_clock(void) {
     ISO_CHECK_MEM_EQ(data, sentinel, sizeof data);
     ISO_CHECK(memcmp(&timing, &original, sizeof timing) == 0);
     ISO_CHECK_EQ_INT(hdd_get_snapshot(simulator, &after), HDD_OK);
-    ISO_CHECK_EQ_UINT(after.tick, HDD_MAX_TICK - 2);
+    ISO_CHECK(after.tick == HDD_MAX_TICK - 2);
     hdd_destroy(simulator);
 }
 
@@ -709,12 +709,12 @@ static void test_all_timing_states(void) {
             ISO_CHECK_EQ_INT(hdd_create(&simulator), HDD_OK);
             ISO_CHECK(hdd_test_set_state(simulator, (uint64_t)phase, head));
             ISO_CHECK_EQ_INT(hdd_read_sector(simulator, lba, bytes, sizeof bytes, &got), HDD_OK);
-            ISO_CHECK_EQ_UINT(got.start_tick, phase);
-            ISO_CHECK_EQ_UINT(got.seek_ticks, seek);
-            ISO_CHECK_EQ_UINT(got.rotation_ticks, rotation);
-            ISO_CHECK_EQ_UINT(got.transfer_ticks, 1);
-            ISO_CHECK_EQ_UINT(got.total_ticks, total);
-            ISO_CHECK_EQ_UINT(got.end_tick, phase + total);
+            ISO_CHECK(got.start_tick == phase);
+            ISO_CHECK(got.seek_ticks == seek);
+            ISO_CHECK(got.rotation_ticks == rotation);
+            ISO_CHECK(got.transfer_ticks == 1);
+            ISO_CHECK(got.total_ticks == total);
+            ISO_CHECK(got.end_tick == phase + total);
             hdd_destroy(simulator);
         }
 }
@@ -746,16 +746,16 @@ static void test_seeded_model(void) {
                 ISO_CHECK_EQ_INT(hdd_read_sector(simulator, lba, bytes, sizeof bytes, &got), HDD_OK);
                 ISO_CHECK_MEM_EQ(bytes, media[lba], sizeof bytes);
             }
-            ISO_CHECK_EQ_UINT(got.start_tick, tick);
-            ISO_CHECK_EQ_UINT(got.seek_ticks, seek);
-            ISO_CHECK_EQ_UINT(got.rotation_ticks, rotation);
-            ISO_CHECK_EQ_UINT(got.total_ticks, total);
+            ISO_CHECK(got.start_tick == tick);
+            ISO_CHECK(got.seek_ticks == seek);
+            ISO_CHECK(got.rotation_ticks == rotation);
+            ISO_CHECK(got.total_ticks == total);
             tick += total; head = target;
         }
         {
             HddSnapshot snap;
             ISO_CHECK_EQ_INT(hdd_get_snapshot(simulator, &snap), HDD_OK);
-            ISO_CHECK_EQ_UINT(snap.tick, tick);
+            ISO_CHECK(snap.tick == tick);
             ISO_CHECK_EQ_UINT(snap.head_track, head);
             ISO_CHECK_MEM_EQ(snap.sectors, media, sizeof media);
         }
