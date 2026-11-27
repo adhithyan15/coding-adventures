@@ -31,10 +31,19 @@ Run the executable from the Rust workspace:
 cargo run --release -p coding_adventures_microbenchmark --bin array-microbenchmark -- --pairs 40 --revision <commit>
 ```
 
+The optional `--rustc-version "<rustc --version output>"` argument adds a
+caller-supplied compiler label to the report. If it is omitted, `runtime` is
+`"unknown"`. The CLI validates that the label is a bounded, nonblank, single
+line rustc version string without control characters or Unicode line separators,
+but it does not query or authenticate the compiler.
+The exact supplied value is retained in the invocation arguments. A CI job may
+query its selected compiler separately and pass that output when it can prove
+which compiler it used.
+
 It compares indexed access with native slice iteration over 4,096 values and
-emits JSON including invocation, the Rust compiler version embedded at build
-time, debug/release profile, OS, and architecture. The installed executable
-does not need `rustc` on `PATH` to report its build compiler.
+emits JSON including invocation, the caller-supplied Rust compiler label (or
+`"unknown"`), debug/release profile, OS, and architecture. Building a library
+consumer does not run a package build script to discover compiler metadata.
 
 Tests use the package-local copy of the shared VER07 fixture so they also run
 from extracted crate sources. In the repository, the test compares that copy
