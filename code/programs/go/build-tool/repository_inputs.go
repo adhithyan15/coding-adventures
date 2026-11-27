@@ -636,7 +636,6 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("lua"),
 	historicalUnixFixtureRow("perl"),
 	historicalUnixFixtureRow("python"),
-	historicalUnixFixtureRow("ruby"),
 	historicalUnixFixtureRow("rust"),
 	historicalUnixFixtureRow("typescript"),
 	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
