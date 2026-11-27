@@ -1180,3 +1180,68 @@ def test_a_bind_of_an_undetermined_type_may_not_be_used_in_an_arm():
         [[["ok", ["bind", "x"]], ONE], [["err_any"], TWO]],
     ]
     assert value_two(unused) == 2
+
+
+R_UE = {"r": parse_type("Result<U8,E>", ERRORS)}
+
+
+def test_a_bind_with_one_undetermined_side_can_be_used_where_the_typing_accepts_it():
+    ok1 = ["ok", lit("U8", 1)]
+    bad = ["err", "BAD"]
+
+    def m(scrutinee, arms_):
+        return ["match", scrutinee, arms_]
+
+    cases = [
+        (m(ok1, [[["bind", "w"], ["is_err", var("w")]]]), False),
+        (m(bad, [[["bind", "w"], ["is_err", var("w")]]]), True),
+        (
+            m(
+                ok1,
+                [
+                    [
+                        ["bind", "w"],
+                        m(
+                            var("w"),
+                            [
+                                [["ok", ["bind", "x"]], var("x")],
+                                [["err_any"], lit("U8", 0)],
+                            ],
+                        ),
+                    ]
+                ],
+            ),
+            1,
+        ),
+        (m(ok1, [[["bind", "w"], ["eq", var("w"), var("r")]]]), True),
+        (m(bad, [[["bind", "w"], ["eq", var("w"), var("r")]]]), True),
+        (
+            m(
+                ["ok", ["tuple", [lit("U8", 1), bad]]],
+                [
+                    [
+                        ["ok", ["tuple", [["bind", "a"], ["bind", "b"]]]],
+                        ["is_err", var("b")],
+                    ],
+                    [["err_any"], ["lit", False]],
+                ],
+            ),
+            True,
+        ),
+    ]
+    for ir, want in cases:
+        env = {"r": ("ok", 1)} if "r" in str(ir) and ir is cases[3][0] else None
+        if ir is cases[4][0]:
+            env = {"r": ("err", "BAD")}
+        # r is Result<U8,E>: the same value as the scrutinee in each equality case
+        got = run(ir, env, R_UE)[1]
+        assert got == want, ir
+
+
+def test_a_bind_of_a_wholly_unknown_type_is_still_unusable():
+    used = [
+        "match",
+        ["err", "BAD"],
+        [[["ok", ["bind", "x"]], var("x")], [["err_any"], TWO]],
+    ]
+    assert code(used) == "ill-typed"
