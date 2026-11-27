@@ -62,17 +62,18 @@ private func windowsEnvironmentValue(named name: String) -> String? {
             return nil
         }
 
-        SetLastError(ERROR_SUCCESS)
+        let successCode = DWORD(bitPattern: ERROR_SUCCESS)
+        let variableMissingCode = DWORD(bitPattern: ERROR_ENVVAR_NOT_FOUND)
+        SetLastError(successCode)
         let required = GetEnvironmentVariableW(nameAddress, nil, 0)
         if required == 0 {
-            switch GetLastError() {
-            case ERROR_ENVVAR_NOT_FOUND:
+            let errorCode = GetLastError()
+            if errorCode == variableMissingCode {
                 return nil
-            case ERROR_SUCCESS:
+            } else if errorCode == successCode {
                 return ""
-            default:
-                return nil
             }
+            return nil
         }
 
         // Windows limits an individual environment string to 32,767 UTF-16
@@ -83,19 +84,18 @@ private func windowsEnvironmentValue(named name: String) -> String? {
         }
         var valueBuffer = [WCHAR](repeating: 0, count: Int(required))
         for _ in 0..<2 {
-            SetLastError(ERROR_SUCCESS)
+            SetLastError(successCode)
             let copied = valueBuffer.withUnsafeMutableBufferPointer { buffer in
                 GetEnvironmentVariableW(nameAddress, buffer.baseAddress, DWORD(buffer.count))
             }
             if copied == 0 {
-                switch GetLastError() {
-                case ERROR_ENVVAR_NOT_FOUND:
+                let errorCode = GetLastError()
+                if errorCode == variableMissingCode {
                     return nil
-                case ERROR_SUCCESS:
+                } else if errorCode == successCode {
                     return ""
-                default:
-                    return nil
                 }
+                return nil
             }
             if Int(copied) < valueBuffer.count {
                 return String(decoding: valueBuffer.prefix(Int(copied)), as: UTF16.self)
