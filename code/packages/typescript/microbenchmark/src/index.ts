@@ -41,6 +41,45 @@ interface NativeJson {
 }
 const nativeJson = JSON as unknown as NativeJson;
 
+/** Reject duplicate decoded object names while leaving parsing to Node's JSON parser. */
+function assertUniqueObjectMembers(text: string): void {
+  const scopes: Array<Set<string> | null> = [];
+  let index = 0;
+
+  while (index < text.length) {
+    const character = text[index];
+    if (character === '"') {
+      let ending = index + 1;
+      while (ending < text.length) {
+        if (text[ending] === "\\") {
+          ending += 2;
+          continue;
+        }
+        if (text[ending] === '"') break;
+        ending += 1;
+      }
+      if (ending >= text.length) return; // Node's parser reports malformed strings.
+
+      let after = ending + 1;
+      while (after < text.length && /[\t\n\r ]/.test(text[after])) after += 1;
+      const current = scopes[scopes.length - 1];
+      if (current !== undefined && current !== null && text[after] === ":") {
+        const key = nativeJson.parse(text.slice(index, ending + 1));
+        if (typeof key !== "string") throw new SyntaxError("invalid JSON object member name");
+        if (current.has(key)) throw new SyntaxError("duplicate JSON object member");
+        current.add(key);
+      }
+      index = ending + 1;
+      continue;
+    }
+
+    if (character === "{") scopes.push(new Set<string>());
+    else if (character === "[") scopes.push(null);
+    else if (character === "}" || character === "]") scopes.pop();
+    index += 1;
+  }
+}
+
 /** Parse JSON without rounding integer tokens outside binary64's exact range. */
 export function parseLosslessJson(text: string): unknown {
   return nativeJson.parse(text, function (_key, value, context) {
@@ -273,10 +312,21 @@ function validateWorkloadMetadata(raw: Record<string, unknown>): void {
   if (hasProfile) validateNonEmptyMetadataString(raw.profile, "profile");
 }
 
+function validateRootMembers(raw: Record<string, unknown>): void {
+  const allowed = new Set([
+    "config", "batch_size", "pairs", "analysis", "workload", "invocation",
+    "revision", "runtime", "os", "arch", "profile",
+  ]);
+  for (const key of Object.keys(raw)) {
+    if (!allowed.has(key)) throw new TypeError(`unknown report member: ${key}`);
+  }
+}
+
 /** Recompute analysis from the report's raw observations and reject tampering. */
 export function replayReport(value: unknown): Report {
   if (value === null || typeof value !== "object") throw new TypeError("report must be an object");
   const raw = value as Record<string, unknown>;
+  validateRootMembers(raw);
   validateWorkloadMetadata(raw);
   const config = raw.config as Config;
   validateConfig(config);
@@ -301,5 +351,6 @@ export function replayReport(value: unknown): Report {
 function targetValue(value: Int64): bigint { return asI64(value, "target_ns", 1n); }
 
 export function replayJson(text: string): Report {
+  assertUniqueObjectMembers(text);
   return replayReport(parseLosslessJson(text));
 }

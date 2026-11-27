@@ -6,7 +6,10 @@
 //! without trusting its precomputed conclusion.
 
 use coding_adventures_rank_statistics::{median, median_interval, Interval};
-use serde::{Deserialize, Serialize};
+use serde::de::{self, MapAccess, SeqAccess, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
+use serde_json::{Map, Number, Value};
+use std::collections::HashSet;
 use std::fmt;
 
 pub const MAX_PAIRS: usize = 10_000;
@@ -22,6 +25,90 @@ impl fmt::Display for Error {
 }
 
 impl std::error::Error for Error {}
+
+/// A JSON value decoded while rejecting duplicate decoded object member names.
+struct UniqueJsonValue(Value);
+
+impl<'de> Deserialize<'de> for UniqueJsonValue {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_any(UniqueJsonValueVisitor)
+    }
+}
+
+struct UniqueJsonValueVisitor;
+
+impl<'de> Visitor<'de> for UniqueJsonValueVisitor {
+    type Value = UniqueJsonValue;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("a JSON value with unique object member names")
+    }
+
+    fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Bool(value)))
+    }
+
+    fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Number(Number::from(value))))
+    }
+
+    fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Number(Number::from(value))))
+    }
+
+    fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Number::from_f64(value)
+            .map(|number| UniqueJsonValue(Value::Number(number)))
+            .ok_or_else(|| E::custom("non-finite JSON number"))
+    }
+
+    fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::String(value.to_owned())))
+    }
+
+    fn visit_string<E>(self, value: String) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::String(value)))
+    }
+
+    fn visit_unit<E>(self) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Null))
+    }
+
+    fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+    where
+        A: SeqAccess<'de>,
+    {
+        let mut values = Vec::new();
+        while let Some(UniqueJsonValue(value)) = sequence.next_element()? {
+            values.push(value);
+        }
+        Ok(UniqueJsonValue(Value::Array(values)))
+    }
+
+    fn visit_map<A>(self, mut object: A) -> Result<Self::Value, A::Error>
+    where
+        A: MapAccess<'de>,
+    {
+        let mut values = Map::new();
+        let mut names = HashSet::new();
+        while let Some(name) = object.next_key::<String>()? {
+            if !names.insert(name.clone()) {
+                return Err(de::Error::custom(format!(
+                    "duplicate JSON object member: {name:?}"
+                )));
+            }
+            let UniqueJsonValue(value) = object.next_value()?;
+            values.insert(name, value);
+        }
+        Ok(UniqueJsonValue(Value::Object(values)))
+    }
+}
 
 fn error(message: impl Into<String>) -> Error {
     Error(message.into())
@@ -256,7 +343,7 @@ impl Report {
 
     /// Parse and reanalyze raw pairs, rejecting a stale or forged analysis.
     pub fn from_json(json: &str) -> Result<Self, Error> {
-        let mut document: serde_json::Value =
+        let UniqueJsonValue(mut document) =
             serde_json::from_str(json).map_err(|e| error(format!("invalid report JSON: {e}")))?;
         // The executable adds descriptive metadata to the same report object.
         // Remove only those documented fields; serde rejects everything else.

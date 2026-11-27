@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject duplicate decoded JSON object members during raw report replay.
+
 ## 0.1.0
 
 - Reject more than 10,000 pairs in public analysis before ratio allocation.

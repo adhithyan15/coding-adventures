@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject duplicate decoded JSON object members during raw replay and reject
+  unknown top-level report members while retaining the object-based API.
 - Reject more than 10,000 pairs in public analysis before mapping pair fields.
 - Reject inherited Object member names as CLI options; only explicitly
   declared flags may update benchmark configuration.

@@ -2,6 +2,16 @@
 
 module CodingAdventures
   module Microbenchmark
+    # JSON's object_class hook sees every nested object before repeated decoded
+    # member names can overwrite an earlier value.
+    class UniqueJsonObject < Hash
+      def []=(key, value)
+        raise ArgumentError, "duplicate JSON object member: #{key.inspect}" if key?(key)
+
+        super
+      end
+    end
+
     module_function
 
     # Parse a standard JSON document. Ruby JSON maps integer tokens to Integer
@@ -9,7 +19,9 @@ module CodingAdventures
     def replay_json(text)
       raise TypeError, "report JSON must be a String" unless text.is_a?(String)
 
-      replay_report(JSON.parse(text, allow_nan: false))
+      parsed = JSON.parse(text, allow_nan: false, allow_duplicate_key: false,
+        object_class: UniqueJsonObject)
+      replay_report(parsed)
     rescue JSON::ParserError => error
       raise ArgumentError, "invalid report JSON: #{error.message}"
     end
@@ -19,6 +31,7 @@ module CodingAdventures
     # intentionally preserved by the caller and do not change the analysis.
     def replay_report(value)
       raise ArgumentError, "report must be an object" unless value.is_a?(Hash)
+      validate_root_members(value)
       validate_metadata(value)
 
       config = Config.from_h(value.fetch("config"))
@@ -94,6 +107,13 @@ module CodingAdventures
       end
     end
     private_class_method :validate_metadata
+
+    def validate_root_members(value)
+      allowed = %w[config batch_size pairs analysis workload invocation revision runtime os arch profile]
+      unknown = value.keys - allowed
+      raise ArgumentError, "unknown report member: #{unknown.first}" unless unknown.empty?
+    end
+    private_class_method :validate_root_members
 
     def valid_metadata_string?(value)
       value.is_a?(String) && value.dup.force_encoding(Encoding::UTF_8).valid_encoding? && !value.include?("\0")
