@@ -1015,6 +1015,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_image_codec_png_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_typescript_tsconfig_portability.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_cabal_config_bootstrap.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_sha_haskell_build_front.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_darwin_cabal_linker.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
@@ -5031,11 +5032,45 @@ jobs:
           fi
 
       - name: Set up Haskell
+        id: haskell
         if: needs.detect.outputs.needs_haskell == 'true'
         uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
         with:
           ghc-version: '9.4.8'
           cabal-version: '3.10.3.0'
+          cabal-update: false
+
+      - name: Set up Haskell package index transport
+        if: needs.detect.outputs.needs_haskell == 'true'
+        shell: bash
+        env:
+          CABAL_STORE_DIR: ${{ steps.haskell.outputs.cabal-store }}
+        run: |
+          # HASKELL_CABAL_HTTPS_BOOTSTRAP_BEGIN
+          if [[ -z "${RUNNER_TEMP:-}" || -z "${GITHUB_ENV:-}" || -z "${CABAL_STORE_DIR:-}" || -z "${RUNNER_OS:-}" ]]; then
+            printf '%s\n' 'RUNNER_TEMP, GITHUB_ENV, CABAL_STORE_DIR, and RUNNER_OS are required for the Haskell package index setup.' >&2
+            exit 1
+          fi
+          if [[ "$RUNNER_TEMP$GITHUB_ENV$CABAL_STORE_DIR$RUNNER_OS" == *$'\r'* || "$RUNNER_TEMP$GITHUB_ENV$CABAL_STORE_DIR$RUNNER_OS" == *$'\n'* ]]; then
+            printf '%s\n' 'Refusing a Haskell package index path or platform value containing a newline.' >&2
+            exit 1
+          fi
+          if [[ "$RUNNER_OS" != "Linux" && "$RUNNER_OS" != "macOS" && "$RUNNER_OS" != "Windows" ]]; then
+            printf '%s\n' 'Unsupported runner platform for the Haskell package index setup.' >&2
+            exit 1
+          fi
+          tmpdir="$(mktemp -d "$RUNNER_TEMP/cabal-https.XXXXXX")"
+          if [[ "$tmpdir/config" == *$'\r'* || "$tmpdir/config" == *$'\n'* ]]; then
+            printf '%s\n' 'Refusing a generated Haskell package index path containing a newline.' >&2
+            exit 1
+          fi
+          printf '%s\n' 'repository hackage.haskell.org' '  url: https://hackage.haskell.org/' '  secure: True' > "$tmpdir/config"
+          printf 'store-dir: %s\n' "$CABAL_STORE_DIR" >> "$tmpdir/config"
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            printf '%s\n' 'install-method: copy' 'overwrite-policy: always' >> "$tmpdir/config"
+          fi
+          printf 'CABAL_CONFIG=%s\n' "$tmpdir/config" >> "$GITHUB_ENV"
+          # HASKELL_CABAL_HTTPS_BOOTSTRAP_END
 
       # GHC links with `-fuse-ld=gold`. Ubuntu 22.04/24.04 ship ld.gold inside
       # `binutils`, but on 26.04 (what `ubuntu-latest` now resolves to) gold was
@@ -5065,6 +5100,7 @@ jobs:
         if: needs.detect.outputs.needs_haskell == 'true'
         shell: bash
         run: |
+          cabal update
           cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
 
       - name: Set up reviewed OCaml compiler and repository

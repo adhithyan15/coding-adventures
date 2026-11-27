@@ -62,7 +62,8 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	},
 	"haskell": {
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
-		"ghc --version", "cabal --version", "cabal list", "set up haskell",
+		"ghc --version", "cabal --version", "cabal list", "cabal-update", "cabal update", "cabal-store",
+		"test_haskell_cabal_config_bootstrap.py", "set up haskell",
 		"verify haskell package index",
 	},
 	"ocaml": {
@@ -269,6 +270,7 @@ func isToolchainScopedStructuralLine(content string) bool {
 		strings.HasPrefix(normalized, "brew "),
 		strings.HasPrefix(normalized, "sudo apt-get "),
 		strings.HasPrefix(normalized, "sed -i.bak "),
+		strings.HasPrefix(normalized, "exit "),
 		normalized == "rm -rf \"$tmpdir\"",
 		strings.HasPrefix(normalized, "powershell "),
 		strings.HasPrefix(normalized, "winget "),
