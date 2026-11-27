@@ -36,6 +36,10 @@ assert.equal(pathInGuest("/hello/.."), -3, "must traverse before applying dot-do
 assert.equal(pathInGuest("/hello/"), -3, "a regular file cannot satisfy a trailing slash");
 assert.equal(pathInGuest(""), -1);
 assert.equal(pathInGuest("/he\0llo"), -1);
+assert.equal(guest.resolve(4095, 1), -1, "resolve cannot read before its input buffer");
+assert.equal(guest.resolve(8192, 1), -1, "resolve cannot read after its input buffer");
+memory[8191] = 47;
+assert.equal(guest.resolve(8191, 1), 1, "input ending exactly at the upper bound is valid");
 
 guest.reset();
 assert.equal(guest.open(pathInGuest("/etc")), -4);

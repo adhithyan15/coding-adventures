@@ -27,8 +27,8 @@ guest-owned names as bounded pointers into the same memory.
 
 The error values are `EINVAL=-1`, `ENOENT=-2`, `ENOTDIR=-3`, `EISDIR=-4`,
 `EBADF=-5`, and `EMFILE=-6`. Path length is limited to 4096 bytes, read
-capacity to 4096 bytes, and path traversal to 512 components. The input buffer
-occupies `[4096, 8192)` and the only guest `read` output region is
+capacity to 4096 bytes, and path traversal to 512 components. Guest path input
+is restricted to `[4096, 8192)` and the only guest `read` output region is
 `[8192, 12288)`. Both the guest and wrapper validate ranges before copying;
 failed reads leave descriptor offsets unchanged. The image is immutable under
 guest operations and contains root entries `hello`, `empty`, and `etc`; `/etc`
