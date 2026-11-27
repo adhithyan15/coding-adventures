@@ -20,8 +20,7 @@
   commands, measured time, child-process control, loopback-only TCP, the Windows
   kernel32 process-tree calls, and three named production goroutine/channel
   roles for Unix signal forwarding, service waits, and bounded benchmark clients.
-  It is a review
-  proposal, not an approval.
+  This is a review proposal, not an approval.
 
 - **Fix: bound benchmark trial counts before slice allocation (`go/allocation-size-overflow`,
   alerts `#259`–`#260`).** Added `maxBenchmarkTrials` (`1_000_000`) bounds checks in
