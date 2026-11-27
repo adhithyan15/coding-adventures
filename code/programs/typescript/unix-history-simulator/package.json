@@ -1,0 +1,23 @@
+{
+  "name": "unix-history-simulator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Step through an early Unix file read in an original TypeScript simulator",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.0",
+    "vitest": "4.1.11"
+  },
+  "dependencies": {
+    "@coding-adventures/unix-history-simulator": "file:../../../packages/typescript/unix-history-simulator"
+  }
+}
