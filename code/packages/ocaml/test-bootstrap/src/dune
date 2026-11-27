@@ -1,0 +1,5 @@
+(library
+ (name coding_adventures_test_bootstrap)
+ (public_name coding-adventures-test-bootstrap)
+ (instrumentation
+  (backend bisect_ppx)))

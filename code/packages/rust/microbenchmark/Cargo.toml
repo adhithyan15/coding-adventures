@@ -3,7 +3,6 @@ name = "coding_adventures_microbenchmark"
 version = "0.1.0"
 edition = "2021"
 description = "Paired microbenchmark collection and replay for VER07"
-build = "build.rs"
 
 [dependencies]
 coding_adventures_rank_statistics = { version = "0.1.0", path = "../rank-statistics" }

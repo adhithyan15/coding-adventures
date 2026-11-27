@@ -688,6 +688,28 @@ its negative controls must be testable on every host OS even though only Linux
 runs the real-strace driver.
 
 
+**Real-strace refusal test oracle.** The Linux `TestSandboxStraceDyingThreads`
+integration test may classify one additional observation as an expected
+*refusal*, never as an accepted trace: the exact `openat` resumed line whose
+result is bare `= ?`. It is a known dying-thread shape only when the full trace
+later contains a parsed terminal exit for that same PID before any known spawn
+record reuses the PID. A known spawn may be printed as one complete call or as
+an unfinished start and a later resumed half; for the latter, the helper must
+match the same PID and syscall while allowing interleaved trace lines. It must
+validate both forms with the trace parser before treating a child PID as a known
+generation. Successful `clone3` remains refused by production policy; the test
+oracle must require the parser to recognize that exact refusal and separately
+validate the translated child PID/parent relationship through a parser-supported
+spawn record. The test helper must require the existing refusal reason, the exact
+refusal line and PID, and that later terminal record; a different syscall,
+trailing text, missing or earlier exit, another PID's exit, or an ambiguous PID
+generation fails the test. This oracle does not change the D35 parser policy:
+the production readers still refuse the incomplete trace. Keep the 20 completed
+probe iterations, empty stderr and reader agreement checks. The predicate and
+its negative controls must be testable on every host OS even though only Linux
+runs the real-strace driver.
+
+
 **Process model.**
 - A first pass collects every child pid a `fork`, `vfork` or `clone`
   returned, because the child's lines may precede the parent's return line.
@@ -2165,7 +2187,18 @@ memory of strace's sources, not checked against 6.19. The text is never copied i
 killed strace, per shard (`explain.sidecar.strace_stderr_codes` and
 `strace_signals`, and `strace_exits` for the exit status of steps with stderr text as `exit-0`, `exit-1`, `exit-2`, `exit-125`, `exit-126`, `exit-127` or `exit-other`; `unrecorded` for text with no code). The field is
 informational: the reason stays `strace-stderr-not-empty`, no key reads it,
-and `kiln:recorder` is unchanged. `step_netns` is true only when strace was started with the
+and `kiln:recorder` is unchanged.
+
+The helper's JSON privacy test must inspect the complete serialized `StepSidecar`.
+It rejects duplicate object members before decoding, compares member names after
+JSON escape decoding, and checks the decoded remaining fields for copied stderr,
+secret text, and fixture-PID text. The only exempt values are valid lowercase
+64-character SHA-256 strings in the exact digest fields `binding_id`,
+`line_sha256`, `trace_sha256` and `exechead_sha256`; arbitrary identifiers,
+unknown fields, malformed digest values, and duplicate keys do not receive an
+exemption. Secret and fixture-PID text is checked after JSON decoding, including
+escaped string values. This is a test oracle for the serialized sidecar, not a
+change to its schema or production classification. `step_netns` is true only when strace was started with the
 `kiln sandbox-exec` command above, the only way a step runs, because that
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the

@@ -15,6 +15,9 @@ module CodingAdventures
 
       factor = send(:finite_float, minimum_factor, "minimum_factor")
       raise ArgumentError, "minimum_factor must be greater than 1" unless factor > 1.0
+      if pairs.length > MAX_PAIRS
+        raise ArgumentError, "pairs must contain at most #{MAX_PAIRS} observations"
+      end
 
       ratios = pairs.map.with_index do |pair, index|
         unless pair.is_a?(Pair) && %w[baseline-first candidate-first].include?(pair.order)
