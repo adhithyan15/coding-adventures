@@ -76,6 +76,15 @@ fn every_variant_has_a_distinct_code_and_a_one_line_detail() {
         },
         CheckError::GoalConstantRedeclared(s("n")),
         CheckError::UnknownConstant(s("n")),
+        CheckError::GoalNames {
+            claim: s("c"),
+            rule: "not-ascii",
+            name: s("n"),
+        },
+        CheckError::Printer {
+            subject: s("claim c"),
+            why: s("w"),
+        },
     ];
     let codes: std::collections::BTreeSet<_> = errs.iter().map(CheckError::code).collect();
     // DuplicateListedGoal deliberately shares the reader's name `DuplicateGoal` but is its own variant.

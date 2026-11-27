@@ -33,6 +33,7 @@
 use crate::control::{ChainEntry, Role};
 use crate::digest::Digest;
 use crate::error::CheckError;
+use crate::printcheck::check_reviewed_file;
 use crate::registry::Registry;
 use crate::resolver::Resolver;
 use lean_kernel::pif::{read, Accepted, GateInputs, Goal};
@@ -131,6 +132,14 @@ pub fn load_chain(
         let report =
             read(env, &bytes, &gate).map_err(|error| CheckError::Read { index, role, error })?;
         env = report.env;
+        // Files a person reviews are read through the printer: `parse(print(F)) = F`, and the
+        // decoded file must agree with what the kernel accepted (VER32 N5).
+        if !matches!(entry.role, Role::Claim | Role::Library) {
+            check_reviewed_file(&bytes, &env, &report.decls).map_err(|e| CheckError::Printer {
+                subject: format!("file {index} ({role})"),
+                why: format!("{e:?}"),
+            })?;
+        }
         let prefix = state;
         state = state.fold(&entry.digest);
         if is_base {
