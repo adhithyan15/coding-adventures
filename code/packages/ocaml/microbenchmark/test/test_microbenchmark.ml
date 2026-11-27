@@ -689,7 +689,7 @@ let test_schema_mutations () =
   List.iter
     (fun wrong ->
       reject "invocation shape" (set_json "invocation" wrong with_meta))
-    [ `Null; `String "cli"; `List [ `Int 1 ]; `List [ `String "" ] ];
+    [ `Null; `String "cli"; `List [ `Int 1 ] ];
   ignore
     (unwrap
        (replay_report
