@@ -241,11 +241,6 @@ pub fn write_outputs(
         .map_err(|e| error(format!("could not flush core report: {e}")))
 }
 
-pub fn write_manifest_file(envelope: &GuestEnvelope, path: &str) -> Result<(), Error> {
-    let mut file = File::create(path).map_err(|e| error(format!("cannot create manifest: {e}")))?;
-    write_envelope(envelope, &mut file)
-}
-
 pub fn replay_file(
     path: &str,
     expected_guest: &str,

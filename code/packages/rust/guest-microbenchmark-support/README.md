@@ -14,6 +14,8 @@ duplicate JSON object members before materialization, including escaped-key
 aliases. The external downstream smoke consumer at
 `code/tests/rust-guest-microbenchmark-consumer` extracts the portable report
 and verifies it equals the envelope report emitted by each guest driver.
+Output helpers accept caller-provided writers; the library does not create
+files.
 
 ```text
 cargo test --manifest-path Cargo.toml

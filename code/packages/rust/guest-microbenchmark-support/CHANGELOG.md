@@ -5,6 +5,8 @@
 - Removed the build-script compiler query; guest host-runtime metadata now
   reports `unknown` unless a future API receives an explicit compiler label.
 - Declared the support library's actual monotonic-clock and replay-file reads.
+- Kept report output on caller-provided writers; removed the unused helper that
+  created manifest files on behalf of library callers.
 - Added a strict guest envelope, duplicate-aware raw JSON replay for core
   reports and envelopes, shared CLI parsing, and calibrated raw empty-entry
   diagnostics.
