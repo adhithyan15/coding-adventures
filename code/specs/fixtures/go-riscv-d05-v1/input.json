@@ -1,0 +1,13 @@
+{
+  "schema": "go-riscv-d05-pipeline-input-v1",
+  "id": "dependent-store-load-branch",
+  "ram_bytes": 256,
+  "max_cycles": 100,
+  "program_bytes_hex": "13003006930000001301000823201100930110008321010063841100930230061382110073000000",
+  "initial_memory_words": [
+    {
+      "address": 128,
+      "value": 42
+    }
+  ]
+}
