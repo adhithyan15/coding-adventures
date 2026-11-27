@@ -7,3 +7,5 @@ Run `BUILD` or `BUILD_windows` for VM and Node tests and the native 40-pair smok
 Benchmark analysis accepts at most 10,000 pairs; the separate rank-statistics
 API has no sample-count cap. Replay paths are read through a 4 MiB plus one
 byte boundary before UTF-8 decoding.
+`Report.fromJson` also checks the 65,536-value and depth-128 budgets before
+the JSON lexer materializes its token list.

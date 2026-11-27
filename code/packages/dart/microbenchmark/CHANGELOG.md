@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Preflight the 65,536 JSON-value and nesting budgets before materializing replay lexer tokens.
 - Validate replay workload IDs using the exact ASCII blank set and reject NULs and malformed surrogate escapes.
 
 - Add paired collection and replay, exact JSON integer preservation, the indexed-array CLI, and packaged fixture checks.

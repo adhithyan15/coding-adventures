@@ -15,6 +15,8 @@ The reusable statistics dependency is separately versioned as
 integer literals, and rejects duplicate keys before report decoding. The
 monotonic wall clock uses QueryPerformanceCounter on Windows and
 `CLOCK_MONOTONIC` on POSIX; neither the library nor driver depends on Warrant.
+Replay checks JSON depth and the 65,536 semantic-value budget before Yojson
+allocates the decoded tree; quoted delimiters do not count as structure.
 Timing results are advisory and do not prove physical cache behavior.
 
 `required_capabilities.json` declares the CLI's observed filesystem, environment,

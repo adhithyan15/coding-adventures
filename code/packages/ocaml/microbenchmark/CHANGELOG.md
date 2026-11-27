@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Enforce the semantic JSON value budget before Yojson tree allocation and make depth scanning ignore quoted delimiters.
 - Instrument the library and CLI with pinned Bisect PPX and require per-file coverage for the OCaml source boundaries.
 - Validate complete report-schema mutations and every public analysis, clock, and workload failure phase.
 - Format the native driver, workload, library interface, implementation, and

@@ -34,3 +34,6 @@ reads no more than 4 MiB plus one byte before decoding or parsing the report.
 nonzero denominator. It runs with the package's declared Perl 5.38.2
 interpreter; coverage is not reused across Perl ABIs. Tests, the script wrapper,
 JSON sibling dependencies, and native/tooling code are outside this metric.
+BUILD runs the complete test suite normally before an instrumented pass that
+skips only the expensive positive 10,000-pair analysis and replay vectors; the
+10,001-pair early rejection remains in both passes.

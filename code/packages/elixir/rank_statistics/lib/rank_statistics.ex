@@ -41,14 +41,33 @@ defmodule CodingAdventures.RankStatistics do
   defp sorted_finite([]), do: {:error, :empty_sample}
 
   defp sorted_finite(values) do
-    if Enum.all?(values, &(is_number(&1) and finite?(&1))) do
-      {:ok, Enum.sort(values)}
-    else
-      {:error, :nonfinite_sample}
+    values
+    |> Enum.reduce_while({:ok, []}, fn value, {:ok, normalized} ->
+      case normalize_finite(value) do
+        {:ok, number} -> {:cont, {:ok, [number | normalized]}}
+        :error -> {:halt, {:error, :nonfinite_sample}}
+      end
+    end)
+    |> case do
+      {:ok, normalized} -> {:ok, normalized |> Enum.reverse() |> Enum.sort()}
+      error -> error
     end
   end
 
-  defp finite?(value) when is_integer(value), do: true
+  defp normalize_finite(value) when is_integer(value) do
+    try do
+      float = value * 1.0
+      if finite?(float), do: {:ok, float}, else: :error
+    rescue
+      ArithmeticError -> :error
+    end
+  end
+
+  defp normalize_finite(value) when is_float(value) do
+    if finite?(value), do: {:ok, value}, else: :error
+  end
+
+  defp normalize_finite(_), do: :error
 
   defp finite?(value) when is_float(value),
     do: value == value and abs(value) <= 1.7976931348623157e308

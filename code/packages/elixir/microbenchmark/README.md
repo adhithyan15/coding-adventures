@@ -7,3 +7,5 @@ Run `BUILD` or `BUILD_windows` to test the library and build the escript. `mix e
 Benchmark analysis accepts at most 10,000 pairs; the separate rank-statistics
 API has no sample-count cap. CLI replay reads at most 4 MiB plus one byte
 before decoding the report.
+The JSON preflight counts root, container, scalar, and string values before
+`:json.decode` allocates the decoded structure; object keys are excluded.

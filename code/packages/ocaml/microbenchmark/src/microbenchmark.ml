@@ -280,23 +280,62 @@ let report_json (report : report) =
 let encode_report report = Yojson.Safe.to_string (report_json report)
 let json_size_limit = 4 * 1024 * 1024
 
-let reject_too_deep source =
-  let depth = ref 0
-  and in_string = ref false
-  and escaped = ref false
-  and failure = ref None in
-  String.iter
-    (fun ch ->
-      if !in_string then
-        if !escaped then escaped := false
-        else if ch = '\\' then escaped := true
-        else if ch = '"' then in_string := false
-        else if ch = '"' then in_string := true
-        else if ch = '{' || ch = '[' then (
+let preflight_json_bounds source =
+  let depth = ref 0 and values = ref 0 and failure = ref None in
+  let length = String.length source in
+  let fail message = if !failure = None then failure := Some message in
+  let count_value () =
+    incr values;
+    if !values > 65_536 then fail "report exceeds JSON value limit"
+  in
+  let is_space = function ' ' | '\t' | '\n' | '\r' -> true | _ -> false in
+  let is_boundary = function
+    | ' ' | '\t' | '\n' | '\r' | ',' | ':' | '[' | ']' | '{' | '}' -> true
+    | _ -> false
+  in
+  let rec skip_space index =
+    if index < length && is_space source.[index] then skip_space (index + 1)
+    else index
+  in
+  let rec string_end index escaped =
+    if index >= length then None
+    else if escaped then string_end (index + 1) false
+    else
+      match source.[index] with
+      | '\\' -> string_end (index + 1) true
+      | '"' -> Some index
+      | _ -> string_end (index + 1) false
+  in
+  let rec scalar_end index =
+    if index < length && not (is_boundary source.[index]) then
+      scalar_end (index + 1)
+    else index
+  in
+  let rec scan index =
+    if index >= length || !failure <> None then ()
+    else
+      match source.[index] with
+      | '"' -> (
+          match string_end (index + 1) false with
+          | None -> ()
+          | Some ending ->
+              let after = skip_space (ending + 1) in
+              if after >= length || source.[after] <> ':' then count_value ();
+              scan (ending + 1))
+      | '{' | '[' ->
           incr depth;
-          if !depth > 128 then failure := Some "report exceeds nesting limit")
-        else if ch = '}' || ch = ']' then decr depth)
-    source;
+          if !depth > 128 then fail "report exceeds nesting limit";
+          count_value ();
+          scan (index + 1)
+      | '}' | ']' ->
+          decr depth;
+          scan (index + 1)
+      | ch when is_space ch || ch = ',' || ch = ':' -> scan (index + 1)
+      | _ ->
+          count_value ();
+          scan (scalar_end index)
+  in
+  scan 0;
   match !failure with Some error -> Error error | None -> Ok ()
 
 let rec validate_tree depth count json =
@@ -623,7 +662,7 @@ let replay_report source =
   else if not (valid_surrogate_escapes source) then
     Error "invalid Unicode surrogate escape"
   else
-    let* () = reject_too_deep source in
+    let* () = preflight_json_bounds source in
     try
       let json = Yojson.Safe.from_string source in
       let* () = validate_tree 0 1 json |> Result.map (fun _ -> ()) in

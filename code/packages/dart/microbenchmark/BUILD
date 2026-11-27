@@ -1,3 +1,4 @@
+set -eu
 dart pub get
 dart run tool/generate_fixture_snapshot.dart
 dart format --output=none --set-exit-if-changed lib test bin tool

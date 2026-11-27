@@ -50,8 +50,12 @@ end
 local cases = {
     {64, 95, 23, 40}, {65, 99, 21, 43}, {127, 95, 51, 75},
     {128, 95, 52, 75}, {256, 99, 106, 149}, {1000, 95, 468, 531},
-    {10000, 50, 4965, 5034}, {10000, 95, 4901, 5098}, {10000, 99, 4870, 5129},
 }
+if os.getenv("CA_COVERAGE_MODE") ~= "1" then
+    cases[#cases + 1] = {10000, 50, 4965, 5034}
+    cases[#cases + 1] = {10000, 95, 4901, 5098}
+    cases[#cases + 1] = {10000, 99, 4870, 5129}
+end
 for _, case in ipairs(cases) do
     local values = {}; for i = 0, case[1] - 1 do values[#values + 1] = i end
     local interval = stats.median_interval(values, case[2])
@@ -74,4 +78,8 @@ for trial = 1, 300 do
     equal(table.concat(values, ","), original, "generated input unchanged")
 end
 
-print("Lua rank-statistics: 1,188 bounded cutoffs, 9 wide vectors, 300 generated samples passed")
+if os.getenv("CA_COVERAGE_MODE") == "1" then
+    print("Lua rank-statistics: 1,188 bounded cutoffs, 6 representative wide vectors, 300 generated samples passed")
+else
+    print("Lua rank-statistics: 1,188 bounded cutoffs, 9 wide vectors, 300 generated samples passed")
+end
