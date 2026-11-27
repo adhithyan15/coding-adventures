@@ -203,7 +203,9 @@ final class MicrobenchmarkTests: XCTestCase {
         assertDuplicate(valid.replacingOccurrences(of: "\"verdict\":\"inconclusive\"", with: "\"verdict\":\"inconclusive\",\"verdict\":\"faster\""), "verdict")
 
         let metadata = Report(config: config, batchSize: 1, pairs: pairs, analysis: analysis,
-                              invocation: ["same-value", "same-value"], revision: "repeat")
+                              workload: "metadata-test",
+                              invocation: ["same-value", "same-value"], revision: "repeat",
+                              runtime: "swift", os: "test", arch: "test")
         let metadataJSON = try encodeReport(metadata)
         assertDuplicate(metadataJSON.replacingOccurrences(of: "\"revision\":\"repeat\"",
                                                           with: "\"revision\":\"repeat\",\"revision\":\"other\""), "revision")
@@ -246,7 +248,8 @@ final class MicrobenchmarkTests: XCTestCase {
         let analysis = try analyze(pairs)
         XCTAssertNotNil(analysis.interval)
         let report = Report(config: config, batchSize: 1, pairs: pairs, analysis: analysis,
-                            workload: ArrayWorkload.identifier)
+                            workload: ArrayWorkload.identifier, invocation: [], revision: "test",
+                            runtime: "swift", os: "test", arch: "test")
         let json = try encodeReport(report)
         XCTAssertEqual(try replayReport(json), report)
         let generic = Report(config: config, batchSize: 1, pairs: pairs, analysis: analysis,
@@ -281,8 +284,8 @@ final class MicrobenchmarkTests: XCTestCase {
                                                    pairs: pairs, analysis: analysis)))
         XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1,
                                                    pairs: Array(pairs.dropLast()), analysis: analysis)))
-        XCTAssertNoThrow(try validated(Report(config: config, batchSize: 1, pairs: pairs,
-                                               analysis: analysis, workload: "other-workload")))
+        XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1, pairs: pairs,
+                                                   analysis: analysis, workload: "other-workload")))
         for invalid in ["", " \t\r\n", "bad\0id"] {
             XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1, pairs: pairs,
                                                        analysis: analysis, workload: invalid)))
@@ -318,6 +321,7 @@ final class MicrobenchmarkTests: XCTestCase {
         XCTAssertEqual(try runCommandLine(arguments: ["--help"], environment: [:], clock: { 0 }).isHelp, true)
 
         let invalid = [["--unknown", "1"], ["--pairs"], ["--pairs", "9223372036854775808"],
+                       ["--revision", ""],
                        ["--seed", "1_000"], ["--factor", "infinity"]]
         for args in invalid {
             XCTAssertThrowsError(try runCommandLine(arguments: args, environment: [:], clock: { 0 }))
@@ -353,6 +357,62 @@ final class MicrobenchmarkTests: XCTestCase {
             "git-revision"
         )
         XCTAssertEqual(try report(environment: ["GITHUB_SHA": "github-sha"]).revision, "github-sha")
+        XCTAssertEqual(try report(environment: ["GIT_REVISION": "", "GITHUB_SHA": "github-sha"]).revision,
+                       "unknown", "a present empty primary suppresses the fallback")
+        XCTAssertEqual(try report(environment: ["GITHUB_SHA": ""]).revision, "unknown")
+    }
+
+    func testMetadataGroupAndPortableStringRules() throws {
+        let config = Configuration(pairs: 1, targetNs: 1, maxBatch: 1)
+        let pairs = [Pair(baselineNs: 10, candidateNs: 10, order: "baseline-first")]
+        let analysis = try analyze(pairs)
+        let complete = Report(config: config, batchSize: 1, pairs: pairs, analysis: analysis,
+                              workload: "guest", invocation: [], revision: "r",
+                              runtime: "\u{2003}", os: " ", arch: "test", profile: " ")
+        let whitespaceJSON = try encodeReport(complete)
+        XCTAssertEqual(try replayReport(whitespaceJSON), complete,
+                       "empty argv and nonempty descriptive whitespace are valid")
+
+        let argument = Report(config: config, batchSize: 1, pairs: pairs, analysis: analysis,
+                              workload: "guest", invocation: [""], revision: "r",
+                              runtime: "swift", os: "test", arch: "test")
+        XCTAssertEqual(try replayReport(encodeReport(argument)), argument,
+                       "empty argument values preserve argv faithfully")
+
+        XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1, pairs: pairs,
+                                                   analysis: analysis, workload: "guest")))
+        XCTAssertThrowsError(try validated(Report(config: config, batchSize: 1, pairs: pairs,
+                                                   analysis: analysis, profile: "release")))
+        let strictMetadata = try encodeReport(Report(
+            config: config, batchSize: 1, pairs: pairs, analysis: analysis,
+            workload: "guest", invocation: [], revision: "r", runtime: "swift",
+            os: "test", arch: "test", profile: "release"
+        ))
+        for invalid in [
+            strictMetadata.replacingOccurrences(of: "\"workload\":\"guest\"", with: "\"workload\":\"\""),
+            strictMetadata.replacingOccurrences(of: "\"workload\":\"guest\"", with: "\"workload\":\"bad\\u0000id\""),
+            strictMetadata.replacingOccurrences(of: "\"revision\":\"r\"", with: "\"revision\":\"\""),
+            strictMetadata.replacingOccurrences(of: "\"revision\":\"r\"", with: "\"revision\":\"bad\\u0000id\""),
+            strictMetadata.replacingOccurrences(of: "\"runtime\":\"swift\"", with: "\"runtime\":\"\""),
+            strictMetadata.replacingOccurrences(of: "\"runtime\":\"swift\"", with: "\"runtime\":\"bad\\u0000id\""),
+            strictMetadata.replacingOccurrences(of: "\"os\":\"test\"", with: "\"os\":\"\""),
+            strictMetadata.replacingOccurrences(of: "\"os\":\"test\"", with: "\"os\":\"bad\\u0000id\""),
+            strictMetadata.replacingOccurrences(of: "\"arch\":\"test\"", with: "\"arch\":\"\""),
+            strictMetadata.replacingOccurrences(of: "\"arch\":\"test\"", with: "\"arch\":\"bad\\u0000id\""),
+            strictMetadata.replacingOccurrences(of: "\"invocation\":[]", with: "\"invocation\":null"),
+            strictMetadata.replacingOccurrences(of: "\"invocation\":[]", with: "\"invocation\":[\"bad\\u0000arg\"]"),
+            strictMetadata.replacingOccurrences(of: "\"profile\":\"release\"", with: "\"profile\":null"),
+            strictMetadata.replacingOccurrences(of: "\"profile\":\"release\"", with: "\"profile\":\"\""),
+            strictMetadata.replacingOccurrences(of: "\"profile\":\"release\"", with: "\"profile\":\"bad\\u0000id\"")
+        ] {
+            XCTAssertThrowsError(try replayReport(invalid))
+        }
+        XCTAssertThrowsError(try replayReport(strictMetadata.replacingOccurrences(
+            of: "\"arch\":\"test\"", with: "\"arch\":null"
+        )))
+        XCTAssertThrowsError(try replayReport(strictMetadata.replacingOccurrences(
+            of: ",\"arch\":\"test\"", with: ""
+        )), "missing one of the six required metadata keys must fail")
     }
 
     private struct Fixture: Decodable {

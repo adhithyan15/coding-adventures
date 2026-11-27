@@ -89,14 +89,34 @@ try {
         & $consumer $noEnvReportPath unknown
         if ($LASTEXITCODE -ne 0) { throw 'external consumer rejected missing-environment default' }
 
-        $env:GIT_REVISION = ''
-        $env:GITHUB_SHA = 'github-sha-smoke'
-        $reportLines = & $executable --pairs 40 --target-ns 1000
-        if ($LASTEXITCODE -ne 0) { throw 'native empty-primary CLI smoke failed' }
+        # Build this child environment explicitly. PowerShell versions before
+        # 7.5 may interpret assigning '' through Env: as removal; an explicit
+        # process environment block preserves the present-empty case.
+        $emptyPrimaryStart = New-Object System.Diagnostics.ProcessStartInfo
+        $emptyPrimaryStart.FileName = $executable
+        $emptyPrimaryStart.Arguments = '--pairs 40 --target-ns 1000'
+        $emptyPrimaryStart.UseShellExecute = $false
+        $emptyPrimaryStart.RedirectStandardOutput = $true
+        $emptyPrimaryStart.RedirectStandardError = $true
+        $emptyPrimaryStart.EnvironmentVariables['GIT_REVISION'] = ''
+        $emptyPrimaryStart.EnvironmentVariables['GITHUB_SHA'] = 'github-sha-smoke'
+        $emptyPrimaryProcess = New-Object System.Diagnostics.Process
+        $emptyPrimaryProcess.StartInfo = $emptyPrimaryStart
+        if (-not $emptyPrimaryProcess.Start()) { throw 'could not start empty-primary CLI smoke' }
+        $emptyPrimaryOutput = $emptyPrimaryProcess.StandardOutput.ReadToEnd()
+        $emptyPrimaryError = $emptyPrimaryProcess.StandardError.ReadToEnd()
+        $emptyPrimaryProcess.WaitForExit()
+        if ($emptyPrimaryProcess.ExitCode -ne 0) {
+            throw "native empty-primary CLI smoke failed: $emptyPrimaryError"
+        }
+        if ($emptyPrimaryOutput -notmatch '"revision":"unknown"' -or
+            $emptyPrimaryOutput -match '"revision":"github-sha-smoke"') {
+            throw 'present-empty GIT_REVISION did not suppress the nonempty fallback'
+        }
         $emptyPrimaryReportPath = Join-Path $scratch 'empty-primary-report.json'
-        [System.IO.File]::WriteAllText($emptyPrimaryReportPath, (($reportLines -join $newline) + $newline), $utf8)
-        & $consumer $emptyPrimaryReportPath --expect-empty
-        if ($LASTEXITCODE -ne 0) { throw 'external consumer rejected empty primary revision' }
+        [System.IO.File]::WriteAllText($emptyPrimaryReportPath, $emptyPrimaryOutput, $utf8)
+        & $consumer $emptyPrimaryReportPath unknown
+        if ($LASTEXITCODE -ne 0) { throw 'external consumer rejected present-empty primary handling' }
 
         Remove-Item Env:GIT_REVISION -ErrorAction SilentlyContinue
         $env:GITHUB_SHA = 'github-sha-smoke'
