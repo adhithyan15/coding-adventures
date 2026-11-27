@@ -35,6 +35,117 @@ return no interval. Ties remain as repeated observations, and both endpoints
 are selected from the input. Confidence is an integer percentage from 1 through
 99. Input values must be finite; an empty sample is invalid.
 
+## TypeScript package profile
+
+The TypeScript package is a pure implementation of the same two operations. It
+exports `median(values: readonly number[]): number` and
+`medianInterval(values: readonly number[], confidencePercent: number)`, which
+returns a readonly `{ low, high }` interval or `null` when no rank qualifies.
+The package does not read fixtures, access the filesystem, collect timings, or
+apply benchmark verdict thresholds; those belong to its tests and consumers.
+
+Validation is deterministic and does not coerce values. `median` first requires
+an actual JavaScript array (`TypeError` otherwise), then requires a nonempty
+array (`RangeError`). It captures the array length once and reads indexed slots
+from left to right exactly once. Every index must be an own property; a hole,
+inherited-only index or non-number is `TypeError`, and a numeric `NaN` or
+infinity is `RangeError`. It copies validated primitive numbers to a fresh
+ordinary array before sorting. Sorting and rank selection use only that
+snapshot; the caller array is not mutated and its iterator or sort method is
+never invoked.
+Exceptions thrown by a caller-owned proxy/getter while reading a slot propagate
+before sorting; side effects inside that caller code are outside this
+nonmutation guarantee.
+
+`medianInterval` validates confidence before touching the sample. A non-number
+confidence is `TypeError`; a number that is non-integral or outside 1 through
+99 is `RangeError`. It then applies the same actual-array, nonempty-array, and
+left-to-right snapshot rules as `median`. Thus invalid confidence wins when
+both confidence and sample are invalid, while the first invalid sample slot
+wins among sample errors. An interval's endpoints are original finite numeric
+observations selected from the validated snapshot.
+
+Comparisons treat `-0` and `+0` as equal. JavaScript's stable array sort keeps
+the input order of equal values, so a selected zero endpoint retains whichever
+zero sign occupied that stable rank; cross-language bitwise sign parity for
+these tied endpoints is not promised. For an even median, the midpoint must be
+correctly rounded to IEEE-754 binary64, round-to-nearest/ties-to-even, for every
+pair of finite inputs. In particular `(-0, -0)` returns negative zero, a mixed
+zero pair returns positive zero, and the result remains finite for opposite
+extremes. A separate exact-rational oracle must generate committed input-bit /
+expected-output-bit vectors; test these bitwise, including negative zero,
+subnormal boundaries, overflow-adjacent values, cancellation and halfway ties.
+The oracle's generator, version and input/output hash are recorded with the
+fixture; a formula copied from the production implementation is not an
+independent oracle.
+
+The TypeScript conformance suite keeps the existing 2,048-case seeded median
+permutation/range campaign (`0x4d454449`) and 2,048-case interval endpoint
+campaign (`0x494e5445`). Add a separate reproducible finite-binary64 campaign
+of 2,048 accepted arrays, seeded with `0x52414e4b`, with lengths 1 through 32;
+the bit generator must deterministically reject and count any non-finite
+candidate rather than silently shrinking the declared accepted count. Preserve
+the canonical fixture replay and input-snapshot checks. Do not invent a fixed
+minimum count of midpoint vectors: declare the semantic edge classes they
+cover and report the actual vector count and provenance.
+
+The independent mathematical interval oracle enumerates all `2^n` sign
+assignments for each `n` from 1 through 12, builds the signed-sum histogram,
+and checks every confidence percentage 1 through 99 and every candidate
+rank. It does not call the production helper or use a binomial recurrence. A
+separate test-only Pascal-triangle `BigInt` implementation differentially
+checks the production multiplicative recurrence at `n = 63, 64, 65, 127, 128,
+129, 257` for every confidence and exact-cutoff neighbors. This is an
+implementation differential, not a second independent mathematical oracle.
+Selected deliberately faulty off-by-one, naive-midpoint, and mutated-input
+controls must be rejected by the same assertions used for the real package.
+The deterministic campaigns, finite enumeration, exact vectors, controls,
+and fixture replay establish only their declared bounded coverage, not a
+universal proof.
+
+The package identity is `@coding-adventures/rank-statistics`, version `0.1.0`,
+using the repository's TypeScript/Vitest conventions and no production
+dependency. Its source coverage must be at least 95% for lines,
+branches, functions and statements in production `src/**/*.ts`; preserve the
+raw V8 denominators and report tests, generated files and source files
+separately. This is stricter than the repository-wide requirement of greater
+than 80% and may not be met by skips or test-source coverage.
+
+The published entry point remains generated ESM and declarations in `dist`,
+with JavaScript and declaration source maps. Since those maps point to the
+original production TypeScript files, the package payload must include all
+referenced production `src/**/*.ts` files (and must not include tests) unless
+both map types are instead verified to embed complete `sourcesContent`. Include
+the README, changelog, MIT license and package-local canonical fixture required
+by the artifact contract. The valid empty capability profile is a schema-v1
+object at `required_capabilities.json` for `typescript/rank-statistics` with
+`$schema`, `version: 1`, `package: "typescript/rank-statistics"`,
+`capabilities: []`, and a nonempty `justification`; validate it with the
+official repository validator. It records package metadata only and is not a
+signature or approval. Register the canonical fixture as an exact
+repository input and run the official lockfile, dependency, tsconfig,
+discovery, build-plan and input-selection checks with their complete registered
+inputs materialized. Because the new package extends the shared
+`tsconfig.base.json`, update the repository-source-input-boundary root set,
+digest, case assertions, and generated C#/Swift projections through their
+owning tools. Preserve existing registry routes, including the NAND and HDD
+fixture consumers.
+
+Build and pack the package, then install that exact tarball into a fresh offline
+consumer outside the repository. Verify ESM runtime calls, a strict NodeNext
+TypeScript consumer, declarations, both source-map target sets and package
+payload hashes; resolve imports only within the installed consumer. This is
+local artifact validation, not registry publication or proof of namespace
+ownership.
+
+Sorting uses the host JavaScript engine's `Array.sort`; ECMAScript does not
+promise a portable comparison or runtime complexity bound for it. The package
+does make an `O(n)` validated snapshot, then performs exact rank arithmetic by
+iterating at most `n` candidate ranks with `BigInt` operands
+whose bit width grows with `n`. Describe that arithmetic and storage separately
+from engine sorting, and do not add a sample-size ceiling, timing threshold or
+cache-performance claim.
+
 ## Conformance and validation
 
 Both language packages replay every case in

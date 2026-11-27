@@ -25,16 +25,19 @@ Build/test tools such as Busted and LuaRocks run in a CLI with captured output.
 
 ## Current selection
 
-**DS-H-CPP-A: checked C++17 heap and installable package.** Go heap #20121,
+**MB02-TS-RANK: TypeScript rank-statistics foundation.** The checked C++17
+heap and installable package merged as #20203 at
+`c306485de4cda14b07bae49c2d3a8a7a535e6374` (source `16b3c8da9f0d32b18cc16e99fe4afbcf59019693`). Go heap #20121,
 Python heap #20126, Rust heap core #20150, graph weights #20140, and TypeScript
 heap #20195 are merged; TypeScript merged at
 `900b065ee1134e758321660f741afb673a17fe2d`. The Rust paired benchmark remains
-separate and incomplete until the shared Rust collector work is delivered.
-This selected item adds bounded C++ min/max queues while preserving the
-legacy heap API, with explicit ownership and exception guarantees, independent
-model histories, an installable CMake package, and relocated-prefix consumer
-validation. It does not implement a private timer. Merged source is not
-evidence that a package has been published.
+separate and incomplete until its shared Rust collector work is delivered.
+This selected microbenchmark item is only the pure TypeScript rank-statistics
+package, exact validation, fixture input registration, and external tarball
+consumer. It adds no collector, clock, Warrant integration, or benchmark timing
+claim. A merged source package is not evidence of registry publication. The
+next heap lane is not selected by this microbenchmark item; reprioritize after
+it is complete.
 
 Each lane below is a separate future work item and ready PR. Reconsider the
 order after each merge; a correctness failure in the active item takes priority.
@@ -45,7 +48,7 @@ order after each merge; a correctness failure in the active item takes priority.
 | 2 | DS-H-PY | Python heap profile, checked bounds, replayable standard-library state-model histories, corrected heap trace and complexity claims, and package evidence. | Merged #20126 at `1db91bb7c989448425fc246f71050452b357bb05` |
 | 3 | DS-H-RS | Rust heap profile, checked growth/construction, release validation and independent histories. | Core merged #20150 at `6d02c654fea328c87fcfea22b1149905e7f0c745`; paired benchmark remains held on shared collector #20073 |
 | 4 | DS-H-TS | TypeScript checked bounded heaps with legacy compatibility, bounded iterator construction, model tests, package installation and direct consumer builds. | Merged #20195 at `900b065ee1134e758321660f741afb673a17fe2d`; paired benchmark is a separate held collector-dependent item. |
-| 5 | DS-H-CPP | C++ heap bounds, ownership/exception profile, installable package, and independent model validation. | Selected; specified in [DT04e-cpp-heap-checked.md](DT04e-cpp-heap-checked.md). The paired benchmark is separate and remains held on the shared collector and capability approval. |
+| 5 | DS-H-CPP | C++ heap bounds, ownership/exception profile, installable package, and independent model validation. | Merged #20203 at `c306485de4cda14b07bae49c2d3a8a7a535e6374`; paired benchmark remains separate and held on the shared collector and capability approval. |
 | 6 | DS-H-JAVA | Java heap contract, model validation and operation benchmark. | Queued |
 | 7 | DS-H-KOTLIN | Kotlin heap contract, model validation and operation benchmark. | Queued |
 | 8 | DS-H-CS | C# heap contract, model validation and operation benchmark. | Queued |
@@ -91,7 +94,8 @@ Audit existing packages before adding replacements. Each structure includes:
 
 | Item | Priority | Evidence and next action |
 |---|---|---|
-| MB-CLOSE | P0 carryover | The benchmark carryover remains separate from the TypeScript heap API. At the last coordinator review, #20073 was still held on Rust profile completeness/hardware-key owner approval and an observed Ubuntu `strace` `PTRACE_LISTEN`/`EIO` CI failure; its auto-merge was off. Eight frozen platform/profile/native/coverage/guest carries remained unpublished pending validation. Recheck live heads, required gates, the capability-approval route, and the actual trace failure before claiming readiness; do not treat a successful local suite as hosted CI or owner approval. |
+| MB-CLOSE | P0 carryover | The benchmark collector/profile/carry work remains separate from pure rank-statistics packages. At the last verified review, First #20073 was held on profile completeness, hardware-key owner approval, and an observed Ubuntu `strace` `PTRACE_LISTEN`/`EIO` CI failure; auto-merge was off. Eight newer frozen platform/profile/native/coverage/guest carries remained unpublished pending validation. Recheck live heads, gates and the real approval route; local package tests do not establish hosted CI or owner approval. |
+| MB02-TS-RANK | P1 foundation | Selected after CPP #20203 merged. Implement only the pure TypeScript median/interval package, exact input and rank validation, canonical fixture registration, and offline installed-tarball consumer. Preserve the held collector/profile boundary; no timer, driver, Warrant integration, registry publication, or cache claim. See [VER07c TypeScript profile](VER07c-rank-statistics.md#typescript-package-profile). |
 | MB-VOS | P0 metadata | The canonical VOS/source-input boundary repair was delivered upstream in #20069. Our #20178 repair was closed unmerged as superseded after source equivalence was verified. A bounded Ruff ISC004/doc follow-up remained; do not revive the superseded branch or conflate it with heap implementation. |
 | MB-API | P2 follow-up | Consider a shared strict Go report-reader API only if another production consumer needs one; keep per-program replay parsers out of individual demos. |
 | MB-META | P0 correctness | The generic workload contract exposed blank/NUL/Unicode inconsistencies in native readers. The coordinator reports the bounded fixes and independent review complete; unchanged reports still need to replay on each affected current PR head before closure. |
