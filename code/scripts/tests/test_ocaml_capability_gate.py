@@ -209,7 +209,7 @@ class OcamlCapabilityGateTest(unittest.TestCase):
             'find . -name dune-workspace -print -quit',
             'test "${#roots[@]}" -gt 0',
             '"$analyzer" --dir "$(dirname "$project")"',
-            "needs: [detect, contracts, ocaml-capability-gate,",
+            "needs: [detect, contracts, capability-approval, ocaml-capability-gate,",
             "OCAML_CAPABILITY_RESULT: ${{ needs['ocaml-capability-gate'].result }}",
             '"$OCAML_CAPABILITY_RESULT"',
         )
