@@ -1,3 +1,4 @@
+-- Fixture-only trace adapter, run temporarily by the Lua package BUILD.
 local simulator = require("unix_history")
 
 local function quote(value)

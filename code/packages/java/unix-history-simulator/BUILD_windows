@@ -1,8 +1,2 @@
 # needs-toolchain: python
-if not exist build mkdir build
-javac -Xlint:all -Werror -d build src/codingadventures/unixhistory/UnixHistory.java src/codingadventures/unixhistory/Cli.java test/codingadventures/unixhistory/ModelTest.java
-if errorlevel 1 exit /b %errorlevel%
-java -cp build codingadventures.unixhistory.ModelTest
-if errorlevel 1 exit /b %errorlevel%
-python ../../../specs/fixtures/historical-unix-v1/replay_cli.py java -cp build codingadventures.unixhistory.Cli
-if errorlevel 1 exit /b %errorlevel%
+python ../../../specs/fixtures/historical-unix-v1/build_windows.py java

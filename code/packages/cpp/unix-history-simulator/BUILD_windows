@@ -1,5 +1,2 @@
 # needs-toolchain: python
-cl /nologo /std:c++17 /EHsc /W4 /WX /Iinclude src\unix_history.cpp tests\model_test.cpp /Fe:model-test.exe
-cl /nologo /std:c++17 /EHsc /W4 /WX /Iinclude src\unix_history.cpp src\cli.cpp /Fe:unix-history.exe
-model-test.exe
-python ../../../specs/fixtures/historical-unix-v1/replay_cli.py .\unix-history.exe
+python ../../../specs/fixtures/historical-unix-v1/build_windows.py cpp

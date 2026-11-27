@@ -1,11 +1,12 @@
+// Fixture-only trace adapter, compiled temporarily by the Java package BUILD.
 package codingadventures.unixhistory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class Cli {
-    private Cli() {}
+public final class FixtureCli {
+    private FixtureCli() {}
 
     public static void main(String[] args) {
         var command = args.length == 0 ? "cat /hello" : String.join(" ", args);
@@ -25,7 +26,7 @@ public final class Cli {
         }
         if (value instanceof Number number) return number.toString();
         if (value instanceof List<?> list) {
-            return list.stream().map(Cli::json).collect(Collectors.joining(",", "[", "]"));
+            return list.stream().map(FixtureCli::json).collect(Collectors.joining(",", "[", "]"));
         }
         if (value instanceof Map<?, ?> map) {
             return map.entrySet().stream().map(item -> json(item.getKey()) + ":" + json(item.getValue()))

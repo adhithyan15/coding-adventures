@@ -1,3 +1,4 @@
+// Fixture-only trace adapter, compiled temporarily by the C++ package BUILD.
 #include "unix_history.hpp"
 #include <iostream>
 

@@ -1,4 +1,4 @@
-"""Replay the Unix traces through a port's JSON command-line adapter."""
+"""Replay traces through temporary fixture adapters built outside package roots."""
 
 import json
 import subprocess

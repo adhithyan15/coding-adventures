@@ -1,3 +1,4 @@
+/* Fixture-only trace adapter, compiled temporarily by the C package BUILD. */
 #include "unix_history.h"
 #include <stdio.h>
 #include <string.h>
