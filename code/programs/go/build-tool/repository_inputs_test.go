@@ -1635,6 +1635,94 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	}
 }
 
+func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "typescript/os-architecture-simulator", Language: "typescript"},
+		{Name: "go/os-architecture-simulator", Language: "go"},
+		{Name: "typescript/adjacent", Language: "typescript"},
+	}
+	exactInputs := []string{osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath}
+	for _, changed := range exactInputs {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		want := map[string]bool{"typescript/os-architecture-simulator": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("%s selected %v, err %v; want %v", changed, got, err, want)
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "typescript")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("typescript-only %s selected %v, err %v; want %v", changed, got, err, want)
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "go")
+		if err != nil || len(got) != 0 {
+			t.Errorf("go-only %s selected %v, err %v; want none", changed, got, err)
+		}
+	}
+	for _, unrelated := range []string{
+		"code/specs/fixtures/os-architecture-v1",
+		osArchitectureProfilesPath + ".bak",
+		"code/specs/fixtures/os-architecture-v1/README.md",
+		"code/specs/fixtures/os-machine-v1/boards.json/child",
+		"code/specs/fixtures/os-machine-v1/verify_boards.mjs.bak",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{unrelated}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Errorf("unrelated path %q selected %v, err %v; want none", unrelated, got, err)
+		}
+	}
+	// Git reports the removed side of a rename alongside the new path. The
+	// old exact fixture still selects this consumer even when the new name is
+	// outside the fixture tree.
+	got, err := repositoryInputConsumersForChange([]string{osArchitectureProfilesPath, "docs/renamed-profiles.json"}, packages, "all")
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/os-architecture-simulator": true}) {
+		t.Fatalf("rename paths selected %v, err %v", got, err)
+	}
+	if got := repositoryInputsForPackage("typescript/os-architecture-simulator"); !reflect.DeepEqual(got, exactInputs) {
+		t.Fatalf("package hash inputs = %v, want exactly %v", got, exactInputs)
+	}
+}
+
+func TestOSArchitectureRepositoryInputsHashEveryExactFile(t *testing.T) {
+	root := t.TempDir()
+	inputs := repositoryInputsForPackage("typescript/os-architecture-simulator")
+	packageRoot := filepath.Join(root, "code", "packages", "typescript", "os-architecture-simulator")
+	if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(packageRoot, "index.ts"), []byte("export {}\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, input := range inputs {
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("initial\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "typescript/os-architecture-simulator", Language: "typescript", Path: packageRoot}
+	for _, input := range inputs {
+		before, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash before editing %s: %v", input, err)
+		}
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.WriteFile(path, []byte("changed\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash after editing %s: %v", input, err)
+		}
+		if before == after {
+			t.Errorf("editing declared input %s did not change package hash", input)
+		}
+		if err := os.WriteFile(path, []byte("initial\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
 func TestFenwickContractSelectsDartAndPythonConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "dart/fenwick-tree", Language: "dart"},
