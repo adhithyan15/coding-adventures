@@ -431,7 +431,7 @@ static HddFuzzResult process_fixture_bytes(const char *text, size_t length) {
         const BJsonValue *probe_error = member(probe, "error");
         int64_t start, head, target, sector;
         HddSimulator *simulator = NULL;
-        HddTiming actual, expected;
+        HddTiming actual = {0}, expected = {0};
         uint8_t bytes[HDD_SECTOR_BYTES];
         HddTiming untouched;
         HddSnapshot before, after;
