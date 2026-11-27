@@ -121,20 +121,21 @@ var (
 		"code/scripts/ct_compare_conformance.py",
 		"code/scripts/tfv.py",
 	}
-	ctCompareCorpusPaths          = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
-	historicalUnixFixturePath     = "code/specs/fixtures/historical-unix-v1/file-read.json"
-	historicalUnixReplayPath      = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
-	historicalUnixBuildNativePath = "code/specs/fixtures/historical-unix-v1/build_native.py"
-	historicalUnixCAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
-	historicalUnixCppAdapterPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
-	historicalUnixJavaAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
-	historicalUnixLuaAdapterPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
-	osArchitectureProfilesPath    = "code/specs/fixtures/os-architecture-v1/profiles.json"
-	osArchitectureVerifyPath      = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
-	osMachineBoardsPath           = "code/specs/fixtures/os-machine-v1/boards.json"
-	osMachineVerifyPath           = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
-	osMachineRiscvPath            = "code/specs/fixtures/os-machine-v1/riscv.json"
-	osMachineRiscvVerifyPath      = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
+	ctCompareCorpusPaths            = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
+	historicalUnixFixturePath       = "code/specs/fixtures/historical-unix-v1/file-read.json"
+	historicalUnixReplayPath        = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
+	historicalUnixBuildNativePath   = "code/specs/fixtures/historical-unix-v1/build_native.py"
+	historicalUnixCAdapterPath      = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
+	historicalUnixCppAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
+	historicalUnixJavaAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
+	historicalUnixLuaAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
+	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
+	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
+	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
+	osMachineBoardsPath             = "code/specs/fixtures/os-machine-v1/boards.json"
+	osMachineVerifyPath             = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
+	osMachineRiscvPath              = "code/specs/fixtures/os-machine-v1/riscv.json"
+	osMachineRiscvVerifyPath        = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
 	// kilnToolchainPinPaths are the pin sources Kiln's committed
 	// code/kiln/legacy/toolchains.json is checked against by its drift test
 	// (realpolicy_test.go). A toolchain bump that edits only these files must
@@ -592,6 +593,14 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	// HOS03d: the native Go semantic simulator replays both canonical OS
+	// profiles through its external fixture verifier.
+	{
+		name: "go/os-architecture-simulator", language: "go",
+		inputs:  "the canonical OS architecture profiles and Go conformance verifier",
+		matches: isGoOSArchitectureFixtureInput,
+		paths:   []string{osArchitectureProfilesPath, osArchitectureGoConformancePath},
+	},
 	// HOS-ARCH-b/c: the architecture package BUILD validates canonical
 	// architecture profiles, machine-board fixtures, and the RV32I board
 	// fixture, plus their exact verifier scripts. Keep selection and cache
@@ -1821,9 +1830,16 @@ func isOSArchitectureFixtureInput(changed string) bool {
 	}
 }
 
+func isGoOSArchitectureFixtureInput(changed string) bool {
+	return changed == osArchitectureProfilesPath || changed == osArchitectureGoConformancePath
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
+	if packageName == "go/os-architecture-simulator" {
+		return []string{osArchitectureProfilesPath, osArchitectureGoConformancePath}
+	}
 	if packageName == "typescript/os-architecture-simulator" {
 		return []string{
 			osArchitectureProfilesPath, osArchitectureVerifyPath,
