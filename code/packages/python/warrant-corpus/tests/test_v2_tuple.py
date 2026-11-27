@@ -505,43 +505,127 @@ def test_a_bad_pattern_or_arm_is_refused(why, ir):
     assert code(ir, scope) == "ill-typed", why
 
 
-def test_a_match_on_an_undetermined_result_is_refused():
-    # a bare ok(...) has no error type, a bare err no payload type (R41)
+ONE = lit("U8", 1)
+TWO = lit("U8", 2)
+# an error type that is undetermined: a bare ok, or a case two error types declare
+TWO_TYPES = {
+    "E": {"kind": "error", "cases": ["BAD", "WORSE"]},
+    "F": {"kind": "error", "cases": ["BAD", "ONE"]},
+}
+
+
+def code_two(ir, scope=None):
+    with pytest.raises(Refusal) as caught:
+        Program(types=TWO_TYPES, levels=TUPLE).compile(ir, scope or {})
+    return caught.value.code
+
+
+def value_two(ir, env=None, scope=None):
+    compiled = Program(types=TWO_TYPES, levels=TUPLE).compile(ir, scope or {})
+    return evaluate(compiled, env or {})
+
+
+def test_an_ok_only_match_on_an_undetermined_error_type_is_not_exhaustive():
+    # P2/P7: this used to be accepted and then crash with a KitError at evaluation
+    joined = ["if", var("c"), ["ok", ONE], ["err", "BAD"]]
+    scope = {"c": parse_type("Bool", {})}
+    ir = ["match", joined, [[["ok", ["bind", "x"]], var("x")]]]
+    assert code_two(ir, scope) == "ill-typed"
     assert (
-        code(
-            [
-                "match",
-                ["ok", lit("U8", 1)],
-                [[["err", "BAD"], lit("U8", 1)], [["ok", ["wild"]], lit("U8", 2)]],
-            ]
-        )
-        == "ill-typed"
-    )
-    assert (
-        code(
-            [
-                "match",
-                ["err", "BAD"],
-                [[["ok", ["bind", "x"]], lit("U8", 1)], [["err_any"], lit("U8", 2)]],
-            ]
-        )
-        == "ill-typed"
-    )
-    assert (
-        code(
-            [
-                "match",
-                ["err", "BAD"],
-                [[["ok", ["wild"]], lit("U8", 1)], [["bind", "x"], lit("U8", 2)]],
-            ]
-        )
-        == "ill-typed"
+        code(["match", ["ok", ONE], [[["ok", ["bind", "x"]], var("x")]]]) == "ill-typed"
     )
 
 
-def test_a_bind_of_a_value_whose_type_is_undetermined_is_refused():
-    ir = ["match", ["ok", lit("U8", 1)], [[["bind", "x"], lit("U8", 1)]]]
-    assert code(ir) == "ill-typed"
+@pytest.mark.parametrize(
+    "arms",
+    [
+        [[["ok", ["bind", "x"]], ONE], [["err_any"], TWO]],
+        [[["ok", ["wild"]], ONE], [["wild"], TWO]],
+        [[["ok", ["wild"]], ONE], [["bind", "w"], TWO]],
+        [[["ok", ["wild"]], ONE], [["err", "BAD"], TWO], [["wild"], ONE]],
+        [[["err", "BAD"], ONE], [["wild"], TWO]],
+        [[["ok", ["wild"]], ONE], [["err", "BAD"], TWO], [["err_any"], ONE]],
+    ],
+)
+def test_forms_that_cover_an_undetermined_error_type_are_accepted(arms):
+    scope = {"c": parse_type("Bool", {})}
+    for scrutinee in (
+        ["if", var("c"), ["ok", ONE], ["err", "BAD"]],
+        ["ok", ONE],
+        ["err", "BAD"],  # BAD belongs to two error types
+    ):
+        ir = ["match", scrutinee, arms]
+        for c in (True, False):
+            if scrutinee[0] == "if" or c:
+                value_two(ir, {"c": c}, scope)
+
+
+def test_an_undetermined_error_type_still_refuses_a_case_nobody_declares():
+    ir = ["match", ["ok", ONE], [[["err", "GHOST"], ONE], [["wild"], TWO]]]
+    assert code_two(ir) == "ill-typed"
+
+
+def test_a_bind_named_result_is_refused_in_any_body():
+    ir = [
+        "match",
+        var("r"),
+        arms((["ok", ["bind", "result"]], ONE), (["err_any"], TWO)),
+    ]
+    assert code(ir, R) == "ill-typed"
+
+
+def test_a_match_of_more_than_256_arms_is_refused():
+    many = [[["err", "BAD"], ONE]] * (pat.MAX_ARMS + 1)
+    assert pat.MAX_ARMS == 256 and code(["match", var("r"), many], R) == "ill-typed"
+
+
+def nested_ok(levels):
+    node = ["wild"]
+    for _ in range(levels - 1):
+        node = ["ok", node]
+    return node
+
+
+def test_a_pattern_nests_at_most_eight_levels():
+    scope = scope_of(r="Result<" * 9 + "U8,E>" + ",E>" * 8)
+    for levels, want in ((8, "ok"), (9, "depth")):
+        ir = ["match", var("r"), [[nested_ok(levels), ONE], [["wild"], TWO]]]
+        if want == "ok":
+            Program(types=ERRORS, levels=TUPLE).compile(ir, scope)
+        else:
+            assert code(ir, scope) == "depth"
+    assert pat.pattern_depth(nested_ok(8)) == 8 and pat.pattern_depth("x") == 0
+
+
+def test_an_intricate_match_is_refused_within_its_budget_not_ground_through():
+    # 18 Result columns, each with an ok row and an err_any row over wildcards: the
+    # exhaustiveness check branches three ways per column (3^18 without a budget)
+    import time
+
+    columns = 18
+    column = Ty("Result", (Ty("U8"), Ty("E")))
+    ty = Ty("()", (column,) * columns)
+    rows = []
+    for i in range(columns):
+        for kind in (pat.Pattern("ok", (pat.WILD,)), pat.Pattern("err_any")):
+            parts = [pat.WILD] * columns
+            parts[i] = kind
+            rows.append([pat.Pattern("tuple", tuple(parts))])
+    start = time.monotonic()
+    with pytest.raises(Refusal) as caught:
+        pat.useful(rows, [pat.WILD], [ty], {"E": ("A", "B")})
+    assert caught.value.code == "ill-typed" and "intricate" in caught.value.message
+    assert time.monotonic() - start < 1.0
+
+
+def test_check_arms_shares_one_budget_across_the_whole_match(monkeypatch):
+    monkeypatch.setattr(pat, "MAX_STEPS", 5)
+    ir = [
+        "match",
+        var("r"),
+        arms((["err", "BAD"], ONE), (["err", "WORSE"], TWO), (["ok", ["wild"]], ONE)),
+    ]
+    assert code(ir, R) == "ill-typed"
 
 
 def test_an_error_type_of_three_cases_needs_all_three():

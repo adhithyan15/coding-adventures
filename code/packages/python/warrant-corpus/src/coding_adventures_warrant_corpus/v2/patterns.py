@@ -50,8 +50,20 @@ DATA_PATTERNS = frozenset({"some", "none", "ctor", "bool"})
 PATTERN_TAGS = frozenset({"ok", "err", "err_any", "tuple", "bind", "wild"})
 
 _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
-MAX_ARMS = 1024
-"""A lane's own bound on the arms of one ``match`` (the spec states none)."""
+MAX_ARMS = 256
+"""The arms of one ``match`` at most (Appendix A.2); more is refused ``ill-typed``."""
+MAX_PATTERN_DEPTH = 8
+"""A pattern nests at most 8 levels (the outermost is 1); deeper is ``depth``."""
+MAX_STEPS = 20_000
+"""The work budget of one usefulness check, in recursion steps (section 14).
+
+The check is exponential in the worst case (a tuple of many ``Result`` columns,
+each with an ``ok`` row and an ``err_any`` row), and a corpus is hostile input.
+Every kit case and every committed adopter ``match`` needs a few hundred steps at
+most; over budget the ``match`` is refused ``ill-typed`` (the spec names no code).
+"""
+OTHER = "\0other"
+"""Stands for every case of an *undetermined* error type that no pattern names."""
 
 
 def _ill_typed(why: str) -> Refusal:
@@ -114,6 +126,22 @@ def holds_data_pattern(raw: object) -> bool:
     return False
 
 
+def pattern_depth(raw: object) -> int:
+    """The deepest nesting of ``ok`` and ``tuple`` patterns (the outermost is 1)."""
+    deepest = 0
+    pending = [(raw, 1)]
+    while pending:
+        item, depth = pending.pop()
+        if type(item) is not list or not item or type(item[0]) is not str:
+            continue
+        deepest = max(deepest, depth)
+        if item[0] == "ok" and len(item) == 2:
+            pending.append((item[1], depth + 1))
+        elif item[0] == "tuple" and len(item) == 2 and type(item[1]) is list:
+            pending.extend((part, depth + 1) for part in item[1])
+    return deepest
+
+
 def parse(
     raw: object,
     ty: Ty,
@@ -141,10 +169,8 @@ def parse(
         if len(raw) != 2 or type(raw[1]) is not str or not _NAME.match(raw[1]):
             raise _ill_typed("bind takes one name")
         name = raw[1]
-        if name in taken or name in bound:
-            raise _ill_typed("a bind may not repeat or shadow a name")
-        if _undetermined(ty):
-            raise _ill_typed("a bind of a value of an undetermined type")
+        if name == "result" or name in taken or name in bound:
+            raise _ill_typed("a bind may not repeat or shadow a name, or be `result`")
         bound[name] = ty
         return Pattern("bind", name=name)
     if tag == "tuple":
@@ -165,23 +191,20 @@ def parse(
             raise _ill_typed("err_any takes no operand")
         return Pattern("err_any")
     if tag == "err":
+        if len(raw) != 2 or type(raw[1]) is not str:
+            raise _ill_typed("err takes the name of a case")
         cases = errors.get(ty.args[1].head)
-        if len(raw) != 2 or type(raw[1]) is not str or cases is None:
-            raise _ill_typed("err takes the name of a case of a known error type")
-        if raw[1] not in cases:
+        if cases is None and ty.args[1].head == UNKNOWN:
+            # an undetermined error type: any case some error type declares
+            declared = any(raw[1] in names for names in errors.values())
+        else:
+            declared = cases is not None and raw[1] in cases
+        if not declared:
             raise _ill_typed("the error type declares no such case")
         return Pattern("err", name=raw[1])
     if len(raw) != 2:
         raise _ill_typed("ok takes one pattern")
-    if _undetermined(ty.args[0]):
-        raise _ill_typed("an ok pattern on a value of an undetermined type")
     return Pattern("ok", (parse(raw[1], ty.args[0], errors, taken, bound),))
-
-
-def _undetermined(ty: Ty) -> bool:
-    return ty.head == UNKNOWN or any(
-        isinstance(arg, Ty) and _undetermined(arg) for arg in ty.args
-    )
 
 
 # ---------------------------------------------------------------------------
@@ -191,11 +214,29 @@ Ctor = tuple  # ("ok",) | ("err", case) | ("tuple", arity)
 Row = list  # of Pattern
 
 
-def _signature(ty: Ty, errors: Mapping[str, tuple[str, ...]]) -> list[Ctor] | None:
+def _cases(
+    ty: Ty, errors: Mapping[str, tuple[str, ...]], column: list[Pattern]
+) -> list[str]:
+    """The error cases of a ``Result`` column: declared, or *open* when undetermined.
+
+    An undetermined error type (a bare ``ok``, a case two error types declare)
+    could be any of them: its cases are the ones the column names plus
+    :data:`OTHER`, which stands for all the rest, so the type is never complete
+    and only ``err_any``, a wildcard or a ``bind`` covers it.
+    """
+    declared = errors.get(ty.args[1].head)
+    if declared is not None:
+        return list(declared)
+    named = sorted({p.name for p in column if p.kind == "err"})
+    return [*named, OTHER]
+
+
+def _signature(
+    ty: Ty, errors: Mapping[str, tuple[str, ...]], column: list[Pattern]
+) -> list[Ctor] | None:
     """Every constructor of ``ty`` a pattern can name, or ``None`` if it has none."""
     if ty.head == "Result":
-        cases = errors.get(ty.args[1].head, ())
-        return [("ok",), *(("err", case) for case in cases)]
+        return [("ok",), *(("err", case) for case in _cases(ty, errors, column))]
     if ty.head == "()":
         return [("tuple", len(ty.args))]
     return None
@@ -254,23 +295,33 @@ def useful(
     query: Row,
     tys: list[Ty],
     errors: Mapping[str, tuple[str, ...]],
+    budget: list[int] | None = None,
 ) -> bool:
     """Does some value match ``query`` and no row of ``rows``?
 
     With ``query`` all wildcards this asks whether ``rows`` leave a value
     uncovered (the ``match`` is not exhaustive); with ``query`` one arm's
     pattern and ``rows`` the arms above it, it asks whether that arm can be
-    reached.  The recursion is over the *types* (at most 16 deep) and the
-    columns, so it is bounded by the size of the patterns.
+    reached.  The recursion is over the *types* and the columns; ``budget`` (a
+    one-item list of steps left, :data:`MAX_STEPS` when absent) bounds the work,
+    and running out refuses the ``match`` as ``ill-typed``.
     """
+    if budget is None:
+        budget = [MAX_STEPS]
+    budget[0] -= 1
+    if budget[0] < 0:
+        raise _ill_typed("a match whose patterns are too intricate to check")
     if not tys:
         return not rows
     head, ty = query[0], tys[0]
-    signature = _signature(ty, errors)
-    cases = list(errors.get(ty.args[1].head, ())) if ty.head == "Result" else []
+    column = [row[0] for row in rows] + [head]
+    signature = _signature(ty, errors, column)
+    cases = _cases(ty, errors, column) if ty.head == "Result" else []
     if head.kind == "err_any":
         return any(
-            useful(_specialize(rows, ("err", case), 0), query[1:], tys[1:], errors)
+            useful(
+                _specialize(rows, ("err", case), 0), query[1:], tys[1:], errors, budget
+            )
             for case in cases
         )
     if not head.is_wild:
@@ -282,6 +333,7 @@ def useful(
             list(head.subs) + query[1:],
             fields + tys[1:],
             errors,
+            budget,
         )
     if signature is not None and set(signature) <= _used(rows, cases):
         for ctor in signature:
@@ -291,11 +343,12 @@ def useful(
                 [WILD] * len(fields) + query[1:],
                 fields + tys[1:],
                 errors,
+                budget,
             ):
                 return True
         return False
     defaults = [row[1:] for row in rows if row[0].is_wild]
-    return useful(defaults, query[1:], tys[1:], errors)
+    return useful(defaults, query[1:], tys[1:], errors, budget)
 
 
 def check_arms(
@@ -307,9 +360,10 @@ def check_arms(
     unreachable arm is reported first).  The kit's closed code set for a ``v2-ir``
     tree has no ``corpus``, so this lane reports them as ``ill-typed``.
     """
+    budget = [MAX_STEPS]  # one budget for the whole match
     for place, arm in enumerate(arms):
         above = [[earlier] for earlier in arms[:place]]
-        if not useful(above, [arm], [scrutinee], errors):
+        if not useful(above, [arm], [scrutinee], errors, budget):
             raise _ill_typed("a match arm that no value can reach")
-    if useful([[arm] for arm in arms], [WILD], [scrutinee], errors):
+    if useful([[arm] for arm in arms], [WILD], [scrutinee], errors, budget):
         raise _ill_typed("a match that can fall through")

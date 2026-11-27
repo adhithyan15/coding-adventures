@@ -1384,9 +1384,10 @@ class Program:
             if source != Ty("Bytes", (width,)):
                 raise Refusal("ill-typed", f"{tag} {target} takes a Bytes<{width}>")
             order = "big" if tag == "from_be" else "little"
+            klass = self._klass(operand.subject)
             return self._combine(
                 target,
-                lambda env: fixed.from_bytes(f(env), target, order),
+                lambda env: fixed.from_bytes(f(env), target, order, klass),
                 [operand],  # type: ignore[arg-type]
             )
         if tag == "widen":
@@ -1514,6 +1515,11 @@ class Program:
             raise Refusal(
                 "level-missing", "ir.data"
             )  # pragma: no cover - not implemented
+        if any(
+            patterns.pattern_depth(arm[0]) > patterns.MAX_PATTERN_DEPTH
+            for arm in arms_raw
+        ):
+            raise Refusal("depth", "a pattern nested more than 8 levels")
         taken = set(scope)
         parsed: list[tuple[patterns.Pattern, dict[str, Ty]]] = []
         for pattern_raw, _body in arms_raw:

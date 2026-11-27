@@ -481,3 +481,15 @@ def test_wrap_and_widen_use_the_semantics_seams():
     program = Program(levels=ALL, sem=Broken())
     compiled = program.compile(["wrap", "U8", lit("Nat", 300)], {})
     assert evaluate(compiled, {}) == 300  # the mutant is visible: wrap is a seam
+
+
+def test_a_runtime_length_other_than_w_over_8_is_ir_overflow_never_a_truncation():
+    program = Program(levels=ALL)
+    compiled = program.compile(["from_be", "U32", var("b")], {"b": Ty("Bytes", (4,))})
+    assert evaluate(compiled, {"b": b"\0\0\0\7"}) == 7
+    with pytest.raises(IrOverflow) as caught:
+        evaluate(compiled, {"b": b"\0\0\7"})  # a value that is not of its declared type
+    assert caught.value.klass == "corpus"
+    with pytest.raises(IrOverflow) as caught:
+        fx.from_bytes(b"\1" * 5, Ty("U32"), "little", "case")
+    assert caught.value.klass == "case"

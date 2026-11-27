@@ -27,6 +27,7 @@ hands to ``unwrap_or`` (section 4.1, [D23]).
 from __future__ import annotations
 
 from .arith import raw_binary, wrap
+from .errors import IrOverflow
 from .wtypes import Ty, fixed_range
 
 SOME = "some"
@@ -160,6 +161,14 @@ def to_bytes(value: int, ty: Ty, order: str) -> bytes:
     return pattern(value, ty).to_bytes(ty.width // 8, order)  # type: ignore[arg-type]
 
 
-def from_bytes(data: bytes, ty: Ty, order: str) -> int:
-    """``from_be`` / ``from_le``: the pattern of ``data`` read back in ``ty``."""
+def from_bytes(data: bytes, ty: Ty, order: str, klass: str = "corpus") -> int:
+    """``from_be`` / ``from_le``: the pattern of ``data`` read back in ``ty``.
+
+    The static type makes the length ``w/8`` (Appendix A.1), so a different
+    runtime length means the value was not of its declared type: a corpus error,
+    never a truncation.  It is reported as ``ir-overflow`` with the class split of
+    section 3.2 (``klass``: ``corpus`` on the pure trace, ``case`` otherwise).
+    """
+    if len(data) != ty.width // 8:
+        raise IrOverflow(klass, "from_be/from_le: a runtime length other than w/8")
     return wrap(int.from_bytes(data, order), ty)  # type: ignore[arg-type]
