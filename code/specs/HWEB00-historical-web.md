@@ -35,7 +35,8 @@ has a lowercase `tag`, an `attributes` mapping, and ordered `children`. Text
 is a string. CRLF becomes LF, and adjacent text in the same parent coalesces.
 Tag and attribute names use ASCII case folding. Whitespace in tags is ASCII
 space, tab, LF, CR, or form feed. Anchor values accept single quotes, double
-quotes, and unquoted values. The first `name`, `href`, or `type` wins if
+quotes, and unquoted values. A quoted value can contain `>`. Write `<` inside
+an attribute value as `&lt;`. The first `name`, `href`, or `type` wins if
 repeated. A valueless recognized attribute maps to null. Values preserve
 case. Decode the archived `&lt;`, `&gt;`, and `&amp;` once in regular text and
 anchor values. Other references remain literal.
@@ -53,7 +54,9 @@ anchor values. Other references remain literal.
 Use a stack for containers. A recognized end tag closes through the closest
 matching open element. Ignore unmatched end tags, and close open elements at
 EOF. An orphan item or glossary entry is retained in the current container.
-Discard `<!--` comments through `-->` or EOF. Preserve malformed tag text.
+Discard `<!--` comments through `-->` or EOF. Preserve text that does not
+match the tag syntax. An anchor keeps attributes parsed before a malformed
+attribute sequence. Markup declarations such as `<!DOCTYPE ...>` remain text.
 Recognized raw-text end tags have the exact spelling `</name>` apart from
 case. These rules make underspecified recovery deterministic for ports. The
 profile describes a teaching implementation based on the archive. Features
