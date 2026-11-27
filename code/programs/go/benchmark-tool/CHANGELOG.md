@@ -8,6 +8,8 @@
   invocation vector. Workload labels remain producer-defined: only the six
   ASCII whitespace characters count as blank, and malformed escaped surrogate
   pairs are rejected while valid Unicode is preserved.
+- Match VER07y's field distinction: descriptive metadata and `profile` reject
+  only empty strings, while only `workload` rejects ASCII-whitespace-only IDs.
 - Add `paired-replay REPORT [--out DIRECTORY]`: bounded duplicate-aware UTF-8
   ingress preserves signed-64 integer observations, verifies schedule and stored
   analysis, and recomputes the exact median interval through `microbenchmark`.

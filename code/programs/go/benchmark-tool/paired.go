@@ -288,7 +288,7 @@ func readPairedReport(data []byte) (pairedSummary, error) {
 			if key == "workload" {
 				invalid = invalid || strings.Trim(s, " \t\n\r\v\f") == "" || strings.ContainsRune(s, '\x00') || !validWorkloadUnicodeEscapes(raw)
 			} else {
-				invalid = invalid || strings.TrimSpace(s) == "" || strings.ContainsRune(s, '\x00')
+				invalid = invalid || s == "" || strings.ContainsRune(s, '\x00')
 			}
 			if invalid {
 				return summary, fmt.Errorf("invalid metadata %s", key)

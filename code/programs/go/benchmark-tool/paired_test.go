@@ -116,7 +116,7 @@ func TestPairedReplayInvalidReportsProduceNoSuccess(t *testing.T) {
 		"null endpoint":         strings.Replace(base, `[1,1]`, `[1,null]`, 1),
 		"absent interval":       strings.Replace(base, `"interval":[1,1],`, "", 1),
 		"null interval":         strings.Replace(base, `[1,1]`, `null`, 1),
-		"blank metadata":        strings.Replace(base, `"runtime":"test-runtime"`, `"runtime":" "`, 1),
+		"empty metadata":        strings.Replace(base, `"runtime":"test-runtime"`, `"runtime":""`, 1),
 		"null metadata":         strings.Replace(base, `"runtime":"test-runtime"`, `"runtime":null`, 1),
 		"null invocation":       strings.Replace(base, `["native-driver"]`, `null`, 1),
 		"bad invocation entry":  strings.Replace(base, `["native-driver"]`, `[null]`, 1),
@@ -169,6 +169,19 @@ func TestPairedReplayMetadataGroup(t *testing.T) {
 	})
 	if _, err := readPairedReport(profileOnly); err == nil {
 		t.Fatal("accepted profile without the complete driver metadata group")
+	}
+}
+
+func TestPairedReplayAcceptsWhitespaceOnlyDescriptiveMetadata(t *testing.T) {
+	for _, key := range []string{"revision", "runtime", "os", "arch", "profile"} {
+		t.Run(key, func(t *testing.T) {
+			data := pairedReportWithMetadata(t, func(object map[string]json.RawMessage) {
+				object[key] = json.RawMessage(`" \t "`)
+			})
+			if _, err := readPairedReport(data); err != nil {
+				t.Fatalf("nonempty whitespace-only %s rejected: %v", key, err)
+			}
+		})
 	}
 }
 
