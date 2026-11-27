@@ -19,6 +19,10 @@ dev = [
     "coding-adventures-ca-capability-analyzer>=0.1.0",
 ]
 
+[tool.uv.sources]
+coding-adventures-test-bootstrap = { path = "../test-bootstrap", editable = true }
+coding-adventures-ca-capability-analyzer = { path = "../ca-capability-analyzer", editable = true }
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/historical_web"]
 
