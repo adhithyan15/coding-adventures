@@ -66,6 +66,8 @@ batch of 65,536, and pair counts from 1 through 10,000. The maximum batch is a
 positive signed-64-bit value with no extra 65,536 hard cap. Reject invalid
 confidence/factor/configuration, malformed pairs, nonpositive durations, and
 missing pairs.
+Report replay validates the bounded config and matches the raw pair array size
+before mapping pair rows or recomputing analysis.
 
 Ruby integers remain exact in memory and in JSON. Seed, expected and observed
 checksums, clock ticks, batch size, target, maximum batch, and pair durations use

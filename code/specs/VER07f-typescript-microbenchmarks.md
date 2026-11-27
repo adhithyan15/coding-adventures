@@ -29,6 +29,8 @@ the input is a nonempty array and that confidence and factor are valid, it
 rejects excess length before mapping or validating pair members. A size error
 therefore takes precedence over malformed members, while invalid scalar
 arguments take precedence over a size error.
+Report replay validates the bounded config and checks the raw pair array length
+against it before traversing pair fields or recomputing analysis.
 
 ## Repository dependency identity
 
