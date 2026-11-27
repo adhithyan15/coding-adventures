@@ -28,17 +28,22 @@ Opening, reading, closing, listing, and resolving paths operate only on this
 guest state. Guest memory is private WebAssembly linear memory; no host file
 or process state is consulted.
 
-The first component surface should provide reset, resolve/open/read/close/list
-operations, descriptor inspection needed by tests, and a bounded memory view
-for input and output buffers. Numeric results and error codes are guest API
-values. They must not depend on JavaScript exceptions or host errno values.
-The guest imports no host functions. Its supported image and operation set are
+The component surface provides `reset`, `resolve`, `open`, `read`, `close`,
+`kind`, descriptor inspection, and directory-entry access through
+`entry_count`, `entry_name_ptr`, and `entry_name_len`. The guest's directory
+entry functions are the list operation; the host adapter does not define
+directory contents. Numeric results and error codes are guest API values.
+They do not depend on JavaScript exceptions or host errno values. The guest
+imports no host functions. Its supported image and operation set are
 deliberately limited to the teaching fixture.
 
-The raw guest API must document pointer and length constraints. The wrapper
-validates path byte count and output capacity before calling guest exports;
-guest input and output ranges must fit in the declared linear memory. A caller
-cannot use an unchecked pointer or length to escape the wrapper's bounds.
+The guest accepts a one-page memory. Path input is in `[4096, 8192)`, read
+output is restricted to `[8192, 12288)`, path length is at most 4096 bytes,
+read capacity at most 4096 bytes, and path traversal at most 512 components.
+Both guest and host adapter validate arithmetic before slicing or copying. A
+rejected read does not advance the descriptor offset. The exported memory is
+visible to the trusted embedding host for marshalling; direct host writes are
+outside the guest API's immutability guarantee.
 
 ## Host and browser boundary
 
@@ -106,15 +111,14 @@ host-adapter evidence, not as nine WAT-only observations.
 
 ## Reconstruction status and toolchain check
 
-This document records the intended contract, not a byte-for-byte recovery of
-an unpublished implementation. The current checkout contains no WAT guest at
-the planned package path and no prior HOS-003e implementation commit is
-available in the local Git history. A new implementation should therefore be
-reviewed against these boundaries and the canonical fixture rather than
-presented as restored source.
+This is a reconstruction, not a byte-for-byte recovery of an unpublished
+implementation. No prior HOS-003e implementation commit or WAT guest was
+available when work began. The new authored module lives at
+`code/packages/wasm/unix-history-simulator/src/unix_history.wat`; its public
+ABI is documented in that package README.
 
-At specification time, the current environment exposes Node `24.22.3` and npm
-`11.19.1`, not the repository pins, and `wat2wasm` is not on `PATH`. No build
-was run. Before implementation validation, locate or provision the exact
-Node/npm and WABT versions in an isolated task environment; do not treat the
-current versions as pinned-build evidence.
+The package's locked toolchain is Node `22.23.5`, npm `11.13.0`, and WABT
+`1.0.39`. The Linux guest compilation, component checks, and all nine shared
+fixture replays passed locally with these versions. Windows source protocol is
+prepared but has not been executed on Windows. Fixture replay validates the
+guest and Node host adapter together, not WAT event formatting in isolation.
