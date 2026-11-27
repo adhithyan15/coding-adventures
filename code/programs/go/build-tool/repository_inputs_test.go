@@ -1577,13 +1577,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	root := t.TempDir()
-	packageRoot := filepath.Join(root, "code", "packages", "go", "unix-history-simulator")
-	if err := os.MkdirAll(packageRoot, 0o755); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(filepath.Join(packageRoot, "simulator.go"), []byte("package sample\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
+	languages := []string{"c", "cpp", "go", "java", "lua", "perl", "python", "ruby", "rust", "typescript"}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
 		t.Fatal(err)
@@ -1591,24 +1585,46 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	if err := os.WriteFile(fixturePath, []byte("[]\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	pkg := discovery.Package{Name: "go/unix-history-simulator", Language: "go", Path: packageRoot}
-	inputs := repositoryInputsForPackage(pkg.Name)
-	if want := []string{historicalUnixFixturePath}; !reflect.DeepEqual(inputs, want) {
-		t.Fatalf("Go package repository inputs = %v, want %v", inputs, want)
-	}
-	before, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
-	if err != nil {
-		t.Fatal(err)
+	before := make(map[string]string, len(languages))
+	for _, language := range languages {
+		name := language + "/unix-history-simulator"
+		packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(name))
+		if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(packageRoot, "simulator.go"), []byte("package sample\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		inputs := repositoryInputsForPackage(name)
+		for _, input := range inputs[1:] {
+			path := filepath.Join(root, filepath.FromSlash(input))
+			if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(path, []byte("source\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		pkg := discovery.Package{Name: name, Language: language, Path: packageRoot}
+		hash, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash %s with declared inputs: %v", name, err)
+		}
+		before[name] = hash
 	}
 	if err := os.WriteFile(fixturePath, []byte("[{\"case\":1}]\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if before == after {
-		t.Fatal("canonical fixture edit did not change Go package hash")
+	for _, language := range languages {
+		name := language + "/unix-history-simulator"
+		pkg := discovery.Package{Name: name, Language: language, Path: filepath.Join(root, "code", "packages", filepath.FromSlash(name))}
+		after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, repositoryInputsForPackage(name))
+		if err != nil {
+			t.Fatalf("rehash %s after fixture edit: %v", name, err)
+		}
+		if before[name] == after {
+			t.Errorf("canonical fixture edit did not change %s hash", name)
+		}
 	}
 	// A package input list for a direct adapter consumer contains its exact
 	// helper sources, not the entire fixture tree or README.
