@@ -474,7 +474,9 @@ console.log(prose, nested);
         # -3 shared_projects: wave, analog-waveform, and discrete-waveform
         # migrated from tsconfig.base.json to standalone configs (PHY-W8-E).
         # +1: os-architecture-simulator is a standalone noEmit semantic package.
-        self.assertEqual(summary.total_projects, 522)
+        # +1 each: this benchmark integration adds TypeScript microbenchmark and
+        # rank-statistics packages alongside the C and Swift ports.
+        self.assertEqual(summary.total_projects, 524)
         self.assertEqual(summary.shared_projects, 305)
         self.assertEqual(summary.inherited_root_dir, 136)
         self.assertEqual(summary.inherited_out_dir, 139)
@@ -494,8 +496,9 @@ console.log(prose, nested);
         # are isolated standalone emitters (TS-W7-A).
         # +3: wave, analog-waveform, and discrete-waveform are isolated
         # standalone emitters (PHY-W8-E).
-        self.assertEqual(summary.standalone_emit_projects, 183)
-        self.assertEqual(summary.isolated_standalone_projects, 183)
+        # +2: TypeScript microbenchmark and rank-statistics have isolated emitters.
+        self.assertEqual(summary.standalone_emit_projects, 185)
+        self.assertEqual(summary.isolated_standalone_projects, 185)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -551,7 +554,8 @@ console.log(prose, nested);
         # +1: neural-framework reads fixtures and checkpoint stdin in tests/CLI.
         # +1: ca-capability-analyzer reads TypeScript packages off disk via Node APIs.
         # +1: os-architecture-simulator uses node:test and node:assert in its inline tests; shipped src stays Node-API-free.
-        self.assertEqual(summary.node_api_projects, 90)
+        # +1: the microbenchmark CLI uses Node process metadata, argv and output.
+        self.assertEqual(summary.node_api_projects, 91)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -586,7 +590,8 @@ console.log(prose, nested);
         # +1: neural-framework directly owns its test/CLI Node type provider.
         # +1: ca-capability-analyzer owns `@types/node` directly.
         # +1: os-architecture-simulator directly owns @types/node for those test compiler inputs.
-        self.assertEqual(summary.node_provider_projects, 90)
+        # +1: the microbenchmark directly owns @types/node for its CLI sources.
+        self.assertEqual(summary.node_provider_projects, 91)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         # 0: matrix-rust-napi's lock exemption is retired; it commits a lock.
@@ -662,7 +667,8 @@ console.log(prose, nested);
         # +1: unix-history-simulator locks its standalone compiler and test graph.
         # +1: the browser program locks its standalone compiler and test graph.
         # +1: os-architecture-simulator locks its standalone TypeScript compiler.
-        self.assertEqual(summary.locked_compilers, 535)
+        # +2: TypeScript microbenchmark and rank-statistics lock their compilers.
+        self.assertEqual(summary.locked_compilers, 537)
 
 
 if __name__ == "__main__":
