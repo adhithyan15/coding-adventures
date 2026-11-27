@@ -288,8 +288,8 @@ func cloneConcurrentGraph(source *Graph) *Graph {
 	return copy
 }
 
-func clonePropertyBags(source map[string]PropertyBag) map[string]PropertyBag {
-	copy := make(map[string]PropertyBag, len(source))
+func clonePropertyBags[K comparable](source map[K]PropertyBag) map[K]PropertyBag {
+	copy := make(map[K]PropertyBag, len(source))
 	for key, properties := range source {
 		copy[key] = copyPropertyBag(properties)
 	}

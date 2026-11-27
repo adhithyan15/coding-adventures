@@ -18,6 +18,8 @@ mst, _ := graph.MinimumSpanningTree(g)
 
 Graph, node, and edge property bags are copied on read. The canonical edge
 property `weight` is kept in sync with `EdgeWeight` and weighted algorithms.
+Edge identity uses the exact unordered pair of endpoint strings, including
+labels with embedded NUL bytes.
 
 `ShortestPath` validates every stored edge before searching, including for a
 same-node query. It returns an error if any weight is negative, NaN, or infinite.
@@ -35,6 +37,8 @@ From this module directory, run the fuzz target manually with:
 
 ```sh
 go test -run=^$ -fuzz=FuzzShortestPathWeightPreconditions -fuzztime=5s -parallel=1 .
+go test -run=^$ -fuzz=FuzzConcurrentGraphModelHistories -fuzztime=5s -parallel=1 .
+go test -run=^$ -fuzz=FuzzEdgeIdentityModel -fuzztime=5s -parallel=1 .
 ```
 
 ## Concurrent use
