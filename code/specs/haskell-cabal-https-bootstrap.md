@@ -8,7 +8,7 @@ CI uses canonical `https://hackage.haskell.org/` while retaining Cabal's built-i
 
 ## Workflow behavior
 
-The pinned `haskell-actions/setup` step sets `cabal-update` to false so it does not contact the old mirror. Immediately after setup, a short Bash block in `.github/workflows/ci.yml` creates a unique directory with `mktemp -d` beneath `RUNNER_TEMP` and writes a new private config. The helper receives the action's `cabal-store` output as `CABAL_STORE_DIR`, appends that `store-dir` to the private config, and on Windows also appends the action's required `install-method: copy` and `overwrite-policy: always` settings. It does not read or modify the user/global config. It writes the base config at that directory's `config` path using `printf`, with these exact UTF-8/LF bytes, then appends `store-dir: ${CABAL_STORE_DIR}`. On Windows it additionally appends the two install settings shown below:
+The pinned `haskell-actions/setup` step sets `cabal-update` to false so it does not contact the old mirror. Immediately after setup, a short Bash block in `.github/workflows/ci.yml` creates a unique directory with `mktemp -d` beneath `RUNNER_TEMP` and writes a new private config. It receives the action's `cabal-store` output as `CABAL_STORE_DIR`; it does not read or modify the user/global config. The base config at that directory's `config` path has these exact UTF-8/LF bytes:
 
 ```
 repository hackage.haskell.org
@@ -16,7 +16,7 @@ repository hackage.haskell.org
   secure: True
 ```
 
-The block also requires nonempty `CABAL_STORE_DIR` and `RUNNER_OS`, rejects CR or LF in every path/value it writes, and runs with the workflow's fail-fast Bash settings. `mktemp` must create a new directory rather than reuse or overwrite one. The runner's native Windows temp path must remain usable from Git Bash and by later Cabal processes. Append one `CABAL_CONFIG=<native absolute path>` assignment to `GITHUB_ENV`; never replace its existing contents. The config persists for later steps. Any validation, directory creation, config write, or environment append failure fails the step; do not continue with Cabal's prior global config. Diagnostics must not print environment contents.
+After the base stanza it appends `store-dir: ${CABAL_STORE_DIR}` on every platform. On Windows it also appends `install-method: copy` and `overwrite-policy: always`, matching the pinned setup action's platform settings. Tests compare complete platform-specific config bytes, including LF newlines. The block requires nonempty `RUNNER_TEMP`, `GITHUB_ENV`, `CABAL_STORE_DIR`, and `RUNNER_OS`, rejects CR or LF in every path/value it writes, and runs with the workflow's fail-fast Bash settings. `mktemp` must create a new directory rather than reuse or overwrite one. The runner's native Windows temp path must remain usable from Git Bash and by later Cabal processes. Append one `CABAL_CONFIG=<native absolute path>` assignment to `GITHUB_ENV`; never replace its existing contents. The config persists for later steps. Any validation, directory creation, config write, or environment append failure fails the step; do not continue with Cabal's prior global config. Diagnostics must not print environment contents.
 
 The setup action cannot contact the old mirror because its `cabal-update` input is false. After setup, the existing `Verify Haskell package index` step runs `cabal update` first and then retains its current `cabal list` verification. Later Cabal commands inherit the same config through `GITHUB_ENV`; do not depend on repeatedly passing `--config-file`.
 
