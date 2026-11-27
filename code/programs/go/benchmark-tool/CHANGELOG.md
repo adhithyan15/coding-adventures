@@ -2,11 +2,12 @@
 
 ## Unreleased
 
-- Reject U+0000 in a present workload identifier while accepting other
-  nonblank producer labels. Only the six ASCII whitespace characters count as
-  blank; reject malformed escaped surrogate pairs while preserving valid
-  Unicode. Allow an explicitly empty invocation vector but continue to reject
-  null and non-string entries.
+- Require the complete six-field driver metadata group when any group member is
+  present; permit `profile` only with that group. Reject U+0000 in metadata and
+  invocation strings while preserving valid empty argv entries and an empty
+  invocation vector. Workload labels remain producer-defined: only the six
+  ASCII whitespace characters count as blank, and malformed escaped surrogate
+  pairs are rejected while valid Unicode is preserved.
 - Add `paired-replay REPORT [--out DIRECTORY]`: bounded duplicate-aware UTF-8
   ingress preserves signed-64 integer observations, verifies schedule and stored
   analysis, and recomputes the exact median interval through `microbenchmark`.
