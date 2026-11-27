@@ -46,6 +46,7 @@ Exit conventions (R19), used by ``make_conformance.py``: 0 identical, 1 the comm
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import re
 import types as _pytypes
@@ -60,8 +61,8 @@ from .corpus_v1 import build_program
 from .corpus_v2 import canonical, chunk_file_name, derive
 from .errors import OracleError
 from .faults import _compile_fault, fault_row
-from .irtree import children, is_node
-from .lower import FIXED, OpSig, lower_document
+from .irtree import children, is_node, match_arms
+from .lower import _RESERVED_V0, FIXED, OpSig, lower_document
 from .parser import parse_source
 from .profile import parse_profile
 from .suites import SuitePlan
@@ -90,7 +91,9 @@ ERROR_CODES = {
     ),
     "v2-domain": frozenset({"descriptor", "index"}),
     "v2-chunk": frozenset({"chunk-file", "slim-chunks", "corpus"}),
-    "v2-fault": frozenset({"level-missing", "subject-forbidden"}),
+    # [D74] (VER04r 16.22): ``ill-typed`` is the bad ``types`` table and the fault row with no common type.
+    # [D77] (VER04r 16.23) adds ``unknown-tag``, ``depth`` and ``model-order``, with their meaning in ``v2-ir``.
+    "v2-fault": frozenset({"ill-typed", "level-missing", "subject-forbidden", "unknown-tag", "depth", "model-order"}),
     # S5c (:mod:`.bindings_v2`): one code; the ``reason`` beside it is the closed set of that module.
     "v2-binding": frozenset({"BindingInvalid"}),
 }
@@ -309,6 +312,15 @@ def read_json(data: bytes) -> object:
 # 2. Type text (section 2.1) and JSON values decoded by declared type (section 2.3)
 # ================================================================================================
 
+#: R123 (VER04r 16.23): the names a ``types`` table may not declare, as a *consumer* reads it.  A table carries no
+#: document version, so the checker's version-scoped ``is_reserved_builtin`` cannot be applied to it: the set is
+#: ``V0_BUILTINS`` plus the six v1 type names that section 2.1's type grammar reads as primitive types in every
+#: corpus (``U16 U32 I8 I16 I32 I64``).  The v1 *function* names (``rem``, ``div_trunc``, ...) are not in it: a
+#: corpus generated from a v0 document may hold an error row called ``rem``.  Lowering keeps its version-scoped set.
+TABLE_RESERVED = _RESERVED_V0 | frozenset(["U16", "U32", "I8", "I16", "I32", "I64"])
+
+#: The message of the R117 refusal of an error name used as a value type.
+ERROR_NOT_VALUE = "an error type is not a value type"
 _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 _WIDTH = re.compile(r"0|[1-9][0-9]*")
 _HEX = re.compile(r"(?:[0-9a-f]{2})*")
@@ -386,14 +398,20 @@ def parse_type(text: object, types: dict | None, *, allow_int: bool = False, wid
             expect(",")
             err = name()
             expect(">")
-            if types is not None and (err not in types or types[err].get("kind") != "error"):
+            if types is not None and (err not in types or not isinstance(types[err], dict) or types[err].get("kind") != "error"):
                 raise Refused("type", "the error type of a Result is a declared error type")
             return A.Ty("Result", (ok, A.Ty(err)))
         if head == "Int":
             if not allow_int:
                 raise Refused("type", "Int is an IR-only type")
             return A.Ty("Int")
-        if head in _PRIMITIVE or (types is not None and head in types):
+        if head in _PRIMITIVE:
+            return A.Ty(head)
+        if types is not None and head in types:
+            row = types[head]
+            if isinstance(row, dict) and row.get("kind") == "error":
+                # R117 (VER04r 16.22): an error type is the second argument of a ``Result`` and nothing else.
+                raise Refused("type", ERROR_NOT_VALUE)
             return A.Ty(head)
         raise Refused("type", "not a type of section 2.1, or not in types")
 
@@ -419,6 +437,112 @@ def type_levels(ty: A.Ty, types: dict | None = None) -> set[str]:
                 found.add(L.LIST)
             stack.extend(a for a in t.args if isinstance(a, A.Ty))
     return found
+
+
+def check_type_table(types: object, code: str) -> None:
+    """R108, R110 (a), R117 (VER04r 16.21, 16.22): refuse a ``types`` table a consumer must not read, whole, with ``code``.
+
+    Section 2.2 holds "at generation and again by every consumer", so the table is read whole and first, before
+    any value, descriptor, row or expression.  Refused, each with the context's own code (``type`` in
+    ``v2-value``, ``corpus`` in ``v2-chunk`` and a corpus, ``ill-typed`` in ``v2-ir`` and ``v2-fault``):
+
+    * a record or variant that contains itself, directly or through any chain (through ``Option``, ``Result``,
+      a tuple or a list; a mutually recursive pair is a chain), rule 1 and R118;
+    * a repeated field or constructor name (rule 4), a name outside ``[A-Za-z_][A-Za-z0-9_]*``;
+    * a row that is not an object, of a kind other than ``error``, ``record`` or ``variant``, or that is
+      malformed, or a count outside rule 2 (1 to 64 distinct cases) or rule 3 (1 to 32 fields; 2 to 64
+      constructors of 0 to 8 fields);
+    * a field or constructor component whose type text the type parser refuses (malformed, deeper than 16, ``Int``,
+      ``Bytes<N>`` over 4096, a name the table does not declare, ``Result<T,Q>`` with ``Q`` not an error type);
+    * R117: a component that names an ``error`` row anywhere except as the second argument of ``Result``.
+
+    The walk is iterative, so a hostile table cannot make it recurse.
+    """
+    if not isinstance(types, dict):
+        raise Refused(code, "the types table is not an object")
+    refs: dict[str, set[str]] = {}
+    for name, row in types.items():
+        # section 2.2 rule 4 and R58: a type name has the name grammar and is not a reserved built-in (the primitive
+        # and fixed-width types, ``List``, ``Option``, ``Result``, ``Some``, ``None``, ...).
+        if not _NAME.fullmatch(name) or name in TABLE_RESERVED:
+            raise Refused(code, "a type name is outside the name grammar or is a reserved built-in (rule 4, R58)")
+        if not isinstance(row, dict):
+            raise Refused(code, "a types row is not an object")
+        kind = row.get("kind")
+        if kind == "error":
+            cases = row.get("cases")
+            if (
+                not isinstance(cases, list)
+                or not 1 <= len(cases) <= 64
+                or not all(isinstance(c, str) and _NAME.fullmatch(c) for c in cases)
+                or len(set(cases)) != len(cases)
+            ):
+                raise Refused(code, "an error type has 1 to 64 distinct case names (section 2.2 rule 2)")
+            continue
+        if kind not in ("record", "variant"):
+            raise Refused(code, "a types row is neither an error, a record nor a variant")
+        try:
+            if kind == "record":
+                rows = row["fields"]
+                if not isinstance(rows, list) or not 1 <= len(rows) <= 32:
+                    raise Refused(code, "a record has 1 to 32 fields (section 2.2 rule 3)")
+                if any(not isinstance(f, list) or len(f) != 2 or not isinstance(f[0], str) for f in rows):
+                    raise TypeError  # each field is a list of exactly a name and a type text
+                names = [f[0] for f in rows]
+                texts = [f[1] for f in rows]
+            else:
+                rows = row["ctors"]
+                if not isinstance(rows, list) or not 2 <= len(rows) <= 64:
+                    raise Refused(code, "a variant has 2 to 64 constructors (section 2.2 rule 3)")
+                if any(not isinstance(c, list) or len(c) != 2 or not isinstance(c[0], str) for c in rows):
+                    raise TypeError  # each constructor is a list of exactly a name and a field list
+                if any(not isinstance(c[1], list) or len(c[1]) > 8 for c in rows):
+                    raise Refused(code, "a constructor has 0 to 8 fields (section 2.2 rule 3)")
+                names = [c[0] for c in rows]
+                texts = [t for c in rows for t in c[1]]
+            repeated = len(set(names)) != len(names)  # an unhashable name is a malformed row
+        except (KeyError, IndexError, TypeError):
+            raise Refused(code, "a types row is malformed") from None
+        if kind == "variant" and any(n in TABLE_RESERVED for n in names):
+            raise Refused(code, "a constructor name is a reserved built-in (R58)")
+        if not all(isinstance(n, str) and _NAME.fullmatch(n) for n in names):
+            raise Refused(code, "a field or constructor name is outside [A-Za-z_][A-Za-z0-9_]* (section 2.2 rule 4)")
+        if repeated:
+            raise Refused(code, "a field or constructor name is repeated (section 2.2 rule 4)")
+        used: set[str] = set()
+        for text in texts:
+            try:
+                stack = [parse_type(text, types)]
+            except Refused:
+                raise Refused(code, "a field names a type the table does not declare, or is not a value type") from None
+            while stack:
+                t = stack.pop()
+                if isinstance(t, A.Ty):
+                    target = types.get(t.head)
+                    if isinstance(target, dict) and target.get("kind") in ("record", "variant"):
+                        used.add(t.head)
+                    # ``parse_type`` has refused an error name that is not a Result's second argument (R117);
+                    # that second argument is the only error name a parsed type holds, and is not walked.
+                    stack.extend(t.args[:1] if t.head == "Result" else t.args)
+        refs[name] = used
+    state: dict[str, int] = {}  # absent: unvisited, 1: on the path, 2: done
+    for start in refs:
+        if start in state:
+            continue
+        path = [(start, iter(sorted(refs[start])))]
+        state[start] = 1
+        while path:
+            node, it = path[-1]
+            for nxt in it:
+                if state.get(nxt) == 1:
+                    raise Refused(code, "a record or variant contains itself (section 2.2 rule 1)")
+                if nxt not in state:
+                    state[nxt] = 1
+                    path.append((nxt, iter(sorted(refs[nxt]))))
+                    break
+            else:
+                state[node] = 2
+                path.pop()
 
 
 def _record_fields(types: dict, name: str) -> list[A.Ty]:
@@ -561,6 +685,7 @@ def derive_value(case: dict) -> dict:
     except JsonReject:
         return {"outcome": "reject", "error": "malformed-json"}
     try:
+        check_type_table(types, "type")  # R108: the whole table, before the type or any value is read
         ty = parse_type(case["type"], types)
     except Refused as r:
         return {"outcome": "reject", "error": r.code}
@@ -661,20 +786,125 @@ def reached_levels(case: dict, trees: list, models: list[str], ops: list[str]) -
     """
     found: set[str] = set()
     for ir in trees:
-        found |= set(L.ir_levels(ir, follow=False)) if is_node(ir) else set()
-    texts = [(tagged["type"], frozenset()) for _name, tagged in case["env"]]
+        found |= known_levels([ir])  # not ``ir_levels``: it raises on the tag ``list`` (R57) and on an unknown tag
+    texts = [(tagged["type"], frozenset(), False) for _name, tagged in case["env"]]
     for name in models:
-        texts += [(t, frozenset()) for _, t in case["models"][name]["params"]]
+        # [D75]: a model parameter may be ``Int`` (nothing else may), so its level is read with ``allow_int``.
+        texts += [(t, frozenset(), True) for _, t in case["models"][name]["params"]]
     for name in ops:
         row = case["ops"][name]
         widths = frozenset(row.get("width_params", ()))
-        texts += [(t, widths) for _, t in [*row["params"], ("ret", row["ret"])]]
-    for text, widths in texts:
+        texts += [(t, widths, False) for _, t in [*row["params"], ("ret", row["ret"])]]
+    for text, widths, int_ok in texts:
         try:
-            found |= type_levels(parse_type(text, case["types"], widths=widths), case["types"])
+            found |= type_levels(parse_type(text, case["types"], allow_int=int_ok, widths=widths), case["types"])
         except Refused:
             continue
     return found
+
+
+MAX_IR_NESTING = 64  # section 14: an expression nested more than 64 deep is ``depth`` (root = level 1)
+
+
+def too_deep(ir: object) -> bool:
+    """Is the tree nested more than 64 deep (section 14; R119 (a))?  The root is level 1, so 64 levels are accepted.
+
+    A walk by tag shape alone (:func:`.irtree.children`), iterative, so a hostile tree cannot make it recurse and a
+    tree that is ill-typed or holds an unknown tag still has a depth: it is what lets ``depth`` come before the typing
+    in ``v2-fault`` (R119 (c)).  A malformed node has no children here; the compile names it.
+    """
+    stack = [(ir, 1)]
+    while stack:
+        node, level = stack.pop()
+        if not is_node(node):
+            continue
+        if level > MAX_IR_NESTING:
+            return True
+        try:
+            stack.extend((c, level + 1) for c in children(node))
+        except (IndexError, TypeError, OracleError):
+            continue
+    return False
+
+
+def tag_level_of(tag: str) -> str | None:
+    """:func:`.levels.tag_level`, plus the tag ``list`` as ``ir.list`` (section 16.16 R57).
+
+    A tree with the tag ``list`` is refused by an IR reader as the level ``ir.list``, never as an unknown tag, so it is
+    ``level-missing`` where ``ir.list`` is not in ``levels``.  (The ``ir.seq`` names are in ``tag_level`` already.)
+    """
+    return L.LIST if tag in L.LIST_TAGS else L.tag_level(tag)
+
+
+def known_levels(trees: list) -> set[str]:
+    """The levels of the tags of ``trees`` that a defined level owns (R119 (d)): it levels only the tags it knows.
+
+    :func:`.levels.ir_levels` raises on an unknown tag; this skips it (the tag is ``unknown-tag``, which is decided
+    after the levels in ``v2-fault``).  A ``match`` is ``ir.tuple``, and ``ir.data`` too when a pattern of it is a
+    data pattern, as ``ir_levels`` reads it.  A model is not followed.
+    """
+    found: set[str] = set()
+    for ir in trees:
+        for node in _nodes(ir):
+            if node[0] == "match":
+                found.add(L.TUPLE)
+                try:
+                    if any(L.has_data_pattern(pattern) for pattern, _body in match_arms(node)):
+                        found.add(L.DATA)
+                except OracleError:
+                    pass  # a malformed match: the compile names it
+                continue
+            level = tag_level_of(node[0])
+            if level is not None:
+                found.add(level)
+    return found
+
+
+def _first_unknown_tag(trees: list) -> str | None:
+    """The first tag of no level this document defines, wherever it stands (section 4.2 rule 7), or ``None``."""
+    for ir in trees:
+        for node in _nodes(ir):
+            if node[0] != "match" and tag_level_of(node[0]) is None:
+                return node[0]
+    return None
+
+
+def fault_static_refusal(trees: list) -> Refused | None:
+    """The three static codes [D77] adds to ``v2-fault``, in no pinned order among themselves (R119 (c)).
+
+    ``unknown-tag`` (a tag of no defined level), ``depth`` (nested more than 64 deep; the ``model_call`` frame limit
+    cannot occur) and ``model-order`` (a ``v2-fault`` case has no ``models``, so every ``model_call`` names a model
+    that is missing from ``models`` and ``model_order``).  ``trees`` are the row's expressions.  The checks read tag
+    names and shape only, so they hold for an expression that is ill-typed too, which is why they come before the
+    typing of the row.  This is the part of :func:`static_refusal` and :func:`classify_ir_refusal` a fault row needs,
+    over its own trees and without the ``v2-ir`` case's ``models``.
+    """
+    tag = _first_unknown_tag(trees)
+    if tag is not None:
+        return Refused("unknown-tag", tag)
+    if any(too_deep(t) for t in trees):
+        return Refused("depth", "an expression nested more than 64 deep")
+    for ir in trees:
+        for node in _nodes(ir):
+            if node[0] == "model_call":
+                return Refused("model-order", str(node[1]) if len(node) > 1 else "")
+    return None
+
+
+def stand_in_reach(case: dict, trees: list, models: list[str], ops: list[str]) -> tuple[list, list[str], list[str]]:
+    """``(trees, models, ops)`` with ``trees`` and ``models`` extended with the stand-ins of the ops ``ir`` reaches and what they call (R100).
+
+    A stand-in that ``subjects`` binds to a reached op is reached **for ``requires``** (a lane cannot run the case
+    without compiling it); one bound to an op nothing reaches is never run and counts for nothing.  It is *not*
+    reached for ``level-missing`` (:func:`static_refusal` reads :func:`reach` alone): a stand-in never causes it.
+    """
+    roots = [case["subjects"][op] for op in ops if case["subjects"].get(op) in case["models"]]
+    names = list(models)
+    for name in roots:
+        for n in [name, *sorted(_closure(case, [case["models"][name]["body"]]))]:
+            if n not in names:
+                names.append(n)
+    return [case["ir"], *(case["models"][n]["body"] for n in names)], names, ops
 
 
 def static_refusal(case: dict) -> Refused | None:
@@ -701,13 +931,13 @@ def static_refusal(case: dict) -> Refused | None:
     for _owner, ir in bodies:
         for node in _nodes(ir):
             tag = node[0]
-            if tag != "match" and L.tag_level(tag) is None:
+            if tag != "match" and tag_level_of(tag) is None:
                 return Refused("unknown-tag", tag)
     trees, models, ops = reach(case)
     for ir in trees:
         for node in _nodes(ir):
             tag = node[0]
-            level = L.TUPLE if tag == "match" else L.tag_level(tag)
+            level = L.TUPLE if tag == "match" else tag_level_of(tag)
             if level not in levels:
                 return Refused("level-missing", tag)
     for level in sorted(reached_levels(case, trees, models, ops) - levels):
@@ -782,7 +1012,11 @@ class IrCase:
 def _ops(case: dict) -> dict:
     out = {}
     for name, row in case["ops"].items():
-        out[name] = op_sig(name, row, case["types"])
+        try:
+            out[name] = op_sig(name, row, case["types"])
+        except OpRowShape as exc:
+            # a malformed op row is part of the table's typing, as the lanes read it: ``ill-typed`` (R122)
+            raise Refused("type", str(exc)) from exc
     return out
 
 
@@ -791,21 +1025,95 @@ def order_of(case: dict) -> list[str]:
     return [n for n in case["model_order"] if n in case["models"]]
 
 
+def _closure(case: dict, roots: list) -> set[str]:
+    """The models a set of trees (or model names) calls, directly or through other models, each once (R124).
+
+    ``roots`` holds IR trees; a ``model_call`` to a name in ``models`` is followed into that model's body.
+    """
+    seen: set[str] = set()
+    trees = list(roots)
+    i = 0
+    while i < len(trees):
+        for node in _nodes(trees[i]):
+            callee = node[1] if node[0] == "model_call" and len(node) > 1 else None
+            if isinstance(callee, str) and callee in case["models"] and callee not in seen:
+                seen.add(callee)
+                trees.append(case["models"][callee]["body"])
+        i += 1
+    return seen
+
+
+def _uncompiled_models(case: dict, params: dict) -> set[str]:
+    """The models the oracle leaves uncompiled (R124; section 16.18 R69 (c) tier 2, R101).
+
+    A model that ``ir`` does not reach (nor the stand-in of an op it reaches, R100) and that
+    needs a level outside the case's ``levels``, through its own parameter types or tags or through a model it calls,
+    is not typed and not costed: a lane at those ``levels`` returns the value, so the oracle may not derive
+    ``level-missing``, ``ill-typed`` or ``ir-cost`` from it.  ``params`` maps a model name to its parsed parameter
+    types.  The checks that read tag names alone still apply to it (:func:`static_refusal`, :func:`_check_skipped`).
+    """
+    levels = set(case["levels"])
+    # R100: a stand-in bound to a reached op is reached; one bound to an op nothing reaches counts for nothing.
+    reached = set(stand_in_reach(case, *reach(case))[1])
+    out: set[str] = set()
+    for name in case["model_order"]:
+        if name not in case["models"] or name in reached:
+            continue
+        family = {name, *_closure(case, [case["models"][name]["body"]])}
+        needs = known_levels([case["models"][m]["body"] for m in family])
+        for m in family:
+            for ty in params.get(m, ()):
+                needs |= type_levels(ty, case["types"])
+        if needs - levels:
+            out.add(name)
+    return out
+
+
+def _check_skipped(case: dict, skipped: set[str]) -> None:
+    """Tier 2's tag-name checks for a model the oracle does not compile: the expression depth and the chain depth.
+
+    ``unknown-tag``, ``subject-forbidden`` and ``model-order`` are :func:`static_refusal`'s, over every body.  The
+    expression depth of the body (more than 64 levels) and the chain depth of R77 (a model is 1 plus the deepest model
+    its body calls, over 64 frames is ``depth``, whether or not anything calls it) are decided here from the tags alone.
+    """
+    chain: dict[str, int] = {}
+    for name in case["model_order"]:
+        if name not in case["models"]:
+            continue
+        body = case["models"][name]["body"]
+        callees = {n[1] for n in _nodes(body) if n[0] == "model_call" and len(n) > 1}
+        chain[name] = 1 + max((chain.get(c, 0) for c in callees if isinstance(c, str)), default=0)
+        if name in skipped and (too_deep(body) or chain[name] > E.MAX_MODEL_DEPTH):
+            raise Refused("depth", f"the model {name!r} nests deeper than 64")
+
+
 def _models(case: dict, ops: dict, max_cost: int) -> E.Program:
     """The program of the case's models, built in ``model_order``.
 
     A corpus model row is ``{"params", "body"}``: there is no declared return type, so a model's
     return type is the type of its body.  Each model is compiled as soon as it is added, so a static
-    error in a body is found here, and a model that calls a later one cannot be built.
+    error in a body is found here, and a model that calls a later one cannot be built.  A model that ``ir`` does not
+    reach and that needs a level outside ``levels`` is not compiled (R124); its parameter types are still read.
     """
     errors = {n: tuple(row["cases"]) for n, row in case["types"].items() if row.get("kind") == "error"}
     # ``ir.data`` is evaluated only for a case that declares it (slice S11c-1 opened it in the evaluator; S11a's
     # evaluator refused it for every case).  A case that does not is refused by the level, as before.
     data = L.DATA in set(case["levels"])
+    # [D75] (VER04r 16.22): a model parameter may have the type ``Int`` (and, R111 (c), ``Int`` under ``Option``,
+    # ``Result``, a tuple or ``List``); an op row, an ``env`` entry, a field and every value still refuse it.  Every
+    # model's parameters are read, compiled or not: a name the table does not declare is ``ill-typed`` either way.
+    parsed = {
+        name: [(p, parse_type(t, case["types"], allow_int=True)) for p, t in case["models"][name]["params"]]
+        for name in case["model_order"]
+    }
+    skipped = _uncompiled_models(case, {n: [t for _, t in ps] for n, ps in parsed.items()})
+    _check_skipped(case, skipped)
     defs: dict = {}
     for name in case["model_order"]:
+        if name in skipped:
+            continue
         row = case["models"][name]
-        params = [(p, parse_type(t, case["types"])) for p, t in row["params"]]
+        params = parsed[name]
         probe = E.Program(dict(defs), ops, max_cost=max_cost, errors=errors, analyze_data=data)
         ret = probe.compile(row["body"], dict(params), False).ty
         defs[name] = E.ModelDef(name, params, ret, row["body"])
@@ -814,7 +1122,7 @@ def _models(case: dict, ops: dict, max_cost: int) -> E.Program:
     # body as an expression, so it never computed the depth of the model itself.  The depth of a model is 1 plus
     # the largest depth of a model its body calls, and over 64 is refused for a chain nothing calls too (the
     # oracle counted frames from the caller before S5e, so it accepted 65 uncalled models and refused 66).
-    for name in order_of(case):
+    for name in defs:
         prog.model(name)
     return prog
 
@@ -831,6 +1139,10 @@ def _rewrite_subjects(ir: object, subjects: dict) -> object:
         return ["model_call", ir[1], [_rewrite_subjects(a, subjects) for a in ir[2]]]
     if ir[0] == "tuple":
         return ["tuple", [_rewrite_subjects(a, subjects) for a in ir[1]]]
+    if ir[0] == "match":
+        # S10d: the arms are ``[pattern, body]`` pairs and not nodes, so the generic walk below would leave a subject call
+        # in an arm body unrewritten.  A pattern holds no expression; each body is rewritten, the scrutinee too.
+        return ["match", _rewrite_subjects(ir[1], subjects), [[pat, _rewrite_subjects(body, subjects)] for pat, body in ir[2]]]
     return [ir[0], *(_rewrite_subjects(c, subjects) if isinstance(c, list) else c for c in ir[1:])]
 
 
@@ -844,7 +1156,26 @@ def calls_for(prog: E.Program, ir: object, tenv: dict) -> object:
 
 
 def compile_ir_case(case: dict) -> IrCase:
-    """Decode, type and compile a ``v2-ir`` case, or raise :class:`Refused` with the kit's static code."""
+    """Decode, type and compile a ``v2-ir`` case, or raise :class:`Refused` with the kit's static code.
+
+    The order is R115 (b)'s as R122 (b) extends it: the bound on ``max_ir_cost`` (one integer of the case, no table
+    needed), then the ``types`` table, read whole (R108, R117: a recursive record or variant, a repeated name, an
+    undeclared or error field type is ``ill-typed`` whether or not the case reaches it), then the signature of every
+    op in ``ops`` (a type text the reader refuses is ``ill-typed``, reached or not), then the type of every ``env``
+    entry (R120), then everything else.  An op signature that needs a level the case lacks is no defect of the row:
+    ``level-missing``, scoped by reach.  A model's signature is left open (R122 (c)).
+    """
+    max_cost = case.get("max_ir_cost", E.MAX_IR_COST)
+    if type(max_cost) is not int or not E.MAX_IR_COST <= max_cost <= 65_536:
+        raise Refused("ir-cost", "max_ir_cost outside 2,000..=65,536")
+    check_type_table(case["types"], "ill-typed")
+    try:
+        ops = _ops(case)
+    except Refused as exc:
+        # R111 (c), R122: an op row whose type text the reader refuses (``Int``, an error type, an undeclared name) is
+        # ``ill-typed``; ``type`` is not in the closed set of ``v2-ir``.
+        raise Refused("ill-typed", exc.why) from exc  # ``parse_type`` is the only refuser here: code ``type``
+    env_types = _env_types(case)
     pre = static_refusal(case)
     if pre is not None:
         raise pre
@@ -852,21 +1183,58 @@ def compile_ir_case(case: dict) -> IrCase:
     if pre is not None:
         raise pre
     levels = set(case["levels"])
-    max_cost = case.get("max_ir_cost", E.MAX_IR_COST)
-    if type(max_cost) is not int or not E.MAX_IR_COST <= max_cost <= 65_536:
-        raise Refused("ir-cost", "max_ir_cost outside 2,000..=65,536")
+    # R100: a stand-in never causes ``level-missing``; a row whose stand-in (of a reached op) needs a level outside
+    # ``levels`` is not a case, so the kit build fails.
+    short = reached_levels(case, *stand_in_reach(case, *reach(case))) - levels
+    if short:
+        raise KitError(f"a stand-in needs {sorted(short)}, outside the case's levels (R100)")
     try:
-        ops = _ops(case)
-        prog = _models(case, ops, max_cost)
+        try:
+            prog = _models(case, ops, max_cost)
+        except Refused as exc:
+            # R111 (c): a model parameter whose type text the reader refuses (an undeclared name) is ``ill-typed``;
+            # any other code (the ``depth`` of a skipped model, R124) is the kit's already.
+            if exc.code != "type":
+                raise
+            raise Refused("ill-typed", exc.why) from exc
         env, tenv = {}, {}
-        for name, tagged in case["env"]:
-            ty = parse_type(tagged["type"], case["types"])
+        for (name, tagged), ty in zip(case["env"], env_types):
             tenv[name] = ty
-            env[name] = decode_value(tagged["value"], ty, case["types"])
+            try:
+                env[name] = decode_value(tagged["value"], ty, case["types"])
+            except Refused as exc:
+                # R120 (b): a ``value`` that does not decode as its type breaks the case's own schema (R45): a kit
+                # error, never a vector (``value`` is outside the closed set of ``v2-ir``).
+                raise KitError(f"an env value does not decode as {ty}: {exc.why}") from exc
         root = prog.compile(case["ir"], tenv, True)
     except OracleError as exc:
         raise classify_ir_refusal(exc, levels) from exc
     return IrCase(prog, tenv, env, root, case["ir"], case["subjects"])
+
+
+def _env_types(case: dict) -> list[A.Ty]:
+    """The parsed type of every ``env`` entry, or ``ill-typed`` (R120; sections 2.1 and 11).
+
+    The type of an entry is part of the case's typing, as a ``lit``'s written type is, and ``v2-ir`` has no ``type``
+    code: **any** refusal of the type text (``Int``, an error type, an undeclared name, ``Result<U8,Q>`` with ``Q``
+    a record, ``Bytes<07>``) is ``ill-typed``.  An entry that is not ``[name, {"type": text, "value": V}]`` breaks
+    the case's own schema and is a kit error (R45), as is a ``value`` that does not decode as its type.
+    """
+    out = []
+    for entry in case["env"]:
+        try:
+            name, tagged = entry
+            text = tagged["type"]
+            tagged["value"]
+        except (TypeError, ValueError, KeyError):
+            raise KitError("an env entry is [name, {\"type\": text, \"value\": V}] (R120)") from None
+        if not isinstance(name, str) or not isinstance(text, str):
+            raise KitError("an env entry has a text name and a text type (R120)")
+        try:
+            out.append(parse_type(text, case["types"]))
+        except Refused as exc:
+            raise Refused("ill-typed", exc.why) from exc
+    return out
 
 
 def _undetermined(ty: A.Ty) -> bool:
@@ -894,9 +1262,10 @@ def derive_ir(case: dict) -> dict:
     except OracleError as exc:
         return {"error": classify_ir_refusal(exc, levels).code}
     ops = built.prog.ops
+    reached_ops = reach(case)[2]
     for op, model in built.subjects.items():
-        if op not in ops:
-            continue
+        if op not in ops or op not in reached_ops:
+            continue  # R100: a stand-in of an op nothing reaches is never run
         stand_in = built.prog.models.get(model)
         # R70: a model has no width_params, so the stand-in has plain Bytes in place of each named-width type.
         want = ([unstated(t) for _, t in ops[op].params], unstated(ops[op].ret))
@@ -1096,23 +1465,61 @@ MAX_SUITE_PRODUCT = 1 << 28  # section 14: ``MAX_SUITE_PRODUCT``
 
 
 def _check_errs(d: dict, ty: A.Ty, types: dict) -> None:
-    """R72: a ``result`` descriptor's ``errs`` equals the declared ``cases`` of its binder type's error type.
+    """R72, R103: a binder descriptor is one *for* its type and agrees with the ``types`` table, node by node.
 
-    ``d`` and ``ty`` are walked together through ``result``, ``option``, ``list`` and ``tuple`` (a variant's
-    fields have no type here).  Equality is of the two lists, order included.  A mismatch raises
-    :class:`Refused` ``("corpus")``; a descriptor that is not one for the type is the caller's to refuse.
+    ``d`` and ``ty`` are walked together.  Every node must be of the kind the type needs (a ``result`` for a
+    ``Result``, an ``option`` for an ``Option``, a ``list`` for a ``List``, a ``tuple`` for a tuple or a record, a
+    ``variant`` for a variant, a leaf for its own type); a ``result``'s ``errs`` equals the declared ``cases`` of its
+    error type, order included (R72); a ``tuple`` has exactly the component count of a tuple type or the field count
+    of a record, and a ``variant``'s constructors equal the declared ones (names, order, field counts; R103), their
+    fields walked against the declared field types.  Anything else, and a ``types`` row that is malformed, raises
+    :class:`Refused` ``("corpus")``.
     """
-    kind = d.get("d") if isinstance(d, dict) else None
-    if kind == "result" and ty.head == "Result":
-        row = types.get(ty.args[1].head, {})
-        if row.get("kind") != "error" or d["errs"] != row["cases"]:
-            raise Refused("corpus", "errs differs from the declared cases of the error type (R72)")
-        _check_errs(d["ok"], ty.args[0], types)
-    elif kind in ("option", "list") and ty.head in ("Option", "List"):
-        _check_errs(d["of"], ty.args[0], types)
-    elif kind == "tuple" and ty.head == "()" and len(d["of"]) == len(ty.args):
-        for part, sub in zip(d["of"], ty.args):
-            _check_errs(part, sub, types)
+    try:
+        _walk_descriptor(d, ty, types)
+    except (KeyError, IndexError, TypeError, ValueError, AttributeError) as exc:
+        raise Refused("corpus", "a binder descriptor or its types row is malformed") from exc
+
+
+def _walk_descriptor(d: dict, ty: A.Ty, types: dict) -> None:
+    def bad(why: str) -> None:
+        raise Refused("corpus", why)
+
+    kind = d["d"]
+    row = types.get(ty.head, {})
+    if kind == "result":
+        if ty.head != "Result":
+            bad("a result descriptor for a type that is not a Result")
+        err = types.get(ty.args[1].head, {})
+        if err.get("kind") != "error" or d["errs"] != err["cases"]:
+            bad("errs differs from the declared cases of the error type (R72)")
+        _walk_descriptor(d["ok"], ty.args[0], types)
+    elif kind in ("option", "list"):
+        if ty.head != kind.capitalize():
+            bad(f"a {kind} descriptor for a type that is not a {kind.capitalize()}")
+        _walk_descriptor(d["of"], ty.args[0], types)
+    elif kind == "tuple":
+        if ty.head == "()":
+            parts = list(ty.args)
+        elif row.get("kind") == "record":
+            parts = [parse_type(text, types) for _, text in row["fields"]]
+        else:
+            bad("a tuple descriptor for a type that is neither a tuple nor a record")
+        if len(d["of"]) != len(parts):
+            bad("a tuple descriptor's arity is not the component or field count of its type (R103)")
+        for part, sub in zip(d["of"], parts):
+            _walk_descriptor(part, sub, types)
+    elif kind == "variant":
+        if row.get("kind") != "variant":
+            bad("a variant descriptor for a type that is not a declared variant")
+        declared = [(name, list(texts)) for name, texts in row["ctors"]]
+        if [(c[0], len(c[1])) for c in d["ctors"]] != [(n, len(t)) for n, t in declared]:
+            bad("ctors differs from the declared constructors of the variant (R103)")
+        for (_, fields), (_, texts) in zip(d["ctors"], declared):
+            for part, text in zip(fields, texts):
+                _walk_descriptor(part, parse_type(text, types), types)
+    elif not _fits(d, ty):
+        bad("a descriptor that is not one for the binder type")
 
 
 def row_keys(row: dict) -> frozenset:
@@ -1138,6 +1545,102 @@ def advance_admitted(running: int, line_cases: int, chunk_size: int) -> int:
     return running + line_cases
 
 
+#: The levels the oracle implements (a ``v2-chunk`` corpus part has no ``levels``; its reader is the oracle's).
+ORACLE_LEVELS = (L.CORE, L.FIXED, L.TUPLE, L.DATA)
+
+
+def check_corpus_ops_models(corpus: dict, row: object = None) -> None:
+    """R125 (VER04r 16.23): read ``corpus.ops``, ``corpus.models`` and ``model_order`` as a lane's corpus reader does.
+
+    Each defect is ``corpus`` (the code of the context, R117 (c)):
+
+    * ``ops`` or ``models`` that is not an object; an op row that is not ``{"params", "ret"}`` or whose parameter or
+      result type text the reader refuses (``Int``, an error type outside ``Result``, an undeclared name,
+      ``Result<U8,Q>``, ``U8<``); a model row that is not ``{"params", "body"}``; a model parameter that names an error
+      type or an undeclared name (``Int``, ``Option<Int>`` and ``(Int,Bool)`` are accepted, [D75]);
+    * a ``model_order`` that is not a list of distinct names of ``models``, or that omits a model;
+    * what section 16.18 R69 lets a reader check of a model **whatever** its level (tier 2): an unknown tag, a
+      ``subject_op`` in a body (section 4.2 rule 3), a ``model_call`` to a missing model or not to an earlier one, a
+      body nested over 64 deep and a chain of more than 64 frames;
+    * for a model whose types and tags lie inside the suite row's ``requires`` plus ``ir.core`` (tier 1: compiled in
+      full, called or not): a body that is ill-typed, over the cost bound, an ``err`` of an undeclared case, or whose
+      parameters name what the table does not declare.
+
+    Any other model gets the tier-2 checks only (R124); if the oracle can compile it and it then fails typing or cost,
+    the outcome would depend on the lane's levels and the row is a :class:`KitError` (R101).  The corpus
+    part is read as a ``v2-ir`` case with the tree ``["lit", true]``, which is what the shared helpers take.  A *suite*
+    that needs a missing level is ``not-live`` (R127), which is not this reader's.
+    """
+
+    def bad(why: str) -> Refused:
+        return Refused("corpus", why)
+
+    types, ops, models, order = corpus["types"], corpus["ops"], corpus["models"], corpus["model_order"]
+    if not isinstance(ops, dict) or not isinstance(models, dict):
+        raise bad("ops and models are objects (R125)")
+    if not isinstance(order, list) or not all(isinstance(n, str) and n in models for n in order):
+        raise bad("model_order is a list of names of models (R125)")
+    if len(set(order)) != len(order) or set(order) != set(models):
+        raise bad("model_order names each model once (R125)")
+    for mrow in models.values():
+        if (
+            not isinstance(mrow, dict)
+            or "body" not in mrow
+            or not isinstance(mrow.get("params"), list)
+            or not all(isinstance(p, list) and len(p) == 2 and isinstance(p[0], str) for p in mrow["params"])
+        ):
+            raise bad("a model row is {params, body} (R125)")
+    cost = corpus["max_ir_cost"]
+    suite_levels = {L.CORE}
+    if isinstance(row, dict) and isinstance(row.get("requires"), list):
+        suite_levels |= {r for r in row["requires"] if isinstance(r, str)}
+
+    def case_at(levels) -> dict:
+        return {
+            "levels": sorted(levels),
+            "ir": ["lit", True],
+            "env": [],
+            "types": types,
+            "models": models,
+            "model_order": order,
+            "ops": ops,
+            "subjects": {},
+            "max_ir_cost": cost if type(cost) is int and 2000 <= cost <= 65_536 else 2000,
+        }
+
+    def compiled(levels) -> set[str]:
+        """The models compiled in full at ``levels`` (tier 1); the others got the tier-2 checks only."""
+        case = case_at(levels)
+        refusal = static_refusal(case)
+        if refusal is not None:
+            raise bad(f"a model is refused: {refusal.code} (R125)")
+        prog = _models(case, _ops(case), case["max_ir_cost"])
+        names = [n for n in order if n in prog.models]
+        # R41: an ``err`` whose case no error type declares is ``ill-typed`` in every compiled model
+        refusal = undeclared_err_case({**case, "models": {n: models[n] for n in names}, "model_order": names})
+        if refusal is not None:
+            raise bad(f"a model is refused: {refusal.code} (R125)")
+        return set(names)
+
+    try:
+        # Tier 1 and tier 2 at the suite row's levels (R69 c, R124): a model whose types and tags lie inside
+        # ``requires`` (plus ``ir.core``) is compiled in full, any other gets the tag-name checks only.
+        compiled(suite_levels)
+    except Refused as exc:
+        raise bad(f"an op or model the reader refuses (R125): {exc.code}: {exc.why}") from exc
+    except OracleError as exc:
+        raise bad(f"a model body the reader refuses (R125): {exc.code}: {exc.message}") from exc
+    except (KeyError, IndexError, TypeError, ValueError, AttributeError):
+        raise bad("an op row or a model row is malformed (R125)") from None
+    # R101: a model beyond ``requires`` that the oracle can compile but that fails typing or cost would make the outcome
+    # depend on the lane's levels (a lane that has the level refuses it, one that lacks it accepts), so the row is not
+    # a case: a kit error, never ``corpus`` and never a silent accept.  One beyond the oracle's own levels is not compiled.
+    try:
+        compiled(ORACLE_LEVELS)
+    except (Refused, OracleError) as exc:
+        raise KitError(f"a chunk corpus model beyond the suite's requires fails at the oracle's levels (R101): {exc}") from exc
+
+
 def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[int, int]:
     """Validate the ``corpus`` and ``suite`` fields of a ``v2-chunk`` case: ``(m, chunk_size)`` or ``corpus``.
 
@@ -1147,6 +1650,8 @@ def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[in
     """
     if not isinstance(corpus, dict) or set(corpus) != CHUNK_CORPUS_KEYS:
         raise Refused("corpus", "the corpus part has the wrong keys")
+    check_type_table(corpus["types"], "corpus")  # R108, before any descriptor is read
+    check_corpus_ops_models(corpus, row)  # R125: ops, models and model_order, read with the table they refer to
     size = schema_index(corpus["chunk_size"], "chunk_size")
     if size & (size - 1) or not (1 << 10) <= size <= (1 << 16):
         raise Refused("corpus", "chunk_size is a power of two in 2^10..2^16")
@@ -1199,7 +1704,8 @@ def check_chunk_file(data: bytes, row: dict, m: int, chunk_size: int) -> list[tu
     One line per chunk, exactly ``m`` of them, ``<c> <cases> <first_admitted> <calls> <inputs_hex>
     [<expected_hex>]`` with single spaces, canonical decimals, 64-digit lowercase hex and LF; the chunk
     index in sequence; ``first_admitted`` the running prefix sum of ``cases`` (:func:`advance_admitted`);
-    ``sum(cases)`` the row's ``cases`` and ``discarded`` the rest of the product; ``chunks_sha256`` the
+    ``sum(cases)`` the row's ``cases`` and ``discarded`` the rest of the product; ``sum(calls)`` the row's
+    ``expected_calls`` ([D73], section 16.21: the per-chunk digests do not cover ``calls``); ``chunks_sha256`` the
     file's digest; the two suite digests the framing of the per-chunk digests.  The expected digest is
     present exactly when the suite is a ``reference`` suite.
     """
@@ -1216,11 +1722,13 @@ def check_chunk_file(data: bytes, row: dict, m: int, chunk_size: int) -> list[tu
     reference = row["oracle"]["kind"] == "reference"
     out: list[tuple] = []
     running = 0
+    calls_total = 0
     for index, line in enumerate(lines):
         hit = _LINE.fullmatch(line)
         if not hit or (hit.group(6) is not None) != reference:
             raise bad("a line breaks the grammar of section 5.5")
         c, cases, first, calls = (int(hit.group(i)) for i in range(1, 5))
+        calls_total += calls
         if c != index:
             raise bad("a chunk index out of sequence")
         if first != running:
@@ -1229,6 +1737,8 @@ def check_chunk_file(data: bytes, row: dict, m: int, chunk_size: int) -> list[tu
         out.append((c, cases, first, calls, hit.group(5), hit.group(6)))
     if running != row["cases"] or row["discarded"] != row["product"] - running:
         raise bad("the cases do not sum to the row's cases")
+    if calls_total != row["expected_calls"]:
+        raise bad("the calls do not sum to the row's expected_calls (D73)")
     framed = S.chunk_digest_framing([bytes.fromhex(t[4]) for t in out])
     if framed != row["inputs_sha256"]:
         raise bad("inputs_sha256 is not the framing of the chunk digests")
@@ -1333,8 +1843,30 @@ def post_value(fault: dict, fn, penv: dict) -> object:
     return fn(penv)
 
 
+class OpRowShape(ValueError):
+    """An op row that is not the section 6 shape (``params``: ``[name, type]`` pairs, ``ret``, optional lists)."""
+
+
+def check_op_row_shape(row: object) -> None:
+    """Raise :class:`OpRowShape` unless ``row`` is an object with ``params`` (pairs of a name and a text), ``ret``
+    and, if present, ``width_params`` (a list of names).  The *type texts* are :func:`parse_type`'s to refuse."""
+    if not isinstance(row, dict) or not isinstance(row.get("params"), list) or "ret" not in row:
+        raise OpRowShape("an op row is {params, ret}")
+    if not all(isinstance(p, list) and len(p) == 2 and isinstance(p[0], str) for p in row["params"]):
+        raise OpRowShape("an op parameter is [name, type]")
+    if not isinstance(row["ret"], str) or not all(isinstance(p[1], str) for p in row["params"]):
+        raise OpRowShape("a type is text")
+    widths = row.get("width_params", [])
+    if not isinstance(widths, list) or not all(isinstance(w, str) for w in widths):
+        raise OpRowShape("width_params is a list of names")
+
+
 def op_sig(name: str, row: dict, types: dict) -> OpSig:
-    """The section 6 op row as an :class:`.lower.OpSig` (the row itself carries no name)."""
+    """The section 6 op row as an :class:`.lower.OpSig` (the row itself carries no name).
+
+    A row that is not of the section 6 shape raises :class:`OpRowShape`.
+    """
+    check_op_row_shape(row)
     statics = tuple(row.get("width_params", ()))
     widths = frozenset(statics)
     params = [(p, parse_type(t, types, widths=widths)) for p, t in row["params"]]
@@ -1348,11 +1880,28 @@ def instantiate_fault(name: str, op_name: str, op_row: dict, types: dict) -> dic
     the fields of its records, so ``field-zero`` and a record or ``Option`` payload of ``missing-error`` have their
     templates here as in a document.
     """
-    errors = {n: tuple(row["cases"]) for n, row in types.items() if row.get("kind") == "error"}
-    data_names = frozenset(n for n, row in types.items() if row.get("kind") in ("record", "variant"))
-    return fault_row(
-        op_sig(op_name, op_row, types), name, errors, data_names, dict(_encoder_spec(types).records)
-    )
+    if not isinstance(types, dict):
+        raise Refused("ill-typed", "the types table is not an object")
+    # A malformed row (not an object, an error row without ``cases``) offers a template nothing: it is a *case*
+    # that ``derive_fault`` answers ``ill-typed``, never a crash of this builder.
+    rows = {n: row for n, row in types.items() if isinstance(row, dict)}
+    errors = {
+        n: tuple(row["cases"])
+        for n, row in rows.items()
+        if row.get("kind") == "error" and isinstance(row.get("cases"), list)
+    }
+    data_names = frozenset(n for n, row in rows.items() if row.get("kind") in ("record", "variant"))
+    # A table with an undeclared field type is a *case* ([D74], R110: ``derive_fault`` answers ``ill-typed``), so the
+    # row is still written: a record that holds such a field has no template fields to offer (the table check, not
+    # this builder, is what refuses it).
+    records: dict = {}
+    for rname, row in rows.items():
+        if row.get("kind") == "record":
+            try:
+                records[rname] = [(f, parse_type(t, types)) for f, t in row["fields"]]
+            except (Refused, KeyError, IndexError, TypeError, ValueError):
+                continue
+    return fault_row(op_sig(op_name, op_row, types), name, errors, data_names, records)
 
 
 def fault_levels(fault: dict, op: OpSig) -> set[str]:
@@ -1364,7 +1913,9 @@ def fault_levels(fault: dict, op: OpSig) -> set[str]:
     ``drop-last-result-byte``, section 8.2).  :func:`derive_fault` checks that.
     """
     trees = [r["expr"] for r in fault["rewrites"]] if fault["kind"] == "pre" else [fault["expr"]]
-    needs = set(L.ir_levels(trees, follow=False))
+    # R119 (d): only the tags a defined level owns are levelled (:func:`known_levels`), not through ``ir_levels``, which
+    # raises on an unknown tag: ``unknown-tag`` is decided after ``level-missing`` in ``v2-fault``.
+    needs = known_levels(trees)
     for _, ty in [*op.params, ("result", op.ret)]:
         needs |= type_levels(ty)
     return needs
@@ -1381,26 +1932,101 @@ def unstated(ty: A.Ty) -> A.Ty:
     return A.Ty(ty.head, tuple(unstated(a) if isinstance(a, A.Ty) else a for a in ty.args))
 
 
+FAULT_KINDS = ("pre", "post", "replace")
+DEFINED_LEVELS = frozenset({L.CORE, L.FIXED, L.TUPLE, L.DATA, L.LIST, L.SEQ})
+
+
+def check_fault_row(fault: object, op_row: object) -> None:
+    """R126 (VER04r 16.23; section 8.1; section 4.2 rule 7): a malformed fault row is a **kit error**, with no code.
+
+    The row is a field of the case and section 8.1 gives it as a closed object of one of three kinds: ``fault``
+    and ``op`` (names), ``kind`` (``pre``, ``post`` or ``replace``), ``requires`` (a list of defined level names) and
+    ``rewrites`` (``pre``: one or more ``{"param", "expr"}``, each ``param`` a parameter of the op and none twice) or
+    ``expr`` (``post``, ``replace``).  A case whose ``fault`` is not one breaks its own schema, which R45 (f) keeps out
+    of the kit for good, so it raises :class:`KitError` and is never a vector.  An undefined level name in
+    ``requires`` is the same (a corpus error in a corpus, a schema break in a kit case).  It is read before the table:
+    :func:`derive_fault` *returns* ``ill-typed`` for a bad table, and a case with both defects would otherwise be
+    written as a vector that a lane fails or passes by accident.
+    """
+
+    def bad(why: str) -> KitError:
+        return KitError(f"a fault row breaks section 8.1 (R126): {why}")
+
+    if not isinstance(fault, dict):
+        raise bad("it is not an object")
+    kind = fault.get("kind")
+    if not isinstance(kind, str) or kind not in FAULT_KINDS:
+        raise bad("kind is pre, post or replace")
+    if set(fault) != {"fault", "op", "kind", "requires", "rewrites" if kind == "pre" else "expr"}:
+        raise bad("an extra or a missing key")
+    if not isinstance(fault["fault"], str) or not isinstance(fault["op"], str) or not _NAME.fullmatch(fault["op"]):
+        raise bad("fault and op are names")
+    requires = fault["requires"]
+    if not isinstance(requires, list) or not all(isinstance(r, str) and r in DEFINED_LEVELS for r in requires):
+        raise bad("requires is a list of defined level names")
+    if kind != "pre":
+        return
+    rewrites = fault["rewrites"]
+    if not isinstance(rewrites, list) or not rewrites:
+        raise bad("a pre fault has one or more rewrites")
+    try:
+        params = [p[0] for p in op_row["params"]]  # a malformed op row is named by ``op_sig``, not here
+    except (KeyError, IndexError, TypeError):
+        params = None
+    seen: set[str] = set()
+    for r in rewrites:
+        if not isinstance(r, dict) or set(r) != {"param", "expr"} or not isinstance(r["param"], str):
+            raise bad("a rewrite is {\"param\", \"expr\"}")
+        if (params is not None and r["param"] not in params) or r["param"] in seen:
+            raise bad("a rewrite names no parameter of the op, or names one twice")
+        seen.add(r["param"])
+
+
 def derive_fault(case: dict) -> dict:
     """``{"args": [..]}`` for ``pre``, ``{"result": V}`` for ``post`` / ``replace``, or a closed error.
 
-    ``level-missing`` (order 1): the row needs a level that ``levels`` lacks (a lane records such a
-    control ``not-live``); ``subject-forbidden`` (order 2): a fault expression contains a
-    ``subject_op``.  A ``pre`` fault reports **every** argument in parameter order after the rewrite,
-    unchanged ones included (R26).  A fault's row must state the ``requires`` the oracle computes.
+    The row's schema is read first and a defect is a kit error (R126).  The order of the codes is section 11's, as
+    R119 (c) and R121 amend it: (1) ``ill-typed`` for the ``types`` table (read whole and first: R108, R117) **and
+    the op row's types** (R121), then (2) ``level-missing`` (the row needs a level that ``levels`` lacks; a lane
+    records such a control ``not-live``), then (3) the three codes [D77] adds, in no pinned order among themselves,
+    ``unknown-tag``, ``depth`` and ``model-order`` (:func:`fault_static_refusal`, which read tag names and shape
+    only), then (4) ``subject-forbidden`` (a fault expression contains a ``subject_op``), then (5) ``ill-typed``
+    again for the typing of the row: a fault expression that is ill-typed as a tree, or has no common type with
+    the parameter or result it replaces (R94, R96 to R98; [D74], R110).  A ``pre`` fault reports **every** argument in
+    parameter order after the rewrite, unchanged ones included (R26).  A fault's row must state the ``requires`` the
+    oracle computes (of the tags it knows: an unknown tag adds no level).
     """
     fault, types = case["fault"], case["types"]
-    named = op_sig(fault["op"], case["op"], types)
+    check_fault_row(fault, case["op"])
+    try:
+        check_type_table(types, "ill-typed")
+    except Refused as r:
+        return {"error": r.code}
+    try:
+        named = op_sig(fault["op"], case["op"], types)
+    except OpRowShape as exc:
+        raise KitError(f"the op row of a v2-fault case is malformed: {exc}") from exc  # a field of the case (R45 f)
+    except Refused as r:
+        # R111 (c), R121: an op row that names ``Int``, an error type or an undeclared type is ``ill-typed``.
+        return {"error": "ill-typed" if r.code == "type" else r.code}
     # R70 and R94: no call site, no widths.  The row is typed with each named width unstated (a parameter or
     # result `Bytes<N>` is plain `Bytes`), and `args` and `result` are decoded as `Bytes` values.
     op = OpSig(named.name, named.statics, [(p, unstated(t)) for p, t in named.params], unstated(named.ret), named.fresh)
     used = fault_levels(fault, op)
     stated = set(fault["requires"])
-    if not (used - {L.CORE} <= stated <= used) or fault["requires"] != sorted(stated):
+    # A row may state ``ir.list`` for a tree that holds the tag ``list`` (R57: refused as the level, not as an unknown
+    # tag); the oracle has no template for it, so the level is allowed in ``requires`` and not demanded.
+    if not (used - {L.CORE, L.LIST} <= stated <= used | {L.LIST}) or fault["requires"] != sorted(stated):
         raise KitError(f"the fault row says requires {fault['requires']}, the oracle finds {sorted(used)} in use")
-    if not stated <= set(case["levels"]):
+    # ``ir.core`` is implicit (section 4.1): a row may omit it from ``requires``, yet the op's own types need it, so
+    # ``levels`` without it is ``level-missing`` (section 11, order 2).  ``ir.list`` is needed when the tree holds ``list``.
+    # The op's ``Bytes`` / ``U8`` / ``Bool`` types are ``ir.core`` (R69 b), so ``ir.core`` is always needed.
+    if (stated | {L.CORE} | (used & {L.LIST})) - set(case["levels"]):
         return {"error": "level-missing"}
     trees = [r["expr"] for r in fault["rewrites"]] if fault["kind"] == "pre" else [fault["expr"]]
+    refusal = fault_static_refusal(trees)
+    if refusal is not None:
+        return {"error": refusal.code}
     if any(E.has_subject(t) for t in trees):
         return {"error": "subject-forbidden"}
     errors = {n: tuple(row["cases"]) for n, row in types.items() if row.get("kind") == "error"}
@@ -1411,6 +2037,10 @@ def derive_fault(case: dict) -> dict:
         # are one rule (S5e's separate check, built on ``lower._unify``, had no tuple widening and is gone).
         compiled = _compile_fault(prog, op, fault, {})
     except OracleError as exc:
+        # R110 (a): a row with no common type, or an expression ill-typed as a tree, is ``ill-typed`` ([D74]).
+        # Only the typing codes are: anything else (a limit, say) is not one of the kit's codes and fails the build.
+        if exc.code in ("ir", "type", "generation", "fault"):
+            return {"error": "ill-typed"}
         raise KitError(f"the oracle cannot compile the fault: {exc}") from exc
     if len(case["args"]) != len(op.params):
         raise KitError("args is one value per parameter")
@@ -1457,6 +2087,10 @@ class Row:
     summary: str
     fields: dict
     intent: dict
+    #: The ``requires`` the author expects the case to compute (S10d, VER04r section 13): ``None`` for an S5 row, which
+    #: must compute ``["ir.core"]`` (R24); a list for a row of a later slice, which must compute exactly that.  It is a
+    #: check, never an input: the case's ``requires`` is always :func:`requires_of`'s, so a table cannot lie about it.
+    requires: list | None = None
 
 
 def contains(intent: object, got: object) -> bool:
@@ -1479,18 +2113,26 @@ def requires_of(category: str, fields: dict, expect: dict) -> list[str]:
         if expect.get("error") in ("level-missing", "unknown-tag"):
             return sorted(fields["levels"])
         trees, models, ops = reach(fields)
-        return sorted({L.CORE} | reached_levels(fields, trees, models, ops))
+        # R100: the stand-in of a reached op counts for requires
+        return sorted({L.CORE} | reached_levels(fields, *stand_in_reach(fields, trees, models, ops)))
     if category == "v2-value":
         try:
             return sorted({L.CORE} | type_levels(parse_type(fields["type"], fields["types"]), fields["types"]))
         except Refused:
             return list(CORE)
     if category == "v2-domain":
-        return sorted(descriptor_levels(fields["descriptor"]))
+        # R9, R69 (b): the binder ``type`` has a level too (a tuple type is ``ir.tuple``), as the ``type`` of a ``v2-value`` case does;
+        # a text the reader refuses has none (the descriptor's own levels stand).
+        found = descriptor_levels(fields["descriptor"])
+        with contextlib.suppress(Refused):
+            found |= type_levels(parse_type(fields.get("type"), None))
+        return sorted(found)
     if category == "v2-chunk":
         return sorted(fields["suite"]["requires"])
     if category == "v2-fault":
-        if expect.get("error") == "level-missing":
+        # R119 (e): for ``level-missing`` and ``unknown-tag`` it is the case's ``levels`` (R24); for ``depth`` and
+        # ``model-order`` the row's ``requires``, as for an accepted case.
+        if expect.get("error") in ("level-missing", "unknown-tag"):
             return sorted(fields["levels"])
         return sorted({*fields["fault"]["requires"], *CORE})
     return list(CORE)
@@ -1519,8 +2161,9 @@ def finish_case(category: str, row: Row, expect: dict, fields: dict | None = Non
         if fields.get("max_ir_cost") == E.MAX_IR_COST:
             raise KitError("max_ir_cost is present only when it is not 2,000", case_id)
     requires = requires_of(category, fields, expect)
-    if requires != CORE:
-        raise KitError(f"requires is {requires}; every S5 case has {CORE} (R24)", case_id)
+    want = CORE if row.requires is None else list(row.requires)
+    if requires != want:
+        raise KitError(f"requires is {requires}; the table says {want} (an S5 row has {CORE}, R24)", case_id)
     return {"id": case_id, "summary": row.summary, "requires": requires, **fields, "expect": expect}
 
 

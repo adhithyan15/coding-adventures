@@ -3389,6 +3389,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding-adventures-heap"
+version = "0.1.0"
+
+[[package]]
 name = "coding-adventures-html-lexer"
 version = "0.1.0"
 dependencies = [
@@ -7558,10 +7562,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "heap"
-version = "0.1.0"
-
-[[package]]
 name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7839,7 +7839,7 @@ dependencies = [
 name = "huffman-tree"
 version = "0.1.0"
 dependencies = [
- "heap",
+ "coding-adventures-heap",
 ]
 
 [[package]]
@@ -8391,9 +8391,9 @@ dependencies = [
 name = "in-memory-data-store-engine"
 version = "0.1.0"
 dependencies = [
+ "coding-adventures-heap",
  "hash-map",
  "hash-set",
- "heap",
  "hyperloglog",
  "in-memory-data-store-protocol",
  "skip-list",
@@ -11460,6 +11460,17 @@ dependencies = [
 [[package]]
 name = "pic16f84a-simulator"
 version = "0.1.0"
+
+[[package]]
+name = "pif-check"
+version = "0.1.0"
+dependencies = [
+ "bignum-core",
+ "coding_adventures_sha256",
+ "lean-kernel",
+ "pif-prelude",
+ "pif-writer",
+]
 
 [[package]]
 name = "pif-prelude"
@@ -15986,6 +15997,13 @@ name = "unicode-xid"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ebc1c04c71510c7f702b52b7c350734c9ff1295c464a03335b00bb84fc54f853"
+
+[[package]]
+name = "unix-history-simulator"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
+]
 
 [[package]]
 name = "untrusted"

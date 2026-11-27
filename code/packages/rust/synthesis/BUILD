@@ -1,1 +1,1 @@
-cargo test -p synthesis -- --nocapture
+cargo test --locked -p synthesis -- --nocapture

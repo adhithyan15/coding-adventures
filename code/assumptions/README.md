@@ -35,6 +35,11 @@ A third, separate file:
   not pin it, so a bucket decision never forces a regeneration. Curated by hand;
   a change to it is an amendment to VER31 section 3 and needs the owner's sign-off.
 
+Proposals, not in force: `catalogue-v2.proposed.json` and `buckets-v2.proposed.json` are an
+unsigned proposal to register the ids G-M1 opens (13 ids; PIF-016a, ADL-006a). No gate, report
+or check reads them. See `PROPOSED-gm1-registration.md` for the diff summary and what the owner
+signs.
+
 Every `assurance_report.json` pins the SHA-256 of all three files in its `catalogue`
 object. After editing any of them, regenerate the reports with
 `ca-assurance-report --generate`; `--check` and the CI step above fail on a stale pin

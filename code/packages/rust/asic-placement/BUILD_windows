@@ -1,1 +1,1 @@
-cargo test -p asic-placement -- --nocapture
+cargo test --locked -p asic-placement -- --nocapture

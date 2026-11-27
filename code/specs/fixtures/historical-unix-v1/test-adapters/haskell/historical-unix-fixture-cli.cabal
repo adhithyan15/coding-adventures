@@ -1,0 +1,13 @@
+cabal-version: 2.4
+name: historical-unix-fixture-cli
+version: 0.1.0.0
+synopsis: External fixture adapter for the historical Unix library
+license: MIT
+build-type: Simple
+
+executable fixture-cli
+  main-is: Main.hs
+  hs-source-dirs: .
+  build-depends: base >=4.14 && <5, aeson, bytestring, unix-history-simulator
+  default-language: Haskell2010
+  ghc-options: -Wall

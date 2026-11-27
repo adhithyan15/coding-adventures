@@ -1,1 +1,1 @@
-cargo test -p arc2d -- --nocapture
+cargo test --locked -p arc2d -- --nocapture

@@ -16,17 +16,21 @@ element in O(log n) time. This makes it the ideal backing store for a
 
 ### The Insight That Makes Heaps Fast
 
-Because a heap is always a complete binary tree, it can be stored as a flat
-array with zero pointers. The parent-child relationship is entirely determined
-by index arithmetic. This means:
+Because a heap is always a complete binary tree, it can be represented by a
+flat array without per-node pointers. The parent-child relationship is
+determined by index arithmetic. A flat array may improve locality for some
+runtimes and workloads; representation alone does not establish a cache or
+performance outcome. This means:
 
 - Push: append to end of array, sift up — O(log n)
 - Pop:  swap root with last element, remove last, sift down — O(log n)
 - Peek: read array[0] — O(1)
 - Build from n elements: O(n) — not O(n log n) — see Floyd's algorithm below
 
-No dynamic memory allocation for nodes. No pointer chasing. The data lives in
-one contiguous block, which is cache-friendly.
+The conceptual array representation needs no per-node links. Whether an
+implementation uses one contiguous allocation, avoids pointer chasing, or
+improves cache behavior depends on the language runtime and representation;
+measure those properties for a defined implementation and workload.
 
 ### Everyday Analogies
 
@@ -280,8 +284,9 @@ most of the work is done at the bottom levels where nodes only sift 1-2 position
 and there are few nodes near the top (where sifting is expensive).
 
 Contrast with building by repeated insertion: each of the n insertions costs
-O(log n) in the worst case → O(n log n) total. Floyd's algorithm is twice as
-fast in practice.
+O(log n) in the worst case → O(n log n) total. These are algorithmic bounds;
+an observed runtime ratio depends on implementation, workload, allocation,
+garbage collection, caches, and measurement noise.
 
 ### Heap Sort
 
@@ -646,7 +651,13 @@ for _ in range(100):
     assert heap_sort(arr) == sorted(arr)
 ```
 
-### Floyd's Algorithm Is O(n) — Verify Empirically
+### Floyd's Algorithm: Optional Runtime Experiment
+
+The asymptotic O(n) bound follows from the height-weighted work argument above,
+not from timings. The following experiment can illustrate a particular
+implementation and machine. Allocation, garbage collection, caches, and
+measurement noise affect its results; it has no pass threshold and cannot
+establish an asymptotic bound.
 
 ```python
 import time
@@ -657,7 +668,7 @@ for n in sizes:
     heapify(arr)
     t1 = time.perf_counter()
     print(f"n={n}: {t1-t0:.4f}s")
-# Expect roughly linear growth, not n-log-n growth
+# Record observations only; do not infer a complexity proof from this output.
 ```
 
 ### Edge Cases
@@ -682,10 +693,138 @@ for n in sizes:
 - **Merge (meld)** — merge two heaps into one. Binary heaps can't do this
   efficiently; leftist heaps and skew heaps support O(log n) merge.
 - **k-ary heap** — instead of 2 children per node, use k children. With k=4 or
-  k=8, sift-up is faster (fewer comparisons) but sift-down is slower (more
-  comparisons). Cache-friendly for large k.
+  k=8, sift-up uses fewer levels while sift-down considers more children per
+  level. The practical tradeoff, including cache behavior, is a representation
+  and runtime hypothesis to measure for a defined workload.
 - **Soft heap** — allows elements to be "corrupted" (given artificially larger
   keys) in exchange for O(1) amortized insert. Used in the best deterministic
   MST algorithm (Chazelle 2000).
 - **Fibonacci heap** — O(1) amortized push and decrease-key, O(log n) pop.
   Theoretically optimal for Dijkstra but with large constant factors.
+
+## TypeScript Profile: Checked Bounded Queues
+
+This additive TypeScript profile keeps the existing `Heap<T>`, `MinHeap<T>`,
+`MaxHeap<T>`, `defaultComparator`, `heapify`, `heapSort`, `nlargest`, and
+`nsmallest` APIs and behavior unchanged. It adds explicit bounded queues with
+checked results; it does not retrofit validation into the legacy classes or
+helpers.
+
+### Public API
+
+Export `BoundedPriorityQueue<T>`, `BoundedMinHeap<T>`, `BoundedMaxHeap<T>`,
+`PushResult<T>`, `ValueResult<T>`, and `BuildResult<H, T>` from the package root.
+Both concrete queues take a required comparator. The shared interface exposes
+readonly `capacity` and `size`, `isEmpty()`, `isFull()`, `tryPush(value)`,
+`tryPeek()`, and `tryPop()`.
+
+```ts
+export type PushResult<T> =
+  | { status: "accepted" }
+  | { status: "full"; rejected: T };
+
+export type ValueResult<T> =
+  | { status: "ok"; value: T }
+  | { status: "empty" };
+
+export type BuildResult<H, T> =
+  | { status: "built"; heap: H }
+  | { status: "capacity-exceeded"; heap: H; rejected: T };
+```
+
+`tryPush` on a full queue returns the same rejected value by identity and leaves
+the queue's logical contents unchanged. At capacity zero, the queue is valid,
+empty, and every push returns `full`. `tryPeek` and `tryPop` report `empty` on
+an empty queue. Results use discriminants rather than `T | undefined`, so an
+actual `undefined` value remains representable and distinguishable from empty.
+
+### Capacity and comparison rules
+
+Capacity is a primitive JavaScript number satisfying
+`Number.isSafeInteger(capacity)` and `0 <= capacity <= 2^32 - 1`. Reject every
+other value with `RangeError` before obtaining or invoking an input iterable's
+`Symbol.iterator`. This includes negative, fractional, NaN, infinite, string,
+boxed-number, and greater-than-maximum values. The maximum is an Array-length
+representation bound, not an allocation promise. Do not preallocate the
+configured capacity. `capacity` is an immutable runtime property as well as a
+TypeScript-readonly API: plain JavaScript assignment must not resize or change
+the reported limit, and internal admission checks use the validated private
+limit rather than a replaceable public property. There is no resize operation.
+
+A comparator is required; do not silently use the legacy permissive default.
+It must be callable and deterministic, must not re-enter or mutate the queue,
+and must define a strict weak order for values held together. It may update
+observational counters; other comparator side effects are external and are not
+rolled back if the comparator throws. Priority fields must not change while
+queued. At runtime, accept comparator results only when `typeof result`
+is `"number"` and the result is not `NaN`; use its sign. Finite fractions and
+positive or negative infinity are valid results, and either signed zero means
+equivalent priority. Comparator lawfulness is a caller obligation that tests
+cannot prove for arbitrary functions.
+
+The selected mutation guarantee is logical-content preservation for
+`tryPush` and `tryPop` when the comparator throws or returns an invalid value.
+`tryPeek` does not need to call the comparator. Perform comparisons and
+validate their results before mutating queue storage; propagate the original
+thrown value. Stage the insertion or removal path using `O(log n)` temporary
+indexes, then apply it after all comparisons succeed. This guarantee assumes
+the comparator contract above.
+Reentrant mutation, caller mutation of queued priorities, and physical
+allocation failure are outside it. Construction
+does not expose a partially built queue if comparison fails.
+
+### Iterable construction and complexity
+
+Each concrete queue provides `fromIterable(capacity, items, comparator)` with a
+concrete heap type in the `BuildResult`. Validate capacity and the comparator
+before accessing the iterable. Acquire a one-shot iterator once and read at
+most `capacity + 1` values. If the first excess value is observed, return the
+accepted-prefix heap and that exact rejected value, then close the iterator
+according to JavaScript `for...of`/`IteratorClose` behavior. If cleanup
+throws, the abrupt completion takes precedence over the normal overflow result. A `next()` error
+propagates unchanged under native iterator semantics. An iterable of exactly
+capacity items succeeds. Input iteration cannot be rewound after an error.
+
+Construction uses repeated checked insertion: for `k` accepted items it stores
+`O(k)` references and makes `O(k log k)` comparisons, with at most
+`capacity + 1` calls to `next()`. Do not describe it as Floyd heapify or `O(k)`.
+Successful push/pop perform `O(log n)` comparisons; peek, size/capacity,
+empty/full checks are `O(1)`. These are comparison and iteration bounds, not
+wall-time guarantees. JavaScript does not promise a physical contiguous layout
+or cache behavior for general arrays; make no locality claim.
+
+### Independent validation and packaging
+
+Check every observable transition against an independently sorted-array or
+multiset model, including complete drain order and identity where ties make
+order unspecified. Exhaust all histories of length zero through six over
+`push(0)`, `push(1)`, `push(2)`, `pop`, and `peek`, at capacities zero through
+three, for both queue directions: 156,248 histories total. Add bounded seeded
+long histories, report realized history/operation counts, and print the seed
+and complete replayable commands for failures. Use a deterministic
+command-deletion reducer that only accepts reductions reproducing the same
+failure; a shortest failing prefix alone is not a general shrink. No new
+property-testing dependency is needed.
+
+Also test legacy min/max classes and helpers against independently sorted
+oracles, including duplicates, negative values, extremes, empty and singleton
+inputs. Cover full/empty/undefined values, identity-preserving rejection,
+zero/max configured capacity without allocation, iterator acquisition and
+cleanup/error precedence, comparison exceptions and invalid returns at each
+sift depth, and construction overflow consumption. Include negative controls
+showing the model catches wrong removal and capacity over-admission. State the
+bounded evidence honestly; it is not a universal proof or mutation result.
+
+Bump the package to `0.2.0`, expose built ESM JavaScript and declarations from
+the package root (`exports`, `types`, and `main`), and keep the tarball
+self-contained. Build and test an `npm pack` artifact from a temporary external
+consumer with Node and `tsc`; exercise both old and new exports. Update each
+direct `file:../heap` consumer's BUILD ordering so heap dependencies are built
+before npm copies/resolves their package contents. Validate Huffman tree and
+in-memory datastore engine through their real leaf-to-root dependency builds.
+Keep production-line coverage and branch coverage separately reported, with
+at least 95% production lines; do not count tests or model code as production.
+
+The TypeScript paired heap-construction benchmark is a separate held
+deliverable dependent on the shared TypeScript collector. Do not add an ad hoc
+timer or claim the paired benchmark is complete in this profile.

@@ -35,6 +35,7 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/host"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/ledger"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recmerge"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/record"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
@@ -78,6 +79,8 @@ func runRecordMerge(args []string, stdout, stderr io.Writer) int {
 	steps := fs.String("steps", "", "the build tool's steps export at that revision (absolute)")
 	plan := fs.String("plan", "", "the build tool's build-plan export at that revision (absolute)")
 	shardCount := fs.Int("shard-count", 0, "the shard count the plan and every shard must agree on")
+	language := fs.String("language", "all",
+		"the recording selection this merge job expects (what the shards were prepared with): a language name, or all (the default). Every shard's binding must equal it, and with all the plan must cover every graph package; a mismatch is a void run")
 	ledgerDir := fs.String("ledger", "", "the ledger directory to write (absolute)")
 	scope := fs.String("scope", "", "shared (CI) or local (a developer's machine)")
 	dryRun := fs.Bool("dry-run", false, "compute the verdict and write nothing")
@@ -131,6 +134,13 @@ func runRecordMerge(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintln(stderr, "kiln: the run's repository, run id and revision are required (flags, or $GITHUB_REPOSITORY, $GITHUB_RUN_ID and $GITHUB_SHA)")
 		return 2
 	}
+	// "all" is the default selection; a binding spells it by omitting the field.
+	if *language != "all" {
+		if err := recfmt.CheckLanguage(*language); err != nil {
+			fmt.Fprintf(stderr, "kiln: --language: %v\n", err)
+			return 2
+		}
+	}
 	if len(shards.arts) == 0 || *shardCount < 1 || *graph == "" || *steps == "" || *plan == "" {
 		fmt.Fprintln(stderr, "kiln: --graph, --steps, --plan, --shard-count and at least one --shard are required")
 		return 2
@@ -174,6 +184,7 @@ func runRecordMerge(args []string, stdout, stderr io.Writer) int {
 		StepsPath:  *steps,
 		PlanPath:   *plan,
 		ShardCount: *shardCount,
+		Language:   *language,
 		Shards:     shards.arts,
 		Run: recmerge.Run{
 			Repository: repo,
@@ -229,6 +240,12 @@ func writeMergeReport(w io.Writer, rep *record.MergeReport, dryRun bool) {
 		for _, i := range idx {
 			fmt.Fprintf(w, "  shard %d void: %s\n", i, strings.Join(rep.Verdict.ShardVoid[i], "; "))
 		}
+	}
+	if rep.Language != "" {
+		// The selection came from the shards' bindings. The drop count is a
+		// number, never a path: the observed paths are not printed.
+		fmt.Fprintf(w, "language selection %s: %d action(s) lost their record for reading an unselected package's untracked or absent paths\n",
+			rep.Language, rep.ForeignDropped)
 	}
 	fmt.Fprintf(w, "recordable %d of %d action(s)\n", rep.Recordable, rep.Actions)
 	if len(rep.Reasons) > 0 {

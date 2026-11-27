@@ -1,1 +1,1 @@
-cargo test -p iir-linker
+cargo test --locked -p iir-linker

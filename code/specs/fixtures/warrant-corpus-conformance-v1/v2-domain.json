@@ -5637,6 +5637,2122 @@
       ],
       "summary": "the name grammar allows a leading underscore and digits after it",
       "type": "Result<Bool,E>"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 4
+      },
+      "expect": {
+        "size": 4,
+        "values_hex": [
+          "64020000000000",
+          "64020000000001",
+          "64020000000100",
+          "64020000000101"
+        ]
+      },
+      "id": "v2-domain/tuple-bool-bool-in-full",
+      "range": [
+        0,
+        4
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "the four values of two Bool components in order: the last component varies fastest",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "u8_all",
+            "size": 256
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "640200000010000000000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-u8-bool-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-u8-bool: the first value",
+      "type": "(U8,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "u8_all",
+            "size": 256
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "640200000010000000000000000000",
+          "640200000010000000000000000001"
+        ]
+      },
+      "id": "v2-domain/tuple-u8-bool-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-u8-bool: indices 0 and 1",
+      "type": "(U8,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "u8_all",
+            "size": 256
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "640200000010ff0000000000000000",
+          "640200000010ff0000000000000001"
+        ]
+      },
+      "id": "v2-domain/tuple-u8-bool-range-last-two",
+      "range": [
+        510,
+        512
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-u8-bool: indices size-2 and size-1",
+      "type": "(U8,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "u8_all",
+            "size": 256
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "640200000010ff0000000000000001"
+        ]
+      },
+      "id": "v2-domain/tuple-u8-bool-index-last",
+      "index": 511,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-u8-bool: the last value",
+      "type": "(U8,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "u8_all",
+            "size": 256
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/tuple-u8-bool-index-size",
+      "index": 512,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-u8-bool: index == size is out of range",
+      "type": "(U8,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "640200000000100000000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-bool-u8-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-bool-u8: the first value",
+      "type": "(Bool,U8)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "640200000000100000000000000000",
+          "640200000000100100000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-bool-u8-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-bool-u8: indices 0 and 1",
+      "type": "(Bool,U8)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "64020000000110fe00000000000000",
+          "64020000000110ff00000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-bool-u8-range-last-two",
+      "range": [
+        510,
+        512
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-bool-u8: indices size-2 and size-1",
+      "type": "(Bool,U8)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "64020000000110ff00000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-bool-u8-index-last",
+      "index": 511,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-bool-u8: the last value",
+      "type": "(Bool,U8)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/tuple-bool-u8-index-size",
+      "index": 512,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "tuple-bool-u8: index == size is out of range",
+      "type": "(Bool,U8)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "64020000000010ff00000000000000",
+          "640200000001100000000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-bool-u8-across-the-first-component",
+      "range": [
+        255,
+        257
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "indices 255 and 256 cross from (false, 255) to (true, 0)",
+      "type": "(Bool,U8)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 8
+      },
+      "expect": {
+        "size": 8,
+        "values_hex": [
+          "6403000000000000",
+          "6403000000000001",
+          "6403000000000100",
+          "6403000000000101",
+          "6403000000010000",
+          "6403000000010001",
+          "6403000000010100",
+          "6403000000010101"
+        ]
+      },
+      "id": "v2-domain/tuple-three-components-in-full",
+      "range": [
+        0,
+        8
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(Bool,Bool,Bool): eight values, the last component fastest",
+      "type": "(Bool,Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "64080000000000000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-eight-components-first",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "the first of 256 values of an eight-component tuple",
+      "type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "64080000000000000000000001"
+        ]
+      },
+      "id": "v2-domain/tuple-eight-components-second",
+      "index": 1,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "index 1 sets the last component",
+      "type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "64080000000100000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-eight-components-index-128",
+      "index": 128,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "index 128 sets the first component",
+      "type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "64080000000101010101010101"
+        ]
+      },
+      "id": "v2-domain/tuple-eight-components-last",
+      "index": 255,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "the last value has every component true",
+      "type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 256
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/tuple-eight-components-index-size",
+      "index": 256,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "index 256 is out of range",
+      "type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "tuple",
+            "of": [
+              {
+                "d": "bool",
+                "size": 2
+              },
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ],
+            "size": 4
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 8
+      },
+      "expect": {
+        "size": 8,
+        "values_hex": [
+          "64020000006402000000000000",
+          "64020000006402000000000001",
+          "64020000006402000000000100",
+          "64020000006402000000000101",
+          "64020000006402000000010000",
+          "64020000006402000000010001",
+          "64020000006402000000010100",
+          "64020000006402000000010101"
+        ]
+      },
+      "id": "v2-domain/tuple-nested-first-in-full",
+      "range": [
+        0,
+        8
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "((Bool,Bool),Bool): the inner pair is the slow component",
+      "type": "((Bool,Bool),Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "tuple",
+            "of": [
+              {
+                "d": "bool",
+                "size": 2
+              },
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ],
+            "size": 4
+          }
+        ],
+        "size": 8
+      },
+      "expect": {
+        "size": 8,
+        "values_hex": [
+          "64020000000064020000000000",
+          "64020000000064020000000001",
+          "64020000000064020000000100",
+          "64020000000064020000000101",
+          "64020000000164020000000000",
+          "64020000000164020000000001",
+          "64020000000164020000000100",
+          "64020000000164020000000101"
+        ]
+      },
+      "id": "v2-domain/tuple-nested-last-in-full",
+      "range": [
+        0,
+        8
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(Bool,(Bool,Bool)): the inner pair is the fast component",
+      "type": "(Bool,(Bool,Bool))"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "result",
+            "errs": [
+              "BAD",
+              "WORSE"
+            ],
+            "ok": {
+              "d": "bool",
+              "size": 2
+            },
+            "size": 4
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 8
+      },
+      "expect": {
+        "size": 8,
+        "values_hex": [
+          "6402000000500000",
+          "6402000000500001",
+          "6402000000500100",
+          "6402000000500101",
+          "6402000000510300000042414400",
+          "6402000000510300000042414401",
+          "64020000005105000000574f52534500",
+          "64020000005105000000574f52534501"
+        ]
+      },
+      "id": "v2-domain/tuple-with-a-result-component-in-full",
+      "range": [
+        0,
+        8
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(Result<Bool,E>, Bool): eight values; the Result varies slowly",
+      "type": "(Result<Bool,E>,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bytes_n",
+            "n": 1,
+            "size": 256
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "640200000020010000000100",
+          "640200000020010000000101"
+        ]
+      },
+      "id": "v2-domain/tuple-with-a-bytes-n-component",
+      "range": [
+        2,
+        4
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(Bytes<1>, Bool): 512 values, the Bytes<1> component slow",
+      "type": "(Bytes<1>,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bytes_d1",
+            "size": 347
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 694
+      },
+      "expect": {
+        "size": 694,
+        "values_hex": [
+          "6402000000200000000000",
+          "6402000000200000000001",
+          "640200000020010000000000",
+          "640200000020010000000001"
+        ]
+      },
+      "id": "v2-domain/tuple-with-a-bytes-d1-component",
+      "range": [
+        0,
+        4
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(Bytes, Bool) over bytes_d1: 347 * 2 values; index 2 is (00, false)",
+      "type": "(Bytes,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "nat_count",
+            "k": 2,
+            "size": 3
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 6
+      },
+      "expect": {
+        "size": 6,
+        "values_hex": [
+          "640200000010000000000000000000",
+          "640200000010000000000000000001",
+          "640200000010010000000000000000",
+          "640200000010010000000000000001",
+          "640200000010020000000000000000",
+          "640200000010020000000000000001"
+        ]
+      },
+      "id": "v2-domain/tuple-with-a-nat-count-component",
+      "range": [
+        0,
+        6
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(Nat, Bool) over nat_count 2: six values",
+      "type": "(Nat,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "fx_full",
+            "size": 256,
+            "t": "I8"
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 512
+      },
+      "expect": {
+        "size": 512,
+        "values_hex": [
+          "64020000001180ffffffffffffff00",
+          "64020000001180ffffffffffffff01",
+          "64020000001181ffffffffffffff00"
+        ]
+      },
+      "id": "v2-domain/tuple-with-a-signed-component",
+      "range": [
+        0,
+        3
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(I8, Bool) over fx_full: the first values are the minimum",
+      "type": "(I8,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "u64_edge",
+            "size": 377
+          },
+          {
+            "d": "u8_all",
+            "size": 256
+          }
+        ],
+        "size": 96512
+      },
+      "expect": {
+        "size": 96512,
+        "values_hex": [
+          "640200000010ffffffffffffff7f10ff00000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-with-a-u64-edge-component",
+      "index": 96511,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(U64, U8) over u64_edge: the last value",
+      "type": "(U64,U8)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "fx_edge",
+            "size": 559,
+            "t": "I32"
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 1118
+      },
+      "expect": {
+        "size": 1118,
+        "values_hex": [
+          "64020000001100000080ffffffff00"
+        ]
+      },
+      "id": "v2-domain/tuple-with-an-fx-edge-component",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(I32, Bool) over fx_edge: the first value",
+      "type": "(I32,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "size": 73,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-shift-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_shift: the first value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "size": 73,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-shift-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_shift: indices 0 and 1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "size": 73,
+        "values_hex": [
+          "10ffff000000000000",
+          "100000010000000000"
+        ]
+      },
+      "id": "v2-domain/nat-shift-range-last-two",
+      "range": [
+        71,
+        73
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_shift: indices size-2 and size-1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "size": 73,
+        "values_hex": [
+          "100000010000000000"
+        ]
+      },
+      "id": "v2-domain/nat-shift-index-last",
+      "index": 72,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_shift: the last value is 65536",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/nat-shift-index-size",
+      "index": 73,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_shift: index == size is out of range",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "size": 73,
+        "values_hex": [
+          "104000000000000000",
+          "104100000000000000",
+          "107f00000000000000",
+          "108000000000000000",
+          "108100000000000000",
+          "10ff00000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-shift-at-the-width-boundaries",
+      "range": [
+        64,
+        70
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "the run 0..=64 ends at index 64 and the bounded set follows: 64, 65, 127, 128, 129, 255",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "size": 73,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000",
+          "100200000000000000",
+          "100300000000000000",
+          "100400000000000000",
+          "100500000000000000",
+          "100600000000000000",
+          "100700000000000000",
+          "100800000000000000",
+          "100900000000000000",
+          "100a00000000000000",
+          "100b00000000000000",
+          "100c00000000000000",
+          "100d00000000000000",
+          "100e00000000000000",
+          "100f00000000000000",
+          "101000000000000000",
+          "101100000000000000",
+          "101200000000000000",
+          "101300000000000000",
+          "101400000000000000",
+          "101500000000000000",
+          "101600000000000000",
+          "101700000000000000",
+          "101800000000000000",
+          "101900000000000000",
+          "101a00000000000000",
+          "101b00000000000000",
+          "101c00000000000000",
+          "101d00000000000000",
+          "101e00000000000000",
+          "101f00000000000000",
+          "102000000000000000",
+          "102100000000000000",
+          "102200000000000000",
+          "102300000000000000",
+          "102400000000000000",
+          "102500000000000000",
+          "102600000000000000",
+          "102700000000000000",
+          "102800000000000000",
+          "102900000000000000",
+          "102a00000000000000",
+          "102b00000000000000",
+          "102c00000000000000",
+          "102d00000000000000",
+          "102e00000000000000",
+          "102f00000000000000",
+          "103000000000000000",
+          "103100000000000000",
+          "103200000000000000",
+          "103300000000000000",
+          "103400000000000000",
+          "103500000000000000",
+          "103600000000000000",
+          "103700000000000000",
+          "103800000000000000",
+          "103900000000000000",
+          "103a00000000000000",
+          "103b00000000000000",
+          "103c00000000000000",
+          "103d00000000000000",
+          "103e00000000000000",
+          "103f00000000000000",
+          "104000000000000000",
+          "104100000000000000",
+          "107f00000000000000",
+          "108000000000000000",
+          "108100000000000000",
+          "10ff00000000000000",
+          "100001000000000000",
+          "10ffff000000000000",
+          "100000010000000000"
+        ]
+      },
+      "id": "v2-domain/nat-shift-in-full",
+      "range": [
+        0,
+        73
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "every one of the 73 values",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_0_64",
+        "size": 65
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/nat-nat-count-64-is-not-nat-shift",
+      "index": 65,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_0_64 stops at 64 where nat_shift goes on: index 65 is out of range for nat_0_64",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "nat_shift",
+            "size": 73
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 146
+      },
+      "expect": {
+        "size": 146,
+        "values_hex": [
+          "640200000010000001000000000000",
+          "640200000010000001000000000001"
+        ]
+      },
+      "id": "v2-domain/tuple-with-a-nat-shift-component",
+      "range": [
+        144,
+        146
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(Nat, Bool) over nat_shift: 146 values, the last component fastest",
+      "type": "(Nat,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "nat_shift",
+            "size": 73
+          },
+          {
+            "d": "nat_shift",
+            "size": 73
+          }
+        ],
+        "size": 5329
+      },
+      "expect": {
+        "size": 5329,
+        "values_hex": [
+          "6402000000100000000000000000100000010000000000",
+          "6402000000100100000000000000100000000000000000",
+          "6402000000100100000000000000100100000000000000"
+        ]
+      },
+      "id": "v2-domain/tuple-of-two-nat-shifts",
+      "range": [
+        72,
+        75
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "(Nat, Nat) over two nat_shift leaves: 5,329 values; index 73 starts the second row",
+      "type": "(Nat,Nat)"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 74
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-nat-shift-wrong-size",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_shift always has size 73",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "k": 64,
+        "size": 73
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-nat-shift-with-a-parameter",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_shift is a leaf with no parameter: an extra key is refused",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-nat-shift-missing-size",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_shift without its size",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-nat-shift-for-u8",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a nat_shift descriptor for a U8 binder",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "nat_shift",
+        "size": 73
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-nat-shift-for-bytes",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a nat_shift descriptor for a Bytes binder",
+      "type": "Bytes"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 5
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-wrong-size",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple size that is not the product of its components",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 3
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 6
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-component-wrong-size",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a wrong size inside a component",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-missing-of",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple without of",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "k": 2,
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-extra-key",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "an extra key on a tuple",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 2
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-of-is-not-a-list",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "of is a list of descriptors",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          "bool",
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-component-is-not-an-object",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a component that is not a descriptor",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 8
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-three-components-for-a-pair",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "of has three entries for a pair type",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-two-components-for-a-triple",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "of has two entries for a triple type",
+      "type": "(Bool,Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-component-for-another-type",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a bool descriptor for the U8 component",
+      "type": "(Bool,U8)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "tuple",
+            "of": [
+              {
+                "d": "bool",
+                "size": 2
+              },
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ],
+            "size": 4
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 8
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-component-nested-for-another-type",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "the inner pair's descriptor does not fit the inner type",
+      "type": "((Bool,U8),Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-for-a-scalar-type",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple descriptor for a Bool binder",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "bool",
+            "size": 2
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-tuple-for-a-result-type",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tuple descriptor for a Result binder",
+      "type": "Result<Bool,E>"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-scalar-for-a-tuple-type",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a bool descriptor for a pair binder: the binder type is a tuple type, which is ir.tuple (R9)",
+      "type": "(Bool,Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "tuple",
+            "of": [
+              {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "tuple",
+                    "of": [
+                      {
+                        "d": "tuple",
+                        "of": [
+                          {
+                            "d": "tuple",
+                            "of": [
+                              {
+                                "d": "tuple",
+                                "of": [
+                                  {
+                                    "d": "tuple",
+                                    "of": [
+                                      {
+                                        "d": "tuple",
+                                        "of": [
+                                          {
+                                            "d": "tuple",
+                                            "of": [
+                                              {
+                                                "d": "tuple",
+                                                "of": [
+                                                  {
+                                                    "d": "tuple",
+                                                    "of": [
+                                                      {
+                                                        "d": "tuple",
+                                                        "of": [
+                                                          {
+                                                            "d": "tuple",
+                                                            "of": [
+                                                              {
+                                                                "d": "tuple",
+                                                                "of": [
+                                                                  {
+                                                                    "d": "bool",
+                                                                    "size": 2
+                                                                  },
+                                                                  {
+                                                                    "d": "bool",
+                                                                    "size": 2
+                                                                  }
+                                                                ],
+                                                                "size": 4
+                                                              },
+                                                              {
+                                                                "d": "bool",
+                                                                "size": 2
+                                                              }
+                                                            ],
+                                                            "size": 8
+                                                          },
+                                                          {
+                                                            "d": "bool",
+                                                            "size": 2
+                                                          }
+                                                        ],
+                                                        "size": 16
+                                                      },
+                                                      {
+                                                        "d": "bool",
+                                                        "size": 2
+                                                      }
+                                                    ],
+                                                    "size": 32
+                                                  },
+                                                  {
+                                                    "d": "bool",
+                                                    "size": 2
+                                                  }
+                                                ],
+                                                "size": 64
+                                              },
+                                              {
+                                                "d": "bool",
+                                                "size": 2
+                                              }
+                                            ],
+                                            "size": 128
+                                          },
+                                          {
+                                            "d": "bool",
+                                            "size": 2
+                                          }
+                                        ],
+                                        "size": 256
+                                      },
+                                      {
+                                        "d": "bool",
+                                        "size": 2
+                                      }
+                                    ],
+                                    "size": 512
+                                  },
+                                  {
+                                    "d": "bool",
+                                    "size": 2
+                                  }
+                                ],
+                                "size": 1024
+                              },
+                              {
+                                "d": "bool",
+                                "size": 2
+                              }
+                            ],
+                            "size": 2048
+                          },
+                          {
+                            "d": "bool",
+                            "size": 2
+                          }
+                        ],
+                        "size": 4096
+                      },
+                      {
+                        "d": "bool",
+                        "size": 2
+                      }
+                    ],
+                    "size": 8192
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 16384
+              },
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ],
+            "size": 32768
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 65536
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "64020000006402000000640200000064020000006402000000640200000064020000006402000000640200000064020000006402000000640200000064020000006402000000640200000001010101010101010101010101010101"
+        ]
+      },
+      "id": "v2-domain/tuple-nested-15-accepted",
+      "index": 65535,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tree of 16 levels is exactly at the limit: the last of 2^16 values has every leaf true",
+      "type": "(((((((((((((((Bool,Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool)"
+    },
+    {
+      "descriptor": {
+        "d": "tuple",
+        "of": [
+          {
+            "d": "tuple",
+            "of": [
+              {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "tuple",
+                    "of": [
+                      {
+                        "d": "tuple",
+                        "of": [
+                          {
+                            "d": "tuple",
+                            "of": [
+                              {
+                                "d": "tuple",
+                                "of": [
+                                  {
+                                    "d": "tuple",
+                                    "of": [
+                                      {
+                                        "d": "tuple",
+                                        "of": [
+                                          {
+                                            "d": "tuple",
+                                            "of": [
+                                              {
+                                                "d": "tuple",
+                                                "of": [
+                                                  {
+                                                    "d": "tuple",
+                                                    "of": [
+                                                      {
+                                                        "d": "tuple",
+                                                        "of": [
+                                                          {
+                                                            "d": "tuple",
+                                                            "of": [
+                                                              {
+                                                                "d": "tuple",
+                                                                "of": [
+                                                                  {
+                                                                    "d": "tuple",
+                                                                    "of": [
+                                                                      {
+                                                                        "d": "bool",
+                                                                        "size": 2
+                                                                      },
+                                                                      {
+                                                                        "d": "bool",
+                                                                        "size": 2
+                                                                      }
+                                                                    ],
+                                                                    "size": 4
+                                                                  },
+                                                                  {
+                                                                    "d": "bool",
+                                                                    "size": 2
+                                                                  }
+                                                                ],
+                                                                "size": 8
+                                                              },
+                                                              {
+                                                                "d": "bool",
+                                                                "size": 2
+                                                              }
+                                                            ],
+                                                            "size": 16
+                                                          },
+                                                          {
+                                                            "d": "bool",
+                                                            "size": 2
+                                                          }
+                                                        ],
+                                                        "size": 32
+                                                      },
+                                                      {
+                                                        "d": "bool",
+                                                        "size": 2
+                                                      }
+                                                    ],
+                                                    "size": 64
+                                                  },
+                                                  {
+                                                    "d": "bool",
+                                                    "size": 2
+                                                  }
+                                                ],
+                                                "size": 128
+                                              },
+                                              {
+                                                "d": "bool",
+                                                "size": 2
+                                              }
+                                            ],
+                                            "size": 256
+                                          },
+                                          {
+                                            "d": "bool",
+                                            "size": 2
+                                          }
+                                        ],
+                                        "size": 512
+                                      },
+                                      {
+                                        "d": "bool",
+                                        "size": 2
+                                      }
+                                    ],
+                                    "size": 1024
+                                  },
+                                  {
+                                    "d": "bool",
+                                    "size": 2
+                                  }
+                                ],
+                                "size": 2048
+                              },
+                              {
+                                "d": "bool",
+                                "size": 2
+                              }
+                            ],
+                            "size": 4096
+                          },
+                          {
+                            "d": "bool",
+                            "size": 2
+                          }
+                        ],
+                        "size": 8192
+                      },
+                      {
+                        "d": "bool",
+                        "size": 2
+                      }
+                    ],
+                    "size": 16384
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 32768
+              },
+              {
+                "d": "bool",
+                "size": 2
+              }
+            ],
+            "size": 65536
+          },
+          {
+            "d": "bool",
+            "size": 2
+          }
+        ],
+        "size": 131072
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/tuple-nested-16-refused",
+      "index": 0,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "summary": "a tree of 17 levels is one past the limit of 16, although the type text is within its depth",
+      "type": "((((((((((((((((Bool,Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool),Bool)"
     }
   ],
   "category": "v2-domain",

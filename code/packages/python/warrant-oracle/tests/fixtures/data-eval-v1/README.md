@@ -69,7 +69,14 @@ The oracle derives both adopters whole from their committed specs (`code/specs/l
 | Adopter | suites | cases | derive (one core) | largest suite | largest `ir_cost` | profile needs |
 |---|---|---|---|---|---|---|
 | logic-gates | 88 | 3,770,123 | about 60 s (60.1 to 61.6 s measured) | 1,048,576 cases | 2,372 (`demux_routes_data`) | `max_ir_cost` above 2,000 (4,096 proposed), one `omit_example` (`decoder_at_the_cap_has_65536_lines`, `not-op-eq-pure`) |
-| arithmetic | 63 | 2,655,437 | about 36 s | 284,258 cases | **1,524** (`alu_add_4_bit_exhaustive`) | **no `max_ir_cost` line**: 1,524 is under the default of 2,000 |
+| arithmetic | 64 (all in `emit-v2`) | 2,655,437 (2,654,925 in 62 suites between CV2-F17 and the split) | about 36 s | 284,258 cases | **1,524** (`alu_add_4_bit_exhaustive`) | **no `max_ir_cost` line**: 1,524 is under the default of 2,000 |
+
+Since CV2-F17 the oracle enforces the 8-binder cap of VER04r 5.3 and 14 (R75) when it derives. arithmetic's claim
+`ripple_carry_adder_with_carry_4_bit_exhaustive` had 9 binders, so its suite was refused with the code `limit` (`emit-v2` reported
+`refused: limit` and listed the other 62; `derive` and `verify-v2` refuse the whole document), and the 512 cases it used to enumerate left the total
+(2,655,437 became 2,654,925). The adopter has since split that claim into `ripple_carry_adder_with_carry_4_bit_exhaustive_cin_0` and
+`_cin_1`, each over the eight `a` and `b` binders with the carry-in a literal (VER04r 16.22 D76), so the document derives whole again: 64 suites and the
+original 2,655,437 cases (measured with `derive`, 38 s).
 
 No control of either adopter is all-blind, so no `accept_blind` line is needed (logic-gates: 162 `unproven`, 32 witnessed and 6 blind
 candidates; arithmetic: 105, 2 and 4). Neither adopter is blocked on anything outside S11c-1.

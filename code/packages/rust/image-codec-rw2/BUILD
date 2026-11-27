@@ -1,1 +1,1 @@
-cargo test -p image-codec-rw2 -- --nocapture
+cargo test --locked -p image-codec-rw2 -- --nocapture

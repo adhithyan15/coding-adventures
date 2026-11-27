@@ -63,7 +63,7 @@ at evaluation but what is refused at lowering**; the `ir.data` column is what S1
 | wasm-leb128 | 44 | 44 | 0 | 18 / 24 / 0 (42 claims; the two encoder bounds were split, VER04r D28) |
 | logic-gates | 88 | 88 | 0 (was 3) | 28 / 57 / 3 |
 | hash-functions | 56 | 54 | 0 (was 19) (+ 2 `err-value`) | 4 / 31 / 21 |
-| arithmetic | 63 | 63 | 0 (was 55) | 7 / 11 / 45 |
+| arithmetic | 63 | 63 (62 in `emit-v2`: one claim has 9 binders and is refused `limit`, CV2-F17) | 0 (was 55) | 7 / 11 / 45 |
 
 (Before S10t-1: wasm-leb128 10 / 8 / 24 tuple, logic-gates 28 / 55 / 2 tuple / 3, arithmetic 5 / 9 / 4 tuple / 45.
 S11a: **every suite of logic-gates and arithmetic now lowers whole**; arithmetic's 55 is the 45 that used to be refused at
@@ -135,7 +135,80 @@ Records, variants (with and without a payload), `Option<T>` as a real type, the 
 * **The committed dumps** (`tests/fixtures/data-eval-v1/`, `make_data_eval.py`, a new directory on purpose): the lowering, evaluation,
   fault, value, domain and refusal dumps of a synthetic data document with a suite on each stream header, which the generator's slice
   S11c-2 must reproduce byte for byte (every file: the typing rows of the refusals dump too). Its README records the oracle's derive time for both adopters (logic-gates about 60 s (60.1 to 61.6 s measured),
-  3,770,123 cases; arithmetic about 36 s, 2,655,437 cases) and arithmetic's largest `ir_cost` (1,524, under the default 2,000).
+  3,770,123 cases; arithmetic about 36 s, 2,655,437 cases in 64 suites since the adopter split its 9-binder claim into two of 8 binders, VER04r D76; it was 2,654,925 in 62 suites between CV2-F17 and the split) and arithmetic's largest `ir_cost` (1,524, under the default 2,000).
+
+### Domain and binder fixes (CV2-F17)
+
+Three defects found when the generator's S11c-2 slice was reviewed; in each the generator followed VER04r and the oracle did not.
+
+* **Demotion refreshes cached sizes bottom-up.** A variant caches one size per constructor and a list its `d16`/`d4`, from the sizes of
+  its children. `_refresh` recomputed a variant before the tuple or record below it had dropped its own cache, so after a 16-bit leaf
+  was demoted the variant kept the stale size, the budget loop saw no progress and refused `W0706` where the generator demotes. Five
+  shapes were affected (variant over tuple, variant over record, nested variant, record over variant, `Option` over variant) and each
+  has a test pinning the demotion path and size (`variant M = X | Y(t: (U16, Bool))` at budget 1000 demotes `0.Y.0.0` to 563).
+* **Composite labels follow the demotion.** The same walk recomputes every composite's `label` from its children: a demoted leaf is
+  `bounded-set`, so a tuple, record, variant, `Option`, `Result` or list holding one is no longer `full` (VER04r 9.3).
+* **A descriptor path has at most 16 nodes** (section 14, a leaf alone counting as one). `descriptor_for` started at depth 0 and tested
+  `> 16`, accepting 17 nodes; it now agrees with the consumer check `descriptor_size`: 16 nodes are accepted, 17 are refused `limit`
+  (tested for nested records and nested `Option`).
+* **A claim has at most 8 binders** (sections 5.3 and 14, R75). `SuitePlan` refuses a ninth with `limit` before any descriptor is
+  built, so `emit-v2` reports the suite `refused: limit` (`derive` and `verify-v2` refuse the whole document). arithmetic's `ripple_carry_adder_with_carry_4_bit_exhaustive` had nine, so
+  `emit-v2` listed 62 arithmetic suites and 2,654,925 cases (was 63 and 2,655,437). The adopter has since split it (VER04r D76: two claims of 8 binders, `_cin_0` and `_cin_1`), so `emit-v2` lists 64 suites and 2,655,437 cases.
+
+* **`tuple` and `variant` descriptors are checked as a consumer must (VER04r 16.20 R103).** `descriptor_size` refuses (`generation`,
+  kit code `descriptor`, as `errs` of R72 does) a `tuple` whose `of` has none or more than 32 entries, and a `variant` with fewer than 2
+  or more than 64 constructors, a constructor name that is not a string or is outside the name grammar (section 2.2 rule 4), a repeated
+  name, or a constructor with more than 8 field descriptors. Where a `types` table is present (`conformance._check_errs`, the corpus
+  reader), the constructor list must equal the declared one (names, order, field counts) and a record's `tuple` must have exactly its
+  field count; a mismatch is a `corpus` refusal as for `errs`. The wording of the two refusals the committed
+  `data_eval_v1.oracle-domains.json` pins (an empty `of`, an empty `ctors`) is unchanged, so no committed byte moves.
+  Tests: `tests/test_descriptor_r103.py`.
+
+* **`Int` never reaches a corpus (VER04r 2.1).** Lowering accepts `Int` anywhere (the committed `data-forms-v1` is a lowering-only
+  fixture), but `derive` refuses, as `generation` / `W0701` and before anything is built, `Int` at any depth in a record or variant field
+  (the `types` table), an op parameter or result, or a binder (`corpus_v2.refuse_int_in_corpus`); `emit-v2` still reports per suite. A model
+  *result* is never written, so it is not checked; a model's *parameters* are written (`corpus["models"][..]["params"]`), contrary to [D23], and
+  are left for an owner ruling because `arithmetic` and `fixed_forms_v1` use them. A `lit` type and a `none` type argument are left alone.
+  An expected value outside its type (`f(3) == 2 - 5` for a `Nat` result, `f(a) == a - 1`) is `W0701` too, and the stream encoder range-checks every
+  scalar. Tests: `tests/test_int_not_in_corpus.py`.
+
+* **The oracle's share of VER04r 16.22 (CV2-F17).** (1) **[D74], R110**: `v2-fault`'s closed set gains `ill-typed`. `derive_fault` reads the
+  case's `types` first (`check_type_table(types, "ill-typed")`), then `level-missing`, then `subject-forbidden`, then the typing of the row; a row
+  with no common type (R94, R96 to R98), a fault expression that is ill-typed as a tree and an op row that names `Int` or an undeclared type are
+  `ill-typed`, where they were a `KitError`. `instantiate_fault` no longer ends in an uncaught `Refused` on an undeclared field. (2) **[D75], R111**:
+  a model parameter may have the type `Int` (and `Int` under `Option`, `Result`, a tuple or `List`): `_models` and `reached_levels` read it with
+  `allow_int`; an op row (now `ill-typed`, was `type`), a field, a binder, an `env` entry and every value still refuse it. The oracle's `v2-chunk`
+  reader never reads a corpus model row, so nothing changes there. (3) **R113**: `bindings_v2.read_corpus` applies `check_type_table` to
+  `corpus.types` (`BindingKitError`: `v2-binding` has no table code, so a bad table is a kit error, never a vector). (4) **R115 (b)**:
+  `compile_ir_case` checks the bound on `max_ir_cost` before the table. (5) **R117**: an error type is not a value type: `check_type_table`,
+  `parse_type` and `lower._resolve` refuse an error name anywhere but the second argument of `Result`; the table is read whole (every member text is
+  parsed, rules 2 to 4 of section 2.2 are enforced). No committed byte moves. Tests: `tests/test_cv2_16_22_checks.py`.
+* **The oracle's share of VER04r 16.23 (CV2-F17).** (1) **[D77], R119**: `v2-fault`'s closed set gains `unknown-tag`, `depth` and `model-order`.
+  `derive_fault` reads the fault row's schema (R126), then the table and the op row (`ill-typed`), then `level-missing` (levelling only the tags it
+  knows), then the three new codes (`fault_static_refusal`: a tag of no level, a nesting over 64, a `model_call`), then `subject-forbidden`, then the
+  typing of the row. `requires_of` gives a `unknown-tag` case its `levels`. (2) **R120**: any refusal of an `env` type text is `ill-typed` in `v2-ir`;
+  an entry that is not `[name, {"type": text, "value": V}]` is a kit error. (3) **R122**: `compile_ir_case` reads every op signature right after the
+  table (so an unused bad op row precedes a tree defect); model signatures are left open. (4) **R123**: the consumer-side `check_type_table` reserves
+  `TABLE_RESERVED` (`V0_BUILTINS` plus `U16 U32 I8 I16 I32 I64`) for row and constructor names; lowering keeps its version-scoped set. (5) **R124**: an
+  unreached model that needs a level outside `levels` is not compiled (`_models`, `_uncompiled_models`); the tag-name checks, the expression depth and
+  the chain depth of R77 still apply to it. (6) **R125**: `check_corpus_and_row` reads `corpus.ops`, `corpus.models` and `model_order`
+  (`check_corpus_ops_models`) and refuses their defects as `corpus` (`Int` model parameters stay accepted, [D75]). (7) **R126**: a malformed fault row
+  or an undefined level in `fault.requires` is a `KitError` (`check_fault_row`), read before the table. No committed byte moves. Tests:
+  `tests/test_cv2_16_23_checks.py`. Review fixes: the tag `list` is `ir.list` (R57), a stand-in never causes `level-missing` and counts for
+  `requires` only for a reached op (R100), R125 reads models in full, the implicit `ir.core` of a fault row, an undecodable `env` value is a
+  kit error, a malformed op row is `ill-typed` / kit error / `corpus`.
+* **Three checks of VER04r 16.21 (CV2-F17).** (1) **[D73]**: `conformance.check_chunk_file` refuses `chunk-file` a chunk file whose
+  `calls` do not sum to the row's `expected_calls` (so every `v2-chunk` and `verify-v2`-adjacent reader path refuses it); `verify-v2` already
+  compared the file byte for byte. (2) **R106**: a value written for a `Bytes<N>` position whose length is not `N` (`N` after static-width
+  substitution) is `generation` / `W0701: a stream value does not have the declared Bytes<N> length`: in `stream.make_encoder` (a claim's
+  expected stream at any depth: `Option`, `Result`, tuple, record, variant, list) and in `corpus_v2._check_value` (an example's arguments and
+  expected value). Plain `Bytes`, a still-named width and an omitted example are not checked. (3) **R108**: `conformance.check_type_table`
+  refuses a `types` table that holds a recursive or mutually recursive record or variant (also through `Option`, `Result`, a tuple or a list), a
+  repeated field or constructor name, or a field naming an undeclared type: `type` in `v2-value` (after `malformed-json`, before the type or
+  any value is read), `corpus` in `v2-chunk`. `v2-ir` runs it first in `compile_ir_case` with code `ill-typed` (whether or not the case reaches the table, so a used bad record is `ill-typed`, no longer `type`, which is outside the `v2-ir` code set). A malformed row (a non-object row a field names, an unhashable name) is a refusal with the context's code, never a crash. The `RecursionError` of a record
+  containing itself and the uncaught `Refused` of an undeclared field type in an unused record are now outcomes. **Not table-checked yet:**
+  `v2-fault`'s `types` table (its closed code set has no code for it, so it needs a spec ruling), a future `v2-domain` `types` (the category has
+  none today) and `v2-binding`'s `corpus.types` (S5d's reader). No committed byte moves. Tests: `tests/test_cv2_16_21_checks.py`.
 
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 
@@ -437,15 +510,16 @@ admitted-case ordinal (`SuitePlan.check_admits`, `ir_eval.compile_admit_check`),
 subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5 and 16.9).
 `tests/test_admit_calls.py` holds the same documents as the generator's `tests/admit_calls.rs`.
 
-## The v2 conformance kit (S5a, S5b, S5e)
+## The v2 conformance kit (S5a, S5b, S5e, S10d)
 
 VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
 `v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault`, and a seventh, `v2-binding` (S5c derives it,
-S5d commits it: see "The reference binding validator" below). All seven files are committed: 958 cases, 1,419 in the
-family with the four v1 categories.
+S5d commits it: see "The reference binding validator" below). All seven files are committed: 1,628 cases, 2,089 in the
+family with the four v1 categories (S10d, the slice that adds the `ir.fixed` and `ir.tuple` vectors, added 670 of them).
 The oracle **derives every expectation**: `src/coding_adventures_warrant_oracle/conformance.py` is the
 derivation module, and the hand-written case tables, the three small kit documents the chunk cases come from
-and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case).
+and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case; the four kit documents are
+`kit`, `kit-small`, `kit-width` and, from S10d, `kit-tuple`).
 
 | Category | The module derives it from |
 |---|---|
@@ -475,7 +549,7 @@ adds 48 cases to the tables, 782 in all (`v2-ir` 248, `v2-domain` 162, `v2-chunk
 unchanged), and the derivation changes they need (VER04r section 16.18 R69 to R77: a `width_params` op in the kit,
 `level-missing` and `requires` by what `ir` reaches, the `errs` rules, the chain depth of an uncalled model); the
 committed `v2-*.json` files and `index.json` are the fixture PRs': S5e's regenerated the six (782 cases) and S5d
-(`v2-binding.json`, 176 cases) brought the family to 1,419. **Regeneration is two steps**:
+(`v2-binding.json`, 176 cases) brought the family to 958 (1,628 after S10d). **Regeneration is two steps**:
 `make_conformance.py --write` (the seven files), then `python3 code/scripts/warrant_corpus_conformance.py --write`
 (`index.json`: the four v1 rows, then one row per `v2-*.json` on disk in the fixed order). `BUILD` runs
 `make_conformance.py --check --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1` (a second derivation of
@@ -483,6 +557,16 @@ the `2**24` suite, about a minute, that the pytest session fixture does not shar
 `code/scripts/warrant_corpus_conformance.py` (which indexes and structurally checks the `v2-*` files without importing
 the oracle or a lane) and its tests, so either tool alone catches a stale index. An edit to the fixture directory,
 the checker or its test selects this package (build-tool `isWarrantOracleInput`).
+
+**S10d** (one PR, [D70]: the tables and the regenerated kit together) adds 670 cases: `v2-value` 49 (tuple values, stream tag `64`),
+`v2-ir` 469 (every `ir.fixed` and `ir.tuple` tag of Appendix A.1, `match` on a `Result`, the vectors of R76, R100, R111 and R120),
+`v2-domain` 57 (the `tuple` descriptor and `nat_shift`), `v2-chunk` 23 (a v2-stream chunk with a tuple binder, over the new
+`kit-tuple.warrant`, and the ops and models of a chunk corpus, R125) and `v2-fault` 72 (the `ir.fixed` and `ir.tuple` templates,
+`off-by-one-consumed` on a `Result<(Bytes,Nat),E>`, `missing-error` with a tuple payload, the `ill-typed` cases of R96 to R98 and R121, and
+the `unknown-tag`, `depth` and `model-order` of R119); `v2-arith` gains none, because the closed `op` set of section 11 (`add sub mul neg`
+and the six comparisons) is all `ir.core`.  A table row of S10d states the `requires` it expects (`Row.requires`) and the build fails
+if the oracle computes another; the 958 cases of S5 are byte for byte unchanged (`tests/test_s10d_vectors.py` pins a digest of them).
+The oracle learned one thing for it: `_rewrite_subjects` now rewrites a subject call inside a `match` arm to its stand-in.
 
 `tests/test_conformance_mutants.py` is the mutant test of [D42]: sixteen named wrong evaluators (no wrap,
 saturation, a signed compare on the bit pattern, eager `and`, first-binder-fastest enumeration, a missing chunk

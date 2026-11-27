@@ -1,1 +1,1 @@
-cargo test -p der-asn1 -- --nocapture
+cargo test --locked -p der-asn1 -- --nocapture

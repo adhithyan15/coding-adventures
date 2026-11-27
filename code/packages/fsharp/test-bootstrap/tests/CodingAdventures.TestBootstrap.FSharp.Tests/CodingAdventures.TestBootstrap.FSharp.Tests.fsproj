@@ -22,5 +22,10 @@
     <Compile Include="ApiTests.fs" />
     <Compile Include="ExceptionTests.fs" />
     <Compile Include="BudgetTests.fs" />
+    <Compile Include="FuzzSupport.fs" />
+    <Compile Include="FsFuzzCorpusRunner.fs" />
+    <Compile Include="FuzzCorpusTests.fs" />
+    <Compile Include="FuzzWrapperPinTests.fs" />
+    <Compile Include="FuzzCampaignTests.fs" />
   </ItemGroup>
 </Project>

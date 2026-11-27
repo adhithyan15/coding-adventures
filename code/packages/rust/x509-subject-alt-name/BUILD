@@ -1,1 +1,1 @@
-cargo test -p x509-subject-alt-name -- --nocapture
+cargo test --locked -p x509-subject-alt-name -- --nocapture

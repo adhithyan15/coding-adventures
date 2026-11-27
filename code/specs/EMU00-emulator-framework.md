@@ -815,7 +815,7 @@ CPU contract's boundary rule (`cpu_boundary_irq`) holds.
 | GE-225 (L3) | D | internal latch | `restore`; typed errors in place of `String` | VOS-016 |
 | 8080 (L7) | H (latch, peek) | not available: no delivery mechanism, so a board has no `irq` lines and timing is by polling | `restore` (all fields are pub) | VOS-014 |
 | Z80 (L7) | H (latch, peek, prefix forms) | `interrupt(data)` and `nmi()` at the boundary; the adapter implements the EI one-instruction delay the simulator lacks | none | no row yet (VOS-D017) |
-| PDP-11 (L6, L8) | B | priority levels and vectors in the new core | none: the old crate stays | no row yet (VOS-D013); MMU in VOS-030 |
+| PDP-11 (L6, L8) | B | priority levels and vectors in the new core | none: the old crate stays | VOS-041 (VOS-D013); MMU in VOS-030 |
 | RV32 (L11, M) | B | CLINT and PLIC lines into `mip` | none: the old crates stay | VOS-020, VOS-021 |
 | S/370 (L9) | N | none | privileged slice, I/O | VOS-032 |
 | AGC (L4) | new simulator | its own | the simulator itself | VOS-018 |
@@ -1239,7 +1239,7 @@ are different classes (section 3.3): `emu-image` (class P) and `emu-host`
 | `emu-cpu-ge225` | M | Shape D | VOS-016 |
 | `emu-cpu-i8080` | M | Shape H (latch and peek) | VOS-014 |
 | `emu-cpu-z80` | M | Shape H plus interrupts | no row (VOS-D017) |
-| `emu-cpu-pdp11` | M | Shape B, new core | no row (VOS-D013); MMU VOS-030 |
+| `emu-cpu-pdp11` | M | Shape B, new core | VOS-041 (VOS-D013); MMU VOS-030 |
 | `emu-cpu-rv32` | M | Shape B, new core; M and U modes, trap CSRs, then PMP | VOS-020, VOS-021 |
 | `emu-cpu-agc` | M | Over the new AGC simulator | VOS-018 |
 | `emu-cpu-s370` | M | After the privileged slice | VOS-032 |
@@ -1264,7 +1264,7 @@ Each has a recommended answer, which this document assumes until decided.
 | Q6 | DMA devices? | Programmed I/O only for the ladder. When the first DMA device is scheduled (a virtio-like disk, GE-225 card DMA), devices emit `DmaRequest` outputs which the spine executes at an instruction boundary, so no device calls the bus |
 | Q7 | Where does ELF parsing live? | Outside the emulator: a host tool turns an ELF into a `meminit` image; the emulator never parses ELF |
 | Q8 | Which QEMU version for the RISC-V lane? | Pinned in VOS-021, with the memory map of section 5.2 checked against it |
-| Q9 | Who owns the PDP-11 machine work between VOS-013 and VOS-023? | A new backlog row (VOS-D013) |
+| Q9 | Who owns the PDP-11 machine work between VOS-013 and VOS-023? | A new backlog row, VOS-041 (VOS-D013) |
 | Q10 | One global clock or per-device clock domains? | One global tick; a device that needs a divider counts ticks itself |
 | Q11 | New RV32 core or extend `Rv32ISimulator`? | New core `emu-cpu-rv32` reusing the decoder; old crate untouched (section 7.3) |
 | Q12 | Torn writes and power loss on disks and tape? | Out of scope for v1; block writes are atomic in the model |

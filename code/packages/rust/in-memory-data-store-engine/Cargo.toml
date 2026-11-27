@@ -6,7 +6,7 @@ description = "Pluggable in-memory data store engine"
 license = "MIT"
 
 [dependencies]
-heap = { path = "../heap" }
+heap = { package = "coding-adventures-heap", version = "0.1.0", path = "../heap" }
 hash-map = { path = "../hash-map" }
 hash-set = { path = "../hash-set" }
 hyperloglog = { path = "../hyperloglog" }

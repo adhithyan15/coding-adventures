@@ -1,1 +1,1 @@
-cargo test -p drc-lvs -- --nocapture
+cargo test --locked -p drc-lvs -- --nocapture

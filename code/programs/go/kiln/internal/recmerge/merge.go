@@ -106,7 +106,38 @@ type Expected struct {
 	// Steps maps a package rel_path to recfmt.StepsDigest of the BUILD lines
 	// this OS runs (B6).
 	Steps map[string]string
+
+	// Language is the recording selection ("" is every language, the default
+	// and the only value before the selector existed).  It is the merge job's
+	// OWN declaration, never read from a shard; every shard's binding must
+	// equal it or the run is void (B3), so blank bindings under a selection and
+	// selection bindings under the default are both refused.
+	Language string
+	// Foreign is the rel_path of every package of the merge's own graph that
+	// the regenerated plan does NOT run, sorted.  With Language "" it must be
+	// empty (else the run is void); with a selection it drives the foreign rule.  Under a
+	// language selection a Go action can read where such a package's build
+	// outputs would be with no declared edge; in the selected run those outputs
+	// are absent, and the merge checks absences only against writes of actions
+	// IN the run, so nothing would contradict the probe.  An absent or untracked
+	// observation inside a Foreign package's directory therefore costs the
+	// action its record (reason ForeignRead).
+	Foreign []string
+	// PlanOutsideSelection counts plan packages the graph says are not of
+	// Language.  Non-zero means the plan was not built with the selection the
+	// bindings claim, which voids the run.
+	PlanOutsideSelection int
+	// PlanNotClosed counts plan packages with a prerequisite (a graph edge, on
+	// any platform, test-trigger providers included) that the plan does not
+	// run. Under a selection such a package cannot have been built as it is
+	// really built, so the run is void.
+	PlanNotClosed int
 }
+
+// ForeignRead is the reason of an action that observed an untracked or absent
+// path inside a package the selection left out.  It is a fixed token: no path
+// text, so the report can count it and print it safely.
+const ForeignRead = "foreign-package-read"
 
 // Input is everything Merge needs.
 type Input struct {
@@ -323,6 +354,10 @@ type merger struct {
 	acts    map[string]*act
 	ordered []*act
 
+	// foreign and selected are the language selection's package sets (see
+	// buildForeign); foreign is nil when every language is recorded.
+	foreign, selected map[string]bool
+
 	wIx, twIx *pathIndex
 	shardW    map[*recfmt.Shard]*pathIndex
 	shardInv  map[*recfmt.Shard]pathSet
@@ -474,9 +509,25 @@ func (m *merger) checkBindings() {
 	if err != nil {
 		m.void("plan: %v", err)
 	}
+	if exp.PlanOutsideSelection > 0 {
+		m.void("plan: %d package(s) are not of the sealed language selection", exp.PlanOutsideSelection)
+	}
+	if exp.PlanNotClosed > 0 {
+		m.void("plan: %d package(s) have a prerequisite the plan does not run", exp.PlanNotClosed)
+	}
+	// With every language recorded the plan must be every package: a
+	// language-restricted plan is never to be read as `all`.
+	if exp.Language == "" && len(exp.Foreign) > 0 {
+		m.void("plan: the default (all languages) selection, but the plan leaves out %d graph package(s)", len(exp.Foreign))
+	}
+	m.buildForeign()
 	for _, s := range m.shards {
 		i, b := s.ArtifactIndex, &s.Binding
 		bad := func(what string) { m.void("binding shard %d: %s", i, what) }
+		// The selection each shard sealed must be the one the merge acts on.
+		if b.Language != exp.Language {
+			bad("B3 the language selection differs from the one the merge declared")
+		}
 		if i < 0 || i >= m.n {
 			bad("the artifact index is outside the plan")
 			// Nothing of this shard has been validated: never analyse it.
@@ -532,6 +583,49 @@ func (m *merger) checkBindings() {
 			bad("B3 inventory.json is not the file the binding names")
 		}
 		m.checkRecordSet(s)
+	}
+}
+
+// buildForeign indexes the packages the selection left out, together with the
+// packages the plan runs, so that foreignDir can find the NEAREST enclosing
+// package of a path (packages nest: a selected package may live inside a
+// foreign package's directory, and a path inside it belongs to it).
+func (m *merger) buildForeign() {
+	m.foreign = nil
+	if m.in.Expected.Language == "" {
+		return
+	}
+	m.foreign = map[string]bool{}
+	for _, f := range m.in.Expected.Foreign {
+		m.foreign[f] = true
+	}
+	m.selected = map[string]bool{}
+	for _, p := range m.in.Expected.Plan {
+		for _, pkg := range p.Packages {
+			m.selected[pkg] = true
+		}
+	}
+}
+
+// foreignDir reports whether path u lies inside a package the selection left
+// out: the nearest enclosing package (u itself or an ancestor directory) is a
+// Foreign one.  An ancestor of a foreign directory is not inside it.
+func (m *merger) foreignDir(u string) bool {
+	if m.foreign == nil {
+		return false
+	}
+	for p := u; ; {
+		if m.selected[p] {
+			return false
+		}
+		if m.foreign[p] {
+			return true
+		}
+		i := strings.LastIndexByte(p, '/')
+		if i < 0 {
+			return false
+		}
+		p = p[:i]
 	}
 }
 
@@ -902,6 +996,22 @@ func (m *merger) perAction() {
 				a.rs.add("precondition:" + traced.Sanitize(c.rec.Refusal))
 			}
 			inv := m.shardInv[c.sh]
+
+			// M16 (language selection): an absent or untracked observation
+			// inside a package the selection left out.  The action read where
+			// that package's outputs would be, with no declared edge; here they
+			// are absent because the package was never built, so nothing above
+			// can contradict the probe.  The action loses its record (only
+			// this action: the reason is a merge-added fixed token, not an
+			// order dependence).  A read of a foreign package's TRACKED source
+			// is an ordinary manifest entry and is not looked at here.
+			for _, list := range [][]string{rec.UntrackedObservations, rec.AbsentObservations} {
+				for _, u := range list {
+					if m.foreignDir(u) {
+						a.rs.add(ForeignRead)
+					}
+				}
+			}
 
 			// M5 and M6: an untracked path the action saw, or an absent name it
 			// probed, that another action wrote (before or after: another job

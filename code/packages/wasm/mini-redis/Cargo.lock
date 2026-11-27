@@ -15,6 +15,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4e7648175b45a9a48536d676f68d918270699102aa8dab5496df06904c914600"
 
 [[package]]
+name = "coding-adventures-heap"
+version = "0.1.0"
+
+[[package]]
 name = "coding_adventures_hash_functions"
 version = "0.2.0"
 
@@ -31,10 +35,6 @@ version = "0.1.0"
 dependencies = [
  "hash-map",
 ]
-
-[[package]]
-name = "heap"
-version = "0.1.0"
 
 [[package]]
 name = "hyperloglog"
@@ -55,9 +55,9 @@ dependencies = [
 name = "in-memory-data-store-engine"
 version = "0.1.0"
 dependencies = [
+ "coding-adventures-heap",
  "hash-map",
  "hash-set",
- "heap",
  "hyperloglog",
  "in-memory-data-store-protocol",
  "skip-list",

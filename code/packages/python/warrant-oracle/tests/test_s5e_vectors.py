@@ -167,12 +167,10 @@ def test_a_fault_needs_a_common_type_not_assignability():
     """R94: ``take(result, 2)`` of a ``Bytes<2>`` result is plain ``Bytes``: it unifies with ``Bytes<2>``, it does not flow."""
     assert C.derive_fault(fault_case(post(TAKE2), PAIR2, ["0a"], "0a0b")) == {"result": "0a0b"}
     assert not E._assignable(A.Ty("Bytes"), A.Ty("Bytes", (2,)))
-    for expr in (["lit", True], ["len", ["var", "result"]]):  # no common type with Bytes<2>
-        with pytest.raises(C.KitError, match="common type"):
-            C.derive_fault(fault_case(post(expr), PAIR2, ["0a"], "0a0b"))
+    for expr in (["lit", True], ["len", ["var", "result"]]):  # no common type with Bytes<2>: [D74] ``ill-typed``
+        assert C.derive_fault(fault_case(post(expr), PAIR2, ["0a"], "0a0b")) == {"error": "ill-typed"}
     rewrite = {"fault": "f", "op": "o", "kind": "pre", "requires": CORE, "rewrites": [{"param": "a", "expr": ["lit", True]}]}
-    with pytest.raises(C.KitError, match="common type"):
-        C.derive_fault(fault_case(rewrite, PAIR2, ["0a"], "0a0b"))
+    assert C.derive_fault(fault_case(rewrite, PAIR2, ["0a"], "0a0b")) == {"error": "ill-typed"}
 
 
 def test_a_bare_ok_has_the_unknown_error_type_and_is_tolerated():

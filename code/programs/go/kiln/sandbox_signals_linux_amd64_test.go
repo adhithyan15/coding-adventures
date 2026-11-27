@@ -101,7 +101,30 @@ func runStracedOr(t *testing.T, script string, setup func(f *sandboxFixture), to
 // connected socket pair, the child end as strace's descriptor 5 (after the two
 // output pipes, 3 and 4), `--exec-notify-fd 5` in the sandbox's arguments, and
 // a responder on this side that answers every notification CONTINUE.
+//
+// strace itself has one known race on a dying thread (its own PTRACE_LISTEN call
+// fails and it exits 1; see strace_retry_test.go).  When a run fails with exactly
+// that, the whole step is run again from a fresh fixture, up to
+// stracePtraceListenAttempts runs in all; every other failure, and the last race
+// hit, fails the test as before.  Each test logs `STRACE_LISTEN_RETRIES=N` (0 when
+// the race never hit) so CI can count how often it happens.
 func runStracedImpl(t *testing.T, script string, setup func(f *sandboxFixture), tolerate func(*trace.Error) bool, notify bool) *stracedRun {
+	t.Helper()
+	retries := 0
+	defer func() { t.Logf("STRACE_LISTEN_RETRIES=%d", retries) }()
+	for attempt := 1; ; attempt++ {
+		r, raced := runStracedAttempt(t, script, setup, tolerate, notify, attempt)
+		if !raced {
+			return r
+		}
+		retries++
+	}
+}
+
+// runStracedAttempt is one run of runStracedImpl.  It reports raced (and a nil
+// run) only when strace hit its PTRACE_LISTEN race and another attempt remains;
+// the caller runs it again.  Everything else is judged here, as it always was.
+func runStracedAttempt(t *testing.T, script string, setup func(f *sandboxFixture), tolerate func(*trace.Error) bool, notify bool, attempt int) (*stracedRun, bool) {
 	t.Helper()
 	straceBin, err := exec.LookPath("strace")
 	if err != nil {
@@ -213,6 +236,21 @@ func runStracedImpl(t *testing.T, script string, setup func(f *sandboxFixture), 
 	r.stdout, r.stderr = stepOut, stepErr
 	t.Logf("step stdout: %q\nstep stderr: %q", stepOut, stepErr)
 	if runErr != nil {
+		code := -1
+		var ee *exec.ExitError
+		if errors.As(runErr, &ee) {
+			code = ee.ExitCode()
+		}
+		if stracePtraceListenRace(code, eb.Bytes()) {
+			if straceShouldRetry(attempt, true) {
+				// Our own synthetic fixture: strace's stderr is safe to print.
+				t.Logf("strace hit its PTRACE_LISTEN race (attempt %d of %d), running the step again: %s",
+					attempt, stracePtraceListenAttempts, strings.TrimSpace(eb.String()))
+				return nil, true
+			}
+			t.Fatalf("strace hit its PTRACE_LISTEN race on all %d attempts: %v\nstrace stderr: %s\n--- trace tail ---\n%s",
+				attempt, runErr, eb.String(), r.tail(25))
+		}
 		t.Fatalf("strace: %v\nstrace stderr: %s\n--- trace tail ---\n%s", runErr, eb.String(), r.tail(25))
 	}
 	if eb.Len() != 0 {
@@ -234,7 +272,7 @@ func runStracedImpl(t *testing.T, script string, setup func(f *sandboxFixture), 
 			at = te.Line
 			if tolerate != nil && tolerate(te) {
 				r.tr, r.refusal = nil, te
-				return r
+				return r, false
 			}
 		}
 		lo, hi := at-15, at+5
@@ -255,7 +293,7 @@ func runStracedImpl(t *testing.T, script string, setup func(f *sandboxFixture), 
 		t.Fatalf("the trace was refused: %v (line %d of %d)\n--- around the refused line ---\n%s\n--- trace tail ---\n%s",
 			err, at, len(lines), win.String(), r.tail(25))
 	}
-	return r
+	return r, false
 }
 
 // exitOf finds the exit of the process with this signal, and its index in

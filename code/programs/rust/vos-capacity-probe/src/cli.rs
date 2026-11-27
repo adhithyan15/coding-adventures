@@ -1874,8 +1874,17 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     refuse_unrenderable(&res)?;
     let block = table::render_block(&res);
     if has(args, "--write") {
-        let new = table::splice(&spec, &block)
+        let mut new = table::splice(&spec, &block)
             .ok_or_else(|| Failure::Usage("the spec has no marker pair to write between".into()))?;
+        // The re-plan block of 8.6 (VOS-D142) is written in the same pass when the spec has its
+        // marker pair; a broken pair is a usage error, not a silent skip.
+        if table::extract_replan_block(&new)
+            .map_err(Failure::Usage)?
+            .is_some()
+        {
+            new = table::splice_replan(&new, &table::render_replan_block(&res))
+                .ok_or_else(|| Failure::Usage("the spec has no replan marker pair".into()))?;
+        }
         write_atomic(&sp, &new)?;
     } else {
         write!(out, "{block}").map_err(|e| Failure::Usage(e.to_string()))?;
@@ -1883,12 +1892,19 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     Ok(())
 }
 
-/// `decide`.
+/// `decide`; `decide --replan` prints section 8.6's decision instead (VOS-D142): the row, K, the
+/// memory verdict and the conditions, the lines `table --write` renders into the replan block.
 pub fn cmd_decide(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
     let (rp, _) = paths(args);
     let res = Results::from_canonical_text(&read(&rp)?).map_err(Failure::Usage)?;
-    let d = decide(&res.rows);
     let w = |e: std::io::Error| Failure::Usage(e.to_string());
+    if has(args, "--replan") {
+        for l in table::replan_lines(&results::decide_replan(&res.rows)) {
+            writeln!(out, "{l}").map_err(w)?;
+        }
+        return Ok(());
+    }
+    let d = decide(&res.rows);
     writeln!(out, "row {}: {}", d.row, d.title).map_err(w)?;
     for b in &d.because {
         writeln!(out, "  {b}").map_err(w)?;

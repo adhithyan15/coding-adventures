@@ -3,6 +3,10 @@
 version = 4
 
 [[package]]
+name = "coding-adventures-heap"
+version = "0.1.0"
+
+[[package]]
 name = "coding_adventures_hash_functions"
 version = "0.2.0"
 
@@ -25,10 +29,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "heap"
-version = "0.1.0"
-
-[[package]]
 name = "hyperloglog"
 version = "0.1.0"
 dependencies = [
@@ -47,9 +47,9 @@ dependencies = [
 name = "in-memory-data-store-engine"
 version = "0.1.0"
 dependencies = [
+ "coding-adventures-heap",
  "hash-map",
  "hash-set",
- "heap",
  "hyperloglog",
  "in-memory-data-store-protocol",
  "skip-list",
