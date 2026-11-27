@@ -6,7 +6,13 @@
 /.github/release-signers @adhithyan15
 /.github/release-signers.sig @adhithyan15
 /.github/workflows/publish.yml @adhithyan15
+/.github/workflows/ci.yml @adhithyan15
 /code/scripts/release_gate.py @adhithyan15
+/code/scripts/capability_approval_gate.py @adhithyan15
+/code/specs/13-capability-security.md @adhithyan15
+/code/specs/schemas/required_capabilities.schema.json @adhithyan15
+/code/specs/schemas/capability-approval.schema.json @adhithyan15
+/code/specs/capability-approvals/ @adhithyan15
 /code/assumptions/buckets-v1.json @adhithyan15
 /code/assumptions/buckets-v1.json.sig @adhithyan15
 /code/assumptions/catalogue-v1.json @adhithyan15

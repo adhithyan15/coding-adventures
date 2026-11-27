@@ -15,6 +15,7 @@
     "previous_profile_status",
     "new_profile_status",
     "previous_manifest_sha256",
+    "new_manifest_sha256",
     "previous_capabilities",
     "new_capabilities",
     "previous_banned_construct_exceptions",
@@ -29,7 +30,7 @@
     "type": { "type": "string", "const": "capability_escalation" },
     "manifest_path": {
       "type": "string",
-      "pattern": "^code/(packages|programs)/[a-z0-9_-]+/[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*/required_capabilities\\.json$",
+      "pattern": "^code/(packages|programs)/[a-z0-9_-]+/[a-z0-9][a-z0-9._-]*/required_capabilities\\.json$",
       "description": "Repository-relative path to the package's capability manifest. The corresponding approval and signature are stored outside this package tree."
     },
     "package": {

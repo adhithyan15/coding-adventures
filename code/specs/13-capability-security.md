@@ -857,7 +857,10 @@ package or approval. The current registry is an uninitialized placeholder until 
 owner adds its first key and revision-1 trust anchor through the owner-reviewed VER31
 bootstrap. Until a key is registered, capability approvals cannot validate.
 
-Signer entries list the namespaces they may authorize. A signer can approve a
+Signer entries list the namespaces they may authorize. The current release-gate
+parser accepts one namespace per signer entry; do not comma-combine namespaces.
+The capability verifier selects an entry for the signing principal that explicitly
+grants `coding-adventures-capabilities`. A signer can approve a
 capability change only when its trusted registry line explicitly includes the
 `coding-adventures-capabilities` namespace. Adding that namespace grants a new signing
 authority and must be part of the separately reviewed signer-chain update; the
@@ -906,12 +909,14 @@ but they can be secured:
 
 ### Capability escalation approval
 
-Adding a capability is a **stricter sub-category** of publish approval. Changing or
-removing an existing nonempty capability profile, or changing a nonempty
-`banned_construct_exceptions` list, is security-relevant and also requires an approval.
-An absent manifest is the default-deny profile; adding a valid empty profile does not
-grant authority. This gate is incremental: it verifies profile changes in a pull request
-and does not turn every untouched legacy manifest into a new baseline blocker.
+Adding or changing a capability grant is a **stricter sub-category** of publish approval.
+A transition that adds, removes, or changes a nonempty `capabilities` array, or adds,
+removes, or changes a nonempty `banned_construct_exceptions` array, is security-relevant
+and requires an approval. A valid empty profile addition, or a manifest edit that only
+changes formatting or its top-level `justification`, does not grant authority and needs
+no approval. An absent manifest is the default-deny profile. This gate is incremental:
+it verifies grant transitions in a pull request and does not turn every untouched legacy
+manifest into a new baseline blocker.
 
 Each approval is a strict versioned JSON document under
 `code/specs/capability-approvals/`, outside the package tree, with a detached `.sig`.
@@ -933,7 +938,11 @@ members and noncanonical byte encodings are rejected. The payload binds:
 - reason, signing principal and UTC approval time.
 
 An approval-only commit does not change the package tree object ID and cannot invalidate
-its own signature. A package source, manifest, or base change does. A deleted manifest
+its own signature. A package source, manifest, or base change in the pull request that
+already contains a pending profile transition does. A later source-only pull request with
+the same capability and exception arrays does not require a new approval; its source is
+reviewed through ordinary code review and CI. A metadata-only manifest edit that does not
+change those arrays also needs no signature. A deleted manifest
 has `new_profile_status: absent`, null new manifest hash, and empty new capability and
 exception arrays; when the entire package directory is also deleted, its package tree is
 null. This authorizes no capability because an absent manifest is default deny. The
