@@ -18,12 +18,13 @@ packages: `c/unix-history-simulator`, `cpp/unix-history-simulator`,
 `rust/unix-history-simulator`, and `typescript/unix-history-simulator`.
 Their package repository-input hashes include the fixture bytes.
 
-`replay_cli.py` is read by the C, C++, Java, and Lua package BUILD scripts, so
-changes to it select and hash only those four consumers. `build_windows.py` is
-invoked by those same four packages' `BUILD_windows` files and has the same
-four-consumer route. Each external adapter source under `test-adapters/` is
-read by its matching package recipe: C, C++, Java, or Lua. The adapter README
-and similarly named files outside these exact inputs do not select consumers.
+`replay_cli.py` and the shared `build_native.py` driver are read by the C,
+C++, Java, and Lua package BUILD recipes, so changes to either select and hash
+only those four consumers. The driver runs package component tests and fixture
+replay on Linux, macOS, and Windows. Each external adapter source under
+`test-adapters/` is read by its matching package recipe: C, C++, Java, or Lua.
+The adapter README and similarly named files outside these exact inputs do not
+select consumers.
 
 ## Selection and hash behavior
 
@@ -42,7 +43,7 @@ language-specific invocation cannot select another language's package.
 
 ## Verification
 
-Tests pin the package set for the canonical fixture, helper, Windows driver,
+Tests pin the package set for the canonical fixture, helper, native driver,
 and each adapter; exercise add/edit/delete/rename path selection and
 lookalikes; and verify that changing declared content changes the appropriate
 package hash while unrelated packages and hash inputs remain unchanged. The
