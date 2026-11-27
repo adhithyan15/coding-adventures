@@ -2,8 +2,8 @@
 
 int main(void) {
     HddSimulator *simulator = NULL;
-    HddSnapshot snapshot;
-    HddTiming timing;
+    HddSnapshot snapshot = {0};
+    HddTiming timing = {0};
     uint8_t bytes[HDD_SECTOR_BYTES];
     HddStatus status = hdd_create(&simulator);
     if (status != HDD_OK) return 1;
