@@ -129,6 +129,11 @@ var (
 	historicalUnixCppAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
 	historicalUnixJavaAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
 	historicalUnixLuaAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
+	historicalUnixCsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.cs"
+	historicalUnixCsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.csproj"
+	historicalUnixFsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fs"
+	historicalUnixFsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fsproj"
+	historicalUnixBuildDotnetPath   = "code/specs/fixtures/historical-unix-v1/build_dotnet.py"
 	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
 	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
 	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
@@ -615,11 +620,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 			osMachineRiscvPath, osMachineRiscvVerifyPath,
 		},
 	},
-	// HOS-002b: every native port replays the canonical shared trace. The
-	// adjacent helper/build driver and external adapters are narrower inputs
-	// read only by the four package recipes that compile those adapters.
+	// HOS-002b: each reusable port replays the canonical shared trace. The
+	// helper/build drivers and external adapters are narrower inputs read only
+	// by the package recipes that compile those adapters.
 	historicalUnixFixtureRow("c"),
 	historicalUnixFixtureRow("cpp"),
+	historicalUnixFixtureRow("csharp"),
+	historicalUnixFixtureRow("fsharp"),
 	historicalUnixFixtureRow("go"),
 	historicalUnixFixtureRow("java"),
 	historicalUnixFixtureRow("lua"),
@@ -632,14 +639,22 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
 	historicalUnixAdapterRow("java", historicalUnixJavaAdapterPath),
 	historicalUnixAdapterRow("lua", historicalUnixLuaAdapterPath),
+	historicalUnixAdapterRow("csharp", historicalUnixCsharpAdapterPath),
+	historicalUnixAdapterRow("csharp", historicalUnixCsharpProjectPath),
+	historicalUnixAdapterRow("fsharp", historicalUnixFsharpAdapterPath),
+	historicalUnixAdapterRow("fsharp", historicalUnixFsharpProjectPath),
 	historicalUnixReplayRow("c"),
 	historicalUnixReplayRow("cpp"),
 	historicalUnixReplayRow("java"),
 	historicalUnixReplayRow("lua"),
+	historicalUnixReplayRow("csharp"),
+	historicalUnixReplayRow("fsharp"),
 	historicalUnixBuildNativeRow("c"),
 	historicalUnixBuildNativeRow("cpp"),
 	historicalUnixBuildNativeRow("java"),
 	historicalUnixBuildNativeRow("lua"),
+	historicalUnixBuildDotnetRow("csharp"),
+	historicalUnixBuildDotnetRow("fsharp"),
 	{
 		name:     "go/microbenchmark",
 		language: "go",
@@ -1811,6 +1826,15 @@ func historicalUnixBuildNativeRow(language string) repositoryInputConsumer {
 	}
 }
 
+func historicalUnixBuildDotnetRow(language string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the shared .NET historical Unix adapter build driver invoked by this package",
+		matches: exactRepositoryPath(historicalUnixBuildDotnetPath),
+		paths:   []string{historicalUnixBuildDotnetPath},
+	}
+}
+
 func exactRepositoryPath(expected string) func(string) bool {
 	return func(changed string) bool { return changed == expected }
 }
@@ -1864,6 +1888,10 @@ func repositoryInputsForPackage(packageName string) []string {
 				inputs = append(inputs, historicalUnixLuaAdapterPath)
 			}
 		case "go", "perl", "python", "ruby", "rust", "typescript":
+		case "csharp":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath)
+		case "fsharp":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixFsharpAdapterPath, historicalUnixFsharpProjectPath)
 		default:
 			return nil
 		}
