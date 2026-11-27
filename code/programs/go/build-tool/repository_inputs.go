@@ -650,6 +650,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("ocaml"),
 	historicalUnixFixtureRow("perl"),
 	historicalUnixFixtureRow("python"),
+	historicalUnixFixturePackageRow("ruby/unix_history_simulator", "ruby"),
 	historicalUnixFixtureRow("rust"),
 	historicalUnixFixtureRow("swift"),
 	historicalUnixFixtureRow("typescript"),
@@ -1969,6 +1970,9 @@ func repositoryInputsForPackage(packageName string) []string {
 			historicalUnixFixturePath, historicalUnixReplayPath,
 			historicalUnixElixirBuildPath, historicalUnixElixirAdapterPath,
 		}
+	}
+	if packageName == "ruby/unix_history_simulator" {
+		return []string{historicalUnixFixturePath}
 	}
 	if strings.HasSuffix(packageName, "/unix-history-simulator") {
 		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
