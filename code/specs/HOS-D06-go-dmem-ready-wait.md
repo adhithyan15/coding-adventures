@@ -29,31 +29,38 @@ remain selected by the existing EX preflight before a request can issue.
 
 ## Cycle convention
 
-`Core.Step()` advances exactly one numbered pipeline cycle. A request's first
-MEM cycle is its issue/service cycle and counts as service cycle one. At the
-beginning of each cycle, before hazard arbitration, the memory timing unit
-advances the outstanding request and makes any completed response visible to
-the MEM token. For latency `L`, a request issued in cycle `M` is ready for
-normal pipeline advancement in cycle `M + L - 1`. Therefore it incurs exactly
-`L - 1` held cycles:
+`Core.Step()` advances exactly one numbered pipeline cycle. The existing
+pipeline order is significant: it increments the cycle, arbitrates hazards on
+the current stage tokens, moves tokens, runs callbacks for tokens entering a
+stage, then runs WB and records the snapshot. The request is issued by the MEM
+entry callback after stage movement in cycle `M`; this callback is service
+cycle one. Latency one completes there and adds no wait. For latency `L > 1`,
+the pending request is first visible to hazard arbitration in cycle `M + 1`.
+Each not-ready arbitration holds IF/ID/EX/MEM and counts as one wait cycle;
+request progress/completion occurs at the end of that held cycle, before the
+next `Step()` can arbitrate. Thus a request of latency `L` is ready before
+arbitration in release cycle `M + L`, after exactly `L - 1` held cycles:
 
-| Configured latency | Issue cycle | Held cycles | Ready/release cycle |
-| ---: | --- | ---: | --- |
-| 1 | `M` | 0 | `M` |
-| 2 | `M` | 1 (`M`) | `M + 1` |
-| 3 | `M` | 2 (`M`, `M + 1`) | `M + 2` |
+| Configured latency | Issue cycle | Held cycles | Completion boundary | Ready/release arbitration |
+| ---: | --- | --- | --- | --- |
+| 1 | `M` | none | MEM-entry callback in `M` | normal `M` transition (no wait) |
+| 2 | `M` | `M + 1` | end of held cycle `M + 1` | `M + 2` |
+| 3 | `M` | `M + 1`, `M + 2` | end of held cycle `M + 2` | `M + 3` |
 
-The ready response is available before that cycle's hazard/forwarding decision,
-not at the end of the cycle. This lets a dependent instruction use the normal
-typed MEM forwarding path on the release cycle. The cycle counter, retired
-count, and stage trace count each held cycle exactly once. A hold is not a
-second memory access, retirement, or callback invocation.
+For latency one, completion occurs in the MEM-entry callback after the cycle's
+hazard decision, exactly where the existing synchronous memory callback
+produces its result. For higher latencies, completion is recorded at the end
+of the last held cycle, and the response is available before hazard/forwarding
+selection on the following release cycle. The cycle counter, retired count,
+and stage trace count each held cycle exactly once. A hold is not a second
+memory access, retirement, or callback invocation.
 
 ## Request lifecycle and backpressure
 
 Each dynamic pipeline instruction has a stable token identity distinct from
 its PC; loops may execute the same PC more than once. When an eligible `LW` or
-`SW` first enters MEM, it issues one request containing that token identity,
+`SW` first enters MEM, its existing MEM-entry callback issues one request
+containing that token identity,
 instruction PC, checked effective word address, operation kind, and the
 configured latency. No request issues for a faulting or squashed instruction.
 At most one request may be outstanding. The request cannot be replaced,
@@ -61,7 +68,11 @@ reissued, canceled, or completed out of order while pending. A request-complete
 event and a request-issued count are recorded once per dynamic token; held-cycle
 evidence records the token and cycle for each actual wait cycle.
 
-If the request is not ready at the beginning of a cycle:
+If the request remains pending when the next cycle begins, the normal pipeline
+hazard callback selects the additive wait action. Each held cycle runs the
+request's deterministic service progress and records completion, if due, at
+that cycle's end. The action is no longer selected on the following cycle
+because the ready response is visible before arbitration. During a held cycle:
 
 1. Hold IF, ID, EX, and MEM tokens in place, preserving their identities and
    values; keep the fetch PC unchanged and do not fetch or decode younger work.
@@ -128,10 +139,12 @@ readiness does not create new fault classes or defer address validation.
 Validation must use two references with separate responsibilities:
 
 1. **Independent cycle/hold oracle.** A small test-only state model derives
-   issue, held, completion, and release cycles from `(latency, first MEM
-   cycle)`, without calling the production request/tick or pipeline-wait
-   helpers. For the table above it expects respectively `(M, no holds, M)`,
-   `(M, [M], M+1)`, and `(M, [M,M+1], M+2)`. The test compares token identities
+   issue, held, completion, and release cycles from `(latency, MEM-entry
+   callback cycle)`, without calling the production request/tick or
+   pipeline-wait helpers. For the table above it expects respectively
+   `(M, no holds, completion in callback M)`,
+   `(M, [M+1], completion end M+1, release M+2)`, and
+   `(M, [M+1,M+2], completion end M+2, release M+3)`. The test compares token identities
    and per-cycle IF/ID/EX/MEM/WB observations, fetch-PC stability, issue/complete
    counts, wait-cycle evidence, and exactly-once WB retirement/commit. It also
    exercises at least one latency greater than three and a second memory
@@ -156,7 +169,8 @@ published 16-cycle/9-retirement fixture unchanged as a compatibility check.
    D05 tests pass. With opt-in latency one, the 16-cycle/9-retirement baseline
    remains unchanged and reports zero wait cycles.
 2. **Exact latency accounting.** For latencies 1, 2, and 3, assert the issue,
-   held-cycle list, completion, and release cycles exactly as in the table.
+   held-cycle list, completion boundary, and release arbitration exactly as in
+   the table.
    Add a larger deterministic latency and show total cycles increase by
    exactly `L - 1` for one isolated memory operation, with all other expected
    pipeline events unchanged.
