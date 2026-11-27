@@ -15,3 +15,8 @@ including `.` and `..`, require the current node to be a directory. Add tests
 for dot within a directory, dot after a file, dot-dot after a file, dot-dot at
 root, and trailing slash behavior; check both file opening and directory listing
 where those APIs share the resolver.
+
+The first pinned OCaml build attempt stopped at Dune's `@fmt` alias because
+three manually wrapped expressions did not match the package formatter. Run the
+package BUILD driver so formatting, compilation, component tests, and fixture
+replay all run in the same pinned toolchain.

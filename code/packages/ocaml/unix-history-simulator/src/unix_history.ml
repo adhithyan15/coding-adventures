@@ -63,8 +63,7 @@ module Filesystem = struct
     if path = "" || String.contains path '\000' then Error EINVAL
     else
       let parts =
-        String.split_on_char '/' path
-        |> List.filter (fun part -> part <> "")
+        String.split_on_char '/' path |> List.filter (fun part -> part <> "")
       in
       Ok parts
 

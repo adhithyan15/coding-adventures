@@ -35,12 +35,10 @@ let test_filesystem_ranges_and_paths () =
     = Error Unix_history.ENOTDIR)
     "dot listing through a regular file";
   require
-    (Unix_history.Filesystem.open_file filesystem "/etc/./notes"
-    = Ok (5, ""))
+    (Unix_history.Filesystem.open_file filesystem "/etc/./notes" = Ok (5, ""))
     "dot traversal within a directory";
   require
-    (Unix_history.Filesystem.list filesystem "/etc/./"
-    = Ok (4, [ "notes" ]))
+    (Unix_history.Filesystem.list filesystem "/etc/./" = Ok (4, [ "notes" ]))
     "dot traversal with a trailing slash";
   require
     (Unix_history.Filesystem.open_file filesystem "/../../hello"
