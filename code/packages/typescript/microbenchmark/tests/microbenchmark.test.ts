@@ -219,6 +219,24 @@ describe("paired microbenchmarks", () => {
     expect(() => replayJson(stringifyLosslessJson(unknown))).toThrow(/unknown report member/);
   });
 
+  it("replays a maximum-size balanced raw report with repeated row member names", () => {
+    const pairs = Array.from({ length: 10_000 }, (_, index) => ({
+      baseline_ns: 1n,
+      candidate_ns: 1n,
+      order: index % 2 === 0 ? "baseline-first" as const : "candidate-first" as const,
+    }));
+    const config = { ...defaults(), pairs: 10_000 };
+    const report = {
+      config,
+      batch_size: 1n,
+      pairs,
+      analysis: analyze(pairs, config.confidence_percent, config.minimum_factor),
+    };
+    const replayed = replayJson(stringifyLosslessJson(report));
+    expect(replayed.pairs).toHaveLength(10_000);
+    expect(replayed.analysis).toEqual(report.analysis);
+  });
+
   it("preserves signed-64-bit JSON integer tokens above 2^53", () => {
     const parsed = parseLosslessJson(`{"seed":-9223372036854775808,"duration":9007199254740993}`) as { seed: bigint; duration: bigint };
     expect(parsed.seed).toBe(-9223372036854775808n);

@@ -904,6 +904,75 @@ mod tests {
     }
 
     #[test]
+    fn raw_json_rejects_duplicate_decoded_members_but_allows_distinct_scopes() {
+        let core = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" },
+            "workload": "generic-workload", "invocation": [], "revision": "shared",
+            "runtime": "shared", "os": "test", "arch": "test"
+        });
+        let valid = core.to_string();
+        assert!(Report::from_json(&valid).is_ok());
+        // The same member name appears in root and config scopes (`pairs`).
+
+        let invalid = [
+            valid.replace("\"pairs\":1", "\"pairs\":1,\"pairs\":1"),
+            valid.replace("\"baseline_ns\":1", "\"baseline_ns\":1,\"baseline_ns\":1"),
+            valid.replace(
+                "\"verdict\":\"inconclusive\"",
+                "\"verdict\":\"inconclusive\",\"verdict\":\"inconclusive\"",
+            ),
+            valid.replace(
+                "\"revision\":\"shared\"",
+                "\"revision\":\"shared\",\"revision\":\"other\"",
+            ),
+            valid.replace("\"pairs\":1", "\"pairs\":1,\"pa\\u0069rs\":1"),
+        ];
+        for duplicate in invalid {
+            assert!(
+                Report::from_json(&duplicate).is_err(),
+                "accepted duplicate: {duplicate}"
+            );
+        }
+    }
+
+    #[test]
+    fn raw_json_accepts_maximum_balanced_report_with_reused_pair_member_names() {
+        let config = Config {
+            pairs: MAX_PAIRS,
+            target_ns: 1,
+            max_batch: 1,
+            ..Config::default()
+        };
+        let pairs = (0..MAX_PAIRS)
+            .map(|index| Pair {
+                baseline_ns: 1,
+                candidate_ns: 1,
+                order: if index % 2 == 0 {
+                    "baseline-first".to_owned()
+                } else {
+                    "candidate-first".to_owned()
+                },
+            })
+            .collect::<Vec<_>>();
+        let analysis = analyze(&pairs, config.confidence_percent, config.minimum_factor).unwrap();
+        let report = Report {
+            config,
+            batch_size: 1,
+            pairs,
+            analysis,
+        };
+
+        let text = report.to_json().unwrap();
+        let replayed = Report::from_json(&text).unwrap();
+        assert_eq!(replayed, report);
+        assert_eq!(replayed.pairs.len(), MAX_PAIRS);
+    }
+
+    #[test]
     fn report_replay_validates_optional_metadata_as_a_complete_group() {
         let core = serde_json::json!({
             "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,

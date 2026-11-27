@@ -150,6 +150,28 @@ class MicrobenchmarkReportTest < Minitest::Test
     assert_raises(ArgumentError) { MB.replay_json(JSON.generate(complete.merge("extra" => true))) }
   end
 
+  def test_json_ingress_accepts_maximum_balanced_report_with_reused_pair_member_names
+    pairs = Array.new(MB::MAX_PAIRS) do |index|
+      MB::Pair.new(
+        baseline_ns: 1,
+        candidate_ns: 1,
+        order: index.even? ? "baseline-first" : "candidate-first"
+      )
+    end
+    config = MB::Config.defaults.to_h.merge("pairs" => MB::MAX_PAIRS)
+    analysis = MB.analyze(pairs)
+    raw = {
+      "config" => config,
+      "batch_size" => 1,
+      "pairs" => pairs.map(&:to_h),
+      "analysis" => analysis.to_h
+    }
+
+    replayed = MB.replay_json(JSON.generate(raw))
+    assert_equal MB::MAX_PAIRS, replayed.pairs.length
+    assert_equal analysis, replayed.analysis
+  end
+
   private
 
   def simple_report
