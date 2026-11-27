@@ -1,2 +1,2 @@
 # needs-toolchain: python
-python ../../../specs/fixtures/historical-unix-v1/build_windows.py cpp
+python ../../../specs/fixtures/historical-unix-v1/build_native.py cpp
