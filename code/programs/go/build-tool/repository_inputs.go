@@ -121,28 +121,36 @@ var (
 		"code/scripts/ct_compare_conformance.py",
 		"code/scripts/tfv.py",
 	}
-	ctCompareCorpusPaths            = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
-	historicalUnixFixturePath       = "code/specs/fixtures/historical-unix-v1/file-read.json"
-	historicalUnixReplayPath        = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
-	historicalUnixBuildNativePath   = "code/specs/fixtures/historical-unix-v1/build_native.py"
-	historicalUnixCAdapterPath      = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
-	historicalUnixCppAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
-	historicalUnixJavaAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
-	historicalUnixLuaAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
-	historicalUnixCsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.cs"
-	historicalUnixCsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.csproj"
-	historicalUnixFsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fs"
-	historicalUnixFsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fsproj"
-	historicalUnixBuildDotnetPath   = "code/specs/fixtures/historical-unix-v1/build_dotnet.py"
-	historicalUnixDartAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/dart/fixture_cli.dart"
-	historicalUnixKotlinAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/kotlin/FixtureReplayTest.kt"
-	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
-	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
-	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
-	osMachineBoardsPath             = "code/specs/fixtures/os-machine-v1/boards.json"
-	osMachineVerifyPath             = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
-	osMachineRiscvPath              = "code/specs/fixtures/os-machine-v1/riscv.json"
-	osMachineRiscvVerifyPath        = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
+	ctCompareCorpusPaths              = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
+	historicalUnixFixturePath         = "code/specs/fixtures/historical-unix-v1/file-read.json"
+	historicalUnixReplayPath          = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
+	historicalUnixElixirBuildPath     = "code/specs/fixtures/historical-unix-v1/build_elixir.py"
+	historicalUnixBuildNativePath     = "code/specs/fixtures/historical-unix-v1/build_native.py"
+	historicalUnixCAdapterPath        = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
+	historicalUnixCppAdapterPath      = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
+	historicalUnixJavaAdapterPath     = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
+	historicalUnixLuaAdapterPath      = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
+	historicalUnixCsharpAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.cs"
+	historicalUnixCsharpProjectPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.csproj"
+	historicalUnixFsharpAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fs"
+	historicalUnixFsharpProjectPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fsproj"
+	historicalUnixBuildDotnetPath     = "code/specs/fixtures/historical-unix-v1/build_dotnet.py"
+	historicalUnixDartAdapterPath     = "code/specs/fixtures/historical-unix-v1/test-adapters/dart/fixture_cli.dart"
+	historicalUnixKotlinAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/kotlin/FixtureReplayTest.kt"
+	historicalUnixElixirAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/elixir/fixture_cli.exs"
+	historicalUnixHaskellCabalPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/haskell/historical-unix-fixture-cli.cabal"
+	historicalUnixHaskellMainPath     = "code/specs/fixtures/historical-unix-v1/test-adapters/haskell/Main.hs"
+	historicalUnixBuildOcamlSwiftPath = "code/specs/fixtures/historical-unix-v1/build_ocaml_swift.py"
+	historicalUnixOcamlAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/ocaml/fixture_cli.ml"
+	historicalUnixSwiftPackagePath    = "code/specs/fixtures/historical-unix-v1/test-adapters/swift/Package.swift"
+	historicalUnixSwiftMainPath       = "code/specs/fixtures/historical-unix-v1/test-adapters/swift/Sources/FixtureCLI/main.swift"
+	osArchitectureProfilesPath        = "code/specs/fixtures/os-architecture-v1/profiles.json"
+	osArchitectureVerifyPath          = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
+	osArchitectureGoConformancePath   = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
+	osMachineBoardsPath               = "code/specs/fixtures/os-machine-v1/boards.json"
+	osMachineVerifyPath               = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
+	osMachineRiscvPath                = "code/specs/fixtures/os-machine-v1/riscv.json"
+	osMachineRiscvVerifyPath          = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
 	// kilnToolchainPinPaths are the pin sources Kiln's committed
 	// code/kiln/legacy/toolchains.json is checked against by its drift test
 	// (realpolicy_test.go). A toolchain bump that edits only these files must
@@ -264,6 +272,9 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too; so does
+	// ocaml/test-bootstrap, which embeds cases.json as test/corpus_data.ml,
+	// cmp-checks that module against it in BUILD (VER05q).
 	// swift/test-bootstrap's CorpusConformanceTests (VER05k),
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
 	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
@@ -629,14 +640,18 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("cpp"),
 	historicalUnixFixtureRow("csharp"),
 	historicalUnixFixtureRow("dart"),
+	historicalUnixFixturePackageRow("elixir/unix_history_simulator", "elixir"),
 	historicalUnixFixtureRow("fsharp"),
 	historicalUnixFixtureRow("go"),
 	historicalUnixFixtureRow("java"),
+	historicalUnixFixtureRow("haskell"),
 	historicalUnixFixtureRow("kotlin"),
 	historicalUnixFixtureRow("lua"),
+	historicalUnixFixtureRow("ocaml"),
 	historicalUnixFixtureRow("perl"),
 	historicalUnixFixtureRow("python"),
 	historicalUnixFixtureRow("rust"),
+	historicalUnixFixtureRow("swift"),
 	historicalUnixFixtureRow("typescript"),
 	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
 	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
@@ -648,6 +663,10 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixAdapterRow("fsharp", historicalUnixFsharpProjectPath),
 	historicalUnixAdapterRow("dart", historicalUnixDartAdapterPath),
 	historicalUnixAdapterRow("kotlin", historicalUnixKotlinAdapterPath),
+	historicalUnixAdapterPackageRow("elixir/unix_history_simulator", "elixir", historicalUnixElixirAdapterPath),
+	historicalUnixElixirDriverRow(),
+	historicalUnixAdapterRow("haskell", historicalUnixHaskellCabalPath),
+	historicalUnixAdapterRow("haskell", historicalUnixHaskellMainPath),
 	historicalUnixReplayRow("c"),
 	historicalUnixReplayRow("cpp"),
 	historicalUnixReplayRow("java"),
@@ -655,12 +674,21 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixReplayRow("csharp"),
 	historicalUnixReplayRow("fsharp"),
 	historicalUnixReplayRow("dart"),
+	historicalUnixReplayPackageRow("elixir/unix_history_simulator", "elixir"),
+	historicalUnixReplayRow("haskell"),
+	historicalUnixReplayRow("ocaml"),
+	historicalUnixReplayRow("swift"),
 	historicalUnixBuildNativeRow("c"),
 	historicalUnixBuildNativeRow("cpp"),
 	historicalUnixBuildNativeRow("java"),
 	historicalUnixBuildNativeRow("lua"),
 	historicalUnixBuildDotnetRow("csharp"),
 	historicalUnixBuildDotnetRow("fsharp"),
+	historicalUnixAdapterRow("ocaml", historicalUnixOcamlAdapterPath),
+	historicalUnixAdapterRow("swift", historicalUnixSwiftPackagePath),
+	historicalUnixAdapterRow("swift", historicalUnixSwiftMainPath),
+	historicalUnixBuildOcamlSwiftRow("ocaml"),
+	historicalUnixBuildOcamlSwiftRow("swift"),
 	{
 		name:     "go/microbenchmark",
 		language: "go",
@@ -977,6 +1005,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    nandFlashFixtureInputs,
 	},
 	{
+		name:     "go/nand-flash",
+		language: "go",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
 		name:     "python/hdd-simulator",
 		language: "python",
 		inputs:   "the exact DB02 shared HDD simulator vector",
@@ -986,6 +1021,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "typescript/hdd-simulator",
 		language: "typescript",
+		inputs:   "the exact DB02 shared HDD simulator vector",
+		matches:  isHDDSimulatorFixture,
+		paths:    hddSimulatorFixtureInputs,
+	},
+	{
+		name:     "c/hdd-simulator",
+		language: "c",
 		inputs:   "the exact DB02 shared HDD simulator vector",
 		matches:  isHDDSimulatorFixture,
 		paths:    hddSimulatorFixtureInputs,
@@ -1491,6 +1533,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "ocaml/test-bootstrap",
+		language: "ocaml",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "cpp/test-bootstrap",
 		language: "cpp",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1805,6 +1854,10 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 
 func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 	name := language + "/unix-history-simulator"
+	return historicalUnixFixturePackageRow(name, language)
+}
+
+func historicalUnixFixturePackageRow(name, language string) repositoryInputConsumer {
 	return repositoryInputConsumer{
 		name: name, language: language,
 		inputs:  "the shared HOS-002 historical Unix replay fixture",
@@ -1814,8 +1867,12 @@ func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 }
 
 func historicalUnixAdapterRow(language, adapterPath string) repositoryInputConsumer {
+	return historicalUnixAdapterPackageRow(language+"/unix-history-simulator", language, adapterPath)
+}
+
+func historicalUnixAdapterPackageRow(name, language, adapterPath string) repositoryInputConsumer {
 	return repositoryInputConsumer{
-		name: language + "/unix-history-simulator", language: language,
+		name: name, language: language,
 		inputs:  "the external historical Unix fixture adapter used by this package recipe",
 		matches: exactRepositoryPath(adapterPath),
 		paths:   []string{adapterPath},
@@ -1823,11 +1880,24 @@ func historicalUnixAdapterRow(language, adapterPath string) repositoryInputConsu
 }
 
 func historicalUnixReplayRow(language string) repositoryInputConsumer {
+	return historicalUnixReplayPackageRow(language+"/unix-history-simulator", language)
+}
+
+func historicalUnixReplayPackageRow(name, language string) repositoryInputConsumer {
 	return repositoryInputConsumer{
-		name: language + "/unix-history-simulator", language: language,
+		name: name, language: language,
 		inputs:  "the shared historical Unix replay helper invoked by this package BUILD",
 		matches: exactRepositoryPath(historicalUnixReplayPath),
 		paths:   []string{historicalUnixReplayPath},
+	}
+}
+
+func historicalUnixElixirDriverRow() repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: "elixir/unix_history_simulator", language: "elixir",
+		inputs:  "the Elixir fixture build and replay driver",
+		matches: exactRepositoryPath(historicalUnixElixirBuildPath),
+		paths:   []string{historicalUnixElixirBuildPath},
 	}
 }
 
@@ -1846,6 +1916,16 @@ func historicalUnixBuildDotnetRow(language string) repositoryInputConsumer {
 		inputs:  "the shared .NET historical Unix adapter build driver invoked by this package",
 		matches: exactRepositoryPath(historicalUnixBuildDotnetPath),
 		paths:   []string{historicalUnixBuildDotnetPath},
+	}
+}
+
+func historicalUnixBuildOcamlSwiftRow(language string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name:     language + "/unix-history-simulator",
+		language: language,
+		inputs:   "the shared OCaml/Swift BUILD and fixture-replay driver",
+		matches:  exactRepositoryPath(historicalUnixBuildOcamlSwiftPath),
+		paths:    []string{historicalUnixBuildOcamlSwiftPath},
 	}
 }
 
@@ -1885,6 +1965,12 @@ func repositoryInputsForPackage(packageName string) []string {
 			osMachineRiscvPath, osMachineRiscvVerifyPath,
 		}
 	}
+	if packageName == "elixir/unix_history_simulator" {
+		return []string{
+			historicalUnixFixturePath, historicalUnixReplayPath,
+			historicalUnixElixirBuildPath, historicalUnixElixirAdapterPath,
+		}
+	}
 	if strings.HasSuffix(packageName, "/unix-history-simulator") {
 		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
 		inputs := []string{historicalUnixFixturePath}
@@ -1906,10 +1992,16 @@ func repositoryInputsForPackage(packageName string) []string {
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
 		case "kotlin":
 			inputs = append(inputs, historicalUnixKotlinAdapterPath)
+		case "haskell":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixHaskellCabalPath, historicalUnixHaskellMainPath)
 		case "csharp":
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath)
 		case "fsharp":
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixFsharpAdapterPath, historicalUnixFsharpProjectPath)
+		case "ocaml":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixOcamlAdapterPath)
+		case "swift":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixSwiftPackagePath, historicalUnixSwiftMainPath)
 		default:
 			return nil
 		}
@@ -1922,9 +2014,9 @@ func repositoryInputsForPackage(packageName string) []string {
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
 		return typescriptGameInputFrameInputs
-	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash":
+	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash", "go/nand-flash":
 		return nandFlashFixtureInputs
-	case "python/hdd-simulator", "typescript/hdd-simulator":
+	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator":
 		return hddSimulatorFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs

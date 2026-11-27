@@ -698,6 +698,45 @@ func TestPbtV1CorpusSelectsThePythonEngine(t *testing.T) {
 	}
 }
 
+func TestPbtV1CorpusSelectsTheOCamlEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "ocaml/test-bootstrap", Language: "ocaml"},
+		{Name: "ocaml/ct-compare", Language: "ocaml"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "ocaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"ocaml/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("ocaml filter: got %v, want %v", got, want)
+	}
+	// The TFV rendering beside the JSON is part of the same corpus directory.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.tfv"}, packages, "ocaml"); err != nil || !got["ocaml/test-bootstrap"] {
+		t.Fatalf("cases.tfv must select the OCaml engine: %v %v", got, err)
+	}
+	// Fail closed: the corpus changed but the OCaml engine package is missing.
+	if _, err := repositoryInputConsumersForChange(corpus, append(packages[:1:1], packages[2:]...), "ocaml"); err == nil {
+		t.Fatal("a corpus change with the OCaml engine package missing must fail closed")
+	}
+	// The embedded copy and the engine's own sources are selected by the package, not by the corpus row.
+	for _, own := range []string{
+		"code/packages/ocaml/test-bootstrap/test/corpus_data.ml",
+		"code/packages/ocaml/test-bootstrap/src/gen.ml",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{own}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the corpus row: %v %v", own, got, err)
+		}
+	}
+	// The CT01 row for the same language stays distinct from the pbt-v1 row.
+	ct, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/ct-compare-v1/cases.json"}, packages, "ocaml")
+	if err != nil || !reflect.DeepEqual(ct, map[string]bool{"ocaml/ct-compare": true}) {
+		t.Fatalf("ct-compare corpus must select only ocaml/ct-compare: %v %v", ct, err)
+	}
+}
+
 func TestFuzzV1CorpusPathMatcher(t *testing.T) {
 	cases := []struct {
 		path string
@@ -782,13 +821,14 @@ func TestPbtV1CorpusSelectsTheJavaEngine(t *testing.T) {
 		{Name: "cpp/test-bootstrap", Language: "cpp"},
 		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 		{Name: "haskell/test-bootstrap", Language: "haskell"},
+		{Name: "ocaml/test-bootstrap", Language: "ocaml"},
 	}
 	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
 	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "ocaml/test-bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -825,13 +865,14 @@ func TestPbtV1CorpusSelectsTheCSharpEngine(t *testing.T) {
 		{Name: "cpp/test-bootstrap", Language: "cpp"},
 		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 		{Name: "haskell/test-bootstrap", Language: "haskell"},
+		{Name: "ocaml/test-bootstrap", Language: "ocaml"},
 	}
 	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
 	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "ocaml/test-bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1052,13 +1093,14 @@ func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
 		{Name: "cpp/test-bootstrap", Language: "cpp"},
 		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 		{Name: "haskell/test-bootstrap", Language: "haskell"},
+		{Name: "ocaml/test-bootstrap", Language: "ocaml"},
 	}
 	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
 	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "haskell/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "ocaml/test-bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1505,14 +1547,17 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	if inputs := repositoryInputsForPackage("ruby/unix-history-simulator"); inputs != nil {
 		t.Fatalf("absent Ruby historical Unix package has fallback inputs %v, want none", inputs)
 	}
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "rust", "typescript"}
-	packages := make([]discovery.Package, 0, len(languages)+1)
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "rust", "swift", "typescript"}
+	packages := make([]discovery.Package, 0, len(languages)+2)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
 		name := language + "/unix-history-simulator"
 		packages = append(packages, discovery.Package{Name: name, Language: language})
 		all[name] = true
 	}
+	elixirPackageName := "elixir/unix_history_simulator"
+	packages = append(packages, discovery.Package{Name: elixirPackageName, Language: "elixir"})
+	all[elixirPackageName] = true
 	packages = append(packages, discovery.Package{Name: "go/adjacent", Language: "go"})
 
 	cases := []struct {
@@ -1524,8 +1569,10 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"replay helper", historicalUnixReplayPath, map[string]bool{
 			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
 			"csharp/unix-history-simulator": true, "fsharp/unix-history-simulator": true,
-			"dart/unix-history-simulator": true,
+			"dart/unix-history-simulator":    true,
+			"haskell/unix-history-simulator": true, "elixir/unix_history_simulator": true,
 			"java/unix-history-simulator": true, "lua/unix-history-simulator": true,
+			"ocaml/unix-history-simulator": true, "swift/unix-history-simulator": true,
 		}},
 		{"shared native driver", historicalUnixBuildNativePath, map[string]bool{
 			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
@@ -1544,6 +1591,16 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"F# adapter project", historicalUnixFsharpProjectPath, map[string]bool{"fsharp/unix-history-simulator": true}},
 		{"Dart adapter", historicalUnixDartAdapterPath, map[string]bool{"dart/unix-history-simulator": true}},
 		{"Kotlin adapter", historicalUnixKotlinAdapterPath, map[string]bool{"kotlin/unix-history-simulator": true}},
+		{"Elixir adapter", historicalUnixElixirAdapterPath, map[string]bool{"elixir/unix_history_simulator": true}},
+		{"Elixir build and replay driver", historicalUnixElixirBuildPath, map[string]bool{"elixir/unix_history_simulator": true}},
+		{"Haskell adapter Cabal file", historicalUnixHaskellCabalPath, map[string]bool{"haskell/unix-history-simulator": true}},
+		{"Haskell adapter source", historicalUnixHaskellMainPath, map[string]bool{"haskell/unix-history-simulator": true}},
+		{"OCaml/Swift shared build driver", historicalUnixBuildOcamlSwiftPath, map[string]bool{
+			"ocaml/unix-history-simulator": true, "swift/unix-history-simulator": true,
+		}},
+		{"OCaml adapter", historicalUnixOcamlAdapterPath, map[string]bool{"ocaml/unix-history-simulator": true}},
+		{"Swift adapter project", historicalUnixSwiftPackagePath, map[string]bool{"swift/unix-history-simulator": true}},
+		{"Swift adapter source", historicalUnixSwiftMainPath, map[string]bool{"swift/unix-history-simulator": true}},
 		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
 		{"lookalike excluded", historicalUnixFixturePath + ".bak", map[string]bool{}},
 		{"unrelated README excluded", "code/packages/go/unix-history-simulator/README.md", map[string]bool{}},
@@ -1562,8 +1619,12 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			})
 		}
 	}
-	for _, language := range []string{"csharp", "fsharp", "dart", "kotlin"} {
-		wantConsumer := language + "/unix-history-simulator"
+	for language, wantConsumer := range map[string]string{
+		"csharp": "csharp/unix-history-simulator", "fsharp": "fsharp/unix-history-simulator",
+		"dart": "dart/unix-history-simulator", "kotlin": "kotlin/unix-history-simulator",
+		"haskell": "haskell/unix-history-simulator", "ocaml": "ocaml/unix-history-simulator",
+		"swift": "swift/unix-history-simulator", "elixir": elixirPackageName,
+	} {
 		for _, tc := range cases {
 			want := map[string]bool{}
 			if tc.want[wantConsumer] {
@@ -1588,6 +1649,10 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			t.Errorf("%s-only fixture selection = %v, err %v; want %v", language, got, err, want)
 		}
 	}
+	got, err = repositoryInputConsumersForChange([]string{historicalUnixFixturePath}, packages, "elixir")
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{elixirPackageName: true}) {
+		t.Errorf("Elixir-only fixture selection = %v, err %v; want %v", got, err, map[string]bool{elixirPackageName: true})
+	}
 	for _, language := range languages {
 		wantInputs := []string{historicalUnixFixturePath}
 		switch language {
@@ -1609,15 +1674,39 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixLuaAdapterPath)
 		}
 		name := language + "/unix-history-simulator"
+		if language == "haskell" {
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixHaskellCabalPath, historicalUnixHaskellMainPath)
+		}
+		if language == "ocaml" {
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixOcamlAdapterPath)
+		}
+		if language == "swift" {
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixSwiftPackagePath, historicalUnixSwiftMainPath)
+		}
 		if got := repositoryInputsForPackage(name); !reflect.DeepEqual(got, wantInputs) {
 			t.Errorf("%s hash inputs = %v, want %v", name, got, wantInputs)
 		}
+	}
+	elixirInputs := repositoryInputsForPackage("elixir/unix_history_simulator")
+	elixirWant := []string{
+		historicalUnixFixturePath, historicalUnixReplayPath,
+		historicalUnixElixirBuildPath, historicalUnixElixirAdapterPath,
+	}
+	if !reflect.DeepEqual(elixirInputs, elixirWant) {
+		t.Errorf("Elixir package repository inputs = %v, want %v", elixirInputs, elixirWant)
 	}
 }
 
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	root := t.TempDir()
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "rust", "typescript"}
+	packageNames := []string{
+		"c/unix-history-simulator", "cpp/unix-history-simulator", "csharp/unix-history-simulator",
+		"dart/unix-history-simulator", "elixir/unix_history_simulator", "fsharp/unix-history-simulator",
+		"go/unix-history-simulator", "haskell/unix-history-simulator", "java/unix-history-simulator",
+		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "ocaml/unix-history-simulator", "perl/unix-history-simulator",
+		"python/unix-history-simulator", "rust/unix-history-simulator",
+		"swift/unix-history-simulator", "typescript/unix-history-simulator",
+	}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
 		t.Fatal(err)
@@ -1625,8 +1714,8 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	if err := os.WriteFile(fixturePath, []byte("[]\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	for _, language := range languages {
-		name := language + "/unix-history-simulator"
+	for _, name := range packageNames {
+		language := strings.SplitN(name, "/", 2)[0]
 		packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(name))
 		if err := os.MkdirAll(packageRoot, 0o755); err != nil {
 			t.Fatal(err)

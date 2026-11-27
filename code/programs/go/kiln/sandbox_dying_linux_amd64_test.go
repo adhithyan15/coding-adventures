@@ -224,6 +224,14 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 					r.refusal.Reason, r.refusal.Line, dyingRefusalDiagnostic(raw, r.refusal.Line, pid))
 			}
 			shape = fmt.Sprintf("bare resumed openat result, later same-pid terminal exit at line %d", terminalLine)
+		case bareGetdentsUnknown.MatchString(text):
+			terminalLine := laterBareGetdentsExit(raw, r.refusal)
+			if terminalLine == 0 {
+				pid, _ := strconv.Atoi(bareGetdentsUnknown.FindStringSubmatch(text)[1])
+				t.Fatalf("refused as %s at line %d: unavailable getdents64 result has no unambiguous later same-pid terminal exit\n--- refusal and terminal candidate ---\n%s",
+					r.refusal.Reason, r.refusal.Line, dyingRefusalDiagnostic(raw, r.refusal.Line, pid))
+			}
+			shape = fmt.Sprintf("unavailable getdents64 result, later same-pid terminal exit at line %d", terminalLine)
 		default:
 			t.Fatalf("refused as %s at line %d, which is not a dying shape: %s\n%s", r.refusal.Reason, r.refusal.Line, text, r.tail(30))
 		}

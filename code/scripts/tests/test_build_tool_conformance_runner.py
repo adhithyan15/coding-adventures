@@ -446,13 +446,13 @@ class CorpusTests(unittest.TestCase):
             {
                 "boundary_count": 29,
                 "input_count": 44,
-                "scope_count": 521,
-                "authorization_count": 542,
+                "scope_count": 523,
+                "authorization_count": 544,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "eb2211b5e41bff384b20676c23d1cd9e149a21b9b2e9f1b0d063e4bbf8678f03",
+            "3413d8f5743ac518f15681bbd3462134778a5c5f6cd2951e643f7f84cc53f5d1",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         dart_hash_map = by_id["dart-hash-map-v1-corpus-input"]

@@ -16,3 +16,17 @@ fixture and invokes the reusable library API directly. Neither lane uses
 
 Publishing separate user-facing command-line programs requires an explicit
 capability review and hardware-key approval under D21 / 13-capability-security.
+
+Elixir's external `.exs` adapter is run by the fixture-local Python build
+driver; fixture commands travel through an environment variable so Windows
+shell parsing cannot change their arguments. The Haskell adapter is a separate
+Cabal executable in the standalone project rooted at the Haskell package. Both
+invoke pure library APIs; neither turns the package into a shipped command-line
+program.
+
+The OCaml and Swift adapters are separate fixture-adjacent projects. A shared
+`build_ocaml_swift.py` driver runs each package's component tests, builds the
+external adapter in a temporary directory, and invokes `replay_cli.py` for all
+nine cases. Their project and source files are selected as exact build-tool
+inputs; the reusable packages do not read fixture JSON or emit serialized
+traces.
