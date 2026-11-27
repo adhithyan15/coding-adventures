@@ -13,8 +13,9 @@ inverse, so ``str(parse_type(text))`` is the canonical spelling.
 
 ``Int`` is the mathematical integer of VER04 section 3.  It exists **inside the
 IR only**: the type of ``Nat - Nat`` and of a ``lit`` node that says
-``"type": "Int"``.  A value, a binder or a signature may not have it, which is
-what the ``allow_int`` switch below is for.
+``"type": "Int"``.  A value, a binder, a field or an op signature may not have
+it; a *model parameter* may ([D75], R111), also under ``Option``, ``Result``,
+a tuple or ``List``.  That is what the ``allow_int`` switch below is for.
 
 Two of the shapes here are only half-known while an IR tree is being typed
 bottom-up.  A bare ``ok(e)`` has no error type yet and a bare ``err("CASE")`` no
@@ -25,6 +26,7 @@ half and :func:`unify` fills it in from whatever the node meets.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -325,6 +327,18 @@ BUILTIN_TYPE_NAMES = frozenset(
     {"Bool", "Nat", "Int", "Bytes", "List", "Option", "Result", *FIXED}
 )
 
+# Section 2.2 R58: a declared record, variant or constructor name may not be any
+# reserved built-in of the document's version.  ``V0_BUILTINS`` of the grammar
+# checker (reserved in every document) is the type names above (``U8`` and
+# ``U64`` among the fixed widths) plus the functions ``len at concat fixed div`` and the
+# constructors ``Some None Ok Err``.  The lane reads no document version, so the
+# v1 *functions* (``rem``, ``take``, ...: reserved in a v1 document only) cannot
+# be applied here; the v1 *types* (``U16`` ... ``I64``) already are, through
+# ``FIXED``.  A reference scan still uses ``BUILTIN_TYPE_NAMES`` alone.
+RESERVED_DECLARED_NAMES = BUILTIN_TYPE_NAMES | frozenset(
+    {"len", "at", "concat", "fixed", "div", "Some", "None", "Ok", "Err"}
+)
+
 _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 
 
@@ -344,6 +358,10 @@ def check_types_table(types: object, code: str) -> None:
     kinds, or whose lists are not lists of the right shape, is refused too: it
     cannot be counted.
 
+    R117: a field or constructor component may not *be* an error type.  An error
+    name occurs only as the second argument of ``Result``; as a field type, alone
+    or under ``Option``, a tuple or ``List``, it names no value.
+
     The table is walked once, with no recursion, so its size costs time
     proportional to itself and nothing more.
     """
@@ -354,7 +372,7 @@ def check_types_table(types: object, code: str) -> None:
     if type(types) is not dict:
         raise refuse("it is an object")
     for name, row in types.items():
-        if not _is_name(name) or name in BUILTIN_TYPE_NAMES:
+        if not _is_name(name) or name in RESERVED_DECLARED_NAMES:
             raise refuse("a declared type name is a built-in or not a name")
         if type(row) is not dict:
             raise refuse("a row is an object")
@@ -374,6 +392,8 @@ def check_types_table(types: object, code: str) -> None:
                     raise refuse("a field is a [name, type] pair with a legal name")
                 if type(entry[1]) is not str:
                     raise refuse("a field type is text")
+            if len({entry[0] for entry in fields}) != len(fields):
+                raise refuse("a record repeats a field name")  # R108
         elif kind == "variant":
             ctors = row.get("ctors")
             if (
@@ -385,14 +405,125 @@ def check_types_table(types: object, code: str) -> None:
                 if type(entry) is not list or len(entry) != 2:
                     raise refuse("a constructor is a [name, [types]] pair")
                 ctor, payload = entry
-                if not _is_name(ctor) or ctor in BUILTIN_TYPE_NAMES:
+                if not _is_name(ctor) or ctor in RESERVED_DECLARED_NAMES:
                     raise refuse("a constructor name is a built-in or not a name")
                 if type(payload) is not list or len(payload) > MAX_CTOR_FIELDS:
                     raise refuse("a constructor has zero to 8 fields")
                 if not all(type(t) is str for t in payload):
                     raise refuse("a constructor field type is text")
+            if len({entry[0] for entry in ctors}) != len(ctors):
+                raise refuse("a variant repeats a constructor name")  # R108
         else:
             raise refuse("a row is an error, a record or a variant")
+    _check_references(types, refuse)
+
+
+def _name_positions(tokens: list[str]) -> Iterator[tuple[str, bool]]:
+    """Each name of a type text, with whether it stands where ``Result`` puts its error.
+
+    A name is in the error slot when it follows the ``,`` of an enclosing
+    ``Result<`` (not of a tuple).  The tracker keeps its own stack of open
+    brackets, so it is linear and never recurses.
+    """
+    enclosing: list[str] = []  # the open brackets: "R" for Result, "N" for the rest
+    for place, token in enumerate(tokens):
+        previous = tokens[place - 1] if place else ""
+        if token == "(":
+            enclosing.append("N")
+        elif token == "<":
+            enclosing.append("R" if previous == "Result" else "N")
+        elif token in (">", ")") and enclosing:
+            enclosing.pop()
+        if _is_word(token):
+            yield token, previous == "," and bool(enclosing) and enclosing[-1] == "R"
+
+
+def names_misplaced_error_type(text: object, types: dict) -> bool:
+    """Does ``text`` use a declared error type outside a ``Result`` error? (R117)"""
+    if not isinstance(text, str):
+        return False
+    try:
+        tokens = _cut_into_tokens(text)
+    except Refusal:
+        return False
+    return any(
+        not slot and _declared_kind(types, name) == "error"
+        for name, slot in _name_positions(tokens)
+    )
+
+
+def _field_types(row: dict) -> list[str]:
+    """The type texts a record's fields or a variant's constructors hold."""
+    if row["kind"] == "record":
+        return [entry[1] for entry in row["fields"]]
+    if row["kind"] == "variant":
+        return [text for entry in row["ctors"] for text in entry[1]]
+    return []
+
+
+def _check_references(types: dict, refuse: Callable[[str], Refusal]) -> None:
+    """R108: every name a field type uses is declared, and no type contains itself.
+
+    The shape of every row is already known to be right.  A field type is read
+    only as tokens: each name in it that is not a built-in of the grammar must
+    be a row of the table (``Option<Ghost>`` names ``Ghost``, and so does the
+    error name of a ``Result``).  The names then form a graph -- an edge from
+    a record or variant to each declared record or variant its fields mention,
+    *through* ``Option``, ``Result``, ``List`` and tuples alike -- and a cycle in
+    it is a type that contains itself, directly or through a chain (rule 1).
+    The cycle search keeps its own stack, so a long chain costs time and no
+    Python recursion: a table that contains itself is a hostile input and must
+    be refused, never walked.
+    """
+    edges: dict[str, list[str]] = {}
+    for name, row in types.items():
+        targets: list[str] = []
+        for text in _field_types(row):
+            try:
+                tokens = _cut_into_tokens(text)
+            except Refusal as error:
+                raise refuse(
+                    "a field type has a character outside the type syntax"
+                ) from error
+            for token, error_slot in _name_positions(tokens):
+                if token in BUILTIN_TYPE_NAMES:
+                    continue
+                if token not in types:
+                    raise refuse("a field type names a type the table does not declare")
+                if types[token]["kind"] != "error":
+                    targets.append(token)
+                elif not error_slot:
+                    # R117: an error type is the second argument of `Result`
+                    # and nothing else.
+                    raise refuse("a field type is an error type, which has no values")
+            try:
+                # Every member type is read, eagerly, by the lane's own parser
+                # (rule 1's depth limit, the grammar of section 2.1, `Int` and
+                # named widths refused): a defective member of a row nothing
+                # reaches is a defect of the table (section 14: read whole).
+                parse_type(text, types)
+            except Refusal as error:
+                raise refuse(f"a member type is not a type: {error.message}") from error
+        edges[name] = targets
+    # Depth-first search, iterative: 1 = on the current path, 2 = finished.
+    state: dict[str, int] = {}
+    for start in edges:
+        if start in state:
+            continue
+        state[start] = 1
+        stack = [(start, iter(edges[start]))]
+        while stack:
+            node, successors = stack[-1]
+            for follow in successors:
+                if state.get(follow) == 1:
+                    raise refuse("a record or variant contains itself")
+                if follow not in state:
+                    state[follow] = 1
+                    stack.append((follow, iter(edges[follow])))
+                    break
+            else:
+                state[node] = 2
+                stack.pop()
 
 
 def forget_widths(ty: Ty) -> Ty:
@@ -473,6 +604,39 @@ def unify(a: Ty, b: Ty) -> Ty | None:
     if a.head == b.head == "Option":
         inner = unify(a.args[0], b.args[0])
         return Ty("Option", (inner,)) if inner else None
+    return None
+
+
+def fault_unify(a: Ty, b: Ty, narrow: bool = False) -> Ty | None:
+    """The common type of two types in a *fault row* (R94, R96, R97), or ``None``.
+
+    :func:`unify` plus the one thing a fault needs: **tuples**.  A tuple is
+    invariant in source (R51), but a fault rewrites one component of a tuple
+    result (``off-by-one-consumed`` turns a ``Nat`` into an ``Int``), so two
+    tuple types of one arity have a common type when their components do,
+    pairwise.  Below a tuple (``narrow`` true) the relation is narrower still:
+    two ``Bytes`` of different width do **not** unify (a one-byte literal in a
+    ``Bytes<2>`` component is refused), while ``Nat``/``Int``, ``Option``,
+    ``Result`` and nested tuples relate as before.
+    """
+    if a.head == UNKNOWN:
+        return b
+    if b.head == UNKNOWN or a == b:
+        return a
+    if {a, b} == {NAT, INT}:
+        return INT
+    if a.head == b.head == "Bytes":
+        return None if narrow else BYTES
+    if a.head == b.head == "Option":
+        inner = fault_unify(a.args[0], b.args[0], narrow)
+        return Ty("Option", (inner,)) if inner else None
+    if a.head == b.head == "Result":
+        ok = fault_unify(a.args[0], b.args[0], narrow)
+        err = fault_unify(a.args[1], b.args[1], narrow)
+        return Ty("Result", (ok, err)) if ok and err else None
+    if a.head == b.head == "()" and len(a.args) == len(b.args):
+        parts = [fault_unify(x, y, True) for x, y in zip(a.args, b.args, strict=True)]
+        return Ty("()", tuple(parts)) if all(parts) else None  # type: ignore[arg-type]
     return None
 
 

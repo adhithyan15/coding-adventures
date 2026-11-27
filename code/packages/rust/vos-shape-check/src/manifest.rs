@@ -156,6 +156,26 @@ pub struct VosToml {
     /// VOS-D098), as written.  Never empty when present, each id 1 to 128 bytes of
     /// `[A-Za-z0-9_/.-]`.  Matched as WHOLE ids by `vos-link check-component`.
     pub excused_controls: Vec<Excuse>,
+    /// The model-SAT lane opt-in (VOS31 section 10.3): `sat = "model"` is the only value, and
+    /// an absent key is `None`, which means the lane is off for this contract.
+    pub sat: Option<SatLane>,
+}
+
+/// The value of the `vos.toml` key `sat`.  A closed enum with one member today: the host
+/// model-SAT lane (`vos-model-sat`).  Any other spelling is an error, never a silent "off".
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SatLane {
+    /// `sat = "model"`.
+    Model,
+}
+
+impl SatLane {
+    /// The `vos.toml` spelling.
+    pub fn name(self) -> &'static str {
+        match self {
+            SatLane::Model => "model",
+        }
+    }
 }
 
 /// One excused negative control: the manifest id it may fail on, and the backlog row that
@@ -225,6 +245,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
         obligations: Vec::new(),
         coverage_floor: None,
         excused_controls: Vec::new(),
+        sat: None,
     };
     let mut excuse_ids: Vec<String> = Vec::new();
     let mut excuse_reasons: Vec<String> = Vec::new();
@@ -254,7 +275,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
         let [key] = path.as_slice() else {
             return bad(
                 line,
-                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations, coverage-floor, excused-controls)",
+                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations, coverage-floor, excused-controls, sat)",
             );
         };
         match (key.as_str(), value) {
@@ -342,6 +363,15 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                 };
                 out.coverage_floor = Some(floor);
             }
+            ("sat", Value::Str(v)) => {
+                if out.sat.is_some() {
+                    return bad(line, "duplicate key");
+                }
+                out.sat = Some(match v.as_str() {
+                    "model" => SatLane::Model,
+                    _ => return bad(line, "sat must be \"model\" (omit the key to turn the lane off)"),
+                });
+            }
             ("excused-controls", Value::Array(items)) => {
                 if excuse_tables != 0 {
                     return bad(line, "duplicate key");
@@ -359,7 +389,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
             }
             (
                 "class" | "kind" | "evidence-features" | "contract" | "obligations"
-                | "coverage-floor" | "excused-controls",
+                | "coverage-floor" | "excused-controls" | "sat",
                 _,
             ) => {
                 return bad(line, "wrong type of value for this key")
@@ -367,7 +397,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
             _ => {
                 return bad(
                     line,
-                    "unknown key (allowed: class, kind, evidence-features, contract, obligations, coverage-floor, excused-controls)",
+                    "unknown key (allowed: class, kind, evidence-features, contract, obligations, coverage-floor, excused-controls, sat)",
                 )
             }
         }

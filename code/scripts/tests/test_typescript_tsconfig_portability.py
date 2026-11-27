@@ -464,13 +464,18 @@ console.log(prose, nested);
         # +1: game-input-frame, a shared-config project with explicit src/dist
         # roots; Node APIs are confined to tests and do not enter shipped src.
         # +1: nand-flash, the DB01 logical SLC media leaf. It inherits the shared paths.
+        # +1: hdd-simulator, the DB02 deterministic HDD leaf, with explicit src/dist roots.
+        # +1: unix-history-simulator, the reusable First Edition Unix kernel model.
+        # +1: unix-history-simulator browser program, which exercises shared
+        # trace fixtures through the simulator's public API.
         # -4 shared_projects: note-frequency, audio-device-sink, pcm-audio, and
         # web-audio-sink migrated from tsconfig.base.json to standalone configs
         # (TS-W7-A; total_projects unchanged because they already had build scripts).
         # -3 shared_projects: wave, analog-waveform, and discrete-waveform
         # migrated from tsconfig.base.json to standalone configs (PHY-W8-E).
-        self.assertEqual(summary.total_projects, 518)
-        self.assertEqual(summary.shared_projects, 304)
+        # +1: os-architecture-simulator is a standalone noEmit semantic package.
+        self.assertEqual(summary.total_projects, 522)
+        self.assertEqual(summary.shared_projects, 305)
         self.assertEqual(summary.inherited_root_dir, 136)
         self.assertEqual(summary.inherited_out_dir, 139)
         # forme-authoring-core, forme-authoring-editor,
@@ -545,7 +550,8 @@ console.log(prose, nested);
         # -1: the retired checklist-app (its Electron shell used Node APIs).
         # +1: neural-framework reads fixtures and checkpoint stdin in tests/CLI.
         # +1: ca-capability-analyzer reads TypeScript packages off disk via Node APIs.
-        self.assertEqual(summary.node_api_projects, 89)
+        # +1: os-architecture-simulator uses node:test and node:assert in its inline tests; shipped src stays Node-API-free.
+        self.assertEqual(summary.node_api_projects, 90)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -579,7 +585,8 @@ console.log(prose, nested);
         # -1: the retired checklist-app (its Electron shell used Node APIs).
         # +1: neural-framework directly owns its test/CLI Node type provider.
         # +1: ca-capability-analyzer owns `@types/node` directly.
-        self.assertEqual(summary.node_provider_projects, 89)
+        # +1: os-architecture-simulator directly owns @types/node for those test compiler inputs.
+        self.assertEqual(summary.node_provider_projects, 90)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         # 0: matrix-rust-napi's lock exemption is retired; it commits a lock.
@@ -651,7 +658,11 @@ console.log(prose, nested);
         # +1: game-clock locks its standalone compiler and test toolchain.
         # +1: game-input-frame locks its shared compiler and test toolchain.
         # +1: nand-flash locks its shared compiler and test toolchain.
-        self.assertEqual(summary.locked_compilers, 531)
+        # +1: hdd-simulator locks its compiler, Node test types, and Vitest.
+        # +1: unix-history-simulator locks its standalone compiler and test graph.
+        # +1: the browser program locks its standalone compiler and test graph.
+        # +1: os-architecture-simulator locks its standalone TypeScript compiler.
+        self.assertEqual(summary.locked_compilers, 535)
 
 
 if __name__ == "__main__":

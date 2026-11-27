@@ -28,6 +28,7 @@ local M = {
   Values = require(prefix .. "values"),
   Tfv = require(prefix .. "tfv"),
   Corpus = require(prefix .. "corpus"),
+  Fuzz = require(prefix .. "fuzz"),
 }
 
 M.VERSION = "0.1.0"

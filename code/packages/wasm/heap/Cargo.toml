@@ -11,5 +11,5 @@ license = "MIT"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-heap = { path = "../../rust/heap" }
+heap = { package = "coding-adventures-heap", version = "0.1.0", path = "../../rust/heap" }
 wasm-bindgen = "0.2"

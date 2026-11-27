@@ -745,6 +745,18 @@ jobs:
       - name: Install Python contract dependencies
         run: python3 -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
 
+      # The repository-source-input boundary lists every package with some
+      # property (every Rust crate that loads rust_library.star, every
+      # TypeScript workspace root, ...), and its digest is pinned in about 27
+      # files. The full conformance corpus below is gated on
+      # run_contracts_build_tool_conformance, so a PR that merely ADDED a package
+      # never ran it and merged green while breaking main (#19903, #20109,
+      # #20124, #20143). This check is not gated: it recomputes the boundary
+      # from the tree with the same function the corpus test uses and takes
+      # about five seconds. If it fails, run the command in its message.
+      - name: Verify the repository-source-input boundary is in sync
+        run: python3 code/scripts/build_tool_conformance.py sync-boundary --check
+
       # `DOC_SHARD_PLANS` now names a document outside human-languages
       # (`code/packages/rust/lang-aot/CHANGELOG.md`), and its only gate until
       # now was the `build` job of `human-languages-books.yml`, which is gated
@@ -1331,6 +1343,8 @@ jobs:
       # tracee's stop lands inside it) passes most single runs, so the two tests
       # that run the structure probes through the real strace are repeated.  A
       # failure prints the refusing call's name (record prepare's probe error).
+      # Without -v, go test prints a failing test's whole output, so this step needs
+      # no -json report: every failed iteration is already in the log in full.
       # Runs even when the first run failed, so one log shows both.
       - name: Repeat the probe-exercising sandbox tests (flake class)
         if: always()
@@ -1359,6 +1373,13 @@ jobs:
       # reproducible on demand on GitHub runners (54 real-kernel subtests, none
       # fired), so requiring it would fail every run.  The census counter
       # parse_restarted_spawns is what shows whether it occurs in real builds.
+      #
+      # Both runs use -json so that a failed iteration prints IN FULL.  This step
+      # used to print only a grep and `tail -n 200` of a multi-thousand-line log:
+      # seven of nine failures of TestSandboxStraceDyingThreads showed no message
+      # at all, because the failing iteration's t.Fatalf text was long gone.  The
+      # two causes strace can have (its own PTRACE_LISTEN race, retried inside the
+      # tests; a real trace problem) must be told apart from the log alone.
       - name: Repeat the restart and signal real-strace tests
         timeout-minutes: 30
         working-directory: code/programs/go/kiln
@@ -1368,19 +1389,59 @@ jobs:
         shell: bash
         run: |
           set +e
+          report="$GITHUB_WORKSPACE/code/programs/go/kiln/ci/assert_sandbox_tests.py"
+          json1="$RUNNER_TEMP/kiln-sandbox-repeat-restart.json"
+          json2="$RUNNER_TEMP/kiln-sandbox-repeat-signals.json"
           log="$RUNNER_TEMP/kiln-sandbox-repeat.log"
-          go test -timeout 12m -count=20 -run '^TestSandboxStraceRestartedSpawn$' -v . > "$log" 2>&1
+          go test -json -timeout 12m -count=20 -run '^TestSandboxStraceRestartedSpawn$' -v . > "$json1" 2>&1
           rc1=$?
-          go test -timeout 10m -count=5 -run '^(TestSandboxStraceSignals|TestSandboxStraceDyingThreads)$' -v . >> "$log" 2>&1
+          go test -json -timeout 10m -count=5 -run '^(TestSandboxStraceSignals|TestSandboxStraceDyingThreads)$' -v . > "$json2" 2>&1
           rc2=$?
           rc=0
           if [ "$rc1" -ne 0 ] || [ "$rc2" -ne 0 ]; then
             rc=1
           fi
+          # The counters below read the text `go test -v` prints; the -json stream
+          # is turned back into exactly that text.  A conversion that fails leaves
+          # the counters short, so it fails the step too.
+          : > "$log"
+          python3 "$report" --text "$json1" >> "$log"
+          rcc1=$?
+          python3 "$report" --text "$json2" >> "$log"
+          rcc2=$?
+          if [ "$rcc1" -ne 0 ] || [ "$rcc2" -ne 0 ]; then
+            echo "could not turn the go test -json stream into text (exit $rcc1, $rcc2)"
+            rc=1
+          fi
           echo "go test exit codes: restarted-spawn=$rc1 signals-and-dying=$rc2"
-          grep -E '^(--- FAIL|FAIL|ok|PASS)|D50 on the real kernel' "$log" | tail -n 80
+          # The log is rebuilt unescaped from test output, so a printed line that
+          # starts with `::` would be a workflow command.  The runner trims leading
+          # whitespace before it looks for `::`, so a space in front is no defence:
+          # carriage returns go and EVERY printed line gets a fixed visible `| `
+          # prefix, so none can start with `::` even after trimming.
+          grep -E '^(--- FAIL|FAIL|ok|PASS)|D50 on the real kernel' "$log" | tail -n 80 | tr -d '\r' | sed 's/^/| /'
           if [ "$rc" -ne 0 ]; then
-            tail -n 200 "$log"
+            # Every failed iteration, in full: with -count=N the same test fails
+            # in one run of N, and a log tail loses exactly that run's message.
+            python3 "$report" --failures "$json1"
+            python3 "$report" --failures "$json2"
+            tail -n 40 "$log" | tr -d '\r' | sed 's/^/| /'
+          fi
+          # strace has a known race on a dying thread (PTRACE_LISTEN, EIO); the
+          # sandbox tests re-run a step that hit exactly that, and each test logs
+          # `STRACE_LISTEN_RETRIES=N`.  Count them so the rate stays visible.
+          listen_retries=$(awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^STRACE_LISTEN_RETRIES=[0-9]+$/) { split($i, a, "="); n += a[2] } } END { print n + 0 }' "$log")
+          echo "STRACE_LISTEN_RETRIES total across the repeated runs: $listen_retries"
+          if [ "$listen_retries" -gt 0 ]; then
+            echo "::notice::strace hit its PTRACE_LISTEN race $listen_retries time(s) in the repeated sandbox tests and the step was re-run each time"
+          fi
+          # The retries keep CI green, which would hide a race that gets worse.  One
+          # CI run is about 100 DyingThreads exposures and the race hit roughly one
+          # run in six, so a healthy total is 0 or 1; more than 5 in a single run is
+          # far above that and deserves a look (a new strace, a new kernel, a change
+          # that makes threads die in more calls), so it is a warning, not a failure.
+          if [ "$listen_retries" -gt 5 ]; then
+            echo "::warning::strace's PTRACE_LISTEN race hit $listen_retries times in one run (more than 5; about one hit per six CI runs was the rate when the retry was added); the tests passed on retries, but the race rate is rising"
           fi
           # Each RestartedSpawn subtest logs one `RESTARTED_SPAWNS=N REFUSED=0|1` line.
           fired=$(awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^RESTARTED_SPAWNS=[0-9]+$/) { split($i, a, "="); n += a[2] } } END { print n + 0 }' "$log")

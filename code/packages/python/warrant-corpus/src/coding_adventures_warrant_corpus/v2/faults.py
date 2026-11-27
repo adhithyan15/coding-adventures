@@ -1,4 +1,4 @@
-"""Fault wrappers at ``ir.core`` (VER04r section 8).
+"""Fault wrappers (VER04r section 8) over the levels this lane implements.
 
 A *negative control* is how a runner proves it can fail: break exactly one
 operation of the library -- not by editing the library, but by wrapping the
@@ -28,6 +28,15 @@ kind       effect
 uses only the tags of its declared level and **never** a ``subject_op``: a fault
 that called the library would not be a fault of one operation.
 
+**Typing a fault row** (sections 16.17 R67 and 16.18 R94, 16.20 R96 to R98, slice
+S10e).  A fault changes values on purpose, so its expression need only have a
+*common type* with what it replaces, not flow to it: ``Bytes`` against
+``Bytes<32>``, ``Int`` against ``Nat``, and -- for the ``off-by-one-consumed``
+template -- a tuple ``(Bytes,Int)`` against ``(Bytes,Nat)``.  The declared type is
+handed down to every branch of an ``if``, every arm of a ``match``, the payload of
+an ``ok`` and each component of a ``tuple`` (the last under a narrower relation),
+and a bytes literal where a plain ``Bytes`` is expected has the type ``Bytes``.
+
 Why one op at a time?  Take ``mul(a, b) == mul(b, a)``.  Break *every* op by
 XOR-ing the low bit of its result and the claim still holds (``mul(a,b)^1 ==
 mul(b,a)^1``): the suite looks insensitive when it is not.  Scoping a fault to
@@ -39,11 +48,21 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from .errors import Refusal
-from .ir import IMPLEMENTED_LEVELS, Compiled, Program, check_requires, evaluate
+from .errors import KitError, Refusal
+from .ir import (
+    IMPLEMENTED_LEVELS,
+    Compiled,
+    Program,
+    check_requires,
+    evaluate,
+    is_node,
+    scan_tags,
+    tag_level,
+    walk,
+)
 from .semantics import STANDARD, Semantics
 from .values import decode_value, value_to_json
-from .wtypes import Ty, check_types_table, unify
+from .wtypes import BYTES, Ty, check_types_table, fault_unify
 
 KINDS = ("pre", "post", "replace")
 
@@ -106,12 +125,22 @@ _KEYS_OF_A_FAULT = {
 }
 
 
-def _ill_formed(why: str) -> Refusal:
-    return Refusal("ill-typed", f"a fault row is malformed: {why}")
+def _ill_formed(why: str) -> KitError:
+    """A malformed fault row breaks the case's own schema: a kit error (R126, R45 f).
+
+    It is never an outcome: ``ill-typed`` covers the types table and the typing
+    of the row's expressions, not the shape of the row itself.
+    """
+    return KitError(f"a fault row is malformed: {why}")
 
 
 def _check_fault_shape(fault: object) -> dict:
-    """The fault row, if it is a closed object of one of the three kinds (8.1)."""
+    """The fault row, if it is a closed object of one of the three kinds (8.1).
+
+    Every defect is a :class:`KitError` (R126), the undefined level name of
+    ``requires`` included (section 4.2 rule 7 makes it a corpus error in a
+    corpus, but a schema break in a kit case).  This is read before the table.
+    """
     if not isinstance(fault, dict) or fault.get("kind") not in KINDS:
         raise _ill_formed("its kind is pre, post or replace")
     if set(fault) != _KEYS_OF_A_FAULT[fault["kind"]]:
@@ -122,15 +151,24 @@ def _check_fault_shape(fault: object) -> dict:
     if type(requires) is not list or not all(type(level) is str for level in requires):
         raise _ill_formed("requires is a list of level names")
     # An undefined level name is a corpus error, never `level-missing` (4.2 rule 7).
-    check_requires(requires, "corpus", "a fault's requires")
+    try:
+        check_requires(requires, "corpus", "a fault's requires")
+    except Refusal as refusal:
+        raise _ill_formed(str(refusal)) from refusal
+    if fault["kind"] == "pre":
+        _check_rewrite_rows(fault["rewrites"], None)
     return fault
 
 
-def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, object]]:
+def _check_rewrite_rows(
+    rows: object, scope: dict[str, Ty] | None
+) -> list[tuple[str, object]]:
     """The ``(parameter, expression)`` pairs of a ``pre`` fault, each row checked.
 
     A rewrite names a parameter that exists, at most one rewrite names it, and
-    the row has exactly the two keys ``param`` and ``expr``.
+    the row has exactly the two keys ``param`` and ``expr``.  With ``scope``
+    ``None`` only the shape is read (before the table); the parameter's
+    existence needs the op row.  Both are kit errors (R126).
     """
     if type(rows) is not list or not rows:
         raise _ill_formed("a pre fault must rewrite something")
@@ -140,7 +178,7 @@ def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, o
         if type(row) is not dict or set(row) != {"param", "expr"}:
             raise _ill_formed("a rewrite is {param, expr}")
         param = row["param"]
-        if type(param) is not str or param not in scope:
+        if type(param) is not str or (scope is not None and param not in scope):
             raise _ill_formed("a rewrite targets a parameter missing from the op")
         if param in seen:
             raise _ill_formed("a parameter is rewritten twice")
@@ -149,18 +187,140 @@ def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, o
     return pairs
 
 
-def _may_replace(produced: Ty, wanted: Ty) -> bool:
-    """May an expression of type ``produced`` stand where a ``wanted`` value goes?
+def _common(produced: Ty, declared: Ty, narrow: bool) -> bool:
+    """Do ``produced`` and ``declared`` have a common type? (R94, R96, R97)
 
-    A fault changes values on purpose, and sometimes their length: dropping the
-    last byte of a ``Bytes<32>`` result yields a plain ``Bytes``, and ``Nat + 1``
-    is an ``Int`` (section 3.2).  So the test is the weaker one the checker uses
-    for two branches, that the two types have a *common* type (R51), not that one
-    flows into the other.  The value is held to the declared type when it is
-    written, so an out-of-range or wrong-length one is refused there, never
-    truncated.
+    The relation of a fault row, :func:`~.wtypes.fault_unify`: at the top
+    (``narrow`` false) R51's ``common_type`` (equal types; ``Nat`` and ``Int``;
+    two ``Bytes`` of different or forgotten width, because a fault may change a
+    length by design; ``Option`` and ``Result`` of types that relate, with one
+    error type); an undetermined ``?`` (a bare ``ok`` or ``err``) relates to
+    anything (R97); and below a **tuple** the narrower relation of R96.
     """
-    return unify(produced, wanted) is not None
+    return fault_unify(produced, declared, narrow) is not None
+
+
+def _positions(expr: object, declared: Ty) -> list[tuple[object, Ty, bool]]:
+    """Every ``(node, expected type, narrow)`` the declared type is handed down to.
+
+    R98 / R67: the declared type goes to the expression itself, to each branch of
+    an ``if`` and each arm of a ``match``, to the payload of an ``ok`` and to
+    component ``i`` of a ``tuple`` (the last one with the narrow relation, and so
+    does everything below it).  Only the *shape* of the declared type is read, so
+    this runs before the expression is typed.  A malformed node simply hands
+    nothing down: the compile that follows refuses it.
+    """
+    found: list[tuple[object, Ty, bool]] = []
+    pending: list[tuple[object, Ty, bool]] = [(expr, declared, False)]
+    while pending:
+        node, expected, narrow = pending.pop()
+        found.append((node, expected, narrow))
+        if not is_node(node):
+            continue
+        tag = node[0]  # type: ignore[index]
+        if tag == "if" and len(node) == 4:  # type: ignore[arg-type]
+            pending += [(node[2], expected, narrow), (node[3], expected, narrow)]  # type: ignore[index]
+        elif tag == "match" and len(node) == 3 and type(node[2]) is list:  # type: ignore[arg-type]
+            pending += [
+                (arm[1], expected, narrow)
+                for arm in node[2]  # type: ignore[index]
+                if type(arm) is list and len(arm) == 2
+            ]
+        elif tag == "ok" and len(node) == 2 and expected.head == "Result":  # type: ignore[arg-type]
+            pending.append((node[1], expected.args[0], narrow))  # type: ignore[index]
+        elif (
+            tag == "tuple"
+            and len(node) == 2  # type: ignore[arg-type]
+            and type(node[1]) is list  # type: ignore[index]
+            and expected.head == "()"
+            and len(node[1]) == len(expected.args)  # type: ignore[index]
+        ):
+            pending += [
+                (part, wanted, True)
+                for part, wanted in zip(node[1], expected.args, strict=True)  # type: ignore[index]
+            ]
+    return found
+
+
+def _mark_plain_bytes(
+    program: Program, positions: list[tuple[object, Ty, bool]]
+) -> None:
+    """R67: a bytes literal where a plain ``Bytes`` is expected has the type ``Bytes``.
+
+    Also records which ``if`` and ``match`` nodes sit at a position the declared
+    type is handed to: their branches are typed with the fault relation (R98),
+    and every other ``if`` or ``match`` by R51 alone.
+    """
+    for node, expected, narrow in positions:
+        if is_node(node) and node[0] in ("if", "match"):  # type: ignore[index]
+            program.handed[id(node)] = narrow
+        if (
+            expected == BYTES
+            and is_node(node)
+            and node[0] == "lit"  # type: ignore[index]
+            and len(node) == 2  # type: ignore[arg-type]
+            and type(node[1]) is dict  # type: ignore[index]
+            and node[1].get("type") == "Bytes"  # type: ignore[index]
+        ):
+            program.plain_bytes.add(id(node))
+
+
+def _check_positions(
+    program: Program, positions: list[tuple[object, Ty, bool]]
+) -> None:
+    """Every position of a compiled fault expression has a common declared type.
+
+    The positions that only *pass the declared type down* (an ``if``, a ``match``,
+    an ``ok`` against a ``Result``, a ``tuple`` against a tuple of the same arity)
+    are compared through their branches, arms, payload and components, not by
+    their own type: the type the typer builds for them may take one branch's
+    shape (R98).  Every other position is compared by its own static type.
+    """
+    assert program.recorded is not None
+    for node, expected, narrow in positions:
+        if not is_node(node):  # pragma: no cover - compile refused it already
+            continue
+        tag = node[0]  # type: ignore[index]
+        if (
+            tag in ("if", "match")
+            or (tag == "ok" and expected.head == "Result")
+            or (
+                tag == "tuple"
+                and expected.head == "()"
+                and len(node[1]) == len(expected.args)  # type: ignore[index]
+            )
+        ):
+            continue
+        if not _common(program.recorded[id(node)], expected, narrow):
+            raise Refusal(
+                "ill-typed",
+                "a fault expression has no common type with what it replaces",
+            )
+
+
+def _static_order(exprs: list[object], available: frozenset[str]) -> None:
+    """Orders 2 to 4 of R119 (c), over **every** expression of the row.
+
+    ``level-missing`` for a tag whose level the runner lacks (a tag of no level
+    is not a level question), then ``depth``, ``unknown-tag`` and ``model-order``
+    (a fault case has no models, so every ``model_call`` is one), then
+    ``subject-forbidden``.  Each step reads all the expressions before the next
+    begins, so one rewrite's ``subject_op`` never hides another rewrite's static
+    code.  The row's ``requires`` is checked by the caller, before this.
+    """
+    for expr in exprs:
+        for node, _depth in walk(expr):
+            level = tag_level(node[0])
+            if level is not None and level not in available:
+                raise Refusal("level-missing", str(node[0]))
+    for expr in exprs:
+        scan_tags(expr, "body", models=(), subjects=False)
+    for expr in exprs:
+        for node, _depth in walk(expr):
+            if node[0] == "subject_op":
+                raise Refusal(
+                    "subject-forbidden", "a fault expression calls no subject"
+                )
 
 
 def compile_fault(
@@ -172,38 +332,57 @@ def compile_fault(
 ) -> CompiledFault:
     """Check a fault row against its op's section 6 row and compile its expressions.
 
-    Refusals (the kit's ``v2-fault`` codes): ``level-missing`` when the row's
-    ``requires`` (or a tag in its expressions) is a level this runner lacks -- a
-    lane records such a control ``not-live``, it is not an error of the lane --
-    and ``subject-forbidden`` for a ``subject_op`` in a fault expression.  A row
-    that is not a well-formed fault, or whose expressions do not produce the type
-    of what they replace, is ``ill-typed`` (F6).
+    A row that is not a well-formed fault is a :class:`KitError` (R126), read
+    before anything else.  Refusals (the kit's ``v2-fault`` codes, in this order:
+    R110 (b), R119 (c), R121): ``ill-typed`` for a ``types`` table that breaks
+    section 2.2 or an op row whose parameter or result type is refused (order
+    1); ``level-missing`` when the row's ``requires`` (or a tag in its
+    expressions) is a level this runner lacks (2) -- a lane records such a
+    control ``not-live``, it is not an error of the lane; ``unknown-tag``,
+    ``depth`` and ``model-order`` (3, no order among them: a fault case has no
+    models, so every ``model_call`` is one); ``subject-forbidden`` for a
+    ``subject_op`` in a fault expression (4); and ``ill-typed`` when the
+    expressions do not produce the type of what they replace (5, F6).
     """
     row = _check_fault_shape(fault)
-    check_types_table(types, "corpus")  # section 2.2, again by every consumer
+    # Order 1 (R110 (b), R121): the table, then the op row's parameter and
+    # result types, both `ill-typed`; [D74], and `corpus` is not in the closed
+    # set of `v2-fault`.  The Program reads the op row, so it is built here,
+    # before the `requires` check.
+    check_types_table(types, "ill-typed")
+    program = Program(types=types, ops={row["op"]: op_row}, levels=levels, sem=sem)
+    declared = program.op(row["op"])
+    # Order 2: `level-missing`, from the row's `requires`, before any expression.
     available = frozenset(levels) & IMPLEMENTED_LEVELS
     if not set(row["requires"]) <= available:
         raise Refusal("level-missing", "the fault needs a level this runner lacks")
-    program = Program(types=types, ops={row["op"]: op_row}, levels=levels, sem=sem)
-    declared = program.op(row["op"])
     params, ret = declared.unbound()
     scope = dict(params)
     if "result" in scope:
         raise Refusal("ill-typed", "an op with a parameter named result")
+    program.recorded = {}
     if row["kind"] == "pre":
-        rewrites = []
-        for param, expr in _check_rewrite_rows(row["rewrites"], scope):
-            compiled = program.compile(expr, scope, role="fault")
-            if not _may_replace(compiled.ty, scope[param]):
-                raise Refusal("ill-typed", f"the rewrite of {param} has the wrong type")
-            rewrites.append((param, compiled))
+        rows = _check_rewrite_rows(row["rewrites"], scope)
+        # Orders 2 to 4 for every rewrite before any rewrite is compiled, so a
+        # typing defect in one never hides a static code in another.
+        _static_order([expr for _param, expr in rows], available)
+        placed = [(_positions(expr, scope[param])) for param, expr in rows]
+        for positions in placed:
+            _mark_plain_bytes(program, positions)
+        rewrites = [
+            (param, program.compile(expr, scope, role="fault")) for param, expr in rows
+        ]
+        # The typing of the row is the last step (R119 c, 5): every rewrite is
+        # scanned and compiled before any rewrite's type is compared.
+        for positions in placed:
+            _check_positions(program, positions)
         return CompiledFault("pre", params, ret, types, sem, rewrites, None)
     scope["result"] = ret
+    _static_order([row["expr"]], available)
+    positions = _positions(row["expr"], ret)
+    _mark_plain_bytes(program, positions)
     expr = program.compile(row["expr"], scope, role="fault")
-    if not _may_replace(expr.ty, ret):
-        raise Refusal(
-            "ill-typed", "the fault expression is not of the op's result type"
-        )
+    _check_positions(program, positions)
     return CompiledFault(row["kind"], params, ret, types, sem, [], expr)
 
 

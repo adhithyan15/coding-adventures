@@ -125,10 +125,10 @@ unescaping), integers in `+-(2^53 - 1)` only, no unpaired surrogate escapes, at
 most 256 nested containers. `containment.relative_inside` compares parsed
 paths, so another drive or share is never "inside".
 
-## v2 `ir.core` runner library (VER04r slice S6a)
+## v2 runner library: `ir.core`, `ir.fixed`, `ir.tuple` (VER04r slices S6a and S10e)
 
 `coding_adventures_warrant_corpus.v2` is the first part of this lane's **v2** runner. It is the library
-for the `ir.core` level, written from VER04r. The package imports nothing from the oracle
+for the levels `ir.core` (S6a), and `ir.fixed` and `ir.tuple` (S10e), written from VER04r. The package imports nothing from the oracle
 (`python/warrant-oracle`), and the conformance kit is the cross-check between the two. A review of the first
 version found five pieces that had been adapted from the oracle's kit code (`parse_type`, the value codec,
 the chunk-row and chunk-file checks, `fits`, and the domain outcome); those were deleted and rewritten from
@@ -140,12 +140,23 @@ more: the independence is that of a second reading of one specification, and the
 | `wtypes` | section 2.1 type names; `flows` and `unify` |
 | `values` | section 2.3 value decoder (every form), section 2.4 stream encoder |
 | `arith` | section 3: one wrapping rule; the `Nat`/`Int` window of 2^127 - 1 |
-| `ir` | section 4 and Appendix A: static checks, lazy `and`/`or`/`implies`/`if`, call counting, cost |
+| `ir` | section 4 and Appendix A: static checks, lazy `and`/`or`/`implies`/`if`/`match`, call counting, cost |
+| `fixed` | Appendix A.1: the value rules of the 35 `ir.fixed` built-ins (shifts, rotations, bit counts, checked arithmetic, the two divisions, byte conversions) |
+| `patterns` | Appendix A.1: the `match` patterns of `ir.tuple` and the usefulness check that refuses a fall-through or an unreachable arm |
 | `domains` | section 5.1: descriptors, `size()` and `nth()` (`list` is the reserved level `ir.list`, refused) |
 | `chunks` | sections 5.2 to 5.5: chunk files, one chunk enumerated alone, the sequential walk |
 | `faults` | section 8: the `pre`, `post` and `replace` wrappers |
 | `semantics` | the seams where a wrong implementation would differ (below) |
 | `kit` | the conformance harness over the v2 kit |
+
+**The levels this lane implements** are `ir.core`, `ir.fixed` and `ir.tuple` (`IMPLEMENTED_LEVELS`). The last two
+are siblings: each depends on `ir.core` alone. `ir.fixed` is the 35 names of Appendix A.1; the `Option` that nine of
+them produce is an intermediate only `unwrap_or` consumes, and anywhere else it is `ir.data`. `ir.tuple` is tuple
+types, the tuple literal, `project`, structural `eq`/`ne`, stream tag `64`, the `tuple` descriptor and **`match` on a
+`Result`**; the level of a `match` is type-directed (R76), so one on a bare tuple, a record, a variant, an `Option` or
+a `Bool`, or one with a data pattern, is `ir.data` and `level-missing` here. A fault row is typed against what it
+replaces with the relation of R94 and R96 to R98 (a fault may turn a tuple's `Nat` into an `Int`). `ir.data`,
+`ir.list` and `ir.seq` are defined and not implemented.
 
 Levels are decided by what an expression reaches ([D64]): a model or op of a level the lane lacks is
 classified (`Program.not_live_models`, `not_live_ops`), and only the suites that reach it are `level-missing`. `subject_op`
@@ -165,14 +176,16 @@ from pathlib import Path
 from coding_adventures_warrant_corpus.v2 import run_kit
 
 report = run_kit(Path("code/specs/fixtures/warrant-corpus-conformance-v1"))
-print("\n".join(report.lines()))      # v2-value: run 128, skipped 0, failed 0 (indexed 128) ...
+print("\n".join(report.lines()))      # v2-value: run 177, skipped 0, failed 0 (indexed 177) ...
 assert report.ok                      # every category accounted for, nothing failed
 ```
 
-A lane runs a case if and only if its `requires` is a subset of the levels it implements (`ir.core`) and
-skips the rest; per category **run plus skipped equals the index count**. The committed kit has 958 v2 cases: 782 in the six categories this lane
-runs (734 from S5b, 48 from S5e), all `ir.core`, 782 run, 0 skipped, 0 failed; and the 176 of `v2-binding` (S5d), a
-category this runner does not know, which is indexed, digest-checked and skipped whole (176 skipped) until S6b. Cases with `also_sequential` are also walked sequentially:
+A lane runs a case if and only if its `requires` is a subset of the levels it implements (`ir.core`, `ir.fixed`,
+`ir.tuple`) and skips the rest; per category **run plus skipped equals the index count**. The committed kit has
+1,628 v2 cases: 1,452 in the six categories this lane runs (734 from S5b, 48 from S5e, 670 from S10d at
+`ir.fixed` and `ir.tuple`), **1,452 run, 0 skipped, 0 failed**; and the 176 of `v2-binding` (S5d), a
+category this runner does not know, which is indexed, digest-checked and skipped whole (176 skipped) until S6b.
+Before S10e the lane skipped 613 of the S10d cases by their `requires` and ran 839. Cases with `also_sequential` are also walked sequentially:
 chunks `0..=c` from product ordinal 0 must equal the committed chunk file, and chunk `c` enumerated alone by
 unranking must equal the walk (about 50 seconds for the 16.7-million-case suite of the kit). A failure line
 names the case id and the outcome, never the input bytes.
@@ -180,13 +193,16 @@ names the case id and the outcome, never the input bytes.
 ### The harness can fail (falsification)
 
 `run_kit(..., sem=...)` takes a `Semantics` object. `STANDARD` (the module-level instance of `Semantics`) is the specification; a subclass that
-overrides one method is a deliberately wrong implementation. `tests/v2_mutants.py` holds sixteen: no wrap, eager
+overrides one method is a deliberately wrong implementation. `tests/v2_mutants.py` holds twenty-six: no wrap, eager
 `and`, first-binder-fastest enumeration (the three VER04r row S6 names), saturating arithmetic, eager `if`, a
 signed comparison on the bit pattern, `neg` of the minimum raising, an unchecked `Nat` product, `take` that does
 not clamp, a signed stream value that is not sign-extended, a big-endian `u32`, decimal text with a leading zero,
 the withdrawn signed `fx_edge` order, `first_admitted` counted on product ordinals, the chunk index missing from
-the stream prefix, and `pre` rewrites applied sequentially. `tests/test_v2_falsification.py` requires each to be
-reported by case id.
+the stream prefix, and `pre` rewrites applied sequentially. S10e adds ten for the two new levels: a shift count
+masked instead of compared with the width, a `shr` that fills the sign, a rotation by the width that returns zero,
+`clz` of zero that is zero, `checked_add` that wraps, a truncating `div` on `Int` (and a flooring `div_trunc`),
+`MIN / -1` that wraps, a `match` whose last matching arm wins, and a tuple descriptor with the first component
+varying fastest. `tests/test_v2_falsification.py` requires each to be reported by case id.
 
 ## Bounded work
 

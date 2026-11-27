@@ -204,17 +204,118 @@ export interface TypeTable {
 export const EMPTY_TABLE: TypeTable = { errors: new Map(), data: new Map() };
 
 /** Section 2.2 rules 3 and 4: a record field is a `[name, type]` pair, `name` in the name grammar and `type` text. */
-function readField(field: unknown, code: KitCode): void {
+function readField(field: unknown, code: KitCode): { name: string; type: string } {
   if (!Array.isArray(field) || field.length !== 2 || typeof field[0] !== "string" || !NAME.test(field[0]) || typeof field[1] !== "string") {
     throw new KitError(code, "a record field is [name, type] with a name in the name grammar");
   }
+  return { name: field[0], type: field[1] };
 }
+
+/**
+ * The member types of one record or variant, kept for the whole-table checks
+ * (R108, R117): the type texts of its fields or constructor components.
+ */
+type Members = readonly string[];
+
+/**
+ * R108 and R117, the checks that need the whole table: read every member type
+ * of a record or variant, then refuse a name the table does not declare as a
+ * record or variant (which is also an error type used as a value type, R117),
+ * and a record or variant that contains itself, directly or through any chain
+ * of `Option`, `Result` payloads, tuples and `List` (R118: `List<Self>` is
+ * recursion, because the rule is about the type and not about which values exist).
+ *
+ * Nothing here recurses over the table.  A hostile table can name a chain of a
+ * million records, or close the chain into a ring, so the cycle test is Kahn's
+ * algorithm on the "contains" graph: repeatedly remove a name that contains no
+ * remaining name; if any name is left, the leftovers are the rings and the
+ * names that lead into one.  Parsing a
+ * member type recurses at most 17 frames (the depth limit of section 2.2 rule 1).
+ */
+function checkMembers(rows: ReadonlyMap<string, Members>, errors: ReadonlyMap<string, readonly string[]>, code: KitCode): void {
+  const contains = new Map<string, Set<string>>();
+  for (const [owner, texts] of rows) {
+    const mentioned = new Set<string>();
+    for (const text of texts) {
+      // `Int` is IR-internal and is refused here with every other malformed text; a named width is an op signature's.
+      const ty = parseType(text, { code });
+      // An explicit work list: a type is a tree of at most 17 levels, but the walk has no reason to rely on it.
+      const pending: Ty[] = [ty];
+      while (pending.length > 0) {
+        const at = pending.pop() as Ty;
+        switch (at.k) {
+          case "Tuple":
+            pending.push(...at.of);
+            break;
+          case "List":
+            pending.push(at.of);
+            break;
+          case "Option":
+            if (at.of !== null) pending.push(at.of);
+            break;
+          case "Result":
+            if (at.ok !== null) pending.push(at.ok);
+            if (at.err === null || !errors.has(at.err)) throw new KitError(code, "an error type is not declared");
+            break;
+          case "Name":
+            // A name is a record or variant of the table.  An error type is not a value type (R117) and a missing one is no type.
+            if (!rows.has(at.name)) {
+              throw new KitError(code, errors.has(at.name) ? "an error type is not a value type" : "a field names a type the table does not declare");
+            }
+            mentioned.add(at.name);
+            break;
+          default:
+        }
+      }
+    }
+    contains.set(owner, mentioned);
+  }
+  // Kahn's algorithm over the reverse edges: a name leaves the graph once every name it contains has left.
+  const waiting = new Map<string, number>();
+  const containedBy = new Map<string, string[]>();
+  const ready: string[] = [];
+  for (const [owner, mentioned] of contains) {
+    waiting.set(owner, mentioned.size);
+    if (mentioned.size === 0) ready.push(owner);
+    for (const inner of mentioned) {
+      const list = containedBy.get(inner);
+      if (list === undefined) containedBy.set(inner, [owner]);
+      else list.push(owner);
+    }
+  }
+  let removed = 0;
+  while (ready.length > 0) {
+    const done = ready.pop() as string;
+    removed += 1;
+    for (const owner of containedBy.get(done) ?? []) {
+      const left = (waiting.get(owner) as number) - 1;
+      waiting.set(owner, left);
+      if (left === 0) ready.push(owner);
+    }
+  }
+  if (removed !== contains.size) throw new KitError(code, "a record or variant contains itself");
+}
+
+/**
+ * R58 (section 2.2): the reserved built-ins.  The grammar checker's `V0_BUILTINS` plus every primitive type name (the
+ * v1 types are included: this runner reads the v1 names in every document).  A record, variant or constructor may not
+ * be called one of these; a field name is not covered and stays free.
+ */
+const RESERVED_NAMES: ReadonlySet<string> = new Set([
+  ...SCALARS.keys(),
+  "Bool", "Int", "Nat", "U8", "U16", "U32", "U64", "I8", "I16", "I32", "I64", "Bytes", "List", "Option", "Result",
+  "len", "at", "concat", "fixed", "div", "Some", "None", "Ok", "Err",
+]);
 
 /**
  * Read a `types` object.  The rules are those of section 2.2: unique names, an
  * error type has one to 64 cases (unique, name grammar), a record one to 32
- * fields, a variant two to 64 constructors of zero to 8 fields.  Violations are
- * refused with `code` (the caller's category decides which).
+ * fields with distinct names, a variant two to 64 constructors with distinct
+ * names and zero to 8 fields each, every member type a valid type that names a
+ * declared record or variant (never `Int`, never an error type outside
+ * `Result`: R117), and no record or variant that contains itself (R108, R118).
+ * The whole table is refused with `code` (the caller's category decides which)
+ * before any value is read.
  */
 export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable {
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
@@ -222,8 +323,9 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
   }
   const errors = new Map<string, readonly string[]>();
   const data = new Map<string, "record" | "variant">();
+  const memberTypes = new Map<string, Members>();
   for (const [name, row] of Object.entries(raw as Record<string, unknown>)) {
-    if (!NAME.test(name) || SCALARS.has(name) || ["Bytes", "List", "Option", "Result"].includes(name)) {
+    if (!NAME.test(name) || RESERVED_NAMES.has(name)) {
       throw new KitError(code, "a type name is not usable");
     }
     if (typeof row !== "object" || row === null || Array.isArray(row)) throw new KitError(code, "a types row is not an object");
@@ -241,24 +343,34 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
     } else if (kind === "record") {
       const fields = entry["fields"];
       if (!Array.isArray(fields) || fields.length < 1 || fields.length > 32) throw new KitError(code, "a record has 1 to 32 fields");
-      for (const field of fields) readField(field, code);
+      const read = fields.map((field) => readField(field, code));
+      if (new Set(read.map((field) => field.name)).size !== read.length) throw new KitError(code, "a record names a field twice");
+      memberTypes.set(name, read.map((field) => field.type));
       data.set(name, "record");
     } else if (kind === "variant") {
       const ctors = entry["ctors"];
       if (!Array.isArray(ctors) || ctors.length < 2 || ctors.length > 64) throw new KitError(code, "a variant has 2 to 64 constructors");
+      const seenCtors = new Set<string>();
+      const texts: string[] = [];
       for (const ctor of ctors) {
-        if (!Array.isArray(ctor) || ctor.length !== 2 || typeof ctor[0] !== "string" || !NAME.test(ctor[0])) {
+        if (!Array.isArray(ctor) || ctor.length !== 2 || typeof ctor[0] !== "string" || !NAME.test(ctor[0]) || RESERVED_NAMES.has(ctor[0])) {
           throw new KitError(code, "a constructor is [name, [types]] with a name in the name grammar");
         }
         const members: unknown = ctor[1];
         if (!Array.isArray(members) || members.length > 8) throw new KitError(code, "a constructor has 0 to 8 fields");
         if (members.some((member) => typeof member !== "string")) throw new KitError(code, "a constructor field is type text");
+        if (seenCtors.has(ctor[0])) throw new KitError(code, "a variant names a constructor twice");
+        seenCtors.add(ctor[0]);
+        texts.push(...(members as string[]));
       }
+      memberTypes.set(name, texts);
       data.set(name, "variant");
     } else {
       throw new KitError(code, "a types row has an unknown kind");
     }
   }
+  // R108, R117: the table is read whole, and before any value, descriptor or expression is read against it.
+  checkMembers(memberTypes, errors, code);
   return { errors, data };
 }
 
@@ -408,6 +520,29 @@ export function isUndetermined(ty: Ty): boolean {
   }
 }
 
+/**
+ * Does `==` mean something on `ty` at the levels this lane implements?  `Bool`, every integer type, `Bytes`, `Result`
+ * and a tuple of such types.  (Records, variants and `Option` have a structural `==` too, but they are `ir.data`;
+ * `List` is `ir.list`; the ordering tags are defined on integers only.)
+ */
+export function hasEquality(ty: Ty): boolean {
+  switch (ty.k) {
+    case "Bool":
+    case "Int":
+    case "Nat":
+    case "U":
+    case "I":
+    case "Bytes":
+      return true;
+    case "Result":
+      return ty.ok === null || hasEquality(ty.ok);
+    case "Tuple":
+      return ty.of.every(hasEquality);
+    default:
+      return false;
+  }
+}
+
 /** Is `ty` a fixed-width integer type? */
 export function isFixed(ty: Ty): ty is { readonly k: "U" | "I"; readonly w: Width } {
   return ty.k === "U" || ty.k === "I";
@@ -428,7 +563,7 @@ export function isInteger(ty: Ty): boolean {
 // ---------------------------------------------------------------------------
 
 /** Can a value of error type `err` (or an undetermined one with `cands`) stand where `target` is wanted? */
-function errorsMeet(a: { err: string | null; cands?: readonly string[] }, b: { err: string | null; cands?: readonly string[] }): string | null | undefined {
+export function errorsMeet(a: { err: string | null; cands?: readonly string[] }, b: { err: string | null; cands?: readonly string[] }): string | null | undefined {
   if (a.err !== null && b.err !== null) return a.err === b.err ? a.err : undefined;
   if (a.err === null && b.err === null) {
     if (a.cands === undefined) return b.cands === undefined ? null : b.cands.length === 1 ? (b.cands[0] as string) : null;
@@ -488,6 +623,54 @@ export function unify(a: Ty, b: Ty): Ty | null {
     return cands === undefined ? { k: "Result", ok, err } : { k: "Result", ok, err, cands };
   }
   return null;
+}
+
+/**
+ * R96 to R98: the **common type of a fault row** (a rewrite and the parameter it replaces, a `post` or `replace`
+ * expression and the op's result, and each branch of an `if` or arm of a `match` against the declared type of its
+ * position), or `null`.
+ *
+ * At the top, and under `Option` and `Result`, this is R94's relation, which is `unify` (R51): equal types, `Nat` and
+ * `Int` to `Int`, two `Bytes` types of different or forgotten width to plain `Bytes`.  Under a **tuple** it is the
+ * narrower relation of R96, which lifts only what a fault template needs: equal types, `Nat` and `Int` (to `Int`),
+ * `Option` and `Result` whose components are related the same way (a `Result` with the same error type or an
+ * undetermined one, R97), and a nested tuple likewise.  `Bytes` types of different width do **not** unify there
+ * (R67's second test: a one-byte literal in a `Bytes<2>` component is refused), and the narrowing holds at every
+ * depth below a tuple.  An undetermined component (a bare `ok`, a bare `err`) has a common type with whatever stands
+ * opposite it, and the common type takes the determined side (R97).
+ */
+export function faultCommon(a: Ty, b: Ty, narrow = false): Ty | null {
+  if (a.k === "Tuple" && b.k === "Tuple") {
+    if (a.of.length !== b.of.length) return null;
+    const parts: Ty[] = [];
+    for (let i = 0; i < a.of.length; i += 1) {
+      const part = faultCommon(a.of[i] as Ty, b.of[i] as Ty, true);
+      if (part === null) return null;
+      parts.push(part);
+    }
+    return { k: "Tuple", of: parts };
+  }
+  if (a.k === "Result" && b.k === "Result") {
+    let ok: Ty | null;
+    if (a.ok === null) ok = b.ok;
+    else if (b.ok === null) ok = a.ok;
+    else {
+      ok = faultCommon(a.ok, b.ok, narrow);
+      if (ok === null) return null;
+    }
+    const err = errorsMeet(a, b);
+    if (err === undefined) return null;
+    const cands = a.err === null && b.err === null ? commonCands(a, b) : undefined;
+    return cands === undefined ? { k: "Result", ok, err } : { k: "Result", ok, err, cands };
+  }
+  if (a.k === "Option" && b.k === "Option") {
+    if (a.of === null) return b;
+    if (b.of === null) return a;
+    const inner = faultCommon(a.of, b.of, narrow);
+    return inner === null ? null : { k: "Option", of: inner };
+  }
+  if (a.k === "Bytes" && b.k === "Bytes" && narrow) return sameType(a, b) ? a : null;
+  return unify(a, b);
 }
 
 function commonCands(a: { cands?: readonly string[] }, b: { cands?: readonly string[] }): readonly string[] | undefined {

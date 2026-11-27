@@ -1,0 +1,1 @@
+- **The Windows harness invokes the clang-cl executable selected by MSVC setup**, even if a later toolchain prepends an older clang-cl to PATH.

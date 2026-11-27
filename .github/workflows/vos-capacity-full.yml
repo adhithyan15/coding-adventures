@@ -2,11 +2,22 @@
 # (VOS30 sections 9.2, 9.3, 9.12.1 and 9.12.2; backlog items VOS-028c3c-3a and
 # VOS-028c3c-3b-2).
 #
+# THE WEEKLY RUN IS PAUSED (VOS-D149, VOS-028c3e; owner decision "Pause until
+# re-record (Recommended)", 2026-11-26).  The first verify of recording
+# 45486250172 was red under the comparison rule as pre-registered, so a weekly
+# verify of it cannot go green and would cost about 35 runner-hours a week.  The
+# `schedule` trigger is therefore removed and this workflow runs on manual
+# dispatch only.  RESTORING THE SCHEDULE IS PART OF VOS-028c3e-4: it comes back
+# once the new recording verifies green on main, in the same change that changes
+# the structural test's trigger assertion back to dispatch plus one weekly cron
+# (`41 1 * * 0`) and the gate's `schedule` arm (mode=verify) back.  Until then the
+# structural test fails if a `schedule:` trigger is added.
+#
 # WHAT THIS DOES
 #   Two modes, both on GitHub-hosted ubuntu-24.04 runners, because no Unix host
 #   is available to the owner (VOS-D121).  `record` (dispatch only) regenerates
-#   the whole full-tier results file.  `verify` (dispatch, or the weekly
-#   schedule) re-runs every row at the checkout and compares it with the
+#   the whole full-tier results file.  `verify` (dispatch; the weekly
+#   schedule is paused, see above) re-runs every row at the checkout and compares it with the
 #   COMMITTED file (VOS30 9.12.1, "Verify at the checkout").  The picture:
 #
 #       gate --> build --> record-shard x64 --> record-join
@@ -50,8 +61,9 @@
 #                    file> --rerun <joined> --expect-shards 64`.
 #   * verify-verdict fails unless the fan-in succeeded: the definition of green.
 #   There is NO gate, no baseline and no Actions-API lookup (owner decision
-#   "Weekly only", 2026-11-24): `schedule` runs one verify a week, off ci.yml's
-#   slots, and `workflow_dispatch` runs either mode on demand.
+#   "Weekly only", 2026-11-24): `schedule` ran one verify a week, off ci.yml's
+#   slots (paused 2026-11-26, above), and `workflow_dispatch` runs either mode on
+#   demand.
 #
 # THE DISCARD RULE (VOS30 section 9.12.1)
 #   A recording is discarded ONLY for an infrastructure failure, never for row
@@ -78,7 +90,8 @@
 #     so the Actions run list includes such runs; otherwise: do not sign.
 #
 # SECURITY SHAPE (VOS30 section 9.12.2)
-#   Triggers: workflow_dispatch and one weekly schedule; never a pull_request,
+#   Triggers: workflow_dispatch ONLY while the weekly schedule is paused (VOS-D149,
+#   VOS-028c3e), dispatch plus one weekly schedule once restored; never a pull_request,
 #   pull_request_target or workflow_run trigger.  Top-level `permissions:
 #   contents: read`; every job states its own.  No secrets, no push, no
 #   `continue-on-error`, no `actions: read`, no actions/cache.  Every action is pinned by full commit SHA.  No expression
@@ -98,12 +111,12 @@ on:
         required: true
         default: verify
         options: [record, verify]
-  # One verify a week, unconditionally (owner decision "Weekly only",
-  # 2026-11-24).  01:41 UTC on Sunday is off ci.yml's slots (00:00 daily and
-  # 06, 12 and 18:00).  A schedule run can only ever be a verify: the gate
-  # below sets the mode from the event.
-  schedule:
-    - cron: "41 1 * * 0"
+  # NO `schedule:` while the weekly verify is paused (owner decision "Pause until
+  # re-record (Recommended)", 2026-11-26; VOS-D149).  VOS-028c3e-4 restores one
+  # weekly verify (cron "41 1 * * 0", off ci.yml's slots) together with the gate's
+  # `schedule` arm and the structural test.  The gate below refuses every event
+  # but workflow_dispatch, so a schedule trigger added by mistake fails loudly
+  # instead of running.
 
 permissions:
   contents: read
@@ -114,9 +127,9 @@ concurrency:
 
 jobs:
   # ── gate ────────────────────────────────────────────────────────────────
-  # Turns the event into the `mode` output: `schedule` is always a verify, a
-  # dispatch takes its input, anything else is refused.  Record mode therefore
-  # cannot come from `schedule`.  There is no Actions-API gate (VOS-D141).
+  # Turns the event into the `mode` output: a dispatch takes its input, anything
+  # else (a `schedule` included, while it is paused) is refused.  Record mode
+  # can only come from a dispatch.  There is no Actions-API gate (VOS-D141).
   gate:
     name: gate
     runs-on: ubuntu-24.04
@@ -148,9 +161,6 @@ jobs:
               ;;
           esac
           case "$GITHUB_EVENT_NAME" in
-            schedule)
-              mode=verify
-              ;;
             workflow_dispatch)
               case "$INPUT_MODE" in
                 record | verify) mode="$INPUT_MODE" ;;
@@ -158,7 +168,7 @@ jobs:
               esac
               ;;
             *)
-              echo "unsupported event: only schedule and workflow_dispatch run this workflow" >&2
+              echo "unsupported event: only workflow_dispatch runs this workflow (the weekly schedule is paused, VOS-028c3e)" >&2
               exit 1
               ;;
           esac

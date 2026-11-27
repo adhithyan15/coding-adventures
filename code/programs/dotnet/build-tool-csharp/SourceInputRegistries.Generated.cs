@@ -1169,6 +1169,47 @@ internal static class SourceInputRegistryProjection
       "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
     },
     {
+      "id": "repository-database-media-hdd-fixture-inputs",
+      "input_origin": "repository",
+      "applies_to": {
+        "exact_roots": [
+          "code/packages/python/hdd-simulator",
+          "code/packages/typescript/hdd-simulator"
+        ],
+        "descendant_roots": [],
+        "excluded_roots": []
+      },
+      "inputs": [
+        {
+          "path": "code/specs/fixtures/database-media-v1/hdd-simulator.json",
+          "role": "cross_package_exact"
+        }
+      ],
+      "reason": "The Python and TypeScript hdd-simulator tests read only their exact shared DB media vector from the repository fixtures.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
+      "id": "repository-database-media-nand-fixture-inputs",
+      "input_origin": "repository",
+      "applies_to": {
+        "exact_roots": [
+          "code/packages/c/nand-flash",
+          "code/packages/python/nand-flash",
+          "code/packages/typescript/nand-flash"
+        ],
+        "descendant_roots": [],
+        "excluded_roots": []
+      },
+      "inputs": [
+        {
+          "path": "code/specs/fixtures/database-media-v1/nand-flash.json",
+          "role": "cross_package_exact"
+        }
+      ],
+      "reason": "The C, Python and TypeScript nand-flash tests read only their exact shared DB media vector from the repository fixtures.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
       "id": "repository-human-language-grammar-cell-inputs",
       "input_origin": "repository",
       "applies_to": {
@@ -1441,6 +1482,7 @@ internal static class SourceInputRegistryProjection
           "code/programs/rust/ircd",
           "code/programs/rust/vos-capacity-probe",
           "code/programs/rust/vos-link",
+          "code/programs/rust/vos-model-sat",
           "code/programs/swift/conduit-hello"
         ],
         "descendant_roots": [],
@@ -1631,6 +1673,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/rust/llm-provider-ollama",
           "code/packages/rust/logic-core",
           "code/packages/rust/logic-engine",
+          "code/packages/rust/pif-check",
           "code/packages/rust/pif-prelude",
           "code/packages/rust/pif-writer",
           "code/packages/rust/polynomial",
@@ -1897,6 +1940,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/haskell-lexer",
           "code/packages/typescript/haskell-parser",
           "code/packages/typescript/hazard-detection",
+          "code/packages/typescript/hdd-simulator",
           "code/packages/typescript/heap",
           "code/packages/typescript/human-language-data",
           "code/packages/typescript/hyperloglog",
@@ -1951,6 +1995,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/mini-sqlite",
           "code/packages/typescript/mosaic-ir-to-layout",
           "code/packages/typescript/multi-directed-graph",
+          "code/packages/typescript/nand-flash",
           "code/packages/typescript/network-stack",
           "code/packages/typescript/neural-graph-vm",
           "code/packages/typescript/neural-network",

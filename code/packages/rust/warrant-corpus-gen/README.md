@@ -80,13 +80,14 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | `patterns` | S10t-2 and S11b: the ten `match` patterns (six of A.1, four data patterns of A.2), the usefulness check over `Result`, `Option`, `Bool`, tuples, records and variants, the corpus errors (code `ir`) |
 | `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (evaluated since S10c-2, on the width `Ir::Fixed::at` records), and `ir::levels`, the tag part of `requires` (R9) |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
+| `corpus_check` | CV2-F17: the document check that `Int` is named in no record or variant field, op signature or binder (VER04r 2.1, `W0701`); `generate` runs it after lowering and before costing, as the oracle's `derive` does; the lowering still accepts `Int` |
 | `analysis` | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
 | `arith` | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
 | `cost` | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
 | `view` | the "parity view" of a lowered document, compared with the oracle (`oracle_view` for `ir.core`, `oracle_view_v1` for the S10 dump with `requires`) |
 | `value`, `eval` | S3b: the `ir.core` evaluator (own implementation over this crate's IR): exact `Nat`/`Int` in the 2^127 window, wrapping fixed-width arithmetic counted as `wraps`, short-circuit `and`/`or`/`implies`/`if`, `MAX_IR_VALUE` checked before allocation, and `trace`, the pure-trace walk behind `expected_calls` and `wraps` |
 | `domains` | S3b: descriptor JSON, labels and sizes over the S2 `resolve_binders`/`Domain` API (S10c-2: `nat_shift`, `fx_edge`, the `demoted` paths; refuses only a list of byte strings); the consumer-side `descriptor_size`; value and encoding caches |
-| `stream` | S3b: the 2.4 value encoders, the context prefix, the v1/v2 header, `warrant-chunks-v1` framing, FNV-1a-64, the slim base set |
+| `stream` | S3b: the 2.4 value encoders (a `Nat`, unsigned or signed value outside its type is `W0701`, `a value is outside the range of <type> (VER04r 2.3)`, the oracle's sentence since CV2-F17), the context prefix, the v1/v2 header, `warrant-chunks-v1` framing, FNV-1a-64, the slim base set |
 | `suite` | S3b: one suite: product enumeration (`unrank_product`, last binder fastest), admission evaluated once per prefix tuple, chunks, counts, suite and v1 whole-suite digests, slim set |
 | `enumerate` | S3b: a whole document at `full` depth, the total-work bounds, the v0 divergence guard rule 2, and the enumeration parity view |
 | `faults` | S3c: the fault IR (`pre`/`post`/`replace`, `Expr::Core` or `Expr::Data` for a level not implemented), the registry of the portable names instantiated by signature, the stand-in rule and the witness search (`ClaimState`: witnessed, blind, unproven, deferred) |
@@ -155,7 +156,7 @@ S10) is checked by a fourth `--check --release` line in `BUILD` and `BUILD_windo
 with tuple values, `match` on a `Result` and the composite faults (`drop-consumed`, `ok-as-err`,
 `off-by-one-consumed`, the tuple-payload `missing-error`): 44 suites, 46,566,930 cases, 740 chunks, 20 faults, no
 profile knob beyond the fault lines. Its spec was changed first (VER04r D28: the two `W0701` claims split, 42 to
-44 claims) and `tests/census.rs` pins the result (364 claims, 242 emittable since VOS-039c added seven `vos-sched-any` claims); its README has the command and
+44 claims) and `tests/census.rs` pins the result (365 claims, 242 emittable since VOS-039c added seven `vos-sched-any` claims); its README has the command and
 what it holds.
 
 ### As a library
@@ -295,23 +296,23 @@ no adopter is blocked by a cost it would simply declare), as of S11b:
 | logic-gates | 88 | **88** | none (S11b: `Option` is a real type; the document still has examples that need an `omit_example` line) |
 | hash-functions | 56 | 48 | `err-value` 2, `W0701` 6 (was `ir.data` 21: 19 lower, 2 use a bound error value, [D55]) |
 | lzw | 21 | **21** | none |
-| arithmetic | 63 | **63** | none (S11b: records, the payload-free variant and a `match` on it lower; was `ir.data` 55) |
+| arithmetic | 64 | **64** | none (S11b: records, the payload-free variant and a `match` on it lower; was `ir.data` 55) |
 | wasm-leb128 | 44 | **44** | none (was 42 claims, 40 emittable, `W0701` 2, before the VER04r D28 split) |
 | vos-sched-any | 15 | 5 | `W0701` 10 (what `ir.data` hid: a claim that calls no op, an impure guard) |
 | vos-sched-fp-bitmap | 13 | 11 | `W0701` 2 |
 | zeroize | 9 | 0 | `inout` 9 |
-| **total** | **364** | **335** | `W0701` 18, `inout` 9, `err-value` 2 |
+| **total** | **365** | **336** | `W0701` 18, `inout` 9, `err-value` 2 |
 
 The table is pinned per adopter in `tests/census.rs` (the generator's `PINS` and the oracle's `ORACLE_PINS`).
 **Since S11b the census counts what lowers**: `ok` is no longer "`generate` can emit it" (S11c-2 evaluates `ir.data`;
-arithmetic still does not generate whole, for its nine-binder claim, VER04r 5.3).
+the adopter has since split arithmetic's nine-binder claim into two of eight binders (VER04r D76), so arithmetic now generates whole).
 History of the totals: before S10b `ir.data` 154,
 `ir.fixed` 101, `inout` 9, `W0701` 2; S10b `ir.data` 79, `ir.fixed` 99, `ir.tuple` 71, `W0701` 8 (89
 emittable); S10t-2 (`ir.tuple` lowers) `ir.data` 100, `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 (105
 emittable); **S10c-2 evaluates `ir.fixed` and describes the signed and 16-bit `fx_edge` and `nat_shift`,
 so no claim is blocked on `ir.fixed` or `16.2` any more** (238 emittable); **the wasm-leb128 adopter
 splits its two `W0701` claims (VER04r D28: 42 to 44 claims)**, so 357 claims, 242 emittable, `W0701` 6; **S11b
-lowers `ir.data`** (the name is never a lowering refusal again, R28): 364 claims, 335 lower.
+lowers `ir.data`** (the name is never a lowering refusal again, R28): 365 claims, 336 lower.
 
 The generator's census now **equals the oracle's lowering census exactly** (oracle numbers from running its
 lowering: `ok`, `W0701` for a lowering refusal, the level or feature name for a refused suite) for **ten of the

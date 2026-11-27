@@ -1,0 +1,51 @@
+[package]
+name = "vos-model-sat"
+version = "0.2.0"
+edition = "2021"
+description = "Host model-SAT lane of the verified-OS program (VOS-040a, VOS31): an N-parametric AIG encoder of the sched contract model and its ten lemmas, with mutant encoders and three cross-checks against the Warrant evaluator and a plain Rust reference; and, from VOS-040b, the solve, DRAT certificate, control, premise witness and committed-table lane with gen and check"
+# An evidence-only host program, not a published package (VOS-D104, checked by `vos-link check-publish`).
+publish = false
+
+[lib]
+name = "vos_model_sat"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vos-model-sat"
+path = "src/main.rs"
+
+# A standalone cargo root (like the other programs under code/programs/rust): every
+# dependency is an in-repository path dependency, no third-party crate.  VOS31 section 3: this
+# crate DEPENDS ON the recorded inputs and edits none of them.
+[workspace]
+
+[dependencies]
+# The encoder targets the bit-blaster's AIG and bit-vectors (VOS31 section 5).
+bit-blaster = { path = "../../../packages/rust/bit-blaster" }
+# VOS-040b (VOS31 7.3): the solver, the proof checker and the digest. The lane depends on these
+# three directly and NOT on vos-capacity-probe; it edits none of them (recorded inputs, section 3).
+cdcl-sat = { path = "../../../packages/rust/cdcl-sat" }
+drat-check = { path = "../../../packages/rust/drat-check" }
+coding_adventures_sha256 = { path = "../../../packages/rust/sha256" }
+# The cross-checks use the Warrant evaluator, read-only (VOS31 section 6).
+coding_adventures_warrant_grammar = { path = "../../../packages/rust/warrant-grammar" }
+# The contract's own files are read through `vos-link check-contract`'s library surface
+# (`load_inputs`, `evaluation_document`, `splice`: VOS31 section 6.1), so the lane evaluates the
+# very document `check-contract` evaluates.
+vos-link = { path = "../vos-link" }
+vos-manifest = { path = "../../../packages/rust/vos-manifest" }
+# VOS-040c: the shared `vos.toml` parser (the `sat` key), the one `vos-link` uses.
+vos-shape-check = { path = "../../../packages/rust/vos-shape-check" }
+
+# A test-only edge (VOS-D058): the cross-checks read the real contract package's files, and the
+# build tool selects a package's tests by its Cargo dependency edges, so an edit to a `.part`
+# or to `contract.vos` must select them.
+[dev-dependencies]
+vos-sched-contract = { path = "../../../packages/rust/vos-sched-contract" }
+# VOS-040b review: the hooks that let a negative control hand the lane a wrong encoder, budget or
+# proof exist only behind this feature, which only this crate's own tests enable (the
+# self-dependency below), so no released build can reach them.
+vos-model-sat = { path = ".", features = ["test-hooks"] }
+
+[features]
+test-hooks = []

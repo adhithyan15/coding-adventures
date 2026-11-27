@@ -1,4 +1,4 @@
-"""The ``ir.core`` evaluator (VER04r section 4 and Appendix A).
+"""The ``ir.core``, ``ir.fixed`` and ``ir.tuple`` evaluator (VER04r section 4, App. A).
 
 Every claim body, ``admit`` refinement, model and fault expression in a v2
 corpus is a small expression tree such as::
@@ -41,6 +41,20 @@ The evaluation rules this file implements, in the order the spec states them:
 5. Equality is structural and type-directed: errors are nominal, ``Bool`` is not
    ``U8``, ``Nat`` widens to ``Int``.
 
+Slice S10e adds the two levels that depend on ``ir.core`` alone (they are
+siblings: neither needs the other):
+
+* ``ir.fixed`` -- the 35 built-ins of Appendix A.1 (``bit_and`` .. ``unwrap_or``):
+  bit operations on the ``w``-bit pattern, shifts and rotations whose exact-``Nat``
+  count is compared with ``w`` before any host shift, ``widen``/``wrap``/``try``,
+  checked arithmetic and the two kinds of division.  The value rules are in
+  :mod:`.fixed`; the ``Option`` the nine producers yield is an *intermediate*
+  that only ``unwrap_or`` consumes (anywhere else it is ``ir.data``).
+* ``ir.tuple`` -- the tuple literal, ``project``, structural ``eq`` and ``match``
+  on a ``Result`` (patterns in :mod:`.patterns`).  The level of a ``match`` is
+  **type-directed** (R76): the same JSON on a bare tuple, record, variant,
+  ``Option`` or ``Bool``, or with a data pattern, is ``ir.data``.
+
 The cost bound is the whole "fuel": the IR has no loop and no recursion, so a
 static worst-path count of node evaluations is a sound bound and no run-time
 meter exists.  An ``if`` costs its condition plus the *larger* branch (an
@@ -52,9 +66,10 @@ from __future__ import annotations
 
 import operator
 import sys
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Collection, Iterator
 from dataclasses import dataclass, field
 
+from . import fixed, patterns
 from .arith import WindowExceeded, raw_binary
 from .errors import IrOverflow, KitError, Refusal
 from .semantics import STANDARD, Semantics
@@ -65,10 +80,13 @@ from .wtypes import (
     INT,
     MAX_FIXED_WIDTH,
     NAT,
+    UNKNOWN,
     UNKNOWN_TY,
     Ty,
     bind_widths,
     check_types_table,
+    fault_unify,
+    fixed_range,
     flows,
     forget_widths,
     parse_type,
@@ -83,8 +101,6 @@ MAX_IR_COST_CEILING = 65_536  # the most a corpus may declare
 MAX_IR_VALUE = 65_536  # any Bytes an evaluator produces, checked BEFORE allocating
 MAX_DEPTH = 64  # nodes on a path
 MAX_FRAMES = 64  # active model_call frames
-
-IMPLEMENTED_LEVELS = frozenset({"ir.core"})
 
 
 # ---------------------------------------------------------------------------
@@ -121,6 +137,45 @@ LEVEL_TAGS: dict[str, frozenset[str]] = {
 # *defined*: a ``requires`` list naming them is a real list, and one naming
 # anything else is a corpus error, not a level the runner happens to lack.
 DEFINED_LEVELS = frozenset(LEVEL_TAGS) | {"ir.inout.records"}
+
+
+# The level lattice (section 4.1, R1): ``ir.core`` is the base; ``ir.fixed`` and
+# ``ir.tuple`` each depend on it alone and **not on one another**; ``ir.data``
+# implies ``ir.tuple`` (and does *not* imply ``ir.fixed``); ``ir.list`` implies
+# ``ir.data``.  The implication is a rule on the levels a *lane declares*, which is
+# why a lane checks its own set (the generator and the oracle never see one).
+LEVEL_NEEDS: dict[str, frozenset[str]] = {
+    "ir.fixed": frozenset({"ir.core"}),
+    "ir.tuple": frozenset({"ir.core"}),
+    "ir.data": frozenset({"ir.core", "ir.tuple"}),
+    "ir.list": frozenset({"ir.core", "ir.tuple", "ir.data"}),
+}
+
+
+def check_declared_levels(levels: Collection[str]) -> frozenset[str]:
+    """The levels a lane declares, if they respect the lattice, else ``corpus``.
+
+    Every level named in ``LEVEL_NEEDS`` must come with the levels it needs, so a
+    lane that declares ``ir.data`` without ``ir.tuple`` (or ``ir.fixed`` without
+    ``ir.core``) is refused; ``ir.fixed`` and ``ir.tuple`` do not need each other.
+    """
+    declared = frozenset(levels)
+    for level in declared:
+        if level not in DEFINED_LEVELS or level == "ir.inout.records":
+            raise Refusal("corpus", f"{level} is not a level a lane may declare")
+        if not LEVEL_NEEDS.get(level, frozenset()) <= declared:
+            raise Refusal("corpus", f"{level} needs {sorted(LEVEL_NEEDS[level])}")
+    return declared
+
+
+IMPLEMENTED_LEVELS = check_declared_levels({"ir.core", "ir.fixed", "ir.tuple"})
+"""The levels this lane implements (VER04r section 4.1, slice S10e).
+
+``ir.fixed`` and ``ir.tuple`` are siblings: each depends on ``ir.core`` alone, so a
+case or a corpus may use either without the other.  ``ir.data`` (which implies
+``ir.tuple``), ``ir.list`` and ``ir.seq`` are *defined* but not implemented: their
+tags are ``level-missing`` here.
+"""
 
 
 def check_requires(requires: object, code: str, what: str) -> list[str]:
@@ -234,6 +289,49 @@ def walk(root: object) -> Iterator[tuple[list, int]]:
         pending.extend((child, depth + 1) for child in reversed(operands(item)))  # type: ignore[arg-type]
 
 
+def scan_tags(
+    root: object,
+    role: str,
+    models: Collection[str] | None = None,
+    subjects: bool = True,
+) -> None:
+    """The checks that read tag names alone, for one top-level expression.
+
+    In the order :meth:`Program.scan` uses: ``depth`` (a path of more than
+    :data:`MAX_DEPTH` nodes), ``unknown-tag`` over every node, ``model-order`` (a
+    ``model_call`` to a name not in ``models``, when given) and then
+    ``subject-forbidden`` (a ``subject_op`` outside a claim body, ``role`` other
+    than ``"body"``): R119 (c) puts the three codes before it wherever they
+    stand.  No level is consulted, so a suite can run this
+    over each expression it holds before it is recorded as needing a level the
+    runner lacks (R107 d, R69 c tier 2).  With ``subjects=False`` the
+    ``subject-forbidden`` pass is left to the caller, which runs it over every
+    expression of a row after this one has read them all (R119 c).
+    """
+    nodes = []
+    for node, depth in walk(root):
+        if depth > MAX_DEPTH:
+            raise Refusal("depth", f"an expression nested more than {MAX_DEPTH} deep")
+        nodes.append(node)
+    for node in nodes:
+        if tag_level(node[0]) is None:
+            raise Refusal("unknown-tag", node[0])
+    for node in nodes:  # model-order wherever it stands (R119 c)
+        if node[0] == "model_call" and models is not None:
+            callee = node[1] if len(node) > 1 else None
+            if type(callee) is not str or callee not in models:
+                raise Refusal(
+                    "model-order", "a model_call names a model that does not exist"
+                )
+    if not subjects:  # the caller runs the subject pass itself, after other rows
+        return
+    for node in nodes:
+        if node[0] == "subject_op" and role != "body":
+            raise Refusal(
+                "subject-forbidden", "subject calls may appear only in a claim body"
+            )
+
+
 # ---------------------------------------------------------------------------
 # Compiled expressions
 # ---------------------------------------------------------------------------
@@ -327,6 +425,46 @@ def calls_of(calls: Calls, env: dict) -> int:
     return calls if isinstance(calls, int) else calls(env)
 
 
+_ABSENT: object = object()  # "no table given", unlike an explicit ``None``
+
+# The nine nodes that *produce* an Option, which only ``unwrap_or`` consumes at
+# ``ir.fixed`` (section 4.1, [D23]).
+_PRODUCERS = frozenset(
+    {
+        "try",
+        "checked_add",
+        "checked_sub",
+        "checked_mul",
+        "div",
+        "rem",
+        "div_trunc",
+        "rem_trunc",
+        "at",
+    }
+)
+_FIXED_TAGS = LEVEL_TAGS["ir.fixed"]
+_BITWISE = {
+    "bit_and": operator.and_,
+    "bit_or": operator.or_,
+    "bit_xor": operator.xor,
+}
+_SHIFTS = frozenset({"shl", "shr", "sar"})
+_ROTATIONS = frozenset({"rotl", "rotr"})
+_COUNTS = frozenset({"popcount", "clz", "ctz"})
+_CASTS = frozenset({"widen", "wrap", "try", "from_be", "from_le"})
+_EXTREMES = frozenset({"max_value", "min_value"})
+_CHECKED = {"checked_add": "add", "checked_sub": "sub", "checked_mul": "mul"}
+_SOME = fixed.SOME
+_NONE = fixed.NONE
+
+
+def _holds_option(ty: Ty) -> bool:
+    """Is ``ty`` an ``Option``, or does one stand anywhere inside it?"""
+    return ty.head == "Option" or any(
+        isinstance(arg, Ty) and _holds_option(arg) for arg in ty.args
+    )
+
+
 class Program:
     """The models and ops of one corpus (or one conformance case), checked on demand.
 
@@ -350,7 +488,7 @@ class Program:
     def __init__(
         self,
         *,
-        types: dict | None = None,
+        types: object = _ABSENT,
         ops: dict | None = None,
         models: dict | None = None,
         model_order: list | None = None,
@@ -358,7 +496,9 @@ class Program:
         max_ir_cost: object = MAX_IR_COST,
         sem: Semantics = STANDARD,
     ) -> None:
-        self.types = types if types is not None else {}
+        # Absent means ``{}``; a *present* non-object (``null``, a list) is kept so
+        # that the table check below refuses it (section 11, section 2.2).
+        self.types = {} if types is _ABSENT else types
         self.sem = sem
         self.levels = frozenset(levels) & IMPLEMENTED_LEVELS
         if (
@@ -392,8 +532,22 @@ class Program:
         self._position = {name: place for place, name in enumerate(self._order)}
         self._check_corpus_structure()
         self._impure_guards = 0  # enclosing guards whose condition calls the subject
+        # A fault row is typed against the type it replaces (section 16.17 R67, section
+        # 16.20 R96 to R98): `plain_bytes` holds the `id`s of the bytes literals that
+        # stand where a plain `Bytes` is expected (they are typed `Bytes`, not
+        # `Bytes<len>`), and `recorded`, when a dict, receives every node's type so
+        # the caller can compare each position afterwards.
+        self.plain_bytes: set[int] = set()
+        self.handed: dict[
+            int, bool
+        ] = {}  # id of an if/match at such a position -> narrow
+        self.recorded: dict[int, Ty] | None = None
         self.models: dict[str, ModelDef] = {}  # the ones compiled so far
         self.reached_ops: dict[str, OpSig] = {}  # the ops whose signature was read
+        # The ops a compiled tree *calls* (`subject_op` nodes).  Reading a
+        # signature (the line above) is not reaching: the corpus check reads every
+        # op's.  Only a called op has a stand-in that counts (R100).
+        self.called_ops: set[str] = set()
         self.not_live_models: dict[str, str] = {}  # name -> why (a missing level)
         self.not_live_ops: dict[str, str] = {}
         self.errors: dict[str, tuple[str, ...]] = {
@@ -469,10 +623,22 @@ class Program:
         if missing:
             raise Refusal("level-missing", f"{what} needs {sorted(missing)[0]}")
 
-    def _declared(self, text: object, widths: frozenset[str] = frozenset()) -> Ty:
-        """A type written in a signature or binder; a bad text is ``ill-typed``."""
+    def _declared(
+        self,
+        text: object,
+        widths: frozenset[str] = frozenset(),
+        *,
+        allow_int: bool = False,
+    ) -> Ty:
+        """A type written in a signature or binder; a bad text is ``ill-typed``.
+
+        ``allow_int`` is for a *model parameter* alone ([D75], R111): a model row
+        is a signature and never a value, so it may name ``Int`` (also under
+        ``Option``, ``Result``, a tuple or ``List``).  An op row, a binder, a
+        field and every value still refuse it.
+        """
         try:
-            ty = parse_type(text, self.types, widths=widths)
+            ty = parse_type(text, self.types, widths=widths, allow_int=allow_int)
         except Refusal as error:
             raise Refusal("ill-typed", f"bad declared type: {error.message}") from error
         self.need_levels(type_level(ty, self.types), str(ty))
@@ -565,7 +731,7 @@ class Program:
             for param, text in row["params"]:
                 if param in scope or type(param) is not str:
                     raise Refusal("ill-typed", "a model parameter name is repeated")
-                scope[param] = self._declared(text)
+                scope[param] = self._declared(text, allow_int=True)  # [D75]
             body = self._compile(row["body"], scope)
         except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
             raise Refusal("ill-typed", "a model row has the wrong shape") from error
@@ -603,11 +769,7 @@ class Program:
         for node in nodes:
             if levels and tag_level(node[0]) not in self.levels:
                 raise Refusal("level-missing", node[0])
-        for node in nodes:
-            if node[0] == "subject_op" and (owner is not None or role != "body"):
-                raise Refusal(
-                    "subject-forbidden", "subject calls may appear only in a claim body"
-                )
+        for node in nodes:  # model-order wherever it stands, before subject-forbidden
             if node[0] == "model_call":
                 callee = node[1] if len(node) > 1 else None
                 if type(callee) is not str or callee not in self._position:
@@ -615,6 +777,11 @@ class Program:
                         "model-order", "a model_call names a model that does not exist"
                     )
                 callees.append(callee)
+        for node in nodes:
+            if node[0] == "subject_op" and (owner is not None or role != "body"):
+                raise Refusal(
+                    "subject-forbidden", "subject calls may appear only in a claim body"
+                )
         return callees
 
     # -- compiling ---------------------------------------------------------------
@@ -633,13 +800,28 @@ class Program:
         except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
             raise Refusal("ill-typed", "an expression has the wrong shape") from error
 
-    def _compile(self, node: object, scope: dict[str, Ty]) -> Compiled:
+    def _compile(
+        self, node: object, scope: dict[str, Ty], *, intermediate: bool = False
+    ) -> Compiled:
+        """Check and compile ``node``.
+
+        ``intermediate`` is set by ``unwrap_or`` for its first operand alone: the
+        one place an ``Option`` may stand without ``ir.data`` (section 4.1,
+        [D23]).  Any other node whose static type holds an ``Option``, and a
+        producer that is not directly under ``unwrap_or``, needs that level.
+        """
         try:
             compiled = self._node(node, scope)
         except RecursionError as error:  # pragma: no cover - depth is capped at 64
             raise Refusal(
                 "depth", "the expression nests too deeply to compile"
             ) from error
+        if self.recorded is not None:
+            self.recorded[id(node)] = compiled.ty
+        if _holds_option(compiled.ty) and not (
+            intermediate and is_node(node) and node[0] in _PRODUCERS  # type: ignore[index]
+        ):
+            self.need_levels({"ir.data"}, "an Option that unwrap_or does not consume")
         if compiled.cost > self.max_cost:
             raise Refusal(
                 "ir-cost", f"worst-path cost {compiled.cost} exceeds {self.max_cost}"
@@ -657,6 +839,17 @@ class Program:
         its overflow depends on what the subject answered: a case failure.
         """
         return "case" if subject_beneath or self._impure_guards else "corpus"
+
+    def _branch_type(self, node: list, first: Ty, second: Ty) -> Ty | None:
+        """The common type of two branches or arms of the ``if`` / ``match`` ``node``.
+
+        R51's ``unify``, except at a position of a fault row the declared type is
+        handed to, where the fault relation applies (R96 to R98: tuples relate
+        component by component).
+        """
+        if id(node) in self.handed:
+            return fault_unify(first, second, self.handed[id(node)])
+        return unify(first, second)
 
     def _under_guard(
         self, guard: Compiled, node: object, scope: dict[str, Ty]
@@ -688,6 +881,10 @@ class Program:
             if len(node) != 2 or not isinstance(node[1], str) or node[1] not in scope:
                 raise Refusal("ill-typed", "an unbound variable")
             name = node[1]
+            if scope[name].head == UNKNOWN:
+                # a `bind` of a value whose WHOLE type is unknown (the payload of a
+                # bare `err`) may not be used; a `Result<U8,?>` may
+                raise Refusal("ill-typed", "a variable of an unknown type")
             return Compiled(scope[name], lambda env: env[name], 1)
         if tag in ("subject_op", "model_call"):
             return self._call(node, scope)
@@ -700,6 +897,14 @@ class Program:
             return self._if(node, scope)
         if tag in ("and", "or", "implies"):
             return self._logic(node, scope)
+        if tag in _FIXED_TAGS:
+            return self._fixed(tag, node, scope)
+        if tag == "tuple":
+            return self._tuple(node, scope)
+        if tag == "project":
+            return self._project(node, scope)
+        if tag == "match":
+            return self._match(node, scope)
         left, right = self._kids(node, scope, 2)
         return self._binary(tag, left, right)
 
@@ -805,9 +1010,11 @@ class Program:
             raise Refusal("ill-typed", f"bad literal: {error.message}") from error
         if ty.head == "Bytes":
             assert isinstance(value, bytes)
-            return Compiled(
-                Ty("Bytes", (len(value),)), lambda _env: value, 1, written=ty
+            # R67: where a fault row expects a plain `Bytes` the literal IS a `Bytes`.
+            static = (
+                BYTES if id(node) in self.plain_bytes else Ty("Bytes", (len(value),))
             )
+            return Compiled(static, lambda _env: value, 1, written=ty)
         return Compiled(ty, lambda _env: value, 1)
 
     def _err(self, node: list) -> Compiled:
@@ -862,7 +1069,7 @@ class Program:
         other = self._under_guard(cond, node[3], scope)
         if cond.ty != BOOL:
             raise Refusal("ill-typed", "an if condition must be true-or-false")
-        common = unify(then.ty, other.ty)
+        common = self._branch_type(node, then.ty, other.ty)
         if common is None:
             raise Refusal("ill-typed", "the two branches of an if share no type")
         if cond.subject and (then.subject or other.subject):
@@ -996,6 +1203,392 @@ class Program:
         cut = sem.take if tag == "take" else sem.drop
         return self._combine(BYTES, lambda env: cut(lf(env), rf(env)), [left, right])  # type: ignore[arg-type]
 
+    # -- ir.fixed (Appendix A.1) -----------------------------------------------------
+    def _type_arg(self, text: object) -> Ty:
+        """The static type argument of ``widen``, ``wrap``, ``try``, ``max_value``...
+
+        It is a type text; one the reader refuses, or one that is not a
+        fixed-width type, makes the node ``ill-typed``.  The type counts for
+        levels like any type written in a node (section 16.18 R69 (b)).
+        """
+        try:
+            ty = parse_type(text, self.types)
+        except Refusal as error:
+            raise Refusal("ill-typed", f"bad type argument: {error.message}") from error
+        self.need_levels(type_level(ty, self.types), f"the type argument {ty}")
+        if not ty.is_fixed:
+            raise Refusal("ill-typed", "this node names a fixed-width type")
+        return ty
+
+    @staticmethod
+    def _same_fixed(left: Compiled, right: Compiled, tag: str) -> Ty:
+        """Two operands of one fixed-width type; mixed widths or signs are ill-typed."""
+        if not left.ty.is_fixed or left.ty != right.ty:
+            raise Refusal(
+                "ill-typed", f"{tag} takes two fixed-width operands of one type"
+            )
+        return left.ty
+
+    def _fixed(self, tag: str, node: list, scope: dict[str, Ty]) -> Compiled:
+        """Every node of the ``ir.fixed`` level, the casts and ``unwrap_or`` aside.
+
+        Typing is *inferred*, as for ``add`` (Appendix A.1): operands are typed
+        from literals, variables and signatures, and a mismatch -- mixed widths,
+        ``sar`` on an unsigned type, a count that is not a ``Nat`` -- is
+        ``ill-typed``.  The glue is the same for all of them: compile the
+        operands (cost ``1 + sum``), check their types, close over the one
+        function of :mod:`.fixed` or :class:`~.semantics.Semantics` that does
+        the arithmetic.
+        """
+        if tag in _CASTS:
+            return self._cast(tag, node, scope)
+        if tag in _EXTREMES:
+            return self._extreme(tag, node)
+        if tag == "unwrap_or":
+            return self._unwrap_or(node, scope)
+        sem = self.sem
+        unary = tag in _COUNTS or tag in (
+            "bit_not",
+            "to_int",
+            "to_nat",
+            "be_bytes",
+            "le_bytes",
+        )
+        kids = self._kids(node, scope, 1 if unary else 2)
+        a = kids[0]
+        af = a.fn
+        if unary:
+            if not a.ty.is_fixed:
+                raise Refusal("ill-typed", f"{tag} takes a fixed-width operand")
+            return self._unary_fixed(tag, a, af)
+        b = kids[1]
+        bf = b.fn
+        if tag in _BITWISE:
+            ty = self._same_fixed(a, b, tag)
+            op = _BITWISE[tag]
+            return self._combine(ty, lambda env: op(af(env), bf(env)), kids)
+        if tag in _SHIFTS or tag in _ROTATIONS or tag == "bit":
+            # The left operand is fixed-width, the count an exact Nat: a U8 or an
+            # Int count is ill-typed, so no count is ever negative.
+            if not a.ty.is_fixed or b.ty != NAT or (tag == "sar" and not a.ty.signed):
+                raise Refusal(
+                    "ill-typed", f"{tag} takes a fixed-width operand and a Nat count"
+                )
+            ty = a.ty
+            if tag == "bit":
+                return self._combine(
+                    BOOL,
+                    lambda env: fixed.bit(af(env), bf(env), ty),
+                    kids,  # type: ignore[arg-type]
+                )
+            run = sem.shift if tag in _SHIFTS else sem.rotate
+            return self._combine(ty, lambda env: run(tag, af(env), bf(env), ty), kids)  # type: ignore[arg-type]
+        if tag in _CHECKED:
+            ty = self._same_fixed(a, b, tag)
+            word = _CHECKED[tag]
+            return self._combine(
+                Ty("Option", (ty,)),
+                lambda env: sem.checked(word, af(env), bf(env), ty),  # type: ignore[arg-type]
+                kids,
+            )
+        if tag in ("div", "rem", "div_trunc", "rem_trunc"):
+            return self._division(tag, a, b, kids)
+        if tag in ("imin", "imax"):
+            if not (a.ty.is_exact and b.ty.is_exact):
+                raise Refusal("ill-typed", f"{tag} takes Int or Nat operands")
+            pick = min if tag == "imin" else max
+            return self._combine(INT, lambda env: pick(af(env), bf(env)), kids)  # type: ignore[type-var]
+        # at: Bytes, Nat or Int
+        if a.ty.head != "Bytes" or not b.ty.is_exact:
+            raise Refusal("ill-typed", "at takes Bytes and a Nat or Int index")
+
+        def at(env: dict) -> tuple:
+            data, index = af(env), bf(env)
+            if index < 0 or index >= len(data):  # type: ignore[arg-type]
+                return _NONE
+            return (_SOME, data[index])  # type: ignore[index]
+
+        return self._combine(Ty("Option", (Ty("U8"),)), at, kids)
+
+    def _unary_fixed(
+        self, tag: str, a: Compiled, af: Callable[[dict], object]
+    ) -> Compiled:
+        """The one-operand nodes: ``bit_not``, counts, ``to_int``/``to_nat``, bytes."""
+        sem, ty = self.sem, a.ty
+        if tag == "bit_not":
+            if ty.signed:
+                return self._combine(ty, lambda env: ~af(env), [a])  # type: ignore[operator]
+            mask = (1 << ty.width) - 1
+            return self._combine(ty, lambda env: af(env) ^ mask, [a])  # type: ignore[operator]
+        if tag == "popcount":
+            return self._combine(NAT, lambda env: fixed.popcount(af(env), ty), [a])  # type: ignore[arg-type]
+        if tag in ("clz", "ctz"):
+            return self._combine(
+                NAT,
+                lambda env: sem.count_zeros(tag, af(env), ty),
+                [a],  # type: ignore[arg-type]
+            )
+        if tag == "to_int":
+            return self._combine(INT, af, [a])
+        if tag == "to_nat":
+            if ty.signed:
+                raise Refusal("ill-typed", "to_nat takes an unsigned operand")
+            return self._combine(NAT, af, [a])
+        order = "big" if tag == "be_bytes" else "little"
+        return self._combine(
+            Ty("Bytes", (ty.width // 8,)),
+            lambda env: fixed.to_bytes(af(env), ty, order),  # type: ignore[arg-type]
+            [a],
+        )
+
+    def _division(
+        self, tag: str, a: Compiled, b: Compiled, kids: list[Compiled]
+    ) -> Compiled:
+        """``div``/``rem`` (floor), ``div_trunc``/``rem_trunc`` (toward zero).
+
+        The typing is the grammar checker's (Appendix A.1, normative [D24]):
+        ``Int``/``Nat`` operands give ``Option<Int>``, two matching *unsigned*
+        fixed-width operands ``Option<U>``, and a signed pair is refused (use the
+        truncating pair); the truncating pair takes two signed operands of one type.
+        """
+        sem, af, bf = self.sem, a.fn, b.fn
+        truncating = tag in ("div_trunc", "rem_trunc")
+        if truncating:
+            if not (a.ty.is_fixed and a.ty.signed and a.ty == b.ty):
+                raise Refusal(
+                    "ill-typed", f"{tag} takes two signed operands of one type"
+                )
+            ty: Ty | None = a.ty
+            result = Ty("Option", (a.ty,))
+        elif a.ty.is_exact and b.ty.is_exact:
+            ty, result = None, Ty("Option", (INT,))
+        elif a.ty.is_fixed and not a.ty.signed and a.ty == b.ty:
+            ty, result = None, Ty("Option", (a.ty,))
+        else:
+            raise Refusal(
+                "ill-typed",
+                f"{tag} takes Int or Nat operands or two unsigned operands of one type",
+            )
+        return self._combine(
+            result,
+            lambda env: sem.divide(tag, af(env), bf(env), ty),
+            kids,  # type: ignore[arg-type]
+        )
+
+    def _cast(self, tag: str, node: list, scope: dict[str, Ty]) -> Compiled:
+        """``widen``, ``wrap``, ``try``, ``from_be``, ``from_le``: ``[tag, "T", e]``."""
+        if len(node) != 3:
+            raise Refusal("ill-typed", f"{tag} takes a type and an operand")
+        target = self._type_arg(node[1])
+        operand = self._compile(node[2], scope)
+        sem, f, source = self.sem, operand.fn, operand.ty
+        if tag in ("from_be", "from_le"):
+            width = target.width // 8
+            # The static width is part of the operand's TYPE (section 16.18 R51): a
+            # plain Bytes, or a Bytes<N> of another N, is ill-typed.
+            if source != Ty("Bytes", (width,)):
+                raise Refusal("ill-typed", f"{tag} {target} takes a Bytes<{width}>")
+            order = "big" if tag == "from_be" else "little"
+            klass = self._klass(operand.subject)
+            return self._combine(
+                target,
+                lambda env: fixed.from_bytes(f(env), target, order, klass),
+                [operand],  # type: ignore[arg-type]
+            )
+        if tag == "widen":
+            if not source.is_fixed:
+                raise Refusal("ill-typed", "widen takes a fixed-width operand")
+            (low, high), (inside_low, inside_high) = (
+                fixed_range(target),
+                fixed_range(source),
+            )
+            if not low <= inside_low or inside_high > high:
+                raise Refusal("ill-typed", "widen needs a range inside the target")
+            return self._combine(target, f, [operand])  # the value is preserved
+        if not (source.is_fixed or source.is_exact):
+            raise Refusal("ill-typed", f"{tag} takes a fixed-width, Int or Nat operand")
+        if tag == "wrap":
+            return self._combine(
+                target, lambda env: sem.wrap(f(env), target), [operand]
+            )  # type: ignore[arg-type]
+        low, high = fixed_range(target)
+
+        def attempt(env: dict) -> tuple:
+            value = f(env)
+            return (_SOME, value) if low <= value <= high else _NONE  # type: ignore[operator]
+
+        return self._combine(Ty("Option", (target,)), attempt, [operand])
+
+    def _extreme(self, tag: str, node: list) -> Compiled:
+        """``max_value`` / ``min_value``: ``[tag, "T"]``; never folded to a literal."""
+        if len(node) != 2:
+            raise Refusal("ill-typed", f"{tag} takes a type")
+        ty = self._type_arg(node[1])
+        value = fixed_range(ty)[1 if tag == "max_value" else 0]
+        return Compiled(ty, lambda _env: value, 1)
+
+    def _unwrap_or(self, node: list, scope: dict[str, Ty]) -> Compiled:
+        """``unwrap_or(o, d)``: the payload of ``o``, else ``d``; **both** evaluated.
+
+        There is no short circuit (Appendix A.1): ``d`` is evaluated, and its
+        subject calls counted, even when ``o`` holds a value, and the cost is the
+        sum.  The first operand may be a producer node directly (the intermediate
+        use of section 4.1); an ``Option`` from anywhere else needs ``ir.data``.
+        """
+        if len(node) != 3:
+            raise Refusal("ill-typed", "unwrap_or takes 2 operand(s)")
+        option = self._compile(node[1], scope, intermediate=True)
+        default = self._compile(node[2], scope)
+        if option.ty.head != "Option":
+            raise Refusal("ill-typed", "unwrap_or takes an Option first")
+        payload = option.ty.args[0]
+        if not flows(default.ty, payload):
+            raise Refusal(
+                "ill-typed", "the default of unwrap_or has the payload's type"
+            )
+        of, df = option.fn, default.fn
+
+        def unwrap(env: dict) -> object:
+            held, fallback = of(env), df(env)
+            return held[1] if held[0] == _SOME else fallback  # type: ignore[index]
+
+        return self._combine(payload, unwrap, [option, default])
+
+    # -- ir.tuple: the literal, project, match on a Result -------------------------
+    def _tuple(self, node: list, scope: dict[str, Ty]) -> Compiled:
+        """``["tuple", [e1, .., en]]``, two to eight operands: a ``(T1,..,Tn)``.
+
+        Nothing lifts under a tuple (R51): ``(b"ab", n)`` is a ``(Bytes<2>,Nat)``
+        and ``(1 + 2, 0u8)`` an ``(Int,U8)``; the component types are the static
+        types of the operands.
+        """
+        if len(node) != 2 or type(node[1]) is not list or not 2 <= len(node[1]) <= 8:
+            raise Refusal("ill-typed", "a tuple literal has 2 to 8 operands")
+        kids = [self._compile(child, scope) for child in node[1]]
+        fns = [kid.fn for kid in kids]
+        ty = Ty("()", tuple(kid.ty for kid in kids))
+        return self._combine(ty, lambda env: tuple(f(env) for f in fns), kids)
+
+    def _project(self, node: list, scope: dict[str, Ty]) -> Compiled:
+        """``["project", e, i]``: component ``i`` (0-based JSON integer) of a tuple."""
+        if len(node) != 3 or type(node[2]) is not int:
+            raise Refusal("ill-typed", "project takes a tuple and an integer index")
+        operand = self._compile(node[1], scope)
+        index = node[2]
+        if operand.ty.head != "()" or not 0 <= index < len(operand.ty.args):
+            raise Refusal("ill-typed", "project takes a tuple and an index inside it")
+        f = operand.fn
+        return self._combine(
+            operand.ty.args[index], lambda env: f(env)[index], [operand]
+        )  # type: ignore[index]
+
+    def _match(self, node: list, scope: dict[str, Ty]) -> Compiled:
+        """``["match", s, [[pat, arm], ..]]`` on a ``Result``: exactly one arm runs.
+
+        **The level is type-directed** (R76): the same JSON is ``ir.tuple`` when
+        the scrutinee's static type is ``Result<X,E>`` and its patterns are
+        those of Appendix A.1, and ``ir.data`` otherwise.  So the scrutinee is
+        typed before anything else is decided, and a ``match`` on a bare tuple,
+        a record, a variant, an ``Option`` or a ``Bool``, or one that holds a
+        data pattern at any depth, is ``level-missing`` here.
+
+        Then, in the order of R12: every pattern is typed against the type it
+        tests (arity, declared error cases, no repeated or shadowing ``bind``);
+        an arm no value reaches is refused; a ``match`` that can fall through is
+        refused.  Only then are the arm bodies compiled, each in the scope its
+        pattern extends.  The arms are guarded by the scrutinee: a subject call
+        in an arm needs a pure scrutinee, as under an ``if``.
+
+        Cost is ``1 +`` the scrutinee ``+`` the **largest** arm (section 4.2
+        rule 6); calls are those of the arm the pure scrutinee selects.
+        """
+        sem = self.sem
+        arms_raw = node[2] if len(node) == 3 else None
+        if (
+            type(arms_raw) is not list
+            or not arms_raw
+            or len(arms_raw) > patterns.MAX_ARMS
+        ):
+            raise Refusal("ill-typed", "match takes a scrutinee and one or more arms")
+        if not all(type(arm) is list and len(arm) == 2 for arm in arms_raw):
+            raise Refusal("ill-typed", "a match arm is a [pattern, body] pair")
+        scrutinee = self._compile(node[1], scope)
+        if scrutinee.ty.head != "Result" or any(
+            patterns.holds_data_pattern(arm[0]) for arm in arms_raw
+        ):
+            self.need_levels({"ir.data"}, "a match that is not on a Result")
+            raise Refusal(
+                "level-missing", "ir.data"
+            )  # pragma: no cover - not implemented
+        if any(
+            patterns.pattern_depth(arm[0]) > patterns.MAX_PATTERN_DEPTH
+            for arm in arms_raw
+        ):
+            raise Refusal("depth", "a pattern nested more than 8 levels")
+        taken = set(scope)
+        parsed: list[tuple[patterns.Pattern, dict[str, Ty]]] = []
+        for pattern_raw, _body in arms_raw:
+            bound: dict[str, Ty] = {}
+            parsed.append(
+                (
+                    patterns.parse(
+                        pattern_raw, scrutinee.ty, self.errors, taken, bound
+                    ),
+                    bound,
+                )
+            )
+        patterns.check_arms([p for p, _b in parsed], scrutinee.ty, self.errors)
+        arms = [
+            self._under_guard(scrutinee, body, {**scope, **bound})
+            for (_pattern, body), (_p, bound) in zip(arms_raw, parsed, strict=True)
+        ]
+        common = arms[0].ty
+        for arm in arms[1:]:
+            merged = self._branch_type(node, common, arm.ty)
+            if merged is None:
+                raise Refusal("ill-typed", "the arms of a match share no type")
+            common = merged
+        if scrutinee.subject and any(arm.subject for arm in arms):
+            raise Refusal(
+                "impure-guard",
+                "a guard that calls the subject sits over a subject call",
+            )
+        sf = scrutinee.fn
+        tests = [pattern for pattern, _b in parsed]
+        bodies = [arm.fn for arm in arms]
+
+        def select(env: dict) -> tuple[int, dict]:
+            value = sf(env)
+            found: dict[int, dict] = {}
+            for place, pattern in enumerate(tests):
+                binds: dict = {}
+                if pattern.test(value, binds):
+                    found[place] = binds
+            if (
+                not found
+            ):  # pragma: no cover - the usefulness check proves exhaustiveness
+                raise KitError("a match fell through")
+            place = sem.choose_arm(list(found))
+            return place, found[place]
+
+        def run(env: dict) -> object:
+            place, binds = select(env)
+            return bodies[place]({**env, **binds})
+
+        arm_calls = [arm.calls for arm in arms]
+        if scrutinee.subject:
+            calls: Calls = scrutinee.calls
+        elif all(isinstance(c, int) for c in arm_calls) and len(set(arm_calls)) == 1:
+            calls = arm_calls[0]
+        else:
+
+            def calls(env: dict) -> int:  # type: ignore[misc]
+                place, binds = select(env)
+                return calls_of(arm_calls[place], {**env, **binds})
+
+        cost = 1 + scrutinee.cost + max(arm.cost for arm in arms)
+        return self._combine(common, run, [scrutinee, *arms], calls=calls, cost=cost)
+
     def _call(self, node: list, scope: dict[str, Ty]) -> Compiled:
         tag = node[0]
         shapes = (3, 4) if tag == "subject_op" else (3,)
@@ -1074,6 +1667,7 @@ class Program:
         a list given to an op that has no ``width_params`` are all ``ill-typed``.
         """
         sig = self.op(name)
+        self.called_ops.add(name)
         given = node[3] if len(node) == 4 else None
         if len(node) == 4 and not sig.width_params:
             raise Refusal("ill-typed", f"{name} has no static widths to bind")
@@ -1188,7 +1782,11 @@ class SubjectTable:
     wrong evaluator -- one that evaluates an untaken branch -- be caught.
 
     Only the ops the program's expressions actually call have stand-ins that
-    matter; an entry for any other op is ignored, as an unused binding is.
+    matter; an entry for any other op is ignored, as an unused binding is: it is
+    not compiled and its signature is not compared (R100, R124).  An op whose
+    signature was merely *read* (the corpus check reads every op's) is not
+    called.  A called op whose stand-in needs a missing level, or has the wrong
+    signature, fails the kit build: a :class:`KitError`, never ``level-missing``.
     """
 
     program: Program
@@ -1196,7 +1794,8 @@ class SubjectTable:
     calls: int = field(default=0)
 
     def __post_init__(self) -> None:
-        for op, sig in self.program.reached_ops.items():
+        for op in sorted(self.program.called_ops):
+            sig = self.program.reached_ops[op]
             model = self.subjects.get(op)
             if model is None:
                 continue

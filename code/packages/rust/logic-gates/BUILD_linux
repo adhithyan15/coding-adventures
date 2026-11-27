@@ -5,11 +5,11 @@
 # KEEP THE REST OF THIS FILE IN SYNC WITH BUILD.
 cargo test --locked -q -p logic-gates --lib -- --nocapture
 cargo test --locked -q -p logic-gates --doc
-cargo test --locked -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width
+cargo test --locked -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width --test realizes_panics
 # SEC-007: the bit domain is also checked in the RELEASE profile, where the crate's own
 # validation used to be compiled away (a debug-only `debug_assert!`).  The same file passes
 # in both profiles or the build fails.
-cargo test --locked -q -p logic-gates --release --test bit_domain --test decoder_width
+cargo test --locked -q -p logic-gates --release --test bit_domain --test decoder_width --test realizes_panics
 # ... and the whole generated Warrant harness (every rejection row included) in release too.
 cargo test --locked -q -p logic-gates --release --test warrant_evidence
 # The library is pure: no capability, test code included (the analyzer reads it).

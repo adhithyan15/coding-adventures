@@ -21,6 +21,13 @@ type WeightedEdge struct {
 type PropertyValue any
 type PropertyBag map[string]PropertyValue
 
+// edgeIdentity stores a canonical endpoint pair without delimiter encoding.
+// Go strings can contain arbitrary bytes, including NUL.
+type edgeIdentity struct {
+	left  string
+	right string
+}
+
 type Graph struct {
 	repr            GraphRepr
 	adj             map[string]map[string]float64
@@ -29,7 +36,7 @@ type Graph struct {
 	matrix          [][]float64
 	graphProperties PropertyBag
 	nodeProperties  map[string]PropertyBag
-	edgeProperties  map[string]PropertyBag
+	edgeProperties  map[edgeIdentity]PropertyBag
 }
 
 func New(repr GraphRepr) *Graph {
@@ -44,7 +51,7 @@ func New(repr GraphRepr) *Graph {
 		matrix:          [][]float64{},
 		graphProperties: make(PropertyBag),
 		nodeProperties:  make(map[string]PropertyBag),
-		edgeProperties:  make(map[string]PropertyBag),
+		edgeProperties:  make(map[edgeIdentity]PropertyBag),
 	}
 }
 
@@ -219,13 +226,13 @@ func (g *Graph) EdgeWeight(left, right string) (float64, error) {
 
 func (g *Graph) Edges() []WeightedEdge {
 	result := make([]WeightedEdge, 0)
-	seen := make(map[string]bool)
+	seen := make(map[edgeIdentity]bool)
 
 	if g.repr == AdjacencyList {
 		for left, neighbors := range g.adj {
 			for right, weight := range neighbors {
 				keyLeft, keyRight := canonicalEndpoints(left, right)
-				key := keyLeft + "\x00" + keyRight
+				key := edgeKey(keyLeft, keyRight)
 				if seen[key] {
 					continue
 				}
@@ -423,9 +430,9 @@ func canonicalEndpoints(left, right string) (string, string) {
 	return right, left
 }
 
-func edgeKey(left, right string) string {
+func edgeKey(left, right string) edgeIdentity {
 	keyLeft, keyRight := canonicalEndpoints(left, right)
-	return keyLeft + "\x00" + keyRight
+	return edgeIdentity{left: keyLeft, right: keyRight}
 }
 
 func copyPropertyBag(properties PropertyBag) PropertyBag {

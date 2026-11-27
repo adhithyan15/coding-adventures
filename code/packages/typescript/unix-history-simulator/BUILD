@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+npm ci --quiet
+npm ci --prefix ../fuzz --quiet
+npm ci --prefix ../sat-solver --quiet
+npm run build --prefix ../sat-solver
+npm run build
+npm run test:coverage
