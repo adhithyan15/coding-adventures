@@ -1,5 +1,5 @@
 /**
- * # The model IR at level `ir.core`: scan, type, cost, evaluate
+ * # The model IR at levels `ir.core`, `ir.fixed` and `ir.tuple`: scan, type, cost, evaluate
  *
  * A model IR expression is a JSON tree, `["tag", operand...]`, with no
  * recursion, no loop and no mutable state (VER04r section 4.2).  This module
@@ -46,6 +46,7 @@
  */
 
 import { KitError, type KitCode } from "./errors.ts";
+import { type Fx, binaryFixed, boundValue, smallWrap, unaryFixed } from "./fixed.ts";
 import { DEFINED_LEVELS, firstMissing, levelOfTag } from "./levels.ts";
 import {
   BOOL,
@@ -55,7 +56,9 @@ import {
   type Ty,
   type TypeTable,
   checkNames,
+  faultCommon,
   flows,
+  hasEquality,
   isExact,
   isFixed,
   isInteger,
@@ -127,7 +130,32 @@ interface T {
   readonly value?: Value;
   readonly slot?: number;
   readonly name?: string;
+  /** `project`: the 0-based component. */
+  readonly index?: number;
+  /** `widen wrap try from_be from_le max_value min_value`: the static type argument. */
+  readonly target?: Fx;
+  /** `match`: the typed patterns, one per arm (`kids[0]` is the scrutinee, `kids[i + 1]` the body of arm `i`). */
+  readonly pats?: readonly TPat[];
 }
+
+/**
+ * A typed `match` pattern (Appendix A.1).  `bind` and `wild` both match anything; `bind` also stores the value in `slot`
+ * of the environment before its arm runs.  `err` with `c === null` is `err_any`.
+ */
+type TPat =
+  | { readonly k: "wild" }
+  | { readonly k: "bind"; readonly slot: number }
+  | { readonly k: "ok"; readonly p: TPat }
+  | { readonly k: "err"; readonly c: string | null }
+  | { readonly k: "tuple"; readonly ps: readonly TPat[] };
+
+/** The type a fault row's declared position hands down (R67, R98), and whether the position is below a tuple (R96). */
+interface Expect {
+  readonly ty: Ty;
+  readonly narrow: boolean;
+}
+
+type Scope = ReadonlyMap<string, { slot: number; ty: Ty }>;
 
 /** What a scan learned about a tree. */
 interface ScanInfo {
@@ -211,6 +239,23 @@ function isNodeArray(value: unknown): value is unknown[] {
   return Array.isArray(value) && value.length > 0 && typeof value[0] === "string";
 }
 
+/** The tags whose position 1 is a static type argument (a fixed-width type name): its text counts for the level (R69 (b)). */
+const TYPE_ARG_TAGS: ReadonlySet<string> = new Set(["widen", "wrap", "try", "max_value", "min_value", "from_be", "from_le"]);
+
+/**
+ * The levels of a `match` pattern (R76): a data pattern (`some none ctor bool`), at any depth, needs `ir.data`; the patterns
+ * of Appendix A.1 (`ok err err_any tuple bind wild`) add nothing.  A pattern is no node, so this reads it by its own head word
+ * and stops at a nesting of 200, far past the limit the typer reports.
+ */
+function patternLevels(pat: unknown, depth: number, info: ScanInfo): void {
+  if (depth > 200 || !Array.isArray(pat) || typeof pat[0] !== "string") return;
+  const head = pat[0];
+  if (head === "some" || head === "none" || head === "ctor" || head === "bool") info.levels.add("ir.data");
+  if (head === "ok" || head === "some") patternLevels(pat[1], depth + 1, info);
+  const inner = head === "tuple" ? pat[1] : head === "ctor" ? pat[2] : undefined;
+  if (Array.isArray(inner)) for (const item of inner) patternLevels(item, depth + 1, info);
+}
+
 /**
  * Walk a tree reading tag names only.
  *
@@ -240,6 +285,7 @@ function scanExpr(
     }
     return;
   }
+  if (TYPE_ARG_TAGS.has(tag) && typeof ir[1] === "string") info.litTypes.push(ir[1]);
   if (tag === "var" || tag === "err") return;
   if (tag === "subject_op") {
     if (role !== "body" && role !== "fault-reach") fail("subject-forbidden", "a subject_op may not stand here");
@@ -266,7 +312,11 @@ function scanExpr(
     scanExpr(ir[1], depth + 1, role, callerIndex, order, info);
     const arms = ir[2];
     if (Array.isArray(arms)) {
-      for (const arm of arms) if (Array.isArray(arm) && arm.length === 2) scanExpr(arm[1], depth + 1, role, callerIndex, order, info);
+      for (const arm of arms) {
+        if (!Array.isArray(arm) || arm.length !== 2) continue;
+        patternLevels(arm[0], 0, info);
+        scanExpr(arm[1], depth + 1, role, callerIndex, order, info);
+      }
     }
     return;
   }
@@ -296,12 +346,19 @@ function reachExpr(ir: unknown, depth: number, order: ReadonlyMap<string, number
     }
     return;
   }
+  if (TYPE_ARG_TAGS.has(tag) && typeof ir[1] === "string") info.litTypes.push(ir[1]);
   if (tag === "var" || tag === "err") return;
   if (tag === "subject_op" && typeof ir[1] === "string") info.ops.add(ir[1]);
   if (tag === "model_call" && typeof ir[1] === "string" && order.has(ir[1])) info.models.add(ir[1]);
   if (tag === "match") {
     reachExpr(ir[1], depth + 1, order, info);
-    if (Array.isArray(ir[2])) for (const arm of ir[2]) if (Array.isArray(arm) && arm.length === 2) reachExpr(arm[1], depth + 1, order, info);
+    if (Array.isArray(ir[2])) {
+      for (const arm of ir[2]) {
+        if (!Array.isArray(arm) || arm.length !== 2) continue;
+        patternLevels(arm[0], 0, info);
+        reachExpr(arm[1], depth + 1, order, info);
+      }
+    }
     return;
   }
   const start = tag === "subject_op" || tag === "model_call" ? 2 : 1;
@@ -324,6 +381,12 @@ interface ModelInfo {
   readonly rawBody: unknown;
   readonly scan: ScanInfo;
   needsMissing: boolean;
+  /**
+   * A level the typer found the body to need once it had types (a `match` on a scrutinee that is not a `Result`, an `Option`
+   * that is not an intermediate): tags and signatures alone did not show it, so the model becomes not-live and everything
+   * that reaches it needs the level too.
+   */
+  lateLevel?: string;
   body?: T;
   ty?: Ty;
   cost: number;
@@ -385,7 +448,14 @@ export interface RunState {
  * Ops, models and types, validated.  Building one **is** the "verify before
  * run" of section 14 for the part of a corpus that is shared by every suite.
  */
+/** Steps of the usefulness check one `match` may spend: far above any kit case or adopter match, far below a hostile one. */
+export const MATCH_BUDGET = 200_000;
+
+/** The type of a name bound to an undetermined payload: it may be ignored, never used. */
+const UNDETERMINED: Ty = { k: "Option", of: null };
+
 export class Program {
+  private matchSteps = MATCH_BUDGET;
   readonly table: TypeTable;
   readonly ops = new Map<string, OpSig>();
   readonly levels: ReadonlySet<string>;
@@ -481,7 +551,16 @@ export class Program {
       if (info.needsMissing) continue;
       info.params.forEach((p) => checkNames(p.ty, this.table, "ill-typed"));
       const scope = new Map(info.params.map((p, slot) => [p.name, { slot, ty: p.ty }]));
-      const body = this.typeExpr(info.rawBody, scope);
+      let body: T;
+      try {
+        body = this.typeExpr(info.rawBody, scope);
+      } catch (error) {
+        // Only the types showed that this body needs a level the lane lacks: the model is not live (R69 (c) tier 2).
+        if (!(error instanceof KitError) || error.code !== "level-missing" || error.level === undefined) throw error;
+        info.needsMissing = true;
+        info.lateLevel = error.level;
+        continue;
+      }
       if (body.cost > this.maxCost) fail("ir-cost", "a model body costs more than max_ir_cost");
       info.body = body;
       info.ty = body.ty;
@@ -572,6 +651,7 @@ export class Program {
         seenModels.add(modelName);
         const model = this.models.get(modelName) as ModelInfo;
         model.params.forEach((p) => typeSet(p.ty));
+        if (model.lateLevel !== undefined) levels.add(model.lateLevel);
         visitScan(model.scan);
       }
     };
@@ -582,13 +662,16 @@ export class Program {
 
   /**
    * Compile an expression over the given variables (their order is the slot
-   * order of the environments it will run on).
+   * order of the environments it will run on).  `expected` is the declared type of a
+   * **fault row**'s position (the parameter it rewrites, the op's result): it is handed
+   * down as R67 and R98 say, and every position it reaches is compared with it by the
+   * common-type relation of R94 to R98.
    *
    * Refusals, in this order: `depth`, `unknown-tag`, `subject-forbidden`,
    * `model-order` (scan); `level-missing` (reach); `ill-typed`, `impure-guard`
    * (type); `ir-cost`.
    */
-  compileExpr(ir: unknown, vars: readonly Param[], role: Role): Compiled {
+  compileExpr(ir: unknown, vars: readonly Param[], role: Role, expected?: Ty): Compiled {
     let scan = newInfo();
     let forbidden: KitError | undefined;
     try {
@@ -608,7 +691,7 @@ export class Program {
     if (forbidden !== undefined) throw forbidden;
     vars.forEach((v) => checkNames(v.ty, this.table, "ill-typed"));
     const scope = new Map(vars.map((v, slot) => [v.name, { slot, ty: v.ty }]));
-    const typed = this.typeExpr(ir, scope);
+    const typed = this.typeExpr(ir, scope, expected === undefined ? undefined : { ty: expected, narrow: false });
     if (typed.cost > this.maxCost) fail("ir-cost", "an expression costs more than max_ir_cost");
     const run = this.compile(typed, false);
     const trace = this.trace(typed);
@@ -639,7 +722,20 @@ export class Program {
   // Step 3: typing
   // -------------------------------------------------------------------------
 
-  private typeExpr(ir: unknown, scope: ReadonlyMap<string, { slot: number; ty: Ty }>): T {
+  /**
+   * Type a node.  `inter` is true only for the first operand of `unwrap_or`: the **intermediate use** of an `Option`
+   * (Appendix A.1, [D23]) needs no `ir.data`.  An `Option` anywhere else is the real type of `ir.data`, a level this lane
+   * lacks, and is `level-missing` here; `expected` is a fault row's declared type for this position, if any.
+   */
+  private typeExpr(ir: unknown, scope: Scope, expected?: Expect, inter = false): T {
+    const typed = this.typeNode(ir, scope, expected);
+    if (typed.ty.k === "Option" && !inter) {
+      throw new KitError("level-missing", "an Option that is not an unwrap_or operand needs ir.data", { level: "ir.data" });
+    }
+    return typed;
+  }
+
+  private typeNode(ir: unknown, scope: Scope, expected?: Expect): T {
     if (!isNodeArray(ir)) return fail("ill-typed", "an IR node is an array that starts with a tag");
     const tag = ir[0] as string;
     const sized = (count: number): void => {
@@ -670,7 +766,9 @@ export class Program {
           if (ty.n !== null) fail("ill-typed", "the written type of a bytes literal is Bytes");
           const data = typeof record["value"] === "string" ? fromHex(record["value"]) : undefined;
           if (data === undefined || data.length > 4096) return fail("ill-typed", "a bytes literal is lowercase hex of at most 4096 bytes");
-          return { tag, ty: { k: "Bytes", n: data.length }, kids: [], sub: false, cost: 1, value: data };
+          // R67: a bytes literal in a position whose declared type is plain `Bytes` has the type `Bytes`; anywhere else `Bytes<len>`.
+          const plain = expected !== undefined && expected.ty.k === "Bytes" && expected.ty.n === null;
+          return { tag, ty: plain ? BYTES : { k: "Bytes", n: data.length }, kids: [], sub: false, cost: 1, value: data };
         }
         if (ty.k === "U" || ty.k === "I" || ty.k === "Nat" || ty.k === "Int") {
           const number = parseDecimal(record["value"]);
@@ -688,6 +786,7 @@ export class Program {
         sized(1);
         const found = typeof ir[1] === "string" ? scope.get(ir[1]) : undefined;
         if (found === undefined) return fail("ill-typed", "a var names nothing in scope");
+        if (found.ty === UNDETERMINED) return fail("ill-typed", "a bind of an undetermined payload is used");
         return { tag, ty: found.ty, kids: [], sub: false, cost: 1, slot: found.slot };
       }
       case "err": {
@@ -700,7 +799,11 @@ export class Program {
         return { tag, ty, kids: [], sub: false, cost: 1, name };
       }
       case "ok": {
-        const [payload] = kidsOf(1, 1) as [T];
+        sized(1);
+        // R98: the payload of an `ok` is compared with the declared payload type of its position.
+        const want = expected !== undefined && expected.ty.k === "Result" && expected.ty.ok !== null ? { ty: expected.ty.ok, narrow: expected.narrow } : undefined;
+        const payload = this.typeExpr(ir[1], scope, want);
+        if (want !== undefined && faultCommon(payload.ty, want.ty, want.narrow) === null) fail("ill-typed", "the payload of an ok shares no type with the declared one");
         return make({ k: "Result", ok: payload.ty, err: null }, [payload]);
       }
       case "is_err": {
@@ -744,11 +847,14 @@ export class Program {
         return make(BOOL, kids);
       }
       case "if": {
-        const kids = kidsOf(1, 3);
-        const [cond, then, otherwise] = kids as [T, T, T];
+        sized(3);
+        const cond = this.typeExpr(ir[1], scope);
+        const then = this.typeExpr(ir[2], scope, expected);
+        const otherwise = this.typeExpr(ir[3], scope, expected);
+        const kids = [cond, then, otherwise];
         if (cond.ty.k !== "Bool") fail("ill-typed", "an if condition is a Bool");
         if (cond.sub && (then.sub || otherwise.sub)) fail("impure-guard", "a subject call under a guard that contains a subject call");
-        const common = unify(then.ty, otherwise.ty);
+        const common = this.branchType([then.ty, otherwise.ty], expected);
         if (common === null) return fail("ill-typed", "the two arms of an if share no type");
         // Worst path: 1 + cond + max(then, else) (a short circuit is never credited, but a branch not taken is not charged).
         return { tag, ty: common, kids, sub: kids.some((k) => k.sub), cost: 1 + cond.cost + Math.max(then.cost, otherwise.cost) };
@@ -759,9 +865,7 @@ export class Program {
         const [a, b] = kids as [T, T];
         const common = unify(a.ty, b.ty);
         if (common === null) return fail("ill-typed", "the sides of an equality share no type");
-        if (common.k !== "Bool" && !isInteger(common) && common.k !== "Bytes" && common.k !== "Result") {
-          fail("ill-typed", "this type has no equality at this level");
-        }
+        if (!hasEquality(common)) fail("ill-typed", "this type has no equality at this level");
         return make(BOOL, kids);
       }
       case "lt":
@@ -827,10 +931,378 @@ export class Program {
         });
         return make(substituteWidths(op.ret, op.widthParams, widths), args, { name: ir[1] });
       }
+
+      // ---- ir.fixed (Appendix A.1) ------------------------------------------------------------------------------------
+      case "bit_and":
+      case "bit_or":
+      case "bit_xor": {
+        const kids = kidsOf(1, 2);
+        const [a, b] = kids as [T, T];
+        if (!isFixed(a.ty) || !sameType(a.ty, b.ty)) fail("ill-typed", `${tag} needs two fixed-width operands of one type`);
+        return make(a.ty, kids);
+      }
+      case "bit_not": {
+        const [a] = kidsOf(1, 1) as [T];
+        if (!isFixed(a.ty)) fail("ill-typed", "bit_not needs a fixed-width operand");
+        return make(a.ty, [a]);
+      }
+      case "shl":
+      case "shr":
+      case "sar":
+      case "rotl":
+      case "rotr": {
+        const kids = kidsOf(1, 2);
+        const [a, n] = kids as [T, T];
+        if (!isFixed(a.ty)) fail("ill-typed", `${tag} needs a fixed-width operand`);
+        if (tag === "sar" && a.ty.k !== "I") fail("ill-typed", "sar needs a signed operand");
+        // The count is an exact `Nat`: not `Int`, not a fixed-width type (a signed count would need a sign rule).
+        if (n.ty.k !== "Nat") fail("ill-typed", `the count of ${tag} is a Nat`);
+        return make(a.ty, kids);
+      }
+      case "popcount":
+      case "clz":
+      case "ctz": {
+        const [a] = kidsOf(1, 1) as [T];
+        if (!isFixed(a.ty)) fail("ill-typed", `${tag} needs a fixed-width operand`);
+        return make(NAT, [a]);
+      }
+      case "bit": {
+        const kids = kidsOf(1, 2);
+        const [a, i] = kids as [T, T];
+        if (!isFixed(a.ty) || i.ty.k !== "Nat") fail("ill-typed", "bit takes a fixed-width operand and a Nat index");
+        return make(BOOL, kids);
+      }
+      case "widen":
+      case "wrap":
+      case "try": {
+        sized(2);
+        const to = staticFixed(ir[1]);
+        const operand = this.typeExpr(ir[2], scope);
+        if (tag === "widen") {
+          // Value preserved: the operand's whole range must lie inside the target's.
+          if (!isFixed(operand.ty)) fail("ill-typed", "widen takes a fixed-width operand");
+          const [lo, hi] = fixedRange(operand.ty.k, operand.ty.w);
+          const [tlo, thi] = fixedRange(to.k, to.w);
+          if (lo < tlo || hi > thi) fail("ill-typed", "widen needs a range inside the target");
+        } else if (!isFixed(operand.ty) && !isExact(operand.ty)) {
+          fail("ill-typed", `${tag} takes a fixed-width, Int or Nat operand`);
+        }
+        return make(tag === "try" ? { k: "Option", of: to as Ty } : (to as Ty), [operand], { target: to });
+      }
+      case "to_int":
+      case "to_nat": {
+        const [a] = kidsOf(1, 1) as [T];
+        if (!isFixed(a.ty) || (tag === "to_nat" && a.ty.k !== "U")) fail("ill-typed", tag === "to_nat" ? "to_nat takes an unsigned operand" : "to_int takes a fixed-width operand");
+        return make(tag === "to_int" ? INT : NAT, [a]);
+      }
+      case "max_value":
+      case "min_value": {
+        sized(1);
+        const to = staticFixed(ir[1]);
+        // Not folded to a `lit` (section 10, unoptimised lowering): a node of its own, cost 1.
+        return { tag, ty: to as Ty, kids: [], sub: false, cost: 1, target: to };
+      }
+      case "checked_add":
+      case "checked_sub":
+      case "checked_mul": {
+        const kids = kidsOf(1, 2);
+        const [a, b] = kids as [T, T];
+        if (!isFixed(a.ty) || !sameType(a.ty, b.ty)) fail("ill-typed", `${tag} needs two fixed-width operands of one type`);
+        return make({ k: "Option", of: a.ty }, kids);
+      }
+      case "div":
+      case "rem": {
+        const kids = kidsOf(1, 2);
+        const [a, b] = kids as [T, T];
+        // Normative [D24, R7]: unsigned pairs give `Option<U>`, `Int`/`Nat` pairs `Option<Int>`; a signed pair is refused.
+        if (isFixed(a.ty) && isFixed(b.ty)) {
+          if (a.ty.k !== "U" || !sameType(a.ty, b.ty)) fail("ill-typed", `${tag} takes unsigned operands of one type (signed ones use ${tag}_trunc)`);
+          return make({ k: "Option", of: a.ty }, kids);
+        }
+        if (isExact(a.ty) && isExact(b.ty)) return make({ k: "Option", of: INT }, kids);
+        return fail("ill-typed", `${tag} takes two unsigned operands of one type or two Int/Nat operands`);
+      }
+      case "div_trunc":
+      case "rem_trunc": {
+        const kids = kidsOf(1, 2);
+        const [a, b] = kids as [T, T];
+        if (!isFixed(a.ty) || a.ty.k !== "I" || !sameType(a.ty, b.ty)) fail("ill-typed", `${tag} takes two signed operands of one type`);
+        return make({ k: "Option", of: a.ty }, kids);
+      }
+      case "imin":
+      case "imax": {
+        const kids = kidsOf(1, 2);
+        if (!kids.every((k) => isExact(k.ty))) fail("ill-typed", `${tag} takes Int or Nat operands`);
+        return make(INT, kids);
+      }
+      case "be_bytes":
+      case "le_bytes": {
+        const [a] = kidsOf(1, 1) as [T];
+        if (!isFixed(a.ty)) fail("ill-typed", `${tag} takes a fixed-width operand`);
+        return make({ k: "Bytes", n: a.ty.w / 8 }, [a]);
+      }
+      case "from_be":
+      case "from_le": {
+        sized(2);
+        const to = staticFixed(ir[1]);
+        const operand = this.typeExpr(ir[2], scope);
+        // The static width must be exactly `w/8` (R51's static-width rule): a plain `Bytes` is refused by every tool.
+        if (operand.ty.k !== "Bytes" || operand.ty.n !== to.w / 8) fail("ill-typed", `${tag} needs a Bytes<${to.w / 8}> operand`);
+        return make(to as Ty, [operand], { target: to });
+      }
+      case "at": {
+        const kids = kidsOf(1, 2);
+        const [bytes, index] = kids as [T, T];
+        if (bytes.ty.k !== "Bytes" || !isExact(index.ty)) fail("ill-typed", "at takes a Bytes value and a Nat or Int index");
+        return make({ k: "Option", of: { k: "U", w: 8 } }, kids);
+      }
+      case "unwrap_or": {
+        sized(2);
+        // The one consumer of an `Option` at `ir.fixed`: the producer is the first operand, directly [D23].
+        const option = this.typeExpr(ir[1], scope, undefined, true);
+        const fallback = this.typeExpr(ir[2], scope);
+        if (option.ty.k !== "Option" || option.ty.of === null) fail("ill-typed", "unwrap_or takes an Option and a default");
+        const payload = (option.ty as Extract<Ty, { k: "Option" }>).of as Ty;
+        if (!flows(fallback.ty, payload)) fail("ill-typed", "the default of unwrap_or does not fit the payload type");
+        return make(payload, [option, fallback]);
+      }
+
+      // ---- ir.tuple (Appendix A.1) ------------------------------------------------------------------------------------
+      case "tuple": {
+        sized(1);
+        const list = ir[1];
+        if (!Array.isArray(list) || list.length < 2 || list.length > 8) return fail("ill-typed", "a tuple literal has 2 to 8 components");
+        const want = expected !== undefined && expected.ty.k === "Tuple" && expected.ty.of.length === list.length ? expected.ty.of : undefined;
+        const kids = list.map((child, i) => {
+          // R98: component `i` is compared with component `i` of the declared tuple, under the narrower relation of R96.
+          const hint = want === undefined ? undefined : { ty: want[i] as Ty, narrow: true };
+          const kid = this.typeExpr(child, scope, hint);
+          if (hint !== undefined && faultCommon(kid.ty, hint.ty, true) === null) fail("ill-typed", "a tuple component shares no type with the declared one");
+          return kid;
+        });
+        return make({ k: "Tuple", of: kids.map((k) => k.ty) }, kids);
+      }
+      case "project": {
+        sized(2);
+        const operand = this.typeExpr(ir[1], scope);
+        const at = ir[2];
+        if (operand.ty.k !== "Tuple") fail("ill-typed", "project takes a tuple");
+        const parts = (operand.ty as Extract<Ty, { k: "Tuple" }>).of;
+        if (typeof at !== "number" || !Number.isInteger(at) || at < 0 || at >= parts.length) fail("ill-typed", "a project index is a JSON integer below the arity");
+        return make(parts[at as number] as Ty, [operand], { index: at as number });
+      }
+      case "match":
+        return this.typeMatch(ir, scope, expected);
       default:
         // A tag of a level this lane lacks was refused by the reach step; a tag of no level by the scan.
         return fail("level-missing", "a construct this lane does not implement");
     }
+  }
+
+  /** The type of the branches of an `if` or the arms of a `match`: R51's `unify`, or, in a fault row, R94 to R98 against the declared type. */
+  private branchType(types: readonly Ty[], expected: Expect | undefined): Ty | null {
+    let acc: Ty | null = null;
+    for (const ty of types) {
+      if (expected !== undefined && faultCommon(ty, expected.ty, expected.narrow) === null) return null;
+      acc = acc === null ? ty : expected === undefined ? unify(acc, ty) : faultCommon(acc, ty, expected.narrow);
+      if (acc === null) return null;
+    }
+    return acc;
+  }
+
+  /** The case names of the error type of `ty`, in declaration order, or `null` when the type does not say which it is. */
+  private errorCases(ty: Extract<Ty, { k: "Result" }>): readonly string[] | null {
+    if (ty.err !== null) return this.table.errors.get(ty.err) ?? null;
+    if (ty.cands !== undefined && ty.cands.length === 1) return this.table.errors.get(ty.cands[0] as string) ?? null;
+    return null;
+  }
+
+  /**
+   * Type a pattern against the type of the value it meets (Appendix A.1) and record what it binds in `binds`.
+   * A data pattern (`some none ctor bool`) is `ir.data`; the reach step has normally said so already, and a lane without
+   * the level never gets here with one.  Every other mistake is `ill-typed` (a corpus error at source).
+   */
+  private typePattern(pat: unknown, ty: Ty, binds: Map<string, { slot: number; ty: Ty }>, seen: Set<string>, depth: number): TPat {
+    // The outermost pattern is level 1: a pattern nests at most 8 deep (VER04j section 4.3), so a ninth level is refused.
+    if (depth > 8) return fail("depth", "a pattern nests at most 8 deep");
+    if (!Array.isArray(pat) || typeof pat[0] !== "string") return fail("ill-typed", "a pattern is an array that starts with a pattern word");
+    const head = pat[0];
+    switch (head) {
+      case "wild":
+        if (pat.length !== 1) fail("ill-typed", "wild has no operand");
+        return { k: "wild" };
+      case "bind": {
+        const name = pat[1];
+        if (pat.length !== 2 || typeof name !== "string" || !isName(name)) return fail("ill-typed", "bind names a variable");
+        // No shadowing: not a binder, a parameter, `result`, an outer `bind`, or the same name twice in one pattern.
+        if (seen.has(name) || binds.has(name) || name === "result") fail("ill-typed", "a bind name shadows another name or repeats");
+        seen.add(name);
+        let slot = 0;
+        for (const entry of binds.values()) slot = Math.max(slot, entry.slot + 1);
+        binds.set(name, { slot, ty });
+        return { k: "bind", slot };
+      }
+      case "ok": {
+        if (pat.length !== 2 || ty.k !== "Result") return fail("ill-typed", "ok matches a Result");
+        // An undetermined payload (a bare `err`) can only be bound or ignored; a body that *uses* the bind is ill-typed (see `var`).
+        return { k: "ok", p: this.typePattern(pat[1], ty.ok ?? UNDETERMINED, binds, seen, depth + 1) };
+      }
+      case "err": {
+        if (pat.length !== 2 || typeof pat[1] !== "string" || ty.k !== "Result") return fail("ill-typed", "err matches a Result and names a case");
+        const cases = this.errorCases(ty);
+        if (cases !== null ? !cases.includes(pat[1]) : ![...this.table.errors.values()].some((list) => list.includes(pat[1] as string))) {
+          fail("ill-typed", "the case is not one of the error type");
+        }
+        return { k: "err", c: pat[1] };
+      }
+      case "err_any":
+        if (pat.length !== 1 || ty.k !== "Result") return fail("ill-typed", "err_any matches a Result");
+        return { k: "err", c: null };
+      case "tuple": {
+        const list = pat[1];
+        if (pat.length !== 2 || !Array.isArray(list) || ty.k !== "Tuple" || list.length !== ty.of.length) {
+          return fail("ill-typed", "a tuple pattern has the arity of the tuple it meets");
+        }
+        const parts = ty.of;
+        return { k: "tuple", ps: list.map((item, i) => this.typePattern(item, parts[i] as Ty, binds, seen, depth + 1)) };
+      }
+      case "some":
+      case "none":
+      case "ctor":
+      case "bool":
+        throw new KitError("level-missing", "a data pattern needs ir.data", { level: "ir.data" });
+      default:
+        return fail("ill-typed", "a pattern word this document does not define");
+    }
+  }
+
+  /**
+   * Is the pattern vector `vec` *useful* against the rows `rows` (Maranget's usefulness check): is there a value that `vec`
+   * matches and no row does?  An arm no value can reach is an arm that is not useful against the arms before it; a `match`
+   * that can fall through is one where a wildcard is useful against all of its arms.  `tys` are the types of the columns,
+   * `null` for a payload that is undetermined (only a wildcard can stand there).
+   */
+  /**
+   * One usefulness question, spending the `match`'s one budget: `budget.left` is loaded into the counter and taken back, so an
+   * inner `match` typed in between cannot spend (or refill) the outer one's.
+   */
+  private usefulWithin(budget: { left: number }, rows: readonly (readonly TPat[])[], vec: readonly TPat[], tys: readonly (Ty | null)[]): boolean {
+    this.matchSteps = budget.left;
+    try {
+      return this.useful(rows, vec, tys);
+    } finally {
+      budget.left = this.matchSteps;
+    }
+  }
+
+  private useful(rows: readonly (readonly TPat[])[], vec: readonly TPat[], tys: readonly (Ty | null)[]): boolean {
+    // A work budget (section 14: a corpus is hostile): the check is exponential in the worst case, and a match that needs more
+    // than MATCH_BUDGET steps (one budget per `match`; a step costs 1 plus the rows it looks at) is refused, as a corpus error, rather than left to run.
+    this.matchSteps -= 1 + rows.length;
+    if (this.matchSteps < 0) fail("ill-typed", "a match is too costly to check");
+    if (vec.length === 0) return rows.length === 0;
+    const head = vec[0] as TPat;
+    const ty = tys[0] ?? null;
+    const restTys = tys.slice(1);
+    const restVec = vec.slice(1);
+    const isWild = (p: TPat): boolean => p.k === "wild" || p.k === "bind";
+    // Specialisations: keep the rows that can match the constructor, replacing the head by its sub-patterns.
+    const onOk = (): TPat[][] =>
+      rows.flatMap((row) => {
+        const first = row[0] as TPat;
+        if (first.k === "ok") return [[first.p, ...row.slice(1)]];
+        return isWild(first) ? [[{ k: "wild" } as TPat, ...row.slice(1)]] : [];
+      });
+    const onErr = (c: string): TPat[][] =>
+      rows.flatMap((row) => {
+        const first = row[0] as TPat;
+        return isWild(first) || (first.k === "err" && (first.c === null || first.c === c)) ? [row.slice(1)] : [];
+      });
+    const onTuple = (n: number): TPat[][] =>
+      rows.flatMap((row) => {
+        const first = row[0] as TPat;
+        if (first.k === "tuple") return [[...first.ps, ...row.slice(1)]];
+        return isWild(first) ? [[...Array.from({ length: n }, () => ({ k: "wild" }) as TPat), ...row.slice(1)]] : [];
+      });
+    const resultTy = ty !== null && ty.k === "Result" ? ty : undefined;
+    const tupleTy = ty !== null && ty.k === "Tuple" ? ty : undefined;
+    const okTy = resultTy === undefined ? null : resultTy.ok;
+    const cases = resultTy === undefined ? null : this.errorCases(resultTy);
+    // The error cases worth trying: those some row names, plus one representative ("", never a case name) for all the others, which
+    // `err_any` and a wildcard cover alike.  Trying every declared case (up to 64 per type, a tuple of 8 such types) would make a
+    // hostile `match` exponential for nothing: two cases no row tells apart are one case.
+    const named = new Set(rows.flatMap((row) => ((row[0] as TPat).k === "err" && (row[0] as { c: string | null }).c !== null ? [(row[0] as { c: string }).c] : [])));
+    const errNames: readonly string[] = cases !== null && cases.every((name) => named.has(name)) ? [...named] : [...named, ""];
+
+    switch (head.k) {
+      case "ok":
+        return this.useful(onOk(), [head.p, ...restVec], [okTy, ...restTys]);
+      case "err":
+        if (head.c === null) return errNames.some((name) => this.useful(onErr(name), restVec, restTys));
+        return this.useful(onErr(head.c), restVec, restTys);
+      case "tuple": {
+        const parts = tupleTy === undefined ? head.ps.map(() => null) : tupleTy.of;
+        return this.useful(onTuple(head.ps.length), [...head.ps, ...restVec], [...parts, ...restTys]);
+      }
+      default: {
+        // A wildcard: useful if the column's constructors are not all present and the default matrix says so, or if some constructor is.
+        const firsts = rows.map((row) => row[0] as TPat);
+        if (resultTy !== undefined) {
+          const hasOk = firsts.some((p) => p.k === "ok");
+          const hasAny = firsts.some((p) => p.k === "err" && p.c === null);
+          const present = new Set(firsts.flatMap((p) => (p.k === "err" && p.c !== null ? [p.c] : [])));
+          const complete = hasOk && (hasAny || (cases !== null && cases.every((name) => present.has(name))));
+          if (complete) {
+            return (
+              this.useful(onOk(), [{ k: "wild" }, ...restVec], [okTy, ...restTys]) ||
+              errNames.some((name) => this.useful(onErr(name), restVec, restTys))
+            );
+          }
+        } else if (tupleTy !== undefined && firsts.some((p) => p.k === "tuple")) {
+          const n = tupleTy.of.length;
+          return this.useful(onTuple(n), [...Array.from({ length: n }, () => ({ k: "wild" }) as TPat), ...restVec], [...tupleTy.of, ...restTys]);
+        }
+        const defaults = rows.filter((row) => isWild(row[0] as TPat)).map((row) => row.slice(1));
+        return this.useful(defaults, restVec, restTys);
+      }
+    }
+  }
+
+  /**
+   * A `match` on a `Result` (`ir.tuple`, R76).  A scrutinee of any other type, or a data pattern, is `ir.data`: this lane
+   * types the scrutinee before it accepts the node and refuses the others as `level-missing`.  The patterns are tried in
+   * order and exactly one arm runs; a `match` that can fall through, an arm no value can reach, a repeated `bind`, and a
+   * `bind` that shadows are corpus errors (`ill-typed` here), and so is an arm body of another type than the others.
+   */
+  private typeMatch(ir: unknown[], scope: Scope, expected: Expect | undefined): T {
+    if (ir.length !== 3 || !Array.isArray(ir[2])) return fail("ill-typed", "match is a scrutinee and a list of arms");
+    const scrutinee = this.typeExpr(ir[1], scope);
+    if (scrutinee.ty.k !== "Result") throw new KitError("level-missing", "a match on anything but a Result needs ir.data", { level: "ir.data" });
+    const armsRaw = ir[2] as unknown[];
+    if (armsRaw.length < 1 || armsRaw.length > 256) return fail("ill-typed", "a match has 1 to 256 arms");
+    const pats: TPat[] = [];
+    const bodies: T[] = [];
+    const budget = { left: MATCH_BUDGET };
+    for (const arm of armsRaw) {
+      if (!Array.isArray(arm) || arm.length !== 2) return fail("ill-typed", "an arm is [pattern, body]");
+      const binds = new Map(scope);
+      const pat = this.typePattern(arm[0], scrutinee.ty, binds, new Set(), 1);
+      // An arm no value can reach: every value it matches is matched by an earlier arm.
+      if (!this.usefulWithin(budget, pats.map((p) => [p]), [pat], [scrutinee.ty])) fail("ill-typed", "an arm no value can reach");
+      pats.push(pat);
+      const body = this.typeExpr(arm[1], binds, expected);
+      if (expected !== undefined && faultCommon(body.ty, expected.ty, expected.narrow) === null) fail("ill-typed", "an arm shares no type with the declared one");
+      bodies.push(body);
+    }
+    // Exhaustive: a wildcard must not be useful against the arms.
+    if (this.usefulWithin(budget, pats.map((p) => [p]), [{ k: "wild" }], [scrutinee.ty])) fail("ill-typed", "a match that can fall through");
+    const common = this.branchType(bodies.map((b) => b.ty), expected);
+    if (common === null) return fail("ill-typed", "the arms of a match share no type");
+    if (scrutinee.sub && bodies.some((b) => b.sub)) fail("impure-guard", "a subject call under a guard that contains a subject call");
+    const kids = [scrutinee, ...bodies];
+    // Cost: 1 + the scrutinee + the largest arm (section 4.2 rule 6).
+    const cost = 1 + scrutinee.cost + Math.max(...bodies.map((b) => b.cost));
+    return { tag: "match", ty: common, kids, sub: kids.some((k) => k.sub), cost, pats };
   }
 
   // -------------------------------------------------------------------------
@@ -923,7 +1395,7 @@ export class Program {
         const b = kid(1);
         const common = unify((t.kids[0] as T).ty, (t.kids[1] as T).ty) as Ty;
         const negate = t.tag === "ne";
-        if (common.k === "Bytes" || common.k === "Result") {
+        if (common.k === "Bytes" || common.k === "Result" || common.k === "Tuple") {
           return negate ? (env) => !valuesEqual(a(env), b(env)) : (env) => valuesEqual(a(env), b(env));
         }
         return negate ? (env) => a(env) !== b(env) : (env) => a(env) === b(env);
@@ -996,6 +1468,101 @@ export class Program {
           return isTake ? data.slice(0, count) : data.slice(count);
         };
       }
+      // ---- ir.fixed ---------------------------------------------------------------------------------------------------
+      case "bit_and":
+      case "bit_or":
+      case "bit_xor":
+      case "shl":
+      case "shr":
+      case "sar":
+      case "rotl":
+      case "rotr":
+      case "bit":
+      case "checked_add":
+      case "checked_sub":
+      case "checked_mul":
+      case "div":
+      case "rem":
+      case "div_trunc":
+      case "rem_trunc":
+      case "imin":
+      case "imax":
+      case "at": {
+        const a = kid(0);
+        const b = kid(1);
+        const first = (t.kids[0] as T).ty;
+        // `div`, `rem`, `imin`, `imax` on `Nat` and `Int` are over `bigint`s and need no width; `at` takes bytes.
+        const f = binaryFixed(t.tag, isFixed(first) ? first : undefined) as (x: unknown, y: unknown) => unknown;
+        return (env) => f(a(env), b(env)) as Value;
+      }
+      case "bit_not":
+      case "popcount":
+      case "clz":
+      case "ctz":
+      case "to_int":
+      case "to_nat":
+      case "be_bytes":
+      case "le_bytes":
+      case "widen":
+      case "wrap":
+      case "try": {
+        const a = kid(0);
+        const first = (t.kids[0] as T).ty;
+        // The operand type only sizes the work; `wrap` and `try` take `Int` and `Nat` too, and then the target stands in.
+        const f = unaryFixed(t.tag, isFixed(first) ? first : (t.target as Fx), t.target) as (x: unknown) => unknown;
+        return (env) => f(a(env)) as Value;
+      }
+      case "from_be":
+      case "from_le": {
+        const a = kid(0);
+        const f = unaryFixed(t.tag, t.target as Fx, t.target) as (x: unknown) => unknown;
+        return (env) => {
+          try {
+            return f(a(env)) as Value;
+          } catch (error) {
+            // A runtime length other than w/8 (a faulted value) is a corpus error, never a truncation (Appendix A.1).
+            if (error instanceof RangeError) return overflow();
+            throw error;
+          }
+        };
+      }
+      case "max_value":
+      case "min_value": {
+        const value = boundValue(t.tag, t.target as Fx);
+        return () => value;
+      }
+      case "unwrap_or": {
+        // Both operands are evaluated, the producer first; no short circuit (Appendix A.1).
+        const a = kid(0);
+        const b = kid(1);
+        return (env) => {
+          const option = a(env) as unknown;
+          const fallback = b(env);
+          return (option === undefined ? fallback : option) as Value;
+        };
+      }
+      // ---- ir.tuple ---------------------------------------------------------------------------------------------------
+      case "tuple": {
+        const parts = t.kids.map((_k, i) => kid(i));
+        const count = parts.length;
+        return (env) => {
+          const out = new Array<unknown>(count);
+          for (let i = 0; i < count; i += 1) out[i] = (parts[i] as Closure)(env);
+          return out;
+        };
+      }
+      case "project": {
+        const a = kid(0);
+        const index = t.index as number;
+        return (env) => (a(env) as readonly unknown[])[index] as Value;
+      }
+      case "match": {
+        const select = this.armSelector(t, kid(0));
+        // R71: an arm lies under the scrutinee as its guard.
+        const guarded = ctx || (t.kids[0] as T).sub;
+        const bodies = t.kids.slice(1).map((_k, i) => kid(i + 1, guarded));
+        return (env) => (bodies[select(env)] as Closure)(env);
+      }
       case "model_call": {
         const info = this.models.get(t.name as string) as ModelInfo;
         const args = t.kids.map((_k, i) => kid(i));
@@ -1021,6 +1588,22 @@ export class Program {
       default:
         throw new KitError("level-missing", "a construct this lane does not implement");
     }
+  }
+
+  /**
+   * The index of the arm a `match` runs: the scrutinee is evaluated once, the patterns are tried in order, and the first
+   * that matches binds its names into the environment slots the typer gave them (`bind` writes `env[slot]`; sibling arms
+   * share slots, which is safe because only one runs and an arm's body is finished before anything else reads the slot).
+   */
+  private armSelector(t: T, scrutinee: Closure): (env: Env) => number {
+    const matchers = (t.pats as readonly TPat[]).map(compilePattern);
+    const count = matchers.length;
+    return (env) => {
+      const value = scrutinee(env);
+      for (let i = 0; i < count; i += 1) if ((matchers[i] as PatternRun)(value, env)) return i;
+      // The typer proved the match exhaustive, so a fall-through is a bug here, never a case outcome.
+      throw new Error("a match fell through");
+    };
   }
 
   private compileArith(t: T, ctx: boolean, overflow: () => never): Closure {
@@ -1084,6 +1667,18 @@ export class Program {
       const r = asFunction(right);
       return { dynamic: (env) => (decide(env) === true ? l(env) : r(env)) };
     }
+    if (t.tag === "match") {
+      const scrutinee = t.kids[0] as T;
+      // A scrutinee that calls the subject guards no call (the typer refused it): its count is the whole count.
+      if (scrutinee.sub) return this.trace(scrutinee);
+      const traces = t.kids.slice(1).map((arm) => this.trace(arm));
+      const fixed = traces.map((tr) => ("fixed" in tr ? tr.fixed : -1));
+      if (fixed.every((n) => n >= 0 && n === fixed[0])) return { fixed: fixed[0] as number };
+      // The scrutinee is pure, so evaluating it here learns the arm that runs without touching the subject.
+      const select = this.armSelector(t, this.compile(scrutinee, false));
+      const counts = traces.map(asFunction);
+      return { dynamic: (env) => (counts[select(env)] as (e: Env) => number)(env) };
+    }
     if (t.tag === "and" || t.tag === "or" || t.tag === "implies") {
       const leftTrace = this.trace(t.kids[0] as T);
       const rightTrace = this.trace(t.kids[1] as T);
@@ -1105,6 +1700,39 @@ export class Program {
   }
 }
 
+type PatternRun = (value: unknown, env: Env) => boolean;
+
+/** Turn a typed pattern into a test that also stores what it binds. */
+function compilePattern(p: TPat): PatternRun {
+  switch (p.k) {
+    case "wild":
+      return () => true;
+    case "bind": {
+      const slot = p.slot;
+      return (value, env) => {
+        env[slot] = value as Value;
+        return true;
+      };
+    }
+    case "ok": {
+      const inner = compilePattern(p.p);
+      return (value, env) => (value as { err?: string }).err === undefined && inner((value as { ok: unknown }).ok, env);
+    }
+    case "err": {
+      const c = p.c;
+      return c === null ? (value) => (value as { err?: string }).err !== undefined : (value) => (value as { err?: string }).err === c;
+    }
+    case "tuple": {
+      const inner = p.ps.map(compilePattern);
+      return (value, env) => {
+        const parts = value as readonly unknown[];
+        for (let i = 0; i < inner.length; i += 1) if (!(inner[i] as PatternRun)(parts[i], env)) return false;
+        return true;
+      };
+    }
+  }
+}
+
 function asFunction(trace: { fixed: number } | { dynamic: (env: Env) => number }): (env: Env) => number {
   if ("fixed" in trace) {
     const n = trace.fixed;
@@ -1113,17 +1741,12 @@ function asFunction(trace: { fixed: number } | { dynamic: (env: Env) => number }
   return trace.dynamic;
 }
 
-/** The wrapping function of a narrow integer type: the value is re-read in the type after each node. */
-function smallWrap(ty: Ty): (x: number) => number {
-  const t = ty as { k: "U" | "I"; w: number };
-  if (t.k === "U") {
-    if (t.w === 8) return (x) => x & 0xff;
-    if (t.w === 16) return (x) => x & 0xffff;
-    return (x) => x >>> 0;
-  }
-  if (t.w === 8) return (x) => (x << 24) >> 24;
-  if (t.w === 16) return (x) => (x << 16) >> 16;
-  return (x) => x | 0;
+/** The static type argument of `widen wrap try max_value min_value from_be from_le`: the name of a fixed-width type, or `ill-typed`. */
+function staticFixed(text: unknown): Fx {
+  if (typeof text !== "string") return fail("ill-typed", "a static type argument is a type name");
+  const ty = parseType(text, { code: "ill-typed" });
+  if (!isFixed(ty)) return fail("ill-typed", "a static type argument names a fixed-width type");
+  return ty;
 }
 
 /** The text of a static type for the kit's `type` field: widths kept, `Bytes<2>` for a two-byte result. */

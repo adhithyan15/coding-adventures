@@ -5,20 +5,26 @@
  * and types; a lane declares the levels it implements and everything else is
  * `level-missing` (a refusal scoped by what an expression *reaches*, [D64]).
  *
- * This runner is the `ir.core` lane: it implements exactly one level.  It must
- * still *know the names* of every defined level, because the spec asks a
- * runner to tell two refusals apart for something it cannot run:
+ * This runner implements three levels: `ir.core`, `ir.fixed` (S10f) and
+ * `ir.tuple` (S10f).  It must still *know the names* of every defined level,
+ * because the spec asks a runner to tell two refusals apart for something it
+ * cannot run:
  *
  *   * a tag of a defined level this runner lacks        -> `level-missing`
  *   * a tag no level defines                            -> `unknown-tag`
  *
- * so `bit_xor` (a tag of `ir.fixed`) is `level-missing` while `frobnicate` is
- * `unknown-tag`.  The tables below are the closed tag sets of Appendix A, A.1
+ * so `some` (a tag of `ir.data`) is `level-missing` while `frobnicate` is
+ * `unknown-tag`.  (A *program* configured with fewer levels, as every kit
+ * case's own `levels` field does, still refuses `bit_xor` as `level-missing`.)  The tables below are the closed tag sets of Appendix A, A.1
  * and A.2, plus the reserved levels' names.
  */
 
-/** The levels this lane implements.  Reserved levels are never in this list ([D66]). */
-export const IMPLEMENTED_LEVELS: readonly string[] = ["ir.core"];
+/**
+ * The levels this lane implements.  Reserved levels are never in this list ([D66]).  `ir.data` is not here either:
+ * `match` on anything but a `Result`, the data patterns, `Option` as a real type and records and variants are all
+ * `level-missing` (R76).
+ */
+export const IMPLEMENTED_LEVELS: readonly string[] = ["ir.core", "ir.fixed", "ir.tuple"];
 
 /** Every level name this document defines, implemented or reserved. */
 export const DEFINED_LEVELS: ReadonlySet<string> = new Set([

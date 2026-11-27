@@ -40,7 +40,7 @@ interface Mutant {
 const MUTANTS: readonly Mutant[] = [
   // ---- the three wrong evaluators of [D42] ----
   {
-    name: "u8-add-does-not-wrap", area: "arithmetic", file: "ir.ts", kills: ["v2-arith", "v2-ir", "v2-fault"],
+    name: "u8-add-does-not-wrap", area: "arithmetic", file: "fixed.ts", kills: ["v2-arith", "v2-ir", "v2-fault"],
     rule: "every fixed-width + - * wraps (section 3.2)",
     edits: [["if (t.w === 8) return (x) => x & 0xff;", "if (t.w === 8) return (x) => x;"]],
   },
@@ -132,7 +132,7 @@ const MUTANTS: readonly Mutant[] = [
   {
     name: "bytes-literal-forgets-its-width", area: "ir", file: "ir.ts", kills: ["v2-ir"],
     rule: "a bytes literal has the static type Bytes<len> (R73, R51)",
-    edits: [["return { tag, ty: { k: \"Bytes\", n: data.length }, kids: [], sub: false, cost: 1, value: data };", "return { tag, ty: BYTES, kids: [], sub: false, cost: 1, value: data };"]],
+    edits: [["return { tag, ty: plain ? BYTES : { k: \"Bytes\", n: data.length }, kids: [], sub: false, cost: 1, value: data };", "return { tag, ty: BYTES, kids: [], sub: false, cost: 1, value: data };"]],
   },
   {
     name: "fixed-width-take-count-accepted", area: "ir", file: "ir.ts", kills: ["v2-ir"],
@@ -187,10 +187,79 @@ const MUTANTS: readonly Mutant[] = [
     rule: "pre rewrites are applied simultaneously (section 8.1)",
     edits: [["for (const rewrite of compiled) out[rewrite.slot] = rewrite.run(args.slice());", "for (const rewrite of compiled) out[rewrite.slot] = rewrite.run(out);"]],
   },
+  // ---- ir.fixed and ir.tuple (S10f) ----
+  // Two more were tried and SURVIVE the kit, which is a gap in it and not in the lane (reported with S10f): an `Option` anywhere but
+  // the first operand of `unwrap_or` is `level-missing` (no case pins it; tests/v2/fixed.test.ts does), and the R98 comparison of an
+  // `ok` payload with the declared one (every kit case that would need it is also caught by the type of the whole expression).
+  {
+    name: "shr-is-arithmetic", area: "arithmetic", file: "fixed.ts", kills: ["v2-ir"],
+    rule: "shr is logical on the pattern, then re-read: shr(-1i8, 1) = 127 (Appendix A.1)",
+    edits: [["(n >= W ? 0 : read(pat(a) >>> Number(n)))", "(n >= W ? 0 : read(a >> Number(n)))"]],
+  },
+  {
+    name: "sar-is-logical", area: "arithmetic", file: "fixed.ts", kills: ["v2-ir"],
+    rule: "sar copies the sign bit (Appendix A.1)",
+    edits: [["(n >= W ? (a < 0 ? -1 : 0) : a >> Number(n))", "(n >= W ? (a < 0 ? -1 : 0) : a >>> Number(n))"]],
+  },
+  {
+    name: "shl-count-not-compared-with-the-width", area: "arithmetic", file: "fixed.ts", kills: ["v2-ir"],
+    rule: "a count is compared with the width before any host shift: shl(1u32, 32) is 0, not 1 (Appendix A.1, Notes)",
+    edits: [["(n >= W ? 0 : wrap(a << Number(n)))", "wrap(a << Number(n % W))"]],
+  },
+  {
+    name: "from-be-reads-little-endian", area: "arithmetic", file: "fixed.ts", kills: ["v2-ir"],
+    rule: "from_be reads the bytes most significant first (Appendix A.1)",
+    edits: [["const little = tag === \"from_le\";", "const little = tag === \"from_be\";"]],
+  },
+  {
+    name: "div-truncates-instead-of-flooring", area: "arithmetic", file: "fixed.ts", kills: ["v2-ir"],
+    rule: "div and rem on Int and Nat are floor, and rem has the divisor's sign (Appendix A.1)",
+    edits: [["if (r !== 0n && r < 0n !== b < 0n) {", "if (false as boolean) {"]],
+  },
+  {
+    name: "clz-of-zero-is-zero", area: "arithmetic", file: "fixed.ts", kills: ["v2-ir"],
+    rule: "clz and ctz of 0 are the width (Appendix A.1)",
+    edits: [["return ((a: number) => BigInt(Math.clz32(pat(a)) - (32 - w))) as (a: never) => Raw;", "return ((a: number) => BigInt(pat(a) === 0 ? 0 : Math.clz32(pat(a)) - (32 - w))) as (a: never) => Raw;"]],
+  },
+  {
+    name: "widen-accepts-a-narrowing", area: "ir", file: "ir.ts", kills: ["v2-ir"],
+    rule: "widen needs the operand's range inside the target's (Appendix A.1)",
+    edits: [["if (lo < tlo || hi > thi) fail(\"ill-typed\", \"widen needs a range inside the target\");", "if (lo < tlo && hi > thi) fail(\"ill-typed\", \"widen needs a range inside the target\");"]],
+  },
+  {
+    name: "match-on-a-non-result-accepted", area: "ir", file: "ir.ts", kills: ["v2-ir"],
+    rule: "a match whose scrutinee is not a Result is ir.data (R76)",
+    edits: [["if (scrutinee.ty.k !== \"Result\") throw new KitError(\"level-missing\", \"a match on anything but a Result needs ir.data\", { level: \"ir.data\" });", "if (scrutinee.ty.k === \"Option\") throw new KitError(\"level-missing\", \"x\", { level: \"ir.data\" });"]],
+  },
+  {
+    name: "match-runs-the-last-matching-arm", area: "ir", file: "ir.ts", kills: ["v2-ir"],
+    rule: "the patterns are tried in order and the first match wins (Appendix A.1)",
+    edits: [["for (let i = 0; i < count; i += 1) if ((matchers[i] as PatternRun)(value, env)) return i;", "for (let i = count - 1; i >= 0; i -= 1) if ((matchers[i] as PatternRun)(value, env)) return i;"]],
+  },
+  {
+    name: "unwrap-or-short-circuits", area: "ir", file: "ir.ts", kills: ["v2-ir"],
+    rule: "unwrap_or evaluates both operands: its cost is the sum and an overflow in the default is an overflow (Appendix A.1)",
+    edits: [["const fallback = b(env);\n          return (option === undefined ? fallback : option) as Value;", "return (option === undefined ? b(env) : option) as Value;"]],
+  },
+  {
+    name: "tuple-stream-tag-is-60", area: "values", file: "values.ts", kills: ["v2-value", "v2-domain"],
+    rule: "a tuple is written `64` and a u32-LE component count (section 2.4)",
+    edits: [["sink.buf[sink.pos] = 0x64;", "sink.buf[sink.pos] = 0x60;"]],
+  },
+  {
+    name: "tuple-descriptor-first-component-fastest", area: "domains", file: "domains.ts", kills: ["v2-domain"],
+    rule: "a tuple descriptor is the product with the last component varying fastest (section 5.1)",
+    edits: [["for (let k = count - 1; k >= 0; k -= 1) {\n            out[k] = (parts[k] as Domain).nth(rest % (sizes[k] as number));", "for (let k = 0; k < count; k += 1) {\n            out[k] = (parts[k] as Domain).nth(rest % (sizes[k] as number));"]],
+  },
+  {
+    name: "fault-tuple-components-unify-like-the-top", area: "faults", file: "types.ts", kills: ["v2-fault"],
+    rule: "under a tuple two Bytes widths do not unify: a one-byte literal in a Bytes<2> component is refused (R96, R67)",
+    edits: [["if (a.k === \"Bytes\" && b.k === \"Bytes\" && narrow) return sameType(a, b) ? a : null;", ""]],
+  },
   {
     name: "fault-flow-demanded-instead-of-a-common-type", area: "faults", file: "faults.ts", kills: ["v2-fault"],
     rule: "a fault expression has a common type with its result, it need not flow (R94)",
-    edits: [['if (unify(typed.ty, ret) === null) throw new KitError("ill-typed", "the expression shares no type with the op\'s result");', 'if (!flows(typed.ty, ret)) throw new KitError("ill-typed", "the expression shares no type with the op\'s result");']],
+    edits: [['if (faultCommon(typed.ty, ret) === null) throw new KitError("ill-typed", "the expression shares no type with the op\'s result");', 'if (!flows(typed.ty, ret)) throw new KitError("ill-typed", "the expression shares no type with the op\'s result");']],
   },
 ];
 
@@ -204,7 +273,7 @@ async function load(mutant: Mutant): Promise<{ runKit: (dir: string, options: { 
     expect(text.split(find).length - 1, `${mutant.name}: the edit must match exactly once`).toBe(1);
     text = text.replace(find, () => replace);
   }
-  if (mutant.file === "faults.ts" && text.includes("flows(typed.ty")) text = text.replace('import { eraseNamedWidths, typeLevels, unify }', 'import { eraseNamedWidths, flows, typeLevels, unify }');
+  if (mutant.file === "faults.ts" && text.includes("flows(typed.ty")) text = text.replace('import { eraseNamedWidths, faultCommon, typeLevels }', 'import { eraseNamedWidths, faultCommon, flows, typeLevels }');
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, text);
   return (await import(pathToFileURL(join(root, "src", "v2", "kit.ts")).href)) as never;

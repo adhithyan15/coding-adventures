@@ -14,7 +14,7 @@
  * `result` is the one reserved name for the call's result.  A fault expression
  * uses only tags of its declared level and **never `subject_op`**.
  *
- * ## Typing a fault row (R70, R94)
+ * ## Typing a fault row (R70, R94, R96 to R98)
  *
  * A lane wraps the op once, with no call site, so there are no static widths to
  * substitute: it types the row with each named width **left unstated**, a
@@ -24,7 +24,12 @@
  * **common type** (`unify`, R51), *not* a flow: a fault may change a length by
  * design (`drop-last-result-byte` has type plain `Bytes` against a `Bytes<32>`
  * result, and plain `Bytes` does not flow to `Bytes<32>`).  A pair with no
- * common type is a corpus error.
+ * common type is a corpus error.  Under a tuple the relation is the narrower
+ * one of R96 (`faultCommon`: `Nat` against `Int` yes, `Bytes<1>` against
+ * `Bytes<2>` no), an undetermined component of a bare `ok` or `err` unifies with
+ * what stands opposite (R97), and **every** branch of an `if`, arm of a `match`,
+ * payload of an `ok` and component of a tuple literal is compared with the
+ * declared type of its position, not only the whole expression (R98).
  *
  * The check is static.  It says nothing about a faulted *value* that is not a
  * value of the declared type (the 31 bytes a dropped byte leaves of a
@@ -35,7 +40,7 @@
 import { KitError } from "./errors.ts";
 import { DEFINED_LEVELS } from "./levels.ts";
 import { type Compiled, type OpSig, type Param, type Program } from "./ir.ts";
-import { eraseNamedWidths, typeLevels, unify } from "./types.ts";
+import { eraseNamedWidths, faultCommon, typeLevels } from "./types.ts";
 import type { Value } from "./values.ts";
 
 /** A compiled fault: apply it to a call's arguments and result. */
@@ -119,8 +124,9 @@ export function compileFault(program: Program, raw: unknown, op: OpSig): Compile
     const slots = rewrites.map((entry) => entry.slot);
     stages(rewrites.map((entry) => ({ ir: entry.expr, vars: params })));
     rewrites.forEach((entry) => {
-      const typed = program.compileExpr(entry.expr, params, "fault");
-      if (unify(typed.ty, (params[entry.slot] as Param).ty) === null) throw new KitError("ill-typed", "a rewrite shares no type with the parameter it replaces");
+      // The declared type is handed down (R67, R98): each branch, arm, `ok` payload and tuple component is compared too.
+      const typed = program.compileExpr(entry.expr, params, "fault", (params[entry.slot] as Param).ty);
+      if (faultCommon(typed.ty, (params[entry.slot] as Param).ty) === null) throw new KitError("ill-typed", "a rewrite shares no type with the parameter it replaces");
       compiled.push({ slot: slots[compiled.length] as number, run: typed.run });
     });
     return {
@@ -140,8 +146,8 @@ export function compileFault(program: Program, raw: unknown, op: OpSig): Compile
   }
 
   stages([{ ir: row["expr"], vars: withResult }]);
-  const typed = program.compileExpr(row["expr"], withResult, "fault");
-  if (unify(typed.ty, ret) === null) throw new KitError("ill-typed", "the expression shares no type with the op's result");
+  const typed = program.compileExpr(row["expr"], withResult, "fault", ret);
+  if (faultCommon(typed.ty, ret) === null) throw new KitError("ill-typed", "the expression shares no type with the op's result");
   return {
     kind,
     fault: row["fault"],
