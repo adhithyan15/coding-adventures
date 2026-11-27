@@ -1,0 +1,7 @@
+rustup target add wasm32-unknown-unknown
+cargo fmt --check
+cargo test --locked
+cargo clippy --locked --all-targets -- -D warnings
+cargo clippy --locked --target wasm32-unknown-unknown --release -- -D warnings
+cargo build --locked --target wasm32-unknown-unknown --release
+node ../../../tests/wasm-microbenchmark-consumer/consumer.mjs target/wasm32-unknown-unknown/release/microbenchmark_wasm.wasm
