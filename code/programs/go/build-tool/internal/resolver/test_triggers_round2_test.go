@@ -281,9 +281,14 @@ func TestSecurityRound2LongContinuedEntriesAreRefusedQuickly(t *testing.T) {
 		body.WriteString("\"a\",\n")
 	}
 	body.WriteString("] }\n")
+	fixtureStarted := time.Now()
+	packages := devDepWorld(t, body.String())
+	fixtureElapsed := time.Since(fixtureStarted)
 	start := time.Now()
-	wantRefused(t, body.String())
-	if elapsed := time.Since(start); elapsed > time.Second {
+	wantRefusedPackages(t, packages)
+	elapsed := time.Since(start)
+	t.Logf("1 MiB fixture setup=%v; parser/resolver=%v", fixtureElapsed, elapsed)
+	if elapsed > time.Second {
 		t.Fatalf("a 1 MiB continued entry took %v", elapsed)
 	}
 
