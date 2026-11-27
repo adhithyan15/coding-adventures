@@ -11,3 +11,5 @@
 - Add a pure reusable deterministic semantic engine with budgeted stepping,
   portable snapshots, replay, and separate batch and protected scheduler
   profiles; no command-line or host-output adapter is included.
+- Add a synthetic CPU stepper, checked 16-bit bus, RAM, configuration ROM,
+  simulated console, two board maps, and portable machine replay fixtures.
