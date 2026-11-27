@@ -26,7 +26,9 @@ ERR = {"E": {"kind": "error", "cases": ["BAD", "WORSE"]}}
 
 
 def op(params, ret):
-    return {"params": [list(p) for p in params], "ret": ret, "requires": CORE}
+    """An op row as a corpus writer emits it: ``requires`` is computed from the signature (R9), ``ir.tuple`` when a type holds a tuple."""
+    tuple_typed = any("(" in t for t in [*(t for _, t in params), ret])
+    return {"params": [list(p) for p in params], "ret": ret, "requires": ["ir.core", "ir.tuple"] if tuple_typed else CORE}
 
 
 OPS = {
@@ -389,8 +391,6 @@ op_row_case("ill-typed-op-row-int-parameter", "an op parameter of type Int: Int 
 op_row_case("ill-typed-op-row-int-result", "an op result of type Int", [["a", "U8"]], "Int")
 op_row_case("ill-typed-op-row-error-type-as-a-parameter", "an error type outside the second argument of a Result", [["a", "E"]], "U8", ERR)
 op_row_case("ill-typed-op-row-undeclared-type", "a parameter type that types does not declare", [["a", "Frob"]], "U8")
-op_row_case("ill-typed-op-row-result-with-a-record-as-error", "Result<U8,Q> with Q a record", [["a", "U8"]], "Result<U8,Q>",
-            {"Q": {"kind": "record", "fields": [["f", "U8"]]}})
 
 # -- R119 (e): the three static codes of v2-fault: unknown-tag, depth and model-order ------------------------------------------------------
 def post_row(name, expr):

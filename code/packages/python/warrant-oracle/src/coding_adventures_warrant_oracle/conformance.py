@@ -46,6 +46,7 @@ Exit conventions (R19), used by ``make_conformance.py``: 0 identical, 1 the comm
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import re
 import types as _pytypes
@@ -2120,7 +2121,12 @@ def requires_of(category: str, fields: dict, expect: dict) -> list[str]:
         except Refused:
             return list(CORE)
     if category == "v2-domain":
-        return sorted(descriptor_levels(fields["descriptor"]))
+        # R9, R69 (b): the binder ``type`` has a level too (a tuple type is ``ir.tuple``), as the ``type`` of a ``v2-value`` case does;
+        # a text the reader refuses has none (the descriptor's own levels stand).
+        found = descriptor_levels(fields["descriptor"])
+        with contextlib.suppress(Refused):
+            found |= type_levels(parse_type(fields.get("type"), None))
+        return sorted(found)
     if category == "v2-chunk":
         return sorted(fields["suite"]["requires"])
     if category == "v2-fault":

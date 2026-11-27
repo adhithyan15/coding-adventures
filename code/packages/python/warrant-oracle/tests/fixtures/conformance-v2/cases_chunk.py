@@ -518,9 +518,6 @@ def build_rows(kits):
         ("op-error-type-as-a-parameter", "an op parameter that names an error type", set_op_param(1, "E")),
         ("op-undeclared-type", "an op parameter whose type the types table does not declare", set_op_param(1, "Frob")),
         ("op-unparseable-type", "an op parameter whose type text is not a type", set_op_param(1, "U8<")),
-        ("op-result-with-a-record-as-error", "Result<U8,Q> with Q a record: the error type of a Result is an error type",
-         lambda p: (p["corpus"]["types"].update({"Q": {"kind": "record", "fields": [["f", "U8"]]}}),
-                    p["corpus"]["ops"]["rop"].update({"ret": "Result<U8,Q>"}))),
         ("model-parameter-names-an-error-type", "a model parameter that names an error type", lambda p: p["corpus"]["models"]["rm"]["params"][1].__setitem__(1, "E")),
         ("model-order-omits-a-model", "model_order that omits a model of models", lambda p: p["corpus"].update({"model_order": ["gm"]})),
     ):

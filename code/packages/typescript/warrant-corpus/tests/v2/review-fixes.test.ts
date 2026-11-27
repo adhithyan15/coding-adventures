@@ -591,9 +591,9 @@ describe("N6: a missing level is named by the one rule (D63)", () => {
 });
 
 describe("the closed run of the kit with the corrected harness", () => {
-  it("still runs every case it implements and none fails (843 of 843; S10d's 400 ir.fixed and ir.tuple cases are skipped)", () => {
+  it("still runs every case it implements and none fails (839 of 839; S10d's 613 ir.fixed and ir.tuple cases are skipped)", () => {
     const report = runKit(KIT_DIR, { sequential: false });
     expect(report.failed).toBe(0);
-    expect(report.run).toBe(843);
+    expect(report.run).toBe(839);
   });
 });

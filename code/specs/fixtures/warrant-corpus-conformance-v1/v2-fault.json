@@ -5366,7 +5366,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(U8,U8),E>"
       },
@@ -5451,7 +5452,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(U8,U8),E>"
       },
@@ -5556,7 +5558,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -5661,7 +5664,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -5734,7 +5738,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(Bytes,Nat)"
       },
@@ -5800,7 +5805,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(Bytes,U8)"
       },
@@ -5867,7 +5873,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(U8,U8)"
       },
@@ -5966,7 +5973,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(U8,U8),E>"
       },
@@ -6146,7 +6154,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -6327,7 +6336,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -6508,7 +6518,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -6689,7 +6700,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -6867,7 +6879,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -7013,7 +7026,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(Bytes,Nat)"
       },
@@ -7093,7 +7107,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(Bytes,U8)"
       },
@@ -7173,7 +7188,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(Bytes,U8)"
       },
@@ -7285,7 +7301,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,I8),E>"
       },
@@ -7407,7 +7424,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,I8),E>"
       },
@@ -7499,7 +7517,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Bool),E>"
       },
@@ -7587,7 +7606,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Bool),E>"
       },
@@ -7683,7 +7703,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Bool),E>"
       },
@@ -7768,7 +7789,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Bool),E>"
       },
@@ -7829,7 +7851,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Bool"
       },
@@ -7904,7 +7927,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "U8"
       },
@@ -7959,7 +7983,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Bool"
       },
@@ -8352,7 +8377,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -8526,7 +8552,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Nat),E>"
       },
@@ -8599,7 +8626,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(Bytes,Nat)"
       },
@@ -8672,7 +8700,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(U8,U8),E>"
       },
@@ -8746,7 +8775,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(U8,U8)"
       },
@@ -8800,7 +8830,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Bool"
       },
@@ -8872,7 +8903,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "Result<(Bytes,Bool),E>"
       },
@@ -8938,7 +8970,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(Bytes<2>,Bool)"
       },
@@ -9181,7 +9214,8 @@
           ]
         ],
         "requires": [
-          "ir.core"
+          "ir.core",
+          "ir.tuple"
         ],
         "ret": "(Result<U8,E>,Bool)"
       },
@@ -9634,58 +9668,6 @@
       "result": "1",
       "summary": "a parameter type that types does not declare",
       "types": {}
-    },
-    {
-      "args": [
-        "1"
-      ],
-      "expect": {
-        "error": "ill-typed"
-      },
-      "fault": {
-        "expr": [
-          "var",
-          "result"
-        ],
-        "fault": "echo-back",
-        "kind": "post",
-        "op": "o",
-        "requires": [
-          "ir.core"
-        ]
-      },
-      "id": "v2-fault/ill-typed-op-row-result-with-a-record-as-error",
-      "levels": [
-        "ir.core"
-      ],
-      "op": {
-        "params": [
-          [
-            "a",
-            "U8"
-          ]
-        ],
-        "requires": [
-          "ir.core"
-        ],
-        "ret": "Result<U8,Q>"
-      },
-      "requires": [
-        "ir.core"
-      ],
-      "result": "1",
-      "summary": "Result<U8,Q> with Q a record",
-      "types": {
-        "Q": {
-          "fields": [
-            [
-              "f",
-              "U8"
-            ]
-          ],
-          "kind": "record"
-        }
-      }
     },
     {
       "args": [

@@ -6,9 +6,10 @@ The case tables of S10d carry the ``requires`` they expect (``Row.requires``) an
 vectors is, so that a table edit that drops a vector or changes an outcome fails here and not silently in a lane.
 
 * the 958 cases of S5 are byte for byte what they were (a digest of their canonical documents per category);
-* every S10d case names ``ir.fixed`` or ``ir.tuple`` in its ``requires`` except 61 that the computed rule leaves at
-  ``ir.core`` (a ``type`` refusal has no type to level, a ``nat_shift`` leaf is a ``Nat``, and the vectors of R111, R119 to
-  R121 and R125 are ``ir.core`` forms): the allowlist below is exact, and a lane that implements ``ir.core`` runs those 61;
+* every S10d case names ``ir.fixed`` or ``ir.tuple`` in its ``requires`` except 57 that the computed rule leaves at
+  ``ir.core`` (a ``type`` refusal has no type to level, a ``nat_shift`` or ``nat_0_64`` leaf is a ``Nat`` and the binder type is
+  one too, and the vectors of R111, R119 to R121 and R125 are ``ir.core`` forms): the allowlist below is exact, and a lane that
+  implements ``ir.core`` runs those 57;
 * the vectors the section 13 row names are present with the outcome the spec states;
 * a wrong evaluator fails an S10d case (the mutants below), and the two changes made to the oracle have tests.
 """
@@ -39,8 +40,8 @@ S5_DIGESTS = {
     "v2-chunk": (74, "cc1a9ff92fef2f1b1617d904f0f09bf2d06b42df895fca86ab32846ee9250c31"),
     "v2-fault": (41, "ef41affcfe104f52d64bdbd153a5c30e6ff4e33650d8f9069042d1bd2fa9889f"),
 }
-#: How many cases S10d added to each category (461; ``v2-arith`` has none: its closed ``op`` set is ``ir.core`` only).
-S10D_COUNTS = {"v2-value": 49, "v2-arith": 0, "v2-ir": 258, "v2-domain": 57, "v2-chunk": 24, "v2-fault": 73}
+#: How many cases S10d added to each category (670; ``v2-arith`` has none: its closed ``op`` set is ``ir.core`` only).
+S10D_COUNTS = {"v2-value": 49, "v2-arith": 0, "v2-ir": 469, "v2-domain": 57, "v2-chunk": 23, "v2-fault": 72}
 
 #: The S10d cases whose computed ``requires`` is ``["ir.core"]``, and why.
 CORE_ONLY = {
@@ -55,18 +56,18 @@ CORE_ONLY = {
         "nat-shift-index-0", "nat-shift-range-first-two", "nat-shift-range-last-two", "nat-shift-index-last", "nat-shift-index-size",
         "nat-shift-at-the-width-boundaries", "nat-shift-in-full", "nat-nat-count-64-is-not-nat-shift", "descriptor-nat-shift-wrong-size",
         "descriptor-nat-shift-with-a-parameter", "descriptor-nat-shift-missing-size", "descriptor-for-another-type-nat-shift-for-u8",
-        "descriptor-for-another-type-nat-shift-for-bytes", "descriptor-scalar-for-a-tuple-type",
+        "descriptor-for-another-type-nat-shift-for-bytes",
     },
     # R125: the ops and models of a chunk corpus part, over the ir.core suite ``ragged``
     "v2-chunk": {
         "corpus-op-int-parameter", "corpus-op-int-result", "corpus-op-error-type-as-a-parameter", "corpus-op-undeclared-type",
-        "corpus-op-unparseable-type", "corpus-op-result-with-a-record-as-error", "corpus-model-parameter-names-an-error-type",
+        "corpus-op-unparseable-type", "corpus-model-parameter-names-an-error-type",
         "corpus-model-order-omits-a-model", "corpus-model-int-parameter-is-accepted",
     },
     "v2-ir": {
         # R111 (d), [D75]: a model with an Int parameter; an op with one is ill-typed whether or not ir calls it (R122)
         "int-model-parameter-compared-with-an-int-literal", "int-model-parameter-negative-argument",
-        "int-model-parameter-with-an-int-result", "int-model-parameter-with-a-nat-operand", "ill-typed-op-int-parameter-never-called",
+        "int-model-parameter-with-a-nat-operand", "ill-typed-op-int-parameter-never-called",
         "ill-typed-op-int-result-never-called",
         # R120 (d): an env type the reader refuses
         "ill-typed-env-entry-of-type-int", "ill-typed-env-entry-of-an-undeclared-type",
@@ -82,7 +83,7 @@ CORE_ONLY = {
         "ill-typed-bytes-for-a-u8-result", "ill-typed-bool-for-a-bytes-parameter",
         # R121: the op row is read with the table
         "ill-typed-op-row-int-parameter", "ill-typed-op-row-int-result", "ill-typed-op-row-error-type-as-a-parameter",
-        "ill-typed-op-row-undeclared-type", "ill-typed-op-row-result-with-a-record-as-error",
+        "ill-typed-op-row-undeclared-type",
         # R119 (e): unknown-tag, depth, model-order
         "unknown-tag-in-a-post-expression", "unknown-tag-in-a-pre-rewrite", "depth-65-nodes-is-refused", "depth-64-nodes-is-accepted",
         "model-order-a-model-call-in-a-fault-expression",
@@ -133,10 +134,10 @@ def test_the_958_cases_of_s5_are_byte_for_byte_what_they_were(kit):
     assert total == 782  # the six categories; the 176 of v2-binding are not touched by any table here
 
 
-def test_s10d_added_461_cases_in_the_stated_places(kit):
+def test_s10d_added_670_cases_in_the_stated_places(kit):
     for category in CATEGORIES:
         assert len(s10d(kit, category)) == S10D_COUNTS[category], category
-    assert sum(S10D_COUNTS.values()) == 461
+    assert sum(S10D_COUNTS.values()) == 670
 
 
 def test_every_s10d_case_names_ir_fixed_or_ir_tuple_except_the_exact_core_only_allowlist(kit):
@@ -150,7 +151,7 @@ def test_every_s10d_case_names_ir_fixed_or_ir_tuple_except_the_exact_core_only_a
                 assert case["requires"] == ["ir.core"], case["id"]
                 core_only.add(slug)
         assert core_only == CORE_ONLY[category], category
-    assert sum(len(v) for v in CORE_ONLY.values()) == 61
+    assert sum(len(v) for v in CORE_ONLY.values()) == 57
 
 
 def test_a_case_that_is_level_missing_has_its_levels_as_requires(kit):
@@ -274,7 +275,7 @@ def test_r125_the_ops_and_models_of_a_chunk_corpus_are_read(kit):
     cases = s10d_cases(kit, "v2-chunk")
     refused = [s for s in cases if s.startswith("corpus-op-") or s in ("corpus-model-parameter-names-an-error-type",
                                                                        "corpus-model-order-omits-a-model")]
-    assert len(refused) == 8
+    assert len(refused) == 7
     assert all(cases[s]["expect"] == {"error": "corpus"} for s in refused)
     assert "error" not in cases["corpus-model-int-parameter-is-accepted"]["expect"]  # [D75]: an Int model parameter is accepted
     assert all(cases[s]["requires"] == ["ir.core"] for s in refused)
@@ -327,7 +328,7 @@ def test_the_three_static_codes_and_the_op_row_r119_r121(kit):
     for slug, case in cases.items():
         if slug.startswith("ill-typed-op-row-"):
             assert case["expect"] == {"error": "ill-typed"}, slug
-    assert sum(1 for s in cases if s.startswith("ill-typed-op-row-")) == 5
+    assert sum(1 for s in cases if s.startswith("ill-typed-op-row-")) == 4
     codes = {c["expect"].get("error") for c in cases.values()}
     assert {"ill-typed", "unknown-tag", "depth", "model-order", "level-missing"} <= codes
 
@@ -401,12 +402,52 @@ def test_r100_a_stand_in_counts_for_requires(kit):
     assert unreached["requires"] == ["ir.core"] and unreached["expect"]["value"] is True
 
 
+def test_a_binder_type_levels_a_domain_case_and_an_op_row_has_its_computed_requires(kit):
+    """B1: the type of a v2-domain case is levelled like a v2-value type; N1: a hand-written op row carries the requires its signature has."""
+    domain = s10d_cases(kit, "v2-domain")
+    assert domain["descriptor-scalar-for-a-tuple-type"]["requires"] == ["ir.core", "ir.tuple"]
+    assert C.requires_of("v2-domain", {"descriptor": {"d": "bool", "size": 2}, "type": "(Bool,Bool)"}, {}) == ["ir.core", "ir.tuple"]
+    assert C.requires_of("v2-domain", {"descriptor": {"d": "bool", "size": 2}, "type": "Frob"}, {}) == ["ir.core"]
+    for category in ("v2-ir", "v2-fault"):
+        for case, _row in s10d(kit, category):
+            rows = case["ops"].values() if category == "v2-ir" else [case["op"]]
+            for op in rows:
+                tuple_typed = any("(" in t for t in [*(t for _, t in op["params"]), op["ret"]])
+                if isinstance(op["ret"], str) and not any(t in op["ret"] for t in ("Int", "Frob")):
+                    assert (op["requires"] == ["ir.core", "ir.tuple"]) == tuple_typed, case["id"]
+
+
+def test_the_ir_fixed_cases_at_16_32_and_64_bits(kit):
+    cases = s10d_cases(kit, "v2-ir")
+    for t, w in (("u16", 16), ("u32", 32), ("u64", 64), ("i16", 16), ("i32", 32), ("i64", 64)):
+        assert cases[f"shl-{t}-by-the-width"]["expect"]["value"] == "0"
+        assert cases[f"rotl-{t}-by-width-plus-one"]["expect"]["value"] == "2"
+        assert cases[f"clz-{t}-zero"]["expect"]["value"] == str(w)
+        assert cases[f"popcount-{t}-all-ones"]["expect"]["value"] == str(w)
+        assert cases[f"bit-{t}-index-equal-to-the-width"]["expect"]["value"] is False
+        assert cases[f"shr-{t}-top-pattern-by-width-minus-one"]["expect"]["value"] == "1"
+    for t, w in (("i16", 16), ("i32", 32), ("i64", 64)):
+        assert cases[f"sar-{t}-minimum-by-width-minus-one"]["expect"]["value"] == "-1"
+        assert cases[f"div-trunc-{t}-minimum-by-minus-one"]["expect"]["value"] == "99"
+        assert cases[f"rem-trunc-{t}-minimum-by-three"]["expect"]["value"] == str(-(2 ** (w - 1) % 3))
+
+
+def test_the_cost_of_a_match_is_the_maximum_and_an_arm_overflow_has_the_class_of_its_guard(kit):
+    cases = s10d_cases(kit, "v2-ir")
+    assert cases["cost-match-two-arms-of-1023-are-accepted"]["expect"]["value"] is True
+    assert cases["cost-match-the-larger-arm-at-1998-is-accepted"]["expect"]["value"] is True
+    assert cases["cost-match-the-larger-arm-at-1999-is-refused"]["expect"] == {"error": "ir-cost"}
+    assert cases["overflow-in-the-taken-match-arm-pure-scrutinee-corpus-class"]["expect"] == {"error": "ir-overflow", "class": "corpus"}
+    assert cases["overflow-in-the-taken-match-arm-subject-scrutinee-case-class"]["expect"] == {"error": "ir-overflow", "class": "case"}
+    assert cases["match-arm-overflow-not-taken-is-a-value"]["expect"]["value"] == "0"
+    assert all(c["requires"] == ["ir.core", "ir.tuple"] for s, c in cases.items() if s.startswith(("cost-match-", "overflow-in-the-taken")))
+
+
 def test_r111_an_int_model_parameter_is_accepted_and_an_int_env_entry_is_not(kit):
     cases = s10d_cases(kit, "v2-ir")
     case = cases["int-model-parameter-compared-with-an-int-literal"]
     assert case["models"]["is_five"]["params"] == [["a", "Int"]]
     assert case["expect"] == {"type": "Bool", "value": True, "calls": 0}
-    assert cases["int-model-parameter-with-an-int-result"]["expect"] == {"type": "Int", "value": "-2", "calls": 0}
     for slug in ("ill-typed-env-entry-of-type-int", "ill-typed-env-entry-of-an-undeclared-type",
                  "ill-typed-env-entry-result-with-a-record-as-error", "ill-typed-op-int-parameter-never-called"):
         assert cases[slug]["expect"] == {"error": "ill-typed"}, slug

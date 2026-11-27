@@ -391,8 +391,7 @@ tdom("descriptor-tuple-for-a-scalar-type", "a tuple descriptor for a Bool binder
      {"error": "descriptor"})
 tdom("descriptor-tuple-for-a-result-type", "a tuple descriptor for a Result binder", tup_d(BOOLD, BOOLD), "Result<Bool,E>", {"index": 0},
      {"error": "descriptor"})
-cdom("descriptor-scalar-for-a-tuple-type", "a bool descriptor for a pair binder: the descriptor needs no level, so a lane that implements "
-    "ir.core runs this case and must refuse it", BOOLD, "(Bool,Bool)", {"index": 0}, {"error": "descriptor"})
+tdom("descriptor-scalar-for-a-tuple-type", "a bool descriptor for a pair binder: the binder type is a tuple type, which is ir.tuple (R9)", BOOLD, "(Bool,Bool)", {"index": 0}, {"error": "descriptor"})
 
 
 def tnest(n):

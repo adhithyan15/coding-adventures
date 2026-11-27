@@ -13,8 +13,8 @@ import { KIT_DIR, kitWithExtraCategory, tamperedKit } from "./support.ts";
 
 const index = JSON.parse(readFileSync(join(KIT_DIR, "index.json"), "utf8")) as { files: { category: string; cases: number }[]; total_cases: number };
 const indexed = (category: string): number => index.files.find((row) => row.category === category)?.cases ?? 0;
-// S10d adds 461 cases at ir.fixed and ir.tuple; 400 of them are skipped by their requires at this lane's levels (ir.core).
-const SKIPPED: Record<string, number> = { "v2-value": 39, "v2-arith": 0, "v2-ir": 246, "v2-domain": 43, "v2-chunk": 15, "v2-fault": 57 };
+// S10d adds 670 cases at ir.fixed and ir.tuple; 613 of them are skipped by their requires at this lane's levels (ir.core).
+const SKIPPED: Record<string, number> = { "v2-value": 39, "v2-arith": 0, "v2-ir": 458, "v2-domain": 44, "v2-chunk": 15, "v2-fault": 57 };
 const SKIPPED_TOTAL = Object.values(SKIPPED).reduce((sum, n) => sum + n, 0);
 
 describe("the committed kit", () => {

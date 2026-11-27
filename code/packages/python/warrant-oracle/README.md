@@ -514,8 +514,8 @@ subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5
 
 VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
 `v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault`, and a seventh, `v2-binding` (S5c derives it,
-S5d commits it: see "The reference binding validator" below). All seven files are committed: 1,419 cases, 1,880 in the
-family with the four v1 categories (S10d, the slice that adds the `ir.fixed` and `ir.tuple` vectors, added 461 of them).
+S5d commits it: see "The reference binding validator" below). All seven files are committed: 1,628 cases, 2,089 in the
+family with the four v1 categories (S10d, the slice that adds the `ir.fixed` and `ir.tuple` vectors, added 670 of them).
 The oracle **derives every expectation**: `src/coding_adventures_warrant_oracle/conformance.py` is the
 derivation module, and the hand-written case tables, the three small kit documents the chunk cases come from
 and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case; the four kit documents are
@@ -549,7 +549,7 @@ adds 48 cases to the tables, 782 in all (`v2-ir` 248, `v2-domain` 162, `v2-chunk
 unchanged), and the derivation changes they need (VER04r section 16.18 R69 to R77: a `width_params` op in the kit,
 `level-missing` and `requires` by what `ir` reaches, the `errs` rules, the chain depth of an uncalled model); the
 committed `v2-*.json` files and `index.json` are the fixture PRs': S5e's regenerated the six (782 cases) and S5d
-(`v2-binding.json`, 176 cases) brought the family to 1,419. **Regeneration is two steps**:
+(`v2-binding.json`, 176 cases) brought the family to 958 (1,628 after S10d). **Regeneration is two steps**:
 `make_conformance.py --write` (the seven files), then `python3 code/scripts/warrant_corpus_conformance.py --write`
 (`index.json`: the four v1 rows, then one row per `v2-*.json` on disk in the fixed order). `BUILD` runs
 `make_conformance.py --check --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1` (a second derivation of
@@ -558,10 +558,10 @@ the `2**24` suite, about a minute, that the pytest session fixture does not shar
 the oracle or a lane) and its tests, so either tool alone catches a stale index. An edit to the fixture directory,
 the checker or its test selects this package (build-tool `isWarrantOracleInput`).
 
-**S10d** (one PR, [D70]: the tables and the regenerated kit together) adds 461 cases: `v2-value` 49 (tuple values, stream tag `64`),
-`v2-ir` 258 (every `ir.fixed` and `ir.tuple` tag of Appendix A.1, `match` on a `Result`, the vectors of R76, R100, R111 and R120),
-`v2-domain` 57 (the `tuple` descriptor and `nat_shift`), `v2-chunk` 24 (a v2-stream chunk with a tuple binder, over the new
-`kit-tuple.warrant`, and the ops and models of a chunk corpus, R125) and `v2-fault` 73 (the `ir.fixed` and `ir.tuple` templates,
+**S10d** (one PR, [D70]: the tables and the regenerated kit together) adds 670 cases: `v2-value` 49 (tuple values, stream tag `64`),
+`v2-ir` 469 (every `ir.fixed` and `ir.tuple` tag of Appendix A.1, `match` on a `Result`, the vectors of R76, R100, R111 and R120),
+`v2-domain` 57 (the `tuple` descriptor and `nat_shift`), `v2-chunk` 23 (a v2-stream chunk with a tuple binder, over the new
+`kit-tuple.warrant`, and the ops and models of a chunk corpus, R125) and `v2-fault` 72 (the `ir.fixed` and `ir.tuple` templates,
 `off-by-one-consumed` on a `Result<(Bytes,Nat),E>`, `missing-error` with a tuple payload, the `ill-typed` cases of R96 to R98 and R121, and
 the `unknown-tag`, `depth` and `model-order` of R119); `v2-arith` gains none, because the closed `op` set of section 11 (`add sub mul neg`
 and the six comparisons) is all `ir.core`.  A table row of S10d states the `requires` it expects (`Row.requires`) and the build fails

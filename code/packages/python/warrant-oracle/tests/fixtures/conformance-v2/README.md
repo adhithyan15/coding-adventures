@@ -127,20 +127,20 @@ call closure of `ir`, which does not follow `subjects`).
 ## S10d: the vectors at `ir.fixed` and `ir.tuple` (VER04r section 13, 16.20 to 16.23)
 
 Each group is a block at the end of its `cases_*.py`; every row states its `requires` (see above).  Counts are cases; "core" is a case
-whose computed `requires` is `["ir.core"]` (a lane that implements `ir.core` runs it; there are 61).
+whose computed `requires` is `["ir.core"]` (a lane that implements `ir.core` runs it; there are 57).
 
 | Vector | Where | Notes |
 |---|---|---|
 | Tuple values, stream tag `64`, arity 2 to 8, nesting, Bytes and Result components, depth 16 and 17 (R17) | `v2-value`, 49 (10 core: the `type` refusals) | a stream is the bare section 2.4 value |
-| The `tuple` descriptor (last component fastest) and `nat_shift` (73 values, [D26]) (R17) | `v2-domain`, 57 (14 core: `nat_shift` is a `Nat` leaf) | `descriptor_levels` is what levels a descriptor |
-| A v2-stream chunk with a tuple binder (R17); the ops and models of a chunk corpus (R125) | `v2-chunk`, 24 (9 core: R125) | `kit-tuple.warrant` |
-| Every `ir.fixed` tag: edges, the count compared with `w` before any shift, `unwrap_or` of the Option producers, `div`/`rem` floor and `div_trunc`/`rem_trunc`, `from_be`/`from_le` static width | `v2-ir` | accepted and refused rows for every tag |
+| The `tuple` descriptor (last component fastest) and `nat_shift` (73 values, [D26]) (R17) | `v2-domain`, 57 (13 core: 12 `nat_shift` and one `nat_0_64`, `Nat` leaves over a `Nat` binder) | `descriptor_levels` is what levels a descriptor |
+| A v2-stream chunk with a tuple binder (R17); the ops and models of a chunk corpus (R125) | `v2-chunk`, 23 (8 core: R125) | `kit-tuple.warrant` |
+| Every `ir.fixed` tag: edges, the count compared with `w` before any shift, `unwrap_or` of the Option producers, `div`/`rem` floor and `div_trunc`/`rem_trunc`, `from_be`/`from_le` static width | `v2-ir` | accepted and refused rows for every tag; every width of 16, 32 and 64 bits for the bit operators, shifts, rotations and counts; `div_trunc`/`rem_trunc` and `sar` at `I16`, `I32`, `I64`; the cost of a match (the maximum over the arms) and the class of an overflow in an arm |
 | `ir.tuple`: literal, `project`, equality, tuples in models and at the op boundary, `match` on a `Result` with every pattern, only the taken arm counted | `v2-ir` | |
 | R76: `match` on a `Result` runs; on a bare tuple or a `Bool` it is `level-missing` (`ir.data`); at `ir.core` it is `level-missing` | `v2-ir` | requires is the case's `levels` |
 | R100: a stand-in with an `ir.fixed` tag under an `ir.core` tree; an unreached stand-in counts for nothing | `v2-ir` | the oracle's kit build already counts a stand-in for `requires` and refuses what R100 and R101 rule out (CV2-F17, 16.23) |
 | R111 (d), [D75]: a model with an `Int` parameter; an op with one is `ill-typed` (R122) | `v2-ir` | core |
 | R120 (d): an `env` type the reader refuses (`Int`, an undeclared name, `Result<U8,Q>`, 17 nested tuples) | `v2-ir` | core |
-| The `ir.fixed` and `ir.tuple` templates: `xor-lsb`, `ignore-high-bit`, `flip-result-bit` (also under `Ok`), `drop-last-result-byte` under `Ok`, `ok-as-err`, `drop-consumed`, `swap-components` | `v2-fault`, 73 in all | `level-missing` at each missing level |
+| The `ir.fixed` and `ir.tuple` templates: `xor-lsb`, `ignore-high-bit`, `flip-result-bit` (also under `Ok`), `drop-last-result-byte` under `Ok`, `ok-as-err`, `drop-consumed`, `swap-components` | `v2-fault`, 72 in all | `level-missing` at each missing level |
 | R96: `off-by-one-consumed` on a `Result<(Bytes,Nat),E>`, accepted | `v2-fault` | all four combinations of bare or `Ok`, `Nat` or fixed-width |
 | R67: `missing-error` with a tuple payload and no parameter of the plain `Bytes` type | `v2-fault` | the zero literal is a plain `Bytes` |
 | R96's second vector, R98's `if`, `match` arm and tuple-component refusals, R94 refusals; R121: an op row naming `Int`, an error type or an undeclared type | `v2-fault` | `ill-typed` ([D74]) |

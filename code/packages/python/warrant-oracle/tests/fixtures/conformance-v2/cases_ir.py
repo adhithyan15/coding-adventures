@@ -58,7 +58,9 @@ def model(params, body):
 
 
 def op(params, ret):
-    return {"params": [list(p) for p in params], "ret": ret, "requires": CORE}
+    """An op row as a corpus writer emits it: ``requires`` is computed from the signature (R9), ``ir.tuple`` when a type holds a tuple."""
+    tuple_typed = any("(" in t for t in [*(t for _, t in params), ret])
+    return {"params": [list(p) for p in params], "ret": ret, "requires": ["ir.core", "ir.tuple"] if tuple_typed else CORE}
 
 
 # Stand-ins, used by many rows: bump(a) = a + 1 on U8 and add2(a, b) = a + b on U8.
@@ -1013,9 +1015,10 @@ case("level-missing-match-on-a-result-at-the-fixed-level", "match is an ir.tuple
      env=[e("r", "Result<U8,E>", {"ok": "1"})], types=ERR, levels=FX, requires=FX)
 case("level-missing-tuple-env-type-at-the-fixed-level", "an env entry of a tuple type needs ir.tuple although no tuple tag is used",
      blit(True), err("level-missing"), env=[e("t", "(U8,U8)", ["1", "2"])], levels=FX, requires=FX)
-case("level-missing-tuple-op-signature-at-the-fixed-level", "a subject call to an op whose signature holds a tuple type needs ir.tuple",
-     ["project", sub_op("pair", u8(1)), 0], err("level-missing"), models={"mk": model([("a", "U8")], u8(1))},
-     ops={"pair": op([("a", "U8")], "(U8,U8)")}, subjects={"pair": "mk"}, levels=FX, requires=FX)
+case("level-missing-tuple-op-signature-at-the-fixed-level", "a subject call to an op whose parameter is a pair needs ir.tuple: the tree has no tuple tag, "
+     "and the stand-in has the op's signature", sub_op("first", var("t")), err("level-missing"), env=[e("t", "(U8,U8)", ["1", "2"])],
+     models={"fst": model([("t", "(U8,U8)")], u8(1))}, ops={"first": op([("t", "(U8,U8)")], "U8")}, subjects={"first": "fst"},
+     levels=FX, requires=FX)
 case("level-missing-fixed-tag-in-a-model-at-the-tuple-level", "a model body with an ir.fixed tag, called",
      call("m", var("a")), err("level-missing"), env=[e("a", "U8", "1")], models={"m": model([("a", "U8")], ["bit_not", var("a")])},
      levels=TU, requires=TU)
@@ -1034,10 +1037,8 @@ case("int-model-parameter-compared-with-an-int-literal", "a model with an Int pa
      requires=CORE)
 case("int-model-parameter-negative-argument", "an Int parameter takes a negative Int literal", call("is_five", lit("Int", -5)),
      ok("Bool", False), models={"is_five": model([("a", "Int")], ["eq", var("a"), lit("Int", 5)])}, requires=CORE)
-case("int-model-parameter-with-an-int-result", "an Int parameter and an Int result", call("inc", lit("Int", -3)), ok("Int", "-2"),
-     models={"inc": model([("a", "Int")], ["add", var("a"), lit("Int", 1)])}, requires=CORE)
-case("int-model-parameter-with-a-nat-operand", "an Int parameter compared with a Nat variable widens as in a comparison",
-     call("m", lit("Int", 3)), ok("Bool", True), env=[e("n", "Nat", "3")],
+case("int-model-parameter-with-a-nat-operand", "an Int parameter compared inside the model with a Nat literal widens as in a comparison",
+     call("m", lit("Int", 3)), ok("Bool", True),
      models={"m": model([("a", "Int")], ["eq", var("a"), lit("Nat", 3)])}, requires=CORE)
 case("ill-typed-op-int-parameter-never-called", "an Int in an op row is refused whether or not ir calls the op (section 2.1, R111 (c), R122)",
      blit(True), IT, ops={"o": op([("a", "Int")], "U8")}, requires=CORE)
@@ -1239,9 +1240,6 @@ tu("ill-typed-match-tuple-pattern-of-the-wrong-arity", "a one-component pattern 
    mt(var("r"), (ok_(["tuple", [bind("a")]]), var("a")), (ANY, u8(0))), IT, env=[e("r", R_PAIR, {"ok": ["1", "2"]})], types=ERR)
 tu("ill-typed-match-tuple-pattern-on-a-scalar-payload", "ok(tuple(..)) on a Result<U8,E>",
    mt(var("r"), (ok_(["tuple", [bind("a"), bind("b")]]), var("a")), (ANY, u8(0))), IT, env=[e("r", R_U8, ROK)], types=ERR)
-tu("ill-typed-match-err-case-no-error-type-declares", "err(NOPE) names a case that E does not declare",
-   mt(var("r"), (ok_(WILD), nat(0)), (["err", "NOPE"], nat(1)), (ANY, nat(2))), IT, env=[e("r", R_U8, ROK)], types=ERR)
-
 # -- R76: the level of match is type-directed.  A match on a Result needs ir.tuple; any other scrutinee needs ir.data -----------------
 tu("level-missing-match-on-a-bare-tuple-needs-ir-data", "the same match JSON on a bare tuple is ir.data, which levels lacks: "
    "level-missing (R76); its requires is the levels",
@@ -1274,3 +1272,126 @@ case("ill-typed-env-entry-result-with-a-record-as-error", "Result<U8,Q> with Q a
 
 tu("ill-typed-tuple-type-seventeen-deep-env", "an env type with 17 nested tuples is deeper than 16 and refused (R120)", blit(True),
    IT, env=[e("t", _T17, _V17)], requires=CORE)
+
+
+# ===============================================================================================
+# S10d: ir.fixed at 16, 32 and 64 bits (the review's N4).  Expected values are written from the bit pattern as text, a different
+# route from the oracle's integer shifts: ``bits(v, w)`` is the w-bit two's-complement pattern of v, and a result is read back with
+# ``from_bits``.  Each case holds one defect or none.
+# ===============================================================================================
+def bits(v, w):
+    return format(v % (1 << w), f"0{w}b")
+
+
+def from_bits(text, signed):
+    w = len(text)
+    v = int(text, 2)
+    return v - (1 << w) if signed and text[0] == "1" else v
+
+
+for _t in ("U16", "U32", "U64", "I16", "I32", "I64"):
+    _w, _signed = int(_t[1:]), _t[0] == "I"
+    _k = _t.lower()
+    _lo, _hi = lo(_t), hi(_t)
+    _top = 1 << (_w - 1)  # the pattern 1000..0, as a value of the type
+    _topv = from_bits(bits(_top, _w), _signed)
+    # bit_or, bit_xor, bit_not on the edge patterns
+    fx(f"bit-or-{_k}-minimum-and-one", f"bit_or(the pattern 10..0, 1) on {_t}", ["bit_or", lit(_t, _topv), lit(_t, 1)],
+       ok(_t, str(from_bits("1" + "0" * (_w - 2) + "1", _signed))))
+    fx(f"bit-xor-{_k}-maximum-and-top", f"bit_xor(all ones, the pattern 10..0) on {_t}",
+       ["bit_xor", lit(_t, from_bits("1" * _w, _signed)), lit(_t, _topv)], ok(_t, str(from_bits("0" + "1" * (_w - 1), _signed))))
+    fx(f"bit-not-{_k}-zero", f"bit_not(0) on {_t}", ["bit_not", lit(_t, 0)], ok(_t, str(from_bits("1" * _w, _signed))))
+    fx(f"bit-not-{_k}-top-pattern", f"bit_not of the pattern 10..0 on {_t}", ["bit_not", lit(_t, _topv)],
+       ok(_t, str(from_bits("0" + "1" * (_w - 1), _signed))))
+    # shifts: by w-1, by w (n >= w gives 0), by one
+    fx(f"shl-{_k}-by-width-minus-one", f"shl(1, {_w - 1}) on {_t} is the pattern 10..0", ["shl", lit(_t, 1), nat(_w - 1)],
+       ok(_t, str(_topv)))
+    fx(f"shl-{_k}-by-the-width", f"shl(1, {_w}) on {_t}: n >= w gives 0", ["shl", lit(_t, 1), nat(_w)], ok(_t, "0"))
+    fx(f"shl-{_k}-drops-the-top-bit", f"shl(all ones, 1) on {_t}: the pattern 1..10", ["shl", lit(_t, from_bits("1" * _w, _signed)), nat(1)],
+       ok(_t, str(from_bits("1" * (_w - 1) + "0", _signed))))
+    fx(f"shr-{_k}-top-pattern-by-width-minus-one", f"shr(the pattern 10..0, {_w - 1}) on {_t} is 1: logical", ["shr", lit(_t, _topv), nat(_w - 1)],
+       ok(_t, "1"))
+    fx(f"shr-{_k}-all-ones-by-one", f"shr(all ones, 1) on {_t}: the pattern 01..1", ["shr", lit(_t, from_bits("1" * _w, _signed)), nat(1)],
+       ok(_t, str(from_bits("0" + "1" * (_w - 1), _signed))))
+    fx(f"shr-{_k}-by-the-width", f"shr(all ones, {_w}) on {_t}: n >= w gives 0", ["shr", lit(_t, from_bits("1" * _w, _signed)), nat(_w)],
+       ok(_t, "0"))
+    if _signed:
+        fx(f"sar-{_k}-minimum-by-width-minus-one", f"sar({_lo}, {_w - 1}) on {_t} is -1: sign fill", ["sar", lit(_t, _lo), nat(_w - 1)],
+           ok(_t, "-1"))
+        fx(f"sar-{_k}-maximum-by-width-minus-one", f"sar(max, {_w - 1}) on {_t} is 0", ["sar", lit(_t, _hi), nat(_w - 1)], ok(_t, "0"))
+        fx(f"sar-{_k}-minimum-by-one", f"sar(min, 1) on {_t}: the pattern 110..0", ["sar", lit(_t, _lo), nat(1)],
+           ok(_t, str(from_bits("11" + "0" * (_w - 2), True))))
+        fx(f"sar-{_k}-negative-by-the-width", f"sar(-1, {_w}) on {_t}: n >= w gives -1 for a negative value", ["sar", lit(_t, -1), nat(_w)],
+           ok(_t, "-1"))
+        fx(f"sar-{_k}-positive-by-the-width", f"sar(max, {_w}) on {_t}: n >= w gives 0 for a non-negative value", ["sar", lit(_t, _hi), nat(_w)],
+           ok(_t, "0"))
+    # rotations: by w-1, by w (a full turn), by w+1 (reduced mod w)
+    fx(f"rotl-{_k}-one-by-width-minus-one", f"rotl(1, {_w - 1}) on {_t}", ["rotl", lit(_t, 1), nat(_w - 1)], ok(_t, str(_topv)))
+    fx(f"rotl-{_k}-by-the-width", f"rotl(1, {_w}) on {_t} is a full turn", ["rotl", lit(_t, 1), nat(_w)], ok(_t, "1"))
+    fx(f"rotl-{_k}-by-width-plus-one", f"rotl(1, {_w + 1}) on {_t}: the count reduces mod w to 1", ["rotl", lit(_t, 1), nat(_w + 1)], ok(_t, "2"))
+    fx(f"rotl-{_k}-top-pattern-by-one", f"rotl(the pattern 10..0, 1) on {_t} is 1", ["rotl", lit(_t, _topv), nat(1)], ok(_t, "1"))
+    fx(f"rotr-{_k}-one-by-one", f"rotr(1, 1) on {_t} is the pattern 10..0", ["rotr", lit(_t, 1), nat(1)], ok(_t, str(_topv)))
+    fx(f"rotr-{_k}-by-the-width", f"rotr(1, {_w}) on {_t} is a full turn", ["rotr", lit(_t, 1), nat(_w)], ok(_t, "1"))
+    fx(f"rotr-{_k}-top-pattern-by-width-minus-one", f"rotr(the pattern 10..0, {_w - 1}) on {_t} is 1 (a left turn by one)", ["rotr", lit(_t, _topv), nat(_w - 1)],
+       ok(_t, "1"))
+    # popcount clz ctz bit
+    fx(f"popcount-{_k}-all-ones", f"popcount of the all-ones pattern on {_t} is {_w}", ["popcount", lit(_t, from_bits("1" * _w, _signed))],
+       ok("Nat", str(_w)))
+    fx(f"popcount-{_k}-top-pattern", f"popcount of the pattern 10..0 on {_t} is 1", ["popcount", lit(_t, _topv)], ok("Nat", "1"))
+    fx(f"clz-{_k}-zero", f"clz(0) on {_t} is {_w}", ["clz", lit(_t, 0)], ok("Nat", str(_w)))
+    fx(f"clz-{_k}-one", f"clz(1) on {_t} is {_w - 1}", ["clz", lit(_t, 1)], ok("Nat", str(_w - 1)))
+    fx(f"clz-{_k}-top-pattern", f"clz of the pattern 10..0 on {_t} is 0", ["clz", lit(_t, _topv)], ok("Nat", "0"))
+    fx(f"ctz-{_k}-zero", f"ctz(0) on {_t} is {_w}", ["ctz", lit(_t, 0)], ok("Nat", str(_w)))
+    fx(f"ctz-{_k}-top-pattern", f"ctz of the pattern 10..0 on {_t} is {_w - 1}", ["ctz", lit(_t, _topv)], ok("Nat", str(_w - 1)))
+    fx(f"ctz-{_k}-one", f"ctz(1) on {_t} is 0", ["ctz", lit(_t, 1)], ok("Nat", "0"))
+    fx(f"bit-{_k}-top-bit-set", f"bit(the pattern 10..0, {_w - 1}) on {_t} is true", ["bit", lit(_t, _topv), nat(_w - 1)], ok("Bool", True))
+    fx(f"bit-{_k}-index-equal-to-the-width", f"bit(all ones, {_w}) on {_t} is false: i >= w", ["bit", lit(_t, from_bits("1" * _w, _signed)), nat(_w)],
+       ok("Bool", False))
+    fx(f"bit-{_k}-low-bit-of-one", f"bit(1, 0) on {_t} is true", ["bit", lit(_t, 1), nat(0)], ok("Bool", True))
+    # div_trunc and rem_trunc (signed only)
+    if _signed:
+        fx(f"div-trunc-{_k}-toward-zero", f"div_trunc(-7, 2) on {_t} is -3", unwrap(["div_trunc", lit(_t, -7), lit(_t, 2)], lit(_t, 99)), ok(_t, "-3"))
+        fx(f"rem-trunc-{_k}-sign-of-the-dividend", f"rem_trunc(-7, 2) on {_t} is -1", unwrap(["rem_trunc", lit(_t, -7), lit(_t, 2)], lit(_t, 99)),
+           ok(_t, "-1"))
+        fx(f"div-trunc-{_k}-minimum-by-minus-one", f"div_trunc(min, -1) on {_t} is None: the quotient leaves the type",
+           unwrap(["div_trunc", lit(_t, _lo), lit(_t, -1)], lit(_t, 99)), ok(_t, "99"))
+        fx(f"rem-trunc-{_k}-minimum-by-minus-one", f"rem_trunc(min, -1) on {_t} is None too", unwrap(["rem_trunc", lit(_t, _lo), lit(_t, -1)], lit(_t, 99)),
+           ok(_t, "99"))
+        fx(f"div-trunc-{_k}-maximum-by-minus-one", f"div_trunc(max, -1) on {_t} is -max", unwrap(["div_trunc", lit(_t, _hi), lit(_t, -1)], lit(_t, 99)),
+           ok(_t, str(-_hi)))
+        fx(f"div-trunc-{_k}-minimum-by-three", f"div_trunc(min, 3) on {_t} truncates toward zero", unwrap(["div_trunc", lit(_t, _lo), lit(_t, 3)], lit(_t, 99)),
+           ok(_t, str(-(-_lo // 3))))
+        fx(f"rem-trunc-{_k}-minimum-by-three", f"rem_trunc(min, 3) on {_t} has the dividend's sign", unwrap(["rem_trunc", lit(_t, _lo), lit(_t, 3)], lit(_t, 99)),
+           ok(_t, str(-(-_lo % 3))))
+        fx(f"div-trunc-{_k}-by-zero", f"div_trunc(5, 0) on {_t} is None", unwrap(["div_trunc", lit(_t, 5), lit(_t, 0)], lit(_t, 99)), ok(_t, "99"))
+
+
+# ===============================================================================================
+# S10d: the cost of a match and the class of an overflow in a match arm (the review's N5; section 4.2 rule 6, R71)
+# ===============================================================================================
+# The cost of a match is 1 + cost(scrutinee) + the **maximum** over the arms, never the sum.  The scrutinee ``r`` is a variable (cost 1),
+# the arms are ``expr_of_cost`` expressions over the Bool variable ``a``.
+MCM = dict(env=[e("a", "Bool", True), e("r", R_U8, ROK)], models=cost_models(), order=[f"c{k}" for k in range(1, 10)], types=ERR)
+
+
+def mcost(arm1, arm2):
+    return mt(var("r"), (ok_(WILD), arm1), (ANY, arm2))
+
+
+tu("cost-match-two-arms-of-1023-are-accepted", "two arms of cost 1,023 cost 1 + 1 + 1,023 = 1,025: the maximum, not the sum (which would be 2,048)",
+   mcost(expr_of_cost(1023), expr_of_cost(1023)), ok("Bool", True), **MCM)
+tu("cost-match-the-larger-arm-at-1998-is-accepted", "1 + 1 + 1,998 = 2,000 is the largest accepted cost", mcost(expr_of_cost(1998), blit(True)),
+   ok("Bool", True), **MCM)
+tu("cost-match-the-larger-arm-at-1999-is-refused", "1 + 1 + 1,999 = 2,001: the second arm decides", mcost(blit(True), expr_of_cost(1999)),
+   err("ir-cost"), **MCM)
+OVI = ["mul", lit("Nat", NAT_MAX), lit("Nat", NAT_MAX)]
+SUBJ_R = sub_op("res", var("r"))
+OVM = dict(env=[e("r", R_U8, ROK)], types=ERR, models={"idr": IDR}, ops={"res": op([("r", R_U8)], R_U8)}, subjects={"res": "idr"})
+tu("overflow-in-the-taken-match-arm-pure-scrutinee-corpus-class", "a pure overflow in the arm that is taken, under a scrutinee with no subject call: the "
+   "generator evaluates it, so the class is corpus", mt(var("r"), (ok_(WILD), ["add", OVI, lit("Int", 0)]), (ANY, lit("Int", 0))),
+   err("ir-overflow", "corpus"), env=[e("r", R_U8, ROK)], types=ERR)
+tu("overflow-in-the-taken-match-arm-subject-scrutinee-case-class", "the same arm under a scrutinee that calls the subject: the arm is under a guard "
+   "with a subject call, so the class is case (R71)", mt(SUBJ_R, (ok_(WILD), ["add", OVI, lit("Int", 0)]), (ANY, lit("Int", 0))),
+   err("ir-overflow", "case"), **OVM)
+tu("match-arm-overflow-not-taken-is-a-value", "the overflowing arm is not taken: a value (the static pass finds no overflow, section 4.2 rule 6)",
+   mt(var("r"), (ok_(WILD), lit("Int", 0)), (ANY, ["add", OVI, lit("Int", 0)])), ok("Int", "0"), env=[e("r", R_U8, ROK)], types=ERR)

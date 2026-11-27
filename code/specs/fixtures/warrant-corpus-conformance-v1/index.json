@@ -37,28 +37,28 @@
       "sha256": "49664e2866be98c37f1d588c1a6b2a565baa6fdf8c8125236b89310b971653bd"
     },
     {
-      "cases": 506,
+      "cases": 717,
       "category": "v2-ir",
       "path": "v2-ir.json",
-      "sha256": "66243da9811d7c465d7a04dc376255f9bb80bfe66b72a299fdba5d5bc4bf0a34"
+      "sha256": "bfda26f43e05aece84609538cdfcb7b16d8939fe164d3e80286f2f10377999d6"
     },
     {
       "cases": 219,
       "category": "v2-domain",
       "path": "v2-domain.json",
-      "sha256": "279462f6e24144565968b23c745623a87488926b647f8f338fe69f6870387374"
+      "sha256": "e4bea94d36c0f7b20fcd87b95741edb5bddd98b8132c20bf79cf6369379ef615"
     },
     {
-      "cases": 98,
+      "cases": 97,
       "category": "v2-chunk",
       "path": "v2-chunk.json",
-      "sha256": "a5e6c81ebfa7327c222340d5499f34278b58617570cdcccb87dbff9407d5515a"
+      "sha256": "6ae51ea5ff79331d4eec2cb2c11b356e774a2599570cfe1c8a19cd7e42fc270b"
     },
     {
-      "cases": 114,
+      "cases": 113,
       "category": "v2-fault",
       "path": "v2-fault.json",
-      "sha256": "22873507247cf5809af9f5f0e53d31b6e415bedbcc35f5dfff6a8dc5178d56f0"
+      "sha256": "0be44f44d8043616940675ee06bf74fbee35ad64c06e64ccb2dfa22c55de46d7"
     },
     {
       "cases": 176,
@@ -68,5 +68,5 @@
     }
   ],
   "schema": "warrant-corpus-conformance-v1",
-  "total_cases": 1880
+  "total_cases": 2089
 }

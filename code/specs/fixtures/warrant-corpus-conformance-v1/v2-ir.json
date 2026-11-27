@@ -32886,37 +32886,41 @@
       "types": {}
     },
     {
-      "env": [],
+      "env": [
+        [
+          "t",
+          {
+            "type": "(U8,U8)",
+            "value": [
+              "1",
+              "2"
+            ]
+          }
+        ]
+      ],
       "expect": {
         "error": "level-missing"
       },
       "id": "v2-ir/level-missing-tuple-op-signature-at-the-fixed-level",
       "ir": [
-        "project",
+        "subject_op",
+        "first",
         [
-          "subject_op",
-          "pair",
           [
-            [
-              "lit",
-              {
-                "type": "U8",
-                "value": "1"
-              }
-            ]
+            "var",
+            "t"
           ]
-        ],
-        0
+        ]
       ],
       "levels": [
         "ir.core",
         "ir.fixed"
       ],
       "model_order": [
-        "mk"
+        "fst"
       ],
       "models": {
-        "mk": {
+        "fst": {
           "body": [
             "lit",
             {
@@ -32926,24 +32930,25 @@
           ],
           "params": [
             [
-              "a",
-              "U8"
+              "t",
+              "(U8,U8)"
             ]
           ]
         }
       },
       "ops": {
-        "pair": {
+        "first": {
           "params": [
             [
-              "a",
-              "U8"
+              "t",
+              "(U8,U8)"
             ]
           ],
           "requires": [
-            "ir.core"
+            "ir.core",
+            "ir.tuple"
           ],
-          "ret": "(U8,U8)"
+          "ret": "U8"
         }
       },
       "requires": [
@@ -32951,9 +32956,9 @@
         "ir.fixed"
       ],
       "subjects": {
-        "pair": "mk"
+        "first": "fst"
       },
-      "summary": "a subject call to an op whose signature holds a tuple type needs ir.tuple",
+      "summary": "a subject call to an op whose parameter is a pair needs ir.tuple: the tree has no tuple tag, and the stand-in has the op's signature",
       "types": {}
     },
     {
@@ -33316,73 +33321,6 @@
       "env": [],
       "expect": {
         "calls": 0,
-        "type": "Int",
-        "value": "-2"
-      },
-      "id": "v2-ir/int-model-parameter-with-an-int-result",
-      "ir": [
-        "model_call",
-        "inc",
-        [
-          [
-            "lit",
-            {
-              "type": "Int",
-              "value": "-3"
-            }
-          ]
-        ]
-      ],
-      "levels": [
-        "ir.core"
-      ],
-      "model_order": [
-        "inc"
-      ],
-      "models": {
-        "inc": {
-          "body": [
-            "add",
-            [
-              "var",
-              "a"
-            ],
-            [
-              "lit",
-              {
-                "type": "Int",
-                "value": "1"
-              }
-            ]
-          ],
-          "params": [
-            [
-              "a",
-              "Int"
-            ]
-          ]
-        }
-      },
-      "ops": {},
-      "requires": [
-        "ir.core"
-      ],
-      "subjects": {},
-      "summary": "an Int parameter and an Int result",
-      "types": {}
-    },
-    {
-      "env": [
-        [
-          "n",
-          {
-            "type": "Nat",
-            "value": "3"
-          }
-        ]
-      ],
-      "expect": {
-        "calls": 0,
         "type": "Bool",
         "value": true
       },
@@ -33435,7 +33373,7 @@
         "ir.core"
       ],
       "subjects": {},
-      "summary": "an Int parameter compared with a Nat variable widens as in a comparison",
+      "summary": "an Int parameter compared inside the model with a Nat literal widens as in a comparison",
       "types": {}
     },
     {
@@ -34752,7 +34690,8 @@
             ]
           ],
           "requires": [
-            "ir.core"
+            "ir.core",
+            "ir.tuple"
           ],
           "ret": "(U8,Bool)"
         }
@@ -35533,7 +35472,8 @@
             ]
           ],
           "requires": [
-            "ir.core"
+            "ir.core",
+            "ir.tuple"
           ],
           "ret": "U8"
         }
@@ -35629,7 +35569,8 @@
             ]
           ],
           "requires": [
-            "ir.core"
+            "ir.core",
+            "ir.tuple"
           ],
           "ret": "(U8,Bool)"
         }
@@ -38610,94 +38551,6 @@
     {
       "env": [
         [
-          "r",
-          {
-            "type": "Result<U8,E>",
-            "value": {
-              "ok": "7"
-            }
-          }
-        ]
-      ],
-      "expect": {
-        "error": "ill-typed"
-      },
-      "id": "v2-ir/ill-typed-match-err-case-no-error-type-declares",
-      "ir": [
-        "match",
-        [
-          "var",
-          "r"
-        ],
-        [
-          [
-            [
-              "ok",
-              [
-                "wild"
-              ]
-            ],
-            [
-              "lit",
-              {
-                "type": "Nat",
-                "value": "0"
-              }
-            ]
-          ],
-          [
-            [
-              "err",
-              "NOPE"
-            ],
-            [
-              "lit",
-              {
-                "type": "Nat",
-                "value": "1"
-              }
-            ]
-          ],
-          [
-            [
-              "err_any"
-            ],
-            [
-              "lit",
-              {
-                "type": "Nat",
-                "value": "2"
-              }
-            ]
-          ]
-        ]
-      ],
-      "levels": [
-        "ir.core",
-        "ir.tuple"
-      ],
-      "model_order": [],
-      "models": {},
-      "ops": {},
-      "requires": [
-        "ir.core",
-        "ir.tuple"
-      ],
-      "subjects": {},
-      "summary": "err(NOPE) names a case that E does not declare",
-      "types": {
-        "E": {
-          "cases": [
-            "BAD",
-            "WORSE"
-          ],
-          "kind": "error"
-        }
-      }
-    },
-    {
-      "env": [
-        [
           "t",
           {
             "type": "(U8,U8)",
@@ -39212,6 +39065,9759 @@
       "subjects": {},
       "summary": "an env type with 17 nested tuples is deeper than 16 and refused (R120)",
       "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "32769"
+      },
+      "id": "v2-ir/bit-or-u16-minimum-and-one",
+      "ir": [
+        "bit_or",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_or(the pattern 10..0, 1) on U16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "32767"
+      },
+      "id": "v2-ir/bit-xor-u16-maximum-and-top",
+      "ir": [
+        "bit_xor",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "65535"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_xor(all ones, the pattern 10..0) on U16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "65535"
+      },
+      "id": "v2-ir/bit-not-u16-zero",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not(0) on U16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "32767"
+      },
+      "id": "v2-ir/bit-not-u16-top-pattern",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not of the pattern 10..0 on U16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "32768"
+      },
+      "id": "v2-ir/shl-u16-by-width-minus-one",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 15) on U16 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "0"
+      },
+      "id": "v2-ir/shl-u16-by-the-width",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 16) on U16: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "65534"
+      },
+      "id": "v2-ir/shl-u16-drops-the-top-bit",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "65535"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(all ones, 1) on U16: the pattern 1..10",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "1"
+      },
+      "id": "v2-ir/shr-u16-top-pattern-by-width-minus-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(the pattern 10..0, 15) on U16 is 1: logical",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "32767"
+      },
+      "id": "v2-ir/shr-u16-all-ones-by-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "65535"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 1) on U16: the pattern 01..1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "0"
+      },
+      "id": "v2-ir/shr-u16-by-the-width",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "65535"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 16) on U16: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "32768"
+      },
+      "id": "v2-ir/rotl-u16-one-by-width-minus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 15) on U16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-u16-by-the-width",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 16) on U16 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "2"
+      },
+      "id": "v2-ir/rotl-u16-by-width-plus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "17"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 17) on U16: the count reduces mod w to 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-u16-top-pattern-by-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(the pattern 10..0, 1) on U16 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "32768"
+      },
+      "id": "v2-ir/rotr-u16-one-by-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 1) on U16 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-u16-by-the-width",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 16) on U16 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U16",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-u16-top-pattern-by-width-minus-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(the pattern 10..0, 15) on U16 is 1 (a left turn by one)",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "16"
+      },
+      "id": "v2-ir/popcount-u16-all-ones",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "65535"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the all-ones pattern on U16 is 16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "1"
+      },
+      "id": "v2-ir/popcount-u16-top-pattern",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the pattern 10..0 on U16 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "16"
+      },
+      "id": "v2-ir/clz-u16-zero",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(0) on U16 is 16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "15"
+      },
+      "id": "v2-ir/clz-u16-one",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(1) on U16 is 15",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/clz-u16-top-pattern",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz of the pattern 10..0 on U16 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "16"
+      },
+      "id": "v2-ir/ctz-u16-zero",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(0) on U16 is 16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "15"
+      },
+      "id": "v2-ir/ctz-u16-top-pattern",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz of the pattern 10..0 on U16 is 15",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/ctz-u16-one",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(1) on U16 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-u16-top-bit-set",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(the pattern 10..0, 15) on U16 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-ir/bit-u16-index-equal-to-the-width",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "65535"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(all ones, 16) on U16 is false: i >= w",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-u16-low-bit-of-one",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(1, 0) on U16 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "2147483649"
+      },
+      "id": "v2-ir/bit-or-u32-minimum-and-one",
+      "ir": [
+        "bit_or",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_or(the pattern 10..0, 1) on U32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "2147483647"
+      },
+      "id": "v2-ir/bit-xor-u32-maximum-and-top",
+      "ir": [
+        "bit_xor",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "4294967295"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_xor(all ones, the pattern 10..0) on U32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "4294967295"
+      },
+      "id": "v2-ir/bit-not-u32-zero",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not(0) on U32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "2147483647"
+      },
+      "id": "v2-ir/bit-not-u32-top-pattern",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not of the pattern 10..0 on U32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "2147483648"
+      },
+      "id": "v2-ir/shl-u32-by-width-minus-one",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 31) on U32 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "0"
+      },
+      "id": "v2-ir/shl-u32-by-the-width",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 32) on U32: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "4294967294"
+      },
+      "id": "v2-ir/shl-u32-drops-the-top-bit",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "4294967295"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(all ones, 1) on U32: the pattern 1..10",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "1"
+      },
+      "id": "v2-ir/shr-u32-top-pattern-by-width-minus-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(the pattern 10..0, 31) on U32 is 1: logical",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "2147483647"
+      },
+      "id": "v2-ir/shr-u32-all-ones-by-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "4294967295"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 1) on U32: the pattern 01..1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "0"
+      },
+      "id": "v2-ir/shr-u32-by-the-width",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "4294967295"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 32) on U32: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "2147483648"
+      },
+      "id": "v2-ir/rotl-u32-one-by-width-minus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 31) on U32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-u32-by-the-width",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 32) on U32 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "2"
+      },
+      "id": "v2-ir/rotl-u32-by-width-plus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "33"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 33) on U32: the count reduces mod w to 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-u32-top-pattern-by-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(the pattern 10..0, 1) on U32 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "2147483648"
+      },
+      "id": "v2-ir/rotr-u32-one-by-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 1) on U32 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-u32-by-the-width",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 32) on U32 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U32",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-u32-top-pattern-by-width-minus-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(the pattern 10..0, 31) on U32 is 1 (a left turn by one)",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "32"
+      },
+      "id": "v2-ir/popcount-u32-all-ones",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "4294967295"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the all-ones pattern on U32 is 32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "1"
+      },
+      "id": "v2-ir/popcount-u32-top-pattern",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the pattern 10..0 on U32 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "32"
+      },
+      "id": "v2-ir/clz-u32-zero",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(0) on U32 is 32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "31"
+      },
+      "id": "v2-ir/clz-u32-one",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(1) on U32 is 31",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/clz-u32-top-pattern",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz of the pattern 10..0 on U32 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "32"
+      },
+      "id": "v2-ir/ctz-u32-zero",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(0) on U32 is 32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "31"
+      },
+      "id": "v2-ir/ctz-u32-top-pattern",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz of the pattern 10..0 on U32 is 31",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/ctz-u32-one",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(1) on U32 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-u32-top-bit-set",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(the pattern 10..0, 31) on U32 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-ir/bit-u32-index-equal-to-the-width",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "4294967295"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(all ones, 32) on U32 is false: i >= w",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-u32-low-bit-of-one",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(1, 0) on U32 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "9223372036854775809"
+      },
+      "id": "v2-ir/bit-or-u64-minimum-and-one",
+      "ir": [
+        "bit_or",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_or(the pattern 10..0, 1) on U64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "9223372036854775807"
+      },
+      "id": "v2-ir/bit-xor-u64-maximum-and-top",
+      "ir": [
+        "bit_xor",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "18446744073709551615"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_xor(all ones, the pattern 10..0) on U64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "18446744073709551615"
+      },
+      "id": "v2-ir/bit-not-u64-zero",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not(0) on U64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "9223372036854775807"
+      },
+      "id": "v2-ir/bit-not-u64-top-pattern",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not of the pattern 10..0 on U64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "9223372036854775808"
+      },
+      "id": "v2-ir/shl-u64-by-width-minus-one",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 63) on U64 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "0"
+      },
+      "id": "v2-ir/shl-u64-by-the-width",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 64) on U64: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "18446744073709551614"
+      },
+      "id": "v2-ir/shl-u64-drops-the-top-bit",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "18446744073709551615"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(all ones, 1) on U64: the pattern 1..10",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "1"
+      },
+      "id": "v2-ir/shr-u64-top-pattern-by-width-minus-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(the pattern 10..0, 63) on U64 is 1: logical",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "9223372036854775807"
+      },
+      "id": "v2-ir/shr-u64-all-ones-by-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "18446744073709551615"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 1) on U64: the pattern 01..1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "0"
+      },
+      "id": "v2-ir/shr-u64-by-the-width",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "18446744073709551615"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 64) on U64: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "9223372036854775808"
+      },
+      "id": "v2-ir/rotl-u64-one-by-width-minus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 63) on U64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-u64-by-the-width",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 64) on U64 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "2"
+      },
+      "id": "v2-ir/rotl-u64-by-width-plus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "65"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 65) on U64: the count reduces mod w to 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-u64-top-pattern-by-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(the pattern 10..0, 1) on U64 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "9223372036854775808"
+      },
+      "id": "v2-ir/rotr-u64-one-by-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 1) on U64 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-u64-by-the-width",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 64) on U64 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "U64",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-u64-top-pattern-by-width-minus-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(the pattern 10..0, 63) on U64 is 1 (a left turn by one)",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "64"
+      },
+      "id": "v2-ir/popcount-u64-all-ones",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "18446744073709551615"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the all-ones pattern on U64 is 64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "1"
+      },
+      "id": "v2-ir/popcount-u64-top-pattern",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the pattern 10..0 on U64 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "64"
+      },
+      "id": "v2-ir/clz-u64-zero",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(0) on U64 is 64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "63"
+      },
+      "id": "v2-ir/clz-u64-one",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(1) on U64 is 63",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/clz-u64-top-pattern",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz of the pattern 10..0 on U64 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "64"
+      },
+      "id": "v2-ir/ctz-u64-zero",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(0) on U64 is 64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "63"
+      },
+      "id": "v2-ir/ctz-u64-top-pattern",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz of the pattern 10..0 on U64 is 63",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/ctz-u64-one",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(1) on U64 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-u64-top-bit-set",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(the pattern 10..0, 63) on U64 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-ir/bit-u64-index-equal-to-the-width",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "18446744073709551615"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(all ones, 64) on U64 is false: i >= w",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-u64-low-bit-of-one",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(1, 0) on U64 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-32767"
+      },
+      "id": "v2-ir/bit-or-i16-minimum-and-one",
+      "ir": [
+        "bit_or",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_or(the pattern 10..0, 1) on I16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "32767"
+      },
+      "id": "v2-ir/bit-xor-i16-maximum-and-top",
+      "ir": [
+        "bit_xor",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_xor(all ones, the pattern 10..0) on I16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-1"
+      },
+      "id": "v2-ir/bit-not-i16-zero",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not(0) on I16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "32767"
+      },
+      "id": "v2-ir/bit-not-i16-top-pattern",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not of the pattern 10..0 on I16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-32768"
+      },
+      "id": "v2-ir/shl-i16-by-width-minus-one",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 15) on I16 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "0"
+      },
+      "id": "v2-ir/shl-i16-by-the-width",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 16) on I16: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-2"
+      },
+      "id": "v2-ir/shl-i16-drops-the-top-bit",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(all ones, 1) on I16: the pattern 1..10",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "1"
+      },
+      "id": "v2-ir/shr-i16-top-pattern-by-width-minus-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(the pattern 10..0, 15) on I16 is 1: logical",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "32767"
+      },
+      "id": "v2-ir/shr-i16-all-ones-by-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 1) on I16: the pattern 01..1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "0"
+      },
+      "id": "v2-ir/shr-i16-by-the-width",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 16) on I16: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-1"
+      },
+      "id": "v2-ir/sar-i16-minimum-by-width-minus-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(-32768, 15) on I16 is -1: sign fill",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "0"
+      },
+      "id": "v2-ir/sar-i16-maximum-by-width-minus-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "32767"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(max, 15) on I16 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-16384"
+      },
+      "id": "v2-ir/sar-i16-minimum-by-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(min, 1) on I16: the pattern 110..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-1"
+      },
+      "id": "v2-ir/sar-i16-negative-by-the-width",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(-1, 16) on I16: n >= w gives -1 for a negative value",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "0"
+      },
+      "id": "v2-ir/sar-i16-positive-by-the-width",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "32767"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(max, 16) on I16: n >= w gives 0 for a non-negative value",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-32768"
+      },
+      "id": "v2-ir/rotl-i16-one-by-width-minus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 15) on I16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-i16-by-the-width",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 16) on I16 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "2"
+      },
+      "id": "v2-ir/rotl-i16-by-width-plus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "17"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 17) on I16: the count reduces mod w to 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-i16-top-pattern-by-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(the pattern 10..0, 1) on I16 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-32768"
+      },
+      "id": "v2-ir/rotr-i16-one-by-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 1) on I16 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-i16-by-the-width",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 16) on I16 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-i16-top-pattern-by-width-minus-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(the pattern 10..0, 15) on I16 is 1 (a left turn by one)",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "16"
+      },
+      "id": "v2-ir/popcount-i16-all-ones",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the all-ones pattern on I16 is 16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "1"
+      },
+      "id": "v2-ir/popcount-i16-top-pattern",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the pattern 10..0 on I16 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "16"
+      },
+      "id": "v2-ir/clz-i16-zero",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(0) on I16 is 16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "15"
+      },
+      "id": "v2-ir/clz-i16-one",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(1) on I16 is 15",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/clz-i16-top-pattern",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz of the pattern 10..0 on I16 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "16"
+      },
+      "id": "v2-ir/ctz-i16-zero",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(0) on I16 is 16",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "15"
+      },
+      "id": "v2-ir/ctz-i16-top-pattern",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz of the pattern 10..0 on I16 is 15",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/ctz-i16-one",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(1) on I16 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-i16-top-bit-set",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-32768"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "15"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(the pattern 10..0, 15) on I16 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-ir/bit-i16-index-equal-to-the-width",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "16"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(all ones, 16) on I16 is false: i >= w",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-i16-low-bit-of-one",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(1, 0) on I16 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-3"
+      },
+      "id": "v2-ir/div-trunc-i16-toward-zero",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-7"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(-7, 2) on I16 is -3",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-1"
+      },
+      "id": "v2-ir/rem-trunc-i16-sign-of-the-dividend",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-7"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(-7, 2) on I16 is -1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "99"
+      },
+      "id": "v2-ir/div-trunc-i16-minimum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-32768"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(min, -1) on I16 is None: the quotient leaves the type",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "99"
+      },
+      "id": "v2-ir/rem-trunc-i16-minimum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-32768"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(min, -1) on I16 is None too",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-32767"
+      },
+      "id": "v2-ir/div-trunc-i16-maximum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "32767"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(max, -1) on I16 is -max",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-10922"
+      },
+      "id": "v2-ir/div-trunc-i16-minimum-by-three",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-32768"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "3"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(min, 3) on I16 truncates toward zero",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "-2"
+      },
+      "id": "v2-ir/rem-trunc-i16-minimum-by-three",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "-32768"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "3"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(min, 3) on I16 has the dividend's sign",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I16",
+        "value": "99"
+      },
+      "id": "v2-ir/div-trunc-i16-by-zero",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "5"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I16",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(5, 0) on I16 is None",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-2147483647"
+      },
+      "id": "v2-ir/bit-or-i32-minimum-and-one",
+      "ir": [
+        "bit_or",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_or(the pattern 10..0, 1) on I32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "2147483647"
+      },
+      "id": "v2-ir/bit-xor-i32-maximum-and-top",
+      "ir": [
+        "bit_xor",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_xor(all ones, the pattern 10..0) on I32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-1"
+      },
+      "id": "v2-ir/bit-not-i32-zero",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not(0) on I32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "2147483647"
+      },
+      "id": "v2-ir/bit-not-i32-top-pattern",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not of the pattern 10..0 on I32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-2147483648"
+      },
+      "id": "v2-ir/shl-i32-by-width-minus-one",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 31) on I32 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "0"
+      },
+      "id": "v2-ir/shl-i32-by-the-width",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 32) on I32: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-2"
+      },
+      "id": "v2-ir/shl-i32-drops-the-top-bit",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(all ones, 1) on I32: the pattern 1..10",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "1"
+      },
+      "id": "v2-ir/shr-i32-top-pattern-by-width-minus-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(the pattern 10..0, 31) on I32 is 1: logical",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "2147483647"
+      },
+      "id": "v2-ir/shr-i32-all-ones-by-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 1) on I32: the pattern 01..1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "0"
+      },
+      "id": "v2-ir/shr-i32-by-the-width",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 32) on I32: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-1"
+      },
+      "id": "v2-ir/sar-i32-minimum-by-width-minus-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(-2147483648, 31) on I32 is -1: sign fill",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "0"
+      },
+      "id": "v2-ir/sar-i32-maximum-by-width-minus-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "2147483647"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(max, 31) on I32 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-1073741824"
+      },
+      "id": "v2-ir/sar-i32-minimum-by-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(min, 1) on I32: the pattern 110..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-1"
+      },
+      "id": "v2-ir/sar-i32-negative-by-the-width",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(-1, 32) on I32: n >= w gives -1 for a negative value",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "0"
+      },
+      "id": "v2-ir/sar-i32-positive-by-the-width",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "2147483647"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(max, 32) on I32: n >= w gives 0 for a non-negative value",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-2147483648"
+      },
+      "id": "v2-ir/rotl-i32-one-by-width-minus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 31) on I32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-i32-by-the-width",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 32) on I32 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "2"
+      },
+      "id": "v2-ir/rotl-i32-by-width-plus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "33"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 33) on I32: the count reduces mod w to 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-i32-top-pattern-by-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(the pattern 10..0, 1) on I32 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-2147483648"
+      },
+      "id": "v2-ir/rotr-i32-one-by-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 1) on I32 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-i32-by-the-width",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 32) on I32 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-i32-top-pattern-by-width-minus-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(the pattern 10..0, 31) on I32 is 1 (a left turn by one)",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "32"
+      },
+      "id": "v2-ir/popcount-i32-all-ones",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the all-ones pattern on I32 is 32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "1"
+      },
+      "id": "v2-ir/popcount-i32-top-pattern",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the pattern 10..0 on I32 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "32"
+      },
+      "id": "v2-ir/clz-i32-zero",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(0) on I32 is 32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "31"
+      },
+      "id": "v2-ir/clz-i32-one",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(1) on I32 is 31",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/clz-i32-top-pattern",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz of the pattern 10..0 on I32 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "32"
+      },
+      "id": "v2-ir/ctz-i32-zero",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(0) on I32 is 32",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "31"
+      },
+      "id": "v2-ir/ctz-i32-top-pattern",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz of the pattern 10..0 on I32 is 31",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/ctz-i32-one",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(1) on I32 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-i32-top-bit-set",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-2147483648"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "31"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(the pattern 10..0, 31) on I32 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-ir/bit-i32-index-equal-to-the-width",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(all ones, 32) on I32 is false: i >= w",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-i32-low-bit-of-one",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(1, 0) on I32 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-3"
+      },
+      "id": "v2-ir/div-trunc-i32-toward-zero",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-7"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(-7, 2) on I32 is -3",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-1"
+      },
+      "id": "v2-ir/rem-trunc-i32-sign-of-the-dividend",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-7"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(-7, 2) on I32 is -1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "99"
+      },
+      "id": "v2-ir/div-trunc-i32-minimum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-2147483648"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(min, -1) on I32 is None: the quotient leaves the type",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "99"
+      },
+      "id": "v2-ir/rem-trunc-i32-minimum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-2147483648"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(min, -1) on I32 is None too",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-2147483647"
+      },
+      "id": "v2-ir/div-trunc-i32-maximum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "2147483647"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(max, -1) on I32 is -max",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-715827882"
+      },
+      "id": "v2-ir/div-trunc-i32-minimum-by-three",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-2147483648"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "3"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(min, 3) on I32 truncates toward zero",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "-2"
+      },
+      "id": "v2-ir/rem-trunc-i32-minimum-by-three",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "-2147483648"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "3"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(min, 3) on I32 has the dividend's sign",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I32",
+        "value": "99"
+      },
+      "id": "v2-ir/div-trunc-i32-by-zero",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "5"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I32",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(5, 0) on I32 is None",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-9223372036854775807"
+      },
+      "id": "v2-ir/bit-or-i64-minimum-and-one",
+      "ir": [
+        "bit_or",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_or(the pattern 10..0, 1) on I64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "9223372036854775807"
+      },
+      "id": "v2-ir/bit-xor-i64-maximum-and-top",
+      "ir": [
+        "bit_xor",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_xor(all ones, the pattern 10..0) on I64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-1"
+      },
+      "id": "v2-ir/bit-not-i64-zero",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not(0) on I64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "9223372036854775807"
+      },
+      "id": "v2-ir/bit-not-i64-top-pattern",
+      "ir": [
+        "bit_not",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit_not of the pattern 10..0 on I64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-9223372036854775808"
+      },
+      "id": "v2-ir/shl-i64-by-width-minus-one",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 63) on I64 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "0"
+      },
+      "id": "v2-ir/shl-i64-by-the-width",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(1, 64) on I64: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-2"
+      },
+      "id": "v2-ir/shl-i64-drops-the-top-bit",
+      "ir": [
+        "shl",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shl(all ones, 1) on I64: the pattern 1..10",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "1"
+      },
+      "id": "v2-ir/shr-i64-top-pattern-by-width-minus-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(the pattern 10..0, 63) on I64 is 1: logical",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "9223372036854775807"
+      },
+      "id": "v2-ir/shr-i64-all-ones-by-one",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 1) on I64: the pattern 01..1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "0"
+      },
+      "id": "v2-ir/shr-i64-by-the-width",
+      "ir": [
+        "shr",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "shr(all ones, 64) on I64: n >= w gives 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-1"
+      },
+      "id": "v2-ir/sar-i64-minimum-by-width-minus-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(-9223372036854775808, 63) on I64 is -1: sign fill",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "0"
+      },
+      "id": "v2-ir/sar-i64-maximum-by-width-minus-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "9223372036854775807"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(max, 63) on I64 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-4611686018427387904"
+      },
+      "id": "v2-ir/sar-i64-minimum-by-one",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(min, 1) on I64: the pattern 110..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-1"
+      },
+      "id": "v2-ir/sar-i64-negative-by-the-width",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(-1, 64) on I64: n >= w gives -1 for a negative value",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "0"
+      },
+      "id": "v2-ir/sar-i64-positive-by-the-width",
+      "ir": [
+        "sar",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "9223372036854775807"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "sar(max, 64) on I64: n >= w gives 0 for a non-negative value",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-9223372036854775808"
+      },
+      "id": "v2-ir/rotl-i64-one-by-width-minus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 63) on I64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-i64-by-the-width",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 64) on I64 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "2"
+      },
+      "id": "v2-ir/rotl-i64-by-width-plus-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "65"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(1, 65) on I64: the count reduces mod w to 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "1"
+      },
+      "id": "v2-ir/rotl-i64-top-pattern-by-one",
+      "ir": [
+        "rotl",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotl(the pattern 10..0, 1) on I64 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-9223372036854775808"
+      },
+      "id": "v2-ir/rotr-i64-one-by-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 1) on I64 is the pattern 10..0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-i64-by-the-width",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(1, 64) on I64 is a full turn",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "1"
+      },
+      "id": "v2-ir/rotr-i64-top-pattern-by-width-minus-one",
+      "ir": [
+        "rotr",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rotr(the pattern 10..0, 63) on I64 is 1 (a left turn by one)",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "64"
+      },
+      "id": "v2-ir/popcount-i64-all-ones",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the all-ones pattern on I64 is 64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "1"
+      },
+      "id": "v2-ir/popcount-i64-top-pattern",
+      "ir": [
+        "popcount",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "popcount of the pattern 10..0 on I64 is 1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "64"
+      },
+      "id": "v2-ir/clz-i64-zero",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(0) on I64 is 64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "63"
+      },
+      "id": "v2-ir/clz-i64-one",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz(1) on I64 is 63",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/clz-i64-top-pattern",
+      "ir": [
+        "clz",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "clz of the pattern 10..0 on I64 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "64"
+      },
+      "id": "v2-ir/ctz-i64-zero",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(0) on I64 is 64",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "63"
+      },
+      "id": "v2-ir/ctz-i64-top-pattern",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz of the pattern 10..0 on I64 is 63",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Nat",
+        "value": "0"
+      },
+      "id": "v2-ir/ctz-i64-one",
+      "ir": [
+        "ctz",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "ctz(1) on I64 is 0",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-i64-top-bit-set",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-9223372036854775808"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "63"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(the pattern 10..0, 63) on I64 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-ir/bit-i64-index-equal-to-the-width",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "-1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "64"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(all ones, 64) on I64 is false: i >= w",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/bit-i64-low-bit-of-one",
+      "ir": [
+        "bit",
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "0"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "bit(1, 0) on I64 is true",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-3"
+      },
+      "id": "v2-ir/div-trunc-i64-toward-zero",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-7"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(-7, 2) on I64 is -3",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-1"
+      },
+      "id": "v2-ir/rem-trunc-i64-sign-of-the-dividend",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-7"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(-7, 2) on I64 is -1",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "99"
+      },
+      "id": "v2-ir/div-trunc-i64-minimum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-9223372036854775808"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(min, -1) on I64 is None: the quotient leaves the type",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "99"
+      },
+      "id": "v2-ir/rem-trunc-i64-minimum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-9223372036854775808"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(min, -1) on I64 is None too",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-9223372036854775807"
+      },
+      "id": "v2-ir/div-trunc-i64-maximum-by-minus-one",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "9223372036854775807"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-1"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(max, -1) on I64 is -max",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-3074457345618258602"
+      },
+      "id": "v2-ir/div-trunc-i64-minimum-by-three",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-9223372036854775808"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "3"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(min, 3) on I64 truncates toward zero",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "-2"
+      },
+      "id": "v2-ir/rem-trunc-i64-minimum-by-three",
+      "ir": [
+        "unwrap_or",
+        [
+          "rem_trunc",
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "-9223372036854775808"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "3"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "rem_trunc(min, 3) on I64 has the dividend's sign",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "I64",
+        "value": "99"
+      },
+      "id": "v2-ir/div-trunc-i64-by-zero",
+      "ir": [
+        "unwrap_or",
+        [
+          "div_trunc",
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "5"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "I64",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "99"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "subjects": {},
+      "summary": "div_trunc(5, 0) on I64 is None",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bool",
+            "value": true
+          }
+        ],
+        [
+          "r",
+          {
+            "type": "Result<U8,E>",
+            "value": {
+              "ok": "7"
+            }
+          }
+        ]
+      ],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/cost-match-two-arms-of-1023-are-accepted",
+      "ir": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "or",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "and",
+                [
+                  "and",
+                  [
+                    "and",
+                    [
+                      "and",
+                      [
+                        "model_call",
+                        "c8",
+                        [
+                          [
+                            "var",
+                            "a"
+                          ]
+                        ]
+                      ],
+                      [
+                        "model_call",
+                        "c6",
+                        [
+                          [
+                            "var",
+                            "a"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "model_call",
+                      "c4",
+                      [
+                        [
+                          "var",
+                          "a"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "model_call",
+                    "c2",
+                    [
+                      [
+                        "var",
+                        "a"
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "model_call",
+                  "c2",
+                  [
+                    [
+                      "var",
+                      "a"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "or",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "and",
+                [
+                  "and",
+                  [
+                    "and",
+                    [
+                      "and",
+                      [
+                        "model_call",
+                        "c8",
+                        [
+                          [
+                            "var",
+                            "a"
+                          ]
+                        ]
+                      ],
+                      [
+                        "model_call",
+                        "c6",
+                        [
+                          [
+                            "var",
+                            "a"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "model_call",
+                      "c4",
+                      [
+                        [
+                          "var",
+                          "a"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "model_call",
+                    "c2",
+                    [
+                      [
+                        "var",
+                        "a"
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "model_call",
+                  "c2",
+                  [
+                    [
+                      "var",
+                      "a"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "model_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9"
+      ],
+      "models": {
+        "c1": {
+          "body": [
+            "var",
+            "a"
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c2": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c1",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c1",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c3": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c2",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c2",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c4": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c3",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c3",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c5": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c4",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c4",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c6": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c5",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c5",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c7": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c6",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c6",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c8": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c7",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c7",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c9": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c8",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c8",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "subjects": {},
+      "summary": "two arms of cost 1,023 cost 1 + 1 + 1,023 = 1,025: the maximum, not the sum (which would be 2,048)",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bool",
+            "value": true
+          }
+        ],
+        [
+          "r",
+          {
+            "type": "Result<U8,E>",
+            "value": {
+              "ok": "7"
+            }
+          }
+        ]
+      ],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/cost-match-the-larger-arm-at-1998-is-accepted",
+      "ir": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "or",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "not",
+                [
+                  "and",
+                  [
+                    "and",
+                    [
+                      "and",
+                      [
+                        "and",
+                        [
+                          "and",
+                          [
+                            "model_call",
+                            "c9",
+                            [
+                              [
+                                "var",
+                                "a"
+                              ]
+                            ]
+                          ],
+                          [
+                            "model_call",
+                            "c7",
+                            [
+                              [
+                                "var",
+                                "a"
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          "model_call",
+                          "c4",
+                          [
+                            [
+                              "var",
+                              "a"
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "model_call",
+                        "c3",
+                        [
+                          [
+                            "var",
+                            "a"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "model_call",
+                      "c2",
+                      [
+                        [
+                          "var",
+                          "a"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "var",
+                    "a"
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "model_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9"
+      ],
+      "models": {
+        "c1": {
+          "body": [
+            "var",
+            "a"
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c2": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c1",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c1",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c3": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c2",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c2",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c4": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c3",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c3",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c5": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c4",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c4",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c6": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c5",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c5",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c7": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c6",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c6",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c8": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c7",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c7",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c9": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c8",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c8",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "subjects": {},
+      "summary": "1 + 1 + 1,998 = 2,000 is the largest accepted cost",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bool",
+            "value": true
+          }
+        ],
+        [
+          "r",
+          {
+            "type": "Result<U8,E>",
+            "value": {
+              "ok": "7"
+            }
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ir-cost"
+      },
+      "id": "v2-ir/cost-match-the-larger-arm-at-1999-is-refused",
+      "ir": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "lit",
+              true
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "or",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "and",
+                [
+                  "and",
+                  [
+                    "and",
+                    [
+                      "and",
+                      [
+                        "and",
+                        [
+                          "model_call",
+                          "c9",
+                          [
+                            [
+                              "var",
+                              "a"
+                            ]
+                          ]
+                        ],
+                        [
+                          "model_call",
+                          "c7",
+                          [
+                            [
+                              "var",
+                              "a"
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "model_call",
+                        "c4",
+                        [
+                          [
+                            "var",
+                            "a"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "model_call",
+                      "c3",
+                      [
+                        [
+                          "var",
+                          "a"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "model_call",
+                    "c2",
+                    [
+                      [
+                        "var",
+                        "a"
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "model_call",
+                  "c1",
+                  [
+                    [
+                      "var",
+                      "a"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "model_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9"
+      ],
+      "models": {
+        "c1": {
+          "body": [
+            "var",
+            "a"
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c2": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c1",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c1",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c3": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c2",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c2",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c4": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c3",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c3",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c5": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c4",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c4",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c6": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c5",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c5",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c7": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c6",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c6",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c8": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c7",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c7",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "c9": {
+          "body": [
+            "and",
+            [
+              "model_call",
+              "c8",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "c8",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "subjects": {},
+      "summary": "1 + 1 + 1,999 = 2,001: the second arm decides",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "env": [
+        [
+          "r",
+          {
+            "type": "Result<U8,E>",
+            "value": {
+              "ok": "7"
+            }
+          }
+        ]
+      ],
+      "expect": {
+        "class": "corpus",
+        "error": "ir-overflow"
+      },
+      "id": "v2-ir/overflow-in-the-taken-match-arm-pure-scrutinee-corpus-class",
+      "ir": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "add",
+              [
+                "mul",
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "18446744073709551615"
+                  }
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "18446744073709551615"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Int",
+                  "value": "0"
+                }
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              {
+                "type": "Int",
+                "value": "0"
+              }
+            ]
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "subjects": {},
+      "summary": "a pure overflow in the arm that is taken, under a scrutinee with no subject call: the generator evaluates it, so the class is corpus",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "env": [
+        [
+          "r",
+          {
+            "type": "Result<U8,E>",
+            "value": {
+              "ok": "7"
+            }
+          }
+        ]
+      ],
+      "expect": {
+        "class": "case",
+        "error": "ir-overflow"
+      },
+      "id": "v2-ir/overflow-in-the-taken-match-arm-subject-scrutinee-case-class",
+      "ir": [
+        "match",
+        [
+          "subject_op",
+          "res",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "add",
+              [
+                "mul",
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "18446744073709551615"
+                  }
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "18446744073709551615"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Int",
+                  "value": "0"
+                }
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              {
+                "type": "Int",
+                "value": "0"
+              }
+            ]
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "model_order": [
+        "idr"
+      ],
+      "models": {
+        "idr": {
+          "body": [
+            "var",
+            "r"
+          ],
+          "params": [
+            [
+              "r",
+              "Result<U8,E>"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "res": {
+          "params": [
+            [
+              "r",
+              "Result<U8,E>"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "Result<U8,E>"
+        }
+      },
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "subjects": {
+        "res": "idr"
+      },
+      "summary": "the same arm under a scrutinee that calls the subject: the arm is under a guard with a subject call, so the class is case (R71)",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "env": [
+        [
+          "r",
+          {
+            "type": "Result<U8,E>",
+            "value": {
+              "ok": "7"
+            }
+          }
+        ]
+      ],
+      "expect": {
+        "calls": 0,
+        "type": "Int",
+        "value": "0"
+      },
+      "id": "v2-ir/match-arm-overflow-not-taken-is-a-value",
+      "ir": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Int",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "add",
+              [
+                "mul",
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "18446744073709551615"
+                  }
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "18446744073709551615"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Int",
+                  "value": "0"
+                }
+              ]
+            ]
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "subjects": {},
+      "summary": "the overflowing arm is not taken: a value (the static pass finds no overflow, section 4.2 rule 6)",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
     }
   ],
   "category": "v2-ir",

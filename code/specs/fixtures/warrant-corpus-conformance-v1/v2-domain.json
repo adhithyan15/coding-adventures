@@ -7401,9 +7401,10 @@
       "id": "v2-domain/descriptor-scalar-for-a-tuple-type",
       "index": 0,
       "requires": [
-        "ir.core"
+        "ir.core",
+        "ir.tuple"
       ],
-      "summary": "a bool descriptor for a pair binder: the descriptor needs no level, so a lane that implements ir.core runs this case and must refuse it",
+      "summary": "a bool descriptor for a pair binder: the binder type is a tuple type, which is ir.tuple (R9)",
       "type": "(Bool,Bool)"
     },
     {
