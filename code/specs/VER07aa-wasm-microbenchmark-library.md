@@ -67,9 +67,10 @@ operation's guard. Read-only `abi_version` remains callable.
 Each `*_json` result is a nonzero `i64` whose low unsigned 32 bits are the
 result pointer and whose high unsigned 32 bits are the UTF-8 byte length. The
 result is not NUL-terminated. The host must read/copy those bytes before
-calling `dealloc(result_ptr, result_len)`. The return value zero is reserved
-for module-side allocation failure, when no JSON error result could be
-created. Application and input failures are JSON error results, not traps.
+calling `dealloc(result_ptr, result_len)`. A JSON operation returns zero when
+the busy guard rejects reentry or when no output allocation can be registered
+within the table/budget; otherwise application and input failures are JSON
+error results, not traps.
 Successful operations return `{"ok":true,"value":...}`; `value` is the
 portable core `Report` for collection and replay, and the core `Analysis` for
 analysis. Failures return
@@ -124,9 +125,13 @@ before any input slice is formed and before any allocation is freed. At most
 are limited to 7 MiB of live input buffers, reserving up to 1 MiB for one
 result; returned results use the remaining budget and should be freed before
 the next operation. If retained results consume that reserve, the next
-operation safely returns zero until the caller frees one. A rejected request
-does not change the table. Temporary JSON copies and result serialization are
-also checked against the document/output limits. The 64 MiB linear-memory
+operation safely returns zero until the caller frees one. An invalid
+allocation or free, a failed busy-guard acquisition, or an allocation rejected
+for table/budget limits does not change any existing table entry. A JSON
+operation with invalid input returns an owned error result when one can be
+allocated and therefore adds that result to the table; it never changes or
+consumes the input allocation. Temporary JSON copies and result serialization
+are also checked against the document/output limits. The 64 MiB linear-memory
 ceiling leaves at least 56 MiB above the maximum retained exported buffers for
 Rust stack, parsed JSON values, core report construction, and serialization.
 The input byte, nesting, and value-count limits bound those transient core
