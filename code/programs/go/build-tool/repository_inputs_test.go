@@ -1719,9 +1719,9 @@ func TestRubyHistoricalUnixFixtureUsesDiscoveredPackageIdentity(t *testing.T) {
 		"c/unix-history-simulator", "cpp/unix-history-simulator", "csharp/unix-history-simulator",
 		"dart/unix-history-simulator", "elixir/unix_history_simulator", "fsharp/unix-history-simulator",
 		"go/unix-history-simulator", "haskell/unix-history-simulator", "java/unix-history-simulator",
-		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "perl/unix-history-simulator",
+		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "ocaml/unix-history-simulator", "perl/unix-history-simulator",
 		"python/unix-history-simulator", "ruby/unix_history_simulator", "rust/unix-history-simulator",
-		"typescript/unix-history-simulator",
+		"swift/unix-history-simulator", "typescript/unix-history-simulator",
 	}
 	for _, name := range packageNames {
 		packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(name))
