@@ -45,7 +45,10 @@ command's report and diagnostics. The `stdout` capability covers stderr too.
 Command-line arguments are not environment access. The CLI uses no filesystem
 replay path and no foreign-function interface. Returning an exit status from
 the current command does not invoke or signal another process and does not add
-a `proc` capability.
+a `proc` capability. `Environment.ProcessPath` and `RuntimeInformation` supply
+observed executable, runtime, operating-system, and architecture metadata;
+these getters do not add a capability pair in the current taxonomy and are not
+environment-variable reads.
 
 ## Validation limits
 
