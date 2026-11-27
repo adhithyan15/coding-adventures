@@ -33,6 +33,10 @@ shape, signed-64-bit integer bounds, baseline-first count, pair count, and
 analysis recomputed from raw observations. JSON readers must preserve integer
 tokens exactly; Lua JSON numbers remain signed 64-bit integers or binary64
 floats, and Perl uses native signed 64-bit integers with checked conversions.
+The public benchmark-analysis boundary accepts at most 10,000 pairs and rejects
+an oversized collection before traversing it to validate, map, or sort
+observations. This limit belongs to the benchmark consumer; reusable
+rank-statistics APIs remain uncapped as required by VER07c.
 
 ## Collection and workload
 
@@ -79,6 +83,9 @@ otherwise-valid report at the supported 10,000-pair maximum; the caps bound
 pathological JSON overhead, not valid workload size. Token preflight must be
 linear and quote/escape aware so punctuation inside strings is not counted as
 JSON structure, and it must run before AST allocation.
+Command-line replay adapters enforce the package's 4 MiB report limit while
+reading the file, before allocating the whole report or decoding it. A
+parser-level limit alone does not bound the path adapter's allocation.
 
 ## Build and package validation
 
@@ -92,3 +99,9 @@ test execution, and failure exit codes; their working paths are relative to the
 package directory.
 Unix package commands must use POSIX path separators; a backslash in an
 unquoted shell argument is an escape, not a directory separator.
+
+Command capability profiles describe runtime calls made by each lane:
+monotonic time, the named revision variables actually read, standard output,
+the Lua monotonic-clock FFI call, and replay-file reads. Rank-statistics APIs
+are pure in-memory libraries. Package tests and build tooling that read fixtures
+or install dependencies are separate from installed runtime effects.

@@ -14,7 +14,11 @@ or missing fields, unbalanced pair order, invalid metadata, and reports whose
 analysis does not match their observations. Parsing is bounded to the shared
 10,000-pair, 4 MiB, 128-level, and 65,536-value limits. The shared fixture is
 copied byte-for-byte into both packages and checked against its canonical
-source.
+source. Public benchmark-analysis APIs accept at most 10,000 pairs and reject
+larger inputs before ratio transformation or sorting; reusable rank-statistics
+APIs remain uncapped as required by VER07c. Haskell checks a caller-provided
+list by examining no more than 10,001 elements, so an unbounded or infinite
+list cannot force an unbounded `length` traversal before rejection.
 
 When `workload` is present, it must be a string that is not empty, is not
 composed only of ASCII whitespace (U+0020, U+0009 through U+000D), and
@@ -38,6 +42,10 @@ fake clocks and bounded deterministic generated inputs; CLI acceptance runs
 40 measured pairs and replays the emitted JSON. Package-consumer checks import
 the built distribution outside the source package. Results remain advisory
 and do not prove hardware cache behavior.
+Each command-line replay adapter applies the shared 4 MiB limit while reading,
+before allocating the complete report or decoding it. The OCaml adapter uses a
+bounded file-size check and bounded read; Haskell uses a bounded read rather
+than lazy `readFile` or an unbounded `ByteString.readFile`.
 
 For the OCaml lane, CI runs the formatter check after copying the analyzer
 package into an isolated directory. Validate Dune aliases with the literal
@@ -87,7 +95,12 @@ The repository build tool runs each `BUILD` line in a fresh shell. A line
 cannot rely on environment changes or shell continuations from another line.
 Local package dependencies must be declared in the standalone build metadata
 and installed leaf-to-root so a clean package build does not depend on a
-pre-populated developer switch. Haskell Cabal commands on macOS select
+pre-populated developer switch. Package BUILD fronts run installed consumers,
+the native 40-pair command, and replay of its output. The Haskell command's
+runtime profile covers monotonic time, the named revision variables it reads,
+and standard output; OCaml retains its analyzer-governed wildcard profile and
+source/digest boundary. Rank-statistics libraries remain pure in-memory
+packages; fixture I/O belongs to tests. Haskell Cabal commands on macOS select
 `DEVELOPER_DIR=/Library/Developer/CommandLineTools` for GHC 9.4.8's hardcoded
 SDK; other platforms retain their inherited toolchain environment. Build
 scripts must propagate failures and run from the package directory.
