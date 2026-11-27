@@ -1041,7 +1041,7 @@ fn a_generated_contract_crate_is_a_component() {
         r.read(&pkg_path("BUILD_windows")),
         "no shell syntax to differ on"
     );
-    assert_eq!(build, canonical_contract_build(C));
+    assert_eq!(build, canonical_contract_build(C, None));
     assert!(build.contains("\ncargo test -p vos-fixture-contract --lib --tests -- --nocapture\n"));
     assert!(build.contains("-- check-contract .\n"));
     assert!(build.ends_with(&format!("-- check-component .\n{MARKER}\n")));
@@ -1426,10 +1426,10 @@ fn the_spec_states_the_budget_and_every_code() {
     );
     assert_eq!(MAX_LEMMAS, 64);
     for code in [
-        "CK01", "CK02", "CK03", "CK04", "CK05", "CK06", "CK07", "CK08", "CK09", "CK10",
+        "CK01", "CK02", "CK03", "CK04", "CK05", "CK06", "CK07", "CK08", "CK09", "CK10", "CK11",
     ] {
         assert!(
-            spec.contains(&format!("| `{code}` |")),
+            spec.contains(&format!("| `{code}`")),
             "VOS04 5.6 has no row for {code}"
         );
     }

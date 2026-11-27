@@ -37,7 +37,7 @@ use std::path::Path;
 
 use coding_adventures_warrant_grammar::binding::parse_evidence_bindings;
 use vos_manifest::warrant::{claim_calls, declared_names};
-use vos_shape_check::manifest::{is_backlog_ref, Excuse};
+use vos_shape_check::manifest::{is_backlog_ref, Excuse, SatLane};
 use vos_shape_check::DEFAULT_EVIDENCE_FEATURES;
 
 use crate::check::WARRANT_STACK_BYTES;
@@ -454,9 +454,14 @@ pub fn canonical_build(g: &GenInputs, windows: bool) -> String {
 ///   unit tests (lib and every integration test), doc tests      the trait is declarations only
 ///   vos-shape-check, the capability analyzer                    the K-class rules
 ///   vos-link check-contract .      the lemmas, the mutants, the config mutants, the table
+///   vos-model-sat check .          ONLY when vos.toml says `sat = "model"` (VOS31 10.1)
 ///   vos-link check-component .     last: this file byte for byte, the file set, the row
 /// ```
-pub fn canonical_contract_build(krate: &str) -> String {
+///
+/// `sat` is the parsed `vos.toml` key of VOS31 10.3.  `None` (the key is absent) generates
+/// exactly the region this function wrote before VOS-040c, so every contract crate that does
+/// not opt in keeps its BUILD files byte for byte.
+pub fn canonical_contract_build(krate: &str, sat: Option<SatLane>) -> String {
     let vl = "../../../programs/rust/vos-link/Cargo.toml";
     let mut s = String::new();
     let mut l = |line: String| {
@@ -481,6 +486,10 @@ pub fn canonical_contract_build(krate: &str) -> String {
     l(format!(
         "cargo run -q --manifest-path {vl} -- check-contract ."
     ));
+    if sat == Some(SatLane::Model) {
+        l(SAT_COMMENT.to_string());
+        l(SAT_LINE.to_string());
+    }
     l(format!(
         "cargo run -q --manifest-path {vl} -- check-component ."
     ));
@@ -488,10 +497,23 @@ pub fn canonical_contract_build(krate: &str) -> String {
     s
 }
 
+/// The comment above [`SAT_LINE`]: it says why the line exists and what it is NOT.
+pub const SAT_COMMENT: &str = "# VOS31 10.1: the host model-SAT lane (sat = \"model\" in vos.toml). It certifies the LEMMAS of this contract's model, not any implementation.";
+
+/// The model-SAT lane's BUILD line (VOS31 10.1), the same text in `BUILD` and `BUILD_windows`.
+/// `--release`: SAT in a debug build is slow.  The lane lives in a standalone cargo root, so the
+/// line names its manifest the way the `vos-link` lines do, and it runs from the crate directory
+/// (the loader refuses a `..` in the crate path).  `vos-link` cannot CALL the lane (the Cargo
+/// edge runs the other way: `vos-model-sat` depends on `vos-link`), so `check-contract` rule
+/// CK11 checks that this line is present and that the committed table is well formed, and the
+/// line itself does the solving.
+pub const SAT_LINE: &str = "cargo run -q --release --manifest-path ../../../programs/rust/vos-model-sat/Cargo.toml -- check .";
+
 /// `vos-link gen-build` for a contract crate: write both BUILD files, keeping the author's
 /// lines below the marker.
 fn gen_build_contract(
     layout: &crate::inputs::Layout,
+    vt: &vos_shape_check::manifest::VosToml,
     mut out: Outcome,
 ) -> Result<Outcome, NoVerdict> {
     let mut wrote = Vec::new();
@@ -499,7 +521,7 @@ fn gen_build_contract(
         let existing = read_text(&layout.impl_dir.join(name), 256 * 1024)?.unwrap_or_default();
         let text = format!(
             "{}{}",
-            canonical_contract_build(&layout.impl_pkg),
+            canonical_contract_build(&layout.impl_pkg, vt.sat),
             trailer_of(&existing)
         );
         if text != existing {
@@ -791,7 +813,7 @@ pub fn gen_build(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outcome, N
     };
     out.header = format!("crate {}", layout.impl_pkg);
     if vt.kind == Some(vos_shape_check::manifest::Kind::Contract) {
-        return gen_build_contract(&layout, out);
+        return gen_build_contract(&layout, &vt, out);
     }
     let g = match load_inputs(&layout, &vt)? {
         Ok(g) => g,

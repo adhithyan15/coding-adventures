@@ -14,9 +14,9 @@
 //! print as `"pending"`, never as a guess.
 
 use crate::chain::Loaded;
+use crate::claims::ClaimReport;
 use crate::digest::Digest;
 use crate::error::CheckError;
-use crate::goals::CheckedGoal;
 use crate::json::Json;
 use lean_kernel::Name;
 use lean_kernel::NamePart;
@@ -41,11 +41,17 @@ pub struct Provided {
     pub allow_list: bool,
     pub signoff: bool,
     pub goals_list: bool,
+    pub registry: bool,
     /// `"signed"`, `"allow-listed"` or `"unvetted"`.
     pub base_trust: &'static str,
 }
 
-pub fn success_report(l: &Loaded, p: &Provided, goals: &[CheckedGoal], aggregate: &Digest) -> Json {
+pub fn success_report(
+    l: &Loaded,
+    p: &Provided,
+    claims: &[ClaimReport],
+    aggregate: &Digest,
+) -> Json {
     let files = l
         .files
         .iter()
@@ -60,19 +66,10 @@ pub fn success_report(l: &Loaded, p: &Provided, goals: &[CheckedGoal], aggregate
             ])
         })
         .collect();
-    let claims = goals
-        .iter()
-        .map(|g| {
-            Json::Obj(vec![
-                ("claim", Json::s(&g.claim_id)),
-                ("theorem", Json::s(dotted(&g.theorem))),
-                ("goal_digest", Json::s(g.digest.hex())),
-                ("goal_listed", Json::Bool(g.listed)),
-            ])
-        })
-        .collect();
     Json::Obj(vec![
         ("ok", Json::Bool(true)),
+        ("pif_version", Json::Num(1)),
+        ("logic_version", Json::Num(1)),
         ("base_environment", Json::s(l.base_environment.hex())),
         ("environment", Json::s(l.environment.hex())),
         ("base_trust", Json::s(p.base_trust)),
@@ -115,8 +112,19 @@ pub fn success_report(l: &Loaded, p: &Provided, goals: &[CheckedGoal], aggregate
         ("goals_sha256", Json::s(aggregate.hex())),
         // The aggregate is *verified* only when a sign-off supplied one to compare with.
         ("goals_sha256_verified", Json::Bool(p.signoff)),
+        (
+            "registry",
+            Json::s(if p.registry {
+                "checked"
+            } else {
+                "not-provided"
+            }),
+        ),
         ("files", Json::Arr(files)),
-        ("claims", Json::Arr(claims)),
+        (
+            "claims",
+            Json::Arr(claims.iter().map(|c| c.json(l)).collect()),
+        ),
     ])
 }
 
