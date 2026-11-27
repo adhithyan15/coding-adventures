@@ -1,0 +1,4 @@
+(library
+ (name unix_history_simulator)
+ (public_name unix-history-simulator)
+ (wrapped false))

@@ -1,0 +1,15 @@
+opam-version: "2.0"
+name: "unix-history-simulator"
+version: "0.1.0"
+synopsis: "Reusable in-memory First Edition Unix teaching model"
+description: "Pure HOS00 filesystem, descriptor-table, and kernel components."
+maintainer: "Coding Adventures"
+authors: "Coding Adventures"
+license: "MIT"
+depends: [
+  "ocaml" {>= "5.0"}
+  "dune" {>= "3.16"}
+]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]

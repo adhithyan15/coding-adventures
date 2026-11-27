@@ -65,6 +65,11 @@ commands use `cmd /C` syntax; no POSIX redirection, shell tests, or path
 assumptions are allowed. The same component checks and nine-case replay run on
 both fronts when the corresponding runtime is available.
 
+The current Linux/macOS workflow pins OCaml 5.2.1, opam 2.5.2 and Dune 3.17.2,
+and Swift 6.3.3. Windows CI uses its reviewed Swift 6.4.2 toolchain. Local
+validation must report actual compiler versions and must not treat a different
+local runtime as proof of the CI-pinned run.
+
 The Go build-tool external-input registry selects OCaml and Swift only for the
 canonical fixture, shared replay helper, shared build/replay driver where
 used, and the exact adapter project/source files consumed by that language.
