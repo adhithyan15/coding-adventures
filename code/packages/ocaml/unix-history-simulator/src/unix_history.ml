@@ -64,7 +64,7 @@ module Filesystem = struct
     else
       let parts =
         String.split_on_char '/' path
-        |> List.filter (fun part -> part <> "" && part <> ".")
+        |> List.filter (fun part -> part <> "")
       in
       Ok parts
 
@@ -75,6 +75,10 @@ module Filesystem = struct
         let rec descend stack remaining =
           match remaining with
           | [] -> Ok (List.hd stack)
+          | "." :: tail -> (
+              match List.hd stack with
+              | File _ -> Error ENOTDIR
+              | Directory _ -> descend stack tail)
           | ".." :: tail -> (
               match List.hd stack with
               | File _ -> Error ENOTDIR

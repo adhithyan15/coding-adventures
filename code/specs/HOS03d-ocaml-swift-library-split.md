@@ -27,6 +27,11 @@ independent byte offset per open descriptor, advances offsets only by bytes
 returned, and frees only the closed slot. Failed operations leave component
 state unchanged.
 
+Path traversal checks that the current node is a directory before processing
+each component, including `.` and `..`. A dot component leaves a directory
+unchanged, but `/file/.` fails with `ENOTDIR` because traversal has already
+reached a regular file. Dot-dot from root remains at root.
+
 Descriptor-table capacity is explicit and validated: negative capacities are
 rejected as invalid input; zero capacity is valid and simply cannot allocate a
 descriptor. Constructors must not silently clamp a negative capacity to zero.

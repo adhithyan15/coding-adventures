@@ -16,6 +16,16 @@ final class UnixHistorySimulatorTests: XCTestCase {
         XCTAssertThrowsError(try filesystem.openFile("/hello/..")) {
             XCTAssertEqual($0 as? SimulatorError, .ENOTDIR)
         }
+        XCTAssertThrowsError(try filesystem.openFile("/hello/.")) {
+            XCTAssertEqual($0 as? SimulatorError, .ENOTDIR)
+        }
+        XCTAssertThrowsError(try filesystem.list("/hello/.")) {
+            XCTAssertEqual($0 as? SimulatorError, .ENOTDIR)
+        }
+        let dotDirectory = try filesystem.list("/etc/./")
+        XCTAssertEqual(dotDirectory.inode, 4)
+        XCTAssertEqual(dotDirectory.names, ["notes"])
+        XCTAssertEqual(try filesystem.openFile("/../../hello").inode, 2)
         XCTAssertThrowsError(try filesystem.openFile("/hello/")) {
             XCTAssertEqual($0 as? SimulatorError, .ENOTDIR)
         }

@@ -89,14 +89,14 @@ public struct FileSystem {
         guard !path.isEmpty, !path.utf8.contains(0) else { throw SimulatorError.EINVAL }
         let parts = path.split(separator: "/", omittingEmptySubsequences: true).map(String.init)
         var stack = [root]
-        for part in parts where part != "." {
-            if part == ".." {
-                guard case .directory = stack[stack.count - 1] else { throw SimulatorError.ENOTDIR }
-                if stack.count > 1 { stack.removeLast() }
-                continue
-            }
+        for part in parts {
             guard case let .directory(_, _, entries) = stack[stack.count - 1] else {
                 throw SimulatorError.ENOTDIR
+            }
+            if part == "." { continue }
+            if part == ".." {
+                if stack.count > 1 { stack.removeLast() }
+                continue
             }
             guard let child = entries.first(where: { $0.name == part }) else {
                 throw SimulatorError.ENOENT
