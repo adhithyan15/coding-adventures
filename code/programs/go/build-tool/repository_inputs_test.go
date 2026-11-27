@@ -1499,6 +1499,14 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 }
 
 func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
+	for _, consumer := range repositoryInputConsumers {
+		if consumer.name == "ruby/unix-history-simulator" {
+			t.Fatal("historical Unix fixture must not register the obsolete hyphenated Ruby identity")
+		}
+	}
+	if inputs := repositoryInputsForPackage("ruby/unix-history-simulator"); inputs != nil {
+		t.Fatalf("obsolete hyphenated Ruby identity has fallback inputs %v, want none", inputs)
+	}
 	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
 	packageNames := map[string]string{
 		"c": "c/unix-history-simulator", "cpp": "cpp/unix-history-simulator",
@@ -1674,7 +1682,7 @@ func TestRubyHistoricalUnixFixtureUsesDiscoveredPackageIdentity(t *testing.T) {
 
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	root := t.TempDir()
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "rust", "typescript"}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
 		t.Fatal(err)
