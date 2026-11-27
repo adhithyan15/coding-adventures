@@ -1,0 +1,5 @@
+# needs-toolchain: python
+cabal build unix-history-simulator
+cabal test unix-history-simulator:simulator-test
+cabal build historical-unix-fixture-cli:exe:fixture-cli
+python ..\..\..\specs\fixtures\historical-unix-v1\replay_cli.py cabal run historical-unix-fixture-cli:exe:fixture-cli --
