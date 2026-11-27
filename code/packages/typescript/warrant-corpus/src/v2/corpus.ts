@@ -1,5 +1,5 @@
 /**
- * # Reading a committed v2 corpus at `ir.core`
+ * # Reading a committed v2 corpus at `ir.core`, `ir.fixed` and `ir.tuple`
  *
  * This is the **library half** of the lane's corpus reader: it loads a
  * `<module>-warrant-v2/` directory, classifies every suite and control by what
@@ -14,6 +14,9 @@
  * counted in `not_live`, and *not compiled*; everything else runs.  A lane at
  * `ir.core` therefore still runs the `ir.core` suites of lzw, x25519 and
  * wasm-leb128, whose models, ops and other suites need `ir.fixed` and `ir.tuple`.
+ * (This lane implements both since S10f, so for it all four committed corpora
+ * are live; a lane handed a smaller `levels` list, as the tests do, still
+ * records the rest `not-live`.)
  *
  * What the library reports is exactly **suites** and **controls**:
  *

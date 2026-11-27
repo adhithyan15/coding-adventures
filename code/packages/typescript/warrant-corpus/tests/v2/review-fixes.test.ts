@@ -80,8 +80,9 @@ describe("B2: names that Object.prototype also has (section 2.2 rule 4, section 
       const raw = JSON.parse(`{"d": "${name}"}`);
       expect(runCase("v2-domain", { type: "U8", descriptor: raw, index: 0, requires: ["ir.core"] }), name).toEqual({ error: "descriptor" });
     }
-    // the kinds of reserved levels stay level-missing
-    expect(runCase("v2-domain", { type: "U8", descriptor: { d: "tuple" }, index: 0, requires: ["ir.core"] })).toEqual({ error: "level-missing" });
+    // the kinds of levels this lane lacks stay level-missing (`tuple` is held since S10f, so it is a plain descriptor refusal here)
+    expect(runCase("v2-domain", { type: "U8", descriptor: { d: "variant" }, index: 0, requires: ["ir.core"] })).toEqual({ error: "level-missing" });
+    expect(runCase("v2-domain", { type: "U8", descriptor: { d: "tuple" }, index: 0, requires: ["ir.core"] })).toEqual({ error: "descriptor" });
   });
 });
 
@@ -577,7 +578,7 @@ describe("N6: a missing level is named by the one rule (D63)", () => {
     const table = readTypeTable({});
     const named = (text: string): string | undefined => {
       try {
-        decodeJson([], parseType(text), table);
+        decodeJson(text.startsWith("(") ? ["1", []] : [], parseType(text), table);
       } catch (error) {
         return (error as KitError).level;
       }
@@ -585,15 +586,17 @@ describe("N6: a missing level is named by the one rule (D63)", () => {
     };
     expect(named("List<Option<U8>>")).toBe("ir.list");
     expect(named("Option<U8>")).toBe("ir.data");
-    expect(named("(U8,U8)")).toBe("ir.tuple");
+    // a tuple is held (S10f): its level is named only for what is inside it
+    expect(named("(U8,Option<U8>)")).toBe("ir.data");
+    expect(named("(U8,List<Option<U8>>)")).toBe("ir.list");
     expect(named("List<(U8,U8)>")).toBe("ir.list");
   });
 });
 
 describe("the closed run of the kit with the corrected harness", () => {
-  it("still runs every case it implements and none fails (839 of 839; S10d's 613 ir.fixed and ir.tuple cases are skipped)", () => {
+  it("runs every case of the six categories and none fails (1,452 of 1,452: S10f runs the 613 ir.fixed and ir.tuple cases S10d added)", () => {
     const report = runKit(KIT_DIR, { sequential: false });
     expect(report.failed).toBe(0);
-    expect(report.run).toBe(839);
+    expect(report.run).toBe(1452);
   });
 });

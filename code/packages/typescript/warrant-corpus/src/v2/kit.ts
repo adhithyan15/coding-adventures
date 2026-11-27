@@ -94,7 +94,7 @@ export interface KitReport {
 
 /** Options of {@link runKit}. */
 export interface KitOptions {
-  /** The levels the runner implements (default: this lane's, `ir.core`). */
+  /** The levels the runner implements (default: this lane's, `ir.core`, `ir.fixed` and `ir.tuple`). */
   readonly levels?: readonly string[];
   /** Also walk `also_sequential` chunk cases from chunk 0 (default true; the slow part of the kit). */
   readonly sequential?: boolean;

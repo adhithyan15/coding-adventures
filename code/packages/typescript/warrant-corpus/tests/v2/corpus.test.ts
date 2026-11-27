@@ -1,11 +1,15 @@
 /**
- * The four committed v2 corpora, read by this lane at `ir.core` (VER04r
- * sections 4.1, 9.1, 14; [D64], [D65]).
+ * The four committed v2 corpora, read by this lane at `ir.core` alone and at
+ * its full levels, `ir.core`, `ir.fixed` and `ir.tuple` (VER04r sections 4.1,
+ * 9.1, 14; [D64], [D65]).
  *
- * A lane at `ir.core` still runs the `ir.core` suites of a corpus that also
- * holds suites of other levels, records the rest `not-live` by what they
+ * A lane at `ir.core` alone still runs the `ir.core` suites of a corpus that
+ * also holds suites of other levels, records the rest `not-live` by what they
  * reach, compiles every `ir.core` fault row, and writes no row for a model or
- * an op.
+ * an op.  At the full levels (S10f) every suite and every control of all four
+ * corpora is live, and each of the 46 million cases of wasm-leb128 reproduces
+ * the digests the oracle committed: that is the evidence that the evaluators
+ * of the two levels agree with it on real corpora, beside the kit.
  */
 import { cpSync, readFileSync, readdirSync, symlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -13,22 +17,34 @@ import { describe, expect, it } from "vitest";
 import { parseTfv } from "../../src/tfv.ts";
 import { KitError } from "../../src/v2/errors.ts";
 import { MAX_IR_WORK_SLIM, MAX_TOTAL_WORK_SLIM, checkWork, chunkFileName, loadV2Corpus, runSuite } from "../../src/v2/corpus.ts";
+import { enumerateChunk, readChunkFile } from "../../src/v2/chunks.ts";
 import { type OpSig, readOp } from "../../src/v2/ir.ts";
 import { parseType, readTypeTable, typeLevels } from "../../src/v2/types.ts";
 import { decodeJson, decodeTfv } from "../../src/v2/values.ts";
 import { CORPORA, tempDir } from "./support.ts";
 
 // name: [live suites, not-live suites, ok controls, not-live controls, cases of the live suites]
-const EXPECTED: Record<string, [number, number, number, number, number]> = {
+const CORE_ONLY: Record<string, [number, number, number, number, number]> = {
   "ct-compare": [9, 0, 7, 1, 572_109],
   x25519: [6, 2, 2, 3, 10_500],
   lzw: [4, 17, 2, 3, 121_168],
   "wasm-leb128": [4, 40, 2, 18, 2_000],
 };
+// At ir.core, ir.fixed and ir.tuple (S10f) nothing is not-live: the cases are the whole of each corpus.
+const ALL_LEVELS: Record<string, [number, number, number, number, number]> = {
+  "ct-compare": [9, 0, 8, 0, 572_109],
+  x25519: [8, 0, 5, 0, 76_130],
+  lzw: [21, 0, 5, 0, 17_563_819],
+  "wasm-leb128": [44, 0, 20, 0, 46_566_930],
+};
+const LANES = [
+  { label: "ir.core", levels: ["ir.core"], expected: CORE_ONLY },
+  { label: "ir.core, ir.fixed and ir.tuple", levels: ["ir.core", "ir.fixed", "ir.tuple"], expected: ALL_LEVELS },
+];
 
-describe.each(CORPORA)("$name-warrant-v2 at ir.core", ({ name, dir }) => {
-  const corpus = loadV2Corpus(dir);
-  const [live, notLive, ok, notLiveControls, cases] = EXPECTED[name] as [number, number, number, number, number];
+describe.each(CORPORA.flatMap((c) => LANES.map((lane) => ({ ...c, lane }))))("$name-warrant-v2 at $lane.label", ({ name, dir, lane }) => {
+  const corpus = loadV2Corpus(dir, lane.levels);
+  const [live, notLive, ok, notLiveControls, cases] = lane.expected[name] as [number, number, number, number, number];
 
   it("classifies suites and controls by what they reach", () => {
     expect(corpus.suites.filter((s) => s.state === "live")).toHaveLength(live);
@@ -56,14 +72,34 @@ describe.each(CORPORA)("$name-warrant-v2 at ir.core", ({ name, dir }) => {
       total += run.cases;
     }
     expect(total).toBe(cases);
-  }, 120_000);
+    // wasm-leb128 is 46.6 million cases at the full levels (about 35 s here, several times that on a CI runner).
+  }, 900_000);
 
   it("runs only the corpus-chosen slim chunks at slim depth", () => {
-    for (const record of corpus.suites.filter((s) => s.state === "live")) {
+    // The lane's pre-flight meter counts the worst case of section 14: every `ok` control re-runs the whole slim set of every
+    // claim in its `required_claims`.  wasm-leb128 has 172 `unproven` entries (no stand-in, so no witness chunk to stop at) and
+    // so counts 37,782,980 ordinals against the 32,000,000 limit once every suite is live: the meter refuses it before any case.
+    // (Section 5.6 has a control stop at its first failure; counting that precisely is the corpus runner's, S7b.)  The slim
+    // chunks themselves are enumerated directly here, against the file, so that they are checked all the same.
+    const overMeter = name === "wasm-leb128" && lane.levels.includes("ir.tuple");
+    const slim = corpus.suites.filter((s) => s.state === "live");
+    if (overMeter) {
+      expect(() => checkWork(corpus, "slim")).toThrow(/total work limit/);
+      for (const record of slim) {
+        const suite = record.suite as NonNullable<typeof record.suite>;
+        const rows = readChunkFile(readFileSync(join(dir, "chunks", chunkFileName(suite.claim))), suite);
+        for (const index of suite.slimChunks) {
+          const result = enumerateChunk(suite, index);
+          expect([result.cases, result.calls, result.inputs, result.expected]).toEqual([rows[index]?.cases, rows[index]?.calls, rows[index]?.inputs, rows[index]?.expected]);
+        }
+      }
+      return;
+    }
+    for (const record of slim) {
       const run = runSuite(corpus, record, "slim");
       expect(run.chunks).toBe(record.suite?.slimChunks.length);
     }
-  }, 120_000);
+  }, 600_000);
 
   it("compiles every ir.core fault row and records the others not-live with a level", () => {
     for (const control of corpus.controls) {
@@ -235,14 +271,24 @@ describe("loading a hostile corpus directory", () => {
     const row = document.suites.find((s) => s["claim"] === "eq_u64_agrees") as Record<string, unknown>;
     row["requires"] = ["ir.core", "ir.fixed"];
     write(dir, document);
-    const corpus = loadV2Corpus(dir);
+    const corpus = loadV2Corpus(dir, ["ir.core"]);
     expect(corpus.suites.find((s) => s.id === row["id"])).toMatchObject({ state: "not-live", level: "ir.fixed" });
+    // The full lane implements ir.fixed, so the same row is live there; a row that declares ir.data is not-live.
+    expect(loadV2Corpus(dir).suites.find((s) => s.id === row["id"])).toMatchObject({ state: "live" });
+    row["requires"] = ["ir.core", "ir.data"];
+    // `levels` is the union of every requires (section 1.4): the control of ignore-high-bit keeps ir.fixed in it.
+    (document as unknown as { levels: string[] }).levels = ["ir.core", "ir.data", "ir.fixed"];
+    write(dir, document);
+    expect(loadV2Corpus(dir).suites.find((s) => s.id === row["id"])).toMatchObject({ state: "not-live", level: "ir.data" });
 
-    // A row that says ir.core but reaches ir.fixed is wrong: the generator said the lane could run it.
+    // A row that says ir.core but reaches ir.fixed (at a lane without it) or ir.data is wrong: the generator said the lane could run it.
     const wrong = copy();
     const other = corpusOf(wrong) as { suites: Record<string, unknown>[] };
     const victim = other.suites.find((s) => s["claim"] === "eq_agrees") as Record<string, unknown>;
     victim["body"] = ["eq", ["bit_not", ["lit", { type: "U8", value: "1" }]], ["lit", { type: "U8", value: "254" }]];
+    write(wrong, other);
+    expect(() => loadV2Corpus(wrong, ["ir.core"])).toThrow(/disagrees/);
+    victim["body"] = ["eq", ["some", ["lit", { type: "U8", value: "1" }]], ["some", ["lit", { type: "U8", value: "254" }]]];
     write(wrong, other);
     expect(() => loadV2Corpus(wrong)).toThrow(/disagrees/);
   });

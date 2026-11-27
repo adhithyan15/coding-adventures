@@ -15,6 +15,7 @@
  * | `U64 I64 Nat Int`       | `bigint`   | a double rounds past 2^53 (`MAX` and `MAX ^ 1` would be the *same* double) |
  * | `Bytes`, `Bytes<N>`     | `Uint8Array` |                                            |
  * | `Ok(v)` / `Err(CASE)`   | `{ok: v}` / `{err: "CASE"}` |                             |
+ * | tuple (`ir.tuple`)      | `unknown[]` | one host value per component, each in the host form of its own type |
  *
  * `number` is the host type of the narrow integers *only at this boundary and
  * inside the evaluator's own wrapping rules* (a 32-bit product goes through
@@ -37,18 +38,21 @@
  * | `I8 I16 I32 I64`             | `11`, then 8 bytes two's complement LE, sign-extended |
  * | `Bytes`, `Bytes<N>`          | `20`, u32-LE length, the bytes                |
  * | `Ok(v)` / `Err(E.V)`         | `50` plus inner / `51`, u32-LE length, UTF-8 case name |
+ * | tuple (`ir.tuple`)           | `64`, u32-LE component count, the components in order |
  *
- * (The tuple, `Option`, record and variant rows belong to `ir.tuple` and
- * `ir.data`; this lane does not implement them.)
+ * (The `Option`, record and variant rows belong to `ir.data` and `List` to
+ * `ir.list`; this lane does not implement them.  A tuple is the one composite
+ * it holds: it is self-delimiting because of its count and its tag, which is
+ * what lets one tuple nest in another without two values sharing bytes.)
  */
 
 import type { TfvValue } from "../values.ts";
 import { KitError } from "./errors.ts";
-import { firstMissing } from "./levels.ts";
+import { IMPLEMENTED_LEVELS, firstMissing } from "./levels.ts";
 import { MAX_WIDTH, type Ty, type TypeTable, type Width, showType, typeLevels } from "./types.ts";
 
 /** A runtime value (see the table above). */
-export type Value = boolean | number | bigint | Uint8Array | { readonly ok: unknown } | { readonly err: string };
+export type Value = boolean | number | bigint | Uint8Array | { readonly ok: unknown } | { readonly err: string } | readonly unknown[];
 
 /** The largest `Nat`/`U64` value. */
 export const U64_MAX = (1n << 64n) - 1n;
@@ -117,13 +121,14 @@ export function parseDecimal(text: unknown): bigint | undefined {
 function lackedLevel(ty: Ty): string {
   const levels = new Set<string>();
   typeLevels(ty, levels);
-  return firstMissing(levels, new Set(["ir.core"])) ?? "ir.data";
+  return firstMissing(levels, new Set(IMPLEMENTED_LEVELS)) ?? "ir.data";
 }
 
 /**
  * Decode `raw` (a parsed JSON value) to the host form of `ty`.  A type this
- * lane does not implement (a tuple, `Option`, record, variant or list) is
- * `level-missing`; every refusal of section 2.3 is `value`.
+ * lane does not implement (`Option`, a record, a variant or a list, wherever it
+ * stands, a tuple component included) is `level-missing`; every refusal of
+ * section 2.3 is `value`.
  */
 export function decodeJson(raw: unknown, ty: Ty, table: TypeTable): Value {
   const bad = (why: string): never => {
@@ -175,6 +180,12 @@ export function decodeJson(raw: unknown, ty: Ty, table: TypeTable): Value {
       }
       return bad("a Result key is ok or err");
     }
+    case "Tuple": {
+      // Section 2.3: an array in component order whose length equals the arity.
+      if (!Array.isArray(raw)) return bad("a tuple is a JSON array");
+      if (raw.length !== ty.of.length) return bad("a tuple has exactly its arity of components");
+      return ty.of.map((part, i) => decodeJson((raw as unknown[])[i], part, table));
+    }
     default:
       throw new KitError("level-missing", "this lane does not hold values of this type", { level: lackedLevel(ty) });
   }
@@ -192,8 +203,8 @@ export function decodeJson(raw: unknown, ty: Ty, table: TypeTable): Value {
  * are `T`/`F`, integers `I<decimal>` (a leading `-` allowed for a signed type),
  * bytes `X<hex>`, and **`Result` stays the `M` form of VER04i section 2.7**: a
  * one-entry map whose key is the text `ok` (the value) or `err` (the error case
- * name as text).  The tuple, variant and list forms belong to levels this lane
- * lacks.  Every refusal is `value`: the same range checks as the JSON decoder.
+ * name as text).  A tuple is `L<n> v1..vn`; the variant and list forms belong
+ * to levels this lane lacks.  Every refusal is `value`: the same range checks as the JSON decoder.
  */
 export function decodeTfv(raw: TfvValue, ty: Ty, table: TypeTable): Value {
   const bad = (why: string): never => {
@@ -233,6 +244,12 @@ export function decodeTfv(raw: TfvValue, ty: Ty, table: TypeTable): Value {
       if (key[1] === "err" && body[0] === "text" && cases !== undefined && cases.includes(body[1])) return { err: body[1] };
       return bad("a Result is ok or a declared error case");
     }
+    case "Tuple": {
+      // Section 2.5: tuples are `L<n> v1..vn`.
+      if (raw[0] !== "list" || raw[1].length !== ty.of.length) return bad("expected a TFV list of the tuple's arity");
+      const items = raw[1];
+      return ty.of.map((part, i) => decodeTfv(items[i] as TfvValue, part, table));
+    }
     default:
       throw new KitError("level-missing", "this lane does not hold values of this type", { level: lackedLevel(ty) });
   }
@@ -263,6 +280,8 @@ export function encodeJson(value: unknown, ty: Ty): unknown {
       if (result.err !== undefined) return { err: result.err };
       return { ok: ty.ok === null ? null : encodeJson(result.ok, ty.ok) };
     }
+    case "Tuple":
+      return (value as readonly unknown[]).map((part, i) => encodeJson(part, ty.of[i] as Ty));
     default:
       throw new KitError("level-missing", "this lane does not hold values of this type", { level: lackedLevel(ty) });
   }
@@ -278,6 +297,12 @@ export function encodeJson(value: unknown, ty: Ty): unknown {
  * one host form, so comparing the host forms is comparing the values.)
  */
 export function valuesEqual(a: unknown, b: unknown): boolean {
+  if (Array.isArray(a)) {
+    // A tuple: equal when every component is, in order (the static types are equal, so the lengths are).
+    if (!Array.isArray(b) || a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i += 1) if (!valuesEqual(a[i], b[i])) return false;
+    return true;
+  }
   if (a instanceof Uint8Array) {
     if (!(b instanceof Uint8Array) || a.length !== b.length) return false;
     for (let i = 0; i < a.length; i += 1) if (a[i] !== b[i]) return false;
@@ -438,6 +463,19 @@ export function makeWriter(ty: Ty): (sink: StreamSink, value: unknown) => void {
         sink.ensure(1);
         sink.buf[sink.pos++] = 0x50;
         (inner as (s: StreamSink, v: unknown) => void)(sink, result.ok);
+      };
+    }
+    case "Tuple": {
+      // `64`, the u32-LE component count, then each component by its own writer (section 2.4).
+      const writers = ty.of.map(makeWriter);
+      const count = writers.length;
+      return (sink, value) => {
+        const parts = value as readonly unknown[];
+        sink.ensure(5);
+        sink.buf[sink.pos] = 0x64;
+        sink.view.setUint32(sink.pos + 1, count, true);
+        sink.pos += 5;
+        for (let i = 0; i < count; i += 1) (writers[i] as (s: StreamSink, v: unknown) => void)(sink, parts[i]);
       };
     }
     default:

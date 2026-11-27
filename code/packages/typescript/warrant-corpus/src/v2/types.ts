@@ -520,6 +520,29 @@ export function isUndetermined(ty: Ty): boolean {
   }
 }
 
+/**
+ * Does `==` mean something on `ty` at the levels this lane implements?  `Bool`, every integer type, `Bytes`, `Result`
+ * and a tuple of such types.  (Records, variants and `Option` have a structural `==` too, but they are `ir.data`;
+ * `List` is `ir.list`; the ordering tags are defined on integers only.)
+ */
+export function hasEquality(ty: Ty): boolean {
+  switch (ty.k) {
+    case "Bool":
+    case "Int":
+    case "Nat":
+    case "U":
+    case "I":
+    case "Bytes":
+      return true;
+    case "Result":
+      return ty.ok === null || hasEquality(ty.ok);
+    case "Tuple":
+      return ty.of.every(hasEquality);
+    default:
+      return false;
+  }
+}
+
 /** Is `ty` a fixed-width integer type? */
 export function isFixed(ty: Ty): ty is { readonly k: "U" | "I"; readonly w: Width } {
   return ty.k === "U" || ty.k === "I";
@@ -540,7 +563,7 @@ export function isInteger(ty: Ty): boolean {
 // ---------------------------------------------------------------------------
 
 /** Can a value of error type `err` (or an undetermined one with `cands`) stand where `target` is wanted? */
-function errorsMeet(a: { err: string | null; cands?: readonly string[] }, b: { err: string | null; cands?: readonly string[] }): string | null | undefined {
+export function errorsMeet(a: { err: string | null; cands?: readonly string[] }, b: { err: string | null; cands?: readonly string[] }): string | null | undefined {
   if (a.err !== null && b.err !== null) return a.err === b.err ? a.err : undefined;
   if (a.err === null && b.err === null) {
     if (a.cands === undefined) return b.cands === undefined ? null : b.cands.length === 1 ? (b.cands[0] as string) : null;
@@ -600,6 +623,54 @@ export function unify(a: Ty, b: Ty): Ty | null {
     return cands === undefined ? { k: "Result", ok, err } : { k: "Result", ok, err, cands };
   }
   return null;
+}
+
+/**
+ * R96 to R98: the **common type of a fault row** (a rewrite and the parameter it replaces, a `post` or `replace`
+ * expression and the op's result, and each branch of an `if` or arm of a `match` against the declared type of its
+ * position), or `null`.
+ *
+ * At the top, and under `Option` and `Result`, this is R94's relation, which is `unify` (R51): equal types, `Nat` and
+ * `Int` to `Int`, two `Bytes` types of different or forgotten width to plain `Bytes`.  Under a **tuple** it is the
+ * narrower relation of R96, which lifts only what a fault template needs: equal types, `Nat` and `Int` (to `Int`),
+ * `Option` and `Result` whose components are related the same way (a `Result` with the same error type or an
+ * undetermined one, R97), and a nested tuple likewise.  `Bytes` types of different width do **not** unify there
+ * (R67's second test: a one-byte literal in a `Bytes<2>` component is refused), and the narrowing holds at every
+ * depth below a tuple.  An undetermined component (a bare `ok`, a bare `err`) has a common type with whatever stands
+ * opposite it, and the common type takes the determined side (R97).
+ */
+export function faultCommon(a: Ty, b: Ty, narrow = false): Ty | null {
+  if (a.k === "Tuple" && b.k === "Tuple") {
+    if (a.of.length !== b.of.length) return null;
+    const parts: Ty[] = [];
+    for (let i = 0; i < a.of.length; i += 1) {
+      const part = faultCommon(a.of[i] as Ty, b.of[i] as Ty, true);
+      if (part === null) return null;
+      parts.push(part);
+    }
+    return { k: "Tuple", of: parts };
+  }
+  if (a.k === "Result" && b.k === "Result") {
+    let ok: Ty | null;
+    if (a.ok === null) ok = b.ok;
+    else if (b.ok === null) ok = a.ok;
+    else {
+      ok = faultCommon(a.ok, b.ok, narrow);
+      if (ok === null) return null;
+    }
+    const err = errorsMeet(a, b);
+    if (err === undefined) return null;
+    const cands = a.err === null && b.err === null ? commonCands(a, b) : undefined;
+    return cands === undefined ? { k: "Result", ok, err } : { k: "Result", ok, err, cands };
+  }
+  if (a.k === "Option" && b.k === "Option") {
+    if (a.of === null) return b;
+    if (b.of === null) return a;
+    const inner = faultCommon(a.of, b.of, narrow);
+    return inner === null ? null : { k: "Option", of: inner };
+  }
+  if (a.k === "Bytes" && b.k === "Bytes" && narrow) return sameType(a, b) ? a : null;
+  return unify(a, b);
 }
 
 function commonCands(a: { cands?: readonly string[] }, b: { cands?: readonly string[] }): readonly string[] | undefined {
