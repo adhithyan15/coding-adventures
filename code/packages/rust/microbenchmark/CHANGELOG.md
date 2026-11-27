@@ -1,5 +1,7 @@
 # Changelog
 
+- Reject duplicate decoded JSON object members during raw report replay.
+
 ## 0.1.0
 
 - Reject more than 10,000 pairs in public analysis before ratio allocation.
@@ -11,3 +13,5 @@
   `--rustc-version` label; remove the compiler-querying Cargo build script so
   library consumers do not trigger that extra subprocess.
 - Accept any nonblank workload producer identifier during single-report replay while keeping the array CLI workload unchanged.
+- Require complete optional report metadata, reject empty/NUL descriptive and profile strings, and preserve empty invocation arguments during replay.
+- Validate CLI report metadata before output so empty explicit revision labels cannot emit invalid reports.
