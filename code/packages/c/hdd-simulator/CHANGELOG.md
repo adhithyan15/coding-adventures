@@ -9,3 +9,5 @@
 - Added a strict bounded trace adapter shared by native tests and separate
   fixture/history libFuzzer targets, with a tick-stepping full-media oracle,
   refusal sentinel checks, fixed seeds, and sanitizer/coverage receipts.
+- Kept the bounded fixture adapter warning-clean on MSVC when timing fields are
+  populated only for valid timing probes.
