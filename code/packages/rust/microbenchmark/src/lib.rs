@@ -799,10 +799,25 @@ mod tests {
 
         let mut generic_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
         generic_metadata["workload"] = serde_json::Value::String("dependent-link-order".to_owned());
+        generic_metadata["invocation"] = serde_json::json!([""]);
+        generic_metadata["revision"] = serde_json::json!("r");
+        generic_metadata["runtime"] = serde_json::json!("Rust");
+        generic_metadata["os"] = serde_json::json!("test");
+        generic_metadata["arch"] = serde_json::json!("test");
         assert_eq!(
             Report::from_json(&generic_metadata.to_string()).unwrap(),
             report
         );
+
+        let mut empty_invocation: serde_json::Value = serde_json::from_str(&json).unwrap();
+        empty_invocation["workload"] = serde_json::json!("dependent-link-order");
+        empty_invocation["invocation"] = serde_json::json!([]);
+        empty_invocation["revision"] = serde_json::json!("r");
+        empty_invocation["runtime"] = serde_json::json!("Rust");
+        empty_invocation["os"] = serde_json::json!("test");
+        empty_invocation["arch"] = serde_json::json!("test");
+        empty_invocation["profile"] = serde_json::json!("release");
+        assert_eq!(Report::from_json(&empty_invocation.to_string()).unwrap(), report);
 
         for value in [
             serde_json::Value::String(String::new()),
@@ -814,7 +829,7 @@ mod tests {
             serde_json::json!([]),
             serde_json::json!({}),
         ] {
-            let mut malformed_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
+            let mut malformed_metadata = empty_invocation.clone();
             malformed_metadata["workload"] = value;
             assert!(Report::from_json(&malformed_metadata.to_string()).is_err());
         }
@@ -823,6 +838,53 @@ mod tests {
         let mut unknown: serde_json::Value = serde_json::from_str(&json).unwrap();
         unknown["surprise"] = serde_json::Value::Bool(true);
         assert!(Report::from_json(&unknown.to_string()).is_err());
+    }
+
+    #[test]
+    fn report_replay_validates_optional_metadata_as_a_complete_group() {
+        let core = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" }
+        });
+        let mut complete = core.clone();
+        complete["workload"] = serde_json::json!("generic-workload");
+        complete["invocation"] = serde_json::json!([]);
+        complete["revision"] = serde_json::json!("r");
+        complete["runtime"] = serde_json::json!("Rust");
+        complete["os"] = serde_json::json!("test");
+        complete["arch"] = serde_json::json!("test");
+        assert!(Report::from_json(&complete.to_string()).is_ok());
+
+        for field in ["workload", "invocation", "revision", "runtime", "os", "arch"] {
+            let mut partial = complete.clone();
+            partial.as_object_mut().unwrap().remove(field);
+            assert!(Report::from_json(&partial.to_string()).is_err(), "accepted missing {field}");
+        }
+        let mut profile_only = core.clone();
+        profile_only["profile"] = serde_json::json!("release");
+        assert!(Report::from_json(&profile_only.to_string()).is_err());
+
+        for field in ["revision", "runtime", "os", "arch"] {
+            for invalid in ["", "bad\0value"] {
+                let mut malformed = complete.clone();
+                malformed[field] = serde_json::json!(invalid);
+                assert!(Report::from_json(&malformed.to_string()).is_err(), "accepted {field}={invalid:?}");
+            }
+        }
+        for invalid in ["", "bad\0value"] {
+            let mut malformed = complete.clone();
+            malformed["profile"] = serde_json::json!(invalid);
+            assert!(Report::from_json(&malformed.to_string()).is_err(), "accepted profile={invalid:?}");
+        }
+        let mut nul_arg = complete.clone();
+        nul_arg["invocation"] = serde_json::json!(["bad\0arg"]);
+        assert!(Report::from_json(&nul_arg.to_string()).is_err());
+        let mut empty_arg = complete;
+        empty_arg["invocation"] = serde_json::json!([""]);
+        assert!(Report::from_json(&empty_arg.to_string()).is_ok());
     }
 
     #[test]

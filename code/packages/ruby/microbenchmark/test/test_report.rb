@@ -67,22 +67,52 @@ class MicrobenchmarkReportTest < Minitest::Test
     assert_equal simple_report.pairs, parsed.pairs
   end
 
-  def test_workload_metadata_is_validated_before_core_projection
-    base = JSON.generate(simple_report.to_h).sub(/\}\z/, "")
-    accepted = [
-      '"dependent-link-order"', '"\\u2003"', '"\\ud83d\\ude00"',
-      '"\\ufffd"', '"\\\\uD800"'
-    ]
-    accepted.each do |token|
-      assert_equal simple_report.pairs, MB.replay_json("#{base},\"workload\":#{token}}").pairs
-    end
+  def test_complete_metadata_group_is_validated_before_core_projection
+    report = simple_report
+    complete = report.to_h.merge(
+      "workload" => "dependent-link-order",
+      "invocation" => [],
+      "revision" => "r",
+      "runtime" => "Ruby",
+      "os" => "test",
+      "arch" => "test"
+    )
+    assert_equal report, MB.replay_report(complete)
+    assert_equal report, MB.replay_json(JSON.generate(complete))
+    assert_equal report, MB.replay_report(complete.merge("invocation" => [""]))
+    assert_equal report, MB.replay_json(JSON.generate(complete.merge("invocation" => [""])))
 
-    rejected = [
-      '""', '" \\t\\n\\r\\f\\u000b"', '"\\u0000"', '"x\\u0000y"',
-      "null", "17", "true", "[]", '"\\ud800"', '"\\udfff"'
-    ]
-    rejected.each do |token|
-      assert_raises(ArgumentError) { MB.replay_json("#{base},\"workload\":#{token}}") }
+    %w[workload invocation revision runtime os arch].each do |field|
+      partial = complete.dup
+      partial.delete(field)
+      assert_raises(ArgumentError, "accepted missing #{field}") { MB.replay_report(partial) }
+      assert_raises(ArgumentError, "accepted missing #{field}") { MB.replay_json(JSON.generate(partial)) }
+    end
+    profile_only = report.to_h.merge("profile" => "release")
+    assert_raises(ArgumentError) { MB.replay_report(profile_only) }
+    assert_raises(ArgumentError) { MB.replay_json(JSON.generate(profile_only)) }
+
+    %w[revision runtime os arch profile].each do |field|
+      ["", "bad\0value"].each do |invalid|
+        malformed = complete.merge("profile" => "release", field => invalid)
+        assert_raises(ArgumentError, "accepted #{field}=#{invalid.inspect}") { MB.replay_report(malformed) }
+        assert_raises(ArgumentError, "accepted #{field}=#{invalid.inspect}") { MB.replay_json(JSON.generate(malformed)) }
+      end
+    end
+    ["", " \t\n\r\f\v", "\0", "x\0y"].each do |invalid|
+      malformed = complete.merge("workload" => invalid)
+      assert_raises(ArgumentError) { MB.replay_report(malformed) }
+      assert_raises(ArgumentError) { MB.replay_json(JSON.generate(malformed)) }
+    end
+    [nil, [1], ["bad\0arg"]].each do |invalid|
+      malformed = complete.merge("invocation" => invalid)
+      assert_raises(ArgumentError) { MB.replay_report(malformed) }
+      assert_raises(ArgumentError) { MB.replay_json(JSON.generate(malformed)) }
+    end
+    ["\u2003", "😀", "\uFFFD", "\\uD800"].each do |accepted|
+      generic = complete.merge("workload" => accepted)
+      assert_equal report, MB.replay_report(generic)
+      assert_equal report, MB.replay_json(JSON.generate(generic))
     end
   end
 

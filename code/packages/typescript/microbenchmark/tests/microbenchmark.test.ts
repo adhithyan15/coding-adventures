@@ -115,17 +115,55 @@ describe("paired microbenchmarks", () => {
     expect(replayed.pairs.every((pair) => BigInt(pair.baseline_ns) > 0n && BigInt(pair.candidate_ns) > 0n)).toBe(true);
   });
 
-  it("validates workload metadata before projecting it from core replay", () => {
+  it("validates complete metadata before projecting it from core replay", () => {
     let tick = 0n;
     const report = collect((n) => n, (n) => n, 1n,
       { ...defaults(), pairs: 1, target_ns: 1n }, () => (tick += 1n));
-    const base = stringifyLosslessJson(report).slice(0, -1);
-    const withWorkload = (token: string) => `${base},"workload":${token}}`;
-    for (const accepted of ["\"dependent-link-order\"", "\"\\u2003\"", "\"\\ud83d\\ude00\"", "\"\\ufffd\"", "\"\\\\uD800\""]) {
-      expect(replayJson(withWorkload(accepted)).pairs).toHaveLength(1);
+    const core = parseLosslessJson(stringifyLosslessJson(report)) as Record<string, unknown>;
+    const complete = {
+      ...core,
+      workload: "dependent-link-order",
+      invocation: [] as string[],
+      revision: "r",
+      runtime: "Node.js",
+      os: "test",
+      arch: "test",
+    };
+    const replayBoth = (value: Record<string, unknown>) => {
+      expect(replayReport(value)).toEqual(report);
+      expect(replayJson(stringifyLosslessJson(value))).toEqual(report);
+    };
+    replayBoth(complete);
+    replayBoth({ ...complete, invocation: [""] });
+    for (const field of ["workload", "invocation", "revision", "runtime", "os", "arch"]) {
+      const partial = { ...complete };
+      delete (partial as Record<string, unknown>)[field];
+      expect(() => replayReport(partial)).toThrow();
+      expect(() => replayJson(stringifyLosslessJson(partial))).toThrow();
     }
-    for (const rejected of ["\"\"", "\" \\t\\n\\r\\f\\u000b\"", "\"\\u0000\"", "\"x\\u0000y\"", "null", "17", "true", "[]", "\"\\ud800\"", "\"\\udfff\""]) {
-      expect(() => replayJson(withWorkload(rejected)), `accepted ${rejected}`).toThrow();
+    const profileOnly = { ...core, profile: "release" } as Record<string, unknown>;
+    expect(() => replayReport(profileOnly)).toThrow();
+    expect(() => replayJson(stringifyLosslessJson(profileOnly))).toThrow();
+
+    for (const field of ["revision", "runtime", "os", "arch", "profile"]) {
+      for (const invalid of ["", "bad\0value"]) {
+        const malformed = { ...complete, profile: "release", [field]: invalid };
+        expect(() => replayReport(malformed)).toThrow();
+        expect(() => replayJson(stringifyLosslessJson(malformed))).toThrow();
+      }
+    }
+    for (const invalid of ["", " \t\n\r\f\v", "\0", "x\0y", "\ud800", "\udfff"]) {
+      const malformed = { ...complete, workload: invalid };
+      expect(() => replayReport(malformed)).toThrow();
+      expect(() => replayJson(stringifyLosslessJson(malformed))).toThrow();
+    }
+    for (const invalid of [["bad\0arg"], [1], null]) {
+      const malformed = { ...complete, invocation: invalid };
+      expect(() => replayReport(malformed)).toThrow();
+      expect(() => replayJson(stringifyLosslessJson(malformed))).toThrow();
+    }
+    for (const accepted of ["\u2003", "\ud83d\ude00", "\ufffd", "\\uD800"]) {
+      replayBoth({ ...complete, workload: accepted });
     }
   });
 

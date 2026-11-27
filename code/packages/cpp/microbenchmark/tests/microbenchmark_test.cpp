@@ -38,6 +38,55 @@ static mb::Pair pair(mb::Int64 baseline, mb::Int64 candidate, std::string order 
     return {baseline, candidate, std::move(order)};
 }
 
+static std::string replace_top_level_value(std::string json, std::string_view key,
+                                           std::string_view replacement) {
+    const std::string prefix = "\"" + std::string(key) + "\": ";
+    const auto member = json.find(prefix);
+    if (member == std::string::npos) throw std::runtime_error("missing report member");
+    const auto begin = member + prefix.size();
+    std::size_t end = begin;
+    if (json[begin] == '"') {
+        ++end;
+        bool escaped = false;
+        while (end < json.size()) {
+            const char current = json[end++];
+            if (escaped) escaped = false;
+            else if (current == '\\') escaped = true;
+            else if (current == '"') break;
+        }
+    } else if (json[begin] == '[') {
+        int depth = 0;
+        bool in_string = false, escaped = false;
+        while (end < json.size()) {
+            const char current = json[end++];
+            if (in_string) {
+                if (escaped) escaped = false;
+                else if (current == '\\') escaped = true;
+                else if (current == '"') in_string = false;
+            } else if (current == '"') in_string = true;
+            else if (current == '[') ++depth;
+            else if (current == ']' && --depth == 0) break;
+        }
+    } else {
+        while (end < json.size() && json[end] != ',' && json[end] != '\n' && json[end] != '}') ++end;
+    }
+    if (end > json.size() || end == begin) throw std::runtime_error("malformed report member");
+    json.replace(begin, end - begin, replacement);
+    return json;
+}
+
+static std::string remove_top_level_member(std::string json, std::string_view key) {
+    const std::string prefix = "\"" + std::string(key) + "\": ";
+    const auto member = json.find(prefix);
+    if (member == std::string::npos) throw std::runtime_error("missing report member");
+    const auto newline_before = json.rfind('\n', member);
+    const auto begin = newline_before == std::string::npos ? 0 : newline_before + 1;
+    const auto newline_after = json.find('\n', member);
+    const auto end = newline_after == std::string::npos ? json.size() : newline_after + 1;
+    json.erase(begin, end - begin);
+    return json;
+}
+
 static void fixture_replay_and_package_drift() {
     std::ifstream local_file("testdata/microbenchmark-pairs-v1.json", std::ios::binary);
     const std::string local((std::istreambuf_iterator<char>(local_file)), {});
@@ -176,6 +225,55 @@ static void failures_and_replay_validation() {
     try { (void)mb::replay_json(invalid_utf8); }
     catch (const std::invalid_argument&) { rejected_utf8 = true; }
     ISO_CHECK(rejected_utf8);
+
+    const auto reject_report = [](const std::string& candidate) {
+        bool rejected = false;
+        try { (void)mb::replay_json(candidate); }
+        catch (const std::invalid_argument&) { rejected = true; }
+        ISO_CHECK(rejected);
+    };
+    for (const auto* field_name : {"workload", "invocation", "revision", "runtime", "os", "arch"})
+        reject_report(remove_top_level_member(text, field_name));
+
+    auto core_report = good;
+    core_report.metadata = {};
+    auto core_json = mb::to_json(core_report);
+    const auto final_object = core_json.rfind("\n}");
+    ISO_CHECK(final_object != std::string::npos);
+    core_json.insert(final_object, ",\n  \"profile\": \"release\"");
+    reject_report(core_json);
+
+    for (const auto* field_name : {"revision", "runtime", "os", "arch", "profile"}) {
+        reject_report(replace_top_level_value(text, field_name, "\"\""));
+        reject_report(replace_top_level_value(text, field_name, "\"bad\\u0000value\""));
+        reject_report(replace_top_level_value(text, field_name, "null"));
+    }
+    for (const auto* invalid : {"\"\"", "\" \\t\\n\\r\\f\\u000b\"", "\"bad\\u0000value\""})
+        reject_report(replace_top_level_value(text, "workload", invalid));
+    for (const auto* invalid : {"null", "[1]", "[\"bad\\u0000arg\"]"})
+        reject_report(replace_top_level_value(text, "invocation", invalid));
+    ISO_CHECK(mb::replay_json(replace_top_level_value(text, "invocation", "[]"))
+                  .metadata.invocation == std::optional<std::vector<std::string>>({}));
+    ISO_CHECK(mb::replay_json(replace_top_level_value(text, "invocation", "[\"\"]"))
+                  .metadata.invocation == std::optional<std::vector<std::string>>({""}));
+    ISO_CHECK(mb::replay_json(replace_top_level_value(text, "revision", "\" \""))
+                  .metadata.revision == std::optional<std::string>(" "));
+    ISO_CHECK(mb::replay_json(replace_top_level_value(text, "workload", "\"\\u2003\""))
+                  .metadata.workload == std::optional<std::string>("\xe2\x80\x83"));
+
+    auto incomplete = good;
+    incomplete.metadata.arch.reset();
+    bool rejected_incomplete_encoder = false;
+    try { (void)mb::to_json(incomplete); }
+    catch (const std::invalid_argument&) { rejected_incomplete_encoder = true; }
+    ISO_CHECK(rejected_incomplete_encoder);
+    auto nul_argument = good;
+    nul_argument.metadata.invocation =
+        std::vector<std::string>{std::string("bad\0arg", 7)};
+    bool rejected_nul_encoder = false;
+    try { (void)mb::to_json(nul_argument); }
+    catch (const std::invalid_argument&) { rejected_nul_encoder = true; }
+    ISO_CHECK(rejected_nul_encoder);
 
     const auto order = text.find("baseline-first");
     ISO_CHECK(order != std::string::npos);
