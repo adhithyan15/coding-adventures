@@ -76,6 +76,42 @@
       "justification": "On Windows the process-tree manager calls fixed kernel32 job-object functions to assign and stop child trees."
     },
     {
+      "category": "thread",
+      "action": "spawn",
+      "target": "signal-forwarder",
+      "justification": "The Unix process-tree cleanup starts one goroutine to forward termination notifications and stop live child trees."
+    },
+    {
+      "category": "thread",
+      "action": "message",
+      "target": "signal-forwarder",
+      "justification": "The Unix signal-forwarder goroutine receives termination notifications over its channel."
+    },
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "service-waiter",
+      "justification": "Each started TCP service gets a goroutine that waits for its command to exit."
+    },
+    {
+      "category": "thread",
+      "action": "message",
+      "target": "service-waiter",
+      "justification": "The service-waiter goroutine sends command completion through the service done channel to the caller."
+    },
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "benchmark-client-worker",
+      "justification": "Parallel TCP/RESP workloads start bounded client goroutines controlled by a semaphore."
+    },
+    {
+      "category": "thread",
+      "action": "message",
+      "target": "benchmark-client-worker",
+      "justification": "The workload caller and bounded client goroutines coordinate through the semaphore and wait group."
+    },
+    {
       "category": "stdout",
       "action": "write",
       "target": "*",

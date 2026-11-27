@@ -17,8 +17,10 @@
   readable summary in a newly reserved directory. Independent-result bootstrap
   comparisons retain their existing behavior.
 - Add an unsigned whole-program capability profile for caller-selected files and
-  commands, measured time, child-process control, loopback-only TCP, and the
-  Windows kernel32 process-tree calls. It is a review proposal, not an approval.
+  commands, measured time, child-process control, loopback-only TCP, the Windows
+  kernel32 process-tree calls, and three scoped goroutine/channel roles for Unix
+  signal forwarding, service waits, and bounded benchmark clients. It is a review
+  proposal, not an approval.
 
 - **Fix: bound benchmark trial counts before slice allocation (`go/allocation-size-overflow`,
   alerts `#259`–`#260`).** Added `maxBenchmarkTrials` (`1_000_000`) bounds checks in
