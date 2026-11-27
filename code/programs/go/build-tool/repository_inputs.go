@@ -138,11 +138,12 @@ var (
 	// must re-run the Java tests too (VER06f); csharp/test-bootstrap's
 	// FuzzReferenceVectorsTests (VER06h), ruby/test_bootstrap's
 	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
-	// (VER06j, scans it line by line), lua/test_bootstrap's test_fuzz_vectors.lua
-	// (VER06p) and elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it
-	// the same way; so does cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k),
-	// through the C++ API, and swift/test-bootstrap's FuzzReferenceVectorsTests
-	// (VER06l) reads it too.
+	// (VER06j, scans it line by line), perl/test-bootstrap's t/11-fuzz-mutate.t
+	// (VER06q), lua/test_bootstrap's test_fuzz_vectors.lua (VER06p) and
+	// elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it the same way;
+	// so does cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k), through the
+	// C++ API, and swift/test-bootstrap's FuzzReferenceVectorsTests (VER06l)
+	// reads it too.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -244,8 +245,9 @@ var (
 	// java/test-bootstrap, kotlin/test-bootstrap, csharp/test-bootstrap and
 	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), cpp/test-bootstrap
 	// (test_fuzz_corpus.cpp, VER06k), ruby/test_bootstrap (VER06i),
-	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n) and lua/test_bootstrap
-	// (test_fuzz_corpus.lua, VER06p).
+	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n), lua/test_bootstrap
+	// (test_fuzz_corpus.lua, VER06p) and perl/test-bootstrap (t/12-fuzz-corpus.t,
+	// VER06q).
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
@@ -1415,6 +1417,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "perl/test-bootstrap",
+		language: "perl",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
 		name:     "lua/test_bootstrap",
 		language: "lua",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1434,6 +1443,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
 		matches:  isFuzzV1Corpus,
 		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "perl/test-bootstrap",
+		language: "perl",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
 	},
 	{
 		name:     "lua/test_bootstrap",

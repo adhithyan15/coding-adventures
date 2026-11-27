@@ -722,6 +722,7 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 		{Name: "go/test-bootstrap", Language: "go"},
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "perl/test-bootstrap", Language: "perl"},
 		{Name: "python/test-bootstrap", Language: "python"},
 		{Name: "ruby/test_bootstrap", Language: "ruby"},
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
@@ -736,7 +737,7 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1187,6 +1188,7 @@ func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 		{Name: "go/test-bootstrap", Language: "go"},
 		{Name: "java/test-bootstrap", Language: "java"},
 		{Name: "kotlin/test-bootstrap", Language: "kotlin"},
+		{Name: "perl/test-bootstrap", Language: "perl"},
 		{Name: "python/test-bootstrap", Language: "python"},
 		{Name: "ruby/test_bootstrap", Language: "ruby"},
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
@@ -1201,7 +1203,7 @@ func TestFuzzV1CorpusSelectsTheJavaEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
+	want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "fsharp/test-bootstrap": true, "go/test-bootstrap": true, "java/test-bootstrap": true, "kotlin/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "python/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
@@ -1284,6 +1286,7 @@ func TestGoFuzzReferenceVectorsSelectTheJavaEngine(t *testing.T) {
 		{Name: "csharp/test-bootstrap", Language: "csharp"},
 		{Name: "go/test-bootstrap", Language: "go"},
 		{Name: "java/test-bootstrap", Language: "java"},
+		{Name: "perl/test-bootstrap", Language: "perl"},
 		{Name: "ruby/test_bootstrap", Language: "ruby"},
 		{Name: "elixir/test_bootstrap", Language: "elixir"},
 		{Name: "lua/test_bootstrap", Language: "lua"},
@@ -1297,7 +1300,7 @@ func TestGoFuzzReferenceVectorsSelectTheJavaEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "java/test-bootstrap": true, "lua/test_bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+	if want := map[string]bool{"c/test-bootstrap": true, "cpp/test-bootstrap": true, "csharp/test-bootstrap": true, "elixir/test_bootstrap": true, "java/test-bootstrap": true, "lua/test_bootstrap": true, "perl/test-bootstrap": true, "ruby/test_bootstrap": true, "swift/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
 	if _, err := repositoryInputConsumersForChange(vectors, packages[:2], "java"); err == nil {
@@ -2100,6 +2103,45 @@ func TestFuzzV1AndGoReferenceVectorsSelectTheRubyEngine(t *testing.T) {
 	} {
 		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
 			t.Fatalf("%s must not select the Ruby rows: %v %v", other, got, err)
+		}
+	}
+}
+
+func TestFuzzV1AndGoReferenceVectorsSelectThePerlEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "perl/test-bootstrap", Language: "perl"},
+		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	for _, input := range []string{
+		"code/specs/fixtures/fuzz-v1/cases.json",
+		"code/specs/fixtures/fuzz-v1/cases.tfv",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "perl")
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{"perl/test-bootstrap": true}) {
+			t.Fatalf("%s must select exactly the Perl engine under the perl filter: %v %v", input, got, err)
+		}
+		// With the Perl package missing the selection fails closed.
+		without := []discovery.Package{packages[0], packages[2], packages[3]}
+		if _, err := repositoryInputConsumersForChange([]string{input}, without, "perl"); err == nil {
+			t.Fatalf("%s with the Perl engine package missing must fail closed", input)
+		}
+	}
+	// The pbt-v1 row still selects it, through its own row.
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/pbt-v1/cases.json"}, packages, "perl"); err != nil || !got["perl/test-bootstrap"] {
+		t.Fatalf("pbt-v1 must still select the Perl engine: %v %v", got, err)
+	}
+	// Neighbouring files and the Perl package's own tests are not these rows.
+	for _, other := range []string{
+		"code/specs/fixtures/fuzz-v10/cases.json",
+		"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go.bak",
+		"code/packages/perl/test-bootstrap/t/11-fuzz-mutate.t",
+		"code/packages/perl/test-bootstrap/t/12-fuzz-corpus.t",
+	} {
+		if got, err := repositoryInputConsumersForChange([]string{other}, packages, "all"); err != nil || len(got) != 0 {
+			t.Fatalf("%s must not select the Perl rows: %v %v", other, got, err)
 		}
 	}
 }

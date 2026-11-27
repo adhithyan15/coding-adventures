@@ -33,6 +33,7 @@ use CodingAdventures::TestBootstrap::StrictJson ();
 use CodingAdventures::TestBootstrap::Values     ();
 use CodingAdventures::TestBootstrap::Tfv        ();
 use CodingAdventures::TestBootstrap::Corpus     ();
+use CodingAdventures::TestBootstrap::Fuzz       ();
 
 # `check` is the one-call entry point: Runner::check.
 sub check { shift if defined $_[0] && !ref $_[0] && $_[0] eq __PACKAGE__; return CodingAdventures::TestBootstrap::Runner::check(@_) }
