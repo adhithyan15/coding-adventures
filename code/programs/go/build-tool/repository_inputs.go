@@ -1012,6 +1012,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    nandFlashFixtureInputs,
 	},
 	{
+		name:     "cpp/nand-flash",
+		language: "cpp",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
 		name:     "go/nand-flash",
 		language: "go",
 		inputs:   "the exact DB01 shared NAND flash vector",
@@ -2034,7 +2041,7 @@ func repositoryInputsForPackage(packageName string) []string {
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
 		return typescriptGameInputFrameInputs
-	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash", "go/nand-flash":
+	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash", "cpp/nand-flash", "go/nand-flash":
 		return nandFlashFixtureInputs
 	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator", "go/hdd-simulator":
 		return hddSimulatorFixtureInputs
