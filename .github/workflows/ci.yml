@@ -1103,6 +1103,9 @@ jobs:
         run: |
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_schema.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'
+          # These filesystem-boundary cases rely on POSIX symlink creation and
+          # mode-bit permission semantics; run them on this Ubuntu-only job.
+          python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_boundary_sync.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_schema.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_runner.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_authority.py'
