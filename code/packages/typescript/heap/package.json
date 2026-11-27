@@ -1,13 +1,27 @@
 {
   "name": "@coding-adventures/heap",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Min-heap and max-heap backed by a flat array with O(log n) push/pop, O(1) peek, and pure helper utilities",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "node node_modules/typescript/bin/tsc",
-    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/heap.test.js",
-    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=80 --test dist-test/tests/heap.test.js"
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/heap.test.js dist-test/tests/bounded-heap.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test-coverage-branches=95 --test dist-test/tests/heap.test.js dist-test/tests/bounded-heap.test.js"
   },
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
