@@ -97,6 +97,9 @@ pub enum CheckError {
     /// R-GOL-4, checked again by the gate from the stored goal term: the claim file declares
     /// a constant that occurs in a goal.
     GoalConstantRedeclared(String),
+    // ---- footprints ----------------------------------------------------------------------
+    /// A constant in a term has no declaration in the environment (the walk cannot be sound).
+    UnknownConstant(String),
 }
 
 impl CheckError {
@@ -135,6 +138,7 @@ impl CheckError {
             CheckError::SignedGoalMissing(_) => "SignedGoalMissing",
             CheckError::AggregateMismatch { .. } => "AggregateMismatch",
             CheckError::GoalConstantRedeclared(_) => "GoalConstantRedeclared",
+            CheckError::UnknownConstant(_) => "UnknownConstant",
         }
     }
 
@@ -218,6 +222,7 @@ impl CheckError {
             CheckError::AggregateMismatch { expected, actual } => {
                 format!("the sign-off's goals aggregate is {expected}, computed {actual}")
             }
+            CheckError::UnknownConstant(n) => format!("no declaration for constant {n}"),
             CheckError::GoalConstantRedeclared(n) => {
                 format!("the claim file declares {n}, which occurs in a goal")
             }

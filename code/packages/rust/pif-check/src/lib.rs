@@ -20,6 +20,8 @@
 //! * [`cte`] and [`goals`]: the canonical term encoding (binding and display forms), the goal
 //!   digest recomputed from the kernel store, the goals list and the goal-signing aggregate
 //!   (VER32 3.6, 9.2, PIF-020);
+//! * [`footprint`], [`registry`] and [`claims`]: the axiom footprint of each theorem, its
+//!   classification against the registry (A1 to A3), and the per-claim report fields;
 //! * [`cli`] and [`report`]: the command line and its machine-readable report.
 //!
 //! Because the gate is part of the trusted base it is written like the kernel: literate
@@ -30,13 +32,16 @@
 #![forbid(unsafe_code)]
 
 pub mod chain;
+pub mod claims;
 pub mod cli;
 pub mod control;
 pub mod cte;
 pub mod digest;
 pub mod error;
+pub mod footprint;
 pub mod goals;
 pub mod json;
+pub mod registry;
 pub mod report;
 pub mod resolver;
 

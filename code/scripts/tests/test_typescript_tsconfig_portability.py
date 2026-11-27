@@ -464,12 +464,15 @@ console.log(prose, nested);
         # +1: game-input-frame, a shared-config project with explicit src/dist
         # roots; Node APIs are confined to tests and do not enter shipped src.
         # +1: nand-flash, the DB01 logical SLC media leaf. It inherits the shared paths.
+        # +1: unix-history-simulator, the reusable First Edition Unix kernel model.
+        # +1: unix-history-simulator browser program, which exercises shared
+        # trace fixtures through the simulator's public API.
         # -4 shared_projects: note-frequency, audio-device-sink, pcm-audio, and
         # web-audio-sink migrated from tsconfig.base.json to standalone configs
         # (TS-W7-A; total_projects unchanged because they already had build scripts).
         # -3 shared_projects: wave, analog-waveform, and discrete-waveform
         # migrated from tsconfig.base.json to standalone configs (PHY-W8-E).
-        self.assertEqual(summary.total_projects, 518)
+        self.assertEqual(summary.total_projects, 520)
         self.assertEqual(summary.shared_projects, 304)
         self.assertEqual(summary.inherited_root_dir, 136)
         self.assertEqual(summary.inherited_out_dir, 139)
@@ -651,7 +654,9 @@ console.log(prose, nested);
         # +1: game-clock locks its standalone compiler and test toolchain.
         # +1: game-input-frame locks its shared compiler and test toolchain.
         # +1: nand-flash locks its shared compiler and test toolchain.
-        self.assertEqual(summary.locked_compilers, 531)
+        # +1: unix-history-simulator locks its standalone compiler and test graph.
+        # +1: the browser program locks its standalone compiler and test graph.
+        self.assertEqual(summary.locked_compilers, 533)
 
 
 if __name__ == "__main__":
