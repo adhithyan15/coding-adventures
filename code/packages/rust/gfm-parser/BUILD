@@ -1,1 +1,1 @@
-cargo test -p gfm-parser -- --nocapture
+cargo test --locked -p gfm-parser -- --nocapture

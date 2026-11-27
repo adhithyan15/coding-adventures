@@ -97,6 +97,7 @@ export function analyze(pairs: readonly Pair[], confidencePercent = 95, minimumF
   if (!Array.isArray(pairs) || pairs.length === 0) throw new RangeError("pairs must not be empty");
   if (!Number.isInteger(confidencePercent) || confidencePercent < 1 || confidencePercent > 99) throw new RangeError("confidence_percent must be from 1 through 99");
   factor(minimumFactor);
+  if (pairs.length > MAX_PAIRS) throw new RangeError(`pairs must contain at most ${MAX_PAIRS} observations`);
   const ratios = pairs.map((pair, index) => {
     if (pair === null || typeof pair !== "object" || (pair.order !== "baseline-first" && pair.order !== "candidate-first")) {
       throw new TypeError(`pair ${index} has invalid order`);

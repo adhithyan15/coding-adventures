@@ -1,0 +1,3 @@
+go vet ./...
+go test -race -count=1 ./... -cover
+go test -run=^$ -fuzz=FuzzPositionalSATAgainstOracle -fuzztime=5s -parallel=1 .

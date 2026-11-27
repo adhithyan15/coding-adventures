@@ -199,7 +199,12 @@ public func muxN(inputs: [Int], sel: [Int]) throws -> Int {
     let lowerSel = Array(sel.dropLast())
     let lo = try muxN(inputs: Array(inputs[0..<half]),  sel: lowerSel)
     let hi = try muxN(inputs: Array(inputs[half...]),   sel: lowerSel)
-    return try mux2(d0: lo, d1: hi, sel: sel.last!)
+    // `sel.count == expectedSel >= 1` was checked above, so `last` is never
+    // nil. We still use guard-let (not `!`) so this path provably cannot trap.
+    guard let top = sel.last else {
+        throw LogicGateError.invalidSelectLength(expected: expectedSel, got: 0)
+    }
+    return try mux2(d0: lo, d1: hi, sel: top)
 }
 
 // MARK: - Demultiplexer (DEMUX)
@@ -350,7 +355,12 @@ public func encoder(inputs: [Int]) throws -> [Int] {
         )
     }
 
-    let activeIndex = inputs.firstIndex(of: 1)!
+    // activeCount == 1 was verified, so an index exists; guard-let keeps this
+    // provably non-trapping (unreachable in practice).
+    guard let activeIndex = inputs.firstIndex(of: 1) else {
+        throw LogicGateError.invalidEncoderInput(
+            "exactly one input must be 1, got 0 active inputs")
+    }
     let n = log2Ceil(inputs.count)  // number of output bits
 
     // Convert activeIndex to binary (LSB first)

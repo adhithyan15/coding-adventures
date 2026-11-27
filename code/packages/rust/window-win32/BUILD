@@ -1,1 +1,1 @@
-cargo test -p window-win32 -- --nocapture
+cargo test --locked -p window-win32 -- --nocapture

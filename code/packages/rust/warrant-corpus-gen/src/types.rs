@@ -236,6 +236,75 @@ impl Ty {
     }
 }
 
+/// The declared records and variants of a document: what a value of a [`Ty::Named`] type needs to be
+/// encoded, written as JSON or TFV, or compared with a fault (`ir.data`, S11c-2).
+///
+/// A record is a single constructor named like the record; a variant lists its constructors.  A value
+/// of either is a [`crate::value::Value::Con`] carrying only the constructor's name, so the field types
+/// (which decide `10` or `11` for an integer, the width of a `Bytes<N>`) live here.  Cloning is cheap
+/// (a reference count).
+#[derive(Debug, Clone, Default)]
+pub struct Decls(std::rc::Rc<DeclsInner>);
+
+#[derive(Debug, Default)]
+struct DeclsInner {
+    /// `name -> [(constructor, field types)]`; a record has one constructor, named like it.
+    adts: std::collections::HashMap<String, Vec<(String, Vec<Ty>)>>,
+    /// Names of the records (the others are variants).
+    records: std::collections::HashSet<String>,
+}
+
+impl Decls {
+    /// The declarations of a lowered document's `types`.
+    pub fn new(types: &[crate::lower::LoweredType]) -> Decls {
+        let mut inner = DeclsInner::default();
+        for t in types {
+            match t {
+                crate::lower::LoweredType::Record { name, fields } => {
+                    inner.records.insert(name.clone());
+                    inner.adts.insert(
+                        name.clone(),
+                        vec![(name.clone(), fields.iter().map(|(_, t)| t.clone()).collect())],
+                    );
+                }
+                crate::lower::LoweredType::Variant { name, ctors } => {
+                    inner.adts.insert(name.clone(), ctors.clone());
+                }
+            }
+        }
+        Decls(std::rc::Rc::new(inner))
+    }
+
+    /// The constructors of the record or variant `name`.
+    pub fn ctors(&self, name: &str) -> Option<&[(String, Vec<Ty>)]> {
+        self.0.adts.get(name).map(Vec::as_slice)
+    }
+
+    /// Is `name` a declared record?
+    pub fn is_record(&self, name: &str) -> bool {
+        self.0.records.contains(name)
+    }
+
+    /// The type that declares constructor `ctor` and its field types (a record's constructor is named like
+    /// the record).
+    pub fn owner(&self, ctor: &str) -> Option<(&str, &[Ty])> {
+        self.0.adts.iter().find_map(|(name, ctors)| {
+            ctors
+                .iter()
+                .find(|(c, _)| c == ctor)
+                .map(|(_, f)| (name.as_str(), f.as_slice()))
+        })
+    }
+
+    /// The field types of constructor `ctor` of type `name`.
+    pub fn fields(&self, name: &str, ctor: &str) -> Option<&[Ty]> {
+        self.ctors(name)?
+            .iter()
+            .find(|(c, _)| c == ctor)
+            .map(|(_, f)| f.as_slice())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

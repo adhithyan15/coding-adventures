@@ -743,9 +743,10 @@ public enum CommandLineResult {
 }
 
 /// Parses options and creates one in-process indexed-array report.
+/// Revision metadata is caller-injected and defaults to an empty environment.
 public func runCommandLine(
     arguments: [String],
-    environment: [String: String] = ProcessInfo.processInfo.environment,
+    environment: [String: String] = [:],
     clock: Clock? = nil
 ) throws -> CommandLineResult {
     var config = Configuration()
@@ -800,7 +801,7 @@ public func runCommandLine(
     report.invocation = arguments
     report.revision = revision
     report.runtime = swiftRuntimeVersion
-    report.os = ProcessInfo.processInfo.operatingSystemVersionString
+    report.os = operatingSystemName
     report.arch = architectureName
     report.profile = buildProfile
     return .report(try validated(report))
@@ -826,6 +827,19 @@ private var architectureName: String {
         "aarch64"
     #elseif arch(i386)
         "x86"
+    #else
+        "unknown"
+    #endif
+}
+
+/// The host operating-system family, using the shared C benchmark labels.
+private var operatingSystemName: String {
+    #if os(Windows)
+        "windows"
+    #elseif os(macOS)
+        "macos"
+    #elseif os(Linux)
+        "linux"
     #else
         "unknown"
     #endif

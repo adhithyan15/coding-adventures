@@ -74,6 +74,7 @@ use vos_manifest::digest::sha256_hex;
 use vos_manifest::document::document_name;
 use vos_manifest::warrant::{claim_calls, claims_of_block, declarations_of_block, DeclKind};
 use vos_manifest::{Contract, Part};
+use vos_shape_check::manifest::{parse_vos_toml, SatLane, VOS_TOML_MAX_BYTES};
 use vos_shape_check::SourceFile;
 
 use crate::check::{first_difference_line, WARRANT_STACK_BYTES};
@@ -100,6 +101,9 @@ pub const TABLE_FILE: &str = "warrant/lemmas.table";
 pub const MUTANTS_DIR: &str = "warrant/mutants";
 
 const TABLE_MAX_BYTES: usize = 1024 * 1024;
+/// The committed model-SAT table (VOS31 section 8), relative to the contract crate directory.
+pub const SAT_TABLE_FILE: &str = "warrant/lemmas.sat";
+const BUILD_MAX_BYTES: usize = 256 * 1024;
 
 // ---------------------------------------------------------------------------------------
 // Loading
@@ -122,6 +126,13 @@ pub struct ContractInputs {
     pub table: Option<String>,
     /// Every `*.rs` file under `src/` (the Rust side of CK10), empty when there is no `src/`.
     pub sources: Vec<SourceFile>,
+    /// The `vos.toml` key `sat` (CK11); `None` when absent.  A `vos.toml` that does not parse is
+    /// already a `GD05`/`CK01` finding and never reaches here.
+    pub sat: Option<SatLane>,
+    /// `BUILD` and `BUILD_windows` as on disk (`None` when absent), for CK11.
+    pub builds: Vec<(&'static str, Option<String>)>,
+    /// `warrant/lemmas.sat` as on disk, if present (CK11).
+    pub sat_table: Option<String>,
 }
 
 /// GD01, GD02 and GD05 are the inputs of a document; for `check-contract` they are `CK01`
@@ -209,6 +220,24 @@ pub fn load_inputs(
         ))
     })?;
 
+    // CK11's inputs.  The `sat` key is read leniently: a `vos.toml` that fails to parse was
+    // already reported above (GD05), so here an error just means "no key".
+    let sat = match read_regular_opt(&layout.impl_dir.join("vos.toml"), VOS_TOML_MAX_BYTES)? {
+        Some(bytes) => String::from_utf8(bytes)
+            .ok()
+            .and_then(|t| parse_vos_toml(&t).ok())
+            .and_then(|v| v.sat),
+        None => None,
+    };
+    let mut builds = Vec::new();
+    for name in ["BUILD", "BUILD_windows"] {
+        builds.push((
+            name,
+            read_text(&layout.impl_dir.join(name), BUILD_MAX_BYTES)?,
+        ));
+    }
+    let sat_table = read_text(&layout.impl_dir.join(SAT_TABLE_FILE), TABLE_MAX_BYTES)?;
+
     let findings: Vec<Finding> = f.into_iter().map(as_ck01).collect();
     match (findings.is_empty(), pkg.contract_part, pkg.lemmas_part) {
         (true, Some(contract_part), Some(lemmas_part)) => Ok(Ok(ContractInputs {
@@ -219,6 +248,9 @@ pub fn load_inputs(
             mutants,
             table,
             sources,
+            sat,
+            builds,
+            sat_table,
         })),
         _ => Ok(Err(findings)),
     }
@@ -511,7 +543,7 @@ fn on_big_stack<R: Send>(f: impl FnOnce() -> R + Send) -> Result<R, NoVerdict> {
 /// What the check found, and the table it would write if it found nothing.
 #[derive(Debug, Default)]
 pub struct Checked {
-    /// `CK02` to `CK08` and `CK10`, in order (`CK09` is the caller's: it compares the table).
+    /// `CK02` to `CK08` and `CK10`, in order (`CK09` and `CK11` are the caller's: the table comparison and the model-SAT files).
     pub findings: Vec<Finding>,
     /// The generated `warrant/lemmas.table`, present only when `findings` is empty.
     pub table: Option<String>,
@@ -953,7 +985,7 @@ fn table_text(
 // ---------------------------------------------------------------------------------------
 
 fn notes() -> Vec<String> {
-    vec!["check-contract: every lemma holds over the whole domain of its binders, every lemma fails on its own mutant (a parsed, span-replaced model), every `config` key is called by a lemma and breaks one when moved by one, and `warrant/lemmas.table` equals what this run writes, byte for byte. Every Rust `enum` of the crate renders to the same `variant ...` line as its Warrant variant (CK10; a tuple variant's field names are not compared). Not checked: that a mutant is the BEST control (the exact set of claims it breaks, VOS-D109), the evidence bindings' `enum ... ctors=` lines against the contract, `Sched::N` in the trait and an implementation's `n_is_eight` literal against `contract.vos`, and bound rows against ceilings (VOS-D055, VOS-039b-2b). The command-type rule is `vos-shape-check` SH19, run by the contract crate's BUILD.".to_string()]
+    vec!["check-contract: every lemma holds over the whole domain of its binders, every lemma fails on its own mutant (a parsed, span-replaced model), every `config` key is called by a lemma and breaks one when moved by one, and `warrant/lemmas.table` equals what this run writes, byte for byte. When `vos.toml` says `sat = \"model\"`, CK11 checks the model-SAT lane's files only (the BUILD line, and a well-formed `warrant/lemmas.sat` current against the parts with one row per lemma per width and at least one counted obligation); the BUILD line runs the lane itself. Every Rust `enum` of the crate renders to the same `variant ...` line as its Warrant variant (CK10; a tuple variant's field names are not compared). Not checked: that a mutant is the BEST control (the exact set of claims it breaks, VOS-D109), the evidence bindings' `enum ... ctors=` lines against the contract, `Sched::N` in the trait and an implementation's `n_is_eight` literal against `contract.vos`, and bound rows against ceilings (VOS-D055, VOS-039b-2b). The command-type rule is `vos-shape-check` SH19, run by the contract crate's BUILD.".to_string()]
 }
 
 /// A line of `text`, escaped and cut, for a finding.
@@ -983,6 +1015,13 @@ pub fn check_contract(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outco
     );
     let checked = check_inputs(&inp)?;
     out.findings = checked.findings;
+    // CK11 (VOS31 10.2): the model-SAT lane's files.  Needs the claim names, so it runs only
+    // when `lemmas.part` parses (CK02 reports it otherwise).
+    if let Ok(claims) = claims_of_block(inp.lemmas_part.text()) {
+        let names: Vec<String> = claims.into_iter().map(|c| c.name).collect();
+        out.findings
+            .extend(crate::sat_lane::check_sat_lane(&inp, &names));
+    }
     if let Some(want) = checked.table {
         match &inp.table {
             None => out.findings.push(Finding::new(

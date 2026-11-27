@@ -171,10 +171,12 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 		"CENSUS ONLY: accept non-empty state roots (a pre-fetched cargo registry). A shard whose state roots are non-empty at its first step is void (state-preloaded), so preloaded state can never be emitted")
 	execHeadSeal := fs.Bool("exec-head", false,
 		"seal the exec-head supervisor ON for every step of the shard (KILN04 D48): the binding and the build tool's -exec-wrapper carry it, and collect voids a run whose steps disagree")
+	language := fs.String("language", "all",
+		"the recording selection: a language name records only that language's prerequisite-closed packages (build-tool -plan-closed-language); all (the default) records every package. Sealed in the binding; record-merge reads it from there")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	usage := "usage: kiln record prepare --root <abs> --dir <abs> --build-tool <abs> --shard-index I --shard-count N --job-start <unix seconds> [--strace <abs>] [--git <abs>] [--allow-preloaded-state] [--exec-head]"
+	usage := "usage: kiln record prepare --root <abs> --dir <abs> --build-tool <abs> --shard-index I --shard-count N --job-start <unix seconds> [--strace <abs>] [--git <abs>] [--allow-preloaded-state] [--exec-head] [--language <name|all>]"
 	if fs.NArg() != 0 || *root == "" || *dir == "" || *buildTool == "" || *index < 0 || *count < 1 || *jobStart < 0 {
 		fmt.Fprintln(stderr, usage)
 		return 2
@@ -207,7 +209,7 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 	}
 	res, err := recordPrepare(record.Options{
 		Root: *root, Dir: *dir, BuildTool: *buildTool, KilnExe: self, Strace: *strace, Git: *gitBin,
-		ShardIndex: *index, ShardCount: *count, JobStart: *jobStart, AllowPreloadedState: *allowPre, ExecHead: *execHeadSeal,
+		ShardIndex: *index, ShardCount: *count, JobStart: *jobStart, AllowPreloadedState: *allowPre, ExecHead: *execHeadSeal, Language: *language,
 		Image: h.ImageID(), Getenv: os.Getenv, Environ: os.Environ(),
 	})
 	if err != nil {

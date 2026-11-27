@@ -55,5 +55,7 @@ def jhex(text: str) -> str:
     return text.encode("utf-8").hex()
 
 
-def row(slug: str, summary: str, fields: dict, intent: dict) -> Row:
-    return Row(slug, summary, fields, intent)
+def row(slug: str, summary: str, fields: dict, intent: dict, requires: list | None = None) -> Row:
+    """A table row.  ``requires`` is ``None`` for an S5 case (it must compute ``["ir.core"]``, R24) and the expected
+    ``requires`` of a case of a later slice (S10d); the build checks it against :func:`requires_of`'s."""
+    return Row(slug, summary, fields, intent, requires)

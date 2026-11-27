@@ -31,6 +31,11 @@ recomputes analysis rather than trusting a supplied verdict. Signed `Int64`
 fields remain JSON integer tokens and are range-checked by Codable decoding.
 The optional workload field is validated as nonblank, NUL-free producer
 metadata; replay accepts other workload identifiers without executing them.
+The library's `runCommandLine` helper accepts revision metadata through its
+injected `environment` dictionary and defaults to no ambient variables. The
+packaged executable reads only `GIT_REVISION` and `GITHUB_SHA`, in that order.
+Its `os` report field is a compile-time operating-system family label
+(`windows`, `macos`, `linux`, or `unknown`), not a host-version string.
 The indexed-array command continues to emit `indexed-array-sum-4096`.
 Replay rejects duplicate object keys (including escaped aliases), unknown
 fields, and forged analysis. JSON input/output is capped at 4 MiB, nesting at

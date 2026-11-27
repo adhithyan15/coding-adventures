@@ -161,7 +161,37 @@ func genWorld(t *testing.T, data []byte) *world {
 			}
 		}
 	}
+	// The selection dimension (KILN04 7.3), drawn LAST so a corpus entry from
+	// before it keeps meaning what it meant: about one world in eight seals a
+	// language and leaves two packages out. The bindings are re-sealed, so every
+	// B check still passes and only the foreign rule is new.
+	if b.rare() {
+		w.selectLang("go", "a/b", "c/d")
+	}
 	return w
+}
+
+// oracleForeign restates the foreign rule without the merge's helpers: the
+// NEAREST enclosing package (the longest package path that is a segment-wise
+// ancestor of u, among the plan's packages and the left-out ones) must be a
+// left-out one.
+func oracleForeign(w *world, u string) bool {
+	best, bestLen, isForeign := "", -1, false
+	consider := func(p string, foreign bool) {
+		if isAnc(p, u) && len(segs(p)) > bestLen {
+			best, bestLen, isForeign = p, len(segs(p)), foreign
+		}
+	}
+	for _, f := range w.foreign {
+		consider(f, true)
+	}
+	for _, sh := range w.plan {
+		for _, p := range sh.Packages {
+			consider(p, false)
+		}
+	}
+	_ = best
+	return isForeign
 }
 
 // ---------------------------------------------------------------------------
@@ -322,6 +352,9 @@ func oracle(w *world) verdict {
 			inv := w.shards[c.shard].Inventory.Paths
 			seen := append(append([]string{}, r.Record.UntrackedObservations...), r.Record.AbsentObservations...)
 			for _, u := range seen {
+				if w.lang != "" && oracleForeign(w, u) {
+					own[a] = true // M16: the action loses its own record, nothing else
+				}
 				for b, ws := range writes {
 					for _, wr := range ws {
 						dep = dep || (b != a && isOv(u, wr))

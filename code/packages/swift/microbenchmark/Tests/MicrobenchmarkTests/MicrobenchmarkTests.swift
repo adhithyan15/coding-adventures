@@ -314,6 +314,7 @@ final class MicrobenchmarkTests: XCTestCase {
         XCTAssertEqual(report.revision, "test")
         XCTAssertEqual(report.workload, ArrayWorkload.identifier)
         XCTAssertEqual(report.pairs.count, 3)
+        XCTAssertEqual(report.os, expectedOperatingSystemName)
         XCTAssertEqual(try runCommandLine(arguments: ["--help"], environment: [:], clock: { 0 }).isHelp, true)
 
         let invalid = [["--unknown", "1"], ["--pairs"], ["--pairs", "9223372036854775808"],
@@ -321,6 +322,37 @@ final class MicrobenchmarkTests: XCTestCase {
         for args in invalid {
             XCTAssertThrowsError(try runCommandLine(arguments: args, environment: [:], clock: { 0 }))
         }
+    }
+
+    func testCommandLineEnvironmentInjectionAndEmptyDefault() throws {
+        func report(environment: [String: String]? = nil) throws -> Report {
+            var tick: Int64 = 0
+            let arguments = ["--pairs", "1", "--target-ns", "1", "--max-batch", "1"]
+            let result: CommandLineResult
+            if let environment {
+                result = try runCommandLine(
+                    arguments: arguments,
+                    environment: environment,
+                    clock: { defer { tick += 1 }; return tick }
+                )
+            } else {
+                result = try runCommandLine(
+                    arguments: arguments,
+                    clock: { defer { tick += 1 }; return tick }
+                )
+            }
+            guard case .report(let value) = result else {
+                throw MicrobenchmarkError.invalidConfiguration("expected a report")
+            }
+            return value
+        }
+
+        XCTAssertEqual(try report().revision, "unknown")
+        XCTAssertEqual(
+            try report(environment: ["GIT_REVISION": "git-revision", "GITHUB_SHA": "github-sha"]).revision,
+            "git-revision"
+        )
+        XCTAssertEqual(try report(environment: ["GITHUB_SHA": "github-sha"]).revision, "github-sha")
     }
 
     private struct Fixture: Decodable {
@@ -354,6 +386,18 @@ final class MicrobenchmarkTests: XCTestCase {
     private enum TestFailure: Error {
         case callback
     }
+}
+
+private var expectedOperatingSystemName: String {
+    #if os(Windows)
+        "windows"
+    #elseif os(macOS)
+        "macos"
+    #elseif os(Linux)
+        "linux"
+    #else
+        "unknown"
+    #endif
 }
 
 private extension CommandLineResult {

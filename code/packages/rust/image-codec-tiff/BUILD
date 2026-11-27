@@ -1,1 +1,1 @@
-cargo test -p image-codec-tiff -- --nocapture
+cargo test --locked -p image-codec-tiff -- --nocapture

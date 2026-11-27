@@ -29,3 +29,4 @@ When adding a TypeScript package, run the repository portability contract as
 well as package-local tests. In a sparse worktree, audit missing tracked inputs
 from the exact Git head rather than interpreting the sparse filesystem as the
 complete repository or expanding a disk-constrained checkout.
+The repository source-boundary test derives TypeScript consumers from package roots whose `BUILD` front and `tsconfig.json` extend the shared base. A new qualifying root must be added to the exact-root list even when its local portability tests pass; then refresh every `boundary_sha256` pin and both language digest assertions.

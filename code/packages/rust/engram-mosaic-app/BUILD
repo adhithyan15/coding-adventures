@@ -1,1 +1,1 @@
-cargo test -p engram-mosaic-app -- --nocapture
+cargo test --locked -p engram-mosaic-app -- --nocapture

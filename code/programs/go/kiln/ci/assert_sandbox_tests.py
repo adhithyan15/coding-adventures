@@ -161,6 +161,8 @@ def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
             event = json.loads(line)
         except json.JSONDecodeError:
             continue
+        if not isinstance(event, dict):
+            continue
         test = event.get("Test")
         if not test:
             continue
@@ -169,6 +171,74 @@ def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
         elif event.get("Action") in FINAL:
             final[test] = event["Action"]
     return {t: o[-limit:] for t, o in out.items() if final.get(t) == "fail"}
+
+
+def failed_runs(lines: list[str]) -> list[tuple[str, list[str]]]:
+    """Every FAILED run of every test, in full, in the order they ended.
+
+    failing_output() keys by test name, which is right for one pass of the suite
+    and wrong for `go test -count=N`: the N runs of a test share its name, so a
+    failure in run 3 would be mixed with runs 1, 2, 4 and 5, or hidden when the
+    last run passed.  A test's "run" event starts a fresh buffer; its final
+    action keeps the buffer (fail) or drops it (pass, skip).  Nothing is cut: a
+    repeat step that prints only a log tail loses exactly the iteration whose
+    message matters.  The package's own output (no Test: a build error, a panic
+    outside a test, the final FAIL line) comes back under the name "(package)"
+    when any test failed or the package did not pass."""
+    open_runs: dict[str, list[str]] = {}
+    failed: list[tuple[str, list[str]]] = []
+    package: list[str] = []
+    package_failed = False
+    for line in lines:
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, dict):
+            continue  # a stray `0` or `null` line is valid JSON but no event
+        test = event.get("Test")
+        action = event.get("Action")
+        if not test:
+            if action == "output":
+                package.extend(log_lines(event.get("Output", "")))
+            elif action == "fail":
+                package_failed = True
+            continue
+        if action == "run":
+            open_runs[test] = []
+        elif action == "output":
+            open_runs.setdefault(test, []).extend(log_lines(event.get("Output", "")))
+        elif action in FINAL:
+            out = open_runs.pop(test, [])
+            if action == "fail":
+                failed.append((test, out))
+    if failed or package_failed:
+        failed.append(("(package)", package))
+    return failed
+
+
+def plain_text(lines: list[str]) -> str:
+    """The text `go test -v` would have printed, rebuilt from the JSON stream.
+
+    Every "output" event, test or package, in stream order: the "Output" fields
+    of a -json stream are the -v text, line breaks included.  The repeat steps
+    run with -json so a failure can be printed in full (failed_runs), and keep
+    their awk counters (RESTARTED_SPAWNS=, PROBE: trace, ...) by counting on this
+    text.  A line that is not JSON (go test writes a build failure that way) is
+    kept as it is, so nothing is dropped."""
+    parts: list[str] = []
+    for line in lines:
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            event = None
+        if not isinstance(event, dict):
+            # Not JSON, or JSON that is no event (`0`, `null`): kept as text.
+            parts.append(line if line.endswith("\n") else line + "\n")
+            continue
+        if event.get("Action") == "output":
+            parts.append(event.get("Output", ""))
+    return "".join(parts)
 
 
 def passing_facts(lines: list[str]) -> dict[str, list[str]]:
@@ -460,7 +530,29 @@ def synthetic_problems(fields: dict[str, str]) -> list[str]:
     return problems
 
 
+def main_repeat(mode: str, path: str) -> int:
+    """The two helpers the repeat steps of ci.yml use on their -json stream:
+    `--text FILE` prints the -v text, `--failures FILE` prints every failed run
+    in full (as workflow groups).  Neither decides pass or fail; the step does."""
+    try:
+        with open(path, encoding="utf-8", errors="replace") as handle:
+            lines = handle.readlines()
+    except OSError as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 2
+    if mode == "--text":
+        sys.stdout.write(plain_text(lines))
+        return 0
+    for test, output in failed_runs(lines):
+        print(f"::group::full output of a failed run of {printable(test)}")
+        print("\n".join(output))
+        print("::endgroup::")
+    return 0
+
+
 def main(argv: list[str]) -> int:
+    if len(argv) == 3 and argv[1] in ("--text", "--failures"):
+        return main_repeat(argv[1], argv[2])
     if len(argv) != 2:
         print(__doc__, file=sys.stderr)
         return 2

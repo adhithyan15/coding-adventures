@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vos-model-sat",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the contract crate's vos.toml and warrant/lemmas.sat (bounded, regular files only, never a symlink); the rest goes through vos-link's loader."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "gen writes exactly warrant/lemmas.sat (refusing a symlink); check --emit-drat writes the .cnf and .drat of each obligation into the directory the caller names (no `..`, never over a symlink)."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the command-line arguments (the contract crate directory and --root)."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints the cross-check, gen and check reports to standard output and a no-verdict reason to standard error."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "Reported by the analyzer for std::process::ExitCode, which only sets the exit status; the program spawns no process."
+    },
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "*",
+      "justification": "Runs the Warrant evaluator on threads with a 256 MiB stack (as vos-link does) and the ten mutant documents in parallel; every thread is joined before its result is used."
+    }
+  ],
+  "justification": "A host checker: reads one contract package through vos-link's bounded loader (that crate owns the file access), evaluates it, and prints a report. No network, no subprocess, no writes."
+}

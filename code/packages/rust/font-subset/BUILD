@@ -1,1 +1,1 @@
-cargo test -p font-subset -- --nocapture
+cargo test --locked -p font-subset -- --nocapture

@@ -1,9 +1,19 @@
 // Command-line entry point for the paired indexed-array experiment.
 import Foundation
 import Microbenchmark
+#if os(Windows)
+import WinSDK
+#elseif canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
 
 do {
-    switch try runCommandLine(arguments: Array(CommandLine.arguments.dropFirst())) {
+    switch try runCommandLine(
+        arguments: Array(CommandLine.arguments.dropFirst()),
+        environment: revisionEnvironment()
+    ) {
     case .help:
         let usage = "Usage: array-microbenchmark [--pairs N] [--confidence P] [--factor F] [--seed N] [--target-ns N] [--max-batch N] [--revision ID]\n"
         try FileHandle.standardOutput.write(contentsOf: Data(usage.utf8))
@@ -16,3 +26,86 @@ do {
     try? FileHandle.standardError.write(contentsOf: Data(diagnostic.utf8))
     exit(EXIT_FAILURE)
 }
+
+/// Read only the revision metadata keys used by the command-line report.
+private func revisionEnvironment() -> [String: String] {
+    var result: [String: String] = [:]
+    for key in ["GIT_REVISION", "GITHUB_SHA"] {
+        if let value = platformEnvironmentValue(named: key) {
+            result[key] = value
+        }
+    }
+    return result
+}
+
+/// Reads one environment variable without materializing the full environment.
+private func platformEnvironmentValue(named name: String) -> String? {
+    #if os(Windows)
+        return windowsEnvironmentValue(named: name)
+    #elseif canImport(Darwin) || canImport(Glibc)
+        return name.withCString { namePointer in
+            guard let value = getenv(namePointer) else {
+                return nil
+            }
+            return String(validatingUTF8: value)
+        }
+    #else
+        return nil
+    #endif
+}
+
+#if os(Windows)
+private func windowsEnvironmentValue(named name: String) -> String? {
+    let nameBuffer = Array(name.utf16) + [0]
+    return nameBuffer.withUnsafeBufferPointer { namePointer -> String? in
+        guard let nameAddress = namePointer.baseAddress else {
+            return nil
+        }
+
+        SetLastError(ERROR_SUCCESS)
+        let required = GetEnvironmentVariableW(nameAddress, nil, 0)
+        if required == 0 {
+            switch GetLastError() {
+            case ERROR_ENVVAR_NOT_FOUND:
+                return nil
+            case ERROR_SUCCESS:
+                return ""
+            default:
+                return nil
+            }
+        }
+
+        // Windows limits an individual environment string to 32,767 UTF-16
+        // code units; allow one extra slot for the terminating NUL.
+        let maximumBufferLength: DWORD = 32_768
+        guard required <= maximumBufferLength else {
+            return nil
+        }
+        var valueBuffer = [WCHAR](repeating: 0, count: Int(required))
+        for _ in 0..<2 {
+            SetLastError(ERROR_SUCCESS)
+            let copied = valueBuffer.withUnsafeMutableBufferPointer { buffer in
+                GetEnvironmentVariableW(nameAddress, buffer.baseAddress, DWORD(buffer.count))
+            }
+            if copied == 0 {
+                switch GetLastError() {
+                case ERROR_ENVVAR_NOT_FOUND:
+                    return nil
+                case ERROR_SUCCESS:
+                    return ""
+                default:
+                    return nil
+                }
+            }
+            if Int(copied) < valueBuffer.count {
+                return String(decoding: valueBuffer.prefix(Int(copied)), as: UTF16.self)
+            }
+            guard copied <= maximumBufferLength else {
+                return nil
+            }
+            valueBuffer = [WCHAR](repeating: 0, count: Int(copied))
+        }
+        return nil
+    }
+}
+#endif

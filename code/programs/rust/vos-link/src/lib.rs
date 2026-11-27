@@ -30,6 +30,8 @@
 //!
 //! | Code | Check |
 //! |---|---|
+//! | `CK11` | a contract with `sat = "model"`: the BUILD lane line, a well-formed `warrant/lemmas.sat` covering every lemma, none ran = fail |
+//! | `CC12` | an implementation makes no SAT claim (`vos.toml`, BUILD or `warrant/`) |
 //! | `GD01`..`GD05` | the inputs: part admission, `contract.vos`, tier files, claim-only obligations, `vos.toml` |
 //! | `CD01` | the document exists and its marker skeleton parses |
 //! | `CD02` | each marker digest equals the digest of its block |
@@ -58,6 +60,7 @@ pub mod inputs;
 pub mod ops;
 pub mod oracle;
 pub mod publish;
+pub mod sat_lane;
 
 pub use build_gen::gen_build;
 pub use component::check_component;

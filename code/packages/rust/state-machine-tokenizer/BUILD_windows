@@ -1,1 +1,1 @@
-cargo test -p state-machine-tokenizer -- --nocapture
+cargo test --locked -p state-machine-tokenizer -- --nocapture

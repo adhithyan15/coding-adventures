@@ -1,0 +1,225 @@
+-- ADL-002 -- the gate MODEL: the eleven LG02 gates as Warrant functions over Int
+-- (VER33 section 5.9 and 10.2, VER32 section 9.2 "G-M1: the model level").
+--
+-- What this file is
+-- =================
+-- logic-gates-basic.warrant (LG02) declares the gates as `op`s: signatures that
+-- describe CODE, bound to a host export.  It contains no gate definition and its
+-- operands are U8.  This file is the missing half: a document in `profile
+-- algorithm` that DEFINES each gate as a total `model` function over `Int`, and
+-- restates the 26 LG02 claims over those definitions.  LG02 stays untouched
+-- (code/scripts/logic_gates_basic_drift.py guards its bytes); this file is a
+-- separate document on purpose.
+--
+-- Why Int, and why the guard is `a not in {0,1}`
+-- ==============================================
+-- A gate takes a WIRE VALUE: 0 or 1.  Anything else is an invalid input and the
+-- gate rejects it (LG01: the Rust gate panics; the model returns the error as a
+-- VALUE, VER33 4.4).  LG02's guard is `a > 1u8` over U8, which is exactly "not a
+-- bit" because a U8 cannot be negative.  Over Int that guard is WRONG: `-1 > 1`
+-- is false, so a model guarded by `a > 1` would ACCEPT -1.  The honest guard is
+-- "is not 0 and is not 1".  Every rejection claim below is stated that way
+-- (`a != 0 and a != 1`), and `to_bit` returns None for every integer other than 0
+-- and 1.  This rewrite is a meaning change the U8 sign-off does not cover
+-- (VER32 9.2); it is reviewed under `gates.model.faithful`.
+--
+-- How a gate is built
+-- ===================
+-- * `to_bit` turns an Int into Option<Bool>: Some(false) for 0, Some(true) for 1,
+--   None otherwise.  `from_bit` turns a Bool back into 0 or 1.
+-- * The SEVEN PRIMITIVES (not, and, or, xor, nand, nor, xnor) are defined
+--   directly as bit functions behind that guard: check each argument, then apply
+--   the Bool operator and convert back.
+-- * The FOUR NAND-BUILT gates (nand_not, nand_and, nand_or, nand_xor) are
+--   COMPOSITIONS OF THE MODEL'S OWN nand_gate, mirroring the Rust constructions
+--   in gates.rs line for line (`nand_not a = nand a a`, `nand_and a b =
+--   nand_not (nand a b)`, `nand_or a b = nand (nand_not a) (nand_not b)`,
+--   `nand_xor` the four-NAND form).  They are NOT defined from the primitive they
+--   are meant to equal.  That is the point: "the hand-built circuit equals the
+--   specification" is then a real theorem (VER32 T3), and a wrong construction
+--   would falsify it.  Had `nand_and` been written as `and_gate`, the theorem
+--   would be true by rewriting and say nothing.
+-- * `ref_not`, `ref_and`, `ref_or`, `ref_xor` are the SPECIFICATION functions
+--   (VER32 `ref_g`) the constructions are compared against.  They are written in
+--   a deliberately different style from the primitives: integer arithmetic behind
+--   an explicit range test, with no to_bit and no Bool operator, so a slip in
+--   to_bit cannot hide on both sides of a comparison.
+--
+-- Oracles.  The truth-table claims keep LG02's oracle: Warrant's own Bool
+-- operators (`not`, `and`, `or`, `!=`, `==`) over Bool binders.  `b2i` is the
+-- claims' own Bool-to-Int helper, separate from the model's `from_bit` so the
+-- claims do not lean on the function under test.
+-- code/scripts/logic_gates_model_guard.py checks the model against the LG02
+-- truth tables and against a sample of rejected inputs.
+--
+-- Claim names follow VER33 5.1: the claim id is `logic_gates_model.claim.NAME`.
+-- The 26 claims below keep LG02's names; the eight `*_over_int` and
+-- `*_matches_ref` claims are additions (see the comments above them).
+warrant logic_gates_model v1 profile algorithm
+
+  error GateError = INVALID_INPUT
+
+  -- ---- the guard and the bit conversions ----
+  model to_bit(x: Int) -> Option<Bool> = if x == 0 then Some(false) else (if x == 1 then Some(true) else None)
+  model from_bit(b: Bool) -> Int = if b then 1 else 0
+
+  -- The claims' own oracle-side conversion (see "Oracles" above).
+  model b2i(b: Bool) -> Int = if b then 1 else 0
+
+  -- Is x a wire value?  Used only by the ref_* specifications.
+  model is_bit(x: Int) -> Bool = x == 0 or x == 1
+
+  -- ---- the seven primitives: bit functions behind the guard ----
+  model not_gate(a: Int) -> Result<Int, GateError> = (match to_bit(a) with
+      None -> Err(GateError.INVALID_INPUT)
+    | Some(x) -> Ok(from_bit(not x)))
+
+  model and_gate(a: Int, b: Int) -> Result<Int, GateError> = (match to_bit(a) with
+      None -> Err(GateError.INVALID_INPUT)
+    | Some(x) -> (match to_bit(b) with
+                    None -> Err(GateError.INVALID_INPUT)
+                  | Some(y) -> Ok(from_bit(x and y))))
+
+  model or_gate(a: Int, b: Int) -> Result<Int, GateError> = (match to_bit(a) with
+      None -> Err(GateError.INVALID_INPUT)
+    | Some(x) -> (match to_bit(b) with
+                    None -> Err(GateError.INVALID_INPUT)
+                  | Some(y) -> Ok(from_bit(x or y))))
+
+  model xor_gate(a: Int, b: Int) -> Result<Int, GateError> = (match to_bit(a) with
+      None -> Err(GateError.INVALID_INPUT)
+    | Some(x) -> (match to_bit(b) with
+                    None -> Err(GateError.INVALID_INPUT)
+                  | Some(y) -> Ok(from_bit(x != y))))
+
+  model nand_gate(a: Int, b: Int) -> Result<Int, GateError> = (match to_bit(a) with
+      None -> Err(GateError.INVALID_INPUT)
+    | Some(x) -> (match to_bit(b) with
+                    None -> Err(GateError.INVALID_INPUT)
+                  | Some(y) -> Ok(from_bit(not (x and y)))))
+
+  model nor_gate(a: Int, b: Int) -> Result<Int, GateError> = (match to_bit(a) with
+      None -> Err(GateError.INVALID_INPUT)
+    | Some(x) -> (match to_bit(b) with
+                    None -> Err(GateError.INVALID_INPUT)
+                  | Some(y) -> Ok(from_bit(not (x or y)))))
+
+  model xnor_gate(a: Int, b: Int) -> Result<Int, GateError> = (match to_bit(a) with
+      None -> Err(GateError.INVALID_INPUT)
+    | Some(x) -> (match to_bit(b) with
+                    None -> Err(GateError.INVALID_INPUT)
+                  | Some(y) -> Ok(from_bit(x == y))))
+
+  -- ---- the four NAND-built gates: compositions of nand_gate ----
+  -- nand_not a = nand a a  (both inputs of the NAND come from one wire)
+  model nand_not(a: Int) -> Result<Int, GateError> = nand_gate(a, a)
+
+  -- nand_and a b = nand_not (nand a b)
+  model nand_and(a: Int, b: Int) -> Result<Int, GateError> = (match nand_gate(a, b) with
+      Err(e) -> Err(e)
+    | Ok(n) -> nand_not(n))
+
+  -- nand_or a b = nand (nand_not a) (nand_not b)   (De Morgan)
+  model nand_or(a: Int, b: Int) -> Result<Int, GateError> = (match nand_not(a) with
+      Err(e) -> Err(e)
+    | Ok(na) -> (match nand_not(b) with
+                   Err(e) -> Err(e)
+                 | Ok(nb) -> nand_gate(na, nb)))
+
+  -- nand_xor a b: with n = nand a b, nand (nand a n) (nand b n)  (four NANDs)
+  model nand_xor(a: Int, b: Int) -> Result<Int, GateError> = (match nand_gate(a, b) with
+      Err(e) -> Err(e)
+    | Ok(n) -> (match nand_gate(a, n) with
+                  Err(e) -> Err(e)
+                | Ok(l) -> (match nand_gate(b, n) with
+                              Err(e) -> Err(e)
+                            | Ok(r) -> nand_gate(l, r))))
+
+  -- ---- specification functions ref_g (VER32 9.2), for the NAND-built gates ----
+  -- Integer arithmetic behind an explicit range test.  On bits: not = 1 - a,
+  -- and = a * b, or = a + b - a * b, xor = (a - b) * (a - b).
+  model ref_not(a: Int) -> Result<Int, GateError> = if is_bit(a) then Ok(1 - a) else Err(GateError.INVALID_INPUT)
+  model ref_and(a: Int, b: Int) -> Result<Int, GateError> = if is_bit(a) and is_bit(b) then Ok(a * b) else Err(GateError.INVALID_INPUT)
+  model ref_or(a: Int, b: Int) -> Result<Int, GateError> = if is_bit(a) and is_bit(b) then Ok(a + b - a * b) else Err(GateError.INVALID_INPUT)
+  model ref_xor(a: Int, b: Int) -> Result<Int, GateError> = if is_bit(a) and is_bit(b) then Ok((a - b) * (a - b)) else Err(GateError.INVALID_INPUT)
+
+  -- ---- claims: the 26 LG02 claims restated over Int ----
+  -- Truth tables range over Bool and compare with Warrant's own operators, as in
+  -- LG02.  Rejections range over every Int that is not a bit (T4): the hypothesis
+  -- is `x != 0 and x != 1`, never `x > 1`.
+  claim not_truth_table:
+    forall a: Bool. not_gate(b2i(a)) == Ok(b2i(not a))
+  claim not_rejects_non_bit:
+    forall a: Int | a != 0 and a != 1. not_gate(a) == Err(GateError.INVALID_INPUT)
+  claim and_truth_table:
+    forall a: Bool, b: Bool. and_gate(b2i(a), b2i(b)) == Ok(b2i(a and b))
+  claim and_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). and_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim or_truth_table:
+    forall a: Bool, b: Bool. or_gate(b2i(a), b2i(b)) == Ok(b2i(a or b))
+  claim or_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). or_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim xor_truth_table:
+    forall a: Bool, b: Bool. xor_gate(b2i(a), b2i(b)) == Ok(b2i(a != b))
+  claim xor_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). xor_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_truth_table:
+    forall a: Bool, b: Bool. nand_gate(b2i(a), b2i(b)) == Ok(b2i(not (a and b)))
+  claim nand_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). nand_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim nor_truth_table:
+    forall a: Bool, b: Bool. nor_gate(b2i(a), b2i(b)) == Ok(b2i(not (a or b)))
+  claim nor_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). nor_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim xnor_truth_table:
+    forall a: Bool, b: Bool. xnor_gate(b2i(a), b2i(b)) == Ok(b2i(a == b))
+  claim xnor_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). xnor_gate(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_not_truth_table:
+    forall a: Bool. nand_not(b2i(a)) == Ok(b2i(not a))
+  claim nand_not_rejects_non_bit:
+    forall a: Int | a != 0 and a != 1. nand_not(a) == Err(GateError.INVALID_INPUT)
+  claim nand_and_truth_table:
+    forall a: Bool, b: Bool. nand_and(b2i(a), b2i(b)) == Ok(b2i(a and b))
+  claim nand_and_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). nand_and(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_or_truth_table:
+    forall a: Bool, b: Bool. nand_or(b2i(a), b2i(b)) == Ok(b2i(a or b))
+  claim nand_or_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). nand_or(a, b) == Err(GateError.INVALID_INPUT)
+  claim nand_xor_truth_table:
+    forall a: Bool, b: Bool. nand_xor(b2i(a), b2i(b)) == Ok(b2i(a != b))
+  claim nand_xor_rejects_non_bit:
+    forall a: Int, b: Int | (a != 0 and a != 1) or (b != 0 and b != 1). nand_xor(a, b) == Err(GateError.INVALID_INPUT)
+  -- The four *_equals_* claims, exactly as LG02 states them: over the BIT domain.
+  claim nand_not_equals_not:
+    forall a: Bool. nand_not(b2i(a)) == not_gate(b2i(a))
+  claim nand_and_equals_and:
+    forall a: Bool, b: Bool. nand_and(b2i(a), b2i(b)) == and_gate(b2i(a), b2i(b))
+  claim nand_or_equals_or:
+    forall a: Bool, b: Bool. nand_or(b2i(a), b2i(b)) == or_gate(b2i(a), b2i(b))
+  claim nand_xor_equals_xor:
+    forall a: Bool, b: Bool. nand_xor(b2i(a), b2i(b)) == xor_gate(b2i(a), b2i(b))
+  -- ---- additions beyond LG02 (VER32 T3 is STRONGER than LG02's *_equals_*) ----
+  -- LG02 states the equivalence of a NAND-built gate and its primitive over Bool,
+  -- so the error cases are never compared.  VER32 T3 quantifies over EVERY integer,
+  -- including the rejected ones: a construction that wrongly accepted 2, or
+  -- rejected a valid bit, is caught here and not there.  These claims are added
+  -- separately rather than silently strengthening the four above.
+  claim nand_not_equals_not_over_int:
+    forall a: Int. nand_not(a) == not_gate(a)
+  claim nand_and_equals_and_over_int:
+    forall a: Int, b: Int. nand_and(a, b) == and_gate(a, b)
+  claim nand_or_equals_or_over_int:
+    forall a: Int, b: Int. nand_or(a, b) == or_gate(a, b)
+  claim nand_xor_equals_xor_over_int:
+    forall a: Int, b: Int. nand_xor(a, b) == xor_gate(a, b)
+  -- Construction = specification function (VER32: T3 mentions both constants).
+  claim nand_not_matches_ref:
+    forall a: Int. nand_not(a) == ref_not(a)
+  claim nand_and_matches_ref:
+    forall a: Int, b: Int. nand_and(a, b) == ref_and(a, b)
+  claim nand_or_matches_ref:
+    forall a: Int, b: Int. nand_or(a, b) == ref_or(a, b)
+  claim nand_xor_matches_ref:
+    forall a: Int, b: Int. nand_xor(a, b) == ref_xor(a, b)
