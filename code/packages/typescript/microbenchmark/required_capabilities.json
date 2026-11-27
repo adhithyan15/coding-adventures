@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/microbenchmark",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The public collector defaults to monotonicClock, which calls process.hrtime.bigint."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GIT_REVISION",
+      "justification": "The CLI reads GIT_REVISION when --revision is absent."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GITHUB_SHA",
+      "justification": "The CLI reads GITHUB_SHA as a fallback when --revision and GIT_REVISION are absent."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The CLI emits its JSON report through console.log and failures through console.error; the taxonomy unifies both streams under stdout.write."
+    }
+  ],
+  "justification": "Unsigned proposal for the existing TypeScript library-plus-driver package. process.argv is command-line input, not an environment read. process.version/platform/arch are runtime metadata, not an enumerated capability operation; no package-source filesystem access was found."
+}
