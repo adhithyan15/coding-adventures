@@ -114,6 +114,15 @@ without advancing another pipeline cycle or re-emitting the commit receipt.
    Separately access aligned address `0xfffffffc`; it remains a high RV32
    address after wrapping and selects a precise load fault. Assert the reported
    wrapped address and that no high address is narrowed through host `int`.
+8. **Bounded fault-prefix differential.** For aligned out-of-range and
+   misaligned `LW` and `SW` cases, run a short common successful prefix through
+   the independent sequential simulator and compare every architectural
+   register and RAM word with the precise pipeline after it selects the fault.
+   The selected faulting PC is absent from successful retirements; the
+   faulting operation and all younger register/store effects are absent. The
+   prefix includes an older committed store and a later older GPR write. A
+   separate adjacent `SW; LW` case continues to compare the complete successful
+   state with the sequential simulator and verify the store-to-load value.
 
 All test programs use the published Go RV32I adapter, a classic five-stage
 configuration, at most 32 instructions, and 200 cycles. The current
