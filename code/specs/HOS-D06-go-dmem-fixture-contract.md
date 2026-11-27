@@ -5,8 +5,9 @@
 Specify a future fixture-only corpus for the opt-in, one-outstanding precise
 D-MEM behavior defined by HOS-D06-GO1 and implemented in the Go core. This
 document defines the canonical guests, timing observations, architectural
-references, JSON safety bounds, and independent-oracle rules. It does not add
-fixture JSON, a JSON Schema, an adapter, or a language route.
+references, JSON safety bounds, and independent-oracle rules. The canonical
+input data is now materialized separately; this contract still does not add an
+expected trace, JSON Schema, adapter, or language route.
 
 The corpus must be language-neutral in its field names and values. Each
 consumer must run the guest through its own native RV32I pipeline and emit the
@@ -16,19 +17,22 @@ compatibility source and its files and hashes are not rewritten.
 
 ## Fixture location and shape
 
-The proposed fixture root is
-`code/specs/fixtures/go-riscv-dmem-ready-v1/`, with `input.json`,
-`expected_trace.json`, `schema.json`, a README, and fixture-adjacent native
-adapters. No package test imports the fixture or gains file access. A future
-adapter must use the existing external fixture-driver convention.
+The fixture root is `code/specs/fixtures/go-riscv-dmem-ready-v1/`. It currently
+contains canonical `input.json` data and a README. A later reviewed step may
+add `expected_trace.json`, `schema.json`, and fixture-adjacent native adapters.
+No package test imports the fixture or gains file access. A future adapter
+must use the existing external fixture-driver convention.
 
 `input.json` is a strict object with a versioned `schema` string and a `cases`
 array. Each case has a stable `id`, precise flat-RAM mode, `latency_cycles`,
-`ram_bytes`, `max_cycles`, a canonical RV32I program, and initial memory. For
-the compatibility case, `program` and initial RAM are a tagged reference to
-the exact D05 input below, with its SHA-256; other cases embed
-`program_bytes_hex` and `initial_memory_words` using the same encoding and
-word shape as `go-riscv-d05-v1/input.json`. Unknown properties are rejected.
+`ram_bytes`, `max_cycles`, a canonical RV32I program, and initial memory. The
+compatibility case repeats the exact D05 program and initial RAM and carries a
+tagged `source` reference to the D05 input path and SHA-256 below. The repeated
+bytes make the corpus self-contained while the tag preserves provenance; a
+consumer must verify they match the referenced input. Unknown properties are
+rejected. `input.json` is canonical data, not yet backed by a published schema
+or expected output. Its current SHA-256 is
+`800486ce328d06263a6e8626964c45ec2b50aff1edbdb48c6a09b401c1213356`.
 
 `expected_trace.json` is a strict object with a versioned `schema`, the SHA-256
 of the exact `input.json` bytes, and one expected result per case. An expected
