@@ -97,6 +97,22 @@ func TestAnalyzeCIWorkflowPatchKeepsUnscopedShellExitConservative(t *testing.T) 
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchRecognizesIsolatedHaskellStepID(t *testing.T) {
+	patch := `
+@@ -5033,0 +5034,1 @@
++        id: haskell
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatal("expected the Haskell setup step ID to remain toolchain-scoped")
+	}
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 1 || got[0] != "haskell" {
+		t.Fatalf("expected Haskell toolchain only, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchKeepsSharedCheckoutUnsafe(t *testing.T) {
 	patch := `
 @@ -1945,0 +1946,3 @@

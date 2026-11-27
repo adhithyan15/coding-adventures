@@ -62,7 +62,7 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	},
 	"haskell": {
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
-		"ghc --version", "cabal --version", "cabal list", "cabal-update", "cabal update", "cabal-store",
+		"ghc --version", "cabal --version", "cabal list", "cabal-update", "cabal update", "cabal-store", "id: haskell",
 		"test_haskell_cabal_config_bootstrap.py", "set up haskell",
 		"verify haskell package index",
 	},
