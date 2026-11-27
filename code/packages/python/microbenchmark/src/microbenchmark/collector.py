@@ -19,6 +19,58 @@ def _finite_json_number(value: object) -> bool:
     return type(value) is float and isfinite(value)
 
 
+def _require_object_fields(
+    value: object, required: set[str], optional: set[str], context: str
+) -> dict[str, object]:
+    """Check the closed object shape available after JSON decoding."""
+    if not isinstance(value, dict):
+        raise ValueError(f"{context} must be an object")
+    missing = required - value.keys()
+    unknown = value.keys() - required - optional
+    if missing:
+        raise ValueError(f"{context} is missing fields: {', '.join(sorted(missing))}")
+    if unknown:
+        raise ValueError(f"{context} has unknown fields: {', '.join(sorted(unknown))}")
+    return value
+
+
+def _valid_metadata_string(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and "\0" not in value
+        and not any(0xD800 <= ord(char) <= 0xDFFF for char in value)
+    )
+
+
+def _validate_driver_metadata(value: dict[str, object]) -> None:
+    """Validate VER07y metadata before projecting a report to its core form."""
+    group = {"workload", "invocation", "revision", "runtime", "os", "arch"}
+    present = group & value.keys()
+    if present and present != group:
+        raise ValueError("driver metadata group must contain all six fields")
+    if "profile" in value and present != group:
+        raise ValueError("profile requires the complete driver metadata group")
+    if not present:
+        return
+
+    workload = value["workload"]
+    if not _valid_metadata_string(workload) or not workload.strip(" \t\n\r\v\f"):
+        raise ValueError("invalid workload identifier")
+    for key in ("revision", "runtime", "os", "arch"):
+        field = value[key]
+        if not _valid_metadata_string(field) or not field:
+            raise ValueError(f"invalid {key} metadata")
+    invocation = value["invocation"]
+    if not isinstance(invocation, list) or any(
+        not _valid_metadata_string(argument) for argument in invocation
+    ):
+        raise ValueError("invocation must be an array of valid strings")
+    if "profile" in value and (
+        not _valid_metadata_string(value["profile"]) or not value["profile"]
+    ):
+        raise ValueError("invalid profile metadata")
+
+
 @dataclass(frozen=True)
 class Config:
     pairs: int = 40
@@ -73,20 +125,41 @@ class Report:
 
     @classmethod
     def from_dict(cls, value: dict[str, object]) -> "Report":
-        """Rebuild and reanalyze a raw JSON report, validating its observation shape."""
+        """Project a decoded mapping into its validated core report.
+
+        This object API validates the closed shape and cannot detect duplicate
+        keys from the original JSON bytes.
+        """
         try:
-            if "workload" in value:
-                workload = value["workload"]
-                if (
-                    not isinstance(workload, str)
-                    or not workload.strip(" \t\n\r\v\f")
-                    or "\0" in workload
-                    or any(0xD800 <= ord(char) <= 0xDFFF for char in workload)
-                ):
-                    raise ValueError("invalid workload identifier")
+            value = _require_object_fields(
+                value,
+                {"config", "batch_size", "pairs", "analysis"},
+                {
+                    "workload",
+                    "invocation",
+                    "revision",
+                    "runtime",
+                    "os",
+                    "arch",
+                    "profile",
+                },
+                "report",
+            )
+            _validate_driver_metadata(value)
             raw_config = value["config"]
-            if not isinstance(raw_config, dict):
-                raise ValueError("config must be an object")
+            raw_config = _require_object_fields(
+                raw_config,
+                {
+                    "pairs",
+                    "confidence_percent",
+                    "minimum_factor",
+                    "seed",
+                    "target_ns",
+                    "max_batch",
+                },
+                set(),
+                "config",
+            )
             config = Config(
                 raw_config["pairs"],
                 raw_config["confidence_percent"],
@@ -103,12 +176,18 @@ class Report:
             if not isinstance(rows, list) or len(rows) != config.pairs:
                 raise ValueError("report pair count does not match config")
             observations = []
+            baseline_first = 0
             for row in rows:
-                if (
-                    not isinstance(row, dict)
-                    or not isinstance(row.get("order"), str)
-                    or row.get("order") not in {"baseline-first", "candidate-first"}
-                ):
+                row = _require_object_fields(
+                    row,
+                    {"baseline_ns", "candidate_ns", "order"},
+                    set(),
+                    "pair",
+                )
+                if not isinstance(row["order"], str) or row["order"] not in {
+                    "baseline-first",
+                    "candidate-first",
+                }:
                     raise ValueError("invalid order value")
                 bns, cns = row["baseline_ns"], row["candidate_ns"]
                 if (
@@ -120,14 +199,19 @@ class Report:
                     raise ValueError(
                         "durations must be positive signed 64-bit integers"
                     )
+                if row["order"] == "baseline-first":
+                    baseline_first += 1
                 observations.append(Observation(bns, cns, row["order"]))
+            if baseline_first != (len(observations) + 1) // 2:
+                raise ValueError("unbalanced pair schedule")
             analysis = analyze(
                 observations, config.confidence_percent, config.minimum_factor
             )
             raw_analysis = value["analysis"]
-            if not isinstance(raw_analysis, dict):
-                raise ValueError("analysis must be an object")
-            interval = raw_analysis.get("interval")
+            raw_analysis = _require_object_fields(
+                raw_analysis, {"ratio", "interval", "verdict"}, set(), "analysis"
+            )
+            interval = raw_analysis["interval"]
             if interval is not None and (
                 not isinstance(interval, list) or len(interval) != 2
             ):

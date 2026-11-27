@@ -58,6 +58,8 @@ def analyze(
     """Analyze candidate/baseline ratios from ordered paired observations."""
     if not pairs:
         raise ValueError("pairs must not be empty")
+    if len(pairs) > 10_000:
+        raise ValueError("at most 10000 pairs are supported")
     if type(confidence_percent) is not int or not 1 <= confidence_percent <= 99:
         raise ValueError("confidence_percent must be an integer from 1 through 99")
     minimum_factor = _validate_factor(minimum_factor)

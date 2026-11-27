@@ -4,3 +4,4 @@ go build ./...
 go test -fuzz=FuzzAnalyzeSinglePair -fuzztime=5s .
 go test -fuzz=FuzzAnalyzePairSetInvariants -fuzztime=5s .
 go test -fuzz=FuzzPerformanceTicksNS -fuzztime=5s .
+python ../../../../code/scripts/microbenchmark-installed-consumer.py go
