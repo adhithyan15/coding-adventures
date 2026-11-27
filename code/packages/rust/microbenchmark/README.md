@@ -40,6 +40,9 @@ The exact supplied value is retained in the invocation arguments. A CI job may
 query its selected compiler separately and pass that output when it can prove
 which compiler it used.
 
+The public analyzer accepts at most 10,000 pairs. It checks confidence, factor,
+and pair count before validating pair contents or allocating its ratio vector.
+
 It compares indexed access with native slice iteration over 4,096 values and
 emits JSON including invocation, the caller-supplied Rust compiler label (or
 `"unknown"`), debug/release profile, OS, and architecture. Building a library

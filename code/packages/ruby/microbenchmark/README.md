@@ -23,7 +23,8 @@ Configuration, checksums, timestamps, batch counts, and raw pair durations use
 exact signed-64-bit Ruby `Integer` values. The standard JSON library parses and
 emits integer tokens without binary64 rounding. The default clock is
 `Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)`; tests can inject
-a deterministic clock. A replay recomputes the analysis, validates raw fields,
+a deterministic clock. Public `analyze` accepts at most 10,000 pairs and checks
+that limit before mapping or validating pair members. A replay recomputes the analysis, validates raw fields,
 and requires the collection order balance.
 
 Run the 4,096-element comparison with:
