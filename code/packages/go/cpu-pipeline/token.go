@@ -322,6 +322,23 @@ type PipelineToken struct {
 	// but does not interpret them; an ISA adapter decides how they affect its
 	// operands. Legacy users can continue using ForwardedFrom and ALUResult.
 	ForwardedOperands []ForwardedOperand
+
+	// PreciseFault is populated only by an opt-in checked-memory adapter after
+	// execute-stage address preflight. The pipeline drains it to WB without
+	// counting it as a successful retirement.
+	PreciseFault *PreciseFault
+}
+
+// PreciseFault is a bounded synchronous access-fault outcome carried by a
+// token until its ordered WB selection point. It describes the selected
+// access; it is not itself a privileged trap or handler execution.
+type PreciseFault struct {
+	PC             int
+	RawInstruction uint32
+	Access         string
+	Cause          string
+	Address        uint32
+	Width          int
 }
 
 // ForwardedOperand identifies one source operand resolved by the hazard unit.
@@ -419,6 +436,10 @@ func (t *PipelineToken) Clone() *PipelineToken {
 				clone.StageEntered[k] = v
 			}
 			clone.ForwardedOperands = append([]ForwardedOperand(nil), t.ForwardedOperands...)
+			if t.PreciseFault != nil {
+				fault := *t.PreciseFault
+				clone.PreciseFault = &fault
+			}
 			return rf.Generate(true, false, &clone)
 		}).GetResult()
 	return result

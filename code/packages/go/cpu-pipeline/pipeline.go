@@ -98,6 +98,7 @@ const (
 	HazardForwardFromMEM                     // Forward value from MEM stage
 	HazardStall                              // Stall the pipeline (insert bubble)
 	HazardFlush                              // Flush speculative stages
+	HazardPreciseFault                       // Squash younger tokens and drain an EX fault to WB
 )
 
 // String returns a human-readable name for the hazard action.
@@ -115,6 +116,8 @@ func (a HazardAction) String() string {
 				return rf.Generate(true, false, "STALL")
 			case HazardFlush:
 				return rf.Generate(true, false, "FLUSH")
+			case HazardPreciseFault:
+				return rf.Generate(true, false, "PRECISE_FAULT")
 			default:
 				return rf.Generate(true, false, "UNKNOWN")
 			}
@@ -157,6 +160,10 @@ type HazardResponse struct {
 	// RedirectPC is the correct PC to fetch from after a flush.
 	// Only meaningful when Action == HazardFlush.
 	RedirectPC int
+
+	// PreciseFaultStageIndex identifies the execute-stage token carrying the
+	// selected fault. That token and older work advance without a new fetch.
+	PreciseFaultStageIndex int
 }
 
 // HazardFunc checks for hazards given the current pipeline stage contents.
@@ -266,6 +273,10 @@ type Pipeline struct {
 
 	// predictFn predicts the next PC. If nil, defaults to PC + 4.
 	predictFn PredictFunc
+
+	// fetchStopped becomes true after a precise fault is selected. The faulting
+	// token and older stages drain to WB without admitting younger instructions.
+	fetchStopped bool
 }
 
 // NewPipeline creates a new pipeline with the given configuration and callbacks.
@@ -416,6 +427,15 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 		stagesCopy := make([]*PipelineToken, numStages)
 		copy(stagesCopy, p.stages)
 		hazard = p.hazardFn(stagesCopy)
+	}
+	if hazard.Action == HazardPreciseFault {
+		faultStage := hazard.PreciseFaultStageIndex
+		if faultStage < 0 || faultStage >= numStages-1 || p.config.Stages[faultStage].Category != StageExecute || p.stages[faultStage] == nil || p.stages[faultStage].PreciseFault == nil {
+			// An invalid fault selection cannot safely be treated as a stall:
+			// retaining WB would invoke its callback a second time. Stop before
+			// any stage callback or commit runs for this malformed transition.
+			panic("cpu-pipeline: precise fault action must identify a faulted execute-stage token")
+		}
 	}
 
 	// --- Phase 2: Compute next state ---
@@ -576,6 +596,20 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 
 		// PC does NOT advance during a stall.
 
+	case HazardPreciseFault:
+		faultStage := hazard.PreciseFaultStageIndex
+		p.fetchStopped = true
+		// Everything before the faulting EX token is younger and is discarded.
+		for i := 0; i < faultStage; i++ {
+			nextStages[i] = NewBubble()
+			nextStages[i].StageEntered[p.config.Stages[i].Name] = p.cycle
+		}
+		// The selected fault and older tokens advance. The old WB token already
+		// committed on its entry cycle and leaves as in normal advancement.
+		for i := faultStage; i < numStages-1; i++ {
+			nextStages[i+1] = p.stages[i]
+		}
+
 	default:
 		// NONE or FORWARD: Normal advancement.
 		//
@@ -622,8 +656,10 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 		}
 
 		// Fetch new instruction into IF stage.
-		tok := p.fetchNewInstruction()
-		nextStages[0] = tok
+		if !p.fetchStopped {
+			tok := p.fetchNewInstruction()
+			nextStages[0] = tok
+		}
 	}
 
 	// --- Phase 3: Commit the new state ---
@@ -682,7 +718,12 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 	lastTok := p.stages[numStages-1]
 	if lastTok != nil && !lastTok.IsBubble {
 		p.writebackFn(lastTok)
-		p.stats.InstructionsCompleted++
+		if lastTok.PreciseFault == nil {
+			p.stats.InstructionsCompleted++
+		}
+		if lastTok.PreciseFault != nil {
+			p.halted = true
+		}
 		if lastTok.IsHalt {
 			p.halted = true
 		}
