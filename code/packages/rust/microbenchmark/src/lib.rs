@@ -1027,6 +1027,31 @@ mod tests {
     }
 
     #[test]
+    fn raw_json_requires_one_complete_document() {
+        let valid = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" }
+        })
+        .to_string();
+        assert!(Report::from_json(&valid).is_ok());
+
+        let truncated = &valid[..valid.len() - 1];
+        for invalid in [
+            truncated.to_owned(),
+            format!("{valid} trailing"),
+            format!("{valid} {{}}"),
+        ] {
+            assert!(
+                Report::from_json(&invalid).is_err(),
+                "accepted incomplete or multiple JSON values: {invalid}"
+            );
+        }
+    }
+
+    #[test]
     fn raw_json_accepts_maximum_balanced_report_with_reused_pair_member_names() {
         let config = Config {
             pairs: MAX_PAIRS,
