@@ -249,7 +249,7 @@ def test_int_under_option_tuple_or_list_is_not_a_type_error_in_a_model(text):
     # At `ir.core` such a type is a missing level, not `ill-typed` as it was: the
     # lane records the model not-live and a call to it is `level-missing`.
     models = {"m": {"params": [["x", text]], "body": ["lit", True]}}
-    program = Program(models=models, model_order=["m"])
+    program = Program(models=models, model_order=["m"], levels=frozenset({"ir.core"}))
     assert "m" in program.not_live_models
     got = outcome_ir(
         case(["lit", True], env=[], models=models, model_order=["m"], subjects={}),
