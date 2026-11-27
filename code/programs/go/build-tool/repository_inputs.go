@@ -140,8 +140,9 @@ var (
 	// test_fuzz_vectors.rb (VER06i) and c/test-bootstrap's test_fuzz_vectors.c
 	// (VER06j, scans it line by line), lua/test_bootstrap's test_fuzz_vectors.lua
 	// (VER06p) and elixir/test_bootstrap's fuzz_corpus_test.exs (VER06n) read it
-	// the same way, and so does swift/test-bootstrap's
-	// FuzzReferenceVectorsTests (VER06l).
+	// the same way; so does cpp/test-bootstrap's test_fuzz_vectors.cpp (VER06k),
+	// through the C++ API, and swift/test-bootstrap's FuzzReferenceVectorsTests
+	// (VER06l) reads it too.
 	goFuzzReferenceVectorPaths = []string{"code/packages/go/test-bootstrap/fuzz/reference_vectors_test.go"}
 	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
 	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
@@ -241,7 +242,8 @@ var (
 	// go/test-bootstrap's fuzz/corpus_test.go read cases.json from the
 	// repository root, so an edit selects those packages; so do
 	// java/test-bootstrap, kotlin/test-bootstrap, csharp/test-bootstrap and
-	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), ruby/test_bootstrap (VER06i),
+	// c/test-bootstrap (test_fuzz_corpus.c, VER06j), cpp/test-bootstrap
+	// (test_fuzz_corpus.cpp, VER06k), ruby/test_bootstrap (VER06i),
 	// elixir/test_bootstrap (fuzz_corpus_test.exs, VER06n) and lua/test_bootstrap
 	// (test_fuzz_corpus.lua, VER06p).
 	fuzzV1CorpusPaths = []string{"code/specs/fixtures/fuzz-v1"}
@@ -1398,6 +1400,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "c/test-bootstrap",
 		language: "c",
+		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
+		matches:  isGoFuzzReferenceVectors,
+		paths:    goFuzzReferenceVectorPaths,
+	},
+	{
+		name:     "cpp/test-bootstrap",
+		language: "cpp",
+		inputs:   "the shared fuzz-v1 fuzz-engine conformance corpus",
+		matches:  isFuzzV1Corpus,
+		paths:    fuzzV1CorpusPaths,
+	},
+	{
+		name:     "cpp/test-bootstrap",
+		language: "cpp",
 		inputs:   "the Go fuzz engine's reference-vector table its differential test parses",
 		matches:  isGoFuzzReferenceVectors,
 		paths:    goFuzzReferenceVectorPaths,

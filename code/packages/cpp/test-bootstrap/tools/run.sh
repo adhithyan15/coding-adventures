@@ -43,8 +43,13 @@ fi
 . "$HARNESS/lib/iso-lib.sh"
 iso__require_check cpp || exit 1
 
-C_LIB="pbt_big pbt_prng pbt_val pbt_budget pbt_shrink pbt_gen pbt_runner pbt_json pbt_tfv pbt_hooks"
-TESTS="test_api test_exceptions test_alloc_throw test_corpus"
+# The fuzz engine (VER06j) is linked too, EXCEPT fuzz_corpus.c (the C lane's corpus runner: the C++ replay must
+# never reach it) and fuzz_sancov.c (not ISO C).  libm: the power schedule uses sqrt and floor.
+C_LIB="pbt_big pbt_prng pbt_val pbt_budget pbt_shrink pbt_gen pbt_runner pbt_json pbt_tfv pbt_hooks fuzz_hooks fuzz_mutate fuzz_bitmap fuzz_sig fuzz_engine"
+TESTS="test_api test_exceptions test_alloc_throw test_corpus test_fuzz_corpus test_fuzz_vectors test_fuzz_pinned test_fuzz_exceptions test_fuzz_handle test_fuzz_alloc"
+# Linux needs -pthread for the one test that starts a thread; elsewhere it is not needed.
+THREAD_FLAGS=""
+if [ "$(uname)" = "Linux" ]; then THREAD_FLAGS="-pthread"; fi
 CFLAGS_ISO="$(iso__strict_flags c)"
 CXXFLAGS_ISO="$(iso__strict_flags cpp)"
 INC="$(iso__include_flags)"
@@ -79,7 +84,7 @@ run_pass() {
     for _t in $TESTS; do
         echo "iso-harness: [$_label] $_t"
         # shellcheck disable=SC2086
-        "$_cxx" $CXXFLAGS_ISO $_extra $INC "tests/$_t.cpp" $_objs -o "$ISO_BUILD_DIR/$_label-$_t"
+        "$_cxx" $CXXFLAGS_ISO $_extra $THREAD_FLAGS $INC "tests/$_t.cpp" $_objs -lm -o "$ISO_BUILD_DIR/$_label-$_t"
         "$ISO_BUILD_DIR/$_label-$_t"
     done
 }
