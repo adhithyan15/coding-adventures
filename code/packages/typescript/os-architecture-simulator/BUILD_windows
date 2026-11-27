@@ -1,0 +1,9 @@
+@echo off
+npm ci --quiet
+if errorlevel 1 exit /b %errorlevel%
+npm run build
+if errorlevel 1 exit /b %errorlevel%
+node --experimental-strip-types --test tests/core.test.ts
+if errorlevel 1 exit /b %errorlevel%
+node --experimental-strip-types ../../../../code/specs/fixtures/os-architecture-v1/verify_profiles.mjs
+if errorlevel 1 exit /b %errorlevel%
