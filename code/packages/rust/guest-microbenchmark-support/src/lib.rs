@@ -394,7 +394,10 @@ pub fn runtime_metadata(
 ) -> RuntimeMetadata {
     RuntimeMetadata {
         revision,
-        host_runtime: env!("CA_GUEST_RUSTC_VERSION").to_owned(),
+        // Runtime metadata must not execute or query a compiler. Callers that
+        // need a compiler label can supply one in a future explicit field;
+        // until then, `unknown` is truthful and portable.
+        host_runtime: "unknown".to_owned(),
         guest_runtime: guest_runtime.to_owned(),
         build_profile: if cfg!(debug_assertions) {
             "debug"
@@ -572,6 +575,12 @@ impl<'de> Visitor<'de> for UniqueJsonValueVisitor {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn runtime_metadata_does_not_query_the_build_compiler() {
+        let metadata = runtime_metadata("guest/1", "source", "revision".to_owned());
+        assert_eq!(metadata.host_runtime, "unknown");
+    }
     use coding_adventures_microbenchmark::{collect, Batch};
 
     fn sample_report() -> Report {

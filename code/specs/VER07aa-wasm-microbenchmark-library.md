@@ -162,7 +162,10 @@ permissions. Its capability manifest must include `time:read:*` because its
 CLI collector calls the host monotonic clock, `fs:create:*` because the
 manifest sidecar uses create-new semantics, and only the filesystem read/write
 permissions justified by replay and sidecar output. Do not assign these host
-permissions to the pure WASM library.
+permissions to the pure WASM library. The shared native guest support crate
+declares `time:read:*` for elapsed monotonic clock reads and `fs:read:*` for its
+caller-selected replay APIs; it accepts writers from callers instead of
+creating files of its own.
 
 The existing `rust-guest-microbenchmark-consumer` remains a shared consumer
 owned by its package BUILD integration. Its ownership documentation and

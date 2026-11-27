@@ -5,7 +5,6 @@ edition = "2021"
 description = "Envelope, CLI, and replay support for guest-runtime microbenchmark drivers"
 license = "MIT"
 repository = "https://github.com/adhithyan15/coding-adventures"
-build = "build.rs"
 
 [dependencies]
 coding_adventures_microbenchmark = { package = "coding_adventures_microbenchmark", version = "0.1.0", path = "../microbenchmark" }

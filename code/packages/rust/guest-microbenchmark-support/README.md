@@ -17,8 +17,10 @@ and verifies it equals the envelope report emitted by each guest driver.
 
 ```text
 cargo test --manifest-path Cargo.toml
-cargo run --manifest-path tests/consumer/Cargo.toml -- report guest.json
+cargo run --manifest-path ../../../tests/rust-guest-microbenchmark-consumer/Cargo.toml -- report guest.json
 ```
 
+The host runtime metadata field currently reports `unknown`: this library does
+not invoke `rustc` during a consumer build to discover a compiler version.
 It depends on the small `coding_adventures_microbenchmark` package and does not
 depend on the optional Warrant framework.

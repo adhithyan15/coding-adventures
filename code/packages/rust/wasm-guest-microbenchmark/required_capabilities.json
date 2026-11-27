@@ -10,10 +10,22 @@
       "justification": "The benchmark command emits the replayable core report and validation results to stdout."
     },
     {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The native host runner measures workloads with std::time::Instant."
+    },
+    {
       "category": "fs",
       "action": "read",
       "target": "*",
       "justification": "The optional replay command reads a report file selected by the user."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "*",
+      "justification": "The optional sidecar writer creates its selected output file with create_new semantics."
     },
     {
       "category": "fs",
