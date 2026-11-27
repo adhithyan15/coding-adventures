@@ -21,15 +21,14 @@ Both durations are converted to binary64 only when forming their ratio, as
 VER07d requires. Statistical samples remain finite binary64 values as specified
 by VER07c.
 
-The exact `medianInterval` API accepts at most 10,000 observations. It checks
-confidence first, then array shape and size, rejecting an oversized sample
-before cloning, sorting, or constructing `BigInt` values. For a within-limit
-sample, it validates finite numeric members before sorting. The basic `median`
-API has no sample-size cap. The public microbenchmark `analyze` API accepts at
-most 10,000 pairs; after checking that the input is a nonempty array and that
-confidence and factor are valid, it rejects excess length before mapping or
-validating pair members. A size error therefore takes precedence over malformed
-members, while invalid scalar arguments take precedence over a size error.
+The generic rank-statistics API follows VER07c's native-input length contract
+and does not impose an application-level sample-size cap; callers are
+responsible for choosing resource-appropriate input sizes. The public
+microbenchmark `analyze` API accepts at most 10,000 pairs; after checking that
+the input is a nonempty array and that confidence and factor are valid, it
+rejects excess length before mapping or validating pair members. A size error
+therefore takes precedence over malformed members, while invalid scalar
+arguments take precedence over a size error.
 
 ## Repository dependency identity
 

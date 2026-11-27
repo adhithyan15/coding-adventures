@@ -49,10 +49,8 @@ Use Ruby's arbitrary-precision integers for the binomial coefficients and
 cutoff comparison; no floating-point probability or machine-word overflow may
 choose the rank. Confidence is an integer percentage from 1 through 99. Return
 `nil` if no rank qualifies. Preserve ties and return endpoints from the input.
-The exact interval accepts at most 10,000 observations. Validate confidence,
-then the array type, nonempty state, and size before converting or mapping any
-sample values; an oversized error precedes errors in individual values. The
-basic `median` API has no sample-size cap.
+This generic API does not impose an application-level sample-size cap; callers
+are responsible for choosing resource-appropriate input sizes.
 
 ## Paired analysis and collection
 
