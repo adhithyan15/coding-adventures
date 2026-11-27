@@ -476,7 +476,7 @@ console.log(prose, nested);
         # -3 shared_projects: wave, analog-waveform, and discrete-waveform
         # migrated from tsconfig.base.json to standalone configs (PHY-W8-E).
         # +1: os-architecture-simulator is a standalone noEmit semantic package.
-        self.assertEqual(summary.total_projects, 523)
+        self.assertEqual(summary.total_projects, 524)
         self.assertEqual(summary.shared_projects, 305)
         self.assertEqual(summary.inherited_root_dir, 136)
         self.assertEqual(summary.inherited_out_dir, 139)
@@ -555,7 +555,7 @@ console.log(prose, nested);
         # +1: ca-capability-analyzer reads TypeScript packages off disk via Node APIs.
         # +1: microbenchmark's shipped CLI/collector uses Node APIs in src.
         # +1: os-architecture-simulator uses node:test and node:assert in its inline tests; shipped src stays Node-API-free.
-        self.assertEqual(summary.node_api_projects, 90)
+        self.assertEqual(summary.node_api_projects, 91)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -591,7 +591,7 @@ console.log(prose, nested);
         # +1: ca-capability-analyzer owns `@types/node` directly.
         # +1: microbenchmark directly owns its shipped CLI/collector Node types.
         # +1: os-architecture-simulator directly owns @types/node for those test compiler inputs.
-        self.assertEqual(summary.node_provider_projects, 90)
+        self.assertEqual(summary.node_provider_projects, 91)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         # 0: matrix-rust-napi's lock exemption is retired; it commits a lock.
@@ -669,7 +669,7 @@ console.log(prose, nested);
         # +2: TypeScript rank-statistics and microbenchmark lock their compiler
         # and test toolchains.
         # +1: os-architecture-simulator locks its standalone TypeScript compiler.
-        self.assertEqual(summary.locked_compilers, 535)
+        self.assertEqual(summary.locked_compilers, 537)
 
 
 if __name__ == "__main__":
