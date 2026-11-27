@@ -1099,3 +1099,84 @@ def test_a_fault_that_reads_a_missing_bind_is_ill_typed():
     with pytest.raises(Refusal) as caught:
         compile_fault(post(expr), op_row("Result<Bool,E>"), ERRORS, ALL)
     assert caught.value.code == "ill-typed"
+
+
+# -- the work budget never refuses what a generator can emit ---------------------------------
+def wide_types(cases):
+    return {"E": {"kind": "error", "cases": [f"C{i}" for i in range(cases)]}}
+
+
+def run_wide(ir, types, scope, env):
+    compiled = Program(types=types, levels=TUPLE).compile(ir, scope)
+    return evaluate(compiled, env)
+
+
+@pytest.mark.parametrize("cases", [20, 21, 64])
+def test_a_match_does_not_depend_on_how_many_cases_a_type_declares(cases):
+    # three Result<Bool,E> columns plus a guard column with 8 arms
+    types = wide_types(cases)
+    cols = "Result<Bool,E>"
+    scope = {"t": parse_type(f"Result<({cols},{cols},{cols},{cols}),E>", types)}
+    arms_ = [
+        [["ok", ["tuple", [["wild"]] * 3 + [["err", f"C{i}"]]]], lit("U8", i)]
+        for i in range(8)
+    ]
+    arms_.append([["wild"], lit("U8", 0)])
+    ir = ["match", var("t"), arms_]
+    value = ("ok", (("ok", True),) * 3 + (("err", "C3"),))
+    assert run_wide(ir, types, scope, {"t": value}) == 3
+
+
+def balanced(parts, make):
+    """Balanced nested pairs: a tuple has at most 8 components, a pattern 8 levels."""
+    if len(parts) == 1:
+        return parts[0]
+    half = len(parts) // 2
+    return make(balanced(parts[:half], make), balanced(parts[half:], make))
+
+
+def nest_type(parts):
+    return balanced(parts, lambda a, b: f"({a},{b})")
+
+
+def nest_value(parts, make):
+    return balanced(parts, make)
+
+
+@pytest.mark.parametrize("columns", [7, 8, 10])
+def test_the_reviewers_family_with_a_guard_column_is_accepted(columns):
+    # each arm pins a guard column to its own error case, so every arm is reachable
+    types = wide_types(2 * columns + 2)
+    col = "Result<Bool,E>"
+    scope = {"t": parse_type(f"Result<{nest_type([col] * (columns + 1))},E>", types)}
+    arms_ = []
+    for i in range(columns):
+        for kind, n in ((["ok", ["wild"]], 2 * i), (["err_any"], 2 * i + 1)):
+            parts = [["wild"]] * columns + [["err", f"C{n}"]]
+            parts[i] = kind
+            arms_.append(
+                [
+                    ["ok", nest_value(parts, lambda a, b: ["tuple", [a, b]])],
+                    lit("U8", n),
+                ]
+            )
+    arms_.append([["wild"], lit("U8", 99)])
+    ir = ["match", var("t"), arms_]
+    items = [("ok", True)] * columns + [("err", f"C{2 * columns + 1}")]
+    miss = ("ok", nest_value(items, lambda a, b: (a, b)))
+    assert run_wide(ir, types, scope, {"t": miss}) == 99
+
+
+def test_a_bind_of_an_undetermined_type_may_not_be_used_in_an_arm():
+    used = [
+        "match",
+        ["err", "BAD"],
+        [[["ok", ["bind", "x"]], var("x")], [["err_any"], TWO]],
+    ]
+    assert code_two(used) == "ill-typed"
+    unused = [
+        "match",
+        ["err", "BAD"],
+        [[["ok", ["bind", "x"]], ONE], [["err_any"], TWO]],
+    ]
+    assert value_two(unused) == 2

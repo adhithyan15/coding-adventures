@@ -88,6 +88,7 @@ from .wtypes import (
     fixed_range,
     flows,
     forget_widths,
+    is_undetermined,
     parse_type,
     unify,
 )
@@ -880,6 +881,9 @@ class Program:
             if len(node) != 2 or not isinstance(node[1], str) or node[1] not in scope:
                 raise Refusal("ill-typed", "an unbound variable")
             name = node[1]
+            if is_undetermined(scope[name]):
+                # a `bind` of a value of an undetermined type may not be used
+                raise Refusal("ill-typed", "a variable of an undetermined type")
             return Compiled(scope[name], lambda env: env[name], 1)
         if tag in ("subject_op", "model_call"):
             return self._call(node, scope)

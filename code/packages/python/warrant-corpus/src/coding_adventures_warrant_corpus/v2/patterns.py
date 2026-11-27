@@ -54,16 +54,14 @@ MAX_ARMS = 256
 """The arms of one ``match`` at most (Appendix A.2); more is refused ``ill-typed``."""
 MAX_PATTERN_DEPTH = 8
 """A pattern nests at most 8 levels (the outermost is 1); deeper is ``depth``."""
-MAX_STEPS = 20_000
-"""The work budget of one usefulness check, in recursion steps (section 14).
+MAX_STEPS = 200_000
+"""The work budget of one usefulness check, (a step costs ``1 + rows``; section 14).
 
 The check is exponential in the worst case (a tuple of many ``Result`` columns,
 each with an ``ok`` row and an ``err_any`` row), and a corpus is hostile input.
 Every kit case and every committed adopter ``match`` needs a few hundred steps at
 most; over budget the ``match`` is refused ``ill-typed`` (the spec names no code).
 """
-OTHER = "\0other"
-"""Stands for every case of an *undetermined* error type that no pattern names."""
 
 
 def _ill_typed(why: str) -> Refusal:
@@ -214,34 +212,6 @@ Ctor = tuple  # ("ok",) | ("err", case) | ("tuple", arity)
 Row = list  # of Pattern
 
 
-def _cases(
-    ty: Ty, errors: Mapping[str, tuple[str, ...]], column: list[Pattern]
-) -> list[str]:
-    """The error cases of a ``Result`` column: declared, or *open* when undetermined.
-
-    An undetermined error type (a bare ``ok``, a case two error types declare)
-    could be any of them: its cases are the ones the column names plus
-    :data:`OTHER`, which stands for all the rest, so the type is never complete
-    and only ``err_any``, a wildcard or a ``bind`` covers it.
-    """
-    declared = errors.get(ty.args[1].head)
-    if declared is not None:
-        return list(declared)
-    named = sorted({p.name for p in column if p.kind == "err"})
-    return [*named, OTHER]
-
-
-def _signature(
-    ty: Ty, errors: Mapping[str, tuple[str, ...]], column: list[Pattern]
-) -> list[Ctor] | None:
-    """Every constructor of ``ty`` a pattern can name, or ``None`` if it has none."""
-    if ty.head == "Result":
-        return [("ok",), *(("err", case) for case in _cases(ty, errors, column))]
-    if ty.head == "()":
-        return [("tuple", len(ty.args))]
-    return None
-
-
 def _field_types(ctor: Ty | Ctor, ty: Ty) -> list[Ty]:
     """The types of the fields of constructor ``ctor`` of ``ty``."""
     if ctor[0] == "ok":  # type: ignore[index]
@@ -276,18 +246,17 @@ def _specialize(rows: list[Row], ctor: Ctor, arity: int) -> list[Row]:
     return out
 
 
-def _used(rows: list[Row], cases: list[str]) -> set[Ctor]:
-    """The constructors the first column of ``rows`` names (``err_any``: every case)."""
-    used: set[Ctor] = set()
-    for row in rows:
-        head = row[0]
-        if head.kind == "err_any":
-            used.update(("err", case) for case in cases)
-        else:
-            ctor = _constructor(head)
-            if ctor is not None:
-                used.add(ctor)
-    return used
+def _named_errors(column: list[Pattern]) -> list[str]:
+    """The error cases some pattern of ``column`` names (``err_any`` names none)."""
+    return sorted({p.name for p in column if p.kind == "err"})
+
+
+def _other_errors_exist(
+    ty: Ty, errors: Mapping[str, tuple[str, ...]], named: list[str]
+) -> bool:
+    """Is there an error case no pattern of the column names?  (Always, if open.)"""
+    declared = errors.get(ty.args[1].head)
+    return True if declared is None else bool(set(declared) - set(named))
 
 
 def useful(
@@ -302,53 +271,88 @@ def useful(
     With ``query`` all wildcards this asks whether ``rows`` leave a value
     uncovered (the ``match`` is not exhaustive); with ``query`` one arm's
     pattern and ``rows`` the arms above it, it asks whether that arm can be
-    reached.  The recursion is over the *types* and the columns; ``budget`` (a
-    one-item list of steps left, :data:`MAX_STEPS` when absent) bounds the work,
-    and running out refuses the ``match`` as ``ill-typed``.
+    reached.
+
+    A column is split into the constructors its patterns *name* and **one
+    "rest" branch** for every constructor they do not (Maranget's default
+    matrix), so the work depends on what the patterns say and never on how many
+    cases an error type declares.  For a ``Result`` the rest is "an ``ok``
+    nobody names" (only wildcard rows match it) and "an ``err`` case nobody
+    names" (wildcard and ``err_any`` rows match it); an undetermined error type
+    always has such a case.  ``budget`` (a one-item list of work left, charged
+    ``1 + rows`` a step, :data:`MAX_STEPS` when absent) bounds the work, and
+    running out refuses the ``match`` as ``ill-typed``.
     """
     if budget is None:
         budget = [MAX_STEPS]
-    budget[0] -= 1
+    budget[0] -= 1 + len(rows)
     if budget[0] < 0:
         raise _ill_typed("a match whose patterns are too intricate to check")
     if not tys:
         return not rows
     head, ty = query[0], tys[0]
-    column = [row[0] for row in rows] + [head]
-    signature = _signature(ty, errors, column)
-    cases = _cases(ty, errors, column) if ty.head == "Result" else []
-    if head.kind == "err_any":
-        return any(
-            useful(
-                _specialize(rows, ("err", case), 0), query[1:], tys[1:], errors, budget
-            )
-            for case in cases
-        )
-    if not head.is_wild:
+    rest = query[1:]
+    if not head.is_wild and head.kind != "err_any":
         ctor = _constructor(head)
         assert ctor is not None
         fields = _field_types(ctor, ty)
         return useful(
             _specialize(rows, ctor, len(fields)),
-            list(head.subs) + query[1:],
+            list(head.subs) + rest,
             fields + tys[1:],
             errors,
             budget,
         )
-    if signature is not None and set(signature) <= _used(rows, cases):
-        for ctor in signature:
-            fields = _field_types(ctor, ty)
+    if ty.head == "Result":
+        column = [row[0] for row in rows]
+        named = _named_errors(column)
+        others = _other_errors_exist(ty, errors, named)
+        if head.kind == "err_any":
+            for case in named:
+                if useful(
+                    _specialize(rows, ("err", case), 0), rest, tys[1:], errors, budget
+                ):
+                    return True
+            matching = [
+                row[1:] for row in rows if row[0].is_wild or row[0].kind == "err_any"
+            ]
+            return others and useful(matching, rest, tys[1:], errors, budget)
+        if any(row[0].kind == "ok" for row in rows):
+            fields = _field_types(("ok",), ty)
             if useful(
-                _specialize(rows, ctor, len(fields)),
-                [WILD] * len(fields) + query[1:],
+                _specialize(rows, ("ok",), 1),
+                [WILD] + rest,
                 fields + tys[1:],
                 errors,
                 budget,
             ):
                 return True
+        else:  # an ok that nobody names: only wildcard rows match it
+            if useful(
+                [r[1:] for r in rows if r[0].is_wild], rest, tys[1:], errors, budget
+            ):
+                return True
+        for case in named:
+            if useful(
+                _specialize(rows, ("err", case), 0), rest, tys[1:], errors, budget
+            ):
+                return True
+        if others:
+            matching = [
+                row[1:] for row in rows if row[0].is_wild or row[0].kind == "err_any"
+            ]
+            return useful(matching, rest, tys[1:], errors, budget)
         return False
-    defaults = [row[1:] for row in rows if row[0].is_wild]
-    return useful(defaults, query[1:], tys[1:], errors, budget)
+    if ty.head == "()" and any(row[0].kind == "tuple" for row in rows):
+        ctor = ("tuple", len(ty.args))
+        return useful(
+            _specialize(rows, ctor, len(ty.args)),
+            [WILD] * len(ty.args) + rest,
+            list(ty.args) + tys[1:],
+            errors,
+            budget,
+        )
+    return useful([r[1:] for r in rows if r[0].is_wild], rest, tys[1:], errors, budget)
 
 
 def check_arms(
