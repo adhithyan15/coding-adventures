@@ -6,8 +6,9 @@ Specify a future fixture-only corpus for the opt-in, one-outstanding precise
 D-MEM behavior defined by HOS-D06-GO1 and implemented in the Go core. This
 document defines the canonical guests, timing observations, architectural
 references, JSON safety bounds, and independent-oracle rules. The canonical
-input data is now materialized separately; this contract still does not add an
-expected trace, JSON Schema, adapter, or language route.
+input and state/timing oracle are materialized separately. The current
+fixture also has a Go-only external pipeline adapter and trace capture; no
+cross-language route is defined here.
 
 The corpus must be language-neutral in its field names and values. Each
 consumer must run the guest through its own native RV32I pipeline and emit the
@@ -18,11 +19,10 @@ compatibility source and its files and hashes are not rewritten.
 ## Fixture location and shape
 
 The fixture root is `code/specs/fixtures/go-riscv-dmem-ready-v1/`. It currently
-contains canonical `input.json`, its strict schema, and an independently
-derived state/timing oracle with a strict schema. A later reviewed step may
-add `expected_trace.json` and fixture-adjacent native adapters. No package test
-imports the fixture or gains file access. A future adapter must use the
-existing external fixture-driver convention.
+contains canonical `input.json`, strict input/oracle/trace schemas, an
+independently derived state/timing oracle, a normalized trace, and an external
+Go adapter. No package test imports the fixture or gains filesystem access;
+the adapter is run from each Go package BUILD front as a separate command.
 
 `input.json` is a strict object with a versioned `schema` string and a `cases`
 array, validated by the adjacent input schema. Each case has a stable `id`,
@@ -48,22 +48,15 @@ schemas validate JSON shape; fixture drivers must additionally check
 cross-field invariants such as unique initial addresses, program fit, event
 ordering, and exact latency formulas.
 
-`expected_trace.json` is a strict object with a versioned `schema`, the SHA-256
-of the exact `input.json` bytes, and one expected result per case. An expected
-result contains:
-
-- a full per-cycle normalized trace, or for the latency-one D05 case a
-  path-and-SHA reference to the existing exact trace projection;
-- ordered `request_events` with sequence, instruction PC, access kind,
-  address, issue cycle, ordered wait-cycle list, completion status, and ready
-  cycle;
-- ordered precise `store_receipts` with PC, address, value, and WB commit
-  cycle;
-- `retired_pcs`, a typed `selected_fault` or null, and `fault_selection_cycle`
-  / `terminal_cycle` when faulted;
-- the full 32-entry `registers` array, the complete `ram_words` array, and
-  aggregate cycles, retirement, forwarding, stall, flush, and D-MEM-wait
-  counts.
+`expected_oracle.json` is the strict, independently derived state-and-timing
+oracle described above. `expected_trace.json` is a separate strict object with
+a versioned `schema`, the SHA-256 of the exact `input.json` bytes, and one
+result per case. The latency-one D05 result is a path-and-SHA reference to the
+unchanged legacy trace; the other cases contain full per-cycle normalized
+pipeline traces. Its current SHA-256 is
+`dc9ef0278603b9b17273df5b3aa236a8c7f3460b20660b8a551366965c075bc4`, and the
+trace schema SHA-256 is
+`725664e52c27b65b46b25d55adba05775bb9006a6ef6f0f2fb47ad8f95dcaf9f`.
 
 Every trace item has the 1-based `cycle`, next-fetch `pc`, `stalled`,
 `flushing`, and exactly the five keys IF/ID/EX/MEM/WB. A stage is null for an
@@ -220,8 +213,7 @@ published trace file without changing it.
 
 ## Strict bounds and JSON safety
 
-The eventual schema and fixture drivers must enforce these bounds before
-execution:
+The schemas and fixture driver enforce these bounds before execution:
 
 - exactly three named cases, no unknown case IDs or object properties;
 - 1 to 32 RV32I instructions; nonempty, even-byte, 4-byte-aligned
@@ -240,8 +232,10 @@ execution:
   `ram_bytes / 4`; retired PCs, store receipts, and typed faults have strict
   per-case shapes.
 
-`expected_trace.json` is compared only after native execution. A fixture-only
-adapter may provide an explicit recapture command, but must first run the
-independent semantic and arithmetic timing assertions before writing the
-expected file. No package-level capability grant, shared package source,
-original D05 fixture mutation, or VOS change is part of this contract.
+`expected_trace.json` is compared only after native execution. Its explicit
+`-record` mode first verifies the pinned input/oracle identities, independent
+sequential state, request semantics, and arithmetic timing assertions, then
+compares the resulting pipeline state/effects with that oracle before writing
+the trace. No package-level capability grant, shared package source, original
+D05 fixture mutation, cross-language route, or VOS change is part of this
+contract.
