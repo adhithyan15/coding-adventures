@@ -9,3 +9,4 @@ API has no sample-count cap. CLI replay reads at most 4 MiB plus one byte
 before decoding the report.
 The JSON preflight counts root, container, scalar, and string values before
 `:json.decode` allocates the decoded structure; object keys are excluded.
+Scalar preflight tracks only token state and does not copy untrusted scalar bytes.

@@ -145,6 +145,10 @@ defmodule CodingAdventures.MicrobenchmarkTest do
     assert {:error, :trailing_json} = Microbenchmark.decode_report("{} false")
     assert {:error, {:invalid_json, _}} = Microbenchmark.decode_report(<<0>>)
     assert {:error, :negative_zero} = Microbenchmark.decode_report("{\"value\":-0}")
+    assert {:error, :invalid_report} = Microbenchmark.decode_report(~S("-0"))
+
+    assert {:error, {:invalid_json, _}} =
+             Microbenchmark.decode_report(String.duplicate("x", 1024 * 1024))
 
     assert {:error, :json_bounds} =
              Microbenchmark.decode_report(

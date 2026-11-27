@@ -204,12 +204,12 @@ defmodule CodingAdventures.Microbenchmark do
   end
 
   defp scan_json_values(binary, depth, count, negative_zero) do
-    {token, rest} = take_json_scalar(binary, [])
+    {is_negative_zero, rest} = scan_json_scalar(binary, :start)
     next_count = count + 1
 
     if next_count > 65_536,
       do: {:error, :json_bounds},
-      else: scan_json_values(rest, depth, next_count, negative_zero or token == "-0")
+      else: scan_json_values(rest, depth, next_count, negative_zero or is_negative_zero)
   end
 
   defp scan_json_string(<<>>), do: :incomplete
@@ -222,14 +222,22 @@ defmodule CodingAdventures.Microbenchmark do
 
   defp skip_json_whitespace(binary), do: binary
 
-  defp take_json_scalar(<<byte, _::binary>> = binary, acc)
+  defp scan_json_scalar(<<byte, _::binary>> = binary, state)
        when byte in [9, 10, 13, 32, 44, 58, 123, 125, 91, 93, 34],
-       do: {acc |> Enum.reverse() |> :erlang.list_to_binary(), binary}
+       do: {state == :negative_zero, binary}
 
-  defp take_json_scalar(<<byte, rest::binary>>, acc), do: take_json_scalar(rest, [byte | acc])
+  defp scan_json_scalar(<<byte, rest::binary>>, state) do
+    next_state =
+      case {state, byte} do
+        {:start, 45} -> :minus
+        {:minus, 48} -> :negative_zero
+        _ -> :other
+      end
 
-  defp take_json_scalar(<<>>, acc),
-    do: {acc |> Enum.reverse() |> :erlang.list_to_binary(), <<>>}
+    scan_json_scalar(rest, next_state)
+  end
+
+  defp scan_json_scalar(<<>>, state), do: {state == :negative_zero, <<>>}
 
   defp normalize_config(c) when is_map(c) do
     %{
