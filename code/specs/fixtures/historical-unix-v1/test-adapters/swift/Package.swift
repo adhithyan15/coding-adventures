@@ -3,11 +3,11 @@ import PackageDescription
 
 let package = Package(
     name: "HistoricalUnixFixtureAdapter",
-    dependencies: [
-        .package(path: "../../../../../packages/swift/unix-history-simulator"),
-    ],
     products: [
         .executable(name: "fixture-cli", targets: ["FixtureCLI"]),
+    ],
+    dependencies: [
+        .package(path: "../../../../../packages/swift/unix-history-simulator"),
     ],
     targets: [
         .executableTarget(

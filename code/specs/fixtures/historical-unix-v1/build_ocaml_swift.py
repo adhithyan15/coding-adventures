@@ -55,27 +55,43 @@ def fixture_replay(language: str, command: str) -> int:
     return 0
 
 
-def prepare_ocaml(package_root: Path, temporary_root: Path) -> Path:
+def prepare_ocaml(package_root: Path, temporary_root: Path, env: dict[str, str]) -> Path:
     build_root = temporary_root / "ocaml-package"
-    run(["dune", "build", "--build-dir", str(build_root), "src/unix_history_simulator.cma"], cwd=package_root)
-    run(["dune", "runtest", "--build-dir", str(build_root)], cwd=package_root)
+    run(["dune", "build", "--build-dir", str(build_root), "@fmt"], cwd=package_root, env=env)
+    run(["dune", "build", "--build-dir", str(build_root)], cwd=package_root, env=env)
+    run(["dune", "runtest", "--build-dir", str(build_root)], cwd=package_root, env=env)
 
-    archives = list(build_root.rglob("unix_history_simulator.cma"))
+    archives = [
+        path
+        for path in build_root.rglob("coding_adventures_unix_history_simulator.cma")
+        if "install" not in path.relative_to(build_root).parts
+    ]
     if len(archives) != 1:
         raise RuntimeError(f"expected one OCaml bytecode library archive, found {archives}")
+    interfaces = [
+        path
+        for path in build_root.rglob("unix_history.cmi")
+        if "install" not in path.relative_to(build_root).parts
+    ]
+    if len(interfaces) != 1:
+        raise RuntimeError(f"expected one compiled OCaml public interface, found {interfaces}")
     adapter_source = FIXTURE_ROOT / "test-adapters/ocaml/fixture_cli.ml"
+    adapter_source_temp = temporary_root / "ocaml-adapter-source" / adapter_source.name
+    adapter_source_temp.parent.mkdir(parents=True)
+    shutil.copy2(adapter_source, adapter_source_temp)
     adapter = temporary_root / ("ocaml-fixture-cli.exe" if os.name == "nt" else "ocaml-fixture-cli")
     run(
         [
             "ocamlc",
             "-I",
-            str(archives[0].parent),
+            str(interfaces[0].parent),
             str(archives[0]),
-            str(adapter_source),
+            str(adapter_source_temp),
             "-o",
             str(adapter),
         ],
-        cwd=package_root,
+        cwd=adapter_source_temp.parent,
+        env=env,
     )
     return adapter
 
@@ -86,16 +102,17 @@ def swift_command() -> list[str]:
     return ["swift"]
 
 
-def prepare_swift(package_root: Path, temporary_root: Path) -> Path:
+def prepare_swift(package_root: Path, temporary_root: Path, env: dict[str, str]) -> Path:
     swift = swift_command()
     package_build = temporary_root / "swift-package"
-    run([*swift, "test", "--scratch-path", str(package_build)], cwd=package_root)
+    run([*swift, "test", "--scratch-path", str(package_build)], cwd=package_root, env=env)
 
     adapter_root = FIXTURE_ROOT / "test-adapters/swift"
     adapter_build = temporary_root / "swift-adapter"
     run(
         [*swift, "build", "--package-path", str(adapter_root), "--scratch-path", str(adapter_build)],
         cwd=package_root,
+        env=env,
     )
     bin_path = Path(
         run(
@@ -109,6 +126,7 @@ def prepare_swift(package_root: Path, temporary_root: Path) -> Path:
                 "--show-bin-path",
             ],
             cwd=package_root,
+            env=env,
             capture_output=True,
         ).strip()
     )
@@ -145,9 +163,9 @@ def main() -> int:
             }
         )
         adapter = (
-            prepare_ocaml(package_root, temporary_root)
+            prepare_ocaml(package_root, temporary_root, environment)
             if language == "ocaml"
-            else prepare_swift(package_root, temporary_root)
+            else prepare_swift(package_root, temporary_root, environment)
         )
         environment["HOS_FIXTURE_EXECUTABLE"] = str(adapter)
         replay_output = run(

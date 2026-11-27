@@ -19,7 +19,13 @@ let string_of_error = function
 type event =
   | Opened of { path : string; inode : int; fd : int }
   | Open_failed of { path : string; error : error }
-  | Read of { fd : int; inode : int; offset : int; bytes : int; next_offset : int }
+  | Read of {
+      fd : int;
+      inode : int;
+      offset : int;
+      bytes : int;
+      next_offset : int;
+    }
   | Read_failed of { fd : int; error : error }
   | Closed of { fd : int }
   | Close_failed of { fd : int; error : error }
@@ -35,7 +41,6 @@ module Filesystem = struct
 
   type t = { root : node }
 
-  let inode = function File file -> file.inode | Directory dir -> dir.inode
   let name = function File file -> file.name | Directory dir -> dir.name
 
   let create_demo () =
@@ -49,18 +54,24 @@ module Filesystem = struct
           entries = [ File { inode = 5; name = "notes"; data = "" } ];
         }
     in
-    { root = Directory { inode = 1; name = "/"; entries = [ hello; empty; etc ] } }
+    {
+      root =
+        Directory { inode = 1; name = "/"; entries = [ hello; empty; etc ] };
+    }
 
   let path_parts path =
     if path = "" || String.contains path '\000' then Error EINVAL
     else
-      let parts = String.split_on_char '/' path |> List.filter (fun part -> part <> "" && part <> ".") in
+      let parts =
+        String.split_on_char '/' path
+        |> List.filter (fun part -> part <> "" && part <> ".")
+      in
       Ok parts
 
   let resolve filesystem path =
     match path_parts path with
     | Error error -> Error error
-    | Ok parts ->
+    | Ok parts -> (
         let rec descend stack remaining =
           match remaining with
           | [] -> Ok (List.hd stack)
@@ -68,18 +79,26 @@ module Filesystem = struct
               match List.hd stack with
               | File _ -> Error ENOTDIR
               | Directory _ ->
-                  let parent = match stack with _current :: (_ :: _ as rest) -> rest | _ -> stack in
+                  let parent =
+                    match stack with
+                    | _current :: (_ :: _ as rest) -> rest
+                    | _ -> stack
+                  in
                   descend parent tail)
           | part :: tail -> (
               match List.hd stack with
               | File _ -> Error ENOTDIR
-              | Directory dir ->
-                  match List.find_opt (fun child -> name child = part) dir.entries with
+              | Directory dir -> (
+                  match
+                    List.find_opt (fun child -> name child = part) dir.entries
+                  with
                   | None -> Error ENOENT
-                  | Some child -> descend (child :: stack) tail)
+                  | Some child -> descend (child :: stack) tail))
         in
-        let trailing_slash = String.length path > 0 && path.[String.length path - 1] = '/' in
-        (match descend [ filesystem.root ] parts with
+        let trailing_slash =
+          String.length path > 0 && path.[String.length path - 1] = '/'
+        in
+        match descend [ filesystem.root ] parts with
         | Error error -> Error error
         | Ok (File _) when trailing_slash -> Error ENOTDIR
         | result -> result)
@@ -128,7 +147,9 @@ module Descriptor_table = struct
       match Hashtbl.find_opt table.slots fd with
       | None -> Error EBADF
       | Some entry -> (
-          match Filesystem.read_range entry.data ~offset:entry.offset ~count with
+          match
+            Filesystem.read_range entry.data ~offset:entry.offset ~count
+          with
           | Error error -> Error error
           | Ok chunk ->
               let offset = entry.offset in
@@ -165,7 +186,9 @@ module Kernel = struct
         | Error error -> Error error
         | Ok fd -> Ok (fd, inode))
 
-  let read kernel ~fd ~count = Descriptor_table.read kernel.descriptors ~fd ~count
+  let read kernel ~fd ~count =
+    Descriptor_table.read kernel.descriptors ~fd ~count
+
   let close kernel ~fd = Descriptor_table.close kernel.descriptors ~fd
   let list kernel path = Filesystem.list kernel.filesystem path
 
@@ -176,10 +199,12 @@ module Kernel = struct
     in
     let length = String.length text in
     let rec skip index =
-      if index < length && is_space text.[index] then skip (index + 1) else index
+      if index < length && is_space text.[index] then skip (index + 1)
+      else index
     in
     let rec take index =
-      if index < length && not (is_space text.[index]) then take (index + 1) else index
+      if index < length && not (is_space text.[index]) then take (index + 1)
+      else index
     in
     let rec loop index words =
       let start = skip index in
@@ -201,7 +226,7 @@ module Kernel = struct
         | Error error ->
             emit (Open_failed { path; error });
             Buffer.add_string output ("error: " ^ string_of_error error ^ "\n")
-        | Ok (fd, inode) ->
+        | Ok (fd, inode) -> (
             emit (Opened { path; inode; fd });
             let rec read_next () =
               match read kernel ~fd ~count:8 with
@@ -220,7 +245,7 @@ module Kernel = struct
                   if bytes <> "" then read_next ()
             in
             read_next ();
-            (match close kernel ~fd with
+            match close kernel ~fd with
             | Ok () -> emit (Closed { fd })
             | Error error -> emit (Close_failed { fd; error })))
     | [ "ls" ] -> run_list kernel "/" output emit

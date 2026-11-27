@@ -1,8 +1,8 @@
 (lang dune 3.16)
-(name unix_history_simulator)
+(name coding-adventures-unix-history-simulator)
 (generate_opam_files false)
 (package
- (name unix-history-simulator)
+ (name coding-adventures-unix-history-simulator)
  (synopsis "Reusable in-memory First Edition Unix teaching model")
  (description
   "Pure filesystem, descriptor-table, and kernel components for the HOS00 teaching model"))
