@@ -42,17 +42,24 @@ caller-configured positive `entries` count. The host owns workload selection,
 implementation, and all host-side effects; the module owns the comparison
 protocol, timer placement, raw observations, and statistical conclusion. A
 host callback must not call back into any module export. One synchronous ABI
-operation may be in progress per instance; concurrent or reentrant calls on
-the same instance are unsupported. Separate instances have independent
-linear memory and may be used independently.
+operation may be in progress per instance. Separate instances have independent
+linear memory and may be used independently. Concurrent calls against the same
+instance are unsupported; the guard rejects nested calls caused by host
+callbacks even if the host violates its no-reentrancy rule.
 
-The module must export its linear memory and the following functions:
+The module must export its linear memory and the following functions. Every
+mutating or operation export (`alloc`, `dealloc`, and the three JSON operations)
+uses a per-instance busy guard. If an import calls back into one while an
+operation is active, the nested call is rejected without changing allocations
+or operation state (`alloc` returns zero, `dealloc` returns 2, and a JSON
+operation returns zero). A failed guard acquisition never clears another
+operation's guard. Read-only `abi_version` remains callable.
 
 | Export | WASM signature | Contract |
 |---|---|---|
 | `abi_version` | `() -> i32` | Return ABI version `1`. |
-| `alloc` | `(byte_len: i32) -> i32` | Allocate `byte_len` bytes in module memory, or return zero on invalid size or allocation failure. Lengths are interpreted as unsigned 32-bit values and checked against the documented input limit before use. Zero-byte allocation returns zero. |
-| `dealloc` | `(ptr: i32, byte_len: i32) -> ()` | Release a nonempty allocation previously returned by `alloc` or by a result export, using the exact pointer and length. Invalid, mismatched, duplicate, or foreign frees are caller errors and have no defined recovery behavior. |
+| `alloc` | `(byte_len: i32) -> i32` | Allocate and zero-initialize `byte_len` bytes in module memory, or return zero on invalid size, busy instance, allocation-table exhaustion, or allocation/budget failure. Lengths are interpreted as unsigned 32-bit values and checked against the documented input limit before use. Zero-byte allocation returns zero. |
+| `dealloc` | `(ptr: i32, byte_len: i32) -> i32` | Release a nonempty live allocation previously returned by `alloc` or by a result export, using the exact pointer and length. Return `0` on release, `1` for no matching live allocation, and `2` when the instance is busy. Invalid, mismatched, duplicate, or foreign frees do not release memory and never trap. |
 | `collect_json` | `(request_ptr: i32, request_len: i32) -> i64` | Validate a JSON collection request, call the host clock and workload imports through the shared Rust collector, and return a packed pointer/length for a JSON core report or structured error response. |
 | `analyze_json` | `(request_ptr: i32, request_len: i32) -> i64` | Validate a JSON object containing confidence, minimum factor, and paired observations, analyze it through the shared core, and return a packed pointer/length for the analysis or structured error response. |
 | `replay_json` | `(request_ptr: i32, request_len: i32) -> i64` | Strictly parse and reanalyze a portable core report through `Report::from_json`, rejecting malformed, duplicated, unknown, or forged fields, and return a packed pointer/length for the validated report or structured error response. |
@@ -77,9 +84,9 @@ pointer into an input after a call returns and holds no global result buffer.
 
 All pointer-plus-length pairs are interpreted unsigned and must fall entirely
 inside the exported memory without integer overflow. Requests are UTF-8 JSON.
-Unknown fields are rejected. The maximum input document is 4 MiB; result
-documents are limited to 8 MiB. `alloc` accepts only lengths from 1 through
-4 MiB, so it can only prepare a valid input document. Collection requests have
+Unknown fields are rejected. The maximum input document is 1 MiB; result
+documents are limited to 1 MiB. `alloc` accepts only lengths from 1 through
+1 MiB, so it can only prepare a valid input document. Collection requests have
 exactly `{"config": <core Config>, "expected_checksum": <signed i64>}`.
 Analysis requests have exactly `{"confidence_percent": <u8>,
 "minimum_factor": <finite number>, "pairs": <Pair[]>}`. Replay input is one
@@ -93,20 +100,50 @@ generic Rust collector and rank-statistics library retain their existing
 contracts and are not given an arbitrary global cap.
 
 Analysis accepts at most 10,000 pairs, matching the core collector's supported
-report size. Replay inherits the 4 MiB document limit and the core's strict
-report validation. The package must check sizes before allocating, parsing,
-walking arrays, or calling the host. It must use checked integer conversions
-for addresses, lengths, batch counts, and packed results. A host callback error
-returns a structured failure and yields no partial report. Invalid module
-inputs never invoke a callback. Clock regression, negative ticks, invalid
-durations, checksum mismatch, malformed JSON, invalid workload status, and
-allocation failure are distinct documented error cases.
+report size. Replay inherits the 1 MiB document limit and the core's strict
+report validation. Before building a generic JSON value, a bounded preflight
+must reject documents deeper than 16 levels or containing more than 100,000
+JSON values/members. Those bounds admit the supported 10,000-pair report while
+preventing a short but structurally explosive document from consuming the
+module's memory budget. Each JSON operation first copies its request into
+module-owned temporary storage and completes UTF-8, size, structural, and
+request-schema validation before invoking either host import. No host callback
+may invalidate a borrowed request slice because none is retained. The package
+must check sizes before allocating, parsing, walking arrays, or calling the
+host. It must use checked integer conversions for addresses, lengths, batch
+counts, and packed results. A host callback error returns a structured failure
+and yields no partial report. Invalid module inputs never invoke a callback.
+Clock regression, negative ticks, invalid durations, checksum mismatch,
+malformed JSON, invalid workload status, and allocation failure are distinct
+documented error cases.
+
+The module tracks every live exported input and returned result in a fixed
+table of at most 32 records. Exact pointer-and-length matches are required
+before any input slice is formed and before any allocation is freed. At most
+8 MiB of exported allocations may remain live per instance. Calls to `alloc`
+are limited to 7 MiB of live input buffers, reserving up to 1 MiB for one
+result; returned results use the remaining budget and should be freed before
+the next operation. If retained results consume that reserve, the next
+operation safely returns zero until the caller frees one. A rejected request
+does not change the table. Temporary JSON copies and result serialization are
+also checked against the document/output limits. The 64 MiB linear-memory
+ceiling leaves at least 56 MiB above the maximum retained exported buffers for
+Rust stack, parsed JSON values, core report construction, and serialization.
+The input byte, nesting, and value-count limits bound those transient core
+allocations; the implementation must exercise the worst accepted report and
+malformed structural cases under the pinned WASM runtime to verify they return
+normally within the memory ceiling. If memory pressure prevents creation of a
+JSON error result, an operation returns zero. It must not rely on allocator
+abort or `unwrap` for any allocation or input failure. Corruption of the
+module's linear memory by a hostile host is outside this contract.
 
 The module must not use a system clock or WASI imports. Its explicit host
 imports are the complete runtime authority boundary; the WASM library's OS
-capability profile is empty. The exported `memory` has an initial limit of 16
-pages and a maximum of 1,024 pages (64 MiB); hosts must not grow memory from
-inside a callback. An independent host consumer may itself require
+capability profile is empty. The exported `memory` has an initial limit of 32
+pages and a maximum of 1,024 pages (64 MiB); the chosen minimum must accommodate
+the pinned Rust WASM stack and static data, and the emitted artifact's limits
+must be inspected. Hosts must not grow memory from inside a callback. An
+independent host consumer may itself require
 clock or workload capabilities, but those belong to that host package and are
 not inherited by the guest library. Build-time compiler identity is not a
 runtime capability: shared guest support reports a bounded explicit compiler
