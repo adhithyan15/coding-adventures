@@ -507,6 +507,16 @@ outside it:
   handle must be the very regular file the size check saw (`os.SameFile`),
   so a symlink swapped in between is refused rather than followed.
 
+The regression test for these limits constructs its manifest before starting
+the parser timer. Its strict one-second budget measures refusal of the
+oversized continued entry, not temporary-directory creation or writing the
+1 MiB fixture. Repository-backed resolver tests may reuse a discovered package
+and graph snapshot only within the same checked-out repository root. The
+cached snapshot is immutable: tests that vary platform-selected BUILD content
+or otherwise mutate packages must work on deep copies, and discovery or
+resolution errors must still fail the test. Hand-built temporary repository
+fixtures remain isolated per test.
+
 A leading UTF-8 byte-order mark is stripped, as TOML allows.
 
 #### Package-local metadata
