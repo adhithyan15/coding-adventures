@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"errors"
 	"math"
 	"strings"
 	"testing"
@@ -90,6 +91,24 @@ func TestConcurrentSnapshotMinimumSpanningTreePreservesNegativeWeights(t *testin
 			}
 			if !negative || total != -3 {
 				t.Fatalf("minimum spanning tree = %v, total weight %v; want a negative edge and total -3", tree, total)
+			}
+		})
+	}
+}
+
+func TestConcurrentSnapshotShortestPathDistinguishesOverflow(t *testing.T) {
+	for _, repr := range representations() {
+		t.Run(string(repr), func(t *testing.T) {
+			g := NewConcurrentGraph(repr)
+			if err := g.AddEdge("start", "middle", math.MaxFloat64); err != nil {
+				t.Fatal(err)
+			}
+			if err := g.AddEdge("middle", "end", math.MaxFloat64); err != nil {
+				t.Fatal(err)
+			}
+			path, err := g.Snapshot().ShortestPath("start", "end")
+			if !errors.Is(err, ErrPathDistanceOverflow) || path != nil {
+				t.Fatalf("snapshot ShortestPath = %v, %v; want nil path and overflow error", path, err)
 			}
 		})
 	}
