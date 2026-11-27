@@ -1,0 +1,18 @@
+cabal-version: 2.4
+name: unix-history-simulator
+version: 0.2.0.0
+synopsis: Reusable First Edition Unix teaching model
+license: MIT
+build-type: Simple
+library
+  exposed-modules: UnixHistory
+  hs-source-dirs: src
+  build-depends: base >=4.14 && <5, aeson, bytestring, containers, text, vector
+  default-language: Haskell2010
+  ghc-options: -Wall
+test-suite simulator-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs: test
+  build-depends: base, aeson, bytestring, text, vector, unix-history-simulator
+  default-language: Haskell2010
