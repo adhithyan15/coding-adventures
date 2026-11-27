@@ -16,11 +16,15 @@ This contract applies to the text ingress APIs:
 - Ruby `replay_json`.
 
 It applies recursively to every JSON object in the input, including report
-metadata, configuration, each pair, and analysis. It does not change the
-object-based APIs (`replayReport` and `replay_report`), because their callers
-may already have lost duplicate members while parsing. It does not add new
-metadata, field, numeric, size, or report-schema restrictions; each reader
-keeps its existing validation rules after duplicate detection.
+metadata, configuration, each pair, and analysis. Duplicate detection does
+not apply to object-based APIs (`replayReport` and `replay_report`), because
+their callers may already have discarded repeated names. The existing
+VER07d/VER07y closed-root schema still applies to both raw and decoded-object
+replay: unknown top-level members are rejected. The TypeScript and Ruby root
+allowlists restore that existing requirement. Apart from this restoration,
+strict ingress does not change metadata, numeric, size, or report-schema
+validation; raw methods apply the same schema checks after duplicate
+detection.
 
 ## Member-name equality
 
