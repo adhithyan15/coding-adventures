@@ -163,3 +163,46 @@ def test_every_fault_row_of_a_committed_corpus_compiles_or_is_not_live(
         else:
             counts["ok"] += 1
     assert counts == {"ok": ok, "not-live": not_live}
+
+
+FULL = frozenset({"ir.core", "ir.fixed", "ir.tuple"})
+
+
+@pytest.mark.parametrize(
+    "name", ["ct-compare", "lzw", "wasm-leb128", "x25519", "logic-gates-basic"]
+)
+def test_every_suite_and_fault_of_every_committed_corpus_builds_at_the_lanes_levels(
+    name,
+):
+    """P8: no committed suite is a corpus error at ``ir.core`` + ``ir.fixed`` + ``ir.tuple``.
+
+    A suite that needs a level the lane lacks (``ir.data``) is ``level-missing``, never
+    ``corpus``; every other suite builds.  (The wasm-leb128 length formulas have an
+    ``Int`` ``expected`` against a ``Nat`` ``result_type``: R42 and R51's unify.)
+    """
+    from coding_adventures_warrant_corpus.v2.faults import compile_fault
+
+    corpus = load(name)
+    built = 0
+    for row in corpus["suites"]:
+        try:
+            chunk_lib.build_suite(part(corpus), row, levels=FULL)
+        except Refusal as refusal:
+            assert refusal.code == "level-missing", (row["id"], refusal)
+            assert "ir.data" in row["requires"] or "ir.list" in row["requires"]
+        else:
+            built += 1
+    assert built
+    for fault in corpus["faults"]:
+        try:
+            compile_fault(fault, corpus["ops"][fault["op"]], corpus["types"], FULL)
+        except Refusal as refusal:
+            assert refusal.code == "level-missing", (fault["fault"], refusal)
+
+
+def test_the_wasm_leb128_length_formulas_build():
+    corpus = load("wasm-leb128")
+    rows = [r for r in corpus["suites"] if r["claim"].endswith("_length_formula")]
+    assert len(rows) >= 2
+    for row in rows:
+        chunk_lib.build_suite(part(corpus), row, levels=FULL)
