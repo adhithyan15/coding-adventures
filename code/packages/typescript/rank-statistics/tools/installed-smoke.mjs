@@ -8,6 +8,7 @@ import {
   readFileSync,
   realpathSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import os from "node:os";
@@ -45,19 +46,37 @@ function sha256(bytes) {
 }
 
 function isWithin(parent, candidate) {
-  const relative = path.relative(parent, candidate);
+  // macOS may spell the same temporary directory as /var/... or
+  // /private/var/...; compare canonical paths rather than those aliases.
+  const realParent = realpathSync(parent);
+  const realCandidate = realpathSync(candidate);
+  const relative = path.relative(realParent, realCandidate);
   return relative === "" || (!relative.startsWith(`..${path.sep}`) && relative !== ".." && !path.isAbsolute(relative));
 }
 
 function assertSafeRemovalTarget(target) {
-  const resolvedParent = path.resolve(tempParent);
-  const resolvedTarget = path.resolve(target);
-  assert.equal(path.basename(resolvedTarget).startsWith("ca-rank-statistics-smoke-"), true);
-  assert.equal(isWithin(resolvedParent, resolvedTarget), true);
-  const stat = lstatSync(resolvedTarget);
+  const lexicalTarget = path.resolve(target);
+  assert.equal(path.basename(lexicalTarget).startsWith("ca-rank-statistics-smoke-"), true);
+  const stat = lstatSync(lexicalTarget);
   assert.equal(stat.isDirectory(), true);
   assert.equal(stat.isSymbolicLink(), false);
-  assert.equal(readFileSync(path.join(resolvedTarget, ".owned-smoke-root"), "utf8"), marker);
+  assert.equal(isWithin(tempParent, lexicalTarget), true);
+  assert.equal(readFileSync(path.join(lexicalTarget, ".owned-smoke-root"), "utf8"), marker);
+}
+
+function createDirectoryAlias(target, alias) {
+  symlinkSync(target, alias, process.platform === "win32" ? "junction" : "dir");
+}
+
+function removeOwnedDirectoryAlias(alias, expectedTarget) {
+  const lexicalAlias = path.resolve(alias);
+  const relative = path.relative(path.resolve(tempRoot), lexicalAlias);
+  assert.equal(relative === "" || (!relative.startsWith(`..${path.sep}`) && relative !== ".." && !path.isAbsolute(relative)), true);
+  assert.equal(lstatSync(lexicalAlias).isSymbolicLink(), true);
+  assert.equal(realpathSync(lexicalAlias), realpathSync(expectedTarget));
+  rmSync(lexicalAlias, { force: false });
+  assert.equal(existsSync(lexicalAlias), false);
+  assert.equal(existsSync(expectedTarget), true, "removing the alias must not remove its target");
 }
 
 let passed = false;
@@ -95,12 +114,31 @@ try {
   writeFileSync(path.join(consumerDir, "package.json"), JSON.stringify({ private: true, type: "module" }, null, 2));
   runNpm(["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--prefix", consumerDir, tarball], packageRoot);
 
+  const realPackageRoot = realpathSync(packageRoot);
+  const realConsumerDir = realpathSync(consumerDir);
+  const expectedInstalledPath = path.join(realConsumerDir, "node_modules", "@coding-adventures", "rank-statistics");
+  const expectedInstalledRoot = realpathSync(expectedInstalledPath);
   const installedRoot = realpathSync(path.join(consumerDir, "node_modules", "@coding-adventures", "rank-statistics"));
-  const expectedInstalledRoot = realpathSync(path.join(consumerDir, "node_modules", "@coding-adventures", "rank-statistics"));
-  assert.equal(installedRoot, expectedInstalledRoot);
-  assert.equal(isWithin(consumerDir, installedRoot), true, "resolved package must stay inside the external consumer");
-  assert.equal(isWithin(packageRoot, installedRoot), false, "installed package must not resolve into the source tree");
-  assert.equal(isWithin(packageRoot, consumerDir), false, "consumer directory must be outside the package source tree");
+  assert.equal(installedRoot, expectedInstalledRoot, "installed package must resolve at the canonical consumer location");
+  assert.equal(isWithin(realConsumerDir, installedRoot), true, "resolved package must stay inside the external consumer");
+  assert.equal(isWithin(realPackageRoot, installedRoot), false, "installed package must not resolve into the source tree");
+  assert.equal(isWithin(realPackageRoot, realConsumerDir), false, "consumer directory must be outside the package source tree");
+  assert.equal(isWithin(realConsumerDir, artifactDir), false, "the sibling artifact directory is outside the consumer");
+
+  // Exercise real directory aliases and ensure cleanup unlinks only the alias.
+  const consumerAlias = path.join(tempRoot, "consumer-alias");
+  createDirectoryAlias(consumerDir, consumerAlias);
+  assert.equal(realpathSync(consumerAlias), realConsumerDir);
+  assert.equal(isWithin(consumerAlias, installedRoot), true, "consumer aliases must canonicalize to their target");
+  assert.equal(isWithin(consumerAlias, artifactDir), false, "an outside sibling must not be treated as consumer content");
+  removeOwnedDirectoryAlias(consumerAlias, consumerDir);
+
+  const sourceAlias = path.join(tempRoot, "source-alias");
+  createDirectoryAlias(packageRoot, sourceAlias);
+  assert.equal(realpathSync(sourceAlias), realPackageRoot);
+  assert.equal(isWithin(realConsumerDir, sourceAlias), false, "a source-tree alias must remain outside the consumer");
+  assert.equal(isWithin(sourceAlias, installedRoot), false, "the installed package must remain outside source aliases");
+  removeOwnedDirectoryAlias(sourceAlias, packageRoot);
   const installedManifest = JSON.parse(readFileSync(path.join(installedRoot, "package.json"), "utf8"));
   assert.equal(installedManifest.name, manifest.name);
   assert.equal(installedManifest.version, manifest.version);
@@ -112,12 +150,14 @@ try {
     assert.ok(Array.isArray(map.sources) && map.sources.length > 0, `${mapFile} must name source files`);
     const targets = map.sources.map((source) => path.resolve(path.dirname(mapPath), source));
     for (const target of targets) {
-      assert.equal(isWithin(installedRoot, target), true, `${mapFile} target escapes the installed package`);
-      const packageRelative = path.relative(installedRoot, target).replaceAll("\\", "/");
+      assert.equal(existsSync(target), true, `${mapFile} source is not installed`);
+      const realTarget = realpathSync(target);
+      assert.equal(isWithin(installedRoot, realTarget), true, `${mapFile} target escapes the installed package`);
+      const packageRelative = path.relative(installedRoot, realTarget).replaceAll("\\", "/");
       assert.ok(listed.has(packageRelative), `${mapFile} references unpacked source ${packageRelative}`);
-      assert.equal(existsSync(target), true, `${mapFile} source is not installed: ${packageRelative}`);
+      assert.equal(existsSync(path.join(installedRoot, packageRelative)), true, `${mapFile} source is not installed: ${packageRelative}`);
     }
-    mapTargets[mapFile] = targets.map((target) => path.relative(installedRoot, target).replaceAll("\\", "/"));
+    mapTargets[mapFile] = targets.map((target) => path.relative(installedRoot, realpathSync(target)).replaceAll("\\", "/"));
   }
   for (const file of ["LICENSE", "testdata/microbenchmark-pairs-v1.json"]) {
     const sourceBytes = readFileSync(path.join(packageRoot, file));
@@ -126,10 +166,14 @@ try {
   }
 
   const runtimePath = path.join(consumerDir, "runtime-smoke.mjs");
-  writeFileSync(runtimePath, `import assert from "node:assert/strict";\nimport { median, medianInterval } from "@coding-adventures/rank-statistics";\nassert.equal(median([1, 2, 3]), 2);\nassert.deepEqual(medianInterval([0.97, 1.01, 1.04, 0.99, 1.02], 70), { low: 0.97, high: 1.04 });\nassert.equal(medianInterval([1, 2, 3], 99), null);\nconst resolved = await import.meta.resolve("@coding-adventures/rank-statistics");\nassert.ok(resolved.startsWith(new URL("./node_modules/@coding-adventures/rank-statistics/", import.meta.url).href));\nconsole.log(JSON.stringify({ resolved }));\n`);
+  writeFileSync(runtimePath, `import assert from "node:assert/strict";\nimport { median, medianInterval } from "@coding-adventures/rank-statistics";\nassert.equal(median([1, 2, 3]), 2);\nassert.deepEqual(medianInterval([0.97, 1.01, 1.04, 0.99, 1.02], 70), { low: 0.97, high: 1.04 });\nassert.equal(medianInterval([1, 2, 3], 99), null);\nconst resolved = await import.meta.resolve("@coding-adventures/rank-statistics");\nconsole.log(JSON.stringify({ resolved }));\n`);
   const runtimeOutput = run(process.execPath, [runtimePath], consumerDir).trim();
   const runtimeResult = JSON.parse(runtimeOutput);
-  assert.ok(runtimeResult.resolved.includes("node_modules/@coding-adventures/rank-statistics/dist/index.js"));
+  const resolvedEntry = realpathSync(fileURLToPath(runtimeResult.resolved));
+  const expectedInstalledEntry = realpathSync(path.join(expectedInstalledRoot, "dist", "index.js"));
+  assert.equal(resolvedEntry, expectedInstalledEntry, "runtime import must resolve to the canonical installed entry");
+  assert.equal(isWithin(realConsumerDir, resolvedEntry), true, "runtime entry must remain inside the external consumer");
+  assert.equal(isWithin(realPackageRoot, resolvedEntry), false, "runtime entry must not resolve into the source tree");
 
   writeFileSync(path.join(consumerDir, "consumer.ts"), `import { median, medianInterval } from "@coding-adventures/rank-statistics";\nconst center: number = median([1, 2, 3]);\nconst interval: { readonly low: number; readonly high: number } | null = medianInterval([1, 2, 3], 50);\nvoid center;\nvoid interval;\n`);
   writeFileSync(path.join(consumerDir, "tsconfig.json"), JSON.stringify({
@@ -159,6 +203,12 @@ try {
     packageFileCount: listed.size,
     productionTypeScriptSources: sourceFiles,
     sourceMapTargets: mapTargets,
+    pathContainmentChecks: {
+      directoryAlias: process.platform === "win32" ? "junction PASS" : "symlink PASS",
+      outsideConsumerSibling: "rejected",
+      sourceTreeAlias: "rejected",
+      aliasCleanupDidNotRemoveTargets: "PASS",
+    },
     licenseSha256: sha256(readFileSync(path.join(installedRoot, "LICENSE"))),
     fixtureSha256: sha256(readFileSync(path.join(installedRoot, "testdata/microbenchmark-pairs-v1.json"))),
     runtimeResolution: runtimeResult.resolved,
