@@ -1,24 +1,33 @@
-"""Structural contract of `.github/workflows/vos-capacity-full.yml` (VOS-028c3c-3a).
+"""Structural contract of `.github/workflows/vos-capacity-full.yml` (VOS-028c3c-3a, 3b-2).
 
 Why this test exists
 ====================
 
-The workflow is a *dispatch-only* recording: no pull request ever runs it, so
-CI never parses it, and a mistake in it shows up only at the first real
-dispatch -- which costs about 220 runner-hours.  What can be checked without
+The workflow runs only on manual dispatch (its weekly schedule is PAUSED, VOS-D149,
+owner decision 2026-11-26; VOS-028c3e-4 restores it): no pull request
+ever runs it, so CI never parses it, and a mistake in it shows up only at the
+first real run -- which costs about 220 runner-hours.  What can be checked without
 running it is its SHAPE, and the shape is where the security and integrity
 rules of VOS30 section 9.12.2 live:
 
-    triggers      dispatch only (part b adds `schedule`); never a PR trigger
+    triggers      exactly dispatch (modes record and verify), NO schedule and no
+                  cron while the weekly verify is paused; never a PR or
+                  workflow_run trigger.  VOS-028c3e-4 restores ONE weekly cron
+                  (`41 1 * * 0`) and changes this test back in the same PR
     permissions   top-level `contents: read`; every job its own; `issues: write`
-                  only in `report`, and nothing else there
+                  only in `report`, and nothing else there; no `actions: read`
     pins          every action on a four-name allowlist, by 40-hex commit SHA
     injection     NO `${{ }}` expression inside any `run:` block: everything
                   reaches a script through the step's `env:`
     integrity     one binary shared by digest; the join is called with all five
                   `--expect-*` flags (VOS-D136) after an exact-set artifact check
     budget        a timeout on every job and every step; 330 / 320 minutes for
-                  the shard; `max-parallel: 8`, `fail-fast: false`
+                  a shard; `max-parallel: 8`, `fail-fast: false`
+    verify        verify-shard runs `check --full --at-checkout` and may only
+                  fail on exit 2 or exit 1 with no file; the retry is a separate
+                  job; the triage validates every exit code; the fan-in joins
+                  with five --expect-* flags and runs `decision-diff` against the
+                  file in ITS OWN checkout; `verify-verdict` is the verdict
 
 Like the other workflow tests in this directory it reads the file as text (the
 contracts job is standard-library only).  It understands just enough
@@ -56,8 +65,6 @@ ALLOWED_ACTIONS = {
     "actions/download-artifact": "9000827ccba6bdab643e8b6fd33ac0654aef8333",
     "dtolnay/rust-toolchain": "4360b52568e2003a75bf9bc1d59f33a8e3fc893c",
 }
-# Triggers the final workflow may have.  Part a (this one) has no schedule yet;
-# VOS-028c3c-3b flips PART_A to False and asserts exactly both.
 # The only job-level keys the workflow may use.  Anything else (`uses` and
 # `secrets` for a reusable workflow, `container`, `services`, `environment`,
 # `env`, `defaults`, `continue-on-error`, ...) widens what a job can reach.
@@ -75,15 +82,52 @@ JOB_CONDITIONS = {
         "'adhithyan15/coding-adventures' && startsWith(github.ref, 'refs/heads/')",
     ),
     "record-join": ("[gate, build, record-shard]", "needs.gate.outputs.mode == 'record'"),
+    "verify-shard": (
+        "[gate, build]",
+        "needs.gate.outputs.mode == 'verify' && github.repository == "
+        "'adhithyan15/coding-adventures' && startsWith(github.ref, 'refs/heads/')",
+    ),
+    "verify-triage": (
+        "[gate, verify-shard]",
+        "${{ !cancelled() && needs.gate.outputs.mode == 'verify' }}",
+    ),
+    "verify-retry": (
+        "[gate, build, verify-triage]",
+        "needs.gate.outputs.mode == 'verify' && needs.verify-triage.outputs.retry != '[]' && "
+        "github.repository == 'adhithyan15/coding-adventures' && startsWith(github.ref, 'refs/heads/')",
+    ),
+    "verify-fan-in": (
+        "[gate, build, verify-shard, verify-triage, verify-retry]",
+        "${{ !cancelled() && needs.gate.outputs.mode == 'verify' && needs.build.result == 'success' && "
+        "needs.verify-shard.result == 'success' && needs.verify-triage.result == 'success' && (needs.verify-retry.result == 'success' || "
+        "needs.verify-retry.result == 'skipped') }}",
+    ),
+    "verify-verdict": (
+        "[gate, verify-fan-in]",
+        "always() && needs.gate.outputs.mode == 'verify'",
+    ),
     "report": (
-        "[gate, build, record-shard, record-join]",
-        "always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))",
+        "[gate, build, record-shard, record-join, verify-shard, verify-triage, verify-retry, "
+        "verify-fan-in, verify-verdict]",
+        "always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') "
+        "|| needs.verify-fan-in.outputs.flakes != '')",
     ),
 }
-ALLOWED_TRIGGERS = {"workflow_dispatch", "schedule"}
-PART_A = True
+# Exactly one trigger while the weekly verify is paused (owner decision "Pause until
+# re-record (Recommended)", 2026-11-26; VOS-D149, VOS30 9.3).  VOS-028c3e-4 restores
+# {"workflow_dispatch", "schedule"} and ONE weekly cron in a free slot (ci.yml uses
+# 00:00 daily and 06, 12, 18:00), by changing this constant, RESTORED_CRON, the gate
+# rule and the tests below in the same PR: adding a `schedule:` trigger back WITHOUT
+# that deliberate test change fails rule_triggers.
+ALLOWED_TRIGGERS = {"workflow_dispatch"}
+RESTORED_CRON = "41 1 * * 0"  # for VOS-028c3e-4; not allowed until then
 REPOSITORY = "adhithyan15/coding-adventures"
-JOBS_PART_A = ["gate", "build", "record-shard", "record-join", "report"]
+JOBS = [
+    "gate", "build", "record-shard", "record-join",
+    "verify-shard", "verify-triage", "verify-retry", "verify-fan-in", "verify-verdict",
+    "report",
+]
+RESULTS_FILE = "code/specs/data/vos30-capacity-results.json"
 BINARY_ARTIFACT = "vos-capacity-probe-binary"
 
 
@@ -294,18 +338,18 @@ class Workflow:
 def rule_triggers(wf: Workflow) -> list[str]:
     got = wf.triggers()
     problems = []
-    if not got <= ALLOWED_TRIGGERS:
-        problems.append(f"triggers {sorted(got - ALLOWED_TRIGGERS)} are not allowed")
-    if "workflow_dispatch" not in got:
-        problems.append("workflow_dispatch is missing")
-    if PART_A and got != {"workflow_dispatch"}:
-        problems.append(f"part a is dispatch only, got {sorted(got)}")
-    if not PART_A and got != ALLOWED_TRIGGERS:
-        problems.append(f"part b has exactly dispatch and schedule, got {sorted(got)}")
+    if got != ALLOWED_TRIGGERS:
+        problems.append(f"triggers must be exactly {sorted(ALLOWED_TRIGGERS)}, got {sorted(got)}")
+    crons = re.findall(r"^\s*-?\s*cron:\s*(.*?)\s*$", wf.code, re.M)
+    if crons:
+        problems.append(
+            f"the weekly schedule is paused (VOS-D149): there must be no cron, got {crons}; "
+            "VOS-028c3e-4 restores it together with this test"
+        )
     if not re.search(r"^ {6}mode:\s*$", wf.code, re.M) or not re.search(
-        r"^ {8}options:\s*\[record\]\s*$", wf.code, re.M
+        r"^ {8}options:\s*\[record, verify\]\s*$", wf.code, re.M
     ):
-        problems.append("inputs.mode must be a choice whose only option is [record]")
+        problems.append("inputs.mode must be a choice whose only options are [record, verify]")
     if not re.search(r"^ {8}type:\s*choice\s*$", wf.code, re.M):
         problems.append("inputs.mode must be `type: choice`")
     return problems
@@ -326,6 +370,14 @@ def rule_permissions(wf: Workflow) -> list[str]:
             problems.append(f"job {name} must have contents: read only, got {perms}")
     if len(re.findall(r"issues:\s*write", wf.code)) != 1:
         problems.append("`issues: write` must appear exactly once (in report)")
+    # No write permission anywhere but that one, and no `actions:` permission at all
+    # (the dropped gate was the only thing that needed `actions: read`).
+    if len(re.findall(r"^\s+[\w-]+:\s*write\s*$", wf.code, re.M)) != 1:
+        problems.append("the only write permission is report's `issues: write`")
+    if re.search(r"^\s+actions:\s*\S+", wf.code, re.M):
+        problems.append("no `actions:` permission is allowed (there is no Actions-API lookup)")
+    if re.search(r"write-all|read-all", wf.code):
+        problems.append("`write-all` and `read-all` are forbidden")
     report = wf.jobs.get("report")
     if report and any(s.uses and s.uses.startswith("actions/checkout") for s in report.steps):
         problems.append("report must not check out")
@@ -333,8 +385,8 @@ def rule_permissions(wf: Workflow) -> list[str]:
 
 
 def rule_jobs_present(wf: Workflow) -> list[str]:
-    if list(wf.jobs) != JOBS_PART_A:
-        return [f"jobs must be {JOBS_PART_A}, got {list(wf.jobs)}"]
+    if list(wf.jobs) != JOBS:
+        return [f"jobs must be {JOBS}, got {list(wf.jobs)}"]
     return []
 
 
@@ -346,13 +398,18 @@ def rule_timeouts(wf: Workflow) -> list[str]:
         for step in job.steps:
             if not re.fullmatch(r"\d+", step.key("timeout-minutes") or ""):
                 problems.append(f"job {name}: step {step.lines[0].strip()} has no timeout-minutes")
-    shard = wf.jobs.get("record-shard")
-    if shard:
-        if shard.key("timeout-minutes") != "330":
-            problems.append("record-shard timeout-minutes must be 330")
-        probe = [s for s in shard.steps if "--tier full" in (s.run_block() or "")]
-        if len(probe) != 1 or probe[0].key("timeout-minutes") != "320":
-            problems.append("the probe step of record-shard must be exactly one step with timeout-minutes 320")
+    for name, marker in (
+        ("record-shard", "--tier full"),
+        ("verify-shard", "check --full"),
+        ("verify-retry", "check --full"),
+    ):
+        shard = wf.jobs.get(name)
+        if shard:
+            if shard.key("timeout-minutes") != "330":
+                problems.append(f"{name} timeout-minutes must be 330")
+            probe = [s for s in shard.steps if marker in (s.run_block() or "")]
+            if len(probe) != 1 or probe[0].key("timeout-minutes") != "320":
+                problems.append(f"the probe step of {name} must be exactly one step with timeout-minutes 320")
     return problems
 
 
@@ -404,8 +461,30 @@ def rule_gate(wf: Workflow) -> list[str]:
     ):
         if needle not in body:
             problems.append(f"the gate script lacks {needle!r} (a tag or fork dispatch must fail loudly)")
-    if body.count("exit 1") < 3:
-        problems.append("the gate must fail (exit 1) on a wrong repository, a non-branch ref and a wrong mode")
+    if body.count("exit 1") < 4:
+        problems.append("the gate must fail (exit 1) on a wrong repository, a non-branch ref, a wrong mode and a wrong event")
+    # While the weekly schedule is paused the event case has ONE arm, workflow_dispatch,
+    # and a catch-all that fails: no `schedule` arm, so a schedule trigger added by
+    # mistake fails loudly instead of silently running a verify.  Record mode can come
+    # only from a dispatch, which can choose only record or verify.
+    if re.search(r"^\s*schedule\)", body, re.M):
+        problems.append("the gate must have no schedule arm while the weekly verify is paused (VOS-D149)")
+    event_case = re.search(r'case "\$GITHUB_EVENT_NAME" in\n(.*?)\n\s*esac\n\s*echo "run=true"', body, re.S)
+    if event_case is None:
+        problems.append("the gate's event case could not be found")
+    else:
+        arms = re.findall(r"^ {12}([\w*|' -]+)\)\s*$", event_case.group(1), re.M)
+        if arms != ["workflow_dispatch", "*"]:
+            problems.append(f"the gate's event case must have exactly the arms workflow_dispatch and *, got {arms}")
+        elif "exit 1" not in event_case.group(1).split("            *)")[-1]:
+            problems.append("the gate's catch-all event arm must exit 1")
+    if "record | verify) mode=\"$INPUT_MODE\" ;;" not in body:
+        problems.append("a dispatch may choose only record or verify")
+    if 'case "$GITHUB_EVENT_NAME" in' not in body:
+        problems.append("the gate must take the mode from the event name")
+    outputs = "\n".join(gate.block("outputs") or [])
+    if "steps.mode.outputs.mode" not in outputs:
+        problems.append("the gate must output mode")
     return problems
 
 
@@ -592,23 +671,247 @@ def rule_report(wf: Workflow) -> list[str]:
     if report is None:
         return ["report is missing"]
     problems = []
-    if (report.key("if") or "") != (
-        "always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))"
-    ):
-        problems.append("report `if:` must be the failure-or-cancelled expression")
+    if (report.key("if") or "") != JOB_CONDITIONS["report"][1]:
+        problems.append("report `if:` must be the failure, cancelled or flakes expression")
     env = {}
     for step in report.steps:
         env.update(step.env_keys())
     if env.get("GH_TOKEN") != "${{ github.token }}":
         problems.append("report needs GH_TOKEN: ${{ github.token }} in step env")
-    for need in ("RUN_ID", "RUN_URL", "MODE"):
+    for need in ("RUN_ID", "RUN_URL", "MODE", "RETRIED", "FLAKES", "RESULT_VERDICT", "RESULT_FAN_IN"):
         if need not in env:
             problems.append(f"report must pass {need} through env")
     body = "\n".join(s.run_block() or "" for s in report.steps)
+    # Shard index lists crossed job outputs: they are used only after a pattern check,
+    # and nothing else a verify produces (row values) reaches the report.
+    if body.count("grep -Eq") < 2:
+        problems.append("report must pattern-check the shard index lists before using them")
+    for needle in ("$retried", "$flakes"):
+        if needle not in body:
+            problems.append(f"report must print the validated index list {needle}")
+    for forbidden in ("needs.verify-shard.outputs", "rerun.json", "download-artifact"):
+        if forbidden in report.text:
+            problems.append(f"report must not read verify data ({forbidden})")
     if "github-actions[bot]" not in body or "env.TITLE" not in body:
         problems.append("report must match the open issue by exact title and github-actions[bot]")
     if "gh issue comment" not in body or "gh issue create" not in body:
         problems.append("report must comment when found and create otherwise")
+    return problems
+
+
+def _check_step(job: Job, marker: str = "check --full") -> list[Step]:
+    return [st for st in job.steps if marker in (st.run_block() or "")]
+
+
+def _verify_leg(wf: Workflow, name: str, tail: str) -> list[str]:
+    """What verify-shard and verify-retry share: the same leg, once, at the checkout."""
+    job = wf.jobs.get(name)
+    if job is None:
+        return [f"{name} is missing"]
+    problems = []
+    strategy = "\n".join(job.block("strategy") or [])
+    for needle in ("fail-fast: false", "max-parallel: 8"):
+        if needle not in strategy:
+            problems.append(f"{name} strategy lacks {needle}")
+    body = "\n".join(st.run_block() or "" for st in job.steps)
+    steps = _check_step(job)
+    if len(steps) != 1:
+        problems.append(f"{name} must run `check --full` in exactly one step (no retry loop inside a shard)")
+        return problems
+    run = steps[0].run_block() or ""
+    if run.count("check --full") != 1 or re.search(r"\b(for|while|until)\b", run):
+        problems.append(f"{name}: the check runs once, with no loop around it")
+    for needle in (
+        '"$exe" check --full --at-checkout',
+        '--shard "$SHARD_K/64"',
+        '--rerun-out "$out/rerun.json"',
+        '--run-id "$RUN_ID"',
+        '--run-attempt "$RUN_ATTEMPT"',
+        '--exe "$exe"',
+        "--jobs 2",
+        f'"$GITHUB_WORKSPACE/{RESULTS_FILE}"',
+    ):
+        if needle not in run:
+            problems.append(f"{name}: the check command lacks {needle}")
+    if "--tier full" in body:
+        problems.append(f"{name} must not run `run --tier full`")
+    # exit 0 or 1 is a success of the job, anything else (or no file) a failure.
+    if "0 | 1) ;;" not in run or "exit 1" not in run or '[ ! -s "$out/rerun.json" ]' not in run:
+        problems.append(f"{name}: exit 2, or exit 1 with no re-run file, must fail the job")
+    if 'printf \'%s\\n\' "$rc" > "$out/exit-code"' not in run:
+        problems.append(f"{name}: the exit code must be written to an exit-code file")
+    if '|| rc=$?' not in run:
+        problems.append(f"{name}: the check's exit status must be captured, not allowed to end the step")
+    for needle in ("test -x /usr/bin/time", '"$GITHUB_WORKSPACE" = "$BUILD_WORKSPACE"', "chmod +x", '"$BUILD_SHA256"'):
+        if needle not in body:
+            problems.append(f"{name} must keep record-shard's workspace and digest steps ({needle})")
+    if not any(st.uses and st.uses.startswith("dtolnay/rust-toolchain") for st in job.steps):
+        problems.append(f"{name} must install the toolchain")
+    checkouts = [st for st in job.steps if st.uses and st.uses.startswith("actions/checkout")]
+    if len(checkouts) != 1 or checkouts[0].with_keys().get("fetch-depth") != "0":
+        problems.append(f"{name} must check out once with fetch-depth: 0")
+    uploads = [st for st in job.steps if st.uses and st.uses.startswith("actions/upload-artifact")]
+    want = "verify-shard-${{ matrix.k }}-of-64-${{ github.run_id }}-${{ github.run_attempt }}" + tail
+    if len(uploads) != 1 or uploads[0].with_keys().get("name") != want:
+        problems.append(f"{name}'s artifact must be named {want}")
+    elif "exit-code" not in uploads[0].text or "rerun.json" not in uploads[0].text:
+        problems.append(f"{name} must upload the re-run file and the exit-code file")
+    return problems
+
+
+def rule_verify_shard(wf: Workflow) -> list[str]:
+    job = wf.jobs.get("verify-shard")
+    problems = _verify_leg(wf, "verify-shard", "")
+    if job is None:
+        return problems
+    text = "\n".join(job.block("strategy") or [])
+    m = re.search(r"^ {8}k:\s*\[([^\]]*)\]\s*$", text, re.M)
+    if not m or [int(x) for x in m.group(1).split(",")] != list(range(64)):
+        problems.append("the verify-shard matrix must be exactly k: [0..63]")
+    if "--at-checkout" not in "\n".join(st.run_block() or "" for st in job.steps):
+        problems.append("verify-shard must use --at-checkout")
+    return problems
+
+
+def rule_verify_triage(wf: Workflow) -> list[str]:
+    job = wf.jobs.get("verify-triage")
+    if job is None:
+        return ["verify-triage is missing"]
+    problems = []
+    downloads = [st for st in job.steps if st.uses and st.uses.startswith("actions/download-artifact")]
+    if len(downloads) != 1 or set(downloads[0].with_keys()) != {"path"}:
+        problems.append("verify-triage must download all of this run's artifacts with only `path`")
+    body = "\n".join(st.run_block() or "" for st in job.steps)
+    # Exit codes come from artifacts: each must be a lone 0 or 1, else the job fails.
+    for needle in ('case "$v" in', "0) ;;", "1) retry=", "*) echo", "exit 1", "wc -c", "tr -d"):
+        if needle not in body:
+            problems.append(f"verify-triage must validate every exit code strictly (lacks {needle!r})")
+    if 'if ! diff "$RUNNER_TEMP/expected.txt" "$RUNNER_TEMP/found.txt"; then' not in body:
+        problems.append("verify-triage must require exactly the 64 shard artifacts and the binary")
+    if 'echo "retry=[$retry]" >> "$GITHUB_OUTPUT"' not in body:
+        problems.append("verify-triage must output the JSON list of shards to retry")
+    # A value read from an artifact must never be evaluated as shell.
+    if re.search(r"\b(eval|source)\b|\$\(\s*cat\b|bash -c|sh -c", body):
+        problems.append("verify-triage must not evaluate artifact content")
+    return problems
+
+
+def rule_verify_retry(wf: Workflow) -> list[str]:
+    job = wf.jobs.get("verify-retry")
+    problems = _verify_leg(wf, "verify-retry", "-retry")
+    if job is None:
+        return problems
+    strategy = "\n".join(job.block("strategy") or [])
+    if "k: ${{ fromJSON(needs.verify-triage.outputs.retry) }}" not in strategy:
+        problems.append("the verify-retry matrix must be fromJSON of the triage's list")
+    # The retry is a separate job: verify-shard never retries inside itself.
+    shard = wf.jobs.get("verify-shard")
+    if shard and len(_check_step(shard)) != 1:
+        problems.append("verify-shard must not contain the retry")
+    return problems
+
+
+def rule_verify_fan_in(wf: Workflow) -> list[str]:
+    job = wf.jobs.get("verify-fan-in")
+    if job is None:
+        return ["verify-fan-in is missing"]
+    problems = []
+    if "verify-shard" not in (job.key("needs") or "") or "needs.verify-shard.result == 'success'" not in (job.key("if") or ""):
+        problems.append("verify-fan-in must need verify-shard and require its success")
+    checkouts = [st for st in job.steps if st.uses and st.uses.startswith("actions/checkout")]
+    if len(checkouts) != 1:
+        problems.append("verify-fan-in must have its own checkout (the committed file is read from it)")
+    downloads = [st for st in job.steps if st.uses and st.uses.startswith("actions/download-artifact")]
+    if len(downloads) != 1 or set(downloads[0].with_keys()) != {"path"}:
+        problems.append("verify-fan-in must download all of this run's artifacts with only `path`")
+    scripts = [st.run_block() or "" for st in job.steps]
+    body = "\n".join(scripts)
+    # Exact set: the binary, the 64 shards and exactly the listed retries.
+    sets = [b for b in scripts if 'if ! diff "$RUNNER_TEMP/expected.txt" "$RUNNER_TEMP/found.txt"; then' in b]
+    if len(sets) != 1 or "exit 1" not in sets[0] or "RETRY_LIST" not in sets[0] or (
+        'echo "verify-shard-${k}-of-64-${RUN_ID}-${RUN_ATTEMPT}-retry"' not in sets[0]
+    ):
+        problems.append("verify-fan-in must require exactly the binary, 64 shards and the listed retries")
+    elif "jq -e" not in sets[0]:
+        problems.append("verify-fan-in must re-validate the retry list before using it")
+    # A retried shard's file replaces its first file.
+    if "-retry/rerun.json" not in body or 'grep -qx "$k"' not in body:
+        problems.append("verify-fan-in must let a shard's retry file replace its first file")
+    joins = [b for b in scripts if " join " in b]
+    if len(joins) != 1:
+        problems.append("verify-fan-in must have exactly one join command")
+    else:
+        for flag in (
+            '--expect-binary-sha256 "$BUILD_SHA256"',
+            '--expect-run-id "$RUN_ID"',
+            '--expect-run-attempt "$RUN_ATTEMPT"',
+            "--expect-shards 64",
+            "--expect-jobs 2",
+            "--out",
+        ):
+            if flag not in joins[0]:
+                problems.append(f"the verify join command lacks {flag}")
+    diffs = [(i, st) for i, st in enumerate(job.steps) if " decision-diff " in (st.run_block() or "")]
+    if len(diffs) != 1:
+        problems.append("verify-fan-in must have exactly one decision-diff command")
+    else:
+        idx, step = diffs[0]
+        run = step.run_block() or ""
+        if "--expect-shards 64" not in run:
+            problems.append("decision-diff must carry --expect-shards 64")
+        if "--rerun " not in run:
+            problems.append("decision-diff must name the joined file with --rerun")
+        m = re.search(r'--recorded\s+"([^"]+)"', run)
+        if not m:
+            problems.append("decision-diff needs --recorded PATH")
+        else:
+            rec = m.group(1)
+            # The committed file of THIS job's checkout, never anything downloaded.
+            if rec != f"$GITHUB_WORKSPACE/{RESULTS_FILE}" or "RUNNER_TEMP" in rec or "artifacts" in rec:
+                problems.append(f"decision-diff --recorded must be the checkout's {RESULTS_FILE}, got {rec}")
+        ups = [i for i, st in enumerate(job.steps) if st.uses and st.uses.startswith("actions/upload-artifact")]
+        if len(ups) != 1 or job.steps[ups[0]].with_keys().get("retention-days") != "90":
+            problems.append("the joined verify file must be uploaded once with retention-days: 90")
+        elif ups[0] > idx:
+            problems.append("the joined verify file must be uploaded before decision-diff (a red verify keeps its file)")
+    summaries = [b for b in scripts if "GITHUB_STEP_SUMMARY" in b and "sha256sum" in b]
+    if not summaries:
+        problems.append("verify-fan-in must write the joined verify file's SHA-256 to the step summary")
+    elif not all(v in summaries[0] for v in ("$GITHUB_SHA", "$GITHUB_REF", "$GITHUB_RUN_ID", "$sum")):
+        problems.append("the verify summary must also record the commit, ref and run id")
+    if "$(git rev-parse HEAD)" not in body or '"$GITHUB_SHA"' not in body:
+        problems.append("verify-fan-in must assert its checkout is the run's commit")
+    if "flakes=" not in body or "flakes:" not in "\n".join(job.block("outputs") or []):
+        problems.append("verify-fan-in must output the flake indices")
+    if re.search(r"git (push|commit)|gh pr|--force", body):
+        problems.append("verify-fan-in must not push or commit")
+    return problems
+
+
+def rule_checkout_is_the_run_commit(wf: Workflow) -> list[str]:
+    """Every job that checks out must assert HEAD is the run's commit."""
+    problems = []
+    for name, job in wf.jobs.items():
+        if not any(st.uses and st.uses.startswith("actions/checkout") for st in job.steps):
+            continue
+        if not any('test "$(git rev-parse HEAD)" = "$GITHUB_SHA"' in (st.run_block() or "") for st in job.steps):
+            problems.append(f"job {name} checks out but never asserts HEAD equals GITHUB_SHA")
+    return problems
+
+
+def rule_verify_verdict(wf: Workflow) -> list[str]:
+    job = wf.jobs.get("verify-verdict")
+    if job is None:
+        return ["verify-verdict is missing"]
+    problems = []
+    body = "\n".join(st.run_block() or "" for st in job.steps)
+    env = {}
+    for st in job.steps:
+        env.update(st.env_keys())
+    if env.get("FAN_IN_RESULT") != "${{ needs.verify-fan-in.result }}":
+        problems.append("verify-verdict must read the fan-in's result through env")
+    if '[ "$FAN_IN_RESULT" != "success" ]' not in body or "exit 1" not in body:
+        problems.append("verify-verdict must fail unless the fan-in succeeded")
     return problems
 
 
@@ -627,6 +930,12 @@ RULES = [
     rule_build,
     rule_artifacts,
     rule_join,
+    rule_verify_shard,
+    rule_verify_triage,
+    rule_verify_retry,
+    rule_verify_fan_in,
+    rule_verify_verdict,
+    rule_checkout_is_the_run_commit,
     rule_report,
 ]
 
@@ -651,12 +960,13 @@ class VosCapacityFullWorkflowTests(unittest.TestCase):
     def test_parser_sees_the_expected_shape(self) -> None:
         # Guards the checker itself: an empty parse would make every rule pass.
         wf = Workflow(self.text)
-        self.assertEqual(list(wf.jobs), JOBS_PART_A)
+        self.assertEqual(list(wf.jobs), JOBS)
         self.assertEqual(wf.triggers(), {"workflow_dispatch"})
-        self.assertGreaterEqual(sum(len(j.steps) for j in wf.jobs.values()), 23)
+        self.assertGreaterEqual(sum(len(j.steps) for j in wf.jobs.values()), 45)
         self.assertGreaterEqual(
-            sum(1 for _, s in wf.all_steps() if s.run_block() is not None), 12
+            sum(1 for _, s in wf.all_steps() if s.run_block() is not None), 25
         )
+        self.assertEqual(len(wf.jobs["verify-fan-in"].steps), 10)
 
     def test_every_uses_is_on_the_allowlist_by_sha(self) -> None:
         # Independent of the parser: a plain regex over the raw text.
@@ -678,7 +988,7 @@ class VosCapacityFullWorkflowTests(unittest.TestCase):
     def test_toolchain_is_the_exact_pin(self) -> None:
         # toolchain_pins.py compares this value with mise.toml; here it only has to
         # be present, exact, and installed wherever the probe is built or run.
-        for job in ("build", "record-shard"):
+        for job in ("build", "record-shard", "verify-shard", "verify-retry"):
             steps = Workflow(self.text).jobs[job].steps
             tool = [s for s in steps if (s.uses or "").startswith("dtolnay/rust-toolchain")]
             self.assertEqual(len(tool), 1, job)
@@ -719,9 +1029,56 @@ class CheckerCanFailTests(unittest.TestCase):
         self.assertFires("rule_triggers", text)
         self.assertFires("rule_no_unsafe_keys", text)
 
-    def test_a_schedule_trigger_in_part_a(self) -> None:
-        text = self.mutated("on:\n  workflow_dispatch:", "on:\n  schedule:\n    - cron: '41 1 * * 0'\n  workflow_dispatch:")
-        self.assertFires("rule_triggers", text)
+    def test_the_paused_weekly_schedule_cannot_come_back_unnoticed(self) -> None:
+        # The negative controls of the pause (VOS-D149): re-adding the schedule, the
+        # restored cron, or any other cron fails, until VOS-028c3e-4 deliberately
+        # changes this test.  Each mutation is applied to the real file's `on:` block.
+        base = "on:\n  workflow_dispatch:"
+        for cron in (RESTORED_CRON, "0 0 * * *", "41 1 * * 1-6"):
+            text = self.mutated(base, f'on:\n  schedule:\n    - cron: "{cron}"\n  workflow_dispatch:')
+            self.assertFires("rule_triggers", text)
+        # A schedule with a second cron, and a schedule trigger with no cron line.
+        two = 'on:\n  schedule:\n    - cron: "41 1 * * 0"\n    - cron: "41 1 * * 1-6"\n  workflow_dispatch:'
+        self.assertFires("rule_triggers", self.mutated(base, two))
+        self.assertFires("rule_triggers", self.mutated(base, "on:\n  schedule:\n  workflow_dispatch:"))
+
+    def test_the_workflow_has_no_cron_and_no_schedule(self) -> None:
+        # Pins the committed file itself, so the pause is visible in the test.
+        self.assertNotRegex(self.text, r"(?m)^\s*-?\s*cron:")
+        self.assertNotIn("schedule", Workflow(self.text).triggers())
+
+    def test_a_mode_choice_that_is_not_record_and_verify(self) -> None:
+        self.assertFires("rule_triggers", self.mutated("options: [record, verify]", "options: [record]"))
+        self.assertFires("rule_triggers", self.mutated("options: [record, verify]", "options: [record, verify, nightly]"))
+
+    def test_other_triggers_are_forbidden(self) -> None:
+        for trig in ("pull_request_target:", "workflow_run:\n    workflows: [x]"):
+            text = self.mutated("on:\n  workflow_dispatch:", f"on:\n  {trig}\n  workflow_dispatch:")
+            self.assertFires("rule_triggers", text)
+            self.assertFires("rule_no_unsafe_keys", text)
+
+    def test_actions_read_anywhere(self) -> None:
+        text = self.mutated("    permissions:\n      contents: read\n    outputs:\n      run:", "    permissions:\n      contents: read\n      actions: read\n    outputs:\n      run:")
+        self.assertFires("rule_permissions", text)
+
+    def test_a_write_permission_outside_report(self) -> None:
+        text = self.mutated("    timeout-minutes: 20\n    permissions:\n      contents: read\n", "    timeout-minutes: 20\n    permissions:\n      contents: write\n")
+        self.assertFires("rule_permissions", text)
+
+    def test_a_gate_with_a_schedule_arm_or_a_lax_event_case(self) -> None:
+        # A restored `schedule)` arm (even a correct one) fails until VOS-028c3e-4 changes
+        # this test; a catch-all that does not exit, or a second arm, fails too.
+        arm = "            workflow_dispatch)\n"
+        self.assertFires("rule_gate", self.mutated(arm, "            schedule)\n              mode=verify\n              ;;\n" + arm))
+        self.assertFires("rule_gate", self.mutated(arm, "            push)\n              mode=verify\n              ;;\n" + arm))
+        self.assertFires(
+            "rule_gate",
+            self.mutated(
+                "(the weekly schedule is paused, VOS-028c3e)\" >&2\n              exit 1\n",
+                "(the weekly schedule is paused, VOS-028c3e)\" >&2\n              true\n",
+            ),
+        )
+        self.assertFires("rule_gate", self.mutated('record | verify) mode="$INPUT_MODE" ;;', 'record | verify | other) mode="$INPUT_MODE" ;;'))
 
     def test_an_expression_inside_run(self) -> None:
         text = self.mutated(
@@ -799,7 +1156,7 @@ class CheckerCanFailTests(unittest.TestCase):
         # Move the validate step (with its comment) ahead of the upload step.
         up = self.text.index("      - name: Upload the joined file")
         val_comment = self.text.index("      # After the upload on purpose")
-        end = self.text.index("\n  # ── report")
+        end = self.text.index("\n  # ── verify-shard")
         text = self.text[:up] + self.text[val_comment:end] + "\n" + self.text[up:val_comment] + self.text[end:]
         self.assertNotEqual(text, self.text)
         self.assertFires("rule_join", text)
@@ -857,6 +1214,133 @@ class CheckerCanFailTests(unittest.TestCase):
     def test_a_summary_without_the_commit_or_ref(self) -> None:
         self.assertFires("rule_join", self.mutated('            echo "commit: $GITHUB_SHA"\n', ""))
         self.assertFires("rule_join", self.mutated('            echo "ref: $GITHUB_REF"\n', ""))
+
+    # ── the verify path ─────────────────────────────────────────────────────
+
+    def in_job(self, job: str, old: str, new: str, count: int = 1) -> str:
+        """Mutate `old` only inside one job (several jobs share the same lines)."""
+        head, sep, body = self.text.partition("\nname: vos-capacity-full\n")
+        self.assertTrue(sep)
+        start = body.index(f"\n  {job}:\n")
+        nxt = body.find("\n  # ── ", start + 1)
+        end = len(body) if nxt < 0 else nxt
+        section = body[start:end]
+        self.assertGreaterEqual(section.count(old), 1, f"{job}: mutation anchor missing: {old!r}")
+        return head + sep + body[:start] + section.replace(old, new, count) + body[end:]
+
+    def test_a_verify_shard_without_at_checkout(self) -> None:
+        text = self.in_job("verify-shard", "check --full --at-checkout", "check --full")
+        self.assertFires("rule_verify_shard", text)
+
+    def test_a_verify_shard_that_survives_exit_two_or_no_file(self) -> None:
+        self.assertFires("rule_verify_shard", self.in_job("verify-shard", "            0 | 1) ;;\n", "            0 | 1 | 2) ;;\n"))
+        self.assertFires(
+            "rule_verify_shard",
+            self.in_job("verify-shard", '          if [ ! -s "$out/rerun.json" ]; then\n', '          if false; then\n'),
+        )
+
+    def test_a_verify_shard_that_ends_on_exit_one(self) -> None:
+        # `|| rc=$?` is what lets exit 1 with a file succeed.
+        self.assertFires("rule_verify_shard", self.in_job("verify-shard", " || rc=$?\n", "\n"))
+
+    def test_a_verify_shard_missing_a_flag(self) -> None:
+        for flag in ("--rerun-out", "--run-id", "--run-attempt", "--exe", "--jobs 2"):
+            self.assertFires("rule_verify_shard", self.in_job("verify-shard", flag, "--other", 99))
+
+    def test_a_verify_shard_against_another_file(self) -> None:
+        text = self.in_job("verify-shard", '"$GITHUB_WORKSPACE/code/specs/data/vos30-capacity-results.json"', '"$RUNNER_TEMP/results.json"')
+        self.assertFires("rule_verify_shard", text)
+
+    def test_a_retry_inside_the_shard(self) -> None:
+        text = self.in_job("verify-shard", "          printf '%s\\n' \"$rc\" > \"$out/exit-code\"\n",
+                           "          for again in 1 2; do \"$exe\" check --full \"$out\"; done\n")
+        self.assertFires("rule_verify_shard", text)
+
+    def test_a_retry_that_is_not_a_matrix_over_the_triage_list(self) -> None:
+        text = self.in_job("verify-retry", "k: ${{ fromJSON(needs.verify-triage.outputs.retry) }}", "k: [0, 1]")
+        self.assertFires("rule_verify_retry", text)
+
+    def test_a_retry_artifact_without_the_suffix(self) -> None:
+        text = self.in_job("verify-retry", "${{ github.run_attempt }}-retry", "${{ github.run_attempt }}")
+        self.assertFires("rule_verify_retry", text)
+
+    def test_a_triage_that_accepts_any_exit_code(self) -> None:
+        self.assertFires("rule_verify_triage", self.in_job("verify-triage", "              *) echo", "              2) echo"))
+        self.assertFires("rule_verify_triage", self.in_job("verify-triage", 'size="$(wc -c < "$shard/exit-code")"', 'size=1'))
+
+    def test_a_triage_that_evaluates_artifact_content(self) -> None:
+        text = self.in_job("verify-triage", 'v="$(tr -d \'\\n\' < "$shard/exit-code")"', 'v="$(tr -d \'\\n\' < "$shard/exit-code")"\n            eval "$v"')
+        self.assertFires("rule_verify_triage", text)
+
+    def test_a_triage_that_does_not_need_all_64(self) -> None:
+        text = self.in_job("verify-triage", "          if ! diff ", "          if false && ! diff ")
+        self.assertFires("rule_verify_triage", text)
+
+    def test_a_triage_that_skips_when_a_shard_failed(self) -> None:
+        text = self.in_job("verify-triage", "if: ${{ !cancelled() && ", "if: ${{ ")
+        self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_a_fan_in_missing_an_expect_flag(self) -> None:
+        for flag in ("--expect-binary-sha256", "--expect-run-id", "--expect-run-attempt", "--expect-shards 64", "--expect-jobs 2"):
+            self.assertFires("rule_verify_fan_in", self.in_job("verify-fan-in", flag, "--other"))
+
+    def test_a_decision_diff_without_expect_shards(self) -> None:
+        text = self.in_job("verify-fan-in", "            --rerun \"$RUNNER_TEMP/verify-joined.json\" \\\n            --expect-shards 64\n",
+                           "            --rerun \"$RUNNER_TEMP/verify-joined.json\"\n")
+        self.assertFires("rule_verify_fan_in", text)
+
+    def test_a_decision_diff_recorded_under_the_download_directory(self) -> None:
+        text = self.in_job("verify-fan-in", '--recorded "$GITHUB_WORKSPACE/code/specs/data/vos30-capacity-results.json"',
+                           '--recorded "$RUNNER_TEMP/artifacts/results.json"')
+        self.assertFires("rule_verify_fan_in", text)
+
+    def test_a_fan_in_without_its_own_checkout(self) -> None:
+        head, sep, body = self.text.partition("\nname: vos-capacity-full\n")
+        start = body.index("\n  verify-fan-in:\n")
+        a = body.index("      - name: Check out the run's commit\n", start)
+        b = body.index("      # The committed file is the recording", a)
+        self.assertFires("rule_verify_fan_in", head + sep + body[:a] + body[b:])
+
+    def test_a_fan_in_that_accepts_a_stray_artifact(self) -> None:
+        text = self.in_job("verify-fan-in", "          if ! diff ", "          if false && ! diff ")
+        self.assertFires("rule_verify_fan_in", text)
+        self.assertFires("rule_verify_fan_in", self.in_job("verify-fan-in", "-retry\"\n            done < ", "\"\n            done < "))
+
+    def test_a_fan_in_where_the_retry_does_not_replace_the_shard(self) -> None:
+        text = self.in_job("verify-fan-in", 'if grep -qx "$k" "$RUNNER_TEMP/retry.txt"; then', "if false; then")
+        self.assertFires("rule_verify_fan_in", text)
+
+    def test_the_joined_verify_file_must_be_kept_90_days_before_decision_diff(self) -> None:
+        self.assertFires("rule_verify_fan_in", self.in_job("verify-fan-in", "retention-days: 90", "retention-days: 5"))
+        head, sep, body = self.text.partition("\nname: vos-capacity-full\n")
+        start = body.index("\n  verify-fan-in:\n")
+        up = body.index("      # Before decision-diff on purpose", start)
+        cmp_ = body.index("      # The verdict comes from DATA", up)
+        end = body.index("\n  # ── verify-verdict", cmp_)
+        swapped = body[:up] + body[cmp_:end] + "\n" + body[up:cmp_] + body[end:]
+        self.assertNotEqual(swapped, body)
+        self.assertFires("rule_verify_fan_in", head + sep + swapped)
+
+    def test_a_fan_in_that_does_not_require_the_shards(self) -> None:
+        text = self.in_job("verify-fan-in", " && needs.verify-shard.result == 'success'", "")
+        self.assertFires("rule_verify_fan_in", text)
+        self.assertFires("rule_job_keys_and_conditions", text)
+
+    def test_a_checkout_without_the_head_assertion(self) -> None:
+        for job in ("build", "record-shard", "verify-shard", "verify-retry", "verify-fan-in"):
+            text = self.in_job(job, 'test "$(git rev-parse HEAD)" = "$GITHUB_SHA"', "true")
+            self.assertFires("rule_checkout_is_the_run_commit", text)
+
+    def test_a_verdict_that_does_not_fail(self) -> None:
+        self.assertFires("rule_verify_verdict", self.mutated('"$FAN_IN_RESULT" != "success"', '"$FAN_IN_RESULT" = "nothing"'))
+        self.assertFires("rule_job_keys_and_conditions", self.mutated("    if: always() && needs.gate.outputs.mode == 'verify'\n", "    if: needs.gate.outputs.mode == 'verify'\n"))
+
+    def test_a_report_that_forwards_unchecked_indices(self) -> None:
+        self.assertFires("rule_report", self.mutated("grep -Eq", "grep -Fq", 99))
+
+    def test_a_verify_leg_without_a_timeout_or_the_right_one(self) -> None:
+        self.assertFires("rule_timeouts", self.in_job("verify-shard", "    timeout-minutes: 330\n", "    timeout-minutes: 360\n"))
+        self.assertFires("rule_timeouts", self.in_job("verify-retry", "        timeout-minutes: 320\n", ""))
 
 
 if __name__ == "__main__":

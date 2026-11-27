@@ -1,1 +1,1 @@
-cargo test -p wasm-module-parser -- --nocapture
+cargo test --locked -p wasm-module-parser -- --nocapture

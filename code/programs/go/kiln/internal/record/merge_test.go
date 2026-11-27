@@ -242,39 +242,6 @@ func TestParsePartitionProjectsThePlan(t *testing.T) {
 	}
 }
 
-// A steps export is keyed by rel_path (legacy.Steps.Lines is looked up that
-// way). An entry that names a path, or a path no shard runs, is a broken input
-// -- refused with an error, never treated as a void run.
-func TestMergeRefusesAStepsExportThePlanDoesNotRun(t *testing.T) {
-	graph, steps, plan := writeExports(t)
-	dir := t.TempDir()
-	if err := os.WriteFile(filepath.Join(dir, "records.jsonl"), nil, 0o600); err != nil {
-		t.Fatal(err)
-	}
-	base := MergeOptions{
-		Root: dir, Source: source.NewGit(dir),
-		GraphPath: graph, StepsPath: steps, PlanPath: plan,
-		ShardCount: 1, Shards: []ShardArtifact{{Index: 0, Dir: dir}},
-		Run: recmergeRun(), Kiln: testKlien, Now: time.Unix(1700000000, 0).UTC(), DryRun: true,
-	}
-	// The plan lists go/a only; the export names b as well.
-	for name, body := range map[string]string{
-		"unplanned":  `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"go/a","steps":["x"]},{"package":"code/packages/go/b","steps":["y"]}]}`,
-		"not a path": `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"../escape","steps":["x"]}]}`,
-		"twice":      `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"code/packages/go/a","steps":["x"]},{"package":"code/packages/go/a","steps":["y"]}]}`,
-	} {
-		p := filepath.Join(t.TempDir(), "steps.json")
-		if err := os.WriteFile(p, []byte(body), 0o600); err != nil {
-			t.Fatal(err)
-		}
-		o := base
-		o.StepsPath = p
-		if _, err := Merge(o); err == nil {
-			t.Errorf("%s: accepted", name)
-		}
-	}
-}
-
 // ---------------------------------------------------------------------------
 // The keys adapter.
 

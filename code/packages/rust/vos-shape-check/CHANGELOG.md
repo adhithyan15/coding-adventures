@@ -4,6 +4,10 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-040c)
+
+- **`vos.toml` key `sat`** (VOS31 10.3): a closed enum (`SatLane`, one member, `Model`; `VosToml::sat: Option<SatLane>`). Only `"model"` is valid, an absent key is `None` (off), a duplicate, another spelling or a non-string is a `vos.toml` error, and the unknown-key message names the key. Test: `sat_key_is_a_closed_enum_with_one_member`.
+
 ### Added (VOS-039d, VOS-D089)
 
 - **The tick audit** (`tests/tick_audit.rs`, VOS03 section 7.1).  Every `while`, `loop` and `for` in `src/**/*.rs`

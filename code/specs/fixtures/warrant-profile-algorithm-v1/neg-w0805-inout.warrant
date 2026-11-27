@@ -1,0 +1,3 @@
+-- expect: W0805
+warrant m v1 profile algorithm
+  op bump(x: inout Int) -> Int

@@ -1,1 +1,1 @@
-cargo test -p paint-vm-gpu-core -- --nocapture
+cargo test --locked -p paint-vm-gpu-core -- --nocapture

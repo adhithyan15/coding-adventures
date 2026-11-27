@@ -63,6 +63,10 @@ type world struct {
 	keys   fakeKeys
 	run    Run
 	honour bool
+	// The recording selection (KILN04 7.3): the language the bindings seal
+	// and the packages it left out. selectLang sets them.
+	lang    string
+	foreign []string
 }
 
 // std is the world most tests use:
@@ -143,7 +147,8 @@ func sl(v ...string) []string {
 }
 
 func (w *world) input() Input {
-	return Input{Run: w.run, Expected: Expected{GraphSHA256: dGraph, StepsSHA256: dSteps, Plan: w.plan, Steps: w.steps},
+	return Input{Run: w.run, Expected: Expected{GraphSHA256: dGraph, StepsSHA256: dSteps, Plan: w.plan, Steps: w.steps,
+		Language: w.lang, Foreign: w.foreign},
 		Shards: w.shards, Keys: w.keys, Now: time.Date(2026, 11, 13, 1, 2, 3, 999, time.UTC),
 		Kiln: "kiln/0.1.0 traced/2 recorder/2", HonourWritesComplete: w.honour}
 }

@@ -114,9 +114,30 @@ func GraphArgs(root, graphPath, stepsPath string) []string {
 
 // PlanArgs are the arguments for the sharded plan: every package, whatever the
 // diff, split into count prerequisite-closed shards by the measured weights.
-func PlanArgs(root string, count int, planPath string) []string {
-	return []string{"-root", root, "-force", "-language", "all", "-shard-count", strconv.Itoa(count),
-		"-shard-weights", ShardWeightsPath, "-emit-plan", planPath}
+//
+// language selects the recording (KILN04 7.3): "" or "all" plans every
+// language, exactly the arguments this function always returned (`-language
+// all`); a name passes `-plan-closed-language <name>` INSTEAD, never both, so
+// the plan holds only that language's prerequisite-closed packages.  The graph
+// and steps exports (GraphArgs) stay whole either way.
+func PlanArgs(root string, count int, planPath, language string) []string {
+	sel := []string{"-language", "all"}
+	if language != "" && language != "all" {
+		sel = []string{"-plan-closed-language", language}
+	}
+	args := []string{"-root", root, "-force"}
+	args = append(args, sel...)
+	return append(args, "-shard-count", strconv.Itoa(count),
+		"-shard-weights", ShardWeightsPath, "-emit-plan", planPath)
+}
+
+// bindingLanguage is the binding's spelling of a selection: "all" and "" are
+// both the default, which the binding writes as no field at all.
+func bindingLanguage(l string) string {
+	if l == "all" {
+		return ""
+	}
+	return l
 }
 
 // Runner starts a tool and waits for it. A non-zero exit is an error.
@@ -145,6 +166,10 @@ type Options struct {
 	// steps run their supervisors; `kiln record step` takes the value from the
 	// seal, and `collect` voids a run whose steps disagree with it.
 	ExecHead bool
+	// Language is the recording selection ("" or "all": every language; a name:
+	// that language's prerequisite-closed packages).  It is sealed in the binding
+	// beside the plan hash; see PlanArgs.
+	Language string
 	// JobStart is the Unix time the job's first step stamped (§5.3, setup
 	// stamps).
 	JobStart int64
@@ -339,7 +364,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if err := o.RunTool(ToolRun{Path: bt.Path, Dir: o.Dir, Env: toolEnv, Timeout: ToolTimeout, Args: GraphArgs(o.Root, graphPath, stepsPath)}); err != nil {
 		return nil, fmt.Errorf("build tool (graph and steps export): %w", err)
 	}
-	if err := o.RunTool(ToolRun{Path: bt.Path, Dir: o.Dir, Env: toolEnv, Timeout: ToolTimeout, Args: PlanArgs(o.Root, o.ShardCount, planPath)}); err != nil {
+	if err := o.RunTool(ToolRun{Path: bt.Path, Dir: o.Dir, Env: toolEnv, Timeout: ToolTimeout, Args: PlanArgs(o.Root, o.ShardCount, planPath, o.Language)}); err != nil {
 		return nil, fmt.Errorf("build tool (plan export): %w", err)
 	}
 	// Each export is read ONCE: the bytes that are hashed for the binding are
@@ -654,7 +679,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 		SandboxConfigSHA256: w.sums["sandbox.json"], KilnSHA256: kiln.SHA256, BuildToolSHA256: bt.SHA256, StraceSHA256: strace.SHA256, GitSHA256: git.SHA256,
 		Recorder: legacy.RecorderVersion, StraceVersion: straceVer, Kernel: kernel, JobStart: o.JobStart,
 		PreparedAt: o.Now().UTC().Format(time.RFC3339), PreparedTicks: preparedTicks,
-		ExecHead: o.ExecHead,
+		ExecHead: o.ExecHead, Language: bindingLanguage(o.Language),
 	}
 	bindBytes, err := recfmt.EncodeBinding(binding)
 	if err != nil {
@@ -709,6 +734,11 @@ func (o *Options) normalize() error {
 	}
 	if o.JobStart < 0 {
 		return fmt.Errorf("--job-start %d is negative", o.JobStart)
+	}
+	// Refused before any process starts: the name goes to the build tool's
+	// argv and into the sealed binding, so it must be the binding's own form.
+	if err := recfmt.CheckLanguage(bindingLanguage(o.Language)); err != nil {
+		return fmt.Errorf("--language: %w", err)
 	}
 	if o.Getenv == nil {
 		o.Getenv = func(string) string { return "" }

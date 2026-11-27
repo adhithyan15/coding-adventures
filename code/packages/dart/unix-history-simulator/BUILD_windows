@@ -1,0 +1,3 @@
+# needs-toolchain: python
+dart run test/model_test.dart
+python ../../../specs/fixtures/historical-unix-v1/replay_cli.py dart run ../../../specs/fixtures/historical-unix-v1/test-adapters/dart/fixture_cli.dart

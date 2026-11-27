@@ -42,6 +42,7 @@ Two obligations this module is built to be tested for
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Iterator
 from dataclasses import dataclass
 from itertools import islice
@@ -49,10 +50,19 @@ from itertools import islice
 from .domains import Desc, is_descriptor_for
 from .domains import build as build_descriptor
 from .errors import KitError, Refusal
-from .ir import IMPLEMENTED_LEVELS, Compiled, Program, evaluator, guarded, type_level
+from .ir import (
+    IMPLEMENTED_LEVELS,
+    Compiled,
+    Program,
+    check_requires,
+    evaluator,
+    guarded,
+    scan_tags,
+    type_level,
+)
 from .semantics import STANDARD, Semantics
 from .values import make_encoder
-from .wtypes import BOOL, Ty, flows, parse_type, unify
+from .wtypes import BOOL, Ty, check_types_table, parse_type, unify
 
 MAX_CHUNKS = 4096
 MAX_SLIM_CHUNKS = 32
@@ -212,6 +222,60 @@ def _corpus_error(why: str) -> Refusal:
     return Refusal("corpus", why)
 
 
+# ---------------------------------------------------------------------------
+# Claim names and chunk file names (section 5.5)
+# ---------------------------------------------------------------------------
+MAX_CLAIM_NAME = 64  # each of the (one or two) names: 1 + 63 more characters
+MAX_CHUNK_FILE_NAME = 133  # two 64-character names, the ".", and ".txt"
+_NAME_FIRST = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_")
+_NAME_REST = _NAME_FIRST | frozenset("0123456789")
+# A file with one of these as a dot-separated segment cannot be created on Windows.
+_DEVICE_NAMES = frozenset(
+    {"con", "prn", "aux", "nul"}
+    | {f"com{n}" for n in range(1, 10)}
+    | {f"lpt{n}" for n in range(1, 10)}
+)
+
+
+def chunk_file_name(claim: object) -> str:
+    """The name of a suite's chunk file, derived from its claim field (section 5.5).
+
+    A claim field is one or two names ``[A-Za-z_][A-Za-z0-9_]{0,63}`` joined by a
+    single ``/``; the file is ``<claim with "/" as ".">.txt``.  Anything else --
+    ``a/b/c``, ``../x``, the empty string, a name of 65 characters, a space, a
+    backslash, a NUL -- is refused as ``corpus``.  So the derived name holds no
+    path separator, no ``..`` and no leading dot, and **nothing read from the
+    corpus is ever used as a path**: the only text that reaches a file name is
+    one this function has accepted character by character.
+
+    A segment that is a Windows device name (``con``, ``nul``, ``com1`` ...,
+    any case) is refused as well, as is a name over 133 bytes, though neither
+    can happen to a claim that passed the first rule except the device names.
+    Two claims equal ignoring case is a fact about *two* rows and is the
+    corpus reader's to check.
+
+    This library never opens the file (the corpus reader, slice S6b, does); it
+    checks the claim here because it reads the suite row anyway and a hostile
+    row must not be half-accepted by one consumer and refused by the next.
+    """
+    if type(claim) is not str:
+        raise _corpus_error("a claim is text")
+    names = claim.split("/")
+    if len(names) > 2:
+        raise _corpus_error("a claim is one or two names joined by a single slash")
+    for name in names:
+        if not 1 <= len(name) <= MAX_CLAIM_NAME:
+            raise _corpus_error("a claim name has one to 64 characters")
+        if name[0] not in _NAME_FIRST or any(c not in _NAME_REST for c in name):
+            raise _corpus_error("a claim name is [A-Za-z_][A-Za-z0-9_]*")
+    file_name = ".".join(names) + ".txt"
+    if len(file_name) > MAX_CHUNK_FILE_NAME:  # pragma: no cover - 64+1+64+4 = 133
+        raise _corpus_error("a chunk file name is over 133 bytes")
+    if any(name.lower() in _DEVICE_NAMES for name in names):
+        raise _corpus_error("a claim name is a Windows device name")
+    return file_name
+
+
 def build_suite(
     corpus: object,
     row: object,
@@ -235,6 +299,11 @@ def build_suite(
             "the suite row carries keys that do not "
             "match the kind of suite it describes"
         )
+    # Both are facts about the row that no level can excuse: an undefined level
+    # name is a corpus error and never `level-missing` (section 4.2 rule 7), and a
+    # claim that is not a legal path name must never reach a file name (5.5).
+    check_requires(row.get("requires"), "corpus", "a suite's requires")
+    chunk_file_name(row.get("claim"))
     try:
         return _assemble_suite(corpus, row, chunk_size, max_cost, sem, levels)  # type: ignore[arg-type]
     except Refusal as error:
@@ -269,6 +338,7 @@ def _read_corpus_part(corpus: object) -> tuple[int, int]:
         raise _corpus_error("chunk_size must be 1024, 2048, ... or 65536")
     if not is_index(cost) or not 2_000 <= cost <= 65_536:
         raise _corpus_error("max_ir_cost lies outside the permitted budget range")
+    check_types_table(corpus["types"], "corpus")  # section 2.2, every consumer
     return size, cost
 
 
@@ -317,6 +387,35 @@ def _assemble_suite(
     levels: frozenset[str] | set[str],
 ) -> Suite:
     types = corpus["types"]
+    # R107 (d): the checks that read tag names alone run over every expression
+    # the suite holds before any of them is recorded as needing a missing level.
+    oracle = row.get("oracle")
+    sides = (
+        [oracle.get("subject"), oracle.get("expected")] if type(oracle) is dict else []
+    )
+    order = corpus.get("model_order")
+    known = (
+        set(order)
+        if type(order) is list and all(type(n) is str for n in order)
+        else None
+    )
+    scan_tags(row.get("admit"), "admit", known)
+    scan_tags(row.get("body"), "body", known)
+    scan_tags(sides[1] if sides else None, "expected", known)
+    scan_tags(sides[0] if sides else None, "body", known)
+    # R116: the program reads every model whole, so it is built before any
+    # binder's descriptor: a descriptor of a level the lane lacks (`list`) is
+    # `level-missing` at once, and must not hide a defect of a model (an unknown
+    # tag is `corpus` wherever the model stands, R69 d).
+    program = Program(
+        types=types,
+        ops=corpus["ops"],
+        models=corpus["models"],
+        model_order=corpus["model_order"],
+        levels=levels,
+        max_ir_cost=max_cost,
+        sem=sem,
+    )
     names, tys, descs, product = _read_binders(row, types, sem)
     if product > MAX_SUITE_PRODUCT:
         raise _corpus_error(
@@ -334,15 +433,6 @@ def _assemble_suite(
     if row["kind"] != "exhaustive":
         raise _corpus_error("the only kind of suite is the exhaustive one")
 
-    program = Program(
-        types=types,
-        ops=corpus["ops"],
-        models=corpus["models"],
-        model_order=corpus["model_order"],
-        levels=levels,
-        max_ir_cost=max_cost,
-        sem=sem,
-    )
     scope = dict(zip(names, tys, strict=True))
     result_ty = parse_type(row["result_type"], types)
     program.need_levels(type_level(result_ty, types), "the result type")
@@ -373,6 +463,23 @@ def _assemble_suite(
     )
 
 
+def _is_reference_body(body: object, subject: object, expected: object) -> bool:
+    """Section 4.3: a ``reference`` suite means ``subject == pure``.
+
+    The body is the ``eq`` node over the oracle's two sides, in either order.
+    Sides are compared as canonical JSON text so that ``true`` and ``1`` (equal
+    in Python, different in JSON) are not confused.
+    """
+
+    def text(node: object) -> str:
+        return json.dumps(node, sort_keys=True, separators=(",", ":"))
+
+    if type(body) is not list or len(body) != 3 or body[0] != "eq":
+        return False
+    sides = (text(body[1]), text(body[2]))
+    return sides in ((text(subject), text(expected)), (text(expected), text(subject)))
+
+
 def _compile_oracle(
     row: dict, program: Program, scope: dict[str, Ty], body: Compiled, result_ty: Ty
 ) -> Compiled | None:
@@ -396,9 +503,13 @@ def _compile_oracle(
         raise _corpus_error(
             "the oracle entry is neither a bare predicate nor a full reference"
         )
+    if not _is_reference_body(row["body"], oracle["subject"], oracle["expected"]):
+        raise _corpus_error(
+            "a reference suite's body must be eq(subject, expected), in either order"
+        )
     subject = program.compile(oracle["subject"], scope, role="body")
     expected = program.compile(oracle["expected"], scope, role="expected")
-    if not flows(expected.ty, result_ty) or unify(subject.ty, result_ty) is None:
+    if unify(expected.ty, result_ty) is None or unify(subject.ty, result_ty) is None:
         raise _corpus_error(
             "a reference suite's sides do not produce its declared result type"
         )
@@ -506,6 +617,7 @@ def check_chunk_file(
     ``chunk-file``: its size, its digest (``chunks_sha256``), its ASCII text and
     line count (``m`` lines, each ended by LF), each line's grammar, the chunk
     index in sequence, ``first_admitted`` as the running total of ``cases``, the
+    ``calls`` total against the row's ``expected_calls`` ([D73]), the ``cases``
     total against the row's ``cases`` and ``discarded``, and finally the two suite
     digests, which are the ``warrant-chunks-v1`` framing of the per-chunk
     digests.  The expected column is there exactly when the suite is a
@@ -526,6 +638,7 @@ def check_chunk_file(
     has_expected = is_reference(row)
     lines: list[ChunkLine] = []
     admitted_so_far = 0
+    total_calls = 0
     for position, piece in enumerate(pieces[:-1]):
         line = parse_chunk_line(piece, has_expected)
         if line.index != position:
@@ -535,9 +648,14 @@ def check_chunk_file(
         admitted_so_far = sem.advance_admitted(
             admitted_so_far, line.cases, suite.chunk_size
         )
+        total_calls += line.calls
         lines.append(line)
+    if not is_index(row["expected_calls"]) or total_calls != row["expected_calls"]:
+        raise _bad_file("the chunk calls do not sum to the row's expected_calls")  # D73
     if (
-        admitted_so_far != row["cases"]
+        not is_index(row["cases"])
+        or not is_index(row["discarded"])
+        or admitted_so_far != row["cases"]
         or row["discarded"] != row["product"] - admitted_so_far
     ):
         raise _bad_file(

@@ -1,1 +1,1 @@
-cargo test -p x509-extensions -- --nocapture
+cargo test --locked -p x509-extensions -- --nocapture

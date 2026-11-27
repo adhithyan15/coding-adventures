@@ -538,7 +538,39 @@ elaborator, compiler and every lifter.
 | Realization | data only, in the binding schema (4.8) |
 
 Diagnostic codes for the new checks (totality, measure type, realization shape, tier
-refusal) are allocated by ADL-001 in the existing registry.
+refusal) are allocated by ADL-001 in the existing registry. **ADL-001a allocated** (VER04i
+registry, `W0801` to `W0807`; implemented in `rust/warrant-grammar`):
+
+| Code | Stage | Meaning |
+|---|---|---|
+| `W0801` | parsing | Bad `profile` clause: a name other than `algorithm`, a missing name, a second clause, or a profile on a v0 document (a profile **requires `v1`**; `pure` is the absence of a clause, never spelled) |
+| `W0802` | parsing | `measure` in an algorithm-profile document (the `rec ... measure` form and the word anywhere). Admitted by ADL-001b |
+| `W0803` | parsing | Unbounded loop or recursion: `rec`, `while`, `loop`, `for`, `until`, `repeat`, `goto`. `fold` over `range` is not refused |
+| `W0804` | parsing, checking | `F32` or `F64` (4.5) |
+| `W0805` | parsing, checking | Effects and state (4.5): `inout`, `fresh`, `vectors`, `ensures`, `driver`, `mut`, `mutable`, `state`, `effect`, `io` |
+| `W0806` | binding | Invalid `realizes`: unknown embedding, missing model function or module, a model module not in `profile algorithm`, arity or type mismatch, `realizes` without `embedding` (or the reverse), `panic` without `realizes` |
+| `W0807` | binding | Invalid `panic` template: empty, wildcard (`*`, `?`, or only format holes), duplicate, more than 16, or compiler-generated (`attempt to`, `unwrap()`, `index out of bounds`, ...) |
+
+**Panic templates (2026-11-24 security review of ADL-001a).** A template must begin with a
+literal **anchor of at least 8 ASCII alphanumeric characters** counted before its first `{}`
+hole (spaces and punctuation may sit between them; no leading hole; holes after the anchor are
+allowed), so `a must be 0 or 1, got {}` passes and `{}: {}`, `a{}`, `{} !` fail: a near-wildcard
+would otherwise match `index out of bounds: the len is 3 but the index is 5` (R5). Only
+printable ASCII (0x20 to 0x7E) is allowed, which refuses NBSP, zero-width, bidi and U+2028/2029
+characters. The compiler-generated denylist is matched after collapsing whitespace, and again
+with the holes removed, and covers the Rust, Go, Java, Python and JS/TS wordings. It is a
+backstop: the long-term check is the lifter confirming each template against a literal panic
+message in the lane source (ADL-032, ADL-033). `ModelModule` is built only from a parsed file
+(its profile is read from the file) and duplicate model module names are `W0806`; the profile
+words are also reserved in the module name.
+
+Inside the profile the refused words are reserved wherever they appear (a model named
+`state` is refused), the first one in source order wins, and a document without the
+clause never sees them. **Binding syntax (ADL-001a):** in `evidence.bindings`, `op NAME ...
+realizes=MODULE.MODEL embedding=int-by-value|bytes-identity` and one `panic OP TEMPLATE`
+line per message (the template is the rest of the line, because it contains spaces);
+`Option`, `Result`, `List` and tuples embed componentwise around the leaf embedding.
+Nothing consumes a realization yet.
 
 ---
 
@@ -573,8 +605,10 @@ declaration-identical to Lean's `Init` is `Pif.*`, `Adl.*` or the module's own, 
 lives in **exactly one** place. A **claim id** matches VER32 G3's charset
 `[A-Za-z0-9_.-]{1,128}`: `<module>.claim.<name>` (finding 18). **Generated goals live under a reserved segment**,
 `<module>.gen.<name>.total`, `<module>.gen.<name>.witness.<n>`, `<module>.gen.<name>.beq_spec`
-and so on, and **`claim` and `gen` are reserved** (a module, type or claim named either is a
-diagnostic), so a user name cannot collide with a generated id. The totality rule compares the
+and so on, and **`claim`, `gen` and `contract` are reserved** (a module, type or claim named
+any of them is a diagnostic), so a user name cannot collide with a generated id. `contract`
+is the segment of the exact-rejection goals `<module>.contract.<f>.<n>` (5.10); it joins the
+reserved set for the same reason `gen` is in it (the redesign recorded in 15). The totality rule compares the
 **regenerated goal digest**, not the id.
 
 ### 5.2 The ADL prelude, as append-only layers
@@ -847,18 +881,89 @@ lemmas.
 **What the signer sees**: the printed model file, the printed goals list and, per package
 claim, its transport elaboration. Nothing was written by the proof producer.
 
-### 5.10 Mandatory lemmas and witnesses (findings 8, 9)
+### 5.10 Mandatory lemmas and witnesses (findings 8, 9; redesigned 2026-11-25)
 
 Gate conditions, each a **generated line on the goals list** (claim ids as in 5.1), proved in
-the claim file or the prelude layer:
+the claim file or the prelude layer. The first design of this section had the gate *detect*
+Warrant constructs in kernel terms and relax an obligation whenever a detector said "no". Three
+security-review rounds each found a new way for that to fail open, and Fable's design review
+(15, 2026-11-25) traced all of them to that one habit. The design below is **derive, don't
+detect**: the gate derives every obligation from the signed goals by a fixed syntactic
+transformation, and nothing a detector decides can remove one.
+
+**What an accepted chain guarantees.**
+
+- **(G1)** For every `claim` goal `Π Γ. C` with a binder, the kernel has proved
+  `(Π Γ. False) → False`, i.e. the telescope is inhabited.
+- **(G2)** For every claim with a hypothesis, the kernel has proved the hypotheses and the
+  conclusion at closed values the goal displays.
+- **(G3)** For every constant outside the pinned prelude and ADL files whose result type reduces
+  to `Pif.Result a b`, the kernel has proved one input returning `ok` and one returning `err`.
+- **(G4)** Every constant named `…beq` has type `T → T → Bool`, and its `beq_spec` is proved.
+- **(G5)** Every `contract` goal is a biconditional `P ↔ f xs = err E` over a single call of `f`.
+
+The gate derives each generated statement from the signed claim and model by a fixed syntactic
+transformation. **No rule exempts a goal because the gate failed to recognise something.**
+
+**What the gate does not guarantee.**
+
+- A guard written inside a Boolean conclusion or inside a model definition is **not a
+  hypothesis**, and gets no witness.
+- A `Result` nested inside another type gets **no outcome witnesses**.
+- That every source `rejects`, `==` and `measure` produced its goal is covered by
+  `warrant.model.elaboration-faithful` (5.8 item 1), **not by a gate condition**.
+
+**The invariants** the design keeps, which a reviewer should test any later change against:
+
+- **I1 Totality.** The obligations are a **total function** of the signed goals list plus the
+  base. No "no" from a detector removes an obligation: where the gate cannot classify
+  something, it keeps the obligation, or it refuses.
+- **I2 The kernel decides semantics.** The gate may only classify a binder by its **kernel
+  sort**. It never inspects a body to decide what a goal "means".
+- **I3 Discovery is role-independent.** A constant is found by its name and type wherever it is
+  declared; which file or role declares it changes nothing about whether it is checked.
+- **I4 Applicability is an explicit input.** Whether the ADL rules apply (`--profile adl|plain`)
+  is a value the sign-off binds and the signature covers; it is never inferred from the files.
+- **I5 Generated goals are functions of claims and the model.** No generated goal depends on
+  the proof side, so a proof producer cannot change what it is asked to prove.
+- **I6 Completeness against source belongs to elaboration faithfulness.** "Every source
+  construct produced its goal" is a statement about the elaborator, closed by 5.8's mechanical
+  evidence, not by a gate condition that would have to re-derive source from kernel terms.
+
+
+**Claim shape (R1; refusal only).** The gate splits each `claim` goal's statement into
+`Π Γ. C`. This is the rule by which the gate classifies binders (I2) and it closes the
+conclusion-type hiding of finding F6. It is enforced **by refusal only**: it never exempts
+anything.
+
+- `C` must be `Eq U l r`, where `U` is a closed type with a whitelisted data head: `Bool`,
+  `Nat`, `Int`, `List`, `Option`, `Prod`, `Pif.Result`, or a model-declared inductive. This is
+  the **only use of a data whitelist**, and it prevents a hypothesis hiding inside the
+  conclusion's type (for example `Eq Prop (h → Q) True`).
+- For each binder in `Γ`, the kernel infers the sort of its type:
+  - `Sort 0`: a **hypothesis**. It must be a non-dependent `Eq Bool p true`, otherwise refuse.
+  - `Sort 1`: a **variable** of any type. No data check is made, because inhabitation is
+    covered by G1.
+  - Any other sort, or an inference error: refuse.
 
 | Condition | Statement |
 |---|---|
-| **`beq` specification** | for every derived `beq_T`: `beq_T a b = true ↔ a = b` (`<module>.<T>.beq_spec`), **emitted as an `And` of the two implications** `And (beq_T a b = true → a = b) (a = b → beq_T a b = true)`: the PIF prelude has **no `Iff`** (`Iff` appears only through the `iff` role of an axioms file, VER32 3.5). The same holds for every `↔` in this section and in 4.4. **A goal uses `Eq T` wherever the claim is a top-level `==`**, and `beq_T` only nested inside a Bool expression |
+| **`beq` specification** | for every constant **found by the reserved name `…beq` only** (its name ends in `beq`; discovery never looks at how a constant is defined), whose type must be `T → T → Bool`, and for every derived `beq_T`: `beq_T a b = true ↔ a = b` (`<module>.<T>.beq_spec`), **emitted as an `And` of the two implications** `And (beq_T a b = true → a = b) (a = b → beq_T a b = true)`: the PIF prelude has **no `Iff`** (`Iff` appears only through the `iff` role of an axioms file, VER32 3.5). The same holds for every `↔` in this section and in 4.4. **A goal uses `Eq T` wherever the claim is a top-level `==`**, and `beq_T` only nested inside a Bool expression |
 | **Helper specifications** | `Adl.Int.{beq, le, lt}`, `Adl.Nat.{beq, ble, blt}`, `Adl.Option.isSome`, `fdiv`, `get?` and each other helper against its stated specification, in its prelude layer. **Deferred from `adl.core` to ADL-008a** (the first layer ships the definitions and the specifications it can prove at once): `Int` order against `add`, `add` commutative and associative, `sub a a = 0`, `Nat.sub` against `add`, and `beq_spec` for `Option`, `Result` and `Prod` |
-| **Non-vacuity witnesses** | for **every goal with a hypothesis, and for every `Refines` and `Equiv` goal**: (i) a **witness in the domain** (`Exists x, hypothesis x = true`); (ii) **one witness on each outcome** (`ok` and `err`); (iii) **one concrete run** (`Eq.refl`). A guard that elaborates to something unsatisfiable, or an empty domain, fails (i) |
-| **Totality** | `<f>.total` and `<f>.mono` for every `measure` model (5.5) |
-| **Exact rejection** | for every `rejects P with E`: `P x ↔ f x = Err E` (4.4), as an `And` of both directions |
+| **Non-vacuity (i)** | for **every `claim` goal with a binder**, `(Π Γ. False) → False`: the telescope of the goal is inhabited. This replaces the earlier `Exists x, hypothesis x = true`, which needed the gate to find the hypothesis inside the goal (a detector; I1) |
+| **Non-vacuity (ii)** | **outcome witnesses for every `Result` model in the module**: one input returning `ok` and one returning `err`, whatever goals mention the model. This replaces the per-goal wording, which let a goal with no recognisable `Result` skip the witness |
+| **Run witness** | **unchanged**: for every claim with a hypothesis, one concrete run (`Eq.refl`) at closed values the goal displays, for the hypotheses and for the conclusion |
+| **Exact rejection** | `rejects P with E` elaborates to the **single goal** `<module>.contract.<f>.<n>`: `P x ↔ f x = Err E` (4.4), as an `And` of both directions. A claim `forall x | P. f x == Err E` is **one-directional** and carries **no** exactness obligation. **Interim:** until `rejects` exists as a source construct (backlog ADL-008d), the gate's exact-rejection check is a **lint, not a guarantee**: it can report a missing converse, but its silence proves nothing (G5 holds only for `contract` goals that are present) |
+| **Totality** `.total`, `.mono` | **Moved to "not yet a gate condition"** (backlog ADL-008e). 5.5 still says what the goals are; the gate does not yet require them. Until it does, a `measure` model is covered only by 5.5's refusal rule, not by this list |
+
+**Configuration.**
+
+- `--profile adl|plain` is **required whenever goals exist**, and is **recorded in the sign-off
+  together with `rules sha256`** (VER32 3.9), so a signature covers the profile that was run.
+- The rules file `pif-rules 2` **pins the prelude and ADL layer digests** (VER32 3.9).
+- **The gate refuses to build** with any constant (`Eq`, `And`, `False`, `Exists`, `Bool`,
+  `Pif.Result` and its constructors and recursor) that is **not declared in a pinned file**,
+  so a base file cannot shadow a constant the obligations are written in terms of.
 
 ---
 
@@ -1335,6 +1440,18 @@ separate claims** `<name>_over_int` and the checks against the specification fun
 signs, and no existing id is renamed). A guard compares the oracle rows with the
 LG02 corpus. The existing `op`s get `realizes` data in their binding file, one per gate.
 
+**ADL-002 landed (2026-11-24); what differs from the sketch above.** The document has 34
+claims, not 26: the 26 LG02 names unchanged (the four `*_equals_*` stay over `Bool`, as in
+LG02) plus eight additions: `nand_{not,and,or,xor}_equals_{not,and,or,xor}_over_int` (VER32
+T3 over every `Int`, error cases included, which LG02's claims never compare) and
+`nand_*_matches_ref` (construction = `ref_*` specification function). `ref_not/and/or/xor` are
+integer-arithmetic specifications behind an `is_bit` range test, with no `to_bit` and no `Bool`
+operator, so a slip in `to_bit` cannot hide on both sides. The truth-table claims use the
+claims' own helper `b2i` (not the model's `from_bit`); `bit` is a built-in name and cannot be
+used. Rejection hypotheses are written `a != 0 and a != 1`, directly, rather than through
+`to_bit`. The checker does not run models; `warrant-grammar/tests/logic_gates_model.rs`
+evaluates every claim and replays all 39 LG02 examples against the model.
+
 **These model claims are not the package claims** (1.4). Each package claim over `U8` gets its
 own transport-rule goal; the model theorems and `Equiv` are lemmas in its proof.
 
@@ -1607,3 +1724,85 @@ document's own four requests to VER32.
 
 **Not applied, and why.** Nothing in VER34 13.1 addressed to VER33 was left out. G7 needed no
 edit because the text already says it. G15 is a recorded judgment, not a decision.
+
+### Follow-up / G-M1 registration 2026-11-25
+
+**Status: ADL-006a and ADL-006b are drafted, proposed, pending owner signature.** Nothing in
+sections 1 to 14 above is edited; this is the review-record note.
+
+| # | Change | Source | Where |
+|---|---|---|---|
+| J1 | **ADL-006b drafted** as VER31 section 13.4 to 13.6: the section 6.2 cap on lane packages lifts per claim, by computation through the claim's own signed goal and the ordinary ladder (finding 12; `proved` stays unreachable for any lane until VER11a Q3 is decided for it); the A-rung is computed by the gate, never declared, printed beside the VER31 rung, and **A2 is never rendered as a package-level word containing "proved"** (1.5, Q7); the model-theorem category and link status come from VER32 Q8 and PIF-020 (13.3 there). Marked "proposed, pending owner signature" | 1.5, 9.2, 13; backlog ADL-006b | VER31 13.4, 13.5 |
+| J2 | **Resolved: VER31 cites CVM-170b for `solver-attested`, it does not copy it**, as the ADL-006b row says. VER31 13.6 carries a non-normative summary, and asks CVM-170b to read its `pif:sha256:` clause "as defined in VER31 13.2" so the scheme has one owner | VER34 6.6, 6.7; CVM-170b | VER31 13.6 |
+| J3 | **ADL-006a drafted** as data (VER13 section 10; `catalogue-v2.proposed.json`, `buckets-v2.proposed.json`): the ids 9.1 marks *new* that G-M1 opens or relies on are registered with a proposed bucket and closing route. The scheme `<pkg>.model.faithful` is instantiated as `gates.model.faithful` (VER32 9.2 pins the spelling), so **`logic_gates.model.faithful` is not registered**. `tcb.vcgen.claim-faithful` and `adl.wir-abi.faithful` are registered now although A1 and A3 open them, because ADL-006a and PIF-016a name them. Not registered here (G-M2 and later): `wir.semantics.lean-faithful`, `wir.typing.checker-guarantees`, `src.<lane>.lean-semantics.faithful`, `src.<lane>.subset-conformance`, `<lane>.backend.code-link`, `tcb.<lane>-toolchain.trusted`, `<pkg>.model.code-link` beyond the gates'; `tcb.bitblast.encoding-correct`, `tcb.symexec.engine-correct` and `tcb.drat.checker-correct` are already in the catalogue | 9.1; backlog ADL-006a | VER13 section 10 |
+| J4 | **G-M1 status (implemented, PRs pending).** Model file, 89-line goals list and claim file produced; 89 goals kernel-checked with empty footprints through `pif-check` with a **test-fixture** sign-off; vectors 1021/1021. G-M1's signature conditions are not yet met: ADL-005b/c and ADL-008a/b still gate it. Also remaining: the owner's signatures and the push queue | backlog G-M1 | warrant-adl shard |
+
+**Not applied, and why.** No bucket moved and no VER31 rule is in force before the owner signs
+VER31 section 13. ADL-006c1 to c3 (the gate code) wait for that signature.
+
+### Fable design review of the mandatory gate, 2026-11-25
+
+**Context.** The gate in `pif-check` enforces 5.10 before a Warrant-derived proof chain can be
+signed. Three security-review rounds (below) each found a new fail-open hole, so the
+coordinator asked Fable for an adversarial *design* review rather than a fourth patch.
+
+**Root cause** (Fable, three parts):
+
+- **RC1 The gate inverts the elaborator.** 5.10 defined obligations over Warrant *source*
+  constructs (a `|` guard, `rejects`, a derived `==`, a `measure` model), but the gate never
+  sees source. It re-derived "which construct was this?" from kernel terms, and the term
+  language is full CIC, so every recogniser had an escape (a wrapper, an alias, a redex, a
+  different role, a different name shape). `rejects P with E` was not even a source construct,
+  and the elaborator's stub generator pattern-matched the claim's shape too, so the gate copied
+  a heuristic instead of checking a fact.
+- **RC2 A negative detection means "no obligation".** Every hole had this shape:
+  `requires_exact_rejection` false skipped exactness; no hypotheses skipped all witnesses;
+  `NotResult` skipped outcome witnesses; `is_data` true skipped inhabitation; a role other than
+  model hid a declaration; a name shape other than `[m, s]` was skipped; and
+  `is_algorithm_chain` false turned the whole gate off.
+- **RC3 The gate reasons semantically itself, and the property has no definition.**
+  Inhabitation and "returns `Err`" are undecidable and the kernel is the only sound judge; the
+  gate's `is_data`/`data_types` was a private, weaker inhabitation checker inside the trusted
+  base. 5.10 never stated what an accepted chain guarantees, so reviewers measured against
+  intuition and every gap became a "hole". What held up was the part where the gate builds a
+  statement and the kernel proves it (`Checker::verify` with exact comparison; the run
+  witness's match, rebuild and compare).
+
+**Findings F1 to F12** (at `a2d9029d167`):
+
+| # | Severity | Finding (the attack in one line) | Closed by |
+|---|---|---|---|
+| F1 | HIGH | Discovery keyed on the chain role: real functions in a `library` file (`lib.f : Int → Pif.Result A E`) with a dummy model constant get no exact-rejection, no outcome witnesses and no `beq_spec` | I3 |
+| F2 | HIGH | Empty instances of indexed families pass even after the N1 fix: `inductive m.T : Type → Type \| mk : m.T Bool` makes `(x : m.T Nat)` pass `is_data` though `m.T Nat` is empty; only a kernel-proved witness sees it | I2, G1 |
+| F3 | MEDIUM | Outcome witnesses skipped by name shape or declaration kind (`m.sub.f`, `opaque`, `axiom`) | I1, I3, G3 |
+| F4 | MEDIUM | Wrappers evade outcome witnesses (`m.R \| mk : Pif.Result A E → m.R`; `m.g x := isOk (m.f x)`; a `Result` model called only transitively) | I1, G3 |
+| F5 | MEDIUM | Spec-level: a guard moved out of the telescope (`∀ x, imp (p x) (q x) = true`, or folded into a model) removes every obligation; detection cannot close it | "does not guarantee" list |
+| F6 | MEDIUM | Latent: the conclusion's `Eq` type is unchecked, so `Eq Prop (h → Q) True` would hide a hypothesis; unprovable today only while the prelude lacks `propext`, `Quot` and `funext` | claim-shape rule (`Eq` at a data head) |
+| F7 | MEDIUM | The gate's vocabulary (`Exists`, `And`, `Eq`, `Bool.true`, `Pif.Result.rec`) is looked up by name and the rules lemmas are bound by type digest only; the sign-off has no `rules` line, so a one-lemma rules file passes unless a consumer pins `rules_sha256` | `pif-rules 2`, `rules sha256` |
+| F8 | MEDIUM | The gate and 5.10 disagree: `.total`/`.mono` are listed but not enforced, and such goals are refused as unrequired | totality row moved out |
+| F9 | LOW (soundness), HIGH (usability) | False refusals: any `E → E → Bool` model not named `beq`; `List`/`Option`/`Prod` models; unused binders breaking the run witness; every one-directional `P → f x = Err E` forced to be exact; a `Result` model that never errs cannot be mentioned | G4, G5, exact-rejection row |
+| F10 | LOW | `beq` discovery used two heuristics; an alias head, an uncurried test or a test outside the model role evades both | `beq_spec` by reserved name |
+| F11 | LOW | Applicability detected from content: odd ids, a `library` role or `(h : G x)` hypotheses read as "not an algorithm chain", making `--accept-not-required` a label dodge | I4, `--profile` |
+| F12 | informational | Distinctness (`Checker::used`) is not a soundness property once statements are exact; it can only cause refusals | none (dropped) |
+
+**The redesign** is **"derive, don't detect"**, adopted by the coordinator; implementation is
+on local branches (backlog ADL-008a/b, redesigned, implementation pending). It is stated in
+5.10: guarantees G1 to G5, a list of what the gate does not guarantee, invariants I1 to I6, the
+changed obligation rows (non-vacuity (i) and (ii), exact rejection as a `contract` goal,
+`beq_spec` by reserved name, totality moved out of the gate), the explicit `--profile` and
+`rules sha256` configuration, and `contract` as a reserved id segment (5.1). The `pif-rules 1`
+format is refused rather than upgraded (VER32 3.9).
+
+**Prior rounds 1 to 3** (security reviews of the ADL-008a/b implementation, before this
+review). Their patches were to the detectors, the cause Fable named in RC1 and RC2; each fix
+is superseded in mechanism by the redesign and each finding stays a test case for it.
+
+| Round | Findings | Fixed then by |
+|---|---|---|
+| 1 | 4 HIGH, 4 MEDIUM, 1 LOW, 1 INFO. Obligations were discovered from producer-chosen labels and checked by loose "mentions X" tests. HIGH: a real claim disguised as `m.gen.c1` escaped every witness check; a foreign id prefix made `module_call` miss the model; a hypothesis not spelled `Eq Bool p true` was not counted; degenerate witnesses passed (`Exists Nat (fun x => x = x)`, identical `.ok`/`.err` witnesses, one theorem backing several obligations). MEDIUM: weak `beq_spec` and exact-rejection; `beq` found by name only; a role-label bypass; top-level-only called-model discovery | exact expected statements compared by hash-consed term equality; discovery from model files and claim types; a strict claim grammar |
+| 2 | 1 HIGH, 4 MEDIUM. HIGH: hidden hypotheses as binder types (`h : m.G x`) and empty-type binders. MEDIUM: exponential `match_pattern`; `Result` detection failing open; rejection discovery evaded by redexes, wrappers or `isErr`; content enforcement dodged with library-filed models | greatest-fixpoint data-type check; memoisation; fail-closed `Result` classification; broader rejection discovery; goal-based enforcement with exit 5 |
+| 3 | N1 HIGH: empty recursive types (`m.Void2 \| mk : m.Void2 → m.Void2`) and recursive `Prop` inductives pass the greatest-fixpoint check. N2 MEDIUM: a wrapper definition (`m.fail e := err e`) evades rejection discovery. N3 MEDIUM: exponential `is_data`. N4 LOW: quadratic `data_types` | superseded: Fable showed the planned N1 fix (least-fixpoint inhabitation) is itself bypassable (F2) |
+
+**New requests recorded.** VER32 3.9 gains `rules sha256` and `profile` sign-off lines and the
+`pif-rules 2` format. Backlog ADL-008d (`rejects P with E` as a source construct) and ADL-008e
+(totality as a gate condition) are added.

@@ -1,1 +1,1 @@
-cargo test -p sixlowpan -- --nocapture
+cargo test --locked -p sixlowpan -- --nocapture

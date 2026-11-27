@@ -1,1 +1,1 @@
-cargo test -p llm-provider-ollama -- --nocapture
+cargo test --locked -p llm-provider-ollama -- --nocapture

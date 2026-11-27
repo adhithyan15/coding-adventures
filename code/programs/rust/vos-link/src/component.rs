@@ -296,13 +296,115 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
     build_tool_row(&mut cx)?;
     publish_rule(&mut cx)?;
     bounds_rule(&mut cx)?;
+    no_sat_claim(&mut cx)?;
 
     out.findings = cx.f;
     out.notes = cx.notes;
     out.notes.push(
-        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any`, the `bound` rows at or under the contract's ceilings (CC09), the oracle attack of each state-producing operation of an `-any` (CC11) and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), that a bound is the TRUE worst case (the step counter, VOS-D089), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029).".to_string(),
+        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any`, the `bound` rows at or under the contract's ceilings (CC09), the oracle attack of each state-producing operation of an `-any` (CC11) and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), that a bound is the TRUE worst case (the step counter, VOS-D089), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029; CC12 fails an implementation whose vos.toml, BUILD or warrant/ makes any SAT claim).".to_string(),
     );
     Ok(out)
+}
+
+/// CC12 (VOS-040c, VOS31 10.2): an **implementation** crate makes no SAT claim.
+///
+/// VOS04 5.2 line 10 reads "no SAT evidence" until VOS-029 can lower a scheduler to SAT, and
+/// "the line fails if it prints any SAT claim for one".  The model-SAT lane certifies the
+/// LEMMAS of a contract's model (VOS31 section 1); it says nothing about code.  So nothing of
+/// the lane may appear on an implementation, and this rule is the negative control that keeps
+/// it so.  It fails when the implementation
+///
+/// * says `sat = "model"` in `vos.toml` (the key belongs to a contract),
+/// * has any file under `warrant/` whose name contains `.sat` (`lemmas.sat`, but also
+///   `lemmas.sat.bak` or `foo.sat`: a table of SAT certificates by any name), or
+/// * names `vos-model-sat` or `lemmas.sat` on any non-comment LOGICAL line of `BUILD` or
+///   `BUILD_windows`, or runs cargo with a `--manifest-path` into `programs/rust/vos-model-sat`.
+///
+/// A logical line joins backslash-continued physical lines first (`vos-model-\` newline `sat`
+/// is one name).  Quotes are dropped before the scan, so `vos-model-"sat"` is caught too.
+///
+/// **Defence in depth, not a proof.**  A substring scan cannot be complete: shell concatenation
+/// (`vos-model-$X`), globs (`s?t`), command substitution or a script that builds the path at run
+/// time all evade it.  Generated BUILD files never contain any of these (`canonical_build` has
+/// no SAT line), so a hit is a hand edit or a copy from a contract crate, and the generated-region
+/// byte comparison (CC03) is what really keeps a hand-added line out.
+fn no_sat_claim(cx: &mut Ctx) -> Result<(), NoVerdict> {
+    if cx.vt.sat.is_some() {
+        cx.find(
+            "CC12",
+            "SAT: vos.toml says `sat = \"model\"` on an implementation crate; the model-SAT lane certifies a contract's lemmas only, and an implementation prints \"no SAT evidence\" (VOS04 5.2 line 10, VOS31 10.2)",
+        );
+    }
+    for name in list_names(&cx.layout.impl_dir.join("warrant"))? {
+        if name.contains(".sat") {
+            cx.find(
+                "CC12",
+                format!(
+                    "SAT: the file {} under warrant/ exists in an implementation crate; a table of SAT certificates, by any name, belongs to a contract crate only (VOS31 10.2)",
+                    esc(&name)
+                ),
+            );
+        }
+    }
+    for name in ["BUILD", "BUILD_windows"] {
+        let Some(text) = read_text(&cx.layout.impl_dir.join(name), BUILD_MAX_BYTES)? else {
+            continue; // CC02 reported it
+        };
+        let hit = logical_lines(&text)
+            .into_iter()
+            .find(|(_, l)| !l.trim_start().starts_with('#') && mentions_sat_lane(l));
+        if let Some((n, line)) = hit {
+            cx.find(
+                "CC12",
+                format!(
+                    "SAT: {name}:{n}: an implementation's BUILD runs the model-SAT lane (`{}`); an implementation prints \"no SAT evidence\" (VOS31 10.2)",
+                    esc(line.trim())
+                ),
+            );
+        }
+    }
+    Ok(())
+}
+
+/// The logical lines of a BUILD file, each with the 1-based number of its first physical line:
+/// a physical line ending in a backslash continues onto the next (the backslash is dropped and
+/// the pieces are joined with nothing between them, as `sh` does for an unquoted continuation).
+pub fn logical_lines(text: &str) -> Vec<(usize, String)> {
+    let mut out: Vec<(usize, String)> = Vec::new();
+    let mut open: Option<(usize, String)> = None;
+    for (i, raw) in text.lines().enumerate() {
+        let raw = raw.strip_suffix('\r').unwrap_or(raw);
+        let (start, mut acc) = open.take().unwrap_or((i + 1, String::new()));
+        match raw.strip_suffix('\\') {
+            Some(piece) => {
+                acc.push_str(piece);
+                open = Some((start, acc));
+            }
+            None => {
+                acc.push_str(raw);
+                out.push((start, acc));
+            }
+        }
+    }
+    if let Some(rest) = open {
+        out.push(rest);
+    }
+    out
+}
+
+/// Does a LOGICAL BUILD line name the model-SAT lane or its table, or point cargo at the lane's
+/// manifest?  Quotes and backslashes are dropped first, and path separators normalised, so
+/// `vos-model-"sat"` and a Windows-style `programs\rust\vos-model-sat\Cargo.toml` are seen as what they name.
+/// Not complete (see [`no_sat_claim`]).
+pub fn mentions_sat_lane(line: &str) -> bool {
+    let norm: String = line
+        .chars()
+        .filter(|c| *c != '"' && *c != '\\')
+        .collect::<String>();
+    let slashed = line.replace('\\', "/").replace(['"', '\''], "");
+    let manifest_into_lane =
+        (slashed.contains("--manifest-path")) && slashed.contains("programs/rust/vos-model-sat");
+    manifest_into_lane || norm.contains("vos-model-sat") || norm.contains("lemmas.sat")
 }
 
 /// CC02: the file set of VOS04 section 5.1.
@@ -394,7 +496,7 @@ fn contract_component(cx: &mut Ctx) -> Result<(), NoVerdict> {
     }
 
     // CC03: BUILD and BUILD_windows begin with the generated region, byte for byte.
-    let want = canonical_contract_build(&cx.krate);
+    let want = canonical_contract_build(&cx.krate, cx.vt.sat);
     for name in ["BUILD", "BUILD_windows"] {
         let Some(found) = read_text(&dir.join(name), BUILD_MAX_BYTES)? else {
             continue; // CC02 reported it

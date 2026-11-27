@@ -1,1 +1,1 @@
-cargo test -p semantic-ir-to-ruby -- --nocapture
+cargo test --locked -p semantic-ir-to-ruby -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p window-appkit -- --nocapture
+cargo test --locked -p window-appkit -- --nocapture

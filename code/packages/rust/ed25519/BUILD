@@ -1,1 +1,1 @@
-cargo test --manifest-path=Cargo.toml -v
+cargo test --locked --manifest-path=Cargo.toml -v
