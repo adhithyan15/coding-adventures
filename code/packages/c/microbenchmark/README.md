@@ -23,7 +23,9 @@ complete standard metadata (`workload`, `invocation`, `revision`, `runtime`,
 `os`, and `arch`, with optional `profile`). Workload IDs are producer-defined;
 the reader does not restrict cross-language reports to the indexed-array CLI.
 Partial metadata groups, duplicate or unknown members, invalid strings, and
-analysis that does not match recomputation remain errors. See
+analysis that does not match recomputation remain errors. Workload IDs made
+only of ASCII whitespace are invalid; other descriptive fields need only be
+nonempty and NUL-free. See
 `code/specs/VER07y-portable-core-report-metadata.md` for the exact contract.
 
 Run tests through `sh tools/run.sh` or `tools/run.ps1`. The local fixture is

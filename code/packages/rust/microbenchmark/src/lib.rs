@@ -6,7 +6,10 @@
 //! without trusting its precomputed conclusion.
 
 use coding_adventures_rank_statistics::{median, median_interval, Interval};
-use serde::{Deserialize, Serialize};
+use serde::de::{self, MapAccess, SeqAccess, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
+use serde_json::{Map, Number, Value};
+use std::collections::HashSet;
 use std::fmt;
 
 pub const MAX_PAIRS: usize = 10_000;
@@ -23,6 +26,90 @@ impl fmt::Display for Error {
 
 impl std::error::Error for Error {}
 
+/// A JSON value decoded while rejecting duplicate decoded object member names.
+struct UniqueJsonValue(Value);
+
+impl<'de> Deserialize<'de> for UniqueJsonValue {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_any(UniqueJsonValueVisitor)
+    }
+}
+
+struct UniqueJsonValueVisitor;
+
+impl<'de> Visitor<'de> for UniqueJsonValueVisitor {
+    type Value = UniqueJsonValue;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("a JSON value with unique object member names")
+    }
+
+    fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Bool(value)))
+    }
+
+    fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Number(Number::from(value))))
+    }
+
+    fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Number(Number::from(value))))
+    }
+
+    fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        Number::from_f64(value)
+            .map(|number| UniqueJsonValue(Value::Number(number)))
+            .ok_or_else(|| E::custom("non-finite JSON number"))
+    }
+
+    fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::String(value.to_owned())))
+    }
+
+    fn visit_string<E>(self, value: String) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::String(value)))
+    }
+
+    fn visit_unit<E>(self) -> Result<Self::Value, E> {
+        Ok(UniqueJsonValue(Value::Null))
+    }
+
+    fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+    where
+        A: SeqAccess<'de>,
+    {
+        let mut values = Vec::new();
+        while let Some(UniqueJsonValue(value)) = sequence.next_element()? {
+            values.push(value);
+        }
+        Ok(UniqueJsonValue(Value::Array(values)))
+    }
+
+    fn visit_map<A>(self, mut object: A) -> Result<Self::Value, A::Error>
+    where
+        A: MapAccess<'de>,
+    {
+        let mut values = Map::new();
+        let mut names = HashSet::new();
+        while let Some(name) = object.next_key::<String>()? {
+            if !names.insert(name.clone()) {
+                return Err(de::Error::custom(format!(
+                    "duplicate JSON object member: {name:?}"
+                )));
+            }
+            let UniqueJsonValue(value) = object.next_value()?;
+            values.insert(name, value);
+        }
+        Ok(UniqueJsonValue(Value::Object(values)))
+    }
+}
+
 fn error(message: impl Into<String>) -> Error {
     Error(message.into())
 }
@@ -33,6 +120,88 @@ fn valid_workload_identifier(value: &str) -> bool {
         && !value
             .bytes()
             .all(|byte| byte == 0x20 || (0x09..=0x0d).contains(&byte))
+}
+
+fn valid_metadata_text(value: &str) -> bool {
+    !value.is_empty() && !value.contains('\0')
+}
+
+fn validate_projected_metadata(
+    object: &serde_json::Map<String, serde_json::Value>,
+) -> Result<(), Error> {
+    const GROUP: [&str; 6] = [
+        "workload",
+        "invocation",
+        "revision",
+        "runtime",
+        "os",
+        "arch",
+    ];
+    let present = GROUP
+        .iter()
+        .filter(|key| object.contains_key(**key))
+        .count();
+    let has_profile = object.contains_key("profile");
+    if present == 0 {
+        return if has_profile {
+            Err(error(
+                "profile metadata requires the complete metadata group",
+            ))
+        } else {
+            Ok(())
+        };
+    }
+    if present != GROUP.len() {
+        return Err(error("report metadata group must contain all six fields"));
+    }
+
+    let workload = object
+        .get("workload")
+        .and_then(serde_json::Value::as_str)
+        .ok_or_else(|| error("workload metadata must be a string"))?;
+    if !valid_workload_identifier(workload) {
+        return Err(error(
+            "workload must be a nonblank UTF-8 identifier without NUL",
+        ));
+    }
+
+    for key in ["revision", "runtime", "os", "arch"] {
+        let value = object
+            .get(key)
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(|| error(format!("{key} metadata must be a string")))?;
+        if !valid_metadata_text(value) {
+            return Err(error(format!(
+                "{key} metadata must be non-empty and contain no NUL"
+            )));
+        }
+    }
+
+    let invocation = object
+        .get("invocation")
+        .and_then(serde_json::Value::as_array)
+        .ok_or_else(|| error("invocation metadata must be an array of strings"))?;
+    if invocation.iter().any(|item| match item.as_str() {
+        Some(value) => value.contains('\0'),
+        None => true,
+    }) {
+        return Err(error(
+            "invocation metadata must contain UTF-8 strings without NUL",
+        ));
+    }
+
+    if has_profile {
+        let profile = object
+            .get("profile")
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(|| error("profile metadata must be a string"))?;
+        if !valid_metadata_text(profile) {
+            return Err(error(
+                "profile metadata must be non-empty and contain no NUL",
+            ));
+        }
+    }
+    Ok(())
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -174,34 +343,12 @@ impl Report {
 
     /// Parse and reanalyze raw pairs, rejecting a stale or forged analysis.
     pub fn from_json(json: &str) -> Result<Self, Error> {
-        let mut document: serde_json::Value =
+        let UniqueJsonValue(mut document) =
             serde_json::from_str(json).map_err(|e| error(format!("invalid report JSON: {e}")))?;
         // The executable adds descriptive metadata to the same report object.
         // Remove only those documented fields; serde rejects everything else.
         if let Some(object) = document.as_object_mut() {
-            if let Some(workload) = object.get("workload") {
-                let identifier = workload
-                    .as_str()
-                    .ok_or_else(|| error("workload metadata must be a string"))?;
-                if !valid_workload_identifier(identifier) {
-                    return Err(error(
-                        "workload must be a nonblank UTF-8 identifier without NUL",
-                    ));
-                }
-            }
-            if let Some(invocation) = object.get("invocation") {
-                if !invocation
-                    .as_array()
-                    .is_some_and(|items| items.iter().all(serde_json::Value::is_string))
-                {
-                    return Err(error("invocation metadata must be an array of strings"));
-                }
-            }
-            for key in ["revision", "runtime", "profile", "os", "arch"] {
-                if object.get(key).is_some_and(|value| !value.is_string()) {
-                    return Err(error(format!("{key} metadata must be a string")));
-                }
-            }
+            validate_projected_metadata(object)?;
             if object
                 .get("pairs")
                 .and_then(serde_json::Value::as_array)
@@ -799,8 +946,26 @@ mod tests {
 
         let mut generic_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
         generic_metadata["workload"] = serde_json::Value::String("dependent-link-order".to_owned());
+        generic_metadata["invocation"] = serde_json::json!([""]);
+        generic_metadata["revision"] = serde_json::json!("r");
+        generic_metadata["runtime"] = serde_json::json!("Rust");
+        generic_metadata["os"] = serde_json::json!("test");
+        generic_metadata["arch"] = serde_json::json!("test");
         assert_eq!(
             Report::from_json(&generic_metadata.to_string()).unwrap(),
+            report
+        );
+
+        let mut empty_invocation: serde_json::Value = serde_json::from_str(&json).unwrap();
+        empty_invocation["workload"] = serde_json::json!("dependent-link-order");
+        empty_invocation["invocation"] = serde_json::json!([]);
+        empty_invocation["revision"] = serde_json::json!("r");
+        empty_invocation["runtime"] = serde_json::json!("Rust");
+        empty_invocation["os"] = serde_json::json!("test");
+        empty_invocation["arch"] = serde_json::json!("test");
+        empty_invocation["profile"] = serde_json::json!("release");
+        assert_eq!(
+            Report::from_json(&empty_invocation.to_string()).unwrap(),
             report
         );
 
@@ -814,7 +979,7 @@ mod tests {
             serde_json::json!([]),
             serde_json::json!({}),
         ] {
-            let mut malformed_metadata: serde_json::Value = serde_json::from_str(&json).unwrap();
+            let mut malformed_metadata = empty_invocation.clone();
             malformed_metadata["workload"] = value;
             assert!(Report::from_json(&malformed_metadata.to_string()).is_err());
         }
@@ -823,6 +988,179 @@ mod tests {
         let mut unknown: serde_json::Value = serde_json::from_str(&json).unwrap();
         unknown["surprise"] = serde_json::Value::Bool(true);
         assert!(Report::from_json(&unknown.to_string()).is_err());
+    }
+
+    #[test]
+    fn raw_json_rejects_duplicate_decoded_members_but_allows_distinct_scopes() {
+        let core = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" },
+            "workload": "generic-workload", "invocation": [], "revision": "shared",
+            "runtime": "shared", "os": "test", "arch": "test"
+        });
+        let valid = core.to_string();
+        assert!(Report::from_json(&valid).is_ok());
+        // The same member name appears in root and config scopes (`pairs`).
+
+        let invalid = [
+            valid.replace("\"pairs\":1", "\"pairs\":1,\"pairs\":1"),
+            valid.replace("\"baseline_ns\":1", "\"baseline_ns\":1,\"baseline_ns\":1"),
+            valid.replace(
+                "\"verdict\":\"inconclusive\"",
+                "\"verdict\":\"inconclusive\",\"verdict\":\"inconclusive\"",
+            ),
+            valid.replace(
+                "\"revision\":\"shared\"",
+                "\"revision\":\"shared\",\"revision\":\"other\"",
+            ),
+            valid.replace("\"pairs\":1", "\"pairs\":1,\"pa\\u0069rs\":1"),
+        ];
+        for duplicate in invalid {
+            assert!(
+                Report::from_json(&duplicate).is_err(),
+                "accepted duplicate: {duplicate}"
+            );
+        }
+    }
+
+    #[test]
+    fn raw_json_requires_one_complete_document() {
+        let valid = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" }
+        })
+        .to_string();
+        assert!(Report::from_json(&valid).is_ok());
+
+        let truncated = &valid[..valid.len() - 1];
+        for invalid in [
+            truncated.to_owned(),
+            format!("{valid} trailing"),
+            format!("{valid} {{}}"),
+        ] {
+            assert!(
+                Report::from_json(&invalid).is_err(),
+                "accepted incomplete or multiple JSON values: {invalid}"
+            );
+        }
+    }
+
+    #[test]
+    fn raw_json_accepts_maximum_balanced_report_with_reused_pair_member_names() {
+        let config = Config {
+            pairs: MAX_PAIRS,
+            target_ns: 1,
+            max_batch: 1,
+            ..Config::default()
+        };
+        let pairs = (0..MAX_PAIRS)
+            .map(|index| Pair {
+                baseline_ns: 1,
+                candidate_ns: 1,
+                order: if index % 2 == 0 {
+                    "baseline-first".to_owned()
+                } else {
+                    "candidate-first".to_owned()
+                },
+            })
+            .collect::<Vec<_>>();
+        let analysis = analyze(&pairs, config.confidence_percent, config.minimum_factor).unwrap();
+        let report = Report {
+            config,
+            batch_size: 1,
+            pairs,
+            analysis,
+        };
+
+        let text = report.to_json().unwrap();
+        let replayed = Report::from_json(&text).unwrap();
+        assert_eq!(replayed, report);
+        assert_eq!(replayed.pairs.len(), MAX_PAIRS);
+    }
+
+    #[test]
+    fn report_replay_validates_optional_metadata_as_a_complete_group() {
+        let core = serde_json::json!({
+            "config": { "pairs": 1, "confidence_percent": 95, "minimum_factor": 1.05,
+                "seed": 0, "target_ns": 1, "max_batch": 1 },
+            "batch_size": 1,
+            "pairs": [{ "baseline_ns": 1, "candidate_ns": 1, "order": "baseline-first" }],
+            "analysis": { "ratio": 1.0, "interval": null, "verdict": "inconclusive" }
+        });
+        let mut complete = core.clone();
+        complete["workload"] = serde_json::json!("generic-workload");
+        complete["invocation"] = serde_json::json!([]);
+        complete["revision"] = serde_json::json!("r");
+        complete["runtime"] = serde_json::json!("Rust");
+        complete["os"] = serde_json::json!("test");
+        complete["arch"] = serde_json::json!("test");
+        assert!(Report::from_json(&complete.to_string()).is_ok());
+
+        for field in [
+            "workload",
+            "invocation",
+            "revision",
+            "runtime",
+            "os",
+            "arch",
+        ] {
+            let mut partial = complete.clone();
+            partial.as_object_mut().unwrap().remove(field);
+            assert!(
+                Report::from_json(&partial.to_string()).is_err(),
+                "accepted missing {field}"
+            );
+        }
+        let mut profile_only = core.clone();
+        profile_only["profile"] = serde_json::json!("release");
+        assert!(Report::from_json(&profile_only.to_string()).is_err());
+
+        for field in ["revision", "runtime", "os", "arch"] {
+            for invalid in [
+                serde_json::Value::Null,
+                serde_json::json!(""),
+                serde_json::json!("bad\0value"),
+            ] {
+                let mut malformed = complete.clone();
+                malformed[field] = invalid.clone();
+                assert!(
+                    Report::from_json(&malformed.to_string()).is_err(),
+                    "accepted {field}={invalid:?}"
+                );
+            }
+        }
+        for field in ["revision", "runtime", "os", "arch", "profile"] {
+            let mut whitespace = complete.clone();
+            whitespace[field] = serde_json::json!(" ");
+            assert!(
+                Report::from_json(&whitespace.to_string()).is_ok(),
+                "rejected non-empty whitespace {field}"
+            );
+        }
+        for invalid in [
+            serde_json::Value::Null,
+            serde_json::json!(""),
+            serde_json::json!("bad\0value"),
+        ] {
+            let mut malformed = complete.clone();
+            malformed["profile"] = invalid.clone();
+            assert!(
+                Report::from_json(&malformed.to_string()).is_err(),
+                "accepted profile={invalid:?}"
+            );
+        }
+        let mut nul_arg = complete.clone();
+        nul_arg["invocation"] = serde_json::json!(["bad\0arg"]);
+        assert!(Report::from_json(&nul_arg.to_string()).is_err());
+        let mut empty_arg = complete;
+        empty_arg["invocation"] = serde_json::json!([""]);
+        assert!(Report::from_json(&empty_arg.to_string()).is_ok());
     }
 
     #[test]

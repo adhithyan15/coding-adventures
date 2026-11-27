@@ -409,13 +409,15 @@ static void test_portable_core_report_metadata(void) {
        "\"workload\":\"\\u0000\""},
       {complete, "\"workload\":\"guest-tree-walk-8\"",
        "\"workload\":\"bad\\u0000id\""},
-      {complete, "\"runtime\":\"C17\"", "\"runtime\":\"\\u2003\""},
+      {complete, "\"runtime\":\"C17\"", "\"runtime\":\"\""},
       {complete, "\"workload\":\"guest-tree-walk-8\"",
        "\"workload\":\"\xc3(\""},
       {complete, "\"invocation\":[]", "\"invocation\":[\"bad\\u0000arg\"]"},
       {complete, "\"invocation\":[]", "\"invocation\":null"},
       {complete, "\"workload\":\"guest-tree-walk-8\"",
        "\"workload\":17"},
+      {complete, "\"arch\":\"test\"",
+       "\"arch\":\"test\",\"profile\":\"\""},
       {complete, "\"arch\":\"test\"", "\"arch\":\"test\",\"other\":0"},
       {complete, "\"revision\":\"r\"", "\"revision\":\"r\",\"revision\":\"s\""},
       {core, "\"analysis\":{\"ratio\":1", "\"analysis\":{\"ratio\":2"},
@@ -429,11 +431,34 @@ static void test_portable_core_report_metadata(void) {
   ISO_CHECK(mb_replay_json(complete, sizeof(complete) - 1, &report) == MB_OK);
   mb_report_free(&report);
   {
+    char empty_argument[1024];
+    ISO_CHECK(replace_once(complete, "\"invocation\":[]",
+                           "\"invocation\":[\"\"]", empty_argument,
+                           sizeof(empty_argument)));
+    ISO_CHECK(mb_replay_json(empty_argument, strlen(empty_argument), &report) == MB_OK);
+    mb_report_free(&report);
+  }
+  {
     char profiled[1024];
     ISO_CHECK(replace_once(complete, "\"arch\":\"test\"",
                            "\"arch\":\"test\",\"profile\":\"release\"",
                            profiled, sizeof(profiled)));
     ISO_CHECK(mb_replay_json(profiled, strlen(profiled), &report) == MB_OK);
+    mb_report_free(&report);
+  }
+  {
+    char whitespace_metadata[1024];
+    char profiled_whitespace_metadata[1024];
+    ISO_CHECK(replace_once(complete, "\"runtime\":\"C17\"",
+                           "\"runtime\":\"\\u2003\"",
+                           whitespace_metadata, sizeof(whitespace_metadata)));
+    ISO_CHECK(replace_once(whitespace_metadata, "\"arch\":\"test\"",
+                           "\"arch\":\"test\",\"profile\":\" \"",
+                           profiled_whitespace_metadata,
+                           sizeof(profiled_whitespace_metadata)));
+    ISO_CHECK(mb_replay_json(profiled_whitespace_metadata,
+                             strlen(profiled_whitespace_metadata),
+                             &report) == MB_OK);
     mb_report_free(&report);
   }
   {

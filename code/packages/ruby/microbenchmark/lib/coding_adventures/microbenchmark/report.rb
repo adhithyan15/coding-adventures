@@ -2,6 +2,16 @@
 
 module CodingAdventures
   module Microbenchmark
+    # JSON's object_class hook sees every nested object before repeated decoded
+    # member names can overwrite an earlier value.
+    class UniqueJsonObject < Hash
+      def []=(key, value)
+        raise ArgumentError, "duplicate JSON object member: #{key.inspect}" if key?(key)
+
+        super
+      end
+    end
+
     module_function
 
     # Parse a standard JSON document. Ruby JSON maps integer tokens to Integer
@@ -9,7 +19,9 @@ module CodingAdventures
     def replay_json(text)
       raise TypeError, "report JSON must be a String" unless text.is_a?(String)
 
-      replay_report(JSON.parse(text, allow_nan: false))
+      parsed = JSON.parse(text, allow_nan: false, allow_duplicate_key: false,
+        object_class: UniqueJsonObject)
+      replay_report(parsed)
     rescue JSON::ParserError => error
       raise ArgumentError, "invalid report JSON: #{error.message}"
     end
@@ -19,7 +31,8 @@ module CodingAdventures
     # intentionally preserved by the caller and do not change the analysis.
     def replay_report(value)
       raise ArgumentError, "report must be an object" unless value.is_a?(Hash)
-      validate_workload_metadata(value)
+      validate_root_members(value)
+      validate_metadata(value)
 
       config = Config.from_h(value.fetch("config"))
       batch_size = positive_i64(value.fetch("batch_size"), "batch_size")
@@ -61,16 +74,56 @@ module CodingAdventures
       raise ArgumentError, "report is missing #{error.key}"
     end
 
-    def validate_workload_metadata(value)
-      return unless value.key?("workload")
+    def validate_metadata(value)
+      group = %w[workload invocation revision runtime os arch]
+      present = group.count { |field| value.key?(field) }
+      has_profile = value.key?("profile")
+      if present.zero?
+        raise ArgumentError, "profile metadata requires the complete metadata group" if has_profile
+
+        return
+      end
+      unless present == group.length
+        raise ArgumentError, "report metadata group must contain all six fields"
+      end
 
       workload = value.fetch("workload")
-      unless workload.is_a?(String) && workload.valid_encoding? &&
-          !workload.empty? && !workload.match?(/\A[ \t\n\r\f\v]*\z/) && !workload.include?("\0")
+      unless valid_nonempty_metadata_string?(workload) && !workload.match?(/\A[ \t\n\r\f\v]*\z/)
         raise ArgumentError, "invalid workload metadata"
       end
+      %w[revision runtime os arch].each do |field|
+        unless valid_nonempty_metadata_string?(value.fetch(field))
+          raise ArgumentError, "invalid #{field} metadata"
+        end
+      end
+
+      invocation = value.fetch("invocation")
+      valid_invocation = invocation.is_a?(Array) && invocation.all? { |item| valid_metadata_string?(item) }
+      unless valid_invocation
+        raise ArgumentError, "invocation metadata must be an array of UTF-8 strings without NUL"
+      end
+      if has_profile && !valid_nonempty_metadata_string?(value.fetch("profile"))
+        raise ArgumentError, "invalid profile metadata"
+      end
     end
-    private_class_method :validate_workload_metadata
+    private_class_method :validate_metadata
+
+    def validate_root_members(value)
+      allowed = %w[config batch_size pairs analysis workload invocation revision runtime os arch profile]
+      unknown = value.keys - allowed
+      raise ArgumentError, "unknown report member: #{unknown.first}" unless unknown.empty?
+    end
+    private_class_method :validate_root_members
+
+    def valid_metadata_string?(value)
+      value.is_a?(String) && value.dup.force_encoding(Encoding::UTF_8).valid_encoding? && !value.include?("\0")
+    end
+    private_class_method :valid_metadata_string?
+
+    def valid_nonempty_metadata_string?(value)
+      valid_metadata_string?(value) && !value.empty?
+    end
+    private_class_method :valid_nonempty_metadata_string?
 
     # Only compare the three public analysis claims. Extra top-level CLI
     # metadata remains outside the reusable report object.
