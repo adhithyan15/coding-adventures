@@ -19,6 +19,10 @@ larger inputs before ratio transformation or sorting; reusable rank-statistics
 APIs remain uncapped as required by VER07c. Haskell checks a caller-provided
 list by examining no more than 10,001 elements, so an unbounded or infinite
 list cannot force an unbounded `length` traversal before rejection.
+The JSON 65,536-value budget counts the root and each array element or object
+member value; object member names do not count. Haskell and OCaml preflight this
+budget before constructing their decoded JSON trees, then retain the same
+post-decode structural validation as a second check.
 
 When `workload` is present, it must be a string that is not empty, is not
 composed only of ASCII whitespace (U+0020, U+0009 through U+000D), and
