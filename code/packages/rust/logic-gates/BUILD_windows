@@ -4,8 +4,8 @@
 # (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
 cargo test --locked -q -p logic-gates --lib -- --nocapture
 cargo test --locked -q -p logic-gates --doc
-cargo test --locked -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width
-cargo test --locked -q -p logic-gates --release --test bit_domain --test decoder_width
+cargo test --locked -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width --test realizes_panics
+cargo test --locked -q -p logic-gates --release --test bit_domain --test decoder_width --test realizes_panics
 cargo test --locked -q -p logic-gates --release --test warrant_evidence
 cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .
 cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir . --check-module

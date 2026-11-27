@@ -25,8 +25,8 @@ $env:ISO_INCLUDE = "include tests $ceng\include $ceng\src $harness\include"
 #   1. compile each .c file to an object with Iso-StrictFlags -Lang c   (+ /c)
 #   2. compile each test .cpp and link the objects with -Lang cpp flags
 # Both flag sets keep /permissive- /W4 /WX (and /clang:-pedantic-errors for clang-cl).
-$lib = @('pbt_big', 'pbt_prng', 'pbt_val', 'pbt_budget', 'pbt_shrink', 'pbt_gen', 'pbt_runner', 'pbt_json', 'pbt_tfv', 'pbt_hooks')
-$tests = @('test_api', 'test_exceptions', 'test_alloc_throw', 'test_corpus')
+$lib = @('pbt_big', 'pbt_prng', 'pbt_val', 'pbt_budget', 'pbt_shrink', 'pbt_gen', 'pbt_runner', 'pbt_json', 'pbt_tfv', 'pbt_hooks', 'fuzz_hooks', 'fuzz_mutate', 'fuzz_bitmap', 'fuzz_sig', 'fuzz_engine')
+$tests = @('test_api', 'test_exceptions', 'test_alloc_throw', 'test_corpus', 'test_fuzz_corpus', 'test_fuzz_vectors', 'test_fuzz_pinned', 'test_fuzz_exceptions', 'test_fuzz_handle', 'test_fuzz_alloc')
 
 Iso-RequireCheck
 $compilers = @(Iso-Compilers -Lang cpp)

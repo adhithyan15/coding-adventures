@@ -76,6 +76,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "drat-check"
+version = "0.1.0"
+
+[[package]]
 name = "grammar-tools"
 version = "0.1.0"
 dependencies = [
@@ -255,13 +259,18 @@ dependencies = [
 
 [[package]]
 name = "vos-model-sat"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "bit-blaster",
+ "cdcl-sat",
+ "coding_adventures_sha256",
  "coding_adventures_warrant_grammar",
+ "drat-check",
  "vos-link",
  "vos-manifest",
+ "vos-model-sat",
  "vos-sched-contract",
+ "vos-shape-check",
 ]
 
 [[package]]

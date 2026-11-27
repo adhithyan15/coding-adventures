@@ -1440,6 +1440,18 @@ separate claims** `<name>_over_int` and the checks against the specification fun
 signs, and no existing id is renamed). A guard compares the oracle rows with the
 LG02 corpus. The existing `op`s get `realizes` data in their binding file, one per gate.
 
+**ADL-002 landed (2026-11-24); what differs from the sketch above.** The document has 34
+claims, not 26: the 26 LG02 names unchanged (the four `*_equals_*` stay over `Bool`, as in
+LG02) plus eight additions: `nand_{not,and,or,xor}_equals_{not,and,or,xor}_over_int` (VER32
+T3 over every `Int`, error cases included, which LG02's claims never compare) and
+`nand_*_matches_ref` (construction = `ref_*` specification function). `ref_not/and/or/xor` are
+integer-arithmetic specifications behind an `is_bit` range test, with no `to_bit` and no `Bool`
+operator, so a slip in `to_bit` cannot hide on both sides. The truth-table claims use the
+claims' own helper `b2i` (not the model's `from_bit`); `bit` is a built-in name and cannot be
+used. Rejection hypotheses are written `a != 0 and a != 1`, directly, rather than through
+`to_bit`. The checker does not run models; `warrant-grammar/tests/logic_gates_model.rs`
+evaluates every claim and replays all 39 LG02 examples against the model.
+
 **These model claims are not the package claims** (1.4). Each package claim over `U8` gets its
 own transport-rule goal; the model theorems and `Equiv` are lemmas in its proof.
 

@@ -330,7 +330,9 @@ def test_a_type_of_a_level_the_runner_lacks_is_level_missing():
     assert outcome_ir(case(reach, ops=tuple_op), STANDARD) == {"error": "level-missing"}
     # an op of a missing level nothing reaches is only classified, not refused
     assert outcome_ir(case(["lit", True], ops=tuple_op), STANDARD)["value"] is True
-    assert "t" in Program(ops=tuple_op).not_live_ops
+    assert "t" in Program(ops=tuple_op, levels=frozenset({"ir.core"})).not_live_ops
+    # ... and at the levels this lane implements (S10e) the tuple type is live
+    assert "t" not in Program(ops=tuple_op).not_live_ops
     assert outcome_ir(case(["lit", True], ops={}, levels=[]), STANDARD) == {
         "error": "level-missing"
     }

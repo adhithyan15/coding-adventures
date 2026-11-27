@@ -62,7 +62,7 @@ from .ir import (
 )
 from .semantics import STANDARD, Semantics
 from .values import make_encoder
-from .wtypes import BOOL, Ty, check_types_table, flows, parse_type, unify
+from .wtypes import BOOL, Ty, check_types_table, parse_type, unify
 
 MAX_CHUNKS = 4096
 MAX_SLIM_CHUNKS = 32
@@ -509,7 +509,7 @@ def _compile_oracle(
         )
     subject = program.compile(oracle["subject"], scope, role="body")
     expected = program.compile(oracle["expected"], scope, role="expected")
-    if not flows(expected.ty, result_ty) or unify(subject.ty, result_ty) is None:
+    if unify(expected.ty, result_ty) is None or unify(subject.ty, result_ty) is None:
         raise _corpus_error(
             "a reference suite's sides do not produce its declared result type"
         )

@@ -51,7 +51,7 @@ fn a_good_chain_exits_zero_with_a_json_report() {
     assert!(out.stderr.is_empty());
     assert!(out
         .stdout
-        .starts_with("{\"ok\":true,\"base_environment\":\""));
+        .starts_with("{\"ok\":true,\"pif_version\":1,\"logic_version\":1,\"base_environment\":\""));
     assert!(out
         .stdout
         .contains(&format!("\"digest\":\"{}\"", Digest::of(&p).hex())));
@@ -72,6 +72,8 @@ fn a_good_chain_exits_zero_with_a_json_report() {
 fn an_allow_list_and_a_matching_signoff_are_honoured() {
     let (t, p, _c, chain) = setup();
     let base = Digest::env_start().fold(&Digest::of(&p));
+    let agg =
+        Digest::of(format!("gates.and_comm {WORKED_DIGEST} {}\n", base.hex()).as_bytes()).hex();
     let allow = t.put(
         "allow.txt",
         format!("pif-allow 1\nprelude sha256:{}\n", Digest::of(&p).hex()).as_bytes(),
@@ -79,7 +81,7 @@ fn an_allow_list_and_a_matching_signoff_are_honoured() {
     let signoff = t.put(
         "signoff.txt",
         format!(
-            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
+            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {agg}\n",
             Digest::of(&p).hex(),
             base.hex()
         )
@@ -102,7 +104,7 @@ fn an_allow_list_and_a_matching_signoff_are_honoured() {
     let bad = t.put(
         "signoff2.txt",
         format!(
-            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
+            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {agg}\n",
             Digest::of(&p).hex(),
             Digest::of(b"other").hex()
         )
@@ -124,7 +126,7 @@ fn an_allow_list_and_a_matching_signoff_are_honoured() {
     let other = t.put(
         "signoff3.txt",
         format!(
-            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {WORKED_DIGEST}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
+            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {WORKED_DIGEST}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {agg}\n",
             Digest::of(b"other").hex()
         )
         .as_bytes(),
@@ -156,6 +158,9 @@ fn an_allow_list_and_a_matching_signoff_are_honoured() {
 #[test]
 fn the_base_comes_from_the_signoff_when_the_chain_lists_only_the_claim() {
     let (t, p, c, _) = setup();
+    let base = Digest::env_start().fold(&Digest::of(&p));
+    let agg =
+        Digest::of(format!("gates.and_comm {WORKED_DIGEST} {}\n", base.hex()).as_bytes()).hex();
     let only_claim = t.put(
         "claimonly.txt",
         format!(
@@ -167,7 +172,7 @@ fn the_base_comes_from_the_signoff_when_the_chain_lists_only_the_claim() {
     let signoff = t.put(
         "so.txt",
         format!(
-            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
+            "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {agg}\n",
             Digest::of(&p).hex(),
             Digest::env_start().fold(&Digest::of(&p)).hex()
         )

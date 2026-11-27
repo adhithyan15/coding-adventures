@@ -52,8 +52,10 @@ fn world() -> W {
 }
 
 fn signoff_text(w: &W) -> String {
+    let agg =
+        Digest::of(format!("gates.and_comm {WORKED_DIGEST} {}\n", w.base_env).as_bytes()).hex();
     format!(
-        "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {WORKED_DIGEST}\n",
+        "pif-signoff 1\nbase prelude sha256:{}\nbase-environment {}\ngoal gates.and_comm {WORKED_DIGEST}\ngoals-sha256 {agg}\n",
         w.prelude_hex, w.base_env
     )
 }

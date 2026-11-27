@@ -3,14 +3,17 @@
 Why this test exists
 ====================
 
-The workflow runs only on dispatch and on one weekly schedule: no pull request
+The workflow runs only on manual dispatch (its weekly schedule is PAUSED, VOS-D149,
+owner decision 2026-11-26; VOS-028c3e-4 restores it): no pull request
 ever runs it, so CI never parses it, and a mistake in it shows up only at the
 first real run -- which costs about 220 runner-hours.  What can be checked without
 running it is its SHAPE, and the shape is where the security and integrity
 rules of VOS30 section 9.12.2 live:
 
-    triggers      exactly dispatch (modes record and verify) and ONE weekly cron
-                  (`41 1 * * 0`); never a PR or workflow_run trigger
+    triggers      exactly dispatch (modes record and verify), NO schedule and no
+                  cron while the weekly verify is paused; never a PR or
+                  workflow_run trigger.  VOS-028c3e-4 restores ONE weekly cron
+                  (`41 1 * * 0`) and changes this test back in the same PR
     permissions   top-level `contents: read`; every job its own; `issues: write`
                   only in `report`, and nothing else there; no `actions: read`
     pins          every action on a four-name allowlist, by 40-hex commit SHA
@@ -110,10 +113,14 @@ JOB_CONDITIONS = {
         "|| needs.verify-fan-in.outputs.flakes != '')",
     ),
 }
-# Exactly these two triggers (VOS30 9.12.2 item 4); one weekly cron in a free slot
-# (ci.yml uses 00:00 daily and 06, 12, 18:00), owner decision "Weekly only".
-ALLOWED_TRIGGERS = {"workflow_dispatch", "schedule"}
-CRON = "41 1 * * 0"
+# Exactly one trigger while the weekly verify is paused (owner decision "Pause until
+# re-record (Recommended)", 2026-11-26; VOS-D149, VOS30 9.3).  VOS-028c3e-4 restores
+# {"workflow_dispatch", "schedule"} and ONE weekly cron in a free slot (ci.yml uses
+# 00:00 daily and 06, 12, 18:00), by changing this constant, RESTORED_CRON, the gate
+# rule and the tests below in the same PR: adding a `schedule:` trigger back WITHOUT
+# that deliberate test change fails rule_triggers.
+ALLOWED_TRIGGERS = {"workflow_dispatch"}
+RESTORED_CRON = "41 1 * * 0"  # for VOS-028c3e-4; not allowed until then
 REPOSITORY = "adhithyan15/coding-adventures"
 JOBS = [
     "gate", "build", "record-shard", "record-join",
@@ -334,8 +341,11 @@ def rule_triggers(wf: Workflow) -> list[str]:
     if got != ALLOWED_TRIGGERS:
         problems.append(f"triggers must be exactly {sorted(ALLOWED_TRIGGERS)}, got {sorted(got)}")
     crons = re.findall(r"^\s*-?\s*cron:\s*(.*?)\s*$", wf.code, re.M)
-    if [c.strip("\"'") for c in crons] != [CRON]:
-        problems.append(f"there must be exactly one cron, {CRON!r}, got {crons}")
+    if crons:
+        problems.append(
+            f"the weekly schedule is paused (VOS-D149): there must be no cron, got {crons}; "
+            "VOS-028c3e-4 restores it together with this test"
+        )
     if not re.search(r"^ {6}mode:\s*$", wf.code, re.M) or not re.search(
         r"^ {8}options:\s*\[record, verify\]\s*$", wf.code, re.M
     ):
@@ -453,10 +463,21 @@ def rule_gate(wf: Workflow) -> list[str]:
             problems.append(f"the gate script lacks {needle!r} (a tag or fork dispatch must fail loudly)")
     if body.count("exit 1") < 4:
         problems.append("the gate must fail (exit 1) on a wrong repository, a non-branch ref, a wrong mode and a wrong event")
-    # Record mode must never come from `schedule`: the schedule arm sets verify and
-    # nothing else, and a dispatch can choose only record or verify.
-    if not re.search(r"schedule\)\s*\n\s*mode=verify\s*\n\s*;;", body):
-        problems.append("the gate's schedule arm must set mode=verify and nothing else")
+    # While the weekly schedule is paused the event case has ONE arm, workflow_dispatch,
+    # and a catch-all that fails: no `schedule` arm, so a schedule trigger added by
+    # mistake fails loudly instead of silently running a verify.  Record mode can come
+    # only from a dispatch, which can choose only record or verify.
+    if re.search(r"^\s*schedule\)", body, re.M):
+        problems.append("the gate must have no schedule arm while the weekly verify is paused (VOS-D149)")
+    event_case = re.search(r'case "\$GITHUB_EVENT_NAME" in\n(.*?)\n\s*esac\n\s*echo "run=true"', body, re.S)
+    if event_case is None:
+        problems.append("the gate's event case could not be found")
+    else:
+        arms = re.findall(r"^ {12}([\w*|' -]+)\)\s*$", event_case.group(1), re.M)
+        if arms != ["workflow_dispatch", "*"]:
+            problems.append(f"the gate's event case must have exactly the arms workflow_dispatch and *, got {arms}")
+        elif "exit 1" not in event_case.group(1).split("            *)")[-1]:
+            problems.append("the gate's catch-all event arm must exit 1")
     if "record | verify) mode=\"$INPUT_MODE\" ;;" not in body:
         problems.append("a dispatch may choose only record or verify")
     if 'case "$GITHUB_EVENT_NAME" in' not in body:
@@ -940,7 +961,7 @@ class VosCapacityFullWorkflowTests(unittest.TestCase):
         # Guards the checker itself: an empty parse would make every rule pass.
         wf = Workflow(self.text)
         self.assertEqual(list(wf.jobs), JOBS)
-        self.assertEqual(wf.triggers(), {"workflow_dispatch", "schedule"})
+        self.assertEqual(wf.triggers(), {"workflow_dispatch"})
         self.assertGreaterEqual(sum(len(j.steps) for j in wf.jobs.values()), 45)
         self.assertGreaterEqual(
             sum(1 for _, s in wf.all_steps() if s.run_block() is not None), 25
@@ -1008,16 +1029,23 @@ class CheckerCanFailTests(unittest.TestCase):
         self.assertFires("rule_triggers", text)
         self.assertFires("rule_no_unsafe_keys", text)
 
-    def test_a_second_cron_or_a_different_cron(self) -> None:
-        self.assertFires(
-            "rule_triggers",
-            self.mutated('    - cron: "41 1 * * 0"\n', '    - cron: "41 1 * * 0"\n    - cron: "41 1 * * 1-6"\n'),
-        )
-        self.assertFires("rule_triggers", self.mutated('"41 1 * * 0"', '"0 0 * * *"'))
+    def test_the_paused_weekly_schedule_cannot_come_back_unnoticed(self) -> None:
+        # The negative controls of the pause (VOS-D149): re-adding the schedule, the
+        # restored cron, or any other cron fails, until VOS-028c3e-4 deliberately
+        # changes this test.  Each mutation is applied to the real file's `on:` block.
+        base = "on:\n  workflow_dispatch:"
+        for cron in (RESTORED_CRON, "0 0 * * *", "41 1 * * 1-6"):
+            text = self.mutated(base, f'on:\n  schedule:\n    - cron: "{cron}"\n  workflow_dispatch:')
+            self.assertFires("rule_triggers", text)
+        # A schedule with a second cron, and a schedule trigger with no cron line.
+        two = 'on:\n  schedule:\n    - cron: "41 1 * * 0"\n    - cron: "41 1 * * 1-6"\n  workflow_dispatch:'
+        self.assertFires("rule_triggers", self.mutated(base, two))
+        self.assertFires("rule_triggers", self.mutated(base, "on:\n  schedule:\n  workflow_dispatch:"))
 
-    def test_a_missing_schedule(self) -> None:
-        text = self.mutated('  schedule:\n    - cron: "41 1 * * 0"\n', "")
-        self.assertFires("rule_triggers", text)
+    def test_the_workflow_has_no_cron_and_no_schedule(self) -> None:
+        # Pins the committed file itself, so the pause is visible in the test.
+        self.assertNotRegex(self.text, r"(?m)^\s*-?\s*cron:")
+        self.assertNotIn("schedule", Workflow(self.text).triggers())
 
     def test_a_mode_choice_that_is_not_record_and_verify(self) -> None:
         self.assertFires("rule_triggers", self.mutated("options: [record, verify]", "options: [record]"))
@@ -1037,8 +1065,19 @@ class CheckerCanFailTests(unittest.TestCase):
         text = self.mutated("    timeout-minutes: 20\n    permissions:\n      contents: read\n", "    timeout-minutes: 20\n    permissions:\n      contents: write\n")
         self.assertFires("rule_permissions", text)
 
-    def test_a_gate_that_lets_the_schedule_record(self) -> None:
-        self.assertFires("rule_gate", self.mutated("              mode=verify\n", "              mode=record\n"))
+    def test_a_gate_with_a_schedule_arm_or_a_lax_event_case(self) -> None:
+        # A restored `schedule)` arm (even a correct one) fails until VOS-028c3e-4 changes
+        # this test; a catch-all that does not exit, or a second arm, fails too.
+        arm = "            workflow_dispatch)\n"
+        self.assertFires("rule_gate", self.mutated(arm, "            schedule)\n              mode=verify\n              ;;\n" + arm))
+        self.assertFires("rule_gate", self.mutated(arm, "            push)\n              mode=verify\n              ;;\n" + arm))
+        self.assertFires(
+            "rule_gate",
+            self.mutated(
+                "(the weekly schedule is paused, VOS-028c3e)\" >&2\n              exit 1\n",
+                "(the weekly schedule is paused, VOS-028c3e)\" >&2\n              true\n",
+            ),
+        )
         self.assertFires("rule_gate", self.mutated('record | verify) mode="$INPUT_MODE" ;;', 'record | verify | other) mode="$INPUT_MODE" ;;'))
 
     def test_an_expression_inside_run(self) -> None:
