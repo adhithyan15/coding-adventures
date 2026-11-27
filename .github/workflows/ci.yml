@@ -1105,7 +1105,11 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'
           # These filesystem-boundary cases rely on POSIX symlink creation and
           # mode-bit permission semantics; run them on this Ubuntu-only job.
-          python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_boundary_sync.py'
+          if [ "$(id -u)" -eq 0 ]; then
+            echo "The filesystem-boundary permission tests require a non-root POSIX user." >&2
+            exit 1
+          fi
+          python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_boundary_sync.py' -v
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_schema.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_runner.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_authority.py'
@@ -4294,6 +4298,29 @@ jobs:
         with:
           python-version: '3.13.17'
           allow-prereleases: true
+
+      - name: Verify Linux Swift symlink test actually runs
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_swift == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/swift-directory-symlink-test.log"
+          swift test --package-path code/programs/swift/build-tool \
+            --filter sourceHashingDoesNotFollowDirectorySymbolicLinks 2>&1 | tee "$log"
+          python3 - "$log" <<'PY'
+          from pathlib import Path
+          import sys
+
+          output = Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace")
+          test_name = "sourceHashingDoesNotFollowDirectorySymbolicLinks()"
+          passed = f"Test {test_name} passed"
+          skipped = f"Test {test_name} skipped:"
+          if skipped in output:
+              raise SystemExit(f"{test_name} was skipped instead of exercising Linux symlink handling")
+          if output.count(passed) != 1:
+              raise SystemExit(f"expected one passing {test_name} event, found {output.count(passed)}")
+          print(f"Observed exactly one passing {test_name} event.")
+          PY
 
       - name: Test ADJ Windows Job containment
         if: runner.os == 'Windows'

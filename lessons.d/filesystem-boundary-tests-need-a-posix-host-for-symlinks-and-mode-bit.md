@@ -15,3 +15,9 @@ Run the full module on a supported POSIX CI host. Keep the tests and their
 assertions intact; do not skip the cases or report a Windows run as a substitute.
 The repository metadata-contracts job already runs on Ubuntu, so invoke the
 module there alongside the other build-tool conformance checks.
+
+Swift Testing can still report an overall successful test run when a
+host-capability test was skipped. For the directory-symlink regression, CI must
+check the named test event itself: require its `passed` event and reject both a
+`skipped` event and a missing event. An aggregate green summary alone does not
+prove that the symlink branch ran.
