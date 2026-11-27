@@ -127,16 +127,16 @@ class RepositoryAuditTests(unittest.TestCase):
             {
                 "canonical_fallbacks": 159,
                 "declarative_starlark": 9,
-                "native": 293,
-                "package_roots": 284,
+                "native": 294,
+                "package_roots": 285,
                 "program_roots": 10,
-                "total_roots": 294,
+                "total_roots": 295,
                 "unsupported": 1,
-                "windows_overrides": 135,
+                "windows_overrides": 136,
             },
         )
         roots = self.report["roots"]
-        self.assertEqual(len(roots), 294)
+        self.assertEqual(len(roots), 295)
         self.assertEqual(
             [row["root"] for row in roots],
             sorted(row["root"] for row in roots),
@@ -181,8 +181,8 @@ class RepositoryAuditTests(unittest.TestCase):
 
     def test_markdown_is_a_rendering_of_the_same_report(self) -> None:
         markdown = audit.render_markdown(self.report)
-        self.assertIn("| Total Elixir roots | 294 |", markdown)
-        self.assertIn("| Native Windows fronts | 293 |", markdown)
+        self.assertIn("| Total Elixir roots | 295 |", markdown)
+        self.assertIn("| Native Windows fronts | 294 |", markdown)
         self.assertIn("`ELIXIR_WINDOWS_METAL_UNAVAILABLE`", markdown)
 
     def test_cli_renders_both_formats_and_fails_closed(self) -> None:

@@ -1,0 +1,3 @@
+go test ./... -cover
+go vet ./...
+go run ../../../specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go

@@ -8,6 +8,8 @@ and never skipped; a malformed profile clause is a parse error exactly where Rus
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from coding_adventures_warrant_oracle.errors import OracleError
@@ -41,3 +43,18 @@ def test_a_malformed_profile_clause_is_a_parse_error(header: str) -> None:
     with pytest.raises(OracleError) as err:
         parse_source((header + "\n" + BODY).encode())
     assert err.value.code == "parse"
+
+
+def test_the_logic_gates_model_document_is_refused_by_name() -> None:
+    """ADL-002: the first real `profile algorithm` document in code/specs.
+
+    The oracle verifies corpus subjects (documents with ops), so the gate model is
+    refused as the `profile.algorithm` level exactly as the synthetic document is,
+    not read as a pure document and not skipped.  Its claims are evaluated by the
+    Rust test `warrant-grammar/tests/logic_gates_model.rs`.
+    """
+    path = Path(__file__).resolve().parents[4] / "specs" / "logic-gates-model.warrant"
+    with pytest.raises(OracleError) as err:
+        parse_source(path.read_bytes())
+    assert err.value.code == "level"
+    assert err.value.level == "profile.algorithm"

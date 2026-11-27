@@ -25,18 +25,16 @@ Build/test tools such as Busted and LuaRocks run in a CLI with captured output.
 
 ## Current selection
 
-**DS-H-TS-A: TypeScript checked bounded heaps.** Go heap #20121
-(`4ad9ec27f4fc00bffb34ee83817f5c84bb8dd399`), Python heap #20126
-(`1db91bb7c989448425fc246f71050452b357bb05`), and Rust heap core #20150
-(`6d02c654fea328c87fcfea22b1149905e7f0c745`) are merged. The Rust paired
-benchmark remains separate and incomplete until the shared Rust collector
-work is delivered. The selected TypeScript profile is specified in
-[DT04-heap.md](DT04-heap.md#typescript-profile-checked-bounded-queues). It adds
-checked bounded min/max queues while preserving the current unbounded API and
-uses independent model histories, package installation, and real direct
-consumer builds. The TypeScript paired benchmark remains held on the shared
-collector; this heap item does not implement a private timer. Merged source is
-not evidence that a package has been published.
+**DS-H-CPP-A: checked C++17 heap and installable package.** Go heap #20121,
+Python heap #20126, Rust heap core #20150, graph weights #20140, and TypeScript
+heap #20195 are merged; TypeScript merged at
+`900b065ee1134e758321660f741afb673a17fe2d`. The Rust paired benchmark remains
+separate and incomplete until the shared Rust collector work is delivered.
+This selected item adds bounded C++ min/max queues while preserving the
+legacy heap API, with explicit ownership and exception guarantees, independent
+model histories, an installable CMake package, and relocated-prefix consumer
+validation. It does not implement a private timer. Merged source is not
+evidence that a package has been published.
 
 Each lane below is a separate future work item and ready PR. Reconsider the
 order after each merge; a correctness failure in the active item takes priority.
@@ -46,8 +44,8 @@ order after each merge; a correctness failure in the active item takes priority.
 | 1 | DS-H-GO | Go heap interfaces, checked bounds, stateful model/property/fuzz tests, usage lesson, paired heap-build benchmark and publishable package metadata. | Merged #20121 at `4ad9ec27f4fc00bffb34ee83817f5c84bb8dd399` |
 | 2 | DS-H-PY | Python heap profile, checked bounds, replayable standard-library state-model histories, corrected heap trace and complexity claims, and package evidence. | Merged #20126 at `1db91bb7c989448425fc246f71050452b357bb05` |
 | 3 | DS-H-RS | Rust heap profile, checked growth/construction, release validation and independent histories. | Core merged #20150 at `6d02c654fea328c87fcfea22b1149905e7f0c745`; paired benchmark remains held on shared collector #20073 |
-| 4 | DS-H-TS | TypeScript checked bounded heaps with legacy compatibility, bounded iterator construction, model tests, package installation and direct consumer builds. | Selected; specified in DT04-heap.md. Paired benchmark is a separate held collector-dependent item. |
-| 5 | DS-H-CPP | C++ heap with bounds/ownership/exception profile and operation benchmark. | Queued |
+| 4 | DS-H-TS | TypeScript checked bounded heaps with legacy compatibility, bounded iterator construction, model tests, package installation and direct consumer builds. | Merged #20195 at `900b065ee1134e758321660f741afb673a17fe2d`; paired benchmark is a separate held collector-dependent item. |
+| 5 | DS-H-CPP | C++ heap bounds, ownership/exception profile, installable package, and independent model validation. | Selected; specified in [DT04e-cpp-heap-checked.md](DT04e-cpp-heap-checked.md). The paired benchmark is separate and remains held on the shared collector and capability approval. |
 | 6 | DS-H-JAVA | Java heap contract, model validation and operation benchmark. | Queued |
 | 7 | DS-H-KOTLIN | Kotlin heap contract, model validation and operation benchmark. | Queued |
 | 8 | DS-H-CS | C# heap contract, model validation and operation benchmark. | Queued |

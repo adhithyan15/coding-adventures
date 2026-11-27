@@ -592,7 +592,19 @@ func FuzzConcurrentGraphModelHistories(f *testing.F) {
 type graphModel struct {
 	nodeOrder []string
 	nodes     map[string]struct{}
-	edges     map[string]modelEdge
+	edges     map[modelEdgeKey]modelEdge
+}
+
+type modelEdgeKey struct {
+	left  string
+	right string
+}
+
+func modelEdgeIdentity(left, right string) modelEdgeKey {
+	if right < left {
+		left, right = right, left
+	}
+	return modelEdgeKey{left: left, right: right}
 }
 
 type modelEdge struct {
@@ -601,7 +613,7 @@ type modelEdge struct {
 }
 
 func newGraphModel() *graphModel {
-	return &graphModel{nodes: make(map[string]struct{}), edges: make(map[string]modelEdge)}
+	return &graphModel{nodes: make(map[string]struct{}), edges: make(map[modelEdgeKey]modelEdge)}
 }
 
 func (m *graphModel) addNode(node string) {
@@ -637,12 +649,12 @@ func (m *graphModel) addEdge(left, right string, weight float64) {
 	if weight == 0 {
 		weight = 1
 	}
-	key := edgeKey(left, right)
+	key := modelEdgeIdentity(left, right)
 	m.edges[key] = modelEdge{left: left, right: right, weight: weight}
 }
 
 func (m *graphModel) removeEdge(left, right string) bool {
-	key := edgeKey(left, right)
+	key := modelEdgeIdentity(left, right)
 	if _, exists := m.edges[key]; !exists {
 		return false
 	}
@@ -701,7 +713,7 @@ func assertGraphMatchesModel(t *testing.T, snapshot *GraphSnapshot, model *graph
 			t.Fatalf("EdgeWeight(%q,%q) = %v, %v; model wants %v", want.left, want.right, weight, err, want.weight)
 		}
 		if !snapshot.HasEdge(want.left, want.right) || !snapshot.HasEdge(want.right, want.left) {
-			t.Fatalf("model edge %q is not symmetric", key)
+			t.Fatalf("model edge %#v is not symmetric", key)
 		}
 		neighbors, err := snapshot.NeighborsWeighted(want.left)
 		if err != nil || neighbors[want.right] != want.weight {

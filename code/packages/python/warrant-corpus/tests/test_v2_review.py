@@ -178,7 +178,9 @@ def test_a_model_reached_through_another_model_is_level_missing():
     ir = ["model_call", "outer", [var("a")]]
     assert code(case(ir, models=models, model_order=["fx", "outer"])) == "level-missing"
     # and the failed compile is not remembered as a success
-    program = Program(models=models, model_order=["fx", "outer"])
+    program = Program(
+        models=models, model_order=["fx", "outer"], levels=frozenset({"ir.core"})
+    )
     for _ in range(2):
         with pytest.raises(Refusal) as caught:
             program.compile(ir, {"a": Ty("U8")})
@@ -616,15 +618,18 @@ def test_an_overflow_in_a_model_entered_through_a_subject_argument_is_a_case_fai
 
 
 def test_a_model_that_needs_a_missing_level_is_classified_not_compiled():
+    core = frozenset({"ir.core"})
     models = {"fx": FIXED_MODEL, "ok": INC["inc"]}
-    program = Program(models=models, model_order=["fx", "ok"])
+    program = Program(models=models, model_order=["fx", "ok"], levels=core)
     assert list(program.not_live_models) == ["fx"] and "ok" in program.models
+    # the same models are all live at the levels this lane implements (S10e)
+    assert Program(models=models, model_order=["fx", "ok"]).not_live_models == {}
     # a model calling a not-live model is itself not live
     models["outer"] = {
         "params": [["a", "U8"]],
         "body": ["model_call", "fx", [var("a")]],
     }
-    program = Program(models=models, model_order=["fx", "ok", "outer"])
+    program = Program(models=models, model_order=["fx", "ok", "outer"], levels=core)
     assert sorted(program.not_live_models) == ["fx", "outer"]
 
 

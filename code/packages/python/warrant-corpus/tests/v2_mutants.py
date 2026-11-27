@@ -12,12 +12,21 @@ The first three are the ones the spec names (VER04r section 13, row S6):
 * :class:`FirstBinderFastest`  the product is enumerated with the first binder fastest
 
 The rest come from the section 16.13 mutant table, where a lane has the seam.
+
+Slice S10e adds the mistakes the two new levels invite (``ir.fixed`` and
+``ir.tuple``): a shift count masked instead of compared, a logical ``shr`` that
+sign-fills, a rotation by the width or more that returns zero, ``clz`` of zero
+that is zero, ``checked_add`` that wraps, a floor division where the spec says
+truncate (and the reverse), ``MIN / -1`` that wraps, a ``match`` whose last
+matching arm wins, and a tuple descriptor with the first component varying
+fastest.
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 
+from coding_adventures_warrant_corpus.v2 import fixed
 from coding_adventures_warrant_corpus.v2.arith import raw_binary
 from coding_adventures_warrant_corpus.v2.semantics import Semantics
 from coding_adventures_warrant_corpus.v2.wtypes import Ty, fixed_range
@@ -174,12 +183,104 @@ class PreRewritesSequential(Semantics):
         return new
 
 
+class ShiftCountMasked(Semantics):
+    """A shift count is masked to ``w - 1`` bits (the hardware's rule) instead of compared with ``w``."""
+
+    def shift(self, op: str, value: int, count: int, ty: Ty) -> int:
+        return fixed.shift(op, value, count & (ty.width - 1), ty)
+
+
+class ShrFillsTheSign(Semantics):
+    """``shr`` is the arithmetic shift: a negative value keeps its sign."""
+
+    def shift(self, op: str, value: int, count: int, ty: Ty) -> int:
+        return fixed.shift("sar" if op == "shr" and ty.signed else op, value, count, ty)
+
+
+class RotateByTheWidthIsZero(Semantics):
+    """A rotation by ``w`` or more is treated like a shift: the count is not reduced modulo ``w``."""
+
+    def rotate(self, op: str, value: int, count: int, ty: Ty) -> int:
+        if count >= ty.width:
+            return 0
+        return fixed.rotate(op, value, count, ty)
+
+
+class ClzOfZeroIsZero(Semantics):
+    """``clz`` and ``ctz`` of the pattern 0 are 0 instead of ``w``."""
+
+    def count_zeros(self, op: str, value: int, ty: Ty) -> int:
+        return 0 if fixed.pattern(value, ty) == 0 else fixed.count_zeros(op, value, ty)
+
+
+class CheckedWraps(Semantics):
+    """``checked_add``/``sub``/``mul`` wrap and answer ``Some`` instead of ``None`` on overflow."""
+
+    def checked(self, op: str, left: int, right: int, ty: Ty) -> tuple:
+        return ("some", self.wrap(raw_binary(op, left, right), ty))
+
+
+class DivIsTruncating(Semantics):
+    """``div`` and ``rem`` on ``Int`` round toward zero (C's rule) instead of flooring."""
+
+    def divide(self, op: str, left: int, right: int, ty: Ty | None) -> tuple:
+        if op in ("div", "rem") and right != 0:
+            quotient = (
+                abs(left) // abs(right) * (1 if (left < 0) == (right < 0) else -1)
+            )
+            return ("some", quotient if op == "div" else left - right * quotient)
+        return fixed.divide(op, left, right, ty)
+
+
+class DivTruncIsFloor(Semantics):
+    """``div_trunc`` and ``rem_trunc`` floor, so ``-7 / 2`` is ``-4``."""
+
+    def divide(self, op: str, left: int, right: int, ty: Ty | None) -> tuple:
+        if op in ("div_trunc", "rem_trunc") and right != 0:
+            return fixed.divide(
+                "div" if op == "div_trunc" else "rem", left, right, None
+            )
+        return fixed.divide(op, left, right, ty)
+
+
+class DivTruncMinByMinusOneWraps(Semantics):
+    """``MIN / -1`` wraps to ``MIN`` instead of being ``None``."""
+
+    def divide(self, op: str, left: int, right: int, ty: Ty | None) -> tuple:
+        if op == "div_trunc" and ty is not None and right == -1:
+            return ("some", self.wrap(-left, ty))
+        return fixed.divide(op, left, right, ty)
+
+
+class MatchLastArmWins(Semantics):
+    """A ``match`` runs the **last** arm whose pattern matches, not the first."""
+
+    def choose_arm(self, matching: list[int]) -> int:
+        return matching[-1]
+
+
+class TupleFirstComponentFastest(Semantics):
+    """A tuple descriptor is a product with the **first** component varying fastest."""
+
+    def component_digits(self, index: int, sizes: list[int]) -> list[int]:
+        digits = []
+        for size in sizes:
+            index, digit = divmod(index, size)
+            digits.append(digit)
+        return digits
+
+
 # name -> (mutant, categories to run, case ids that must be reported)
 MUTANTS: dict[str, tuple[Semantics, tuple[str, ...], tuple[str, ...]]] = {
     "no-wrap": (
         NoWrap(),
         ("v2-arith", "v2-ir", "v2-fault"),
-        ("v2-arith/u8-add-wrap", "v2-ir/add-u8-wraps", "v2-fault/off-by-one-u8-wraps"),
+        (
+            "v2-arith/u8-add-wrap",
+            "v2-ir/add-u8-wraps",
+            "v2-fault/off-by-one-u8-wraps",
+            "v2-ir/wrap-nat-256-into-u8",  # S10e: the ir.fixed `wrap` node reads the same seam
+        ),
     ),
     "eager-and": (
         EagerAnd(),
@@ -258,5 +359,60 @@ MUTANTS: dict[str, tuple[Semantics, tuple[str, ...], tuple[str, ...]]] = {
         PreRewritesSequential(),
         ("v2-fault",),
         ("v2-fault/pre-rewrites-read-the-original-arguments",),
+    ),
+    # -- slice S10e: the mistakes ir.fixed and ir.tuple invite ------------------
+    "shift-count-masked": (
+        ShiftCountMasked(),
+        ("v2-ir",),
+        ("v2-ir/shl-u8-count-equal-to-width", "v2-ir/shl-count-is-the-largest-nat"),
+    ),
+    "shr-fills-the-sign": (
+        ShrFillsTheSign(),
+        ("v2-ir",),
+        ("v2-ir/shr-i8-is-logical", "v2-ir/shr-i8-minimum-by-seven"),
+    ),
+    "rotate-by-the-width-is-zero": (
+        RotateByTheWidthIsZero(),
+        ("v2-ir",),
+        ("v2-ir/rotl-u8-count-equal-to-width", "v2-ir/rotl-u8-count-reduced-mod-w"),
+    ),
+    "clz-of-zero-is-zero": (
+        ClzOfZeroIsZero(),
+        ("v2-ir",),
+        ("v2-ir/clz-u8-zero", "v2-ir/ctz-u8-zero"),
+    ),
+    "checked-wraps": (
+        CheckedWraps(),
+        ("v2-ir",),
+        ("v2-ir/checked-add-u8-overflows", "v2-ir/checked-add-i8-past-the-maximum"),
+    ),
+    "div-is-truncating": (
+        DivIsTruncating(),
+        ("v2-ir",),
+        ("v2-ir/div-int-floors", "v2-ir/rem-int-has-the-divisors-sign-positive"),
+    ),
+    "div-trunc-is-floor": (
+        DivTruncIsFloor(),
+        ("v2-ir",),
+        ("v2-ir/div-trunc-i8-toward-zero",),
+    ),
+    "div-trunc-min-by-minus-one-wraps": (
+        DivTruncMinByMinusOneWraps(),
+        ("v2-ir",),
+        ("v2-ir/div-trunc-i8-minimum-by-minus-one",),
+    ),
+    "match-last-arm-wins": (
+        MatchLastArmWins(),
+        ("v2-ir",),
+        ("v2-ir/match-first-matching-arm-wins",),
+    ),
+    "tuple-first-component-fastest": (
+        TupleFirstComponentFastest(),
+        ("v2-domain", "v2-chunk"),
+        (
+            "v2-domain/tuple-u8-bool-range-first-two",
+            "v2-domain/tuple-bool-u8-across-the-first-component",
+            "v2-chunk/tuple-pair-binder-chunk",
+        ),
     ),
 }

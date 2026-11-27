@@ -1,5 +1,5 @@
 /**
- * # Reading a committed v2 corpus at `ir.core`
+ * # Reading a committed v2 corpus at `ir.core`, `ir.fixed` and `ir.tuple`
  *
  * This is the **library half** of the lane's corpus reader: it loads a
  * `<module>-warrant-v2/` directory, classifies every suite and control by what
@@ -14,6 +14,9 @@
  * counted in `not_live`, and *not compiled*; everything else runs.  A lane at
  * `ir.core` therefore still runs the `ir.core` suites of lzw, x25519 and
  * wasm-leb128, whose models, ops and other suites need `ir.fixed` and `ir.tuple`.
+ * (This lane implements both since S10f, so for it all four committed corpora
+ * are live; a lane handed a smaller `levels` list, as the tests do, still
+ * records the rest `not-live`.)
  *
  * What the library reports is exactly **suites** and **controls**:
  *
@@ -317,7 +320,9 @@ function checkOmittedExamples(raw: unknown): void {
 export function runSuite(corpus: V2Corpus, record: SuiteRecord, depth: Depth = "full"): SuiteRun {
   const suite = record.suite;
   if (suite === undefined) throw new KitError("corpus", "a not-live suite is not run");
-  checkWork(corpus, depth);
+  // One suite, no control: it is charged its own work only.  The whole-run meter (every suite, control re-runs included) is the
+  // planner's, `checkWork(corpus, depth)`, and a caller that runs the corpus calls it once before the first suite.
+  checkWork(corpus, depth, record);
   const file = regularFile(corpus.dir, ["chunks", chunkFileName(suite.claim)], MAX_CHUNK_FILE_BYTES, "chunk-file");
   const rows = readChunkFile(file, suite);
   const wanted = depth === "full" ? rows.map((r) => r.index) : suite.slimChunks.slice();
@@ -376,7 +381,7 @@ export interface Work {
  * its chosen chunks (at most 32 chunks of at most 65,536); a `full` run all of
  * them.  Exceeding a bound is a corpus error, raised before any case runs.
  */
-export function checkWork(corpus: V2Corpus, depth: Depth): Work {
+export function checkWork(corpus: V2Corpus, depth: Depth, only?: SuiteRecord): Work {
   if (depth !== "full" && depth !== "slim") corrupt("depth is full or slim");
   let ordinals = 0;
   let irWork = 0;
@@ -395,7 +400,7 @@ export function checkWork(corpus: V2Corpus, depth: Depth): Work {
     ordinals += count;
     irWork += suite.irCost * count;
   };
-  for (const record of corpus.suites) {
+  for (const record of only === undefined ? corpus.suites : [only]) {
     const suite = record.suite;
     if (suite === undefined || record.state !== "live") continue;
     liveBy.set(suite.id, suite);
@@ -403,7 +408,7 @@ export function checkWork(corpus: V2Corpus, depth: Depth): Work {
   }
   // Section 14 counts negative-control re-runs in the slim total: a live control re-runs each suite it requires
   // (its `required_claims`) over that suite's slim chunk set.  A full run runs no control, so adds none.
-  if (depth === "slim") {
+  if (depth === "slim" && only === undefined) {
     for (const control of corpus.controls) {
       if (control.state !== "ok") continue;
       for (const claim of control.requiredClaims) {

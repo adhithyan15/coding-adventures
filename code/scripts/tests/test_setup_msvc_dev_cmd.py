@@ -123,6 +123,16 @@ class GitHubEnvironmentFileTests(unittest.TestCase):
 
 
 class ClangClSelectionTests(unittest.TestCase):
+    def test_selected_executable_is_absolute_and_preserves_spaces(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="Visual Studio LLVM ") as directory:
+            selected = msvc.selected_clang_cl_executable((directory, (22, 1, 3)))
+            self.assertEqual(str((Path(directory) / "clang-cl.exe").resolve()), selected)
+            with tempfile.TemporaryDirectory() as output_directory:
+                destination = Path(output_directory) / "github-env"
+                msvc.append_github_environment(destination, {"ISO_CLANG_CL": selected})
+                self.assertEqual(f"ISO_CLANG_CL={selected}\n", destination.read_text())
+        self.assertIsNone(msvc.selected_clang_cl_executable(None))
+
     def test_parses_clang_version_output(self) -> None:
         self.assertEqual(
             (22, 1, 0),
