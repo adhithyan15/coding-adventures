@@ -1193,6 +1193,7 @@ internal static class SourceInputRegistryProjection
       "input_origin": "repository",
       "applies_to": {
         "exact_roots": [
+          "code/packages/c/nand-flash",
           "code/packages/python/nand-flash",
           "code/packages/typescript/nand-flash"
         ],
@@ -1205,7 +1206,7 @@ internal static class SourceInputRegistryProjection
           "role": "cross_package_exact"
         }
       ],
-      "reason": "The Python and TypeScript nand-flash tests read only their exact shared DB media vector from the repository fixtures.",
+      "reason": "The C, Python and TypeScript nand-flash tests read only their exact shared DB media vector from the repository fixtures.",
       "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
     },
     {

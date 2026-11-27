@@ -17,6 +17,7 @@ func databaseMediaPackages(root string) []discovery.Package {
 	packages := []discovery.Package{
 		{Name: "python/nand-flash", Language: "python"},
 		{Name: "typescript/nand-flash", Language: "typescript"},
+		{Name: "c/nand-flash", Language: "c"},
 		{Name: "python/hdd-simulator", Language: "python"},
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 	}
@@ -40,7 +41,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		{
 			fixture:          nandFlashFixturePath,
 			predicate:        isNANDFlashFixture,
-			readers:          map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true},
+			readers:          map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true},
 			pythonReader:     "python/nand-flash",
 			typescriptReader: "typescript/nand-flash",
 			inputs:           nandFlashFixtureInputs,
@@ -60,9 +61,14 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		if err != nil || !reflect.DeepEqual(selected, tc.readers) {
 			t.Fatalf("all-language %s selection = %v, err %v; want %v", tc.fixture, selected, err, tc.readers)
 		}
+		cReaders := map[string]bool{}
+		if tc.readers["c/nand-flash"] {
+			cReaders["c/nand-flash"] = true
+		}
 		for language, expected := range map[string]map[string]bool{
 			"python":     {tc.pythonReader: true},
 			"typescript": {tc.typescriptReader: true},
+			"c":          cReaders,
 		} {
 			got, err := repositoryInputConsumersForChange([]string{tc.fixture}, packages, language)
 			if err != nil || !reflect.DeepEqual(got, expected) {
@@ -72,7 +78,10 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		if !tc.predicate(tc.fixture) {
 			t.Errorf("exact predicate rejected %s", tc.fixture)
 		}
-		for _, packageName := range []string{tc.pythonReader, tc.typescriptReader} {
+		for _, packageName := range []string{tc.pythonReader, tc.typescriptReader, "c/nand-flash"} {
+			if !tc.readers[packageName] {
+				continue
+			}
 			if got := repositoryInputsForPackage(packageName); !reflect.DeepEqual(got, tc.inputs) {
 				t.Errorf("%s fallback hash inputs = %v; want exact %v", packageName, got, tc.inputs)
 			}
@@ -111,6 +120,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 	for packageName, expected := range map[string][]string{
 		"python/nand-flash":        {nandFlashFixturePath},
 		"typescript/nand-flash":    {nandFlashFixturePath},
+		"c/nand-flash":             {nandFlashFixturePath},
 		"python/hdd-simulator":     {hddSimulatorFixturePath},
 		"typescript/hdd-simulator": {hddSimulatorFixturePath},
 	} {
@@ -137,7 +147,7 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 	}{
 		{
 			path:    nandFlashFixturePath,
-			readers: map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true},
+			readers: map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true},
 		},
 		{
 			path:    hddSimulatorFixturePath,
@@ -155,6 +165,8 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 					sourcePath += ".py"
 				case "typescript":
 					sourcePath += ".ts"
+				case "c":
+					sourcePath += ".c"
 				}
 				if err := os.MkdirAll(filepath.Dir(sourcePath), 0o755); err != nil {
 					t.Fatal(err)
@@ -222,7 +234,7 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 		{
 			id:      "repository-database-media-nand-fixture-inputs",
 			fixture: nandFlashFixturePath,
-			roots:   []string{"code/packages/python/nand-flash", "code/packages/typescript/nand-flash"},
+			roots:   []string{"code/packages/c/nand-flash", "code/packages/python/nand-flash", "code/packages/typescript/nand-flash"},
 		},
 		{
 			id:      "repository-database-media-hdd-fixture-inputs",

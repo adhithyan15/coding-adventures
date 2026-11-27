@@ -1499,7 +1499,7 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 }
 
 func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
-	languages := []string{"c", "cpp", "go", "java", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
 	packages := make([]discovery.Package, 0, len(languages)+1)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
@@ -1517,6 +1517,8 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"canonical corpus add or edit", historicalUnixFixturePath, all},
 		{"replay helper", historicalUnixReplayPath, map[string]bool{
 			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
+			"csharp/unix-history-simulator": true, "fsharp/unix-history-simulator": true,
+			"dart/unix-history-simulator": true,
 			"java/unix-history-simulator": true, "lua/unix-history-simulator": true,
 		}},
 		{"shared native driver", historicalUnixBuildNativePath, map[string]bool{
@@ -1527,6 +1529,15 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"C++ adapter", historicalUnixCppAdapterPath, map[string]bool{"cpp/unix-history-simulator": true}},
 		{"Java adapter", historicalUnixJavaAdapterPath, map[string]bool{"java/unix-history-simulator": true}},
 		{"Lua adapter", historicalUnixLuaAdapterPath, map[string]bool{"lua/unix-history-simulator": true}},
+		{".NET adapter build driver", historicalUnixBuildDotnetPath, map[string]bool{
+			"csharp/unix-history-simulator": true, "fsharp/unix-history-simulator": true,
+		}},
+		{"C# adapter source", historicalUnixCsharpAdapterPath, map[string]bool{"csharp/unix-history-simulator": true}},
+		{"C# adapter project", historicalUnixCsharpProjectPath, map[string]bool{"csharp/unix-history-simulator": true}},
+		{"F# adapter source", historicalUnixFsharpAdapterPath, map[string]bool{"fsharp/unix-history-simulator": true}},
+		{"F# adapter project", historicalUnixFsharpProjectPath, map[string]bool{"fsharp/unix-history-simulator": true}},
+		{"Dart adapter", historicalUnixDartAdapterPath, map[string]bool{"dart/unix-history-simulator": true}},
+		{"Kotlin adapter", historicalUnixKotlinAdapterPath, map[string]bool{"kotlin/unix-history-simulator": true}},
 		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
 		{"lookalike excluded", historicalUnixFixturePath + ".bak", map[string]bool{}},
 		{"unrelated README excluded", "code/packages/go/unix-history-simulator/README.md", map[string]bool{}},
@@ -1543,6 +1554,19 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 					t.Fatalf("selected %v, want %v", got, tc.want)
 				}
 			})
+		}
+	}
+	for _, language := range []string{"csharp", "fsharp", "dart", "kotlin"} {
+		wantConsumer := language + "/unix-history-simulator"
+		for _, tc := range cases {
+			want := map[string]bool{}
+			if tc.want[wantConsumer] {
+				want[wantConsumer] = true
+			}
+			got, err := repositoryInputConsumersForChange([]string{tc.path}, packages, language)
+			if err != nil || !reflect.DeepEqual(got, want) {
+				t.Errorf("%s-only %s selected %v, err %v; want %v", language, tc.name, got, err, want)
+			}
 		}
 	}
 	// Git's changed-path list reports either side of a rename. The old
@@ -1565,6 +1589,14 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixCAdapterPath)
 		case "cpp":
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixCppAdapterPath)
+		case "csharp":
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath)
+		case "fsharp":
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixFsharpAdapterPath, historicalUnixFsharpProjectPath)
+		case "dart":
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
+		case "kotlin":
+			wantInputs = append(wantInputs, historicalUnixKotlinAdapterPath)
 		case "java":
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixJavaAdapterPath)
 		case "lua":
@@ -1579,7 +1611,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	root := t.TempDir()
-	languages := []string{"c", "cpp", "go", "java", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
 		t.Fatal(err)
@@ -1587,7 +1619,6 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	if err := os.WriteFile(fixturePath, []byte("[]\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	before := make(map[string]string, len(languages))
 	for _, language := range languages {
 		name := language + "/unix-history-simulator"
 		packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(name))
@@ -1608,24 +1639,29 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 			}
 		}
 		pkg := discovery.Package{Name: name, Language: language, Path: packageRoot}
-		hash, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
-		if err != nil {
-			t.Fatalf("hash %s with declared inputs: %v", name, err)
-		}
-		before[name] = hash
-	}
-	if err := os.WriteFile(fixturePath, []byte("[{\"case\":1}]\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	for _, language := range languages {
-		name := language + "/unix-history-simulator"
-		pkg := discovery.Package{Name: name, Language: language, Path: filepath.Join(root, "code", "packages", filepath.FromSlash(name))}
-		after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, repositoryInputsForPackage(name))
-		if err != nil {
-			t.Fatalf("rehash %s after fixture edit: %v", name, err)
-		}
-		if before[name] == after {
-			t.Errorf("canonical fixture edit did not change %s hash", name)
+		for _, input := range inputs {
+			path := filepath.Join(root, filepath.FromSlash(input))
+			original, err := os.ReadFile(path)
+			if err != nil {
+				t.Fatalf("read %s hash input for %s: %v", input, name, err)
+			}
+			before, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+			if err != nil {
+				t.Fatalf("hash %s before editing %s: %v", name, input, err)
+			}
+			if err := os.WriteFile(path, append(original, []byte("changed\n")...), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+			if err != nil {
+				t.Fatalf("hash %s after editing %s: %v", name, input, err)
+			}
+			if before == after {
+				t.Errorf("editing declared input %s did not change %s hash", input, name)
+			}
+			if err := os.WriteFile(path, original, 0o644); err != nil {
+				t.Fatal(err)
+			}
 		}
 	}
 	// A package input list for a direct adapter consumer contains its exact
@@ -1635,28 +1671,78 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	if !reflect.DeepEqual(cInputs, want) {
 		t.Fatalf("C package repository inputs = %v, want %v", cInputs, want)
 	}
+	for _, test := range []struct {
+		language string
+		adapter  string
+		project  string
+	}{
+		{"csharp", historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath},
+		{"fsharp", historicalUnixFsharpAdapterPath, historicalUnixFsharpProjectPath},
+	} {
+		got := repositoryInputsForPackage(test.language + "/unix-history-simulator")
+		want := []string{historicalUnixFixturePath, historicalUnixReplayPath, historicalUnixBuildDotnetPath, test.adapter, test.project}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("%s package repository inputs = %v, want %v", test.language, got, want)
+		}
+	}
+	dartInputs := repositoryInputsForPackage("dart/unix-history-simulator")
+	dartWant := []string{historicalUnixFixturePath, historicalUnixReplayPath, historicalUnixDartAdapterPath}
+	if !reflect.DeepEqual(dartInputs, dartWant) {
+		t.Errorf("Dart package repository inputs = %v, want %v", dartInputs, dartWant)
+	}
+	kotlinInputs := repositoryInputsForPackage("kotlin/unix-history-simulator")
+	kotlinWant := []string{historicalUnixFixturePath, historicalUnixKotlinAdapterPath}
+	if !reflect.DeepEqual(kotlinInputs, kotlinWant) {
+		t.Errorf("Kotlin package repository inputs = %v, want %v", kotlinInputs, kotlinWant)
+	}
 }
 
-func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
+func TestOSArchitectureFixtureRoutesGoAndTypescriptConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "typescript/os-architecture-simulator", Language: "typescript"},
 		{Name: "go/os-architecture-simulator", Language: "go"},
 		{Name: "typescript/adjacent", Language: "typescript"},
 	}
-	exactInputs := []string{osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath}
-	for _, changed := range exactInputs {
+	tsInputs := []string{
+		osArchitectureProfilesPath, osArchitectureVerifyPath,
+		osMachineBoardsPath, osMachineVerifyPath,
+		osMachineRiscvPath, osMachineRiscvVerifyPath,
+	}
+	for _, changed := range tsInputs {
+		tsWant := map[string]bool{"typescript/os-architecture-simulator": true}
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
 		want := map[string]bool{"typescript/os-architecture-simulator": true}
+		if changed == osArchitectureProfilesPath {
+			want["go/os-architecture-simulator"] = true
+		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Errorf("%s selected %v, err %v; want %v", changed, got, err, want)
 		}
 		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "typescript")
-		if err != nil || !reflect.DeepEqual(got, want) {
-			t.Errorf("typescript-only %s selected %v, err %v; want %v", changed, got, err, want)
+		if err != nil || !reflect.DeepEqual(got, tsWant) {
+			t.Errorf("typescript-only %s selected %v, err %v; want %v", changed, got, err, tsWant)
 		}
 		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "go")
+		goWant := map[string]bool{}
+		if changed == osArchitectureProfilesPath {
+			goWant["go/os-architecture-simulator"] = true
+		}
+		if err != nil || !reflect.DeepEqual(got, goWant) {
+			t.Errorf("go-only %s selected %v, err %v; want %v", changed, got, err, goWant)
+		}
+	}
+	for _, changed := range []string{osArchitectureGoConformancePath, osArchitectureGoConformancePath + ".bak"} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		want := map[string]bool{}
+		if changed == osArchitectureGoConformancePath {
+			want["go/os-architecture-simulator"] = true
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("Go verifier path %s selected %v, err %v; want %v", changed, got, err, want)
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "typescript")
 		if err != nil || len(got) != 0 {
-			t.Errorf("go-only %s selected %v, err %v; want none", changed, got, err)
+			t.Errorf("Go verifier path %s selected TypeScript consumers %v, err %v", changed, got, err)
 		}
 	}
 	for _, unrelated := range []string{
@@ -1665,6 +1751,9 @@ func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
 		"code/specs/fixtures/os-architecture-v1/README.md",
 		"code/specs/fixtures/os-machine-v1/boards.json/child",
 		"code/specs/fixtures/os-machine-v1/verify_boards.mjs.bak",
+		osMachineRiscvPath + ".bak",
+		"code/specs/fixtures/os-machine-v1/verify_riscv.test.ts.bak",
+		"code/specs/fixtures/os-machine-v1/README.md",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{unrelated}, packages, "all")
 		if err != nil || len(got) != 0 {
@@ -1674,12 +1763,22 @@ func TestOSArchitectureFixtureRoutesOnlyTypescriptConsumer(t *testing.T) {
 	// Git reports the removed side of a rename alongside the new path. The
 	// old exact fixture still selects this consumer even when the new name is
 	// outside the fixture tree.
-	got, err := repositoryInputConsumersForChange([]string{osArchitectureProfilesPath, "docs/renamed-profiles.json"}, packages, "all")
-	if err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/os-architecture-simulator": true}) {
-		t.Fatalf("rename paths selected %v, err %v", got, err)
+	for _, renamedInput := range []string{osArchitectureProfilesPath, osMachineRiscvPath} {
+		got, err := repositoryInputConsumersForChange([]string{renamedInput, "docs/renamed-fixture.json"}, packages, "all")
+		want := map[string]bool{"typescript/os-architecture-simulator": true}
+		if renamedInput == osArchitectureProfilesPath {
+			want["go/os-architecture-simulator"] = true
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("rename paths for %s selected %v, err %v; want %v", renamedInput, got, err, want)
+		}
 	}
-	if got := repositoryInputsForPackage("typescript/os-architecture-simulator"); !reflect.DeepEqual(got, exactInputs) {
-		t.Fatalf("package hash inputs = %v, want exactly %v", got, exactInputs)
+	if got := repositoryInputsForPackage("typescript/os-architecture-simulator"); !reflect.DeepEqual(got, tsInputs) {
+		t.Fatalf("TypeScript package hash inputs = %v, want exactly %v", got, tsInputs)
+	}
+	goInputs := []string{osArchitectureProfilesPath, osArchitectureGoConformancePath}
+	if got := repositoryInputsForPackage("go/os-architecture-simulator"); !reflect.DeepEqual(got, goInputs) {
+		t.Fatalf("Go package hash inputs = %v, want exactly %v", got, goInputs)
 	}
 }
 
@@ -1721,6 +1820,45 @@ func TestOSArchitectureRepositoryInputsHashEveryExactFile(t *testing.T) {
 		}
 		if err := os.WriteFile(path, []byte("initial\n"), 0o644); err != nil {
 			t.Fatal(err)
+		}
+	}
+}
+
+func TestGoOSArchitectureRepositoryInputsHashEveryExactFile(t *testing.T) {
+	root := t.TempDir()
+	inputs := repositoryInputsForPackage("go/os-architecture-simulator")
+	packageRoot := filepath.Join(root, "code", "packages", "go", "os-architecture-simulator")
+	if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(packageRoot, "core.go"), []byte("package simulator\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, input := range inputs {
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("initial\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "go/os-architecture-simulator", Language: "go", Path: packageRoot}
+	for _, input := range inputs {
+		before, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash before editing %s: %v", input, err)
+		}
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.WriteFile(path, []byte("changed\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash after editing %s: %v", input, err)
+		}
+		if before == after {
+			t.Errorf("editing declared Go input %s did not change package hash", input)
 		}
 	}
 }

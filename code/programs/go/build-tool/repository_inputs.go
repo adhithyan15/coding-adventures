@@ -121,18 +121,28 @@ var (
 		"code/scripts/ct_compare_conformance.py",
 		"code/scripts/tfv.py",
 	}
-	ctCompareCorpusPaths          = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
-	historicalUnixFixturePath     = "code/specs/fixtures/historical-unix-v1/file-read.json"
-	historicalUnixReplayPath      = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
-	historicalUnixBuildNativePath = "code/specs/fixtures/historical-unix-v1/build_native.py"
-	historicalUnixCAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
-	historicalUnixCppAdapterPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
-	historicalUnixJavaAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
-	historicalUnixLuaAdapterPath  = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
-	osArchitectureProfilesPath    = "code/specs/fixtures/os-architecture-v1/profiles.json"
-	osArchitectureVerifyPath      = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
-	osMachineBoardsPath           = "code/specs/fixtures/os-machine-v1/boards.json"
-	osMachineVerifyPath           = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
+	ctCompareCorpusPaths            = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
+	historicalUnixFixturePath       = "code/specs/fixtures/historical-unix-v1/file-read.json"
+	historicalUnixReplayPath        = "code/specs/fixtures/historical-unix-v1/replay_cli.py"
+	historicalUnixBuildNativePath   = "code/specs/fixtures/historical-unix-v1/build_native.py"
+	historicalUnixCAdapterPath      = "code/specs/fixtures/historical-unix-v1/test-adapters/c/fixture_cli.c"
+	historicalUnixCppAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/cpp/fixture_cli.cpp"
+	historicalUnixJavaAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/java/FixtureCli.java"
+	historicalUnixLuaAdapterPath    = "code/specs/fixtures/historical-unix-v1/test-adapters/lua/fixture_cli.lua"
+	historicalUnixCsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.cs"
+	historicalUnixCsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/csharp/FixtureCli.csproj"
+	historicalUnixFsharpAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fs"
+	historicalUnixFsharpProjectPath = "code/specs/fixtures/historical-unix-v1/test-adapters/fsharp/FixtureCli.fsproj"
+	historicalUnixBuildDotnetPath   = "code/specs/fixtures/historical-unix-v1/build_dotnet.py"
+	historicalUnixDartAdapterPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/dart/fixture_cli.dart"
+	historicalUnixKotlinAdapterPath = "code/specs/fixtures/historical-unix-v1/test-adapters/kotlin/FixtureReplayTest.kt"
+	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
+	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
+	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
+	osMachineBoardsPath             = "code/specs/fixtures/os-machine-v1/boards.json"
+	osMachineVerifyPath             = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
+	osMachineRiscvPath              = "code/specs/fixtures/os-machine-v1/riscv.json"
+	osMachineRiscvVerifyPath        = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
 	// kilnToolchainPinPaths are the pin sources Kiln's committed
 	// code/kiln/legacy/toolchains.json is checked against by its drift test
 	// (realpolicy_test.go). A toolchain bump that edits only these files must
@@ -590,22 +600,39 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
-	// HOS-ARCH-b: the architecture package BUILD validates both canonical
-	// architecture profiles and machine-board fixtures, plus their exact
-	// verifier scripts. Keep selection and cache inputs in lockstep.
+	// HOS03d: the native Go semantic simulator replays both canonical OS
+	// profiles through its external fixture verifier.
+	{
+		name: "go/os-architecture-simulator", language: "go",
+		inputs:  "the canonical OS architecture profiles and Go conformance verifier",
+		matches: isGoOSArchitectureFixtureInput,
+		paths:   []string{osArchitectureProfilesPath, osArchitectureGoConformancePath},
+	},
+	// HOS-ARCH-b/c: the architecture package BUILD validates canonical
+	// architecture profiles, machine-board fixtures, and the RV32I board
+	// fixture, plus their exact verifier scripts. Keep selection and cache
+	// inputs in lockstep.
 	{
 		name: "typescript/os-architecture-simulator", language: "typescript",
-		inputs:  "the canonical OS architecture and machine-board fixtures and their BUILD verifiers",
+		inputs:  "the canonical OS architecture, machine-board, and RV32I fixtures and their BUILD verifiers",
 		matches: isOSArchitectureFixtureInput,
-		paths:   []string{osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath},
+		paths: []string{
+			osArchitectureProfilesPath, osArchitectureVerifyPath,
+			osMachineBoardsPath, osMachineVerifyPath,
+			osMachineRiscvPath, osMachineRiscvVerifyPath,
+		},
 	},
-	// HOS-002b: every native port replays the canonical shared trace. The
-	// adjacent helper/build driver and external adapters are narrower inputs
-	// read only by the four package recipes that compile those adapters.
+	// HOS-002b: each reusable port replays the canonical shared trace. The
+	// helper/build drivers and external adapters are narrower inputs read only
+	// by the package recipes that compile those adapters.
 	historicalUnixFixtureRow("c"),
 	historicalUnixFixtureRow("cpp"),
+	historicalUnixFixtureRow("csharp"),
+	historicalUnixFixtureRow("dart"),
+	historicalUnixFixtureRow("fsharp"),
 	historicalUnixFixtureRow("go"),
 	historicalUnixFixtureRow("java"),
+	historicalUnixFixtureRow("kotlin"),
 	historicalUnixFixtureRow("lua"),
 	historicalUnixFixtureRow("perl"),
 	historicalUnixFixtureRow("python"),
@@ -616,14 +643,25 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
 	historicalUnixAdapterRow("java", historicalUnixJavaAdapterPath),
 	historicalUnixAdapterRow("lua", historicalUnixLuaAdapterPath),
+	historicalUnixAdapterRow("csharp", historicalUnixCsharpAdapterPath),
+	historicalUnixAdapterRow("csharp", historicalUnixCsharpProjectPath),
+	historicalUnixAdapterRow("fsharp", historicalUnixFsharpAdapterPath),
+	historicalUnixAdapterRow("fsharp", historicalUnixFsharpProjectPath),
+	historicalUnixAdapterRow("dart", historicalUnixDartAdapterPath),
+	historicalUnixAdapterRow("kotlin", historicalUnixKotlinAdapterPath),
 	historicalUnixReplayRow("c"),
 	historicalUnixReplayRow("cpp"),
 	historicalUnixReplayRow("java"),
 	historicalUnixReplayRow("lua"),
+	historicalUnixReplayRow("csharp"),
+	historicalUnixReplayRow("fsharp"),
+	historicalUnixReplayRow("dart"),
 	historicalUnixBuildNativeRow("c"),
 	historicalUnixBuildNativeRow("cpp"),
 	historicalUnixBuildNativeRow("java"),
 	historicalUnixBuildNativeRow("lua"),
+	historicalUnixBuildDotnetRow("csharp"),
+	historicalUnixBuildDotnetRow("fsharp"),
 	{
 		name:     "go/microbenchmark",
 		language: "go",
@@ -934,6 +972,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "typescript/nand-flash",
 		language: "typescript",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
+		name:     "c/nand-flash",
+		language: "c",
 		inputs:   "the exact DB01 shared NAND flash vector",
 		matches:  isNANDFlashFixture,
 		paths:    nandFlashFixtureInputs,
@@ -1778,7 +1823,7 @@ func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 func historicalUnixAdapterRow(language, adapterPath string) repositoryInputConsumer {
 	return repositoryInputConsumer{
 		name: language + "/unix-history-simulator", language: language,
-		inputs:  "the external historical Unix fixture adapter compiled by this package",
+		inputs:  "the external historical Unix fixture adapter used by this package recipe",
 		matches: exactRepositoryPath(adapterPath),
 		paths:   []string{adapterPath},
 	}
@@ -1802,6 +1847,15 @@ func historicalUnixBuildNativeRow(language string) repositoryInputConsumer {
 	}
 }
 
+func historicalUnixBuildDotnetRow(language string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name: language + "/unix-history-simulator", language: language,
+		inputs:  "the shared .NET historical Unix adapter build driver invoked by this package",
+		matches: exactRepositoryPath(historicalUnixBuildDotnetPath),
+		paths:   []string{historicalUnixBuildDotnetPath},
+	}
+}
+
 func exactRepositoryPath(expected string) func(string) bool {
 	return func(changed string) bool { return changed == expected }
 }
@@ -1812,18 +1866,31 @@ func isHistoricalUnixFixture(changed string) bool {
 
 func isOSArchitectureFixtureInput(changed string) bool {
 	switch changed {
-	case osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath:
+	case osArchitectureProfilesPath, osArchitectureVerifyPath,
+		osMachineBoardsPath, osMachineVerifyPath,
+		osMachineRiscvPath, osMachineRiscvVerifyPath:
 		return true
 	default:
 		return false
 	}
 }
 
+func isGoOSArchitectureFixtureInput(changed string) bool {
+	return changed == osArchitectureProfilesPath || changed == osArchitectureGoConformancePath
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
+	if packageName == "go/os-architecture-simulator" {
+		return []string{osArchitectureProfilesPath, osArchitectureGoConformancePath}
+	}
 	if packageName == "typescript/os-architecture-simulator" {
-		return []string{osArchitectureProfilesPath, osArchitectureVerifyPath, osMachineBoardsPath, osMachineVerifyPath}
+		return []string{
+			osArchitectureProfilesPath, osArchitectureVerifyPath,
+			osMachineBoardsPath, osMachineVerifyPath,
+			osMachineRiscvPath, osMachineRiscvVerifyPath,
+		}
 	}
 	if strings.HasSuffix(packageName, "/unix-history-simulator") {
 		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
@@ -1842,6 +1909,14 @@ func repositoryInputsForPackage(packageName string) []string {
 				inputs = append(inputs, historicalUnixLuaAdapterPath)
 			}
 		case "go", "perl", "python", "ruby", "rust", "typescript":
+		case "dart":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
+		case "kotlin":
+			inputs = append(inputs, historicalUnixKotlinAdapterPath)
+		case "csharp":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixCsharpAdapterPath, historicalUnixCsharpProjectPath)
+		case "fsharp":
+			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildDotnetPath, historicalUnixFsharpAdapterPath, historicalUnixFsharpProjectPath)
 		default:
 			return nil
 		}
@@ -1854,7 +1929,7 @@ func repositoryInputsForPackage(packageName string) []string {
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
 		return typescriptGameInputFrameInputs
-	case "python/nand-flash", "typescript/nand-flash":
+	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash":
 		return nandFlashFixtureInputs
 	case "python/hdd-simulator", "typescript/hdd-simulator":
 		return hddSimulatorFixtureInputs
