@@ -4,41 +4,44 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
+	"io"
 	"os"
-	"strconv"
-	"strings"
 
 	satsolver "github.com/adhithyan15/coding-adventures/code/packages/go/sat-solver"
 )
 
 func main() {
+	data, err := io.ReadAll(os.Stdin)
+	if err != nil {
+		fatal(err)
+	}
+	formula, err := satsolver.ParseDimacs(string(data))
+	if err != nil {
+		fatal(err)
+	}
 	solver, err := satsolver.NewSolver()
-	if err != nil { panic(err) }
-	scanner := bufio.NewScanner(os.Stdin)
-	var vars uint32
-	var clause []satsolver.Lit
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" || strings.HasPrefix(line, "c") { continue }
-		if strings.HasPrefix(line, "p") {
-			fields := strings.Fields(line); parsed, parseErr := strconv.ParseUint(fields[2], 10, 32); if parseErr != nil { panic(parseErr) }; vars = uint32(parsed)
-			for i := uint32(0); i < vars; i++ { if _, err = solver.NewVar(); err != nil { panic(err) } }; continue
-		}
-		fields := strings.Fields(line)
-		for _, field := range fields {
-			n, parseErr := strconv.Atoi(field)
-			if parseErr != nil { panic(parseErr) }
-			if n == 0 { if _, err = solver.AddClause(clause); err != nil { panic(err) }; clause = nil; continue }
-			variable := satsolver.Var(abs(n) - 1)
-			literal, makeErr := satsolver.MakeLit(variable, n < 0); if makeErr != nil { panic(makeErr) }
-			clause = append(clause, literal)
+	if err != nil {
+		fatal(err)
+	}
+	for i := uint32(0); i < formula.NumVars; i++ {
+		if _, err = solver.NewVar(); err != nil {
+			fatal(err)
 		}
 	}
-	if len(clause) > 0 { if _, err = solver.AddClause(clause); err != nil { panic(err) } }
-	result, err := solver.Solve(); if err != nil { panic(err) }
-	fmt.Println(strings.ToUpper(string(result)))
+	for _, clause := range formula.Clauses {
+		if _, err = solver.AddClause(clause); err != nil {
+			fatal(err)
+		}
+	}
+	result, err := solver.Solve()
+	if err != nil {
+		fatal(err)
+	}
+	fmt.Println(result)
 }
 
-func abs(value int) int { if value < 0 { return -value }; return value }
+func fatal(err error) {
+	fmt.Fprintln(os.Stderr, err)
+	os.Exit(1)
+}

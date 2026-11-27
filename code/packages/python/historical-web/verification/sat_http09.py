@@ -31,6 +31,10 @@ def _cnf(length: int, mutant: bool = False) -> str:
         clauses.append(())
     else:
         clauses.append(tuple(bad))
+        if mutant:
+            # Pin byte zero to zero so the SAT control has a concrete
+            # forbidden witness, not merely an existential SAT result.
+            clauses.extend((-literal,) for literal in byte_clause(0, 0))
         if not mutant:
             for position, selector in enumerate(bad):
                 for value in range(0x21, 0x7F):
@@ -42,13 +46,18 @@ def _cnf(length: int, mutant: bool = False) -> str:
 
 
 def _solve(cnf: str) -> str:
-    go = os.environ.get("HWEB_GO", "/workspace/.coding-adventures-tools/go/bin/go")
+    go = os.environ.get("HWEB_GO", "go")
     bridge = Path(__file__).with_name("go_sat")
     result = subprocess.run(
-        [go, "run", "."], cwd=bridge, input=cnf, text=True,
-        capture_output=True, check=True,
+        [go, "run", "."],
+        cwd=bridge,
+        input=cnf,
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
     )
-    return result.stdout.strip()
+    return result.stdout.strip().upper()
 
 
 def _replay() -> int:

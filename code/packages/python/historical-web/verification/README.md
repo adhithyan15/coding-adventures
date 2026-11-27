@@ -9,8 +9,8 @@ It then replays every octet payload in that bound through the public parser.
 Run from this package directory:
 
 ```sh
-PATH=/workspace/.coding-adventures-tools/go/bin:$PATH \
-  PYTHONPATH=src .venv/bin/python verification/sat_http09.py
+PATH=/path/to/go-1.26/bin:$PATH PYTHONPATH=src \
+  .venv/bin/python verification/sat_http09.py
 ```
 
 The observed run reports 3 UNSAT SAT-model queries, a SAT negative control, and
