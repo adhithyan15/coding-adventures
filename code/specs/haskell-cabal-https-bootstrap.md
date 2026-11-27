@@ -8,7 +8,7 @@ CI uses canonical `https://hackage.haskell.org/` while retaining Cabal's built-i
 
 ## Workflow behavior
 
-Before `haskell-actions/setup`, a short Python block in `.github/workflows/ci.yml` creates a unique config file beneath `RUNNER_TEMP`. It resolves the temporary root and newly created file, rejects a path outside that root or containing CR/LF, and writes UTF-8 without BOM with LF newlines:
+Before `haskell-actions/setup`, a short Bash block in `.github/workflows/ci.yml` creates a unique directory with `mktemp -d` beneath `RUNNER_TEMP`. It writes the config at that directory's `config` path using `printf`, with exactly these UTF-8/LF bytes:
 
 ```
 repository hackage.haskell.org
@@ -16,16 +16,16 @@ repository hackage.haskell.org
   secure: True
 ```
 
-Creation must be exclusive (no overwrite or symlink/reparse escape). It appends one `CABAL_CONFIG=<native absolute path>` assignment to `GITHUB_ENV`, preserving existing bytes and lines. The config file persists for later steps. Failure to validate required runner inputs, create/write the file, or append the environment entry fails the step; do not report success if the environment entry was not written. Diagnostics may identify the failed operation but must not print environment contents.
+The block requires nonempty `RUNNER_TEMP` and `GITHUB_ENV`, rejects CR or LF in either path and in the final config path, and runs with the workflow's fail-fast Bash settings. `mktemp` must create a new directory rather than reuse or overwrite one. The runner's native Windows temp path must remain usable from Git Bash and by later Cabal processes. Append one `CABAL_CONFIG=<native absolute path>` assignment to `GITHUB_ENV`; never replace its existing contents. The config persists for later steps. Any validation, directory creation, config write, or environment append failure fails the step; do not continue with Cabal's prior global config. Diagnostics must not print environment contents.
 
-Set the setup action's `cabal-update` to false. In the following existing `Verify Haskell package index` step, run `cabal update` before the existing `cabal list` verification. Later Cabal commands inherit `CABAL_CONFIG` from `GITHUB_ENV`; do not depend on repeatedly passing `--config-file`.
+Set the setup action's `cabal-update` input to false so it cannot contact the old mirror before the new config is active. The existing `Verify Haskell package index` step runs `cabal update` first and then retains its current `cabal list` verification. Later Cabal commands inherit the same config through `GITHUB_ENV`; do not depend on repeatedly passing `--config-file`.
 
 Keep the truthful Haskell step label and existing `cabal list` check in the changed workflow hunk so the CI diff classifier recognizes the Haskell toolchain. Avoid unsafe/shared workflow controls. Verify the actual plan for the complete workflow diff: Haskell is selected, unrelated toolchains are not selected, and `full_build` remains false for an ordinary pull request. The workflow sentinel's existing required-gate behavior remains unchanged.
 
 ## Tests
 
-A focused test extracts and executes the exact inline Python block from the workflow. It covers a temp path containing spaces, existing `GITHUB_ENV` content, exact config bytes and newline/BOM properties, native absolute path export, missing/malformed inputs, write/append failures, and no success after append failure. Test that path CR/LF cannot inject extra environment assignments and that the created config resolves beneath the canonical temp root. Tests must not mutate user Cabal configuration or dump the environment.
+A focused test extracts and executes the exact Bash block from the workflow with the same fail-fast options used by GitHub. It covers a temp path containing spaces, existing `GITHUB_ENV` content, exact config bytes/newline/no-BOM, native absolute config path, missing/malformed inputs, CR/LF injection rejection, config-write and environment-append failures, and failure propagation before Cabal runs. It verifies the setup input is false and the new `cabal update` precedes the existing index query. Tests must not mutate user Cabal configuration or dump environment values.
 
-For integration, read back the assignment emitted by the exact block and run Cabal with only that `CABAL_CONFIG` value (no `--config-file`). Reuse the isolated signed index where available, but prove a package archive absent before the command is fetched successfully through the HTTPS configuration. Record separately whether the signed index was reused and whether the package archive was cold. Preserve the earlier cold test using explicit `--config-file` as separate supporting evidence; it does not prove the workflow's environment-only handoff.
+For integration, run the extracted workflow block, read back its emitted `CABAL_CONFIG` assignment, and invoke Cabal using only that environment value (no `--config-file`). Reuse the isolated signed index where available, but prove a package archive absent before the command is fetched through the HTTPS configuration. Record separately whether the signed index was reused and whether the package archive was cold. Preserve the earlier cold test using explicit `--config-file` as separate supporting evidence; it does not prove the workflow's environment-only handoff.
 
 Use Cabal 3.10.3.0 and GHC 9.4.8 when available. Preserve exact commands, versions, exits, source/input hashes, and sanitized logs. Run focused workflow-classifier tests, emitted-plan checks, and affected source-input/cache checks. At least one actual Cabal command must inherit the config via `CABAL_CONFIG`. No registry upload or rank-statistics source changes are part of this item.
