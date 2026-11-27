@@ -18,21 +18,35 @@ compatibility source and its files and hashes are not rewritten.
 ## Fixture location and shape
 
 The fixture root is `code/specs/fixtures/go-riscv-dmem-ready-v1/`. It currently
-contains canonical `input.json` data and a README. A later reviewed step may
-add `expected_trace.json`, `schema.json`, and fixture-adjacent native adapters.
-No package test imports the fixture or gains file access. A future adapter
-must use the existing external fixture-driver convention.
+contains canonical `input.json`, its strict schema, and an independently
+derived state/timing oracle with a strict schema. A later reviewed step may
+add `expected_trace.json` and fixture-adjacent native adapters. No package test
+imports the fixture or gains file access. A future adapter must use the
+existing external fixture-driver convention.
 
 `input.json` is a strict object with a versioned `schema` string and a `cases`
-array. Each case has a stable `id`, precise flat-RAM mode, `latency_cycles`,
-`ram_bytes`, `max_cycles`, a canonical RV32I program, and initial memory. The
+array, validated by the adjacent input schema. Each case has a stable `id`,
+precise flat-RAM mode, `latency_cycles`, `ram_bytes`, `max_cycles`, a canonical
+RV32I program, and initial memory. The
 compatibility case repeats the exact D05 program and initial RAM and carries a
-tagged `source` reference to the D05 input path and SHA-256 below. The repeated
-bytes make the corpus self-contained while the tag preserves provenance; a
-consumer must verify they match the referenced input. Unknown properties are
-rejected. `input.json` is canonical data, not yet backed by a published schema
-or expected output. Its current SHA-256 is
+tagged `source` reference to the D05 input path and SHA-256 below. The
+`source.fixture` value is relative to `code/specs/fixtures/`, so it resolves to
+`code/specs/fixtures/go-riscv-d05-v1/input.json`. The repeated bytes make the
+corpus self-contained while the tag preserves provenance; a consumer must
+verify they match the referenced input. Unknown properties are rejected.
+`input.json` is not yet accompanied by a full expected pipeline trace. Its
+current SHA-256 is
 `800486ce328d06263a6e8626964c45ec2b50aff1edbdb48c6a09b401c1213356`.
+
+`expected_oracle.json` records only values derivable from instruction decoding,
+the independent sequential semantics, and the reviewed timing arithmetic:
+request and wait events, store receipts, retirement/fault state, full registers
+and RAM, and aggregate counters. It contains no per-cycle pipeline stages and
+is not a captured trace. Its SHA-256 is
+`3b49a95bc30a02a95cebd64f811419229c6e69c23f314d751a1298d69751d700`. The
+schemas validate JSON shape; fixture drivers must additionally check
+cross-field invariants such as unique initial addresses, program fit, event
+ordering, and exact latency formulas.
 
 `expected_trace.json` is a strict object with a versioned `schema`, the SHA-256
 of the exact `input.json` bytes, and one expected result per case. An expected
