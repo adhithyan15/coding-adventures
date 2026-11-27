@@ -52,16 +52,21 @@ for _, case in ipairs(fixture_data.cases) do
 end
 
 local maximum_pairs = {}
-for index = 1, 10000 do
-    maximum_pairs[index] = {
-        baseline_ns = 1,
-        candidate_ns = 1,
-        order = index % 2 == 1 and "baseline-first" or "candidate-first",
-    }
+if os.getenv("CA_COVERAGE_MODE") == "1" then
+    for index = 1, 10001 do maximum_pairs[index] = false end
+    rejects(function() benchmark.analyze(maximum_pairs, 0, 1) end, "at most 10000 pairs")
+else
+    for index = 1, 10000 do
+        maximum_pairs[index] = {
+            baseline_ns = 1,
+            candidate_ns = 1,
+            order = index % 2 == 1 and "baseline-first" or "candidate-first",
+        }
+    end
+    equal(benchmark.analyze(maximum_pairs, 95, 1.05).ratio, 1.0, "analysis accepts 10000 pairs")
+    maximum_pairs[10001] = false
+    rejects(function() benchmark.analyze(maximum_pairs, 0, 1) end, "at most 10000 pairs")
 end
-equal(benchmark.analyze(maximum_pairs, 95, 1.05).ratio, 1.0, "analysis accepts 10000 pairs")
-maximum_pairs[10001] = false
-rejects(function() benchmark.analyze(maximum_pairs, 0, 1) end, "at most 10000 pairs")
 
 local config = { pairs = 5, confidence_percent = 95, minimum_factor = 1.05, seed = -5, target_ns = 100, max_batch = 16 }
 local first_tick = 0
@@ -184,11 +189,13 @@ metadata_report.invocation = { [[brace { [ ], comma, quote " slash \]] }
 equal(benchmark.from_json(benchmark.to_json(metadata_report)).invocation[1], [[brace { [ ], comma, quote " slash \]], "escaped string punctuation is not counted as structure")
 local absent_metadata = benchmark.from_json(portable)
 equal(absent_metadata.workload, nil, "metadata absence remains valid")
-local maximum_pairs, large_pairs = 10000, {}
-for i = 1, maximum_pairs do large_pairs[i] = { baseline_ns = 1, candidate_ns = 1, order = i % 2 == 1 and "baseline-first" or "candidate-first" } end
-local large_report = { config = { pairs = maximum_pairs, confidence_percent = 95, minimum_factor = 1.05, seed = 0, target_ns = 1, max_batch = 1 },
-    batch_size = 1, pairs = large_pairs, analysis = benchmark.analyze(large_pairs, 95, 1.05) }
-equal(#benchmark.from_json(benchmark.to_json(large_report)).pairs, maximum_pairs, "valid maximum-pair report fits parser caps")
+if os.getenv("CA_COVERAGE_MODE") ~= "1" then
+    local maximum_pairs, large_pairs = 10000, {}
+    for i = 1, maximum_pairs do large_pairs[i] = { baseline_ns = 1, candidate_ns = 1, order = i % 2 == 1 and "baseline-first" or "candidate-first" } end
+    local large_report = { config = { pairs = maximum_pairs, confidence_percent = 95, minimum_factor = 1.05, seed = 0, target_ns = 1, max_batch = 1 },
+        batch_size = 1, pairs = large_pairs, analysis = benchmark.analyze(large_pairs, 95, 1.05) }
+    equal(#benchmark.from_json(benchmark.to_json(large_report)).pairs, maximum_pairs, "valid maximum-pair report fits parser caps")
+end
 
 rejects(function() benchmark.from_json('{"a":1,"a":2}') end, "duplicate")
 rejects(function() benchmark.from_json('{"a":1,"\\u0061":2}') end, "duplicate")

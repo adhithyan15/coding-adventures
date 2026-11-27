@@ -145,11 +145,21 @@ defmodule CodingAdventures.MicrobenchmarkTest do
     assert {:error, :trailing_json} = Microbenchmark.decode_report("{} false")
     assert {:error, {:invalid_json, _}} = Microbenchmark.decode_report(<<0>>)
     assert {:error, :negative_zero} = Microbenchmark.decode_report("{\"value\":-0}")
+    assert {:error, :invalid_report} = Microbenchmark.decode_report(~S("-0"))
+
+    assert {:error, {:invalid_json, _}} =
+             Microbenchmark.decode_report(String.duplicate("x", 1024 * 1024))
 
     assert {:error, :json_bounds} =
              Microbenchmark.decode_report(
                String.duplicate("[", 129) <> "0" <> String.duplicate("]", 129)
              )
+
+    at_value_limit = "[" <> Enum.join(List.duplicate("0", 65_535), ",") <> "]"
+    assert {:error, :invalid_report} = Microbenchmark.decode_report(at_value_limit)
+
+    over_value_limit = "[" <> Enum.join(List.duplicate("0", 65_536), ",") <> "]"
+    assert {:error, :json_bounds} = Microbenchmark.decode_report(over_value_limit)
 
     assert {:error, _} = Microbenchmark.decode_report("{")
     assert {:error, _} = Microbenchmark.decode_report("[]")
@@ -321,6 +331,7 @@ defmodule CodingAdventures.MicrobenchmarkTest do
     accepted_workloads = [
       {encode_token.("indexed-array-sum-4096"), "indexed-array-sum-4096"},
       {encode_token.("dependent-link-order"), "dependent-link-order"},
+      {encode_token.("workload [ { with escaped \" quote"), "workload [ { with escaped \" quote"},
       {~S("\u2003"), <<0xE2, 0x80, 0x83>>},
       {~S("\ud83d\udca1"), <<0xF0, 0x9F, 0x92, 0xA1>>},
       {~S("\ufffd"), <<0xEF, 0xBF, 0xBD>>},

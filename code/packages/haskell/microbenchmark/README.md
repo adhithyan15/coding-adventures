@@ -13,7 +13,9 @@ cabal run array-microbenchmark -- --replay report.json
 The library depends on the separately publishable `rank-statistics` package.
 The command's 4 MiB report parser is backed by Aeson/Scientific and rejects
 duplicate JSON keys before object decoding. Replay preserves signed 64-bit
-integer tokens. Timings are advisory, with no speed threshold.
+integer tokens. A lexical preflight enforces the depth and 65,536-value bounds
+before Aeson allocates the parsed tree. Timings are advisory, with no speed
+threshold.
 
 Run `cabal test` from this directory. The test suite exercises fake-clock
 calibration, scheduling and failure paths; CLI acceptance should run the

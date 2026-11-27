@@ -31,13 +31,19 @@ subtest 'fixture remains canonical and all analysis cases conform' => sub {
 };
 
 subtest 'analysis accepts the supported maximum and rejects excess before pair inspection' => sub {
-    my @maximum = map {
-        { baseline_ns => 1, candidate_ns => 1, order => $_ % 2 ? 'baseline-first' : 'candidate-first' }
-    } 1 .. 10_000;
-    is(analyze(\@maximum, 95, 1.05)->{ratio}, 1, '10000 pairs are accepted');
-    push @maximum, undef;
-    like dies { analyze(\@maximum, 'invalid confidence', 'invalid factor') },
-        qr/at most 10000 pairs/, '10001 pairs are rejected before pair and parameter validation';
+    if ($ENV{CA_COVERAGE_MODE}) {
+        my @excess = (undef) x 10_001;
+        like dies { analyze(\@excess, 'invalid confidence', 'invalid factor') },
+            qr/at most 10000 pairs/, 'oversized input is rejected before pair and parameter validation';
+    } else {
+        my @maximum = map {
+            { baseline_ns => 1, candidate_ns => 1, order => $_ % 2 ? 'baseline-first' : 'candidate-first' }
+        } 1 .. 10_000;
+        is(analyze(\@maximum, 95, 1.05)->{ratio}, 1, '10000 pairs are accepted');
+        push @maximum, undef;
+        like dies { analyze(\@maximum, 'invalid confidence', 'invalid factor') },
+            qr/at most 10000 pairs/, '10001 pairs are rejected before pair and parameter validation';
+    }
 };
 
 subtest 'collector calibrates, balances and reproduces its schedule' => sub {
@@ -144,10 +150,12 @@ subtest 'strict report replay preserves signed 64-bit integer tokens' => sub {
     my $without_metadata = { %$report };
     delete @{$without_metadata}{qw(workload invocation revision runtime os arch)};
     ok(report_from_json(report_to_json($without_metadata)), 'complete metadata absence is valid');
-    my @large_pairs = map { { baseline_ns => 1, candidate_ns => 1, order => $_ % 2 ? 'baseline-first' : 'candidate-first' } } 1 .. 10_000;
-    my $large = { config => { pairs => 10_000, confidence_percent => 95, minimum_factor => 1.05, seed => 0, target_ns => 1, max_batch => 1 },
-        batch_size => 1, pairs => \@large_pairs, analysis => analyze(\@large_pairs, 95, 1.05) };
-    is(scalar @{report_from_json(report_to_json($large))->{pairs}}, 10_000, 'valid maximum-pair report fits parser caps');
+    unless ($ENV{CA_COVERAGE_MODE}) {
+        my @large_pairs = map { { baseline_ns => 1, candidate_ns => 1, order => $_ % 2 ? 'baseline-first' : 'candidate-first' } } 1 .. 10_000;
+        my $large = { config => { pairs => 10_000, confidence_percent => 95, minimum_factor => 1.05, seed => 0, target_ns => 1, max_batch => 1 },
+            batch_size => 1, pairs => \@large_pairs, analysis => analyze(\@large_pairs, 95, 1.05) };
+        is(scalar @{report_from_json(report_to_json($large))->{pairs}}, 10_000, 'valid maximum-pair report fits parser caps');
+    }
     my $escaped_text = { %$report, invocation => ['brace { comma, quote " and slash \\'] };
     is(report_from_json(report_to_json($escaped_text))->{invocation}[0], 'brace { comma, quote " and slash \\', 'escaped string punctuation does not count as JSON structure');
     my $dense = '[' . ('0,' x 100_000) . '0]';

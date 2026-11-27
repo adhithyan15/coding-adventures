@@ -54,4 +54,7 @@ array CLI continues to emit `indexed-array-sum-4096`.
 `src/coding_adventures/microbenchmark/init.lua` only and requires more than
 80% with a nonzero denominator. The native C clock shim, test/CLI wrapper files,
 and sibling dependency modules are excluded; their native and installed
-consumer checks still run separately.
+consumer checks still run separately. BUILD runs the full suite without
+instrumentation, then uses a deterministic coverage pass that skips only the
+expensive positive 10,000-pair analysis and replay vectors; it still checks the
+10,001-pair early rejection.

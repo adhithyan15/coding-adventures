@@ -290,6 +290,16 @@ let test_replay () =
             value.workload
       | None -> Alcotest.fail "expected metadata")
     accepted_workloads;
+  let bracketed_workload =
+    String.make 130 '[' ^ " \\\"[{}]" ^ String.make 130 ']'
+  in
+  let bracketed_token = Yojson.Safe.to_string (`String bracketed_workload) in
+  (match (unwrap (replay_report (with_workload bracketed_token))).metadata with
+  | Some value ->
+      Alcotest.check Alcotest.string
+        "quoted brackets and escaped quotes are metadata" bracketed_workload
+        value.workload
+  | None -> Alcotest.fail "expected metadata");
   let invalid_workloads =
     [
       "\"\"";
@@ -316,6 +326,23 @@ let test_replay () =
         ("invalid workload: " ^ token)
         (replay_report (with_workload token)))
     invalid_workloads;
+  assert_error "unknown field"
+    (replay_report
+       (replace_once "\"batch_size\":1" "\"extra\":1,\"batch_size\":1" json));
+  ignore
+    (unwrap (replay_report (encode_report { report with metadata = None })));
+  assert_error "JSON byte bound"
+    (replay_report (String.make ((4 * 1024 * 1024) + 1) ' '));
+  assert_error "nesting bound"
+    (replay_report (String.make 129 '[' ^ String.make 129 ']'));
+  let too_many_values =
+    "[" ^ String.concat "," (List.init 65_536 (fun _ -> "0")) ^ "]"
+  in
+  (match replay_report too_many_values with
+  | Error message ->
+      Alcotest.check Alcotest.string "preflight value count"
+        "report exceeds JSON value limit" message
+  | Ok _ -> Alcotest.fail "JSON value budget was not enforced before decoding");
   let pairs = [ pair; { pair with order = Baseline_first } ] in
   let analysis2 = unwrap (analyze pairs 95 1.05) in
   assert_error "unbalanced report"
@@ -351,7 +378,11 @@ let test_replay () =
       config = many_config;
       pairs = many_pairs;
       analysis = many_analysis;
-      metadata = None;
+      metadata =
+        Some
+          (default_metadata
+             (List.init 256 (fun _ -> "arg"))
+             bracketed_workload "OCaml 5.2.1" "linux" "x86_64");
     }
   in
   ignore (unwrap (replay_report (encode_report many_report)))

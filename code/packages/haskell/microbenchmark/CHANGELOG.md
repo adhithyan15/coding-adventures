@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Enforce the semantic JSON value budget before Aeson allocates the replay tree.
 - Validate present replay workload IDs using the exact ASCII blank set and reject NULs and malformed surrogate escapes.
 
 - Add paired collection, exact-rank analysis, strict report replay, and an indexed-array CLI.

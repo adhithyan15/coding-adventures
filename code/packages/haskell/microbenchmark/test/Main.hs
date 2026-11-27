@@ -10,7 +10,7 @@ import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BSC
 import Data.Int (Int64)
 import Data.IORef (IORef, newIORef, readIORef, atomicModifyIORef', modifyIORef')
-import Data.List (isInfixOf)
+import Data.List (intercalate, isInfixOf)
 import Data.Array (listArray)
 import Microbenchmark
 import System.Exit (exitFailure)
@@ -189,6 +189,10 @@ replayTests = do
     assert "unknown field rejected" (isLeft (replayReport unknownField))
     assert "size limit enforced" (isLeft (replayReport oversized))
     assert "nesting bound checked before JSON parse" (isLeft (replayReport tooDeep))
+    let tooManyValues = BSC.pack ("[" ++ intercalate "," (replicate 65536 "0") ++ "]")
+    assert "JSON value budget is enforced before decoding" (case replayReport tooManyValues of
+        Left message -> message == "report exceeds JSON value limit"
+        Right _ -> False)
     let maximumPairs =
             [ Pair 1 1 (if even index then BaselineFirst else CandidateFirst)
             | index <- [0..9999]
@@ -196,6 +200,12 @@ replayTests = do
     assert "analysis accepts 10000 pairs" (isRight (analyze maximumPairs 95 1.05))
     assert "analysis rejects 10001 pairs" (isLeft (analyze (maximumPairs ++ [pair]) 95 1.05))
     assert "analysis rejects infinite input after a bounded prefix" (isLeft (analyze (repeat pair) 95 1.05))
+    maximumAnalysis <- right (analyze maximumPairs 95 1.05)
+    let maximumConfig = config { configPairs = 10000 }
+        maximumMetadata = metadata { metadataInvocation = replicate 256 "arg" }
+        maximumReport = Report maximumConfig 1 maximumPairs maximumAnalysis (Just maximumMetadata)
+    assert "maximum metadata report stays within the exact JSON value budget"
+        (isRight (replayReport (encodeReport maximumReport)))
     let unbalancedConfig = config { configPairs = 2 }
         unbalancedPairs = [pair, pair { pairOrder = BaselineFirst }]
     unbalancedAnalysis <- right (analyze unbalancedPairs 95 1.05)

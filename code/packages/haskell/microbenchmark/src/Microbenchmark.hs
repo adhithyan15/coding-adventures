@@ -235,23 +235,38 @@ replayReport bytes
 -- A lexical key pass rejects duplicates before Aeson collapses them; Aeson
 -- remains responsible for the complete JSON grammar and decoded value tree.
 preflightKeys :: BS.ByteString -> Either String ()
-preflightKeys input = go 0 []
+preflightKeys input = go 0 [] 0
   where
     size = BS.length input
     byte = BS.index input
     skip i | i < size && byte i `elem` [9, 10, 13, 32] = skip (i + 1)
            | otherwise = i
-    go i stack
+    addValue count =
+        let next = count + 1
+         in if next > 65536 then Left "report exceeds JSON value limit" else Right next
+    go :: Int -> [Maybe (Set.Set String)] -> Int -> Either String ()
+    go i stack values
         | i >= size = Right ()
         | byte i == 34 = do
             end <- stringEnd (i + 1)
             let after = skip (end + 1)
-            stack' <- if after < size && byte after == 58 then insertKey i end after stack else Right stack
-            go (end + 1) stack'
-        | byte i == 123 = if length stack >= 128 then Left "report exceeds nesting limit" else go (i + 1) (Just Set.empty : stack)
-        | byte i == 91 = if length stack >= 128 then Left "report exceeds nesting limit" else go (i + 1) (Nothing : stack)
-        | byte i == 125 || byte i == 93 = go (i + 1) (drop 1 stack)
-        | otherwise = go (i + 1) stack
+                isKey = after < size && byte after == 58
+            stack' <- if isKey then insertKey i end after stack else Right stack
+            values' <- if isKey then Right values else addValue values
+            go (end + 1) stack' values'
+        | byte i == 123 = do
+            if length stack >= 128 then Left "report exceeds nesting limit" else Right ()
+            values' <- addValue values
+            go (i + 1) (Just Set.empty : stack) values'
+        | byte i == 91 = do
+            if length stack >= 128 then Left "report exceeds nesting limit" else Right ()
+            values' <- addValue values
+            go (i + 1) (Nothing : stack) values'
+        | byte i == 125 || byte i == 93 = go (i + 1) (drop 1 stack) values
+        | byte i `elem` [9, 10, 13, 32, 44, 58] = go (i + 1) stack values
+        | otherwise = do
+            values' <- addValue values
+            go (scalarEnd i) stack values'
     stringEnd i | i >= size = Left "unterminated string"
                  | byte i == 92 = stringEnd (i + 2)
                  | byte i == 34 = Right i
@@ -275,6 +290,8 @@ preflightKeys input = go 0 []
                     else Left ("integer field must use an integer JSON token: " ++ key)
     numberEnd i | i >= size || byte i `elem` [9, 10, 13, 32, 44, 93, 125] = i
                 | otherwise = numberEnd (i + 1)
+    scalarEnd i | i >= size || byte i `elem` [9, 10, 13, 32, 44, 58, 91, 93, 123, 125] = i
+                | otherwise = scalarEnd (i + 1)
 
 checkTree :: Int -> Int -> Value -> Either String Int
 checkTree depth nodes value

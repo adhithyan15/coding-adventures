@@ -5045,10 +5045,10 @@ jobs:
             sudo apt-get install -y cpanminus
             # Pre-install Test2::V0 to the system Perl location (requires sudo).
             # Without sudo, cpanm falls back to ~/perl5 which prove cannot find.
-            sudo cpanm --quiet --notest Test2::V0
+            sudo cpanm --quiet --notest Test2::V0 Devel::Cover@1.52
           elif [ "$RUNNER_OS" = "macOS" ]; then
             brew install cpanminus
-            cpanm --quiet --notest Test2::V0
+            cpanm --quiet --notest Test2::V0 Devel::Cover@1.52
           fi
 
       - name: Set up Haskell

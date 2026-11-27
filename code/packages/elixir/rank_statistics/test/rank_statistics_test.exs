@@ -9,6 +9,17 @@ defmodule CodingAdventures.RankStatisticsTest do
     assert values == [1.7976931348623157e308, -1.7976931348623157e308]
     assert {:ok, 2.5} = Stats.median([1.0, 2.0, 3.0, 4.0])
     assert {:ok, 2.0} = Stats.median([1, 3])
+    assert {:ok, singleton} = Stats.median([1])
+    assert singleton == 1.0 and is_float(singleton)
+    assert {:ok, 9_007_199_254_740_992.0} = Stats.median([9_007_199_254_740_993])
+    assert {:ok, {1.0, 6.0}} = Stats.median_interval([1, 2, 3, 4, 5, 6], 95)
+  end
+
+  test "rejects integers outside the finite binary64 range" do
+    unrepresentable = Integer.pow(2, 1024)
+
+    assert {:error, :nonfinite_sample} = Stats.median([unrepresentable])
+    assert {:error, :nonfinite_sample} = Stats.median_interval([1, unrepresentable], 95)
   end
 
   test "midpoint remains correct at subnormal, normal, and maximum-finite boundaries" do

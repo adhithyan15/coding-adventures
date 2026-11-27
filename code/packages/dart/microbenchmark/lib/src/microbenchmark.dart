@@ -325,6 +325,7 @@ String _decodeJsonStringToken(String raw) {
 dynamic _decodeReport(String source) {
   if (utf8.encode(source).length > _maxJsonBytes)
     throw FormatException('input exceeds 4 MiB');
+  _preflightJsonValues(source);
   final tokens = tokenizeJson(source);
   var index = 0, nodes = 0, depth = 0;
   Token peek() => tokens[index];
@@ -400,6 +401,90 @@ dynamic _decodeReport(String source) {
   if (decoded is! Map<String, dynamic>)
     throw FormatException('report root must be an object');
   return _reportFromMap(decoded);
+}
+
+void _preflightJsonValues(String source) {
+  var index = 0;
+  var depth = 0;
+  var values = 0;
+
+  int skipWhitespace(int position) {
+    while (position < source.length) {
+      final code = source.codeUnitAt(position);
+      if (code != 0x20 && (code < 0x09 || code > 0x0d)) break;
+      position++;
+    }
+    return position;
+  }
+
+  void addValue() {
+    values++;
+    if (values > 65536) throw const FormatException('too many JSON values');
+  }
+
+  while (index < source.length) {
+    final code = source.codeUnitAt(index);
+    if (code == 0x20 ||
+        (code >= 0x09 && code <= 0x0d) ||
+        code == 0x2c ||
+        code == 0x3a) {
+      index++;
+      continue;
+    }
+    if (code == 0x22) {
+      index++;
+      var escaped = false;
+      var closed = false;
+      while (index < source.length) {
+        final next = source.codeUnitAt(index++);
+        if (escaped) {
+          escaped = false;
+        } else if (next == 0x5c) {
+          escaped = true;
+        } else if (next == 0x22) {
+          closed = true;
+          break;
+        }
+      }
+      if (closed) {
+        final afterString = skipWhitespace(index);
+        if (afterString >= source.length ||
+            source.codeUnitAt(afterString) != 0x3a) {
+          addValue();
+        }
+      }
+      continue;
+    }
+    if (code == 0x7b || code == 0x5b) {
+      addValue();
+      depth++;
+      if (depth > 128) throw const FormatException('too deeply nested');
+      index++;
+      continue;
+    }
+    if (code == 0x7d || code == 0x5d) {
+      depth--;
+      index++;
+      continue;
+    }
+
+    addValue();
+    while (index < source.length) {
+      final next = source.codeUnitAt(index);
+      if (next == 0x20 ||
+          (next >= 0x09 && next <= 0x0d) ||
+          next == 0x2c ||
+          next == 0x3a ||
+          next == 0x5b ||
+          next == 0x5d ||
+          next == 0x7b ||
+          next == 0x7d ||
+          next == 0x22) {
+        break;
+      }
+      index++;
+    }
+  }
 }
 
 Report _reportFromMap(Map<String, dynamic> map) {

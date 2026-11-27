@@ -37,4 +37,6 @@ instrumented.
 `BUILD` measures LuaCov 0.17.0-1 executable-line coverage for
 `src/coding_adventures/rank_statistics/init.lua` only and requires more than
 80% with a nonzero denominator. Test, sibling dependency, and C-source files
-are outside this library metric.
+are outside this library metric. BUILD first runs the complete suite normally;
+the instrumented pass uses representative vectors instead of the three
+10,000-value stress vectors, which remain covered by the normal suite.

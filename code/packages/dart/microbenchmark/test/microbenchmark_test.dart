@@ -392,6 +392,15 @@ void main() {
     final tooDeep =
         '${List<String>.filled(129, '[').join()}0${List<String>.filled(129, ']').join()}';
     expect(() => Report.fromJson(tooDeep), throwsFormatException);
+    final quotedDelimiters = jsonEncode('workload [ { with escaped " quote');
+    final quotedReport = encoded.replaceFirst(
+        '"workload":"test"', '"workload":$quotedDelimiters');
+    expect(Report.fromJson(quotedReport).metadata['workload'],
+        'workload [ { with escaped " quote');
+    final tooManyValues =
+        '{"values":[${List<String>.filled(65536, '0').join(',')}]}';
+    expect(() => Report.fromJson(tooManyValues), throwsFormatException,
+        reason: 'value count is rejected before materializing lexer tokens');
     expect(
         () => Report.fromJson(
             List<String>.filled(4 * 1024 * 1024 + 1, ' ').join()),

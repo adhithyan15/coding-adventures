@@ -156,26 +156,88 @@ defmodule CodingAdventures.Microbenchmark do
 
   defp exact_fields(_, _), do: {:error, :fields}
 
-  defp preflight_json(binary) do
-    stripped = Regex.replace(~r/"(?:\\.|[^"\\])*"/, binary, "\"\"")
+  defp preflight_json(binary), do: scan_json_values(binary, 0, 0, false)
 
-    {depth, count} =
-      for <<byte <- stripped>>, reduce: {0, 0} do
-        {depth, count} ->
-          cond do
-            byte in [?{, ?[] -> {depth + 1, if(depth >= 128, do: 65_537, else: count + 1)}
-            byte in [?}, ?]] -> {max(depth - 1, 0), if(depth == 0, do: 65_537, else: count)}
-            byte == ?, -> {depth, count + 1}
-            true -> {depth, count}
-          end
-      end
-
+  # Count semantic JSON values before :json.decode allocates a parsed tree.
+  # Object keys are strings too, but do not consume the value-node budget.
+  defp scan_json_values(<<>>, 0, count, negative_zero) do
     cond do
-      Regex.match?(~r/(?:^|[,:\s])-0(?:[\s,}\]]|$)/, stripped) -> {:error, :negative_zero}
-      depth != 0 or count > 65_536 -> {:error, :json_bounds}
+      negative_zero -> {:error, :negative_zero}
+      count > 65_536 -> {:error, :json_bounds}
       true -> :ok
     end
   end
+
+  defp scan_json_values(<<>>, _depth, _count, _negative_zero), do: {:error, :json_bounds}
+
+  defp scan_json_values(<<byte, rest::binary>>, depth, count, negative_zero)
+       when byte in [9, 10, 13, 32, 44, 58],
+       do: scan_json_values(rest, depth, count, negative_zero)
+
+  defp scan_json_values(<<34, rest::binary>>, depth, count, negative_zero) do
+    case scan_json_string(rest) do
+      {:ok, remaining} ->
+        after_string = skip_json_whitespace(remaining)
+        value_count = if match?(<<58, _::binary>>, after_string), do: count, else: count + 1
+        scan_json_values(after_string, depth, value_count, negative_zero)
+
+      :incomplete ->
+        :ok
+    end
+  end
+
+  defp scan_json_values(<<opener, rest::binary>>, depth, count, negative_zero)
+       when opener in [123, 91] do
+    next_depth = depth + 1
+    next_count = count + 1
+
+    if next_depth > 128 or next_count > 65_536,
+      do: {:error, :json_bounds},
+      else: scan_json_values(rest, next_depth, next_count, negative_zero)
+  end
+
+  defp scan_json_values(<<closer, rest::binary>>, depth, count, negative_zero)
+       when closer in [125, 93] do
+    if depth == 0,
+      do: {:error, :json_bounds},
+      else: scan_json_values(rest, depth - 1, count, negative_zero)
+  end
+
+  defp scan_json_values(binary, depth, count, negative_zero) do
+    {is_negative_zero, rest} = scan_json_scalar(binary, :start)
+    next_count = count + 1
+
+    if next_count > 65_536,
+      do: {:error, :json_bounds},
+      else: scan_json_values(rest, depth, next_count, negative_zero or is_negative_zero)
+  end
+
+  defp scan_json_string(<<>>), do: :incomplete
+  defp scan_json_string(<<92, _escaped, rest::binary>>), do: scan_json_string(rest)
+  defp scan_json_string(<<34, rest::binary>>), do: {:ok, rest}
+  defp scan_json_string(<<_byte, rest::binary>>), do: scan_json_string(rest)
+
+  defp skip_json_whitespace(<<byte, rest::binary>>) when byte in [9, 10, 13, 32],
+    do: skip_json_whitespace(rest)
+
+  defp skip_json_whitespace(binary), do: binary
+
+  defp scan_json_scalar(<<byte, _::binary>> = binary, state)
+       when byte in [9, 10, 13, 32, 44, 58, 123, 125, 91, 93, 34],
+       do: {state == :negative_zero, binary}
+
+  defp scan_json_scalar(<<byte, rest::binary>>, state) do
+    next_state =
+      case {state, byte} do
+        {:start, 45} -> :minus
+        {:minus, 48} -> :negative_zero
+        _ -> :other
+      end
+
+    scan_json_scalar(rest, next_state)
+  end
+
+  defp scan_json_scalar(<<>>, state), do: {state == :negative_zero, <<>>}
 
   defp normalize_config(c) when is_map(c) do
     %{

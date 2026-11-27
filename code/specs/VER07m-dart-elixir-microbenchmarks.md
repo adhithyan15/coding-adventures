@@ -95,6 +95,9 @@ validate integer tokens as integers in the signed-64-bit domain before
 serializing to the shared contract. Test both signed endpoints and reject
 float/exponent forms for integer fields. Both profiles bound replay to 10,000
 pairs, 4 MiB of UTF-8 JSON, nesting depth 128, and 65,536 JSON values. The
+value budget counts the root and every array element or object member value;
+object member names do not count. Replay implementations preflight the value
+and depth bounds before materializing a lexer token list or parsed JSON tree.
 command-line replay adapters enforce the 4 MiB file limit while reading,
 before allocating the complete file or decoding UTF-8. A parser-level limit
 alone does not bound the path adapter's allocation.

@@ -2,6 +2,8 @@
 
 ## 0.1.0
 
+- Count semantic JSON values before decoding replay input, including root and container values while excluding object keys.
+- Scan replay scalars without copying attacker-controlled token bytes into temporary lists.
 - Validate replay workload IDs using the exact ASCII blank set and reject NULs and malformed surrogate escapes.
 
 - Add rank-statistics dependency, paired collection, replay, and indexed-array CLI.
