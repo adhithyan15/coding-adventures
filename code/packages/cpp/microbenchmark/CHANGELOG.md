@@ -5,6 +5,8 @@
 ### Fixed
 - Express the shuffle rejection threshold without unary minus on an unsigned
   value so MSVC `/WX` accepts the sampler; preserve its seeded schedule.
+- Enforce the complete optional metadata group and validate every metadata
+  string before replay or serialization, preserving empty invocation values.
 
 ## 0.1.0
 

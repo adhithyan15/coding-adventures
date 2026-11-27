@@ -61,4 +61,29 @@ class MicrobenchmarkArrayDriverTest < Minitest::Test
     assert_empty output.string
     assert_match(/pairs must be an integer/, errors.string)
   end
+
+  def test_cli_skips_empty_ambient_revision_labels_and_rejects_empty_explicit_label
+    arguments = ["--pairs", "1", "--target-ns", "1", "--max-batch", "1"]
+    [
+      [{"GIT_REVISION" => "", "GITHUB_SHA" => "fallback"}, "fallback"],
+      [{"GIT_REVISION" => "", "GITHUB_SHA" => ""}, "unknown"],
+      [{"GIT_REVISION" => "primary", "GITHUB_SHA" => "secondary"}, "primary"]
+    ].each do |environment, expected|
+      output = StringIO.new
+      errors = StringIO.new
+      status = MB::CLI.run(arguments, output: output, error_output: errors,
+        environment: environment, program: "array-microbenchmark")
+      assert_equal 0, status, errors.string
+      assert_equal expected, JSON.parse(output.string).fetch("revision")
+      assert_equal 1, MB.replay_json(output.string).pairs.length
+    end
+
+    output = StringIO.new
+    errors = StringIO.new
+    status = MB::CLI.run([*arguments, "--revision", ""], output: output,
+      error_output: errors, environment: {}, program: "array-microbenchmark")
+    assert_equal 1, status
+    assert_empty output.string
+    assert_match(/revision metadata/, errors.string)
+  end
 end

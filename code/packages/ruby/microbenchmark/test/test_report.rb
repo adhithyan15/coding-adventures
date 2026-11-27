@@ -62,28 +62,114 @@ class MicrobenchmarkReportTest < Minitest::Test
   end
 
   def test_cli_metadata_survives_as_json_while_replay_checks_report
-    raw = simple_report.to_h.merge("workload" => "example", "revision" => "abc")
+    raw = simple_report.to_h.merge(
+      "workload" => "example",
+      "invocation" => [],
+      "revision" => "abc",
+      "runtime" => "Ruby",
+      "os" => "test",
+      "arch" => "test"
+    )
     parsed = MB.replay_json(JSON.generate(raw))
     assert_equal simple_report.pairs, parsed.pairs
   end
 
-  def test_workload_metadata_is_validated_before_core_projection
-    base = JSON.generate(simple_report.to_h).sub(/\}\z/, "")
-    accepted = [
-      '"dependent-link-order"', '"\\u2003"', '"\\ud83d\\ude00"',
-      '"\\ufffd"', '"\\\\uD800"'
-    ]
-    accepted.each do |token|
-      assert_equal simple_report.pairs, MB.replay_json("#{base},\"workload\":#{token}}").pairs
-    end
+  def test_complete_metadata_group_is_validated_before_core_projection
+    report = simple_report
+    complete = report.to_h.merge(
+      "workload" => "dependent-link-order",
+      "invocation" => [],
+      "revision" => "r",
+      "runtime" => "Ruby",
+      "os" => "test",
+      "arch" => "test"
+    )
+    assert_equal report, MB.replay_report(complete)
+    assert_equal report, MB.replay_json(JSON.generate(complete))
+    assert_equal report, MB.replay_report(complete.merge("invocation" => [""]))
+    assert_equal report, MB.replay_json(JSON.generate(complete.merge("invocation" => [""])))
 
-    rejected = [
-      '""', '" \\t\\n\\r\\f\\u000b"', '"\\u0000"', '"x\\u0000y"',
-      "null", "17", "true", "[]", '"\\ud800"', '"\\udfff"'
-    ]
-    rejected.each do |token|
-      assert_raises(ArgumentError) { MB.replay_json("#{base},\"workload\":#{token}}") }
+    %w[workload invocation revision runtime os arch].each do |field|
+      partial = complete.dup
+      partial.delete(field)
+      assert_raises(ArgumentError, "accepted missing #{field}") { MB.replay_report(partial) }
+      assert_raises(ArgumentError, "accepted missing #{field}") { MB.replay_json(JSON.generate(partial)) }
     end
+    profile_only = report.to_h.merge("profile" => "release")
+    assert_raises(ArgumentError) { MB.replay_report(profile_only) }
+    assert_raises(ArgumentError) { MB.replay_json(JSON.generate(profile_only)) }
+
+    %w[revision runtime os arch profile].each do |field|
+      [nil, "", "bad\0value"].each do |invalid|
+        malformed = complete.merge("profile" => "release", field => invalid)
+        assert_raises(ArgumentError, "accepted #{field}=#{invalid.inspect}") { MB.replay_report(malformed) }
+        assert_raises(ArgumentError, "accepted #{field}=#{invalid.inspect}") { MB.replay_json(JSON.generate(malformed)) }
+      end
+      whitespace = complete.merge("profile" => "release", field => " ")
+      assert_equal report, MB.replay_report(whitespace)
+      assert_equal report, MB.replay_json(JSON.generate(whitespace))
+    end
+    [nil, "", " \t\n\r\f\v", "\0", "x\0y"].each do |invalid|
+      malformed = complete.merge("workload" => invalid)
+      assert_raises(ArgumentError) { MB.replay_report(malformed) }
+      assert_raises(ArgumentError) { MB.replay_json(JSON.generate(malformed)) }
+    end
+    [nil, [1], ["bad\0arg"]].each do |invalid|
+      malformed = complete.merge("invocation" => invalid)
+      assert_raises(ArgumentError) { MB.replay_report(malformed) }
+      assert_raises(ArgumentError) { MB.replay_json(JSON.generate(malformed)) }
+    end
+    ["\u2003", "😀", "\uFFFD", "\\uD800"].each do |accepted|
+      generic = complete.merge("workload" => accepted)
+      assert_equal report, MB.replay_report(generic)
+      assert_equal report, MB.replay_json(JSON.generate(generic))
+    end
+  end
+
+  def test_json_ingress_rejects_duplicate_decoded_members_and_unknown_root_keys
+    report = simple_report
+    complete = report.to_h.merge(
+      "workload" => "generic-workload", "invocation" => [], "revision" => "shared",
+      "runtime" => "shared", "os" => "test", "arch" => "test"
+    )
+    text = JSON.generate(complete)
+    assert_equal report, MB.replay_json(text)
+    # The same member name appears in the root and config objects, not one scope.
+
+    invalid = [
+      text.sub('"pairs":5', '"pairs":5,"pairs":5'),
+      text.sub('"baseline_ns":1', '"baseline_ns":1,"baseline_ns":1'),
+      text.sub('"verdict":"inconclusive"', '"verdict":"inconclusive","verdict":"inconclusive"'),
+      text.sub('"revision":"shared"', '"revision":"shared","revision":"other"'),
+      text.sub('"pairs":5', '"pairs":5,"pa\\u0069rs":5')
+    ]
+    invalid.each { |duplicate| assert_raises(ArgumentError) { MB.replay_json(duplicate) } }
+    assert_raises(ArgumentError) { MB.replay_json(text.sub(/\}\z/, ",}")) }
+
+    assert_raises(ArgumentError) { MB.replay_report(complete.merge("extra" => true)) }
+    assert_raises(ArgumentError) { MB.replay_json(JSON.generate(complete.merge("extra" => true))) }
+  end
+
+  def test_json_ingress_accepts_maximum_balanced_report_with_reused_pair_member_names
+    pairs = Array.new(MB::MAX_PAIRS) do |index|
+      MB::Pair.new(
+        baseline_ns: 1,
+        candidate_ns: 1,
+        order: index.even? ? "baseline-first" : "candidate-first"
+      )
+    end
+    config = MB::Config.defaults.to_h.merge("pairs" => MB::MAX_PAIRS)
+    analysis = MB.analyze(pairs)
+    raw = {
+      "config" => config,
+      "batch_size" => 1,
+      "pairs" => pairs.map(&:to_h),
+      "analysis" => analysis.to_h
+    }
+
+    replayed = MB.replay_json(JSON.generate(raw))
+    assert_equal MB::MAX_PAIRS, replayed.pairs.length
+    assert_equal analysis, replayed.analysis
   end
 
   private
