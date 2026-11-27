@@ -1500,10 +1500,19 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 
 func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	packageNames := map[string]string{
+		"c": "c/unix-history-simulator", "cpp": "cpp/unix-history-simulator",
+		"csharp": "csharp/unix-history-simulator", "dart": "dart/unix-history-simulator",
+		"fsharp": "fsharp/unix-history-simulator", "go": "go/unix-history-simulator",
+		"java": "java/unix-history-simulator", "kotlin": "kotlin/unix-history-simulator",
+		"lua": "lua/unix-history-simulator", "perl": "perl/unix-history-simulator",
+		"python": "python/unix-history-simulator", "ruby": "ruby/unix_history_simulator",
+		"rust": "rust/unix-history-simulator", "typescript": "typescript/unix-history-simulator",
+	}
 	packages := make([]discovery.Package, 0, len(languages)+1)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
-		name := language + "/unix-history-simulator"
+		name := packageNames[language]
 		packages = append(packages, discovery.Package{Name: name, Language: language})
 		all[name] = true
 	}
@@ -1577,7 +1586,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	}
 	for _, language := range languages {
 		got, err := repositoryInputConsumersForChange([]string{historicalUnixFixturePath}, packages, language)
-		want := map[string]bool{language + "/unix-history-simulator": true}
+		want := map[string]bool{packageNames[language]: true}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Errorf("%s-only fixture selection = %v, err %v; want %v", language, got, err, want)
 		}
@@ -1602,10 +1611,64 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		case "lua":
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixLuaAdapterPath)
 		}
-		name := language + "/unix-history-simulator"
+		name := packageNames[language]
 		if got := repositoryInputsForPackage(name); !reflect.DeepEqual(got, wantInputs) {
 			t.Errorf("%s hash inputs = %v, want %v", name, got, wantInputs)
 		}
+	}
+	if got := repositoryInputsForPackage("ruby/unix-history-simulator"); got != nil {
+		t.Errorf("obsolete Ruby package identity still has cache inputs: %v", got)
+	}
+}
+
+func TestRubyHistoricalUnixFixtureUsesDiscoveredPackageIdentity(t *testing.T) {
+	root := t.TempDir()
+	packageNames := []string{
+		"c/unix-history-simulator", "cpp/unix-history-simulator",
+		"csharp/unix-history-simulator", "dart/unix-history-simulator",
+		"fsharp/unix-history-simulator", "go/unix-history-simulator",
+		"java/unix-history-simulator", "kotlin/unix-history-simulator",
+		"lua/unix-history-simulator", "perl/unix-history-simulator",
+		"python/unix-history-simulator", "ruby/unix_history_simulator",
+		"rust/unix-history-simulator", "typescript/unix-history-simulator",
+	}
+	for _, name := range packageNames {
+		packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(name))
+		if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(packageRoot, "BUILD"), nil, 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	discovered := make(map[string]bool, len(packages))
+	for _, pkg := range packages {
+		discovered[pkg.Name] = true
+	}
+	if len(packages) != len(packageNames) || !discovered["ruby/unix_history_simulator"] || discovered["ruby/unix-history-simulator"] {
+		t.Fatalf("discovered Ruby identities are wrong: %v", discovered)
+	}
+	selected, err := repositoryInputConsumersForChange([]string{historicalUnixFixturePath}, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := make(map[string]bool, len(packageNames))
+	for _, name := range packageNames {
+		want[name] = true
+	}
+	if !reflect.DeepEqual(selected, want) {
+		t.Fatalf("canonical fixture selected %v, want %v", selected, want)
+	}
+	if selected["ruby/unix-history-simulator"] {
+		t.Fatal("fixture selection emitted the obsolete hyphenated Ruby identity")
+	}
+	if got := repositoryInputsForPackage("ruby/unix_history_simulator"); !reflect.DeepEqual(got, []string{historicalUnixFixturePath}) {
+		t.Fatalf("Ruby cache inputs = %v, want only the shared fixture", got)
 	}
 }
 
@@ -1621,6 +1684,9 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	}
 	for _, language := range languages {
 		name := language + "/unix-history-simulator"
+		if language == "ruby" {
+			name = "ruby/unix_history_simulator"
+		}
 		packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(name))
 		if err := os.MkdirAll(packageRoot, 0o755); err != nil {
 			t.Fatal(err)
