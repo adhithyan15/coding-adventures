@@ -33,6 +33,16 @@ MEM-time store behavior. `Core.PreciseStoreReceipts()` returns copies of
 successful WB store commits; `Core.PreciseFaultOutcome()` returns the terminal
 fault identity when one was selected.
 
+`CoreConfig.DataMemoryLatencyCycles` optionally sets deterministic flat-RAM
+service latency for this mode; zero means one cycle. Alternatively,
+`NewRiscVCoreWithPreciseMemoryLatency(config, memorySize, cycles)` sets it
+directly, with zero using the same one-cycle default. Each additional cycle
+holds the pending MEM token in order. Load data is exposed to typed MEM
+forwarding only when its request is ready, and stores still change RAM only at
+WB. `Core.PreciseMemoryRequestEvents()` returns detached issue, wait, and
+ready-cycle evidence; a store's timing completion does not replace its WB
+commit receipt.
+
 ## Supported Instructions
 
 ### RV32I Base Integer (37 instructions)
