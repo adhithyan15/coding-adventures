@@ -118,9 +118,8 @@ def main() -> None:
         "vector_count": len(vectors),
         "fixture_sha256": hashlib.sha256(payload).hexdigest(),
     }
-    (output / "midpoint-vectors-v1.meta.json").write_text(
-        json.dumps(metadata, indent=2) + "\n", encoding="utf-8"
-    )
+    metadata_payload = (json.dumps(metadata, indent=2) + "\n").encode("utf-8")
+    (output / "midpoint-vectors-v1.meta.json").write_bytes(metadata_payload)
 
 
 if __name__ == "__main__":
