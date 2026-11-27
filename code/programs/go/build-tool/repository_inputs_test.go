@@ -1497,7 +1497,15 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 }
 
 func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	for _, consumer := range repositoryInputConsumers {
+		if consumer.name == "ruby/unix-history-simulator" {
+			t.Fatal("historical Unix fixture must not register the absent Ruby package")
+		}
+	}
+	if inputs := repositoryInputsForPackage("ruby/unix-history-simulator"); inputs != nil {
+		t.Fatalf("absent Ruby historical Unix package has fallback inputs %v, want none", inputs)
+	}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "perl", "python", "rust", "typescript"}
 	packages := make([]discovery.Package, 0, len(languages)+2)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
@@ -1636,7 +1644,7 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 		"dart/unix-history-simulator", "elixir/unix_history_simulator", "fsharp/unix-history-simulator",
 		"go/unix-history-simulator", "haskell/unix-history-simulator", "java/unix-history-simulator",
 		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "perl/unix-history-simulator",
-		"python/unix-history-simulator", "ruby/unix-history-simulator", "rust/unix-history-simulator",
+		"python/unix-history-simulator", "rust/unix-history-simulator",
 		"typescript/unix-history-simulator",
 	}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
