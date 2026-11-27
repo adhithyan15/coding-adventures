@@ -1,0 +1,27 @@
+@echo off
+npm ci --prefix ../transistors --quiet
+if errorlevel 1 exit /b %errorlevel%
+npm ci --prefix ../logic-gates --quiet
+if errorlevel 1 exit /b %errorlevel%
+npm ci --prefix ../arithmetic --quiet
+if errorlevel 1 exit /b %errorlevel%
+npm ci --prefix ../cpu-simulator --quiet
+if errorlevel 1 exit /b %errorlevel%
+npm ci --prefix ../riscv-simulator --quiet
+if errorlevel 1 exit /b %errorlevel%
+npm ci --quiet
+if errorlevel 1 exit /b %errorlevel%
+npm run build --prefix ../cpu-simulator
+if errorlevel 1 exit /b %errorlevel%
+npm run build --prefix ../riscv-simulator
+if errorlevel 1 exit /b %errorlevel%
+npm run build
+if errorlevel 1 exit /b %errorlevel%
+npm test
+if errorlevel 1 exit /b %errorlevel%
+node --experimental-strip-types ../../../../code/specs/fixtures/os-architecture-v1/verify_profiles.mjs
+if errorlevel 1 exit /b %errorlevel%
+node --experimental-strip-types ../../../../code/specs/fixtures/os-machine-v1/verify_boards.mjs
+if errorlevel 1 exit /b %errorlevel%
+npx vitest run --globals --root ../../../../code/specs fixtures/os-machine-v1/verify_riscv.test.ts
+if errorlevel 1 exit /b %errorlevel%

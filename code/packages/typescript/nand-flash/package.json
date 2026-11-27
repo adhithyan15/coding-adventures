@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/nand-flash",
+  "version": "0.1.0",
+  "description": "A logical SLC NAND flash media simulator for database learning",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["nand", "flash", "database", "storage", "education"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.11"
+  }
+}

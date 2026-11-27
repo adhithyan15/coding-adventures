@@ -1,1 +1,1 @@
-cargo test -p tls13-cipher-suite-offer -- --nocapture
+cargo test --locked -p tls13-cipher-suite-offer -- --nocapture

@@ -1,0 +1,5 @@
+packages:
+  .
+  ../../../specs/fixtures/historical-unix-v1/test-adapters/haskell
+
+tests: True

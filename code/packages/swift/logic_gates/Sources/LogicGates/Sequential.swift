@@ -37,7 +37,7 @@
 /// Both Q and Q̄ are stored explicitly. In a real latch, Q̄ is literally
 /// derived from the cross-coupled gate whose output is the complement of Q.
 /// We store both for convenience (no need to recompute the complement).
-public struct LatchState: Equatable {
+public struct LatchState: Equatable, Sendable {
     /// The primary output. Conventionally the "stored" value.
     public let q: Int
     /// The complementary output. Always equals `1 - q` in valid states.
@@ -55,7 +55,7 @@ public struct LatchState: Equatable {
 ///
 /// In addition to Q and Q̄, we track the internal master-slave state for
 /// educational purposes — showing which latch holds the current data.
-public struct FlipFlopState: Equatable {
+public struct FlipFlopState: Equatable, Sendable {
     public let q: Int
     public let qBar: Int
     /// Snapshot of the master latch's Q output at the moment of evaluation.
@@ -374,6 +374,10 @@ public func shiftRegister(
     serialIn: Int, clock: Int,
     q: [Int] = [0, 0, 0, 0]  // default: 4-bit shift register
 ) throws -> (q: [Int], serialOut: Int, states: [FlipFlopState]) {
+    // Width cap first: before any validation loop or allocation.
+    guard q.count <= maxWidth else {
+        throw LogicGateError.invalidWidth(name: "q", value: q.count)
+    }
     try validateBit(serialIn, name: "serialIn")
     try validateBit(clock, name: "clock")
     for (i, v) in q.enumerated() { try validateBit(v, name: "q[\(i)]") }

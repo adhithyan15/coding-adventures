@@ -2234,6 +2234,37 @@ func normalizedDotnetProjectPath(path string) string {
 
 var buildToolDepsRe = regexp.MustCompile(`(?m)#\s*build-tool:\s*deps\s*=\s*(.+)$`)
 
+// UnresolvedBuildToolDeps lists the `# build-tool: deps=` entries of pkg that
+// name no package in known.  Default resolution drops such entries silently
+// (parseBuildToolDeps); a caller that must not fail open -- the closed-language
+// plan -- asks for them explicitly.  Sorted, unique, read-only.
+func UnresolvedBuildToolDeps(pkg discovery.Package, known map[string]bool) []string {
+	if pkg.BuildContent == "" {
+		return nil
+	}
+	seen := make(map[string]bool)
+	for _, match := range buildToolDepsRe.FindAllStringSubmatch(pkg.BuildContent, -1) {
+		if len(match) < 2 {
+			continue
+		}
+		for _, raw := range strings.FieldsFunc(match[1], func(r rune) bool {
+			return r == ',' || r == ' ' || r == '\t'
+		}) {
+			dep := strings.TrimSpace(raw)
+			if dep == "" || dep == pkg.Name || known[dep] {
+				continue
+			}
+			seen[dep] = true
+		}
+	}
+	var out []string
+	for dep := range seen {
+		out = append(out, dep)
+	}
+	sort.Strings(out)
+	return out
+}
+
 func parseBuildToolDeps(pkg discovery.Package, knownPackageNames map[string]bool) []string {
 	if pkg.BuildContent == "" {
 		return nil

@@ -46,6 +46,10 @@ pub enum Value {
     /// `checked_*`, `div`, `rem`, `div_trunc`, `rem_trunc`, `at`), consumed by `unwrap_or` alone.  It
     /// is never a binder, a parameter, a result or an encoded value (VER04r 16.10 [D23]).
     Opt(Option<Box<Value>>),
+    /// A record or a variant (`ir.data`, S11c-2): the constructor's name and its fields in declaration
+    /// order.  A record's constructor is named like the record, so equality is structural and needs no
+    /// type; the declared field types (which the stream, JSON and TFV writers need) are [`crate::types::Decls`].
+    Con(Rc<str>, Vec<Value>),
 }
 
 impl Value {
@@ -58,7 +62,7 @@ impl Value {
     ///
     /// # Errors
     ///
-    /// `level [ir.data]` for a list, option, record or variant: those belong to a later level
+    /// `level [ir.list]` for a list (the reserved level, R27); options, records and variants convert
     /// and never reach a binder of a document this generator emits.  A tuple converts
     /// component by component (`ir.tuple`).
     pub fn from_eval(v: &EvalValue) -> Result<Value, GenError> {
@@ -78,11 +82,20 @@ impl Value {
                     .map(Value::from_eval)
                     .collect::<Result<Vec<_>, _>>()?,
             ),
-            EvalValue::List(_) | EvalValue::Option(_) | EvalValue::Con { .. } => {
+            EvalValue::Option(None) => Value::Opt(None),
+            EvalValue::Option(Some(inner)) => Value::Opt(Some(Box::new(Value::from_eval(inner)?))),
+            EvalValue::Con { ctor, fields, .. } => Value::Con(
+                Rc::from(ctor.as_str()),
+                fields
+                    .iter()
+                    .map(Value::from_eval)
+                    .collect::<Result<Vec<_>, _>>()?,
+            ),
+            EvalValue::List(_) => {
                 return Err(GenError::level(
-                    Beyond::IrData,
+                    Beyond::IrList,
                     "",
-                    "a list, option, record or variant value needs ir.data",
+                    "a list value is the reserved level ir.list",
                 ))
             }
         })
@@ -176,28 +189,33 @@ mod tests {
             ])
         );
         assert_ne!(v, Value::Tuple(vec![Value::Bool(true)]));
-        // a list inside a tuple is still ir.data
+        // a list inside a tuple is still the reserved ir.list
         let bad = EvalValue::Tuple(vec![EvalValue::Bool(true), EvalValue::List(vec![])]);
-        assert_eq!(Value::from_eval(&bad).unwrap_err().level, Some("ir.data"));
+        assert_eq!(Value::from_eval(&bad).unwrap_err().level, Some("ir.list"));
     }
 
     #[test]
-    fn composites_are_ir_data_and_refused_naming_the_level() {
-        for v in [
-            EvalValue::List(vec![]),
-            EvalValue::Option(None),
-            EvalValue::Con {
-                ty: "T".into(),
-                index: 0,
-                ctor: "T".into(),
-                record: true,
-                fields: vec![],
-            },
-        ] {
-            let e = Value::from_eval(&v).unwrap_err();
-            assert_eq!(e.level, Some("ir.data"));
-        }
-        // an Ok whose payload is a composite is refused too
+    fn options_records_and_variants_convert_and_a_list_is_still_refused() {
+        assert_eq!(Value::from_eval(&EvalValue::Option(None)).unwrap(), Value::Opt(None));
+        let some = EvalValue::Option(Some(Box::new(EvalValue::Bool(true))));
+        assert_eq!(
+            Value::from_eval(&some).unwrap(),
+            Value::Opt(Some(Box::new(Value::Bool(true))))
+        );
+        let con = EvalValue::Con {
+            ty: "T".into(),
+            index: 0,
+            ctor: "T".into(),
+            record: true,
+            fields: vec![EvalValue::Nat(2)],
+        };
+        assert_eq!(
+            Value::from_eval(&con).unwrap(),
+            Value::Con(Rc::from("T"), vec![Value::Int(2)])
+        );
+        // a list is the reserved ir.list, also under an Ok
+        let e = Value::from_eval(&EvalValue::List(vec![])).unwrap_err();
+        assert_eq!(e.level, Some("ir.list"));
         let nested = EvalValue::Result(Ok(Box::new(EvalValue::List(vec![]))));
         assert!(Value::from_eval(&nested).is_err());
     }

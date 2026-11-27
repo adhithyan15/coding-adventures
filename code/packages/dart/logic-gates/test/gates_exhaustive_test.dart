@@ -3,16 +3,20 @@ import 'package:test/test.dart';
 
 // Dart ints are 64-bit on the VM; write the extremes without a literal that
 // would overflow on the web.
-final int int64Min = -(1 << 62) * 2;
-final int int64Max = (1 << 62) - 1 + (1 << 62);
+//
+// On dart2js ints are JS numbers (`identical(1, 1.0)`): shifts are 32-bit,
+// `1.0 is int`, and integral doubles pass as bits. Those cases are VM-only.
+final bool isWeb = identical(1, 1.0);
+final int int64Min = isWeb ? -4503599627370496 : -(1 << 62) * 2;
+final int int64Max = isWeb ? 4503599627370496 : (1 << 62) - 1 + (1 << 62);
 
 final List<int> badValues = [
   for (var v = -1024; v <= 1024; v++)
     if (v != 0 && v != 1) v,
   int64Min,
   int64Max,
-  1 << 31,
-  -(1 << 31),
+  2147483648,
+  -2147483648,
 ];
 
 void main() {
@@ -130,7 +134,8 @@ void main() {
     }
   });
 
-  group('dynamic type confusion (Dart VM)', () {
+  group('dynamic type confusion (Dart VM)',
+      skip: isWeb ? 'VM-only: dart2js accepts integral doubles' : false, () {
     final confused = <Object?>[1.0, 0.0, true, false, '1', null];
     final gates = <String, Function>{
       for (final e in binary.entries) e.key: e.value.$1,

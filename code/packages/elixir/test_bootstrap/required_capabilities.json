@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "elixir/test_bootstrap",
+  "capabilities": [
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "*",
+      "justification": "The fuzz engine (VER06n) runs every target execution in its own monitored, heap-limited BEAM process and kills it on a wall-clock timeout; one process per execution, none outlive their execution."
+    },
+    {
+      "category": "thread",
+      "action": "message",
+      "target": "*",
+      "justification": "The execution process reports its outcome to the engine in one message, and the engine waits with a bounded receive for the process's exit notification."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The executor computes a wall-clock deadline with System.monotonic_time/1 for each target execution; no calendar time is read."
+    }
+  ],
+  "justification": "No filesystem, network, clock or environment access. The fuzz engine spawns one monitored process per target execution (and the PBT budget helpers spawn on request); tests read the committed pbt-v1 and fuzz-v1 fixtures and Go's fuzz reference-vector table."
+}

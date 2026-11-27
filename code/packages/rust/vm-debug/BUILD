@@ -1,1 +1,1 @@
-cargo test -p vm-debug -- --nocapture
+cargo test --locked -p vm-debug -- --nocapture

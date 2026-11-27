@@ -1,1 +1,1 @@
-cargo test -p smt-lib-format -- --nocapture
+cargo test --locked -p smt-lib-format -- --nocapture

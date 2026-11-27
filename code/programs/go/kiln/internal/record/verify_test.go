@@ -318,7 +318,9 @@ func TestVerifyTreeFileSizeCap(t *testing.T) {
 func TestVerifyTreeBudget(t *testing.T) {
 	dir := newRepo(t, baseFiles)
 	saved := budget
-	budget = time.Nanosecond
+	// A non-positive deadline is expired synchronously, so this assertion does
+	// not depend on the timer resolution of the host operating system.
+	budget = 0
 	defer func() { budget = saved }()
 	_, err := VerifyTree(dir, "")
 	if err == nil || !strings.Contains(err.Error(), "budget") {

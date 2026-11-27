@@ -1036,3 +1036,66 @@ before any `proved-per-run` or `proved-to-isa` label is allowed.
 7. **Gate-level scale.** Is a bounded BMC of `ct_eq` at `n <= 4` on the
    step netlist worth its cost, given strategy (A) is complete? (Proposed: yes
    once, as a one-time independent cross-check.)
+
+---
+
+## 10. Review record
+
+### Follow-up / G-M1 registration 2026-11-25
+
+**Status: proposed, pending owner signature.** VER13 had no review-record section; this is
+it. It records the registration that the first proof target (logic gates, G-M1) needs, as a
+proposal, and changes nothing the checker reads: the section 3 tables and the counts of
+section 3.9 still describe the 84-entry `catalogue-v1.json`, so the spec-sync rule (AC-14) is
+unaffected.
+
+**What is proposed.** Thirteen new ids, registered as data in
+`code/assumptions/catalogue-v2.proposed.json` with proposed buckets in
+`buckets-v2.proposed.json` (revision 2, **requires the owner's signature**), and described
+in `code/assumptions/PROPOSED-gm1-registration.md`. The human table is
+[VER31](VER31-tiered-release-standard.md) section 13.7.
+
+| Id | Opened by | Source | Proposed bucket |
+|---|---|---|---|
+| `kernel.checker.correct` | any kernel-checked claim | VER11a 11.2; VER32 9.2 | (c) |
+| `kernel.logic.consistent` | any kernel-checked claim | VER11a 11.2, Q5; VER32 9.2 | (c), open |
+| `spec.goal.faithful` | every signed goal | VER11a 11.2; VER32 9.2 | (b) |
+| `pif.reader.correct` | G-M1 | VER32 9.2 (PIF-016a) | (c) |
+| `pif.prelude.faithful` | G-M1 | VER32 9.2, Q6 | (b) |
+| `tcb.pif.gate-binding` | G-M1 | VER32 9.2 | (c) |
+| `tcb.pif.printer` | G-M1 | VER32 9.2, N5 | (c) |
+| `gates.model.faithful` | G-M1 | VER32 9.2 | (b) |
+| `gates.model.code-link` | G-M1 | VER32 9.2 | (c) |
+| `warrant.model.elaboration-faithful` | A2 (G-M1) | VER33 9.1, Q6 (ADL-006a) | (c) |
+| `adl.prelude.faithful` | A2 (G-M1) | VER33 9.1 (ADL-006a) | (b) |
+| `adl.wir-abi.faithful` | A3, not G-M1 | VER32 PIF-016a; VER33 9.1 | (b) |
+| `tcb.vcgen.claim-faithful` | A1, not G-M1 | VER33 9.1, ADL-013; VER34 6.7 | (c) |
+
+**Rules the registration follows.** (1) An id is never renamed, so the spellings VER32,
+VER33 and VER11a fixed are kept, including the family prefixes `kernel`, `pif`, `gates`,
+`warrant` and `adl`. (2) No existing id changes bucket; `kernel.logic.consistent` is
+registered as (c) and open, the standing position of VER31 follow-up item V3, and VER11a Q5
+(proposed (a)) is left for the owner to decide separately. (3) The scheme
+`<pkg>.model.faithful` of VER33 9.1 is instantiated as `gates.model.faithful`, the spelling
+VER32 9.2 pins; `logic_gates.model.faithful` is not registered. (4) No evidence kind is
+added; the entries reuse kinds already in `evidence-kinds.json`, so neither it nor any
+report's pin changes. The missing kind, for a kernel-checked link theorem, is PIF-016b's.
+
+**What applying it needs, not done here.**
+
+1. **Extend the family list** (section 5.2's `family` enum, `FAMILIES` in
+   `assumption_catalogue.py`, the Rust loader's list in
+   `ca-assurance-report/src/catalogue.rs`, and the JSON schema) with `kernel`, `pif`, `gates`,
+   `warrant` and `adl`. The checker's own `family_of` rule (the id prefix) then holds. Until
+   then the 13 entries fail the structure check on `family` and on nothing else.
+2. **Add the 13 rows to section 3** (a new group of tables, consumed at layers `spec` and
+   `wir`) and to the generator's overlay, update the counts of section 3.9 (84 becomes 97),
+   and regenerate `catalogue-v1.json`; then regenerate every report's catalogue pin.
+3. **The owner signs `buckets-v1.json` revision 2** (VER31 13.8).
+
+**Not applied, and why.** The catalogue, the bucket file and section 3 are trust-root inputs
+(VER31 section 9.6): adding rows without the owner's signature would either break the
+spec-sync check or imply a signature that does not exist. Ids VER32 and VER33 list for later
+milestones (`gates.nand.primitive-contract`, `gates.compose.*`, `wir.semantics.lean-faithful`,
+`wir.typing.checker-guarantees`, `src.<lane>.*`, `<lane>.backend.code-link`,
+`tcb.<lane>-toolchain.trusted`) belong to PIF-016b, PIF-016c and the per-lane rows.

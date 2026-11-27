@@ -8,6 +8,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use crate::checker::{CheckedWarrantModule, CheckerError, CheckerErrorKind, DiagnosticCode, Type};
 use crate::driver::DriverRecord;
+use crate::parser::Profile;
 
 /// Closed error normalization rule.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -538,6 +539,256 @@ pub struct EvidenceBindingFile {
     /// WX-A host composites: the `struct`/`enum` lines and the `ret=` /
     /// `errors=` options (VER04j section 4.6).
     pub hosts: HostSpec,
+    /// VER33 section 4.8: the `realizes=` / `embedding=` options and `panic`
+    /// lines, by operation name.  Data only: nothing consumes it yet
+    /// (ADL-001a is schema and validation); see [`Realization`].
+    pub realizations: BTreeMap<String, Realization>,
+}
+
+/// The canonical embeddings a `realizes` binding may select (VER33 section 4.8).
+///
+/// ```text
+/// int-by-value    every integer leaf (Int, Nat, U8..U64, I8..I64) is the
+///                 model's `Int` of the same value; Bool is Bool
+/// bytes-identity  every Bytes / Bytes<N> leaf is the model's Bytes, byte for
+///                 byte; Bool is Bool
+/// ```
+///
+/// `Option`, `Result`, `List` and tuples embed *componentwise* around whichever
+/// leaf embedding is chosen, so they need no name of their own.  The set is
+/// closed: there is no user-supplied conversion function.
+pub const EMBEDDINGS: [&str; 2] = ["int-by-value", "bytes-identity"];
+
+/// Most `panic` templates one realization may declare.  The set is finite and
+/// reviewed (VER33 section 8.2); an unbounded list is not a reviewed list.
+pub const MAX_PANIC_TEMPLATES: usize = 16;
+
+/// Longest `panic` template, in bytes.
+pub const MAX_PANIC_TEMPLATE_BYTES: usize = 256;
+
+/// How an `op` says it implements a model function (VER33 section 4.8).
+///
+/// ```text
+/// op nand_gate export=nand_gate faults=always_true realizes=logic_gates_model.nand_gate embedding=int-by-value
+/// panic nand_gate a must be 0 or 1
+/// panic nand_gate b must be 0 or 1
+/// ```
+///
+/// `realizes` names a model function and *selects* an embedding; it does not
+/// state the domain (the lane function's declared parameter types do), and it
+/// is optional: without it the op has A0/A1 evidence only.  `panic_messages`
+/// is the finite, declared set of the lane's panic identities that count as the
+/// modelled rejection, as **exact templates**.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Realization {
+    /// The model file's module name (the `warrant NAME` of an algorithm-profile document).
+    pub module: String,
+    /// The model function in that module.
+    pub model: String,
+    /// One of [`EMBEDDINGS`], kept as text so that validation can refuse an
+    /// unknown one rather than the type system making it unrepresentable.
+    pub embedding: String,
+    /// Exact format templates (VER33 section 8.2, R5).
+    pub panic_messages: Vec<String>,
+}
+
+/// Phrases that mark a panic as *compiler-generated*: an overflow, an index, an
+/// `unwrap`, a division by zero, an allocation failure.  Such a panic can never
+/// be the modelled rejection (VER33 section 8.2: "compiler-generated panics ...
+/// can never be listed"), because it also fires on bugs the model knows nothing
+/// about.  Matched case-insensitively as a substring of the *normalised*
+/// template (whitespace runs collapsed), and again with the `{}` holes removed,
+/// across the lanes' wordings (Rust, Go, Java, Python, JS/TS).
+///
+/// This list is a backstop, not the check: the long-term check is the lifter
+/// confirming each template against a literal panic message in the lane source
+/// (backlog ADL-032, ADL-033).
+const COMPILER_GENERATED_PANICS: [&str; 38] = [
+    "attempt to ",
+    "with overflow",
+    "index out of bounds",
+    "out of bounds for length",
+    "index out of range",
+    "slice bounds out of range",
+    "slice index",
+    "range end index",
+    "range start index",
+    "byte index",
+    "unwrap()",
+    "result::unwrap",
+    "option::unwrap",
+    "on a `none` value",
+    "on an `err` value",
+    "divide by zero",
+    "division by zero",
+    "division or modulo by zero",
+    "/ by zero",
+    "remainder with a divisor of zero",
+    "explicit panic",
+    "internal error: entered unreachable",
+    "not yet implemented",
+    "capacity overflow",
+    "already borrowed",
+    "already mutably borrowed",
+    "nil pointer",
+    "nil map",
+    "runtime error",
+    "cannot read propert",
+    "is not a function",
+    "stack overflow",
+    "assertion failed",
+    "pop from empty list",
+    "out of memory",
+    "list index out of range",
+    "is not defined",
+    "is not iterable",
+];
+
+/// Characters a template must begin with, counted as ASCII alphanumerics before
+/// the first `{}` hole: the **anchor rule** (security review of ADL-001a).
+pub const MIN_PANIC_ANCHOR: usize = 8;
+
+/// Why a `panic` template is refused, or `Ok` when it is an exact template.
+///
+/// ```text
+/// "a must be 0 or 1"                 accepted: exact text
+/// "a must be 0 or 1, got {}"         accepted: anchor, then a hole
+/// "{}"  "{}: {}"  "a{}"  "{} !"      refused:  no anchor (a near-wildcard)
+/// "x"   "short {}"                   refused:  anchor under 8 alphanumerics
+/// ""    "   "                        refused:  empty
+/// "bad *"  ".*"  "?"                 refused:  wildcard characters
+/// NBSP, U+200B, bidi, accents        refused:  only printable ASCII (0x20-0x7E)
+/// "attempt to add with overflow"     refused:  compiler-generated (W0807)
+/// ```
+///
+/// **The anchor rule.** A template must begin with at least
+/// [`MIN_PANIC_ANCHOR`] ASCII alphanumeric characters before its first `{}`
+/// hole (spaces and punctuation may sit between them), so it cannot start with
+/// a hole and a single literal character beside a hole is not enough.  Without
+/// it `{}: {}` would match `index out of bounds: the len is 3 but the index is
+/// 5`, defeating VER33 R5 ("exact templates, no wildcards").  Holes after the
+/// anchor are allowed.
+pub fn check_panic_template(text: &str) -> Result<(), String> {
+    if text.trim().is_empty() {
+        return Err("panic template is empty".to_string());
+    }
+    if text.len() > MAX_PANIC_TEMPLATE_BYTES {
+        return Err(format!(
+            "panic template is longer than {MAX_PANIC_TEMPLATE_BYTES} bytes"
+        ));
+    }
+    // Printable ASCII only: this also refuses tabs and newlines, NBSP, zero-width
+    // and bidi characters, and U+2028/2029, which could hide or reorder text.
+    if text.chars().any(|c| !(' '..='~').contains(&c)) {
+        return Err("panic template contains a character outside printable ASCII".to_string());
+    }
+    if text != text.trim() {
+        return Err("panic template has leading or trailing whitespace".to_string());
+    }
+    if text.contains(['*', '?']) {
+        return Err("panic template contains a wildcard character".to_string());
+    }
+    // `{}` is the only format hole; `{{` and `}}` escape the braces.
+    let mut anchor = 0usize;
+    let mut seen_hole = false;
+    let mut literal = false;
+    let mut stripped = String::new();
+    let mut chars = text.chars().peekable();
+    while let Some(c) = chars.next() {
+        match c {
+            '{' if chars.peek() == Some(&'}') => {
+                chars.next();
+                seen_hole = true;
+                stripped.push(' ');
+            }
+            '{' if chars.peek() == Some(&'{') => {
+                chars.next();
+                literal = true;
+                stripped.push('{');
+            }
+            '}' if chars.peek() == Some(&'}') => {
+                chars.next();
+                literal = true;
+                stripped.push('}');
+            }
+            '{' | '}' => {
+                return Err("panic template has a brace that is not `{}`, `{{` or `}}`".to_string())
+            }
+            c => {
+                if !c.is_whitespace() {
+                    literal = true;
+                }
+                if !seen_hole && c.is_ascii_alphanumeric() {
+                    anchor += 1;
+                }
+                stripped.push(c);
+            }
+        }
+    }
+    if !literal {
+        return Err("panic template is only format holes: a wildcard".to_string());
+    }
+    if anchor < MIN_PANIC_ANCHOR {
+        return Err(format!(
+            "panic template needs a literal anchor of at least {MIN_PANIC_ANCHOR} alphanumeric characters before its first `{{}}` hole"
+        ));
+    }
+    let norm = |t: &str| {
+        t.split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ")
+            .to_lowercase()
+    };
+    let (a, b) = (norm(text), norm(&stripped));
+    if let Some(p) = COMPILER_GENERATED_PANICS
+        .iter()
+        .find(|p| a.contains(*p) || b.contains(*p))
+    {
+        return Err(format!(
+            "panic template looks compiler-generated (contains `{p}`); only an authored panic can be the modelled rejection"
+        ));
+    }
+    Ok(())
+}
+
+impl Realization {
+    /// The shape rules that need no model module: a known embedding, plain
+    /// identifiers, and every `panic` entry an exact, distinct template.
+    /// Returns the diagnostic code with the reason.
+    pub fn check_shape(&self, op: &str) -> Result<(), (DiagnosticCode, String)> {
+        let w0806 = |m: String| (DiagnosticCode::W0806, m);
+        if !EMBEDDINGS.contains(&self.embedding.as_str()) {
+            return Err(w0806(format!(
+                "op `{op}`: unknown embedding `{}` (the canonical set is {})",
+                self.embedding,
+                EMBEDDINGS.join(", ")
+            )));
+        }
+        for (what, name) in [("module", &self.module), ("model function", &self.model)] {
+            if !is_rust_identifier(name) {
+                return Err(w0806(format!(
+                    "op `{op}`: realized {what} `{name}` is not an identifier"
+                )));
+            }
+        }
+        if self.panic_messages.len() > MAX_PANIC_TEMPLATES {
+            return Err((
+                DiagnosticCode::W0807,
+                format!("op `{op}`: more than {MAX_PANIC_TEMPLATES} panic templates"),
+            ));
+        }
+        for (i, m) in self.panic_messages.iter().enumerate() {
+            check_panic_template(m)
+                .map_err(|e| (DiagnosticCode::W0807, format!("op `{op}`: {e}")))?;
+            if self.panic_messages[..i].contains(m) {
+                return Err((
+                    DiagnosticCode::W0807,
+                    format!("op `{op}`: panic template `{m}` is declared twice"),
+                ));
+            }
+        }
+        Ok(())
+    }
 }
 
 /// The most cases an `exhaustive_budget` may ask the generated harness to
@@ -629,6 +880,9 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
     let mut hosts = HostSpec::default();
     let mut drivers: BTreeMap<String, DriverRecord> = BTreeMap::new();
     let mut driver_ops: BTreeSet<String> = BTreeSet::new();
+    // VER33 4.8: per-op `realizes=` / `embedding=` and the `panic` lines.
+    let mut realizes: BTreeMap<String, (String, String, Option<String>)> = BTreeMap::new();
+    let mut panics: BTreeMap<String, Vec<String>> = BTreeMap::new();
     for (n, raw) in text.lines().enumerate() {
         let line = raw.trim();
         if line.is_empty() || line.starts_with('#') {
@@ -728,6 +982,8 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                 let mut host_errors = None;
                 let mut err_any = None;
                 let mut inout: Vec<(String, InoutForm)> = Vec::new();
+                let mut realizes_to: Option<(String, String)> = None;
+                let mut embedding: Option<String> = None;
                 for w in words {
                     let (k, v) = w.split_once('=').unwrap_or((w, ""));
                     let list = || -> Vec<String> {
@@ -756,6 +1012,27 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                             inout = parse_inout_entries(v)
                                 .map_err(|e| at(format!("W0501: op `{name}`: {e}")))?;
                         }
+                        "realizes" if !v.is_empty() => {
+                            let (m, f) = v.split_once('.').ok_or_else(|| {
+                                at(format!(
+                                    "W0806: op `{name}`: `realizes=` must be MODULE.MODEL"
+                                ))
+                            })?;
+                            if realizes_to.is_some() {
+                                return Err(at(format!(
+                                    "W0806: op `{name}`: `realizes=` appears twice"
+                                )));
+                            }
+                            realizes_to = Some((m.to_string(), f.to_string()));
+                        }
+                        "embedding" if !v.is_empty() => {
+                            if embedding.is_some() {
+                                return Err(at(format!(
+                                    "W0806: op `{name}`: `embedding=` appears twice"
+                                )));
+                            }
+                            embedding = Some(v.to_string());
+                        }
                         "faults" if !v.is_empty() => faults = list(),
                         "proofs_not_live" if !v.is_empty() => not_live = Some(v.to_string()),
                         _ => return Err(at(format!("op `{name}`: unknown or malformed option `{w}`"))),
@@ -774,6 +1051,22 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                 }
                 if driver_flag {
                     driver_ops.insert(name.to_string());
+                }
+                match (realizes_to, embedding) {
+                    (Some((m, f)), Some(e)) => {
+                        realizes.insert(name.to_string(), (m, f, Some(e)));
+                    }
+                    (Some(_), None) => {
+                        return Err(at(format!(
+                            "W0806: op `{name}`: `realizes=` needs `embedding=` (a canonical embedding is always named)"
+                        )));
+                    }
+                    (None, Some(_)) => {
+                        return Err(at(format!(
+                            "W0806: op `{name}`: `embedding=` without `realizes=`"
+                        )));
+                    }
+                    (None, None) => {}
                 }
                 if let Some(export) = export.as_deref() {
                     if inout.is_empty() {
@@ -842,6 +1135,20 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                     return Err(at(format!("op `{name}` is bound twice")));
                 }
             }
+            "panic" => {
+                // `panic OP TEMPLATE...`: the template is the rest of the line,
+                // verbatim apart from the trim the line already had.
+                let (name, template) = rest.split_once(char::is_whitespace).ok_or_else(|| {
+                    at("W0807: `panic` needs an operation name and a template".to_string())
+                })?;
+                let template = template.trim();
+                check_panic_template(template)
+                    .map_err(|e| at(format!("W0807: op `{name}`: {e}")))?;
+                panics
+                    .entry(name.to_string())
+                    .or_default()
+                    .push(template.to_string());
+            }
             "driver" => {
                 let mut words = rest.split_whitespace();
                 let name = words
@@ -884,6 +1191,27 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
         if let Some(binding) = bindings.get_mut(&name) {
             binding.driver = Some(record);
         }
+    }
+    // VER33 4.8, cross-line half: a `panic` line belongs to a realizing op, and
+    // a realization's shape is checked as soon as the file is read.
+    for name in panics.keys() {
+        if !realizes.contains_key(name) {
+            return Err(format!(
+                "W0806: `panic` line for op `{name}`, which has no `realizes=`"
+            ));
+        }
+    }
+    let mut realizations = BTreeMap::new();
+    for (name, (module, model, embedding)) in realizes {
+        let r = Realization {
+            module,
+            model,
+            embedding: embedding.unwrap_or_default(),
+            panic_messages: panics.remove(&name).unwrap_or_default(),
+        };
+        r.check_shape(&name)
+            .map_err(|(code, why)| format!("{code}: {why}"))?;
+        realizations.insert(name, r);
     }
     let need = |v: Option<String>, k: &str| v.ok_or_else(|| format!("missing `{k}`"));
     let need_n = |v: Option<u64>, k: &str| v.ok_or_else(|| format!("missing `{k}`"));
@@ -941,6 +1269,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
         arg_types,
         proofs_not_live,
         hosts,
+        realizations,
     })
 }
 
@@ -1043,5 +1372,187 @@ pub fn validate_bindings(
         }
     }
 
+    Ok(())
+}
+
+/// The leaves of a type under an embedding, and whether the embedding admits
+/// them.  Containers (`List`, `Option`, `Result`, tuples) embed componentwise.
+fn embeds(op_ty: &Type, model_ty: &Type, embedding: &str) -> bool {
+    let int = |t: &Type| {
+        matches!(
+            t,
+            Type::Int
+                | Type::Nat
+                | Type::U8
+                | Type::U16
+                | Type::U32
+                | Type::U64
+                | Type::I8
+                | Type::I16
+                | Type::I32
+                | Type::I64
+        )
+    };
+    match (op_ty, model_ty) {
+        (Type::Bool, Type::Bool) => true,
+        (a, Type::Int) if embedding == "int-by-value" => int(a),
+        (Type::Bytes | Type::FixedBytes(_), Type::Bytes) if embedding == "bytes-identity" => true,
+        (Type::FixedBytes(a), Type::FixedBytes(b)) if embedding == "bytes-identity" => a == b,
+        (Type::List(a), Type::List(b)) | (Type::Option(a), Type::Option(b)) => {
+            embeds(a, b, embedding)
+        }
+        (Type::Result(a, ea), Type::Result(b, eb)) => ea == eb && embeds(a, b, embedding),
+        (Type::Tuple(a), Type::Tuple(b)) => {
+            a.len() == b.len() && a.iter().zip(b).all(|(x, y)| embeds(x, y, embedding))
+        }
+        _ => false,
+    }
+}
+
+/// A checked model file offered to [`validate_realizations`], with the profile
+/// its header declared.  The profile travels beside the checked module, not in
+/// it: `CheckedWarrantModule`'s `Debug` output is pinned byte for byte by the
+/// v0 compatibility proofs, so it must not grow a field for a pure document.
+#[derive(Debug, Clone, Copy)]
+pub struct ModelModule<'a> {
+    module: &'a CheckedWarrantModule,
+    profile: Profile,
+}
+
+impl<'a> ModelModule<'a> {
+    /// Offer `module`, the checked form of `file`: the profile is read from the
+    /// parsed file itself, never supplied by the caller, so a pure document
+    /// cannot be presented as an algorithm one.  A pair whose names differ is
+    /// treated as pure (and so refused by [`validate_realizations`]).
+    pub fn new(file: &crate::parser::WarrantFile<'_>, module: &'a CheckedWarrantModule) -> Self {
+        Self {
+            module,
+            profile: if file.name == module.module_name {
+                file.profile
+            } else {
+                Profile::Pure
+            },
+        }
+    }
+}
+
+/// Validates every `realizes` binding of `op_module` against the model modules
+/// (VER33 section 4.8).  Schema and validation only: nothing uses the result.
+///
+/// For each realizing op the validator refuses (all `W0806` unless noted):
+///
+/// ```text
+/// an op the document does not declare
+/// an unknown embedding, or a non-identifier module/model name
+/// a model module that is not provided, or is not `profile algorithm`
+/// a model function the module does not define
+/// a different number of parameters
+/// a parameter or result type the embedding does not map onto the model's
+/// an empty, wildcard, duplicate or compiler-generated panic template  (W0807)
+/// ```
+pub fn validate_realizations(
+    op_module: &CheckedWarrantModule,
+    realizations: &BTreeMap<String, Realization>,
+    model_modules: &[ModelModule<'_>],
+) -> Result<(), CheckerError> {
+    let fail = |code: DiagnosticCode, msg: String, span: (usize, usize)| CheckerError {
+        code,
+        kind: CheckerErrorKind::InvalidRealization(msg),
+        span,
+    };
+    for (i, m) in model_modules.iter().enumerate() {
+        if model_modules[..i]
+            .iter()
+            .any(|o| o.module.module_name == m.module.module_name)
+        {
+            return Err(fail(
+                DiagnosticCode::W0806,
+                format!("model module `{}` is offered twice", m.module.module_name),
+                (0, 0),
+            ));
+        }
+    }
+    for (op_name, r) in realizations {
+        let op = op_module.operations.get(op_name).ok_or_else(|| {
+            fail(
+                DiagnosticCode::W0806,
+                format!("realization names op `{op_name}`, which the document does not declare"),
+                (0, 0),
+            )
+        })?;
+        r.check_shape(op_name)
+            .map_err(|(code, msg)| fail(code, msg, op.span))?;
+        let module = model_modules
+            .iter()
+            .find(|m| m.module.module_name == r.module)
+            .ok_or_else(|| {
+                fail(
+                    DiagnosticCode::W0806,
+                    format!(
+                        "op `{op_name}` realizes module `{}`, which was not provided",
+                        r.module
+                    ),
+                    op.span,
+                )
+            })?;
+        if module.profile != Profile::Algorithm {
+            return Err(fail(
+                DiagnosticCode::W0806,
+                format!(
+                    "op `{op_name}`: module `{}` is not in `profile algorithm`",
+                    r.module
+                ),
+                op.span,
+            ));
+        }
+        let model = module.module.models.get(&r.model).ok_or_else(|| {
+            fail(
+                DiagnosticCode::W0806,
+                format!(
+                    "op `{op_name}`: module `{}` has no model function `{}`",
+                    r.module, r.model
+                ),
+                op.span,
+            )
+        })?;
+        if model.params.len() != op.params.len() {
+            return Err(fail(
+                DiagnosticCode::W0806,
+                format!(
+                    "op `{op_name}` has {} parameters but model `{}` has {}",
+                    op.params.len(),
+                    r.model,
+                    model.params.len()
+                ),
+                op.span,
+            ));
+        }
+        for (i, ((pn, op_ty), (_, model_ty))) in op.params.iter().zip(&model.params).enumerate() {
+            if !embeds(op_ty, model_ty, &r.embedding) {
+                return Err(fail(
+                    DiagnosticCode::W0806,
+                    format!(
+                        "op `{op_name}` parameter {i} `{pn}`: `{}` does not embed into model `{}` under `{}`",
+                        op_ty.display_name(),
+                        model_ty.display_name(),
+                        r.embedding
+                    ),
+                    op.span,
+                ));
+            }
+        }
+        if !embeds(&op.return_type, &model.target_type, &r.embedding) {
+            return Err(fail(
+                DiagnosticCode::W0806,
+                format!(
+                    "op `{op_name}` result `{}` does not embed into model result `{}` under `{}`",
+                    op.return_type.display_name(),
+                    model.target_type.display_name(),
+                    r.embedding
+                ),
+                op.span,
+            ));
+        }
+    }
     Ok(())
 }

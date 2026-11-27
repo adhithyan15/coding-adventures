@@ -71,7 +71,25 @@ def test_v2_arith_agrees_with_python_integers(kit):
 # ---------------------------------------------------------------------------------------------------
 
 
+def split_components(ty):
+    """The component type texts of a tuple type ``(A,B,..)``: split at the commas that are not inside ``()`` or ``<>``."""
+    assert ty.startswith("(") and ty.endswith(")")
+    parts, depth, start = [], 0, 1
+    for i, ch in enumerate(ty[1:-1], 1):
+        depth += ch in "(<"
+        depth -= ch in ")>"
+        if ch == "," and depth == 0:
+            parts.append(ty[start:i])
+            start = i + 1
+    parts.append(ty[start:-1])
+    return parts
+
+
 def reference_stream(ty, raw):
+    if ty.startswith("("):  # S10d: a tuple is 64, the u32 count, then the components (section 2.4)
+        parts = split_components(ty)
+        assert len(parts) == len(raw)
+        return b"\x64" + struct.pack("<I", len(parts)) + b"".join(reference_stream(t, x) for t, x in zip(parts, raw))
     if ty == "Bool":
         return b"\x01" if raw else b"\x00"
     if ty in ("U8", "U16", "U32", "U64", "Nat"):
@@ -81,7 +99,7 @@ def reference_stream(ty, raw):
     if ty.startswith("Bytes"):
         data = bytes.fromhex(raw)
         return b"\x20" + struct.pack("<I", len(data)) + data
-    assert ty.startswith("Result<")
+    assert ty.startswith("Result<"), ty
     inner = ty[len("Result<") : ty.rindex(",")]
     if "ok" in raw:
         return b"\x50" + reference_stream(inner, raw["ok"])
@@ -101,7 +119,7 @@ def test_v2_value_streams_agree_with_struct_pack(kit):
         else:
             assert len(want.hex()) > C.STREAM_HEX_LIMIT, slug
         checked += 1
-    assert checked > 30
+    assert checked > 30 + 25  # S10d adds 25 accepted tuple values
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -238,6 +256,12 @@ def enc(kind, v):
         return b"\x01" if v else b"\x00"
     if kind == "Bytes":
         return b"\x20" + u32(len(v)) + v
+    if isinstance(kind, tuple) and kind[0] == "()":  # S10d: ("()", [component kinds])
+        return b"\x64" + u32(len(kind[1])) + b"".join(enc(k, x) for k, x in zip(kind[1], v))
+    if isinstance(kind, tuple) and kind[0] == "Result":  # S10d: ("Result", payload kind)
+        if v[0] == "ok":
+            return b"\x50" + enc(kind[1], v[1])
+        return b"\x51" + field(v[1])
     if kind.startswith("Result"):
         if v[0] == "ok":
             return b"\x50" + enc("Bool", v[1])
@@ -263,11 +287,32 @@ def _suites():
         "negs": ([list(range(-128, 128))], lambda a: True, lambda a: ((-a + 128) % 256) - 128, "I8", lambda a: 1),
         "res": ([[("ok", False), ("ok", True), ("err", "BAD"), ("err", "WORSE")]], lambda a: True,
                 lambda a: a == ("ok", True), "Bool", lambda a: 1),
+        # S10d: the suites of kit-tuple.warrant, their binders written as Python tuples (last component fastest)
+        "pairs": ([BYTE_BOOL], lambda t: True, lambda t: t[0], "U8", lambda t: 1),
+        "triples": ([list(itertools.product(range(256), range(256), BOOLS))], lambda t: True, lambda t: (t[0] + t[1]) % 256, "U8",
+                    lambda t: 1),
+        "nested": ([list(itertools.product(list(itertools.product(BOOLS, BOOLS)), BYTE_BOOL))], lambda t: True, lambda t: t[1][0], "U8",
+                   lambda t: 1),
+        "mixed": ([list(range(256)), list(itertools.product(BOOLS, BOOLS))], lambda a, t: True, lambda a, t: t[0] and t[1], "Bool",
+                  lambda a, t: 1),
+        "result_of_tuple": ([[("ok", t) for t in itertools.product(BOOLS, BOOLS)] + [("err", "BAD"), ("err", "WORSE")]], lambda r: True,
+                            lambda r: r[0] == "ok" and r[1][0] and r[1][1], "Bool", lambda r: 1),
+        "two_pairs": ([list(itertools.product(BOOLS, BOOLS))] * 2, lambda a, b: True, lambda a, b: a == b, "Bool", lambda a, b: 1),
     }
 
 
+TUPLE_CLAIMS = {"pairs", "triples", "nested", "mixed", "result_of_tuple", "two_pairs"}
+BOOLS = [False, True]
+BYTE_BOOL = list(itertools.product(range(256), BOOLS))
+
+
+
 BINDER_KINDS = {"big": ["U8"] * 3, "gap": ["U8"] * 2, "grid": ["U8"] * 2, "ragged": ["Nat", "U8"], "two_bytes": ["Bytes"] * 2,
-                "short": ["U8"] * 2, "negs": ["I8"], "res": ["Result"]}
+                "short": ["U8"] * 2, "negs": ["I8"], "res": ["Result"],
+                "pairs": [("()", ["U8", "Bool"])], "triples": [("()", ["U8", "U8", "Bool"])],
+                "nested": [("()", [("()", ["Bool", "Bool"]), ("()", ["U8", "Bool"])])],
+                "mixed": ["U8", ("()", ["Bool", "Bool"])], "result_of_tuple": [("Result", ("()", ["Bool", "Bool"]))],
+                "two_pairs": [("()", ["Bool", "Bool"])] * 2}
 
 
 def naive_chunk(row, claim, c, chunk_size):
@@ -309,6 +354,13 @@ def lines_of(kit_obj, claim):
         ("kit", "negs", None),
         ("kit", "res", None),
         ("kit", "big", (0, 1, 128, 254, 255)),
+        # S10d: the tuple suites of kit-tuple.warrant (the 128 chunks of ``triples`` are probed at the ends and in the middle)
+        ("tuple", "pairs", None),
+        ("tuple", "nested", None),
+        ("tuple", "mixed", None),
+        ("tuple", "result_of_tuple", None),
+        ("tuple", "two_pairs", None),
+        ("tuple", "triples", (0, 1, 5, 64, 126, 127)),
     ],
 )
 def test_the_chunk_files_agree_with_a_naive_enumerator(kit, which, claim, chunks):
@@ -333,7 +385,8 @@ def test_the_v2_chunk_expectations_are_the_chunk_file_lines(kit):
         if "error" in case["expect"]:
             continue
         claim = case["suite"]["claim"]
-        which = "small" if claim in ("grid", "gap", "ragged") else "width" if claim in ("fixed1", "ground") else "kit"
+        which = ("small" if claim in ("grid", "gap", "ragged") else "width" if claim in ("fixed1", "ground")
+                 else "tuple" if claim in TUPLE_CLAIMS else "kit")
         line = lines_of(kit.kits[which], claim)[case["chunk"]]
         want = {"cases": int(line[1]), "first_admitted": int(line[2]), "calls": int(line[3]), "inputs_sha256": line[4]}
         if len(line) > 5:

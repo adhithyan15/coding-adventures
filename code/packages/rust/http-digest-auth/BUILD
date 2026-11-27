@@ -1,1 +1,1 @@
-cargo test -p http-digest-auth
+cargo test --locked -p http-digest-auth

@@ -1,1 +1,1 @@
-cargo test -p lean-kernel -- --nocapture
+cargo test --locked -p lean-kernel -- --nocapture

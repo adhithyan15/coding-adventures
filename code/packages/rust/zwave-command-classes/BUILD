@@ -1,1 +1,1 @@
-cargo test -p zwave-command-classes -- --nocapture
+cargo test --locked -p zwave-command-classes -- --nocapture

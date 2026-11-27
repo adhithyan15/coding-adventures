@@ -4,4 +4,4 @@
 # installed on Windows, and a recipe that probes for cabal at a fixed path can
 # pass without testing anything. Each line of a BUILD file runs in its own shell,
 # so the command stays on one line.
-cabal test
+cabal test --ghc-options=-Werror

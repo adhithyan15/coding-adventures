@@ -45,12 +45,57 @@ match Prop.check 42UL options (Gen.integer 0I 1000I) (fun x -> x < 10I) with
 * A `Prop.check` nested inside a property is charged to the outermost check's
   shrink budget; the binding never opens a fresh budget root.
 
+## Fuzzing (fuzz-v1)
+
+The same package binds the coverage-guided fuzz engine of
+[`csharp/test-bootstrap`](../../csharp/test-bootstrap) (spec
+[VER06m](../../../specs/VER06m-fsharp-fuzz-binding.md)); again one engine, no copy.
+
+```fsharp
+open CodingAdventures.TestBootstrap.FSharp.Fuzzing
+
+let report =
+    fuzz {
+        seed 7UL
+        iterations 500
+        seeds [ [| 1uy; 2uy |] ]
+        target (fun data h ->
+            h.Edge "entry"                       // caller-reported coverage
+            h.Tick()                             // one unit of work: the step budget
+            if data.Length > 3 && data.[0] = 0x41uy then h.Edge "long-a"
+            if data.Length > 3 && data.[3] = 0uy then failwith "boom")   // any exception is a crash
+    }
+
+printfn "%A" report                              // counts only: never bytes, corpus or seed
+for c in report.Crashes do printfn "%s %s" c.Signature c.Kind
+for line in Tap.failures report "my-target" 1 do printfn "%s" line   // not ok 1 - my-target [fuzz-crash:...]
+```
+
+* `Campaign.run corpus options target` is the explicit form; `FuzzOptions` is a record
+  (`{ FuzzOptions.defaults with MaxIterations = 5 }`) whose `%A`/`ToString` omit the seed.
+* `FuzzReport` and `CrashRecord` are classes: input bytes and the seed are reachable only by
+  `crash.MinimalInput ()`, `report.Corpus ()` and `report.Seed`.
+* Every fuzz-v1 operation has a wrapper: `Mutate.bitFlip/byteFlip/byteArithmetic/boundaryInsert/
+  blockDelete/blockInsert/blockDuplicate/splice/sequence`, `Admission.admit`, `Energy.calculate`,
+  `Signature.crash/isDuplicate`, `Tap.format/failures`, `FuzzFailureId.isValid`.
+* A fresh `Handle` serves each execution and is retired afterwards; budgets are sticky (a
+  target that swallows the sentinel is still a timeout or OOM). An exception from F# code,
+  `failwith`, `Async.RunSynchronously` or `task { }` reaches the engine unchanged.
+* **Await every `async { }` you start inside a target.** A workflow started with
+  `Async.Start` and forgotten outlives the run; it may call `h.Edge` (a no-op once retired) but
+  not `h.Tick`/`h.Reserve` (they throw), and an exception escaping it is unhandled on the thread
+  pool. Crash signatures name F# closures (which carry source line numbers), so prefer a named
+  function for a target whose signature must survive edits (VER06m section 6).
+
 ## Conformance
 
 The tests replay the whole shared `pbt-v1` corpus (25 cases, exact outputs,
 minimals and shrink step counts) **through the F# API** with their own runner,
 plus per-op negative controls and F#-layer sabotage seams (seed shift, dropped
-shrink step, swapped bounds) that must make the corpus fail.
+shrink step, swapped bounds) that must make the corpus fail. The shared `fuzz-v1` corpus
+(25 cases, 14 ops) is replayed the same way by `FsFuzzCorpusRunner`, with nine fuzz seams
+(offset shift, byte-order swap, inverted dedup, leaked TAP target, admit-everything,
+accept-any failure id, seed shift, energy delta, dropped signature frame).
 
 ## Build
 

@@ -1,0 +1,5 @@
+# No runtime dependencies: core Perl only (Scalar::Util, B, Math::BigInt, Encode,
+# Config, and for the fuzz engine Time::HiRes, POSIX and Sub::Util).  The tests use Test::More, also core; it is listed so the file says so.
+on 'test' => sub {
+    requires 'Test::More';
+};

@@ -3,6 +3,8 @@ package graph
 import (
 	"container/heap"
 	"errors"
+	"fmt"
+	"math"
 	"sort"
 )
 
@@ -151,7 +153,37 @@ func (h *shortestPathHeap) Pop() any {
 	return item
 }
 
+func validateShortestPathWeights(g *Graph) error {
+	// Dijkstra's algorithm only terminates with correct results when all edge
+	// weights are finite and non-negative. Validate the complete graph before
+	// endpoint shortcuts: an unrelated negative edge in an undirected graph is
+	// itself a negative cycle and can otherwise cause unbounded relaxation.
+	if g.repr == AdjacencyList {
+		for left, neighbors := range g.adj {
+			for right, weight := range neighbors {
+				if weight < 0 || math.IsNaN(weight) || math.IsInf(weight, 0) {
+					return fmt.Errorf("shortest path requires finite, non-negative edge weights; edge %q-%q has weight %v", left, right, weight)
+				}
+			}
+		}
+		return nil
+	}
+
+	for row, weights := range g.matrix {
+		for col, weight := range weights {
+			if weight != 0 && (weight < 0 || math.IsNaN(weight) || math.IsInf(weight, 0)) {
+				return fmt.Errorf("shortest path requires finite, non-negative edge weights; edge %q-%q has weight %v", g.nodeList[row], g.nodeList[col], weight)
+			}
+		}
+	}
+	return nil
+}
+
 func ShortestPath(g *Graph, start, end string) ([]string, error) {
+	if err := validateShortestPathWeights(g); err != nil {
+		return nil, err
+	}
+
 	if !g.HasNode(start) {
 		return nil, &NodeNotFoundError{Node: start}
 	}
@@ -165,7 +197,7 @@ func ShortestPath(g *Graph, start, end string) ([]string, error) {
 	dist := make(map[string]float64, g.Size())
 	prev := make(map[string]string, g.Size())
 	for _, node := range g.Nodes() {
-		dist[node] = 1e308
+		dist[node] = math.Inf(1)
 	}
 	dist[start] = 0
 
@@ -188,6 +220,11 @@ func ShortestPath(g *Graph, start, end string) ([]string, error) {
 		sort.Strings(keys)
 		for _, neighbor := range keys {
 			alt := dist[item.node] + neighbors[neighbor]
+			// Positive infinity is the unreachable marker. An overflowing
+			// candidate is not a finite path, so leave it out of the heap.
+			if math.IsInf(alt, 1) {
+				continue
+			}
 			if alt < dist[neighbor] {
 				dist[neighbor] = alt
 				prev[neighbor] = item.node
@@ -196,7 +233,18 @@ func ShortestPath(g *Graph, start, end string) ([]string, error) {
 		}
 	}
 
-	if dist[end] == 1e308 {
+	if math.IsInf(dist[end], 1) {
+		// Dijkstra cannot distinguish a disconnected target from a target
+		// reachable only through sums that overflow float64. Check topology
+		// only in this exceptional case to preserve the ordinary fast path.
+		reachable, err := BFS(g, start)
+		if err == nil {
+			for _, node := range reachable {
+				if node == end {
+					return nil, ErrPathDistanceOverflow
+				}
+			}
+		}
 		return []string{}, nil
 	}
 

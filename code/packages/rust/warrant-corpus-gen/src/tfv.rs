@@ -27,51 +27,156 @@ use crate::ir::Ir;
 use crate::json::Json;
 use crate::lower::Lowered;
 use coding_adventures_warrant_grammar::parser::Version;
-use crate::stream::encode;
-use crate::types::Ty;
+use crate::stream::encode_in;
+use crate::types::{Decls, Ty};
 use crate::value::Value;
 
 fn hex(b: &[u8]) -> String {
     b.iter().map(|x| format!("{x:02x}")).collect()
 }
 
-fn json_value(ty: &Ty, v: &Value) -> Result<Json, GenError> {
+/// The containers TFV nests at most this deep inside one field value, the outermost being depth 1
+/// (TF01 2.2, VER04j 4.9, R99).  The line's own `R<n>` is the record header and does not count.
+pub const MAX_TFV_DEPTH: usize = 64;
+
+/// One container deeper: `depth` counts the `L` and `M` open around the value being written.  A variant
+/// is two containers (`L2` holding the name and an `L<k>` of the fields), a `Result` one (`M1`, for `Ok`
+/// and for `Err`), an `Option` one (`L0` as well as `L1`).  Past 64 is a `limit` (R99), before anything
+/// is written for the value.
+fn enter(depth: usize) -> Result<usize, GenError> {
+    if depth >= MAX_TFV_DEPTH {
+        return Err(GenError::new(
+            code::LIMIT,
+            "",
+            "a TFV value nests deeper than 64 containers (TF01 2.2, VER04j 4.9)",
+        ));
+    }
+    Ok(depth + 1)
+}
+
+fn wrong_shape() -> GenError {
+    GenError::internal("an example value has the wrong shape")
+}
+
+/// The JSON of a value of type `ty` as `corpus.json` writes it (VER04r 2.3): integers are decimal strings,
+/// bytes lowercase hex, a `Result` `{"ok":v}` / `{"err":"CASE"}`, a tuple or a record an array, an `Option`
+/// `{"none":true}` / `{"some":v}`, a variant `{"ctor":C,"fields":[..]}`.
+///
+/// # Errors
+///
+/// `W0701` for a value that does not have its declared shape.
+pub fn value_json(decls: &Decls, ty: &Ty, v: &Value) -> Result<Json, GenError> {
+    json_value(decls, ty, v)
+}
+
+/// The TFV of a value of type `ty` as `cases.tfv` writes it (VER04r 2.5), counting containers from depth 0
+/// (R99): a tuple or record `L<n> ..`, an `Option` `L0` / `L1 x`, a `Result` `M1 ..`, a variant
+/// `L2 S<hex ctor> L<k> ..`.
+///
+/// # Errors
+///
+/// `limit` for a value that would open a container at depth 65 (R99), `W0701` for a wrong shape.
+pub fn value_tfv(decls: &Decls, ty: &Ty, v: &Value) -> Result<String, GenError> {
+    tfv_value(decls, ty, v, 0)
+}
+
+/// The oracle's refusal of an `Int` value in the JSON and TFV writers (VER04r 2.1).
+fn int_never_written() -> GenError {
+    GenError::new(code::W0701, "", "an `Int` value is never written to a corpus (VER04r 2.1)")
+}
+
+fn json_value(decls: &Decls, ty: &Ty, v: &Value) -> Result<Json, GenError> {
     Ok(match (ty, v) {
+        (Ty::Int, _) => return Err(int_never_written()),
         (_, Value::Bool(b)) => Json::Bool(*b),
         (_, Value::Int(i)) => Json::str(i.to_string()),
         (_, Value::Bytes(b)) => Json::str(hex(b)),
-        (Ty::Result(ok, _), Value::Ok(inner)) => Json::obj([("ok", json_value(ok, inner)?)]),
+        (Ty::Result(ok, _), Value::Ok(inner)) => Json::obj([("ok", json_value(decls, ok, inner)?)]),
         (_, Value::Err(case)) => Json::obj([("err", Json::str(&**case))]),
         (Ty::Tuple(parts), Value::Tuple(items)) if parts.len() == items.len() => Json::arr(
             parts
                 .iter()
                 .zip(items)
-                .map(|(t, v)| json_value(t, v))
+                .map(|(t, v)| json_value(decls, t, v))
                 .collect::<Result<Vec<_>, _>>()?,
         ),
-        _ => return Err(GenError::internal("an example value has the wrong shape")),
+        // `ir.data`: `{"none":true}` / `{"some":v}`; a record is the array of its fields; a variant is
+        // `{"ctor":C,"fields":[..]}` (VER04r 2.3)
+        (Ty::Option(_), Value::Opt(None)) => Json::obj([("none", Json::Bool(true))]),
+        (Ty::Option(t), Value::Opt(Some(x))) => Json::obj([("some", json_value(decls, t, x)?)]),
+        (Ty::Named(name), Value::Con(ctor, items)) => {
+            let fields = decls.fields(name, ctor).filter(|f| f.len() == items.len()).ok_or_else(wrong_shape)?;
+            let parts = fields
+                .iter()
+                .zip(items)
+                .map(|(t, v)| json_value(decls, t, v))
+                .collect::<Result<Vec<_>, _>>()?;
+            if decls.is_record(name) {
+                Json::arr(parts)
+            } else {
+                Json::obj([("ctor", Json::str(&**ctor)), ("fields", Json::arr(parts))])
+            }
+        }
+        _ => return Err(wrong_shape()),
     })
 }
 
-fn tfv_value(ty: &Ty, v: &Value) -> Result<String, GenError> {
+fn tfv_value(decls: &Decls, ty: &Ty, v: &Value, depth: usize) -> Result<String, GenError> {
     Ok(match (ty, v) {
+        (Ty::Int, _) => return Err(int_never_written()),
         (_, Value::Bool(true)) => "T".to_string(),
         (_, Value::Bool(false)) => "F".to_string(),
         (_, Value::Int(i)) => format!("I{i}"),
         (_, Value::Bytes(b)) => format!("X{}", hex(b)),
         (Ty::Result(ok, _), Value::Ok(inner)) => {
-            format!("M1 S{} {}", hex(b"ok"), tfv_value(ok, inner)?)
+            let d = enter(depth)?;
+            format!("M1 S{} {}", hex(b"ok"), tfv_value(decls, ok, inner, d)?)
         }
-        (_, Value::Err(case)) => format!("M1 S{} S{}", hex(b"err"), hex(case.as_bytes())),
+        (_, Value::Err(case)) => {
+            enter(depth)?;
+            format!("M1 S{} S{}", hex(b"err"), hex(case.as_bytes()))
+        }
         (Ty::Tuple(parts), Value::Tuple(items)) if parts.len() == items.len() => {
+            let d = enter(depth)?;
             let mut out = format!("L{}", items.len());
             for (t, v) in parts.iter().zip(items) {
                 out.push(' ');
-                out.push_str(&tfv_value(t, v)?);
+                out.push_str(&tfv_value(decls, t, v, d)?);
             }
             out
         }
-        _ => return Err(GenError::internal("an example value has the wrong shape")),
+        // `ir.data` (VER04j 4.9, VER04r 2.5): an `Option` is `L0` / `L1 x`; a record is `L<n> f1 .. fn`; a
+        // variant is `L2 S<hex ctor> L<k> f1 .. fk`, by constructor *name*.  The declared type decides what
+        // an `L1` is, never the text.
+        (Ty::Option(_), Value::Opt(None)) => {
+            enter(depth)?;
+            "L0".to_string()
+        }
+        (Ty::Option(t), Value::Opt(Some(x))) => {
+            let d = enter(depth)?;
+            format!("L1 {}", tfv_value(decls, t, x, d)?)
+        }
+        (Ty::Named(name), Value::Con(ctor, items)) => {
+            let fields = decls.fields(name, ctor).filter(|f| f.len() == items.len()).ok_or_else(wrong_shape)?;
+            if decls.is_record(name) {
+                let d = enter(depth)?;
+                let mut out = format!("L{}", items.len());
+                for (t, v) in fields.iter().zip(items) {
+                    out.push(' ');
+                    out.push_str(&tfv_value(decls, t, v, d)?);
+                }
+                out
+            } else {
+                let d = enter(enter(depth)?)?;
+                let mut out = format!("L2 S{} L{}", hex(ctor.as_bytes()), items.len());
+                for (t, v) in fields.iter().zip(items) {
+                    out.push(' ');
+                    out.push_str(&tfv_value(decls, t, v, d)?);
+                }
+                out
+            }
+        }
+        _ => return Err(wrong_shape()),
     })
 }
 
@@ -109,14 +214,19 @@ impl Examples {
     }
 }
 
-/// Is a `Bytes` inside `v` (itself, or under an `Ok`) longer than the 4,096-byte limit?
-fn over_limit(ty: &Ty, v: &Value) -> bool {
+/// Is a `Bytes` inside `v` (itself, or under an `Ok`, an `Option`, a tuple, a record or a variant) longer than the 4,096-byte limit?
+fn over_limit(decls: &Decls, ty: &Ty, v: &Value) -> bool {
     match (ty, v) {
         (_, Value::Bytes(b)) => b.len() > MAX_EXAMPLE_BYTES,
-        (Ty::Result(ok, _), Value::Ok(inner)) => over_limit(ok, inner),
-        (Ty::Tuple(parts), Value::Tuple(items)) => {
-            parts.iter().zip(items).any(|(t, v)| over_limit(t, v))
+        (Ty::Result(ok, _), Value::Ok(inner)) | (Ty::Option(ok), Value::Opt(Some(inner))) => {
+            over_limit(decls, ok, inner)
         }
+        (Ty::Tuple(parts), Value::Tuple(items)) => {
+            parts.iter().zip(items).any(|(t, v)| over_limit(decls, t, v))
+        }
+        (Ty::Named(name), Value::Con(ctor, items)) => decls
+            .fields(name, ctor)
+            .is_some_and(|f| f.iter().zip(items).any(|(t, v)| over_limit(decls, t, v))),
         _ => false,
     }
 }
@@ -128,12 +238,14 @@ struct Evaluated<'l> {
     widths: &'l [u64],
     args: Vec<(&'l str, Ty, Value)>,
     expected: Value,
+    decls: &'l Decls,
 }
 
 impl Evaluated<'_> {
     /// Is any argument, or the pure value, over the 4,096-byte limit?
     fn any_over_limit(&self) -> bool {
-        self.args.iter().any(|(_, t, v)| over_limit(t, v)) || over_limit(&self.lop.ret, &self.expected)
+        self.args.iter().any(|(_, t, v)| over_limit(self.decls, t, v))
+            || over_limit(self.decls, &self.lop.ret, &self.expected)
     }
 }
 
@@ -149,7 +261,7 @@ impl Evaluated<'_> {
 /// which an omitted example never reaches.
 fn evaluate<'l>(
     lowered: &'l Lowered,
-    program: &Program<'_>,
+    program: &'l Program<'_>,
     checker: &Program<'_>,
     reference: &'l crate::lower::ExampleRef,
 ) -> Result<Evaluated<'l>, GenError> {
@@ -190,6 +302,7 @@ fn evaluate<'l>(
             .map(|((n, t), v)| (n.as_str(), t.substitute(&statics), v))
             .collect(),
         expected,
+        decls: program.decls(),
     })
 }
 
@@ -286,18 +399,19 @@ pub fn examples_omitting(
         let mut arg_json = Vec::new();
         let mut fields = vec![("op".to_string(), format!("S{}", hex(ev.lop.name.as_bytes())))];
         for (pname, concrete, v) in &ev.args {
-            encode(concrete, v, &mut Vec::new()).map_err(at)?;
-            arg_json.push(json_value(concrete, v).map_err(at)?);
-            fields.push(((*pname).to_string(), tfv_value(concrete, v).map_err(at)?));
+            encode_in(ev.decls, concrete, v, &mut Vec::new()).map_err(at)?;
+            arg_json.push(json_value(ev.decls, concrete, v).map_err(at)?);
+            // a field value starts at depth 0: the line's `R<n>` does not count (R99)
+            fields.push(((*pname).to_string(), tfv_value(ev.decls, concrete, v, 0).map_err(at)?));
         }
-        encode(&ev.lop.ret, &ev.expected, &mut Vec::new()).map_err(at)?;
+        encode_in(ev.decls, &ev.lop.ret, &ev.expected, &mut Vec::new()).map_err(at)?;
         let mut row = vec![
             ("id".to_string(), Json::str(id.as_str())),
             ("op".to_string(), Json::str(ev.lop.name.as_str())),
             ("args".to_string(), Json::Arr(arg_json)),
             (
                 "expected".to_string(),
-                json_value(&ev.lop.ret, &ev.expected).map_err(at)?,
+                json_value(ev.decls, &ev.lop.ret, &ev.expected).map_err(at)?,
             ),
             ("result_type".to_string(), Json::str(ev.lop.ret.name())),
         ];
@@ -307,7 +421,7 @@ pub fn examples_omitting(
         }
         fields.push((
             "expect".to_string(),
-            tfv_value(&ev.lop.ret, &ev.expected).map_err(at)?,
+            tfv_value(ev.decls, &ev.lop.ret, &ev.expected, 0).map_err(at)?,
         ));
         let mut line = format!("{id} R{}", fields.len());
         for (k, v) in &fields {

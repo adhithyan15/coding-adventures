@@ -26,10 +26,10 @@
         Iso-ExpectCompileFail -Lang c|cpp -Source f       → assert every compiler rejects f
 
     Environment knobs (same names as iso-lib.sh):
-        ISO_REQUIRE, ISO_INCLUDE, ISO_LINK_ARGS, ISO_BUILD_DIR (default _build),
-        ISO_CSTD, ISO_CXXSTD. ISO_LINK_ARGS is a space-separated list of
-        linker arguments appended after `/link` (leave empty for MSVC math APIs
-        supplied by the C runtime).
+        ISO_REQUIRE, ISO_CLANG_CL, ISO_INCLUDE, ISO_LINK_ARGS,
+        ISO_BUILD_DIR (default _build), ISO_CSTD, ISO_CXXSTD. ISO_LINK_ARGS
+        is a space-separated list of linker arguments appended after `/link`
+        (leave empty for MSVC math APIs supplied by the C runtime).
 
     `cl.exe` must already be on PATH — in CI the msvc-dev-cmd action puts it
     there; locally, run from a "Developer Command Prompt" / after vcvars64.bat.
@@ -77,14 +77,35 @@ function Iso-StrictFlags {
     return $flags
 }
 
-# Return the MSVC-family compilers present on PATH, in a stable order.
+# Resolve one compiler name to the executable that should be invoked. The setup
+# bootstrap pins the selected Visual Studio clang-cl by absolute path because
+# another toolchain may prepend an older clang-cl to PATH later in the job.
+function Iso-CompilerExecutable {
+    param([Parameter(Mandatory)][ValidateSet('cl','clang-cl')][string]$Compiler)
+    if ($Compiler -eq 'clang-cl' -and $env:ISO_CLANG_CL) {
+        $selectedPath = $env:ISO_CLANG_CL
+        if (-not [IO.Path]::IsPathRooted($selectedPath) -or
+            [IO.Path]::GetFileName($selectedPath) -ine 'clang-cl.exe' -or
+            -not (Test-Path -LiteralPath $selectedPath -PathType Leaf)) {
+            throw "iso-harness: ISO_CLANG_CL must name an existing absolute clang-cl.exe: $selectedPath"
+        }
+        return (Resolve-Path -LiteralPath $selectedPath).Path
+    }
+    $command = Get-Command "$Compiler.exe" -CommandType Application -ErrorAction SilentlyContinue
+    if (-not $command) { $command = Get-Command $Compiler -CommandType Application -ErrorAction SilentlyContinue }
+    if (-not $command) { return $null }
+    return $command.Path
+}
+
+# Return compiler names present, in a stable order. Keep names separate from
+# executable paths so strict-flag selection remains explicit.
 function Iso-Compilers {
     param([Parameter(Mandatory)][ValidateSet('c','cpp')][string]$Lang)
     # cl.exe and clang-cl.exe compile both C and C++ (the /std flag selects the
     # dialect), so the candidate set is the same for both languages.
     $found = @()
     foreach ($cc in @('cl', 'clang-cl')) {
-        if (Get-Command $cc -ErrorAction SilentlyContinue) { $found += $cc }
+        if (Iso-CompilerExecutable -Compiler $cc) { $found += $cc }
     }
     return $found
 }
@@ -94,7 +115,9 @@ function Iso-RequireCheck {
     if (-not $env:ISO_REQUIRE) { return }
     $missing = @()
     foreach ($req in ($env:ISO_REQUIRE -split '\s+' | Where-Object { $_ })) {
-        if (-not (Get-Command $req -ErrorAction SilentlyContinue)) { $missing += $req }
+        if ($req -eq 'clang-cl') {
+            if (-not (Iso-CompilerExecutable -Compiler 'clang-cl')) { $missing += $req }
+        } elseif (-not (Get-Command $req -ErrorAction SilentlyContinue)) { $missing += $req }
     }
     if ($missing.Count -gt 0) {
         throw "iso-harness: required compiler(s) not found: $($missing -join ' ') (ISO_REQUIRE='$($env:ISO_REQUIRE)')"
@@ -118,6 +141,7 @@ function Iso-BuildAndRun {
     if ($env:ISO_LINK_ARGS) { $linkArgs = @($env:ISO_LINK_ARGS -split '\s+' | Where-Object { $_ }) }
     New-Item -ItemType Directory -Force -Path $buildDir | Out-Null
     foreach ($cc in $compilers) {
+        $compiler = Iso-CompilerExecutable -Compiler $cc
         $flags = Iso-StrictFlags -Lang $Lang -Compiler $cc
         $exe = Join-Path $buildDir "$cc-$Name.exe"
         Write-Host "iso-harness: [$cc] compiling $Name"
@@ -127,7 +151,7 @@ function Iso-BuildAndRun {
         # default is 1 MiB, so a test that is fine elsewhere (a deep recursive
         # formatter, a large automatic buffer) overflowed here and looked like a
         # portability bug when it was only a smaller default.
-        & $cc @flags $Sources "/Fe:$exe" "/Fo:$buildDir\" /link /STACK:8388608 @linkArgs
+        & $compiler @flags $Sources "/Fe:$exe" "/Fo:$buildDir\" /link /STACK:8388608 @linkArgs
         if ($LASTEXITCODE -ne 0) { throw "iso-harness: [$cc] COMPILE FAILED for $Name" }
         Write-Host "iso-harness: [$cc] running $Name"
         & $exe
@@ -155,6 +179,7 @@ function Iso-ExpectCompileFail {
     $buildDir = Iso-BuildDir
     New-Item -ItemType Directory -Force -Path $buildDir | Out-Null
     foreach ($cc in $compilers) {
+        $compiler = Iso-CompilerExecutable -Compiler $cc
         $flags = Iso-StrictFlags -Lang $Lang -Compiler $cc
         Write-Host "iso-harness: [$cc] expecting REJECTION of $Source"
         # /c compiles without linking; we only care about the accept/reject verdict.
@@ -164,7 +189,7 @@ function Iso-ExpectCompileFail {
         $savedErrorPreference = $ErrorActionPreference
         try {
             $ErrorActionPreference = 'Continue'
-            & $cc @flags '/c' $Source "/Fo:$buildDir\" *> $null
+            & $compiler @flags '/c' $Source "/Fo:$buildDir\" *> $null
             $compileExitCode = $LASTEXITCODE
         } finally { $ErrorActionPreference = $savedErrorPreference }
         if ($compileExitCode -eq 0) {

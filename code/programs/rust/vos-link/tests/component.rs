@@ -2460,3 +2460,117 @@ fn the_oracle_fault_is_the_one_the_spec_names() {
         "VOS04 5.6 must state CC11 and the constant"
     );
 }
+
+// --- CC12 (VOS-040c, VOS31 10.2): an implementation never claims SAT ---------------------------
+
+#[test]
+fn cc12_an_implementation_with_the_sat_key_is_refused() {
+    let r = good("cc12-key", PROD, "production", false);
+    let t = r.read(&p(PROD, "vos.toml"));
+    r.write(&p(PROD, "vos.toml"), format!("{t}sat = \"model\"\n"));
+    only(
+        &run(&r, PROD),
+        "CC12",
+        "`sat = \"model\"` on an implementation crate",
+    );
+}
+
+#[test]
+fn cc12_an_implementation_with_a_sat_table_is_refused() {
+    let r = good("cc12-table", PROD, "production", false);
+    r.write(&p(PROD, "warrant/lemmas.sat"), "vos-sat 1\nend\n");
+    only(
+        &run(&r, PROD),
+        "CC12",
+        "under warrant/ exists in an implementation",
+    );
+}
+
+#[test]
+fn cc12_an_implementation_build_that_runs_the_lane_is_refused_in_both_files() {
+    for (file, name) in [("BUILD", "BUILD:"), ("BUILD_windows", "BUILD_windows:")] {
+        let r = good("cc12-build", PROD, "production", false);
+        let text = r.read(&p(PROD, file));
+        r.write(
+            &p(PROD, file),
+            format!("{text}cargo run -q --release --manifest-path ../../../programs/rust/vos-model-sat/Cargo.toml -- check .\n"),
+        );
+        let o = run(&r, PROD);
+        only(&o, "CC12", name);
+    }
+    // A comment that merely mentions the lane is not a run.
+    let r = good("cc12-comment", PROD, "production", false);
+    let text = r.read(&p(PROD, "BUILD"));
+    r.write(
+        &p(PROD, "BUILD"),
+        format!("{text}# no vos-model-sat here\n"),
+    );
+    assert!(run(&r, PROD).findings.is_empty());
+}
+
+#[test]
+fn cc12_any_file_under_warrant_with_sat_in_its_name_is_refused() {
+    for name in ["lemmas.sat.bak", "foo.sat", "x.sat.old"] {
+        let r = good("cc12-satname", PROD, "production", false);
+        r.write(
+            &p(PROD, &format!("warrant/{name}")),
+            "x
+",
+        );
+        only(
+            &run(&r, PROD),
+            "CC12",
+            "under warrant/ exists in an implementation",
+        );
+    }
+    // A neighbour that merely contains the letters is fine.
+    let r = good("cc12-sat-ok", PROD, "production", false);
+    r.write(
+        &p(PROD, "warrant/saturate.txt"),
+        "x
+",
+    );
+    assert!(run(&r, PROD).findings.is_empty());
+}
+
+#[test]
+fn cc12_a_continued_or_quoted_name_and_a_manifest_path_are_caught() {
+    use vos_link::component::{logical_lines, mentions_sat_lane};
+    // Unit level: continuation, quotes, Windows separators, a manifest path.
+    let lines = logical_lines("echo a\ncargo run vos-model-\\\nsat check .\nlast\n");
+    assert_eq!(lines[1], (2, "cargo run vos-model-sat check .".to_string()));
+    assert_eq!(lines.len(), 3);
+    assert!(mentions_sat_lane("cargo run vos-model-\"sat\" check"));
+    assert!(mentions_sat_lane(
+        r"cargo run --manifest-path ..\..\programs\rust\vos-model-sat\Cargo.toml"
+    ));
+    assert!(mentions_sat_lane("cat warrant/lemmas.sat"));
+    assert!(!mentions_sat_lane("cargo test --manifest-path Cargo.toml"));
+    // Through the rule, in both BUILD files.
+    for file in ["BUILD", "BUILD_windows"] {
+        let r = good("cc12-split", PROD, "production", false);
+        let t = r.read(&p(PROD, file));
+        r.write(
+            &p(PROD, file),
+            format!("{t}cargo run -q vos-model-\\\nsat check .\n"),
+        );
+        only(&run(&r, PROD), "CC12", &format!("{file}:"));
+        let r = good("cc12-mp", PROD, "production", false);
+        let t = r.read(&p(PROD, file));
+        r.write(
+            &p(PROD, file),
+            format!(
+                "{t}cargo run -q --manifest-path ../../../programs/rust/vos-model-sat/Cargo.toml\n"
+            ),
+        );
+        only(&run(&r, PROD), "CC12", &format!("{file}:"));
+    }
+    // A comment that mentions the lane (even a continued one) is still allowed.
+    let r = good("cc12-comment2", PROD, "production", false);
+    let t = r.read(&p(PROD, "BUILD"));
+    r.write(
+        &p(PROD, "BUILD"),
+        format!("{t}# see vos-model-sat \\\n# and lemmas.sat\n"),
+    );
+    assert!(run(&r, PROD).findings.is_empty());
+}
