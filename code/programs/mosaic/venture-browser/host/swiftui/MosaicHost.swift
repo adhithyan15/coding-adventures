@@ -164,6 +164,14 @@ private struct VentureScrollMetrics {
   let maxOffsetY: Double
 }
 
+private struct NativeClickResolution {
+  let point: NSPoint
+  let window: NSWindow
+  let resolver: String
+  let targetView: NSView?
+  let accessibilityTarget: NSAccessibilityProtocol?
+}
+
 @objc(MosaicHost)
 final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private let native: VentureNativeLibrary?
@@ -184,6 +192,9 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var surfaceRenderBaseline: CGSize?
   private var lastSurfaceRenderSize: CGSize?
   private var chromeEventCounts: [String: Int] = [:]
+  private var zoomDiagnosticRecordCount = 0
+  private var lastZoomModelForDiagnostic: [String: Any] = [:]
+  private var lastZoomModelAt: TimeInterval?
   private(set) var lastAuxiliaryDocument: NSDictionary?
   private(set) var lastBrowsingContextRequest: NSDictionary?
   private(set) var lastDownloadRequest: NSDictionary?
@@ -206,13 +217,43 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   }
 
   func applyProps() -> NSDictionary? {
-    native?.decode(native?.applyProps(browser))
+    let result = native?.decode(native?.applyProps(browser))
       ?? ["error": "Venture native bridge is unavailable"]
+    updateZoomModelDiagnostic(from: result)
+    return result
+  }
+
+  private func updateZoomModelDiagnostic(from result: NSDictionary?) {
+    guard zoomDiagnosticEnabled, let props = result?["props"] as? NSDictionary else { return }
+    lastZoomModelForDiagnostic = [
+      "zoom_label": diagnosticText(props["zoom-label"] as? String),
+      "zoom_in_disabled": props["zoom-in-disabled"] as? Bool ?? false,
+    ]
+    lastZoomModelAt = ProcessInfo.processInfo.systemUptime
   }
 
   func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary? {
-    guard let native, let browser else { return applyProps() }
+    let isZoom = name as String == "onZoomIn"
+    let countBefore = chromeEventCounts[name as String, default: 0]
+    if isZoom {
+      zoomDiagnostic("zoom_callback_entry", [
+        "native_present": native != nil,
+        "browser_present": browser != nil,
+        "host_window_number": contentView?.window?.windowNumber ?? 0,
+        "count_before": countBefore,
+      ])
+    }
+    guard let native, let browser else {
+      if isZoom { zoomDiagnostic("zoom_callback_no_bridge", [:]) }
+      return applyProps()
+    }
     chromeEventCounts[name as String, default: 0] += 1
+    if isZoom {
+      zoomDiagnostic("zoom_callback_counted", [
+        "count_before": countBefore,
+        "count_after": chromeEventCounts[name as String, default: 0],
+      ])
+    }
     let value = envelope["value"] as? String
     let response = name.utf8String.flatMap { eventName in
       if let value {
@@ -222,8 +263,125 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
     contentView?.renderPage()
     let decoded = native.decode(response)
+    if isZoom { updateZoomModelDiagnostic(from: decoded) }
     consumeEffect(decoded)
     return decoded
+  }
+
+  private var zoomDiagnosticEnabled: Bool {
+    ProcessInfo.processInfo.environment["VENTURE_UI_ZOOM_DIAGNOSTIC"] == "1"
+  }
+
+  private func zoomDiagnostic(_ event: String, _ fields: [String: Any]) {
+    guard zoomDiagnosticEnabled, zoomDiagnosticRecordCount < 160 else { return }
+    zoomDiagnosticRecordCount += 1
+    var record: [String: Any] = [
+      "event": event,
+      "sequence": zoomDiagnosticRecordCount,
+      "uptime_seconds": ProcessInfo.processInfo.systemUptime,
+    ]
+    for (key, value) in fields { record[key] = value }
+    guard let encoded = try? JSONSerialization.data(withJSONObject: record, options: [.fragmentsAllowed])
+    else { return }
+    FileHandle.standardError.write(encoded)
+    FileHandle.standardError.write(Data([0x0A]))
+  }
+
+  private func zoomModelDiagnosticFields() -> [String: Any] {
+    var fields = lastZoomModelForDiagnostic
+    if let lastZoomModelAt {
+      fields["model_observation_age_ms"] = max(0, (ProcessInfo.processInfo.systemUptime - lastZoomModelAt) * 1000)
+    }
+    return fields
+  }
+
+  private func diagnosticScalar(_ value: CGFloat) -> String {
+    String(format: "%.2f", locale: Locale(identifier: "en_US_POSIX"), Double(value))
+  }
+
+  private func diagnosticText(_ value: String?) -> String {
+    let text = value ?? ""
+    return text.count <= 128 ? text : String(text.prefix(128)) + "…"
+  }
+
+  private func diagnosticRect(_ rect: NSRect) -> [String: String] {
+    [
+      "x": diagnosticScalar(rect.origin.x), "y": diagnosticScalar(rect.origin.y),
+      "width": diagnosticScalar(rect.size.width), "height": diagnosticScalar(rect.size.height),
+    ]
+  }
+
+  private func zoomResolutionDiagnosticFields(_ resolution: NativeClickResolution) -> [String: Any] {
+    let window = resolution.window
+    var fields: [String: Any] = [
+      "resolver": resolution.resolver,
+      "click_point_window": [
+        "x": diagnosticScalar(resolution.point.x), "y": diagnosticScalar(resolution.point.y),
+      ],
+      "window_number": window.windowNumber,
+      "app_active": NSApp.isActive,
+      "window_key": window.isKeyWindow,
+      "window_main": window.isMainWindow,
+      "window_visible": window.isVisible,
+    ]
+    if let view = resolution.targetView {
+      let frame = view.convert(view.bounds, to: nil)
+      fields["target_view_class"] = String(describing: type(of: view))
+      fields["target_view_frame_window"] = diagnosticRect(frame)
+      fields["click_inside_target_view_frame"] = frame.contains(resolution.point)
+    }
+    if let control = resolution.accessibilityTarget {
+      let frame = control.accessibilityFrame()
+      fields["ax_identifier"] = diagnosticText(control.accessibilityIdentifier())
+      fields["ax_label"] = diagnosticText(control.accessibilityLabel())
+      fields["ax_enabled"] = control.isAccessibilityEnabled()
+      fields["ax_frame_screen"] = diagnosticRect(frame)
+    }
+    if let contentView = window.contentView, let hitTestParent = contentView.superview {
+      let hitTestPoint = hitTestParent.convert(resolution.point, from: nil)
+      let hit = contentView.hitTest(hitTestPoint)
+      fields["hit_test_point_superview"] = [
+        "x": diagnosticScalar(hitTestPoint.x), "y": diagnosticScalar(hitTestPoint.y),
+      ]
+      fields["hit_test_class"] = hit.map { String(describing: type(of: $0)) } ?? "<none>"
+      if let targetView = resolution.targetView {
+        fields["hit_is_target_view"] = hit === targetView
+      }
+    } else {
+      fields["hit_test_class"] = "<content-view-has-no-superview>"
+    }
+    return fields
+  }
+
+  private func captureZoomFailureWindow(markerPath: String) -> [String: Any] {
+    guard let window = contentView?.window, let view = window.contentView else {
+      return ["snapshot": "unavailable_no_owned_content_window"]
+    }
+    let bounds = view.bounds
+    guard bounds.origin.x.isFinite, bounds.origin.y.isFinite,
+      bounds.width.isFinite, bounds.height.isFinite,
+      bounds.width > 0, bounds.height > 0,
+      bounds.width <= 2048, bounds.height <= 2048
+    else { return ["snapshot": "skipped_nonfinite_or_dimension_limit"] }
+    let width = Int(bounds.width.rounded(.up))
+    let height = Int(bounds.height.rounded(.up))
+    guard width > 0, height > 0, width <= 2048, height <= 2048, width * height <= 2_500_000,
+      let bitmap = NSBitmapImageRep(
+        bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height,
+        bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+        colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+    else { return ["snapshot": "skipped_dimension_limit"] }
+    view.cacheDisplay(in: bounds, to: bitmap)
+    guard let png = bitmap.representation(using: .png, properties: [:]), png.count <= 1_500_000
+    else { return ["snapshot": "skipped_size_limit"] }
+    let destination = URL(fileURLWithPath: markerPath).deletingLastPathComponent()
+      .appendingPathComponent("swiftui-zoom-failure.png")
+    do {
+      try png.write(to: destination, options: .atomic)
+      return ["snapshot": "saved", "snapshot_bytes": png.count, "snapshot_width": width, "snapshot_height": height]
+    } catch {
+      return ["snapshot": "write_failed", "snapshot_error_type": String(describing: type(of: error))]
+    }
   }
 
   private func consumeEffect(_ response: NSDictionary?) {
@@ -1022,9 +1180,19 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
   ) {
     let closeEvents = chromeEventCounts["onPageInfoClose", default: 0]
-    let pageInfoOpen = (applyProps()?["props"] as? NSDictionary)?["page-info-open"] as? Bool
+    let propsResult = applyProps()
+    let props = propsResult?["props"] as? NSDictionary
+    let pageInfoOpen = props?["page-info-open"] as? Bool
     if closeEvents == eventCount + 1, pageInfoOpen == false {
       let zoomEvents = chromeEventCounts["onZoomIn", default: 0]
+      if zoomDiagnosticEnabled {
+        zoomDiagnostic("zoom_pre_click", [
+          "baseline_count": zoomEvents,
+          "zoom_label": diagnosticText(props?["zoom-label"] as? String),
+          "zoom_in_disabled": props?["zoom-in-disabled"] as? Bool ?? false,
+          "props_call_reused": true,
+        ])
+      }
       guard performNativeButtonClick(identifier: "zoom-in-button") else {
         writeInteractionResult(
           ["backend": "swiftui", "status": "error", "error": "zoom-in-button not found"],
@@ -1060,6 +1228,16 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
   ) {
     let zoomEvents = chromeEventCounts["onZoomIn", default: 0]
+    if zoomDiagnosticEnabled {
+      zoomDiagnostic("zoom_poll", [
+        "baseline_count": eventCount,
+        "actual_count": zoomEvents,
+        "host_window_number": contentView?.window?.windowNumber ?? 0,
+        "expected_exact_count": eventCount + 1,
+        "remaining_polls": remaining,
+        "model_snapshot": zoomModelDiagnosticFields(),
+      ])
+    }
     if zoomEvents == eventCount + 1 {
       let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
       guard performNativeButtonClick(identifier: "view-source-button") else {
@@ -1076,6 +1254,16 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       return
     }
     guard remaining > 0 else {
+      let snapshot = zoomDiagnosticEnabled ? captureZoomFailureWindow(markerPath: markerPath) : [:]
+      if zoomDiagnosticEnabled {
+        zoomDiagnostic("zoom_timeout", [
+          "baseline_count": eventCount,
+          "actual_count": zoomEvents,
+          "expected_exact_count": eventCount + 1,
+          "model_snapshot": zoomModelDiagnosticFields(),
+          "snapshot_result": snapshot,
+        ])
+      }
       writeInteractionResult(
         ["backend": "swiftui", "status": "error", "error": "native page zoom did not dispatch"],
         to: markerPath)
@@ -1740,7 +1928,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return nil
   }
 
-  private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+  private func nativeToolbarControlPoint(identifier: String) -> NativeClickResolution? {
     let identifiers = [
       "back-button", "forward-button", "home-button", "reload-button", "stop-button",
     ]
@@ -1759,34 +1947,37 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         let toolbarStart = addressIndex - identifiers.count
         let control = siblings[toolbarStart + controlIndex]
         guard !control.frame.isEmpty else { return nil }
-        return (
-          control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil), window
-        )
+        return NativeClickResolution(
+          point: control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil),
+          window: window, resolver: "native_toolbar", targetView: control,
+          accessibilityTarget: nil)
       }
       addressBranch = ancestor
     }
     return nil
   }
 
-  private func nativePageActionControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+  private func nativePageActionControlPoint(identifier: String) -> NativeClickResolution? {
     let identifiers = [
       "copy-address-button", "open-page-button", "save-page-button",
       "print-page-button", "share-page-button", "page-info-button",
       "zoom-out-button", "zoom-reset-button", "zoom-in-button", "view-source-button",
     ]
-    return nativeActionRowControlPoint(identifier: identifier, identifiers: identifiers)
+    return nativeActionRowControlPoint(
+      identifier: identifier, identifiers: identifiers, resolver: "native_page_action")
   }
 
-  private func nativeLibraryControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+  private func nativeLibraryControlPoint(identifier: String) -> NativeClickResolution? {
     let identifiers = [
       "bookmark-button", "bookmarks-button", "history-button", "find-button",
     ]
-    return nativeActionRowControlPoint(identifier: identifier, identifiers: identifiers)
+    return nativeActionRowControlPoint(
+      identifier: identifier, identifiers: identifiers, resolver: "native_library")
   }
 
   private func nativeActionRowControlPoint(
-    identifier: String, identifiers: [String]
-  ) -> (NSPoint, NSWindow)? {
+    identifier: String, identifiers: [String], resolver: String
+  ) -> NativeClickResolution? {
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
     guard let address = findEditableTextField(in: NSApp, visited: &visited),
@@ -1821,9 +2012,9 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         .sorted { $0.frame.minX < $1.frame.minX }
       guard controls.count == identifiers.count else { continue }
       let control = controls[controlIndex]
-      return (
-        control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil), window
-      )
+      return NativeClickResolution(
+        point: control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil),
+        window: window, resolver: resolver, targetView: control, accessibilityTarget: nil)
     }
     return nil
   }
@@ -1856,7 +2047,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
   }
 
-  private func accessibleControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+  private func accessibleControlPoint(identifier: String) -> NativeClickResolution? {
     let labels = accessibleControlLabels(identifier: identifier)
     for window in NSApp.windows {
       var visited = Set<ObjectIdentifier>()
@@ -1868,7 +2059,10 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         else { continue }
         let frame = control.accessibilityFrame()
         guard !frame.isEmpty else { continue }
-        return (window.convertPoint(fromScreen: NSPoint(x: frame.midX, y: frame.midY)), window)
+        return NativeClickResolution(
+          point: window.convertPoint(fromScreen: NSPoint(x: frame.midX, y: frame.midY)),
+          window: window, resolver: "accessibility", targetView: control as? NSView,
+          accessibilityTarget: control)
       }
     }
     return nil
@@ -1876,12 +2070,14 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   private func performNativeButtonClick(identifier: String) -> Bool {
     NSApp.activate(ignoringOtherApps: true)
-    if let (point, window) = accessibleControlPoint(identifier: identifier)
+    if let resolution = accessibleControlPoint(identifier: identifier)
       ?? nativeToolbarControlPoint(identifier: identifier)
       ?? nativeLibraryControlPoint(identifier: identifier)
       ?? nativePageActionControlPoint(identifier: identifier)
     {
-      sendPrimaryClick(at: point, to: window)
+      let isZoom = identifier == "zoom-in-button" && zoomDiagnosticEnabled
+      if isZoom { zoomDiagnostic("zoom_click_resolution", zoomResolutionDiagnosticFields(resolution)) }
+      sendPrimaryClick(at: resolution.point, to: resolution.window, zoomDiagnostic: isZoom)
       return true
     }
     for window in NSApp.windows {
@@ -1893,7 +2089,25 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
           identifier: identifier, labels: accessibleControlLabels(identifier: identifier),
           in: root, visited: &visited)
         else { continue }
-        return control.accessibilityPerformPress()
+        let isZoomDiagnostic = identifier == "zoom-in-button" && zoomDiagnosticEnabled
+        if isZoomDiagnostic {
+          let frame = control.accessibilityFrame()
+          zoomDiagnostic("zoom_click_resolution", [
+            "resolver": "accessibility_press_fallback",
+            "fallback_route": true,
+            "ax_identifier": diagnosticText(control.accessibilityIdentifier()),
+            "ax_label": diagnosticText(control.accessibilityLabel()),
+            "ax_enabled": control.isAccessibilityEnabled(),
+            "ax_frame_screen": diagnosticRect(frame),
+            "host_window_number": contentView?.window?.windowNumber ?? 0,
+            "app_active": NSApp.isActive,
+          ])
+        }
+        let pressed = control.accessibilityPerformPress()
+        if isZoomDiagnostic {
+          zoomDiagnostic("zoom_accessibility_press_result", ["pressed": pressed])
+        }
+        return pressed
       }
     }
     return false
@@ -2021,12 +2235,28 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return true
   }
 
-  private func sendPrimaryClick(at location: NSPoint, to window: NSWindow) {
+  private func sendPrimaryClick(at location: NSPoint, to window: NSWindow, zoomDiagnostic: Bool = false) {
     for eventType in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
-      guard let event = primaryMouseEvent(type: eventType, at: location, in: window)
-      else { continue }
+      let event = primaryMouseEvent(type: eventType, at: location, in: window)
+      if zoomDiagnostic {
+        zoomDiagnosticLogMouseEvent(eventType, constructed: event != nil, submitted: false)
+      }
+      guard let event else { continue }
       NSApp.sendEvent(event)
+      if zoomDiagnostic {
+        zoomDiagnosticLogMouseEvent(eventType, constructed: true, submitted: true)
+      }
     }
+  }
+
+  private func zoomDiagnosticLogMouseEvent(
+    _ type: NSEvent.EventType, constructed: Bool, submitted: Bool
+  ) {
+    let label = type == .leftMouseDown ? "left_mouse_down" : "left_mouse_up"
+    zoomDiagnostic("zoom_mouse_event", [
+      "type": label, "constructed": constructed,
+      "submitted_to_nsapp": submitted,
+    ])
   }
 
   private func primaryMouseEvent(
