@@ -8,22 +8,22 @@
 //
 // This adapter bridges the gap:
 //
-//   RISC-V world                     Core world
-//   ─────────────                    ──────────
-//   uint32 instructions              int instructions
-//   DecodeResult (mnemonic, fields)  PipelineToken (Rs1, Rs2, Rd, signals)
-//   ExecuteResult (changes, nextPC)  PipelineToken (ALUResult, BranchTaken)
-//   cpu.RegisterFile (uint32)        core.RegisterFile (int)
-//   cpu.Memory (flat array)          MemoryController (latency model)
+//	RISC-V world                     Core world
+//	─────────────                    ──────────
+//	uint32 instructions              int instructions
+//	DecodeResult (mnemonic, fields)  PipelineToken (Rs1, Rs2, Rd, signals)
+//	ExecuteResult (changes, nextPC)  PipelineToken (ALUResult, BranchTaken)
+//	cpu.RegisterFile (uint32)        core.RegisterFile (int)
+//	cpu.Memory (flat array)          MemoryController (latency model)
 //
 // The adapter translates between these representations at two points:
 //
-//   1. Decode: RISC-V decoder fills a DecodeResult → adapter copies fields
-//      into the PipelineToken (Rs1, Rs2, Rd, control signals).
+//  1. Decode: RISC-V decoder fills a DecodeResult → adapter copies fields
+//     into the PipelineToken (Rs1, Rs2, Rd, control signals).
 //
-//   2. Execute: adapter reads register values from the Core's RegisterFile,
-//      computes ALU results using RISC-V semantics, and fills the token's
-//      ALUResult, BranchTaken, BranchTarget, and WriteData fields.
+//  2. Execute: adapter reads register values from the Core's RegisterFile,
+//     computes ALU results using RISC-V semantics, and fills the token's
+//     ALUResult, BranchTaken, BranchTarget, and WriteData fields.
 //
 // === Why Not Just Reuse the RISC-V Executor Directly? ===
 //
@@ -31,10 +31,10 @@
 // registers, computes results, modifies registers, AND accesses memory.
 // But the Core's pipeline separates these into distinct stages:
 //
-//   ID stage:  decode instruction, identify registers
-//   EX stage:  compute ALU result, resolve branches
-//   MEM stage: access memory (loads/stores) — handled by Core
-//   WB stage:  write registers — handled by Core
+//	ID stage:  decode instruction, identify registers
+//	EX stage:  compute ALU result, resolve branches
+//	MEM stage: access memory (loads/stores) — handled by Core
+//	WB stage:  write registers — handled by Core
 //
 // The adapter must NOT read/write registers or access memory during Execute.
 // It only computes ALU results. The Core handles memory and writeback.
@@ -52,9 +52,9 @@
 package riscvsimulator
 
 import (
-	cpu "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-simulator"
-	cpupipeline "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-pipeline"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/core"
+	cpupipeline "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-pipeline"
+	cpu "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-simulator"
 )
 
 // =========================================================================
@@ -92,6 +92,15 @@ func NewRiscVISADecoder() *RiscVISADecoder {
 	return result
 }
 
+// SupportsTypedOperandForwarding opts the RISC-V core into source-tagged
+// forwarding values carried by the generic pipeline. Other ISA adapters keep
+// the legacy scalar forwarding path unless they explicitly add this contract.
+func (*RiscVISADecoder) SupportsTypedOperandForwarding() bool { return true }
+
+// ZeroRegisterIndex reports RISC-V's hardwired x0 convention to the core's
+// generic hazard adapter so writes to x0 cannot become forwarding producers.
+func (*RiscVISADecoder) ZeroRegisterIndex() (int, bool) { return 0, true }
+
 // InstructionSize returns 4 — all RV32I instructions are 32 bits (4 bytes).
 //
 // RISC-V also defines a compressed extension (RV32C) with 16-bit instructions,
@@ -108,24 +117,26 @@ func (d *RiscVISADecoder) InstructionSize() int {
 //
 // This is the ID (Instruction Decode) stage of the pipeline. The adapter:
 //
-//   1. Calls the RISC-V decoder to parse the raw bits into a DecodeResult.
-//   2. Copies the decoded fields (registers, immediates, control signals)
-//      into the PipelineToken that the Core's pipeline uses.
+//  1. Calls the RISC-V decoder to parse the raw bits into a DecodeResult.
+//  2. Copies the decoded fields (registers, immediates, control signals)
+//     into the PipelineToken that the Core's pipeline uses.
 //
 // === Mapping from DecodeResult to PipelineToken ===
 //
 // The RISC-V DecodeResult uses a generic map[string]int for fields:
-//   Fields["rd"]  → token.Rd
-//   Fields["rs1"] → token.Rs1
-//   Fields["rs2"] → token.Rs2
-//   Fields["imm"] → token.Immediate
+//
+//	Fields["rd"]  → token.Rd
+//	Fields["rs1"] → token.Rs1
+//	Fields["rs2"] → token.Rs2
+//	Fields["imm"] → token.Immediate
 //
 // Control signals are derived from the mnemonic:
-//   "add", "addi", "lui", ... → RegWrite = true
-//   "lw", "lb", ...          → RegWrite = true, MemRead = true
-//   "sw", "sb", ...          → MemWrite = true
-//   "beq", "bne", ...        → IsBranch = true
-//   "ecall" (halt)           → IsHalt = true
+//
+//	"add", "addi", "lui", ... → RegWrite = true
+//	"lw", "lb", ...          → RegWrite = true, MemRead = true
+//	"sw", "sb", ...          → MemWrite = true
+//	"beq", "bne", ...        → IsBranch = true
+//	"ecall" (halt)           → IsHalt = true
 func (d *RiscVISADecoder) Decode(rawInstruction int, token *cpupipeline.PipelineToken) *cpupipeline.PipelineToken {
 	// Call the RISC-V decoder. It expects uint32; the Core uses int.
 	raw := uint32(rawInstruction)
@@ -211,11 +222,11 @@ func (d *RiscVISADecoder) Decode(rawInstruction int, token *cpupipeline.Pipeline
 //
 // This is the EX (Execute) stage of the pipeline. The adapter:
 //
-//   1. Reads source register values from the Core's RegisterFile.
-//   2. Computes the ALU result based on the mnemonic and operands.
-//   3. For branches: resolves whether the branch is taken and computes the target.
-//   4. For loads/stores: computes the effective address (base + offset).
-//   5. Fills in the token's ALUResult, WriteData, BranchTaken, BranchTarget.
+//  1. Reads source register values from the Core's RegisterFile.
+//  2. Computes the ALU result based on the mnemonic and operands.
+//  3. For branches: resolves whether the branch is taken and computes the target.
+//  4. For loads/stores: computes the effective address (base + offset).
+//  5. Fills in the token's ALUResult, WriteData, BranchTaken, BranchTarget.
 //
 // IMPORTANT: The executor does NOT access memory or write registers.
 // Those happen in later pipeline stages (MEM and WB), handled by the Core.
@@ -229,6 +240,23 @@ func (d *RiscVISADecoder) Execute(token *cpupipeline.PipelineToken, regFile *cor
 	}
 	if token.Rs2 >= 0 {
 		rs2Val = regFile.Read(token.Rs2)
+	}
+	for _, forwarded := range token.ForwardedOperands {
+		// x0 is constant zero. Even if a malformed or legacy callback reports
+		// it, never replace the architectural zero value with that payload.
+		if forwarded.Register == 0 {
+			continue
+		}
+		switch forwarded.Operand {
+		case cpupipeline.SourceOperand1:
+			if forwarded.Register == token.Rs1 {
+				rs1Val = forwarded.Value
+			}
+		case cpupipeline.SourceOperand2:
+			if forwarded.Register == token.Rs2 {
+				rs2Val = forwarded.Value
+			}
+		}
 	}
 
 	// Cast to uint32 for bitwise and unsigned operations.
@@ -599,9 +627,10 @@ func decodeFieldsFromToken(token *cpupipeline.PipelineToken) map[string]int {
 //
 // Example:
 //
-//   config := core.SimpleConfig()
-//   c, err := NewRiscVCore(config, 65536)
-//   // Load a program, then c.Run(10000)
+//	config := core.SimpleConfig()
+//	c, err := NewRiscVCore(config, 65536)
+//	// Load a program, then c.Run(10000)
+//
 // riscvCoreResult is an internal helper struct for returning multiple values from NewRiscVCore.
 type riscvCoreResult struct {
 	c   *core.Core
@@ -648,9 +677,9 @@ func NewRiscVCore(config core.CoreConfig, memorySize int) (*core.Core, error) {
 // its constructor), then manually load program data through the SparseMemory.
 //
 // The caller is responsible for:
-//   1. Creating the SparseMemory with appropriate regions
-//   2. Loading program code into the SparseMemory via LoadBytes
-//   3. Using the returned Core for execution
+//  1. Creating the SparseMemory with appropriate regions
+//  2. Loading program code into the SparseMemory via LoadBytes
+//  3. Using the returned Core for execution
 //
 // Note: The Core's internal MemoryController will use its own flat memory
 // for cache simulation statistics. For programs that only access addresses

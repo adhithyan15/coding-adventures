@@ -160,12 +160,12 @@ func TestADD(t *testing.T) {
 
 	// R1 = 10, R2 = 20, R3 = R1 + R2 = 30
 	program := EncodeProgram(
-		EncodeADDI(1, 0, 10),  // R1 = 0 + 10
-		EncodeADDI(2, 0, 20),  // R2 = 0 + 20
-		EncodeNOP(),           // avoid data hazard
-		EncodeNOP(),           // avoid data hazard
-		EncodeADD(3, 1, 2),    // R3 = R1 + R2
-		EncodeNOP(),           // pipeline drain
+		EncodeADDI(1, 0, 10), // R1 = 0 + 10
+		EncodeADDI(2, 0, 20), // R2 = 0 + 20
+		EncodeNOP(),          // avoid data hazard
+		EncodeNOP(),          // avoid data hazard
+		EncodeADD(3, 1, 2),   // R3 = R1 + R2
+		EncodeNOP(),          // pipeline drain
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
@@ -221,11 +221,11 @@ func TestSUB(t *testing.T) {
 	c := makeSimpleCore(t)
 
 	program := EncodeProgram(
-		EncodeADDI(1, 0, 50),  // R1 = 50
-		EncodeADDI(2, 0, 20),  // R2 = 20
+		EncodeADDI(1, 0, 50), // R1 = 50
+		EncodeADDI(2, 0, 20), // R2 = 20
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeSUB(3, 1, 2),    // R3 = R1 - R2 = 30
+		EncodeSUB(3, 1, 2), // R3 = R1 - R2 = 30
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
@@ -253,7 +253,7 @@ func TestLOAD(t *testing.T) {
 	c.memCtrl.WriteWord(512, 0xDEAD)
 
 	program := EncodeProgram(
-		EncodeADDI(1, 0, 0),   // R1 = 0 (base address)
+		EncodeADDI(1, 0, 0), // R1 = 0 (base address)
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeLOAD(2, 1, 512), // R2 = Memory[R1 + 512] = Memory[512]
@@ -281,11 +281,11 @@ func TestSTORE(t *testing.T) {
 	// Use address 512 (0x200) to stay within the positive 12-bit immediate range.
 	// Values >= 0x800 (2048) are sign-extended to negative numbers.
 	program := EncodeProgram(
-		EncodeADDI(1, 0, 0),     // R1 = 0 (base address)
-		EncodeADDI(2, 0, 0x42),  // R2 = 0x42 (value to store)
+		EncodeADDI(1, 0, 0),    // R1 = 0 (base address)
+		EncodeADDI(2, 0, 0x42), // R2 = 0x42 (value to store)
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeSTORE(1, 2, 512),  // Memory[R1 + 512] = R2
+		EncodeSTORE(1, 2, 512), // Memory[R1 + 512] = R2
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
@@ -329,17 +329,17 @@ func TestSimpleSequence(t *testing.T) {
 	c.memCtrl.WriteWord(512, 100)
 
 	program := EncodeProgram(
-		EncodeADDI(1, 0, 0),     // R1 = 0 (base)
+		EncodeADDI(1, 0, 0), // R1 = 0 (base)
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeLOAD(2, 1, 512),   // R2 = Memory[512] = 100
+		EncodeLOAD(2, 1, 512), // R2 = Memory[512] = 100
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeADDI(3, 2, 50),    // R3 = R2 + 50 = 150
+		EncodeADDI(3, 2, 50), // R3 = R2 + 50 = 150
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeSTORE(1, 3, 516),  // Memory[516] = R3
+		EncodeSTORE(1, 3, 516), // Memory[516] = R3
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
@@ -373,27 +373,27 @@ func TestCountingProgram(t *testing.T) {
 	// Loop body: R1 = R1 + R2
 	// After 5 iterations via unrolling: R1 = 5
 	program := EncodeProgram(
-		EncodeADDI(1, 0, 0),   // R1 = 0
-		EncodeADDI(2, 0, 1),   // R2 = 1
+		EncodeADDI(1, 0, 0), // R1 = 0
+		EncodeADDI(2, 0, 1), // R2 = 1
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeADD(1, 1, 2),    // R1 = R1 + 1 = 1
-		EncodeNOP(),
-		EncodeNOP(),
-		EncodeNOP(),
-		EncodeADD(1, 1, 2),    // R1 = R1 + 1 = 2
+		EncodeADD(1, 1, 2), // R1 = R1 + 1 = 1
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeADD(1, 1, 2),    // R1 = R1 + 1 = 3
+		EncodeADD(1, 1, 2), // R1 = R1 + 1 = 2
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeADD(1, 1, 2),    // R1 = R1 + 1 = 4
+		EncodeADD(1, 1, 2), // R1 = R1 + 1 = 3
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeADD(1, 1, 2),    // R1 = R1 + 1 = 5
+		EncodeADD(1, 1, 2), // R1 = R1 + 1 = 4
+		EncodeNOP(),
+		EncodeNOP(),
+		EncodeNOP(),
+		EncodeADD(1, 1, 2), // R1 = R1 + 1 = 5
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
@@ -1087,10 +1087,10 @@ func TestMultiCoreSharedMemory(t *testing.T) {
 
 	// Core 0 loads from that address.
 	prog0 := EncodeProgram(
-		EncodeADDI(1, 0, 0),    // R1 = 0
+		EncodeADDI(1, 0, 0), // R1 = 0
 		EncodeNOP(),
 		EncodeNOP(),
-		EncodeLOAD(2, 1, 512),  // R2 = Memory[512]
+		EncodeLOAD(2, 1, 512), // R2 = Memory[512]
 		EncodeNOP(),
 		EncodeNOP(),
 		EncodeNOP(),
@@ -1584,7 +1584,7 @@ func TestDefaultRegisterFileConfig(t *testing.T) {
 // TestTokenToSlot verifies the token-to-slot conversion function.
 func TestTokenToSlot(t *testing.T) {
 	t.Run("nil token", func(t *testing.T) {
-		slot := tokenToSlot(nil)
+		slot := tokenToSlot(nil, -1, cpupipeline.StageDecode)
 		if slot.Valid {
 			t.Error("nil token should produce invalid slot")
 		}
@@ -1592,7 +1592,7 @@ func TestTokenToSlot(t *testing.T) {
 
 	t.Run("bubble token", func(t *testing.T) {
 		bubble := cpupipeline.NewBubble()
-		slot := tokenToSlot(bubble)
+		slot := tokenToSlot(bubble, -1, cpupipeline.StageDecode)
 		if slot.Valid {
 			t.Error("bubble should produce invalid slot")
 		}
@@ -1607,8 +1607,9 @@ func TestTokenToSlot(t *testing.T) {
 		tok.Rd = 3
 		tok.RegWrite = true
 		tok.ALUResult = 42
+		tok.WriteData = 42
 
-		slot := tokenToSlot(tok)
+		slot := tokenToSlot(tok, -1, cpupipeline.StageExecute)
 		if !slot.Valid {
 			t.Error("ADD token should produce valid slot")
 		}
@@ -1621,6 +1622,16 @@ func TestTokenToSlot(t *testing.T) {
 		if slot.DestReg == nil || *slot.DestReg != 3 {
 			t.Error("dest reg should be 3")
 		}
+		if slot.DestValue == nil || *slot.DestValue != 42 {
+			t.Error("dest value should preserve the executed writeback value")
+		}
+		if !slot.UsesALU {
+			t.Error("execute-stage token should use the ALU")
+		}
+		decodeSlot := tokenToSlot(tok, -1, cpupipeline.StageDecode)
+		if decodeSlot.UsesALU {
+			t.Error("decode-stage token should not claim simultaneous EX ALU use")
+		}
 	})
 
 	t.Run("BRANCH token", func(t *testing.T) {
@@ -1631,9 +1642,31 @@ func TestTokenToSlot(t *testing.T) {
 		tok.Rs1 = 1
 		tok.Rs2 = 2
 
-		slot := tokenToSlot(tok)
+		slot := tokenToSlot(tok, -1, cpupipeline.StageExecute)
 		if !slot.IsBranch {
 			t.Error("branch token should have IsBranch=true")
+		}
+	})
+
+	t.Run("zero result remains available", func(t *testing.T) {
+		tok := cpupipeline.NewToken()
+		tok.Rd = 3
+		tok.RegWrite = true
+		tok.WriteData = 0
+		slot := tokenToSlot(tok, -1, cpupipeline.StageExecute)
+		if slot.DestValue == nil || *slot.DestValue != 0 {
+			t.Fatal("zero is a valid forwarded writeback value")
+		}
+	})
+
+	t.Run("hardwired zero is not a producer", func(t *testing.T) {
+		tok := cpupipeline.NewToken()
+		tok.Rd = 0
+		tok.RegWrite = true
+		tok.WriteData = 99
+		slot := tokenToSlot(tok, 0, cpupipeline.StageExecute)
+		if slot.DestReg != nil || slot.DestValue != nil {
+			t.Fatal("hardwired x0 must not become a forwarding producer")
 		}
 	})
 }

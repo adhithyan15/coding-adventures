@@ -37,10 +37,18 @@ func (d *DataHazardDetector) Detect(idStage, exStage, memStage PipelineSlot) Haz
 			// Check each source register; track the worst hazard found.
 			worst := HazardResult{Action: ActionNone, Reason: "no data dependencies detected"}
 
-			for _, srcReg := range idStage.SourceRegs {
+			var forwarded []ForwardedOperand
+			for sourceIndex, srcReg := range idStage.SourceRegs {
 				r := d.checkSingleRegister(srcReg, exStage, memStage)
 				worst = pickHigherPriority(worst, r)
+				if (r.Action == ActionForwardFromEX || r.Action == ActionForwardFromMEM) && r.ForwardedValue != nil {
+					forwarded = append(forwarded, ForwardedOperand{
+						SourceIndex: sourceIndex, SourceRegister: srcReg,
+						Value: *r.ForwardedValue, SourceStage: r.ForwardedFrom,
+					})
+				}
 			}
+			worst.ForwardedOperands = forwarded
 
 			return rf.Generate(true, false, worst)
 		}).GetResult()

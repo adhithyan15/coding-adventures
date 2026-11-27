@@ -560,8 +560,8 @@ func TestStallFreezesEarlierStages(t *testing.T) {
 	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
 		// Only stall once: when LDR is in EX and ADD is in ID.
 		if !stallInjected && len(stages) >= 3 {
-			exTok := stages[2]  // EX stage
-			idTok := stages[1]  // ID stage
+			exTok := stages[2] // EX stage
+			idTok := stages[1] // ID stage
 			if exTok != nil && !exTok.IsBubble && exTok.Opcode == "LDR" &&
 				idTok != nil && !idTok.IsBubble && idTok.Opcode == "ADD" {
 				stallInjected = true
@@ -767,6 +767,75 @@ func TestForwardingApplied(t *testing.T) {
 	}
 	// Note: ALUResult is overwritten by the execute callback.
 	// The ForwardedFrom field is the durable indicator that forwarding occurred.
+}
+
+func TestTypedForwardingOperandsAreCopiedAndPreserveLegacyScalar(t *testing.T) {
+	instrs := make([]int, 10)
+	for i := range instrs {
+		instrs[i] = makeInstruction(opADD, 1, 2, 3)
+	}
+	p := newTestPipeline(instrs, nil)
+	records := []ForwardedOperand{
+		{Operand: SourceOperand1, Register: 1, Value: 17, SourceStage: "MEM"},
+		{Operand: SourceOperand2, Register: 2, Value: 23, SourceStage: "EX"},
+	}
+	checks := 0
+	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
+		checks++
+		if checks == 4 {
+			return HazardResponse{
+				Action: HazardForwardFromEX, ForwardValue: 23, ForwardSource: "EX",
+				ForwardedOperands: records,
+			}
+		}
+		return HazardResponse{Action: HazardNone}
+	})
+	for i := 0; i < 4; i++ {
+		p.Step()
+	}
+	tok := p.StageContents("EX")
+	if tok == nil {
+		t.Fatal("expected forwarded token in EX")
+	}
+	if tok.ForwardedFrom != "EX" {
+		t.Fatalf("legacy scalar forwarding source changed: %q", tok.ForwardedFrom)
+	}
+	if len(tok.ForwardedOperands) != 2 || tok.ForwardedOperands[0].Operand != SourceOperand1 || tok.ForwardedOperands[1].Operand != SourceOperand2 {
+		t.Fatalf("typed operand identity was not preserved: %#v", tok.ForwardedOperands)
+	}
+	records[0].Value = 999
+	if tok.ForwardedOperands[0].Value != 17 {
+		t.Fatal("pipeline token aliases the hazard callback's forwarding slice")
+	}
+	clone := tok.Clone()
+	clone.ForwardedOperands[1].Value = 888
+	if tok.ForwardedOperands[1].Value != 23 {
+		t.Fatal("token clone aliases its typed forwarding slice")
+	}
+}
+
+func TestTypedForwardingMetadataDoesNotOverrideStall(t *testing.T) {
+	instrs := make([]int, 8)
+	for i := range instrs {
+		instrs[i] = makeInstruction(opADD, 1, 2, 3)
+	}
+	p := newTestPipeline(instrs, nil)
+	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
+		if len(stages) > 1 && stages[1] != nil && !stages[1].IsBubble {
+			return HazardResponse{
+				Action:            HazardStall,
+				ForwardedOperands: []ForwardedOperand{{Operand: SourceOperand1, Register: 1, Value: 99, SourceStage: "MEM"}},
+			}
+		}
+		return HazardResponse{Action: HazardNone}
+	})
+	p.Step()
+	p.Step()
+	p.Step()
+	id := p.StageContents("ID")
+	if id == nil || len(id.ForwardedOperands) != 0 {
+		t.Fatalf("stalled decode token acquired speculative forwarding metadata: %#v", id)
+	}
 }
 
 // =========================================================================

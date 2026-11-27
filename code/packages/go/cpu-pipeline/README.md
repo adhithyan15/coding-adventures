@@ -62,6 +62,13 @@ fmt.Printf("IPC: %.3f, Stalls: %d, Flushes: %d\n",
     stats.IPC(), stats.StallCycles, stats.FlushCycles)
 ```
 
+Hazard callbacks may also provide `HazardResponse.ForwardedOperands`, a list of
+`ForwardedOperand` records with source position, register, value, and source
+stage. The pipeline copies the records onto the decode token and its snapshots;
+it does not interpret or apply them to an ALU operation. ISA adapters that need
+both `rs1` and `rs2` bypass values can consume these tags. The original scalar
+`ForwardValue` and `ForwardSource` fields remain supported for existing clients.
+
 ## Configuration Presets
 
 | Preset | Stages | Inspired By |

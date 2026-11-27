@@ -3,6 +3,9 @@
 ## [0.4.0] - Unreleased
 
 ### Added
+- Opted the RV32I core adapter into typed source-operand forwarding and added
+  a dependent pipeline-vs-sequential regression including load-use, branch,
+  and store-register operands.
 - Added opt-in host byte I/O syscalls for compiler end-to-end tests.
 
 ## [0.3.0] - 2026-04-02

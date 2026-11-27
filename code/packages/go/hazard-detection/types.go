@@ -31,7 +31,7 @@ package hazarddetection
 type HazardAction int
 
 const (
-	ActionNone          HazardAction = iota // Green light
+	ActionNone           HazardAction = iota // Green light
 	ActionForwardFromMEM                     // Forward from MEM stage
 	ActionForwardFromEX                      // Forward from EX stage
 	ActionStall                              // Must stall (load-use hazard)
@@ -103,12 +103,23 @@ type PipelineSlot struct {
 // It includes what action to take, the forwarded value (if any),
 // stall/flush counts, and a human-readable reason for debugging.
 type HazardResult struct {
-	Action         HazardAction
-	ForwardedValue *int
-	ForwardedFrom  string
-	StallCycles    int
-	FlushCount     int
-	Reason         string
+	Action            HazardAction
+	ForwardedValue    *int
+	ForwardedFrom     string
+	ForwardedOperands []ForwardedOperand
+	StallCycles       int
+	FlushCount        int
+	Reason            string
+}
+
+// ForwardedOperand records one ID source slot resolved by the data hazard
+// detector. SourceIndex preserves the source's position in PipelineSlot's
+// SourceRegs slice; pipeline and ISA adapters map that position to an operand.
+type ForwardedOperand struct {
+	SourceIndex    int
+	SourceRegister int
+	Value          int
+	SourceStage    string
 }
 
 // IntPtr is a helper to create a pointer to an int. Useful for setting

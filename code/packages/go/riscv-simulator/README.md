@@ -8,6 +8,13 @@ RISC-V (pronounced "risk-five") is an open-source instruction set architecture d
 
 This simulator interfaces with the `cpu-simulator` generic fetch-decode-execute pipeline.
 
+When used through the configurable Go `core`, the RV32I adapter opts into typed
+`rs1`/`rs2` forwarding metadata. The core applies these values to decoded
+operands before arithmetic, branch comparison, or store data selection. Existing
+sequential `RiscVSimulator` behavior remains the independent architectural
+reference. This integration evidence covers classic five-stage forwarding and
+load-use stalls; it does not model precise stores or memory faults.
+
 ## Supported Instructions
 
 ### RV32I Base Integer (37 instructions)

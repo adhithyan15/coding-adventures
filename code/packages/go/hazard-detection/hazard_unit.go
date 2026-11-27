@@ -45,7 +45,9 @@ func (u *HazardUnit) Check(ifStage, idStage, exStage, memStage PipelineSlot) Haz
 
 			// Pick highest-priority result.
 			final := pickHighestPriority(controlResult, dataResult, structuralResult)
-			u.history = append(u.history, final)
+			historyResult := final
+			historyResult.ForwardedOperands = append([]ForwardedOperand(nil), final.ForwardedOperands...)
+			u.history = append(u.history, historyResult)
 			return rf.Generate(true, false, final)
 		}).GetResult()
 	return result
@@ -57,6 +59,9 @@ func (u *HazardUnit) History() []HazardResult {
 		func(op *Operation[[]HazardResult], rf *ResultFactory[[]HazardResult]) *OperationResult[[]HazardResult] {
 			out := make([]HazardResult, len(u.history))
 			copy(out, u.history)
+			for i := range out {
+				out[i].ForwardedOperands = append([]ForwardedOperand(nil), u.history[i].ForwardedOperands...)
+			}
 			return rf.Generate(true, false, out)
 		}).GetResult()
 	return result

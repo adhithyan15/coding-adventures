@@ -93,11 +93,11 @@ type WritebackFunc func(token *PipelineToken)
 type HazardAction int
 
 const (
-	HazardNone          HazardAction = iota // No hazard -- proceed normally
-	HazardForwardFromEX                     // Forward value from EX stage
-	HazardForwardFromMEM                    // Forward value from MEM stage
-	HazardStall                             // Stall the pipeline (insert bubble)
-	HazardFlush                             // Flush speculative stages
+	HazardNone           HazardAction = iota // No hazard -- proceed normally
+	HazardForwardFromEX                      // Forward value from EX stage
+	HazardForwardFromMEM                     // Forward value from MEM stage
+	HazardStall                              // Stall the pipeline (insert bubble)
+	HazardFlush                              // Flush speculative stages
 )
 
 // String returns a human-readable name for the hazard action.
@@ -135,6 +135,11 @@ type HazardResponse struct {
 
 	// ForwardSource is the stage that provided the forwarded value.
 	ForwardSource string
+
+	// ForwardedOperands carries zero or more source-tagged values for an ISA
+	// adapter. The pipeline copies these onto the decode token while retaining
+	// the legacy scalar fields and action behavior.
+	ForwardedOperands []ForwardedOperand
 
 	// StallStages is the number of stages to stall (typically 1).
 	StallStages int
@@ -578,6 +583,10 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 				if s.Category == StageDecode && p.stages[i] != nil && !p.stages[i].IsBubble {
 					p.stages[i].ALUResult = hazard.ForwardValue
 					p.stages[i].ForwardedFrom = hazard.ForwardSource
+					p.stages[i].ForwardedOperands = append(
+						p.stages[i].ForwardedOperands,
+						hazard.ForwardedOperands...,
+					)
 					break
 				}
 			}

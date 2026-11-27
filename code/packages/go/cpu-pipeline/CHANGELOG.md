@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0] - Unreleased
+
+### Added
+- Optional source-tagged `ForwardedOperand` records on hazard responses and
+  pipeline tokens; existing scalar forwarding metadata and actions are kept.
+- Token snapshots deep-copy typed forwarding records.
+
 ## [0.2.0] - 2026-04-02
 
 ### Changed

@@ -29,7 +29,13 @@ memStage := hd.PipelineSlot{}
 result := unit.Check(ifStage, idStage, exStage, memStage)
 // result.Action == hd.ActionForwardFromEX
 // *result.ForwardedValue == 42
+// result.ForwardedOperands[0] includes source index, register 1, value 42, and EX
 ```
+
+`ForwardedOperands` contains one entry for each source with a ready producer.
+For the same source register in EX and MEM, EX wins because it is the younger
+write. A load in EX produces a stall and is not replaced by an older MEM value;
+the consumer is checked again after the load reaches MEM.
 
 ## Priority System
 
