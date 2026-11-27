@@ -18,7 +18,6 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from types import ModuleType
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[3]
@@ -63,12 +62,17 @@ class StubTrustedReleaseGate:
         self.principal = principal
         self.verified: list[tuple[bytes, str, str]] = []
 
-    def verify_signers_chain(self, repo: Path, ref: str) -> tuple[str, list[dict[str, str]]]:
+    def verify_signers_chain(
+        self, repo: Path, ref: str
+    ) -> tuple[str, list[dict[str, str]]]:
         self.repo = repo
         self.ref = ref
-        return (
+        signers_text = (
             '# revision: 1\nowner@example.test namespaces="coding-adventures-capabilities" '
-            "sk-ssh-ed25519@openssh.com AAAATEST owner\n",
+            "sk-ssh-ed25519@openssh.com AAAATEST owner\n"
+        )
+        return (
+            signers_text,
             [
                 {
                     "principal": self.principal,
@@ -79,7 +83,9 @@ class StubTrustedReleaseGate:
             ],
         )
 
-    def verify_signed_file(self, signers: str, data: bytes, signature: str, namespace: str) -> str:
+    def verify_signed_file(
+        self, signers: str, data: bytes, signature: str, namespace: str
+    ) -> str:
         self.verified.append((data, signature, namespace))
         if signature != "test-signature\n" or namespace != gate.SIGNATURE_NAMESPACE:
             raise release_gate.GateError("SIG", "test signature rejected")
@@ -93,9 +99,17 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.git("init", "-b", "main")
         self.git("config", "user.name", "Capability Gate Test")
         self.git("config", "user.email", "capability-gate@example.test")
-        self.write(".github/release-signers", (REPO / ".github/release-signers").read_bytes())
-        self.write("code/specs/schemas/required_capabilities.schema.json", (REPO / gate.REQUIRED_SCHEMA_PATH).read_bytes())
-        self.write("code/specs/schemas/capability-approval.schema.json", (REPO / gate.APPROVAL_SCHEMA_PATH).read_bytes())
+        self.write(
+            ".github/release-signers", (REPO / ".github/release-signers").read_bytes()
+        )
+        self.write(
+            "code/specs/schemas/required_capabilities.schema.json",
+            (REPO / gate.REQUIRED_SCHEMA_PATH).read_bytes(),
+        )
+        self.write(
+            "code/specs/schemas/capability-approval.schema.json",
+            (REPO / gate.APPROVAL_SCHEMA_PATH).read_bytes(),
+        )
         self.write(gate.RELEASE_GATE_PATH, (REPO / gate.RELEASE_GATE_PATH).read_bytes())
         self.write("code/packages/rust/demo/README.md", b"demo\n")
         self.write(MANIFEST, manifest([]))
@@ -133,7 +147,9 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.git("commit", "-m", message)
         return self.git("rev-parse", "HEAD")
 
-    def add_approval(self, reason: str = "Approve the monotonic clock requirement.") -> str:
+    def add_approval(
+        self, reason: str = "Approve the monotonic clock requirement."
+    ) -> str:
         # Commit the package change first so the approval signs its stable tree.
         package_head = self.commit("change package profile")
         payload = gate.propose_approval(
@@ -154,7 +170,10 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         return gate._load_trusted_schemas(str(self.root), self.base)
 
     def test_empty_profile_addition_needs_no_approval(self) -> None:
-        self.write("code/packages/rust/empty/required_capabilities.json", manifest([]).replace(b"rust/demo", b"rust/empty"))
+        self.write(
+            "code/packages/rust/empty/required_capabilities.json",
+            manifest([]).replace(b"rust/demo", b"rust/empty"),
+        )
         head = self.commit("add empty profile")
         self.assertEqual(
             gate.verify_changes(
@@ -194,14 +213,21 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         original_git = gate._git
         commands: list[tuple[str, ...]] = []
 
-        def observing_git(root: str, *args: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
+        def observing_git(
+            root: str, *args: str, check: bool = True
+        ) -> subprocess.CompletedProcess[bytes]:
             commands.append(tuple(args))
             return original_git(root, *args, check=check)
 
         gate._git = observing_git
         try:
             with self.assertRaises(gate.GateError) as caught:
-                gate.git_blob(str(self.root), head, "code/packages/rust/demo/large.bin", max_size=8)
+                gate.git_blob(
+                    str(self.root),
+                    head,
+                    "code/packages/rust/demo/large.bin",
+                    max_size=8,
+                )
         finally:
             gate._git = original_git
         self.assertEqual(caught.exception.code, "INPUT_TOO_LARGE")
@@ -231,14 +257,22 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         target_file = package_root / target_parts[0] / target_parts[1]
         target_file.parent.mkdir(parents=True)
         target_file.write_bytes(manifest([CAPABILITY]))
-        subprocess.run(["git", "add", "--", str(target_file.relative_to(self.root))], cwd=self.root, check=True)
-        blob = subprocess.run(
-            ["git", "hash-object", "-w", "--stdin"],
+        subprocess.run(
+            ["git", "add", "--", str(target_file.relative_to(self.root))],
             cwd=self.root,
-            input=empty_profile,
-            capture_output=True,
             check=True,
-        ).stdout.decode("ascii").strip()
+        )
+        blob = (
+            subprocess.run(
+                ["git", "hash-object", "-w", "--stdin"],
+                cwd=self.root,
+                input=empty_profile,
+                capture_output=True,
+                check=True,
+            )
+            .stdout.decode("ascii")
+            .strip()
+        )
         self.git("update-index", "--cacheinfo", f"120000,{blob},{MANIFEST}")
         self.git("commit", "-m", "replace manifest file with symlink mode")
         head = self.git("rev-parse", "HEAD")
@@ -246,10 +280,16 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.assertIn("100644 blob", self.git("ls-tree", base, MANIFEST))
         self.assertIn("120000 blob", self.git("ls-tree", head, MANIFEST))
         base_bytes = subprocess.run(
-            ["git", "show", f"{base}:{MANIFEST}"], cwd=self.root, capture_output=True, check=True
+            ["git", "show", f"{base}:{MANIFEST}"],
+            cwd=self.root,
+            capture_output=True,
+            check=True,
         ).stdout
         head_bytes = subprocess.run(
-            ["git", "show", f"{head}:{MANIFEST}"], cwd=self.root, capture_output=True, check=True
+            ["git", "show", f"{head}:{MANIFEST}"],
+            cwd=self.root,
+            capture_output=True,
+            check=True,
         ).stdout
         self.assertEqual(base_bytes, head_bytes)
 
@@ -271,9 +311,14 @@ class CapabilityApprovalGateTests(unittest.TestCase):
     def test_duplicate_principal_entries_choose_explicit_namespace(self) -> None:
         entries = [
             {"principal": "owner@example.test", "options": 'namespaces="release"'},
-            {"principal": "owner@example.test", "options": f'namespaces="{gate.SIGNATURE_NAMESPACE}"'},
+            {
+                "principal": "owner@example.test",
+                "options": f'namespaces="{gate.SIGNATURE_NAMESPACE}"',
+            },
         ]
-        self.assertIs(gate._authorized_signer(entries, "owner@example.test"), entries[1])
+        self.assertIs(
+            gate._authorized_signer(entries, "owner@example.test"), entries[1]
+        )
         self.assertIsNone(gate._authorized_signer(entries[:1], "owner@example.test"))
 
     def test_manifest_path_must_match_build_discovery_shape(self) -> None:
@@ -291,7 +336,9 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         try:
             (self.root / "linked-dir").symlink_to(outside, target_is_directory=True)
             with self.assertRaises(gate.GateError):
-                gate.safe_write_repo_file(str(self.root), "linked-dir/proposal.json", b"x")
+                gate.safe_write_repo_file(
+                    str(self.root), "linked-dir/proposal.json", b"x"
+                )
             (self.root / "linked-file").symlink_to(outside / "target")
             with self.assertRaises(gate.GateError):
                 gate.safe_write_repo_file(str(self.root), "linked-file", b"x")
@@ -336,7 +383,10 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         )
         self.assertEqual(trusted.verified[0][2], gate.SIGNATURE_NAMESPACE)
         approval = gate.strict_json_loads(trusted.verified[0][0], "captured approval")
-        self.assertEqual(approval["package_tree"], self.git("rev-parse", f"{head}:code/packages/rust/demo"))
+        self.assertEqual(
+            approval["package_tree"],
+            self.git("rev-parse", f"{head}:code/packages/rust/demo"),
+        )
 
     def test_profile_reductions_require_signature(self) -> None:
         self.write(MANIFEST, manifest([CAPABILITY]))
@@ -356,7 +406,9 @@ class CapabilityApprovalGateTests(unittest.TestCase):
             [PACKAGE],
         )
 
-    def _invalid_base_repair(self, *, delete_manifest: bool = False, delete_package: bool = False) -> str:
+    def _invalid_base_repair(
+        self, *, delete_manifest: bool = False, delete_package: bool = False
+    ) -> str:
         self.write(MANIFEST, b"[]\n")
         self.base = self.commit("historical invalid manifest")
         if delete_manifest:
@@ -380,7 +432,9 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.assertEqual(doc["previous_profile_status"], "invalid")
         self.assertIsNone(doc["previous_capabilities"])
         self.assertIsNone(doc["previous_banned_construct_exceptions"])
-        self.assertEqual(doc["previous_manifest_sha256"], hashlib.sha256(b"[]\n").hexdigest())
+        self.assertEqual(
+            doc["previous_manifest_sha256"], hashlib.sha256(b"[]\n").hexdigest()
+        )
         self.write(APPROVAL, payload)
         self.write(APPROVAL + ".sig", b"test-signature\n")
         return self.commit("add invalid-profile repair approval")
@@ -405,9 +459,14 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.remove(MANIFEST)
         package_head = self.commit("delete manifest")
         payload = gate.propose_approval(
-            str(self.root), manifest_path=MANIFEST, base_ref="main", base_commit=self.base,
-            head_commit=package_head, reason="Approve deletion of the capability manifest.",
-            approved_by="owner@example.test", approved_at="2026-11-27T12:00:00Z",
+            str(self.root),
+            manifest_path=MANIFEST,
+            base_ref="main",
+            base_commit=self.base,
+            head_commit=package_head,
+            reason="Approve deletion of the capability manifest.",
+            approved_by="owner@example.test",
+            approved_at="2026-11-27T12:00:00Z",
         )
         doc = gate.strict_json_loads(payload, "deletion proposal")
         self.assertEqual(doc["new_profile_status"], "absent")
@@ -419,8 +478,12 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         head = self.commit("approve manifest deletion")
         self.assertEqual(
             gate.verify_changes(
-                str(self.root), base_ref="main", base_commit=self.base, head_commit=head,
-                trusted_release_gate=StubTrustedReleaseGate(), trusted_schema_validators=self.validators(),
+                str(self.root),
+                base_ref="main",
+                base_commit=self.base,
+                head_commit=head,
+                trusted_release_gate=StubTrustedReleaseGate(),
+                trusted_schema_validators=self.validators(),
             ),
             [PACKAGE],
         )
@@ -431,9 +494,14 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.remove("code/packages/rust/demo")
         package_head = self.commit("delete whole package")
         payload = gate.propose_approval(
-            str(self.root), manifest_path=MANIFEST, base_ref="main", base_commit=self.base,
-            head_commit=package_head, reason="Approve deletion of the capability-bearing package.",
-            approved_by="owner@example.test", approved_at="2026-11-27T12:00:00Z",
+            str(self.root),
+            manifest_path=MANIFEST,
+            base_ref="main",
+            base_commit=self.base,
+            head_commit=package_head,
+            reason="Approve deletion of the capability-bearing package.",
+            approved_by="owner@example.test",
+            approved_at="2026-11-27T12:00:00Z",
         )
         doc = gate.strict_json_loads(payload, "package deletion proposal")
         self.assertEqual(doc["new_profile_status"], "absent")
@@ -443,8 +511,12 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         head = self.commit("approve package deletion")
         self.assertEqual(
             gate.verify_changes(
-                str(self.root), base_ref="main", base_commit=self.base, head_commit=head,
-                trusted_release_gate=StubTrustedReleaseGate(), trusted_schema_validators=self.validators(),
+                str(self.root),
+                base_ref="main",
+                base_commit=self.base,
+                head_commit=head,
+                trusted_release_gate=StubTrustedReleaseGate(),
+                trusted_schema_validators=self.validators(),
             ),
             [PACKAGE],
         )
@@ -452,12 +524,18 @@ class CapabilityApprovalGateTests(unittest.TestCase):
     def test_changed_package_tree_invalidates_signature(self) -> None:
         self.write(MANIFEST, manifest([CAPABILITY]))
         self.add_approval()
-        self.write("code/packages/rust/demo/README.md", b"source changed after signature\n")
+        self.write(
+            "code/packages/rust/demo/README.md", b"source changed after signature\n"
+        )
         head = self.commit("change package tree after approval")
         with self.assertRaises(gate.GateError) as caught:
             gate.verify_changes(
-                str(self.root), base_ref="main", base_commit=self.base, head_commit=head,
-                trusted_release_gate=StubTrustedReleaseGate(), trusted_schema_validators=self.validators(),
+                str(self.root),
+                base_ref="main",
+                base_commit=self.base,
+                head_commit=head,
+                trusted_release_gate=StubTrustedReleaseGate(),
+                trusted_schema_validators=self.validators(),
             )
         self.assertEqual(caught.exception.code, "STALE_APPROVAL")
 
@@ -469,34 +547,50 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         head = self.commit("duplicate approval field")
         with self.assertRaises(gate.GateError) as caught:
             gate.verify_changes(
-                str(self.root), base_ref="main", base_commit=self.base, head_commit=head,
-                trusted_release_gate=StubTrustedReleaseGate(), trusted_schema_validators=self.validators(),
+                str(self.root),
+                base_ref="main",
+                base_commit=self.base,
+                head_commit=head,
+                trusted_release_gate=StubTrustedReleaseGate(),
+                trusted_schema_validators=self.validators(),
             )
         self.assertEqual(caught.exception.code, "DUPLICATE_JSON_MEMBER")
 
     def test_noncanonical_approval_json_is_rejected(self) -> None:
         self.write(MANIFEST, manifest([CAPABILITY]))
         self.add_approval()
-        approval = gate.strict_json_loads((self.root / APPROVAL).read_bytes(), "approval")
+        approval = gate.strict_json_loads(
+            (self.root / APPROVAL).read_bytes(), "approval"
+        )
         self.write(APPROVAL, json.dumps(approval, indent=2).encode() + b"\n")
         head = self.commit("noncanonical approval")
         with self.assertRaises(gate.GateError) as caught:
             gate.verify_changes(
-                str(self.root), base_ref="main", base_commit=self.base, head_commit=head,
-                trusted_release_gate=StubTrustedReleaseGate(), trusted_schema_validators=self.validators(),
+                str(self.root),
+                base_ref="main",
+                base_commit=self.base,
+                head_commit=head,
+                trusted_release_gate=StubTrustedReleaseGate(),
+                trusted_schema_validators=self.validators(),
             )
         self.assertEqual(caught.exception.code, "NONCANONICAL_APPROVAL")
 
     def test_invalid_prior_profile_cannot_claim_empty_previous_profile(self) -> None:
-        head = self._invalid_base_repair()
-        approval = gate.strict_json_loads((self.root / APPROVAL).read_bytes(), "approval")
+        self._invalid_base_repair()
+        approval = gate.strict_json_loads(
+            (self.root / APPROVAL).read_bytes(), "approval"
+        )
         approval["previous_capabilities"] = []
         self.write(APPROVAL, gate.canonical_json_bytes(approval))
         final = self.commit("invent old profile")
         with self.assertRaises(gate.GateError) as caught:
             gate.verify_changes(
-                str(self.root), base_ref="main", base_commit=self.base, head_commit=final,
-                trusted_release_gate=StubTrustedReleaseGate(), trusted_schema_validators=self.validators(),
+                str(self.root),
+                base_ref="main",
+                base_commit=self.base,
+                head_commit=final,
+                trusted_release_gate=StubTrustedReleaseGate(),
+                trusted_schema_validators=self.validators(),
             )
         self.assertEqual(caught.exception.code, "INVALID_APPROVAL")
 
@@ -504,38 +598,60 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(MANIFEST, manifest([CAPABILITY]))
         self.write("code/specs/schemas/required_capabilities.schema.json", b"{}\n")
         self.write("code/specs/schemas/capability-approval.schema.json", b"{}\n")
-        self.write("code/scripts/release_gate.py", b"raise RuntimeError('candidate verifier ran')\n")
-        self.write(".github/release-signers", b"# revision: 1\nattacker namespaces=\"coding-adventures-capabilities\" sk-ssh-ed25519@openssh.com AAAA\n")
+        self.write(
+            "code/scripts/release_gate.py",
+            b"raise RuntimeError('candidate verifier ran')\n",
+        )
+        self.write(
+            ".github/release-signers",
+            b'# revision: 1\nattacker namespaces="coding-adventures-capabilities" sk-ssh-ed25519@openssh.com AAAA\n',
+        )
         candidate = self.commit("tamper with candidate trust files")
         proposal = gate.propose_approval(
-            str(self.root), manifest_path=MANIFEST, base_ref="main", base_commit=self.base,
-            head_commit=candidate, reason="Review the changed capability profile.",
+            str(self.root),
+            manifest_path=MANIFEST,
+            base_ref="main",
+            base_commit=self.base,
+            head_commit=candidate,
+            reason="Review the changed capability profile.",
         )
         self.write(APPROVAL, proposal)
         self.write(APPROVAL + ".sig", b"made-up-signature\n")
         head = self.commit("add unsigned approval-shaped input")
         with self.assertRaises(gate.GateError) as caught:
             gate.verify_changes(
-                str(self.root), base_ref="main", base_commit=self.base, head_commit=head,
+                str(self.root),
+                base_ref="main",
+                base_commit=self.base,
+                head_commit=head,
             )
         self.assertEqual(caught.exception.code, "NO_TRUSTED_SIGNER")
 
     def test_missing_base_verifier_does_not_fall_back_to_candidate(self) -> None:
         self.remove(gate.RELEASE_GATE_PATH)
         self.base = self.commit("base without verifier")
-        self.write(gate.RELEASE_GATE_PATH, b"raise RuntimeError('candidate verifier ran')\n")
+        self.write(
+            gate.RELEASE_GATE_PATH, b"raise RuntimeError('candidate verifier ran')\n"
+        )
         self.write(MANIFEST, manifest([CAPABILITY]))
         candidate = self.commit("candidate adds profile and its own helper")
         proposal = gate.propose_approval(
-            str(self.root), manifest_path=MANIFEST, base_ref="main", base_commit=self.base,
-            head_commit=candidate, reason="Review the changed capability profile.",
+            str(self.root),
+            manifest_path=MANIFEST,
+            base_ref="main",
+            base_commit=self.base,
+            head_commit=candidate,
+            reason="Review the changed capability profile.",
         )
         self.write(APPROVAL, proposal)
         self.write(APPROVAL + ".sig", b"made-up-signature\n")
         head = self.commit("candidate adds an unsigned approval")
         with self.assertRaises(gate.GateError) as caught:
             gate.verify_changes(
-                str(self.root), base_ref="main", base_commit=self.base, head_commit=head,
+                str(self.root),
+                base_ref="main",
+                base_commit=self.base,
+                head_commit=head,
             )
         self.assertEqual(caught.exception.code, "TRUSTED_VERIFIER")
 
@@ -543,8 +659,12 @@ class CapabilityApprovalGateTests(unittest.TestCase):
         self.write(MANIFEST, manifest([CAPABILITY]))
         head = self.commit("profile for unsigned proposal")
         raw = gate.propose_approval(
-            str(self.root), manifest_path=MANIFEST, base_ref="main", base_commit=self.base,
-            head_commit=head, reason="Review the monotonic clock profile.",
+            str(self.root),
+            manifest_path=MANIFEST,
+            base_ref="main",
+            base_commit=self.base,
+            head_commit=head,
+            reason="Review the monotonic clock profile.",
         )
         proposal = gate.strict_json_loads(raw, "proposal")
         self.assertEqual(proposal["approved_by"], "UNSIGNED-PROPOSAL")
@@ -558,8 +678,15 @@ def _ssh_string(value: bytes) -> bytes:
 
 def _security_key_sshsig(flags: int) -> str:
     key_type = b"sk-ssh-ed25519@openssh.com"
-    public_key = _ssh_string(key_type) + _ssh_string(b"\0" * 32) + _ssh_string(b"application")
-    signature = _ssh_string(key_type) + _ssh_string(b"\1" * 64) + bytes([flags]) + (7).to_bytes(4, "big")
+    public_key = (
+        _ssh_string(key_type) + _ssh_string(b"\0" * 32) + _ssh_string(b"application")
+    )
+    signature = (
+        _ssh_string(key_type)
+        + _ssh_string(b"\1" * 64)
+        + bytes([flags])
+        + (7).to_bytes(4, "big")
+    )
     blob = (
         b"SSHSIG"
         + (1).to_bytes(4, "big")
@@ -569,7 +696,11 @@ def _security_key_sshsig(flags: int) -> str:
         + _ssh_string(b"sha512")
         + _ssh_string(signature)
     )
-    return "-----BEGIN SSH SIGNATURE-----\n" + base64.b64encode(blob).decode() + "\n-----END SSH SIGNATURE-----\n"
+    return (
+        "-----BEGIN SSH SIGNATURE-----\n"
+        + base64.b64encode(blob).decode()
+        + "\n-----END SSH SIGNATURE-----\n"
+    )
 
 
 @unittest.skipUnless(shutil.which("ssh-keygen"), "OpenSSH is required")
@@ -586,7 +717,16 @@ class SSHSignatureBoundaryTests(unittest.TestCase):
                 capture_output=True,
             )
             subprocess.run(
-                ["ssh-keygen", "-Y", "sign", "-n", "wrong-namespace", "-f", str(key), str(message)],
+                [
+                    "ssh-keygen",
+                    "-Y",
+                    "sign",
+                    "-n",
+                    "wrong-namespace",
+                    "-f",
+                    str(key),
+                    str(message),
+                ],
                 check=True,
                 capture_output=True,
             )
@@ -626,23 +766,43 @@ class CapabilityBootstrapWorkflowTests(unittest.TestCase):
                 break
         script = "\n".join(script_lines) + "\n"
 
-        with tempfile.TemporaryDirectory(prefix="capability-bootstrap-workflow-") as temp:
+        with tempfile.TemporaryDirectory(
+            prefix="capability-bootstrap-workflow-"
+        ) as temp:
             root = Path(temp)
-            subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True)
-            subprocess.run(["git", "config", "user.name", "Bootstrap test"], cwd=root, check=True)
-            subprocess.run(["git", "config", "user.email", "bootstrap@example.test"], cwd=root, check=True)
+            subprocess.run(
+                ["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "Bootstrap test"], cwd=root, check=True
+            )
+            subprocess.run(
+                ["git", "config", "user.email", "bootstrap@example.test"],
+                cwd=root,
+                check=True,
+            )
 
             def commit(message: str) -> str:
                 subprocess.run(["git", "add", "-A"], cwd=root, check=True)
-                subprocess.run(["git", "commit", "-m", message], cwd=root, check=True, capture_output=True)
+                subprocess.run(
+                    ["git", "commit", "-m", message],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                )
                 return subprocess.run(
-                    ["git", "rev-parse", "HEAD"], cwd=root, check=True,
-                    capture_output=True, text=True,
+                    ["git", "rev-parse", "HEAD"],
+                    cwd=root,
+                    check=True,
+                    capture_output=True,
+                    text=True,
                 ).stdout.strip()
 
             (root / "README.md").write_text("base\n", encoding="utf-8")
             base = commit("base without verifier")
-            candidate_script = root / gate.RELEASE_GATE_PATH.replace("release_gate.py", "capability_approval_gate.py")
+            candidate_script = root / gate.RELEASE_GATE_PATH.replace(
+                "release_gate.py", "capability_approval_gate.py"
+            )
             candidate_script.parent.mkdir(parents=True, exist_ok=True)
             candidate_script.write_text(
                 "from pathlib import Path\nPath('candidate-verifier-ran').write_text('bad')\n",
@@ -652,9 +812,26 @@ class CapabilityBootstrapWorkflowTests(unittest.TestCase):
 
             def run_block(head: str) -> subprocess.CompletedProcess[str]:
                 env = dict(os.environ)
-                env.update({"GITHUB_BASE_REF": "main", "PR_BASE_SHA": base, "PR_HEAD_SHA": head})
+                env.update(
+                    {
+                        "GITHUB_BASE_REF": "main",
+                        "PR_BASE_SHA": base,
+                        "PR_HEAD_SHA": head,
+                    }
+                )
                 return subprocess.run(
-                    ["bash", "-e", "-u", "-o", "pipefail", "-c", script, "workflow-step", base, head],
+                    [
+                        "bash",
+                        "-e",
+                        "-u",
+                        "-o",
+                        "pipefail",
+                        "-c",
+                        script,
+                        "workflow-step",
+                        base,
+                        head,
+                    ],
                     cwd=root,
                     env=env,
                     check=False,

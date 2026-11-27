@@ -28,7 +28,6 @@ from typing import Any
 from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 
-
 REQUIRED_SCHEMA_PATH = "code/specs/schemas/required_capabilities.schema.json"
 APPROVAL_SCHEMA_PATH = "code/specs/schemas/capability-approval.schema.json"
 RELEASE_GATE_PATH = "code/scripts/release_gate.py"
@@ -78,9 +77,13 @@ def strict_json_loads(raw: bytes, label: str) -> Any:
     except UnicodeDecodeError as exc:
         raise GateError("INVALID_JSON", f"{label} is not UTF-8") from exc
     except json.JSONDecodeError as exc:
-        raise GateError("INVALID_JSON", f"{label} is invalid JSON at byte {exc.pos}") from exc
+        raise GateError(
+            "INVALID_JSON", f"{label} is invalid JSON at byte {exc.pos}"
+        ) from exc
     except RecursionError as exc:
-        raise GateError("INVALID_JSON", f"{label} exceeds the supported JSON nesting depth") from exc
+        raise GateError(
+            "INVALID_JSON", f"{label} exceeds the supported JSON nesting depth"
+        ) from exc
 
 
 def canonical_json_bytes(document: Any) -> bytes:
@@ -97,15 +100,18 @@ def canonical_json_bytes(document: Any) -> bytes:
             + b"\n"
         )
     except (TypeError, ValueError) as exc:
-        raise GateError("INVALID_JSON", "approval cannot be represented as canonical JSON") from exc
+        raise GateError(
+            "INVALID_JSON", "approval cannot be represented as canonical JSON"
+        ) from exc
 
 
-def _git(root: str, *args: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
+def _git(
+    root: str, *args: str, check: bool = True
+) -> subprocess.CompletedProcess[bytes]:
     result = subprocess.run(
         ["git", *args],
         cwd=root,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         check=False,
     )
     if check and result.returncode != 0:
@@ -126,16 +132,22 @@ def git_blob(
     exact_entries: list[tuple[bytes, bytes, bytes]] = []
     for record in (item for item in tree.stdout.split(b"\0") if item):
         if b"\t" not in record:
-            raise GateError("GIT_TREE_ENTRY", f"git returned a malformed tree entry for {path}")
+            raise GateError(
+                "GIT_TREE_ENTRY", f"git returned a malformed tree entry for {path}"
+            )
         metadata, raw_path = record.split(b"\t", 1)
         if raw_path.decode("utf-8", "strict") != path:
             continue
         fields = metadata.split()
         if len(fields) != 3:
-            raise GateError("GIT_TREE_ENTRY", f"git returned a malformed tree entry for {path}")
+            raise GateError(
+                "GIT_TREE_ENTRY", f"git returned a malformed tree entry for {path}"
+            )
         exact_entries.append((fields[0], fields[1], fields[2]))
     if len(exact_entries) > 1:
-        raise GateError("GIT_TREE_ENTRY", f"git returned duplicate tree entries for {path}")
+        raise GateError(
+            "GIT_TREE_ENTRY", f"git returned duplicate tree entries for {path}"
+        )
     if exact_entries:
         mode, object_type, _oid = exact_entries[0]
         if mode not in {b"100644", b"100755"} or object_type != b"blob":
@@ -160,9 +172,13 @@ def git_blob(
     try:
         size = int(size_result.stdout.strip())
     except ValueError as exc:
-        raise GateError("GIT_READ", f"git returned an invalid object size for {path}") from exc
+        raise GateError(
+            "GIT_READ", f"git returned an invalid object size for {path}"
+        ) from exc
     if size < 0 or size > max_size:
-        raise GateError("INPUT_TOO_LARGE", f"{path} exceeds the {max_size}-byte input limit")
+        raise GateError(
+            "INPUT_TOO_LARGE", f"{path} exceeds the {max_size}-byte input limit"
+        )
     return _git(root, "cat-file", "blob", object_name).stdout
 
 
@@ -175,7 +191,9 @@ def _schema_validator(
         Draft202012Validator.check_schema(schema)
         if required_schema_bytes is None:
             return Draft202012Validator(schema)
-        required_schema = strict_json_loads(required_schema_bytes, "trusted required-capabilities schema")
+        required_schema = strict_json_loads(
+            required_schema_bytes, "trusted required-capabilities schema"
+        )
         Draft202012Validator.check_schema(required_schema)
         registry = Registry().with_resource(
             required_schema["$id"], Resource.from_contents(required_schema)
@@ -185,15 +203,22 @@ def _schema_validator(
         raise GateError("TRUSTED_SCHEMA", f"trusted schema is invalid: {exc}") from exc
 
 
-def _validation_message(validator: Draft202012Validator, document: Any, label: str) -> str | None:
+def _validation_message(
+    validator: Draft202012Validator, document: Any, label: str
+) -> str | None:
     try:
-        errors = sorted(validator.iter_errors(document), key=lambda error: tuple(str(p) for p in error.absolute_path))
+        errors = sorted(
+            validator.iter_errors(document),
+            key=lambda error: tuple(str(p) for p in error.absolute_path),
+        )
     except RecursionError:
         return f"{label} exceeds the supported JSON nesting depth"
     if not errors:
         return None
     error = errors[0]
-    pointer = "/" + "/".join(str(part).replace("~", "~0").replace("/", "~1") for part in error.absolute_path)
+    pointer = "/" + "/".join(
+        str(part).replace("~", "~0").replace("/", "~1") for part in error.absolute_path
+    )
     return f"{label} fails schema at {pointer}: {error.message}"
 
 
@@ -229,7 +254,9 @@ def _manifest_path(path: str) -> PurePosixPath:
         or not any(path.startswith(prefix) for prefix in MANIFEST_PREFIXES)
         or len(parsed.parts) != 5
     ):
-        raise GateError("MANIFEST_PATH", f"unsupported capability manifest path {path!r}")
+        raise GateError(
+            "MANIFEST_PATH", f"unsupported capability manifest path {path!r}"
+        )
     return parsed
 
 
@@ -244,10 +271,14 @@ def _package_name(path: PurePosixPath) -> str:
 def approval_path_for_manifest(manifest_path: str) -> str:
     parsed = _manifest_path(manifest_path)
     relative = PurePosixPath(*parsed.parts[1:-1])
-    return PurePosixPath(APPROVAL_PREFIX, *relative.parts).with_suffix(".json").as_posix()
+    return (
+        PurePosixPath(APPROVAL_PREFIX, *relative.parts).with_suffix(".json").as_posix()
+    )
 
 
-def _changed_paths(root: str, base_commit: str, head_commit: str, pathspec: str) -> set[str]:
+def _changed_paths(
+    root: str, base_commit: str, head_commit: str, pathspec: str
+) -> set[str]:
     result = _git(
         root,
         "diff",
@@ -268,17 +299,28 @@ def _tree_oid(root: str, revision: str, package_root: str) -> str | None:
     if not records:
         return None
     if len(records) != 1 or b"\t" not in records[0]:
-        raise GateError("PACKAGE_TREE", f"git returned an ambiguous package tree entry for {package_root}")
+        raise GateError(
+            "PACKAGE_TREE",
+            f"git returned an ambiguous package tree entry for {package_root}",
+        )
     metadata, raw_path = records[0].split(b"\t", 1)
     fields = metadata.split()
     if raw_path.decode("utf-8", "strict") != package_root or len(fields) != 3:
-        raise GateError("PACKAGE_TREE", f"git returned a malformed package tree entry for {package_root}")
+        raise GateError(
+            "PACKAGE_TREE",
+            f"git returned a malformed package tree entry for {package_root}",
+        )
     mode, object_type, raw_oid = fields
     if mode != b"040000" or object_type != b"tree":
-        raise GateError("PACKAGE_TREE", f"{package_root} exists but is not a package directory tree")
+        raise GateError(
+            "PACKAGE_TREE", f"{package_root} exists but is not a package directory tree"
+        )
     oid = raw_oid.decode("ascii", "strict")
     if not HEX_OBJECT_ID.fullmatch(oid):
-        raise GateError("PACKAGE_TREE", f"git returned an invalid package tree id for {package_root}")
+        raise GateError(
+            "PACKAGE_TREE",
+            f"git returned an invalid package tree id for {package_root}",
+        )
     return oid
 
 
@@ -297,10 +339,7 @@ def _requires_approval(old: Profile, new: Profile) -> bool:
     return (
         old_capabilities != new_capabilities
         and bool(old_capabilities or new_capabilities)
-    ) or (
-        old_exceptions != new_exceptions
-        and bool(old_exceptions or new_exceptions)
-    )
+    ) or (old_exceptions != new_exceptions and bool(old_exceptions or new_exceptions))
 
 
 def _profile_payload_fields(profile: Profile, prefix: str) -> dict[str, Any]:
@@ -368,7 +407,10 @@ def _check_payload_matches(
         approved_at=approval["approved_at"],
     )
     if approval != expected:
-        raise GateError("STALE_APPROVAL", "approval does not exactly match the base and candidate package profiles")
+        raise GateError(
+            "STALE_APPROVAL",
+            "approval does not exactly match the base and candidate package profiles",
+        )
 
 
 def _has_namespace(entry: dict[str, Any], namespace: str) -> bool:
@@ -379,7 +421,9 @@ def _has_namespace(entry: dict[str, Any], namespace: str) -> bool:
     return namespace in match.group(1).split(",")
 
 
-def _authorized_signer(entries: list[dict[str, Any]], principal: str) -> dict[str, Any] | None:
+def _authorized_signer(
+    entries: list[dict[str, Any]], principal: str
+) -> dict[str, Any] | None:
     """Select a trusted principal entry that explicitly grants this namespace."""
     return next(
         (
@@ -395,7 +439,9 @@ def _authorized_signer(entries: list[dict[str, Any]], principal: str) -> dict[st
 def _load_trusted_release_gate(root: str, base_commit: str) -> ModuleType:
     raw = git_blob(root, base_commit, RELEASE_GATE_PATH)
     if raw is None:
-        raise GateError("TRUSTED_VERIFIER", f"{RELEASE_GATE_PATH} is absent from PR base")
+        raise GateError(
+            "TRUSTED_VERIFIER", f"{RELEASE_GATE_PATH} is absent from PR base"
+        )
     with tempfile.TemporaryDirectory(prefix="capability-gate-trusted-") as temp:
         path = PurePosixPath(temp, "release_gate.py")
         # The imported module keeps its code object after the temporary source
@@ -404,26 +450,41 @@ def _load_trusted_release_gate(root: str, base_commit: str) -> ModuleType:
 
         trusted_path = Path(str(path))
         trusted_path.write_bytes(raw)
-        spec = importlib.util.spec_from_file_location("_trusted_release_gate", trusted_path)
+        spec = importlib.util.spec_from_file_location(
+            "_trusted_release_gate", trusted_path
+        )
         if spec is None or spec.loader is None:
-            raise GateError("TRUSTED_VERIFIER", "could not load release gate from PR base")
+            raise GateError(
+                "TRUSTED_VERIFIER", "could not load release gate from PR base"
+            )
         module = importlib.util.module_from_spec(spec)
         sys.modules[spec.name] = module
         spec.loader.exec_module(module)
         return module
 
 
-def _load_trusted_schemas(root: str, base_commit: str) -> tuple[Draft202012Validator, Draft202012Validator]:
+def _load_trusted_schemas(
+    root: str, base_commit: str
+) -> tuple[Draft202012Validator, Draft202012Validator]:
     required_raw = git_blob(root, base_commit, REQUIRED_SCHEMA_PATH)
     approval_raw = git_blob(root, base_commit, APPROVAL_SCHEMA_PATH)
     if required_raw is None or approval_raw is None:
-        raise GateError("TRUSTED_SCHEMA", "required capability approval schemas are absent from PR base")
-    return _schema_validator(required_raw), _schema_validator(approval_raw, required_raw)
+        raise GateError(
+            "TRUSTED_SCHEMA",
+            "required capability approval schemas are absent from PR base",
+        )
+    return _schema_validator(required_raw), _schema_validator(
+        approval_raw, required_raw
+    )
 
 
-def _validate_profile_package(profile: Profile, path: PurePosixPath, label: str) -> None:
+def _validate_profile_package(
+    profile: Profile, path: PurePosixPath, label: str
+) -> None:
     if profile.status == "valid" and profile.package != _package_name(path):
-        raise GateError("PACKAGE_MISMATCH", f"{label} package identity does not match its path")
+        raise GateError(
+            "PACKAGE_MISMATCH", f"{label} package identity does not match its path"
+        )
 
 
 def _load_candidate_approval(
@@ -437,22 +498,31 @@ def _load_candidate_approval(
         root, head_commit, approval_path + ".sig", max_size=MAX_SIGNATURE_BYTES
     )
     if raw is None or signature_raw is None:
-        raise GateError("MISSING_APPROVAL", f"expected approval JSON and detached signature at {approval_path}")
+        raise GateError(
+            "MISSING_APPROVAL",
+            f"expected approval JSON and detached signature at {approval_path}",
+        )
     if len(raw) > MAX_APPROVAL_BYTES or len(signature_raw) > MAX_SIGNATURE_BYTES:
-        raise GateError("INPUT_TOO_LARGE", "approval JSON or signature exceeds the size limit")
+        raise GateError(
+            "INPUT_TOO_LARGE", "approval JSON or signature exceeds the size limit"
+        )
     approval = strict_json_loads(raw, approval_path)
     if not isinstance(approval, dict):
         raise GateError("INVALID_APPROVAL", "approval payload must be a JSON object")
     if raw != canonical_json_bytes(approval):
-        raise GateError("NONCANONICAL_APPROVAL", "approval bytes are not canonical UTF-8 JSON")
+        raise GateError(
+            "NONCANONICAL_APPROVAL", "approval bytes are not canonical UTF-8 JSON"
+        )
     message = _validation_message(approval_validator, approval, approval_path)
     if message:
         raise GateError("INVALID_APPROVAL", message)
     timestamp = approval["approved_at"]
     try:
-        parsed_timestamp = dt.datetime.fromisoformat(timestamp[:-1] + "+00:00")
+        parsed_timestamp = dt.datetime.fromisoformat(timestamp)
     except ValueError as exc:
-        raise GateError("INVALID_APPROVAL", "approved_at is not a valid UTC timestamp") from exc
+        raise GateError(
+            "INVALID_APPROVAL", "approved_at is not a valid UTC timestamp"
+        ) from exc
     if parsed_timestamp.utcoffset() != dt.timedelta(0):
         raise GateError("INVALID_APPROVAL", "approved_at must be expressed in UTC")
     try:
@@ -499,10 +569,13 @@ def verify_changes(
     base_commit: str,
     head_commit: str,
     trusted_release_gate: ModuleType | None = None,
-    trusted_schema_validators: tuple[Draft202012Validator, Draft202012Validator] | None = None,
+    trusted_schema_validators: tuple[Draft202012Validator, Draft202012Validator]
+    | None = None,
 ) -> list[str]:
     """Verify changed profiles. Returns a concise list of verified packages."""
-    if not HEX_OBJECT_ID.fullmatch(base_commit) or not HEX_OBJECT_ID.fullmatch(head_commit):
+    if not HEX_OBJECT_ID.fullmatch(base_commit) or not HEX_OBJECT_ID.fullmatch(
+        head_commit
+    ):
         raise GateError("REVISION", "base and head must be full Git object IDs")
     _git(repo_root, "cat-file", "-e", f"{base_commit}^{{commit}}")
     _git(repo_root, "cat-file", "-e", f"{head_commit}^{{commit}}")
@@ -510,7 +583,9 @@ def verify_changes(
         raise GateError("BASE_REF", "invalid base ref")
 
     if trusted_schema_validators is None:
-        required_validator, approval_validator = _load_trusted_schemas(repo_root, base_commit)
+        required_validator, approval_validator = _load_trusted_schemas(
+            repo_root, base_commit
+        )
     else:
         required_validator, approval_validator = trusted_schema_validators
 
@@ -540,13 +615,19 @@ def verify_changes(
         old = _profile(base_raw, required_validator, f"base {path}")
         new = _profile(head_raw, required_validator, f"candidate {path}")
         if new.status == "invalid":
-            raise GateError("INVALID_CANDIDATE_MANIFEST", f"candidate {path} is not a valid schema-v1 manifest")
+            raise GateError(
+                "INVALID_CANDIDATE_MANIFEST",
+                f"candidate {path} is not a valid schema-v1 manifest",
+            )
         _validate_profile_package(old, parsed, f"base {path}")
         _validate_profile_package(new, parsed, f"candidate {path}")
         package_root = _package_root(parsed)
         package_tree = _tree_oid(repo_root, head_commit, package_root)
         if new.status == "valid" and package_tree is None:
-            raise GateError("PACKAGE_TREE", f"candidate manifest exists but package tree {package_root} is absent")
+            raise GateError(
+                "PACKAGE_TREE",
+                f"candidate manifest exists but package tree {package_root} is absent",
+            )
         if _requires_approval(old, new):
             approval_path = approval_path_for_manifest(path)
             expected_approval_paths.update({approval_path, approval_path + ".sig"})
@@ -555,7 +636,10 @@ def verify_changes(
     unexpected = changed_approval_paths - expected_approval_paths
     if unexpected:
         unexpected_list = ", ".join(sorted(unexpected))
-        raise GateError("ORPHAN_APPROVAL", f"approval changes do not match a changed security-relevant profile: {unexpected_list}")
+        raise GateError(
+            "ORPHAN_APPROVAL",
+            f"approval changes do not match a changed security-relevant profile: {unexpected_list}",
+        )
 
     approvals: list[tuple[str, str, dict[str, Any], str]] = []
     for path, package, old, new, package_tree in pending:
@@ -605,11 +689,17 @@ def verify_changes(
         except Exception as exc:  # release_gate exposes specific GateError details
             message = getattr(exc, "message", str(exc))
             code = getattr(exc, "code", "NO_TRUSTED_SIGNER")
-            if "no signer has been registered" in message or "no key" in message or "no key" in code.lower():
+            if (
+                "no signer has been registered" in message
+                or "no key" in message
+                or "no key" in code.lower()
+            ):
                 code = "NO_TRUSTED_SIGNER"
             raise GateError(code, message) from exc
         if not signer_entries:
-            raise GateError("NO_TRUSTED_SIGNER", "trusted base signer registry contains no keys")
+            raise GateError(
+                "NO_TRUSTED_SIGNER", "trusted base signer registry contains no keys"
+            )
 
     for package, approval_path, approval, signature in approvals:
         principal = approval["approved_by"]
@@ -632,7 +722,10 @@ def verify_changes(
                 getattr(exc, "message", str(exc)),
             ) from exc
         if verified_principal != principal:
-            raise GateError("PRINCIPAL_MISMATCH", "SSH signature principal does not match approved_by")
+            raise GateError(
+                "PRINCIPAL_MISMATCH",
+                "SSH signature principal does not match approved_by",
+            )
         verified.append(package)
 
     return verified
@@ -651,18 +744,35 @@ def propose_approval(
 ) -> bytes:
     """Build canonical unsigned approval bytes for human review and signing."""
     parsed = _manifest_path(manifest_path)
-    required_raw = git_blob(repo_root, base_commit, REQUIRED_SCHEMA_PATH, max_size=MAX_MANIFEST_BYTES)
+    required_raw = git_blob(
+        repo_root, base_commit, REQUIRED_SCHEMA_PATH, max_size=MAX_MANIFEST_BYTES
+    )
     if required_raw is None:
-        raise GateError("TRUSTED_SCHEMA", "required-capabilities schema is absent from PR base")
+        raise GateError(
+            "TRUSTED_SCHEMA", "required-capabilities schema is absent from PR base"
+        )
     validator = _schema_validator(required_raw)
-    old = _profile(git_blob(repo_root, base_commit, manifest_path), validator, f"base {manifest_path}")
-    new = _profile(git_blob(repo_root, head_commit, manifest_path), validator, f"candidate {manifest_path}")
+    old = _profile(
+        git_blob(repo_root, base_commit, manifest_path),
+        validator,
+        f"base {manifest_path}",
+    )
+    new = _profile(
+        git_blob(repo_root, head_commit, manifest_path),
+        validator,
+        f"candidate {manifest_path}",
+    )
     if new.status == "invalid":
-        raise GateError("INVALID_CANDIDATE_MANIFEST", "candidate manifest is not schema-valid")
+        raise GateError(
+            "INVALID_CANDIDATE_MANIFEST", "candidate manifest is not schema-valid"
+        )
     _validate_profile_package(old, parsed, f"base {manifest_path}")
     _validate_profile_package(new, parsed, f"candidate {manifest_path}")
     if not _requires_approval(old, new):
-        raise GateError("NO_APPROVAL_REQUIRED", "this profile change does not require a signed approval")
+        raise GateError(
+            "NO_APPROVAL_REQUIRED",
+            "this profile change does not require a signed approval",
+        )
     package_tree = _tree_oid(repo_root, head_commit, _package_root(parsed))
     if new.status == "valid" and package_tree is None:
         raise GateError("PACKAGE_TREE", "candidate package tree is absent")
@@ -683,9 +793,13 @@ def propose_approval(
         repo_root, base_commit, APPROVAL_SCHEMA_PATH, max_size=MAX_APPROVAL_BYTES
     )
     if approval_schema_raw is None:
-        raise GateError("TRUSTED_SCHEMA", "capability approval schema is absent from PR base")
+        raise GateError(
+            "TRUSTED_SCHEMA", "capability approval schema is absent from PR base"
+        )
     approval_validator = _schema_validator(approval_schema_raw, required_raw)
-    validation_error = _validation_message(approval_validator, document, "unsigned proposal")
+    validation_error = _validation_message(
+        approval_validator, document, "unsigned proposal"
+    )
     if validation_error:
         raise GateError("INVALID_PROPOSAL", validation_error)
     return payload
@@ -701,9 +815,14 @@ def safe_write_repo_file(repo_root: str, relative_path: str, payload: bytes) -> 
         or "\\" in relative_path
         or not parsed.parts
     ):
-        raise GateError("PROPOSAL_PATH", "proposal output must be a clean repository-relative path")
+        raise GateError(
+            "PROPOSAL_PATH", "proposal output must be a clean repository-relative path"
+        )
     if not hasattr(os, "O_NOFOLLOW") or not hasattr(os, "O_DIRECTORY"):
-        raise GateError("PROPOSAL_OUTPUT", "safe proposal creation requires no-follow directory support")
+        raise GateError(
+            "PROPOSAL_OUTPUT",
+            "safe proposal creation requires no-follow directory support",
+        )
     root = Path(repo_root).resolve(strict=True)
     directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
     root_fd = os.open(root, directory_flags)
@@ -734,7 +853,9 @@ def safe_write_repo_file(repo_root: str, relative_path: str, payload: bytes) -> 
     except GateError:
         raise
     except OSError as exc:
-        raise GateError("PROPOSAL_OUTPUT", f"cannot safely create {relative_path}: {exc}") from exc
+        raise GateError(
+            "PROPOSAL_OUTPUT", f"cannot safely create {relative_path}: {exc}"
+        ) from exc
     finally:
         for fd in reversed(opened_fds):
             os.close(fd)
@@ -748,7 +869,9 @@ def _parser() -> argparse.ArgumentParser:
     verify.add_argument("--base-ref", required=True)
     verify.add_argument("--base-commit", required=True)
     verify.add_argument("--head-commit", required=True)
-    propose = subparsers.add_parser("propose", help="write unsigned approval payload bytes")
+    propose = subparsers.add_parser(
+        "propose", help="write unsigned approval payload bytes"
+    )
     propose.add_argument("--repo-root", required=True)
     propose.add_argument("--manifest-path", required=True)
     propose.add_argument("--base-ref", required=True)
@@ -772,9 +895,14 @@ def main(argv: list[str] | None = None) -> int:
                 head_commit=args.head_commit,
             )
             if packages:
-                print("Verified signed capability profiles: " + ", ".join(sorted(packages)))
+                print(
+                    "Verified signed capability profiles: "
+                    + ", ".join(sorted(packages))
+                )
             else:
-                print("No changed nonempty capability profile requires a signed approval.")
+                print(
+                    "No changed nonempty capability profile requires a signed approval."
+                )
             return 0
         proposal = propose_approval(
             args.repo_root,
@@ -790,12 +918,26 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Unsigned proposal written to {output}")
         print(
             "After owner review and signer bootstrap, sign the exact file with: "
-            + shlex.join(["ssh-keygen", "-Y", "sign", "-f", "<HARDWARE_KEY_PATH>", "-n", SIGNATURE_NAMESPACE, str(output)])
+            + shlex.join(
+                [
+                    "ssh-keygen",
+                    "-Y",
+                    "sign",
+                    "-f",
+                    "<HARDWARE_KEY_PATH>",
+                    "-n",
+                    SIGNATURE_NAMESPACE,
+                    str(output),
+                ]
+            )
         )
         print("No signature was created.")
         return 0
     except GateError as exc:
-        print(f"::error title=Capability approval gate [{exc.code}]::{exc.message}", file=sys.stderr)
+        print(
+            f"::error title=Capability approval gate [{exc.code}]::{exc.message}",
+            file=sys.stderr,
+        )
         return 1
 
 
