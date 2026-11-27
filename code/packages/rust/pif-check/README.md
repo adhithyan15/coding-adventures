@@ -15,7 +15,13 @@ which files it was shown or which theorem is accepted for which claim. This crat
                  verified     (trusted)               footprint, buckets
 ```
 
-## What is here (PIF-003a)
+## What is here
+
+PIF-003 in four parts: 003a resolver, chain and CLI; 003b canonical term encoding and goal
+digests; 003c footprints, classification and the report; 003d the printer, the round trips
+and G7.
+
+### Resolver, chain and CLI (PIF-003a)
 
 | Module | Role |
 |---|---|
@@ -82,16 +88,130 @@ continues over it. Digests print as 64 lowercase hex digits.
 * **`--withdrawn-logic n,n,...`** is gate configuration passed to the reader (R-VER-1); an empty
   list withdraws none.
 * Control files and store entries must be regular files (no symbolic links, FIFOs, devices).
+## Goals and the canonical term encoding (PIF-003b)
+
+A claim file binds a claim id to a theorem (`goal "<id>" <theorem> sha256:<hex>`). The kernel
+checked the proof; the gate decides whether the theorem's *statement* is the signed one.
+
+| Module | Role |
+|---|---|
+| `cte` | The canonical term encoding of VER32 3.6 in two forms. The **binding CTE** (binder names and info erased, levels syntactic, 1 MiB cap) is computed **from the kernel store**; the **display CTE** keeps names. `Dterm` holds a term as a tree, built and emitted with explicit stacks (no recursion on attacker-controlled depth), with a strict parser for the display form |
+| `goals` | G4/G5: recompute each goal digest from the theorem's type and compare it with the record's (a hint); the **goals list** (one line per claim: claim id, one space, display CTE, LF) parsed and checked with `erase(display) = binding`; sign-off goal digests; the **goal-signing aggregate** (PIF-020); R-GOL-4 again from the stored goal term |
+
+The worked example's goal digest, recomputed from the kernel store, is
+`bf1fa0a0d828b019965f46efa44ff2627bf54a59558a1bc2959b52c161f74676`, the value in VER32 4.6.
+
+### Pinned byte layout
+
+VER32 gives the CTE grammar and says STRING and NAT are "written exactly as in PIF (4.1)".
+This crate writes a NAT in decimal with no leading zero, and a STRING in double quotes with
+printable ASCII 0x21 to 0x7E as itself except `"` and `\` (`\"`, `\\`) and every other
+character (space, controls, non-ASCII) as `\u{h}` in lowercase hex without leading zeros. The
+parser accepts exactly those spellings, so a name has one encoding. A numeric name component
+prints as digits (`<"A",3>`), a string component `"3"` as `<"A","3">`.
+
+### Goals list and aggregate
+
+```text
+gates.and_comm Pd(<"a">,C<"Bool">[],Pd(<"b">,C<"Bool">[],A(A(A(C<"Eq">[s(z)],...
+```
+
+The aggregate is `SHA-256` over the lines `claim-id goal-digest base-environment-digest`
+(digests as 64 lowercase hex digits), each ended by LF, sorted bytewise. VER32 does not fix
+the terminator or the digest spelling; this is the choice made here. `pif-check --goals
+<file>` adds the list; the report prints each claim's `goal_digest` and `goals_sha256`.
+
+### Sign-off comparison and limits (security review)
+
+`goals_sha256` is always printed (the aggregate the gate computed); `goals_sha256_verified` is
+true only when a sign-off supplied an aggregate to compare with. A goals list may have at most
+100,000 lines, and claim lookups use hash maps, so a hostile list cannot make the gate quadratic.
+## Footprints, classification and the report (PIF-003c)
+
+| Module | Role |
+|---|---|
+| `footprint` | The axioms a theorem's type **and** value depend on, transitively, over the whole chain; a constant's footprint includes itself (G2). Explicit stacks, a visited set over names and hash-consed expressions, deterministic order. Inductives contribute constructors and recursor, recursors their rules |
+| `registry` | The axiom registry file and its exact-match rule (A2): `(name, universe parameters, binding-CTE digest of the type, environment-prefix digest)`. Builds the reader's `GateInputs::axiom_registry` per file, with that file's prefix |
+| `claims` | The per-claim report fields: claim id, theorem, goal digest, base and full environment digests, footprint with classes and buckets, kernel crate version and commit, certificate id `pif:sha256:<claim file digest>`, `rungs: "pending"` |
+
+**Classification today.** A `Warrant.Assume.*` or `Src.*` axiom that exactly matches a
+registry entry is a *registered* (c) assumption (a `Src.*` one is never bucket (a), and the
+report says "relative to Lean + these axioms; consistency with the kernel logic not
+established"). **Every other axiom, including `propext`, `Classical.choice` and
+`Quot.sound`, is an unclassified (c) assumption**: A1 needs a validated `axiom.*` `prim`
+role, roles are kernel slice 4, and until then the gate fails closed.
+
+`footprint::Footprinter` memoises per-node footprints, so `claim_reports` walks the shared prelude
+once however many claims there are.
+
+### Registry file
+
+```text
+pif-registry 1
+axiom <name CTE> <params> <type digest> <prefix digest>
+axiom <"Warrant","Assume","gates","nand"> - <64 hex> <64 hex>
+axiom <"Src","hol","select"> <"u">,<"v"> <64 hex> <64 hex>
+```
+
+`<params>` is `-` or comma-separated name CTEs. Only `Warrant.Assume.*` and `Src.*` names are
+accepted. `pif-check --registry <file>`.
+
+### Kernel version and commit
+
+`claims::KERNEL_VERSION` is written by hand (a cargo dependency does not expose its version
+at compile time) and a test compares it with `lean-kernel`'s manifest. The commit is read
+from the build environment variable `PIF_KERNEL_COMMIT` and is `"unknown"` without it.
+
+## The printer `pif-pp`, the round trips and G7 (PIF-003d)
+
+A person signs a *printed* goal and reviews *printed* definitions, so the printer decides
+what they see (`tcb.pif.printer`). VER32 lets it stay outside the trusted base only if the
+gate checks that printing loses nothing. The gate does:
+
+| Module | Role |
+|---|---|
+| `printer` | Terms to text: `forall (a : T), ...`, `fun (x : T) => ...`, `A -> B` for an unused `_` binder, `let x : T := v; b`, `Sort l`, constants with `.{levels}`, bound variables as `#n`. Deterministic, iterative, refuses shadowed binders, unprintable names, keywords as names, literals and projections |
+| `ppparse` | The **independent** parser of that syntax (a stack machine; shares only the `Dterm` data type with the printer) |
+| `filemodel`, `filetext` | A file as a person reads it: decoded **from the PIF text with the file's own binder names** (not through the kernel store, which keeps the first-interned names), printed one line per declaration, and parsed back |
+| `printcheck` | `parse(print(G)) = G` for every goal; `parse(print(F)) = F` for every prelude, ADL, model and axioms file; and the decoded file must agree with what the kernel accepted, declaration by declaration (binding CTE of every type and value, kinds, hints, parameters, the set of declared names) |
+| `names` | G7: every name in a goal's display CTE is in the ASCII class; binder names are single-component, pairwise distinct (`_` exempt) and not constants of the environment |
+| `pp_cli` | `pif-pp file <path>`, `pif-pp check <path>`, `pif-pp goal <display CTE>` |
+
+`load_chain` runs the file round trip on every reviewed base file, and `check_goals` runs G7
+and the goal round trip on every goals-list line (and, with no list, the constant and
+universe-parameter part of G7 on the stored goal term).
+
+**Why the parser is hand-written and not generated by `grammar-tools`.** For a trusted gate it
+is the same conflict as VER32 Q1: a generated parser puts a lexer engine, a parser engine and
+a grammar compiler into the trusted base, and the code that turns a parse tree into a
+de Bruijn term would still be hand-written. The syntax is small and unambiguous, the parser
+is a stack machine, and the round trip is the differential. The grammar in `printer.rs` is
+written so a `.grammar` file can be derived from it if `grammar-tools` is later audited to
+that level.
+
+**Hostile inputs.** `decode` refuses forward and self references (a table is acyclic), one
+budget covers every unfolding step of a file, the printed text is bounded as a whole, and
+`pif-pp file` only prints after the round trip succeeds. Profile ids and feature words must be
+plain lowercase words, so nothing but printable ASCII reaches the terminal. `pif-pp goal`
+prints the goal digest (`goal-digest <hex>`) next to the text.
+
+**Shadowing.** Variables print as `#n`, so a repeated binder name cannot change a meaning; the
+rule is a readability and review rule. The printer refuses a repeated name when the text can
+then refer to either binder (the new one is used in its body, or the old one is used inside
+the new scope). Two binders that are never referred to inside the inner scope are allowed:
+the committed prelude writes every arrow as a binder named `a`, so `Prop -> Prop -> Prop` is
+two unused `a` binders. G7 is stricter for goals: all binder names are distinct.
 
 ## Running
 
 ```sh
 cargo test -p pif-check
 cargo run -q -p pif-check -- --store ./store --chain chain.txt --allow allow.txt
+cargo run -q -p pif-check --bin pif-pp -- file ../../specs/data/pif/prelude.pif
 ```
 
 ## Not yet here
 
-Goal digests and the canonical term encoding (PIF-003b), footprints, axiom classification
-and the full report (PIF-003c), and the printer `pif-pp` with its round trips (PIF-003d).
-`pif-eval` and `pif-fmt` of PIF-003 are separate untrusted tools and are not part of this crate.
+* The VER31 rungs (`rungs` prints `"pending"`) and the `axiom.*` role bindings of A1
+  (kernel slice 4): every axiom in a footprint is an unclassified (c) assumption until then.
+* `pif-eval` and `pif-fmt` of PIF-003 are separate untrusted tools and are not part of this crate.

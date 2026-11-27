@@ -93,7 +93,7 @@ pub const MAX_CHAIN: usize = 65;
 
 /// Split a control file into rows of single-space-separated fields, enforcing the strict
 /// line format. Returns the rows with their 1-based line numbers.
-fn rows<'a>(
+pub(crate) fn rows<'a>(
     what: &'static str,
     text: &'a str,
     magic: &str,
@@ -127,7 +127,7 @@ fn rows<'a>(
     Ok(out)
 }
 
-fn digest_at(what: &'static str, line: usize, s: &str) -> Result<Digest, CheckError> {
+pub(crate) fn digest_at(what: &'static str, line: usize, s: &str) -> Result<Digest, CheckError> {
     Digest::parse(s).ok_or(CheckError::BadControlFile {
         what,
         line,

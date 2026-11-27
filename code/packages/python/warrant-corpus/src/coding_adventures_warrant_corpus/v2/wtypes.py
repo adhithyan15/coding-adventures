@@ -607,6 +607,39 @@ def unify(a: Ty, b: Ty) -> Ty | None:
     return None
 
 
+def fault_unify(a: Ty, b: Ty, narrow: bool = False) -> Ty | None:
+    """The common type of two types in a *fault row* (R94, R96, R97), or ``None``.
+
+    :func:`unify` plus the one thing a fault needs: **tuples**.  A tuple is
+    invariant in source (R51), but a fault rewrites one component of a tuple
+    result (``off-by-one-consumed`` turns a ``Nat`` into an ``Int``), so two
+    tuple types of one arity have a common type when their components do,
+    pairwise.  Below a tuple (``narrow`` true) the relation is narrower still:
+    two ``Bytes`` of different width do **not** unify (a one-byte literal in a
+    ``Bytes<2>`` component is refused), while ``Nat``/``Int``, ``Option``,
+    ``Result`` and nested tuples relate as before.
+    """
+    if a.head == UNKNOWN:
+        return b
+    if b.head == UNKNOWN or a == b:
+        return a
+    if {a, b} == {NAT, INT}:
+        return INT
+    if a.head == b.head == "Bytes":
+        return None if narrow else BYTES
+    if a.head == b.head == "Option":
+        inner = fault_unify(a.args[0], b.args[0], narrow)
+        return Ty("Option", (inner,)) if inner else None
+    if a.head == b.head == "Result":
+        ok = fault_unify(a.args[0], b.args[0], narrow)
+        err = fault_unify(a.args[1], b.args[1], narrow)
+        return Ty("Result", (ok, err)) if ok and err else None
+    if a.head == b.head == "()" and len(a.args) == len(b.args):
+        parts = [fault_unify(x, y, True) for x, y in zip(a.args, b.args, strict=True)]
+        return Ty("()", tuple(parts)) if all(parts) else None  # type: ignore[arg-type]
+    return None
+
+
 def is_undetermined(ty: Ty) -> bool:
     """Does ``ty`` still hold a ``?`` (the unknown half of a bare ``ok``/``err``)?"""
     return ty.head == UNKNOWN or any(

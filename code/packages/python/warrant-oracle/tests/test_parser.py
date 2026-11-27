@@ -97,11 +97,11 @@ GOLDEN = {
     "arithmetic": (
         "arithmetic",
         "v1",
-        218,
+        219,  # 218 before VER04r D76 split the 9-binder claim in two
         {
             "AssumeDecl": 2,
             "BoundDecl": 5,
-            "ClaimDecl": 63,
+            "ClaimDecl": 64,
             "ErrorDecl": 1,
             "ExampleDecl": 53,
             "InputDecl": 12,

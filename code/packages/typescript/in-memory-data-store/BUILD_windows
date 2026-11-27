@@ -1,6 +1,6 @@
 cd ../hash-map && npm ci --quiet
 cd ../hash-set && npm ci --quiet
-cd ../heap && npm ci --quiet
+cd ../heap && npm ci --quiet && npm run build --silent
 cd ../hyperloglog && npm ci --quiet
 cd ../in-memory-data-store-engine && npm ci --quiet
 cd ../in-memory-data-store-protocol && npm ci --quiet

@@ -2,6 +2,16 @@
 
 All notable changes to `heap` (C++) are documented in this file.
 
+## [0.2.0] - Unreleased
+
+### Added
+
+- Added bounded min/max priority queues with checked capacity, one-pass range
+  construction, explicit move/ownership and comparator-exception guarantees,
+  and an installable relocatable CMake package.
+- Added independent model histories, ownership/error-path tests, comparison
+  bounds, and a relocated installed-consumer smoke.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added

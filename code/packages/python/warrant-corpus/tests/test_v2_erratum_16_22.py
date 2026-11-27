@@ -24,7 +24,7 @@ from test_v2_lane_checks import ERR, fault_case, fault_row
 from coding_adventures_warrant_corpus.v2 import STANDARD, Program
 from coding_adventures_warrant_corpus.v2 import chunks as C
 from coding_adventures_warrant_corpus.v2 import ir as ir_module
-from coding_adventures_warrant_corpus.v2.errors import KitError, Refusal
+from coding_adventures_warrant_corpus.v2.errors import Refusal
 from coding_adventures_warrant_corpus.v2.faults import compile_fault
 from coding_adventures_warrant_corpus.v2.kit import (
     outcome_fault,
@@ -249,7 +249,7 @@ def test_int_under_option_tuple_or_list_is_not_a_type_error_in_a_model(text):
     # At `ir.core` such a type is a missing level, not `ill-typed` as it was: the
     # lane records the model not-live and a call to it is `level-missing`.
     models = {"m": {"params": [["x", text]], "body": ["lit", True]}}
-    program = Program(models=models, model_order=["m"])
+    program = Program(models=models, model_order=["m"], levels=frozenset({"ir.core"}))
     assert "m" in program.not_live_models
     got = outcome_ir(
         case(["lit", True], env=[], models=models, model_order=["m"], subjects={}),
@@ -326,11 +326,11 @@ def test_int_is_still_refused_as_a_binder_a_field_and_a_value():
     assert code_of(lambda: parse_type("Option<Int>", {})) == "type"
 
 
-def test_an_env_entry_of_type_int_is_still_a_kit_error():
-    # R111 (c): no vector; the lane's reading is unchanged.
+def test_an_env_entry_of_type_int_is_ill_typed():
+    # R111 (c) as amended by section 16.23 R120: a vector now (see
+    # test_v2_erratum_16_23.py), no longer a kit error.
     got = case(["lit", True], env=[["x", {"type": "Int", "value": "1"}]])
-    with pytest.raises(KitError):
-        outcome_ir(got, STANDARD)
+    assert outcome_ir(got, STANDARD) == {"error": "ill-typed"}
 
 
 # ===========================================================================

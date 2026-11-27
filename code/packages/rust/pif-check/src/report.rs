@@ -14,6 +14,8 @@
 //! print as `"pending"`, never as a guess.
 
 use crate::chain::Loaded;
+use crate::claims::ClaimReport;
+use crate::digest::Digest;
 use crate::error::CheckError;
 use crate::json::Json;
 use lean_kernel::Name;
@@ -38,11 +40,18 @@ pub fn dotted(n: &Name) -> String {
 pub struct Provided {
     pub allow_list: bool,
     pub signoff: bool,
+    pub goals_list: bool,
+    pub registry: bool,
     /// `"signed"`, `"allow-listed"` or `"unvetted"`.
     pub base_trust: &'static str,
 }
 
-pub fn success_report(l: &Loaded, p: &Provided) -> Json {
+pub fn success_report(
+    l: &Loaded,
+    p: &Provided,
+    claims: &[ClaimReport],
+    aggregate: &Digest,
+) -> Json {
     let files = l
         .files
         .iter()
@@ -57,20 +66,10 @@ pub fn success_report(l: &Loaded, p: &Provided) -> Json {
             ])
         })
         .collect();
-    let claims = l
-        .files
-        .iter()
-        .flat_map(|f| f.goals.iter())
-        .map(|g| {
-            Json::Obj(vec![
-                ("claim", Json::s(&g.claim_id)),
-                ("theorem", Json::s(dotted(&g.theorem))),
-                ("recorded_goal_digest", Json::s(&g.digest)),
-            ])
-        })
-        .collect();
     Json::Obj(vec![
         ("ok", Json::Bool(true)),
+        ("pif_version", Json::Num(1)),
+        ("logic_version", Json::Num(1)),
         ("base_environment", Json::s(l.base_environment.hex())),
         ("environment", Json::s(l.environment.hex())),
         ("base_trust", Json::s(p.base_trust)),
@@ -94,16 +93,38 @@ pub fn success_report(l: &Loaded, p: &Provided) -> Json {
                 ),
                 (
                     "goals",
-                    Json::s(if p.signoff { "pending" } else { "absent" }),
+                    Json::s(if p.signoff { "checked" } else { "absent" }),
                 ),
                 (
                     "aggregate",
-                    Json::s(if p.signoff { "pending" } else { "absent" }),
+                    Json::s(if p.signoff { "checked" } else { "absent" }),
                 ),
             ]),
         ),
+        (
+            "goals_list",
+            Json::s(if p.goals_list {
+                "checked"
+            } else {
+                "not-provided"
+            }),
+        ),
+        ("goals_sha256", Json::s(aggregate.hex())),
+        // The aggregate is *verified* only when a sign-off supplied one to compare with.
+        ("goals_sha256_verified", Json::Bool(p.signoff)),
+        (
+            "registry",
+            Json::s(if p.registry {
+                "checked"
+            } else {
+                "not-provided"
+            }),
+        ),
         ("files", Json::Arr(files)),
-        ("claims", Json::Arr(claims)),
+        (
+            "claims",
+            Json::Arr(claims.iter().map(|c| c.json(l)).collect()),
+        ),
     ])
 }
 

@@ -43,11 +43,14 @@ def test_the_standard_semantics_passes_what_the_mutant_fails(name):
 
 
 def test_a_mutant_is_reported_in_every_category_it_was_built_to_break():
-    """The three mutants the spec names, and the category each must be caught in."""
+    """The three mutants the spec names (and two of S10e), and the category each must be caught in."""
     expectations = {
         "no-wrap": {"v2-arith", "v2-ir", "v2-fault"},
         "eager-and": {"v2-ir"},
         "first-binder-fastest": {"v2-chunk"},
+        # S10e: the mistakes of the two new levels are caught where each one lives
+        "shift-count-masked": {"v2-ir"},
+        "tuple-first-component-fastest": {"v2-domain", "v2-chunk"},
     }
     for name, wanted in expectations.items():
         mutant, categories, _pinned = MUTANTS[name]
