@@ -272,6 +272,9 @@ var (
 	// does java/test-bootstrap's CorpusConformanceTest (VER05e);
 	// kotlin/test-bootstrap (VER05f), csharp/test-bootstrap (VER05g), c/test-bootstrap (VER05i) and
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
+	// fsharp/test-bootstrap's FsCorpusRunner (VER05l) read it too; so does
+	// ocaml/test-bootstrap, which embeds cases.json as test/corpus_data.ml,
+	// cmp-checks that module against it in BUILD (VER05q).
 	// swift/test-bootstrap's CorpusConformanceTests (VER05k),
 	// ruby/test_bootstrap's test_corpus_conformance.rb (VER05h),
 	// lua/test_bootstrap's test_corpus_conformance.lua (VER05o),
@@ -1015,6 +1018,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    hddSimulatorFixtureInputs,
 	},
 	{
+		name:     "c/hdd-simulator",
+		language: "c",
+		inputs:   "the exact DB02 shared HDD simulator vector",
+		matches:  isHDDSimulatorFixture,
+		paths:    hddSimulatorFixtureInputs,
+	},
+	{
 		name:     "python/trig",
 		language: "python",
 		inputs:   "the TRIG-REF-1 bit-exact corpus and the generator, oracle and validator its BUILD runs (--check)",
@@ -1515,6 +1525,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    pbtV1CorpusPaths,
 	},
 	{
+		name:     "ocaml/test-bootstrap",
+		language: "ocaml",
+		inputs:   "the shared pbt-v1 property-engine conformance corpus",
+		matches:  isPbtV1Corpus,
+		paths:    pbtV1CorpusPaths,
+	},
+	{
 		name:     "cpp/test-bootstrap",
 		language: "cpp",
 		inputs:   "the shared pbt-v1 property-engine conformance corpus",
@@ -1991,7 +2008,7 @@ func repositoryInputsForPackage(packageName string) []string {
 		return typescriptGameInputFrameInputs
 	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash":
 		return nandFlashFixtureInputs
-	case "python/hdd-simulator", "typescript/hdd-simulator":
+	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator":
 		return hddSimulatorFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
