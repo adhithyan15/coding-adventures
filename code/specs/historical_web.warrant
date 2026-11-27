@@ -1,0 +1,36 @@
+-- HWEB00 / VER04 -- executable wire-contract slice for HTTP/0.9.
+--
+-- The Python reference currently has no Warrant host binding.  This document
+-- therefore owns the wire model and its claims, while the Python lane remains
+-- an explicitly recorded integration gap (see verification/warrant/README.md).
+
+warrant historical_web v1
+  model request_wire(path: Bytes) -> Bytes = concat(concat(b"47455420", path), b"0d0a")
+
+  op encode_http09_request(address: Bytes) -> Bytes
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels encode_http09_request:
+    address public
+
+  input encode_http09_request.address:
+    hostile
+    ensures no_panic, terminates
+
+  bound encode_http09_request:
+    steps <= 64
+    depth <= 4
+
+  example encode_root:
+    encode_http09_request(b"2f") == request_wire(b"2f")
+  example encode_path_with_query:
+    encode_http09_request(b"2f696e6465782e68746d6c3f612b62") == request_wire(b"2f696e6465782e68746d6c3f612b62")
+  example encode_gateway_address:
+    encode_http09_request(b"6674703a2f2f782f61") == request_wire(b"6674703a2f2f782f61")
+
+  claim one_byte_address_has_exact_wire_shape:
+    forall b: U8. encode_http09_request(be_bytes(b)) == request_wire(be_bytes(b))
