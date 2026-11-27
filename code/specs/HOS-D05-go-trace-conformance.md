@@ -18,10 +18,12 @@ value forwards from MEM into a taken branch. The branch skips a wrong-path
 register write and reaches a bounded terminal ECALL. Only aligned, in-range
 flat-RAM accesses are used.
 
-The test loads the input fixture, constructs the real five-stage Go core, and
-also runs the same bytes and initial memory through the separate sequential
-`RiscVSimulator`. Fixture input drives execution; expected trace data is only
-used for comparison after execution.
+An external fixture harness loads the input, constructs the real five-stage Go
+core through its public API, and runs the same bytes and initial memory through
+the separate sequential `RiscVSimulator`. Fixture input drives execution;
+expected trace data is only used for comparison after execution. The harness
+is kept under the fixture's `test-adapters/go/` directory, outside the
+publishable package; the package-local BUILD and tests remain zero-capability.
 
 ## Captured output contract
 
@@ -49,8 +51,9 @@ profile. The final RAM comparison is for aligned in-range word accesses only.
 
 ## Acceptance checks
 
-- Replay the JSON input on the actual classic five-stage Go pipeline and match
-  the committed cycle projection exactly.
+- Run the external Go fixture harness from the `riscv-simulator` module to
+  replay the JSON input on the actual classic five-stage pipeline and match the
+  committed cycle projection exactly.
 - Assert separate operand tags/values, one load-use stall, taken redirect,
   wrong-path suppression, and the captured terminal path.
 - Compare staged and sequential retired instruction PCs, all 32 registers,
