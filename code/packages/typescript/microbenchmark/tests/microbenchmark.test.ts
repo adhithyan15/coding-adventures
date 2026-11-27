@@ -193,6 +193,32 @@ describe("paired microbenchmarks", () => {
     }
   });
 
+  it("rejects duplicate decoded JSON members while allowing separate object scopes", () => {
+    let tick = 0n;
+    const report = collect((n) => n, (n) => n, 1n,
+      { ...defaults(), pairs: 1, target_ns: 1n }, () => (tick += 1n));
+    const valid = stringifyLosslessJson({
+      ...report, workload: "generic-workload", invocation: [], revision: "shared",
+      runtime: "shared", os: "test", arch: "test",
+    });
+    expect(replayJson(valid)).toEqual(report);
+    // The same member name appears in the root and config objects, not one scope.
+
+    const invalid = [
+      valid.replace('"pairs":1', '"pairs":1,"pairs":1'),
+      valid.replace('"baseline_ns":1', '"baseline_ns":1,"baseline_ns":1'),
+      valid.replace('"verdict":"inconclusive"', '"verdict":"inconclusive","verdict":"inconclusive"'),
+      valid.replace('"revision":"shared"', '"revision":"shared","revision":"other"'),
+      valid.replace('"pairs":1', '"pairs":1,"pa\\u0069rs":1'),
+    ];
+    for (const text of invalid) expect(() => replayJson(text)).toThrow(/duplicate JSON object member/);
+    expect(() => replayJson(`${valid.slice(0, -1)},}`)).toThrow();
+
+    const unknown = { ...report, extra: true };
+    expect(() => replayReport(unknown)).toThrow(/unknown report member/);
+    expect(() => replayJson(stringifyLosslessJson(unknown))).toThrow(/unknown report member/);
+  });
+
   it("preserves signed-64-bit JSON integer tokens above 2^53", () => {
     const parsed = parseLosslessJson(`{"seed":-9223372036854775808,"duration":9007199254740993}`) as { seed: bigint; duration: bigint };
     expect(parsed.seed).toBe(-9223372036854775808n);

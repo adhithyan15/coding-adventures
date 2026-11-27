@@ -126,6 +126,30 @@ class MicrobenchmarkReportTest < Minitest::Test
     end
   end
 
+  def test_json_ingress_rejects_duplicate_decoded_members_and_unknown_root_keys
+    report = simple_report
+    complete = report.to_h.merge(
+      "workload" => "generic-workload", "invocation" => [], "revision" => "shared",
+      "runtime" => "shared", "os" => "test", "arch" => "test"
+    )
+    text = JSON.generate(complete)
+    assert_equal report, MB.replay_json(text)
+    # The same member name appears in the root and config objects, not one scope.
+
+    invalid = [
+      text.sub('"pairs":5', '"pairs":5,"pairs":5'),
+      text.sub('"baseline_ns":1', '"baseline_ns":1,"baseline_ns":1'),
+      text.sub('"verdict":"inconclusive"', '"verdict":"inconclusive","verdict":"inconclusive"'),
+      text.sub('"revision":"shared"', '"revision":"shared","revision":"other"'),
+      text.sub('"pairs":5', '"pairs":5,"pa\\u0069rs":5')
+    ]
+    invalid.each { |duplicate| assert_raises(ArgumentError) { MB.replay_json(duplicate) } }
+    assert_raises(ArgumentError) { MB.replay_json(text.sub(/\}\z/, ",}")) }
+
+    assert_raises(ArgumentError) { MB.replay_report(complete.merge("extra" => true)) }
+    assert_raises(ArgumentError) { MB.replay_json(JSON.generate(complete.merge("extra" => true))) }
+  end
+
   private
 
   def simple_report
