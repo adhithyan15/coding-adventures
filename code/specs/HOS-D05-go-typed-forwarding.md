@@ -33,6 +33,14 @@ generic pipeline callbacks. The RISC-V decoder uses typed records for `rs1` and
 `rs2` before arithmetic, branch comparison, address calculation, or store-data
 selection; the generic pipeline does not interpret instruction operands.
 
+The Core maps source-register entries back to their `rs1`/`rs2` positions even
+if one slot is absent, and names the exact decode-stage index it inspected.
+This lets the generic pipeline attach typed records to the selected token in a
+multi-decode configuration while retaining first-decode scalar behavior for
+legacy callbacks. Typed metadata is replaced with a fresh owned copy on
+forwarding and cleared from held decode tokens on a stall. `StallStages` means
+the stage index where the bubble is inserted, not a stall duration.
+
 The Core adapter must report structural resource use for the stage that uses
 the resource. In particular, decode does not occupy the EX-stage ALU while an
 older token is executing. The current adapter marks both ID and EX tokens as

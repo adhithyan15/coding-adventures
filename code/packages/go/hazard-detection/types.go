@@ -84,9 +84,12 @@ func (a HazardAction) String() string {
 //	    UsesALU: true,
 //	}
 type PipelineSlot struct {
-	Valid                bool
-	PC                   int
-	SourceRegs           []int
+	Valid      bool
+	PC         int
+	SourceRegs []int
+	// SourceIndices maps each SourceRegs entry to its original operand slot.
+	// Nil retains the historical compact positional interpretation.
+	SourceIndices        []int
 	DestReg              *int // nil means no destination register
 	DestValue            *int // nil means value not yet available
 	IsBranch             bool
@@ -113,8 +116,9 @@ type HazardResult struct {
 }
 
 // ForwardedOperand records one ID source slot resolved by the data hazard
-// detector. SourceIndex preserves the source's position in PipelineSlot's
-// SourceRegs slice; pipeline and ISA adapters map that position to an operand.
+// detector. SourceIndex preserves its architectural operand slot, using
+// PipelineSlot.SourceIndices when supplied and the compact slice position for
+// legacy callers.
 type ForwardedOperand struct {
 	SourceIndex    int
 	SourceRegister int

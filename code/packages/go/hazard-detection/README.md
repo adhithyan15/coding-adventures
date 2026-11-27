@@ -33,6 +33,8 @@ result := unit.Check(ifStage, idStage, exStage, memStage)
 ```
 
 `ForwardedOperands` contains one entry for each source with a ready producer.
+`PipelineSlot.SourceIndices` can preserve the architectural operand position
+when unused source slots are omitted; without it, the list position is used.
 For the same source register in EX and MEM, EX wins because it is the younger
 write. A load in EX produces a stall and is not replaced by an older MEM value;
 the consumer is checked again after the load reaches MEM.

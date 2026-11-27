@@ -39,11 +39,18 @@ func (d *DataHazardDetector) Detect(idStage, exStage, memStage PipelineSlot) Haz
 
 			var forwarded []ForwardedOperand
 			for sourceIndex, srcReg := range idStage.SourceRegs {
+				if srcReg < 0 {
+					continue
+				}
 				r := d.checkSingleRegister(srcReg, exStage, memStage)
 				worst = pickHigherPriority(worst, r)
 				if (r.Action == ActionForwardFromEX || r.Action == ActionForwardFromMEM) && r.ForwardedValue != nil {
+					operandIndex := sourceIndex
+					if len(idStage.SourceIndices) == len(idStage.SourceRegs) {
+						operandIndex = idStage.SourceIndices[sourceIndex]
+					}
 					forwarded = append(forwarded, ForwardedOperand{
-						SourceIndex: sourceIndex, SourceRegister: srcReg,
+						SourceIndex: operandIndex, SourceRegister: srcReg,
 						Value: *r.ForwardedValue, SourceStage: r.ForwardedFrom,
 					})
 				}

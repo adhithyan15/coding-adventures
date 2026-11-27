@@ -12,6 +12,8 @@ All notable changes to the `core` package will be documented in this file.
   held until the load result reaches MEM.
 - Forwarding producer values preserve valid zero-valued results, and optional
   zero-register conventions prevent RISC-V x0 from becoming a producer.
+- Typed forwarding records retain rs1/rs2 positions and target the decode
+  stage selected by the Core hazard check in multi-decode layouts.
 
 ## [0.2.0] - 2026-04-02
 

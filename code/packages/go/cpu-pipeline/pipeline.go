@@ -137,11 +137,18 @@ type HazardResponse struct {
 	ForwardSource string
 
 	// ForwardedOperands carries zero or more source-tagged values for an ISA
-	// adapter. The pipeline copies these onto the decode token while retaining
-	// the legacy scalar fields and action behavior.
+	// adapter. The pipeline copies these onto the selected decode token while
+	// retaining the legacy scalar fields and action behavior.
 	ForwardedOperands []ForwardedOperand
 
-	// StallStages is the number of stages to stall (typically 1).
+	// ForwardedOperandsStageIndex selects the decode stage that owns the token
+	// resolved by the hazard callback. If nil, typed records use the first
+	// decode stage for compatibility with callbacks that only know the legacy
+	// pipeline convention.
+	ForwardedOperandsStageIndex *int
+
+	// StallStages is the stage index at which to insert the stall bubble.
+	// Zero selects the first execute stage (or the historical fallback).
 	StallStages int
 
 	// FlushCount is the number of stages to flush on a misprediction.
@@ -527,6 +534,14 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 
 		stalled = true
 		p.stats.StallCycles++
+		// A decode token held across the cycle must not retain a typed value
+		// selected for an earlier producer state. It will be resolved again
+		// after the producer advances.
+		for i, stage := range p.config.Stages {
+			if stage.Category == StageDecode && i < numStages && p.stages[i] != nil {
+				p.stages[i].ForwardedOperands = nil
+			}
+		}
 
 		// Find the stall insertion point.
 		stallPoint := hazard.StallStages
@@ -579,15 +594,24 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 
 		// Handle forwarding if needed.
 		if hazard.Action == HazardForwardFromEX || hazard.Action == HazardForwardFromMEM {
+			firstDecode := -1
 			for i, s := range p.config.Stages {
 				if s.Category == StageDecode && p.stages[i] != nil && !p.stages[i].IsBubble {
+					if firstDecode < 0 {
+						firstDecode = i
+					}
 					p.stages[i].ALUResult = hazard.ForwardValue
 					p.stages[i].ForwardedFrom = hazard.ForwardSource
-					p.stages[i].ForwardedOperands = append(
-						p.stages[i].ForwardedOperands,
-						hazard.ForwardedOperands...,
-					)
 					break
+				}
+			}
+			if len(hazard.ForwardedOperands) > 0 {
+				target := firstDecode
+				if hazard.ForwardedOperandsStageIndex != nil {
+					target = *hazard.ForwardedOperandsStageIndex
+				}
+				if target >= 0 && target < numStages && p.config.Stages[target].Category == StageDecode && p.stages[target] != nil && !p.stages[target].IsBubble {
+					p.stages[target].ForwardedOperands = append([]ForwardedOperand(nil), hazard.ForwardedOperands...)
 				}
 			}
 		}

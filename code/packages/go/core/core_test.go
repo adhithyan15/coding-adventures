@@ -8,6 +8,10 @@ import (
 	cpupipeline "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-pipeline"
 )
 
+type typedForwardingTestDecoder struct{ *MockDecoder }
+
+func (typedForwardingTestDecoder) SupportsTypedOperandForwarding() bool { return true }
+
 // =========================================================================
 // Test Helpers
 // =========================================================================
@@ -1634,6 +1638,19 @@ func TestTokenToSlot(t *testing.T) {
 		}
 	})
 
+	t.Run("rs2-only source retains operand position", func(t *testing.T) {
+		tok := cpupipeline.NewToken()
+		tok.Rs1 = -1
+		tok.Rs2 = 7
+		slot := tokenToSlot(tok, -1, cpupipeline.StageDecode)
+		if len(slot.SourceRegs) != 1 || slot.SourceRegs[0] != 7 {
+			t.Fatalf("unexpected source register list: %#v", slot.SourceRegs)
+		}
+		if len(slot.SourceIndices) != 1 || slot.SourceIndices[0] != 1 {
+			t.Fatalf("rs2 source position was compacted: %#v", slot.SourceIndices)
+		}
+	})
+
 	t.Run("BRANCH token", func(t *testing.T) {
 		tok := cpupipeline.NewToken()
 		tok.Opcode = "BRANCH"
@@ -1669,6 +1686,39 @@ func TestTokenToSlot(t *testing.T) {
 			t.Fatal("hardwired x0 must not become a forwarding producer")
 		}
 	})
+}
+
+func TestCoreTargetsLastDecodeTokenAndPreservesRs2Position(t *testing.T) {
+	config := SimpleConfig()
+	config.Pipeline = cpupipeline.PipelineConfig{Stages: []cpupipeline.PipelineStage{
+		{Name: "IF", Category: cpupipeline.StageFetch},
+		{Name: "ID1", Category: cpupipeline.StageDecode},
+		{Name: "ID2", Category: cpupipeline.StageDecode},
+		{Name: "EX", Category: cpupipeline.StageExecute},
+		{Name: "MEM", Category: cpupipeline.StageMemory},
+		{Name: "WB", Category: cpupipeline.StageWriteback},
+	}, ExecutionWidth: 1}
+	decoder := typedForwardingTestDecoder{MockDecoder: NewMockDecoder()}
+	c, err := NewCore(config, decoder)
+	if err != nil {
+		t.Fatal(err)
+	}
+	id1 := cpupipeline.NewToken()
+	id1.PC, id1.Rs1 = 4, 9
+	id2 := cpupipeline.NewToken()
+	id2.PC, id2.Rs1, id2.Rs2 = 8, -1, 1
+	ex := cpupipeline.NewToken()
+	ex.PC, ex.Rd, ex.RegWrite, ex.WriteData = 12, 1, true, 77
+	response := c.hazardCallback([]*cpupipeline.PipelineToken{nil, id1, id2, ex, nil, nil})
+	if response.Action != cpupipeline.HazardForwardFromEX {
+		t.Fatalf("expected EX forwarding response, got %#v", response)
+	}
+	if response.ForwardedOperandsStageIndex == nil || *response.ForwardedOperandsStageIndex != 2 {
+		t.Fatalf("typed records targeted the wrong decode stage: %#v", response.ForwardedOperandsStageIndex)
+	}
+	if len(response.ForwardedOperands) != 1 || response.ForwardedOperands[0].Operand != cpupipeline.SourceOperand2 || response.ForwardedOperands[0].Register != 1 {
+		t.Fatalf("last decode rs2 operand position was lost: %#v", response.ForwardedOperands)
+	}
 }
 
 // =========================================================================

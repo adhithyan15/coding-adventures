@@ -129,6 +129,19 @@ func TestDataHazard_MultipleSourceRegsWorstWins(t *testing.T) {
 	}
 }
 
+func TestDataHazardPreservesExplicitSourcePosition(t *testing.T) {
+	detector := &DataHazardDetector{}
+	id := PipelineSlot{Valid: true, SourceRegs: []int{7}, SourceIndices: []int{1}}
+	ex := PipelineSlot{Valid: true, DestReg: IntPtr(7), DestValue: IntPtr(42)}
+	result := detector.Detect(id, ex, emptySlot())
+	if result.Action != ActionForwardFromEX || len(result.ForwardedOperands) != 1 {
+		t.Fatalf("expected an EX forward, got %#v", result)
+	}
+	if got := result.ForwardedOperands[0]; got.SourceIndex != 1 || got.SourceRegister != 7 || got.Value != 42 {
+		t.Fatalf("explicit rs2 position was lost: %#v", got)
+	}
+}
+
 func TestDataHazard_StallBeatsForward(t *testing.T) {
 	d := &DataHazardDetector{}
 	id := PipelineSlot{Valid: true, SourceRegs: []int{1, 2}}

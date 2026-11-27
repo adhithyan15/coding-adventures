@@ -267,6 +267,7 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 	}
 
 	var ifTok, idTok, exTok, memTok *cpupipeline.PipelineToken
+	idStageIndex := -1
 	for i, stage := range pipelineCfg.Stages {
 		if i >= numStages {
 			break
@@ -279,6 +280,7 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 			}
 		case cpupipeline.StageDecode:
 			idTok = tok
+			idStageIndex = i
 		case cpupipeline.StageExecute:
 			if exTok == nil {
 				exTok = tok
@@ -341,6 +343,9 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 		}
 		response.ForwardSource = result.ForwardedFrom
 		response.ForwardedOperands = c.typedForwardedOperands(result.ForwardedOperands)
+		if len(response.ForwardedOperands) > 0 {
+			response.ForwardedOperandsStageIndex = &idStageIndex
+		}
 		c.forwardCount++
 
 	case hazarddetection.ActionForwardFromMEM:
@@ -350,6 +355,9 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 		}
 		response.ForwardSource = result.ForwardedFrom
 		response.ForwardedOperands = c.typedForwardedOperands(result.ForwardedOperands)
+		if len(response.ForwardedOperands) > 0 {
+			response.ForwardedOperandsStageIndex = &idStageIndex
+		}
 		c.forwardCount++
 	}
 
@@ -416,9 +424,11 @@ func tokenToSlot(tok *cpupipeline.PipelineToken, zeroRegister int, stage cpupipe
 
 	if tok.Rs1 >= 0 {
 		slot.SourceRegs = append(slot.SourceRegs, tok.Rs1)
+		slot.SourceIndices = append(slot.SourceIndices, 0)
 	}
 	if tok.Rs2 >= 0 {
 		slot.SourceRegs = append(slot.SourceRegs, tok.Rs2)
+		slot.SourceIndices = append(slot.SourceIndices, 1)
 	}
 
 	if tok.Rd >= 0 && tok.Rd != zeroRegister && tok.RegWrite {

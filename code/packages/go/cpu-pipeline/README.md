@@ -64,10 +64,15 @@ fmt.Printf("IPC: %.3f, Stalls: %d, Flushes: %d\n",
 
 Hazard callbacks may also provide `HazardResponse.ForwardedOperands`, a list of
 `ForwardedOperand` records with source position, register, value, and source
-stage. The pipeline copies the records onto the decode token and its snapshots;
-it does not interpret or apply them to an ALU operation. ISA adapters that need
-both `rs1` and `rs2` bypass values can consume these tags. The original scalar
-`ForwardValue` and `ForwardSource` fields remain supported for existing clients.
+stage. A callback may set `ForwardedOperandsStageIndex` to route them to a
+specific decode-stage token; when omitted, the pipeline keeps its legacy
+first-decode behavior. The pipeline copies the records onto that token and its
+snapshots; it does not interpret or apply them to an ALU operation. On a stall,
+typed values are cleared from held decode tokens and must be resolved again.
+ISA adapters that need both `rs1` and `rs2` bypass values can consume these
+tags. The original scalar `ForwardValue` and `ForwardSource` fields remain
+supported for existing clients. `StallStages` is the bubble insertion stage
+index, not a duration.
 
 ## Configuration Presets
 
