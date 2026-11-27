@@ -50,7 +50,7 @@ jobs:
           printf '%s\n' 'source tree checks passed' >> "$out/source-and-host.txt"
 
       - name: Set up Go 1.26.1
-        uses: actions/setup-go@v7
+        uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
         with:
           go-version: '1.26.1'
           cache-dependency-path: 'code/**/go.sum'
