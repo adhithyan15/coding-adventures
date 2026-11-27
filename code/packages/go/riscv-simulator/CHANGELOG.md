@@ -20,6 +20,9 @@
 ## [0.2.0] - Unreleased
 
 ### Added
+- Bounded precise-memory fault comparisons against an independently stepped
+  sequential prefix for aligned out-of-range and misaligned word loads/stores;
+  the cases check older committed state and suppression of faulting/younger effects.
 - Full RV32I base integer instruction set (~30 new instructions):
   - I-type arithmetic: slti, sltiu, xori, ori, andi, slli, srli, srai
   - R-type arithmetic: sll, slt, sltu, xor, srl, sra, or, and

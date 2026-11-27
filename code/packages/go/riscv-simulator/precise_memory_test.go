@@ -395,3 +395,91 @@ func TestPreciseModeDoesNotSelectWrongPathLoadFault(t *testing.T) {
 		t.Fatalf("correct target did not retire: x3=%d", got)
 	}
 }
+
+func TestPreciseFaultsMatchIndependentSequentialPrefix(t *testing.T) {
+	tests := []struct {
+		name      string
+		access    string
+		address   int
+		wantCause string
+	}{
+		{name: "aligned out-of-range load", access: "load", address: 256, wantCause: "load_access_fault"},
+		{name: "misaligned load", access: "load", address: 1, wantCause: "load_address_misaligned"},
+		{name: "aligned out-of-range store", access: "store", address: 256, wantCause: "store_access_fault"},
+		{name: "misaligned store", access: "store", address: 1, wantCause: "store_address_misaligned"},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			prefix := []uint32{
+				EncodeAddi(10, 0, 128), // older store address
+				EncodeAddi(1, 0, 42),   // older store data
+				EncodeSw(1, 10, 0),     // must commit before selected fault
+				EncodeAddi(3, 0, 7),    // older GPR write and faulting-LW sentinel
+			}
+			var faulting uint32
+			if tc.access == "load" {
+				faulting = EncodeLw(3, 0, tc.address)
+			} else {
+				faulting = EncodeSw(1, 0, tc.address)
+			}
+			guest := append(append([]uint32(nil), prefix...),
+				faulting,
+				EncodeSw(1, 10, 4),    // younger store must not commit
+				EncodeAddi(31, 0, 99), // younger GPR effect must not retire
+			)
+
+			c, err := NewRiscVCoreWithPreciseMemory(core.SimpleConfig(), 256)
+			if err != nil {
+				t.Fatal(err)
+			}
+			c.LoadProgram(Assemble(guest), 0)
+			c.MemoryController().WriteWord(132, 88)
+			snapshots, retired := runPreciseCore(t, c, 100)
+
+			// Load the same complete instruction image, but step the independent
+			// engine only through the successful prefix before the selected access.
+			sequential := NewRiscVSimulator(256)
+			sequential.CPU.Memory.WriteWord(132, 88)
+			sequential.CPU.LoadProgram(Assemble(guest), 0)
+			wantRetired := make([]int, 0, len(prefix))
+			for range prefix {
+				step := sequential.Step()
+				wantRetired = append(wantRetired, step.Fetch.PC)
+			}
+			if !reflect.DeepEqual(retired, wantRetired) {
+				t.Fatalf("successful retirements=%v, sequential prefix=%v", retired, wantRetired)
+			}
+			if got := c.Pipeline().Stats().InstructionsCompleted; got != len(prefix) {
+				t.Fatalf("completed count=%d, want successful prefix count %d", got, len(prefix))
+			}
+			fault, ok := c.PreciseFaultOutcome()
+			if !ok || fault.PC != 16 || fault.Address != uint32(tc.address) || fault.Width != 4 || fault.Access != tc.access || fault.Cause != tc.wantCause {
+				t.Fatalf("selected fault=%+v, ok=%t", fault, ok)
+			}
+			last := snapshots[len(snapshots)-1]
+			if wb := last.Stages["WB"]; wb == nil || wb.PreciseFault == nil || wb.PC != fault.PC {
+				t.Fatalf("fault selection token missing at WB: %+v", wb)
+			}
+			if got := c.ReadRegister(31); got != 0 {
+				t.Fatalf("younger x31 effect escaped: %d", got)
+			}
+			if got := c.ReadRegister(3); got != 7 {
+				t.Fatalf("faulting load changed x3 or older write was lost: %d", got)
+			}
+			receipts := c.PreciseStoreReceipts()
+			if len(receipts) != 1 || receipts[0].PC != 8 || receipts[0].Address != 128 || receipts[0].Value != 42 {
+				t.Fatalf("committed store receipts=%+v, want only older PC 8 store", receipts)
+			}
+			for register := 0; register < 32; register++ {
+				if got, want := uint32(c.ReadRegister(register)), sequential.CPU.Registers.Read(register); got != want {
+					t.Errorf("x%d staged=%#x, successful-prefix oracle=%#x", register, got, want)
+				}
+			}
+			for address := 0; address < 256; address += 4 {
+				if got, want := uint32(c.MemoryController().ReadWord(address)), sequential.CPU.Memory.ReadWord(address); got != want {
+					t.Errorf("RAM[%d] staged=%#x, successful-prefix oracle=%#x", address, got, want)
+				}
+			}
+		})
+	}
+}
