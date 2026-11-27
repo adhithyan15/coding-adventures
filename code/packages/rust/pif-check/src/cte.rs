@@ -630,6 +630,32 @@ impl<'a> P<'a> {
     }
 }
 
+/// Parse a comma-separated list of name CTEs (`<"u">,<"v">`) that fills the whole text. Used
+/// by the axiom registry for universe parameters.
+pub fn parse_name_list(text: &str) -> Result<Vec<Name>, CteError> {
+    let mut p = P {
+        s: text.as_bytes(),
+        i: 0,
+    };
+    let mut out = Vec::new();
+    loop {
+        out.push(p.name()?);
+        if p.i == p.s.len() {
+            return Ok(out);
+        }
+        p.expect(b',')?;
+    }
+}
+
+/// Parse one name CTE that fills the whole text.
+pub fn parse_name(text: &str) -> Result<Name, CteError> {
+    let mut v = parse_name_list(text)?;
+    match (v.pop(), v.is_empty()) {
+        (Some(n), true) => Ok(n),
+        _ => Err(CteError::Syntax("expected one name", 0)),
+    }
+}
+
 impl Dterm {
     /// Parse a display CTE. **Strict**: the text must be exactly what [`Dterm::display`] emits
     /// for some tree (no spaces, canonical numerals and escapes, nothing after the term), so

@@ -74,3 +74,7 @@ path = "tests/bounds.rs"
 [[test]]
 name = "publish"
 path = "tests/publish.rs"
+
+[[test]]
+name = "sat_lane"
+path = "tests/sat_lane.rs"
