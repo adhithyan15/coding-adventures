@@ -11,6 +11,7 @@ import (
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cigates"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/hasher"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/plan"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
 )
@@ -1492,6 +1493,145 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 				t.Fatalf("got %v, want %v", got, tc.want)
 			}
 		})
+	}
+}
+
+func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
+	languages := []string{"c", "cpp", "go", "java", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	packages := make([]discovery.Package, 0, len(languages)+1)
+	all := make(map[string]bool, len(languages))
+	for _, language := range languages {
+		name := language + "/unix-history-simulator"
+		packages = append(packages, discovery.Package{Name: name, Language: language})
+		all[name] = true
+	}
+	packages = append(packages, discovery.Package{Name: "go/adjacent", Language: "go"})
+
+	cases := []struct {
+		name string
+		path string
+		want map[string]bool
+	}{
+		{"canonical corpus add or edit", historicalUnixFixturePath, all},
+		{"replay helper", historicalUnixReplayPath, map[string]bool{
+			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
+			"java/unix-history-simulator": true, "lua/unix-history-simulator": true,
+		}},
+		{"shared native driver", historicalUnixBuildNativePath, map[string]bool{
+			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
+			"java/unix-history-simulator": true, "lua/unix-history-simulator": true,
+		}},
+		{"C adapter", historicalUnixCAdapterPath, map[string]bool{"c/unix-history-simulator": true}},
+		{"C++ adapter", historicalUnixCppAdapterPath, map[string]bool{"cpp/unix-history-simulator": true}},
+		{"Java adapter", historicalUnixJavaAdapterPath, map[string]bool{"java/unix-history-simulator": true}},
+		{"Lua adapter", historicalUnixLuaAdapterPath, map[string]bool{"lua/unix-history-simulator": true}},
+		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
+		{"lookalike excluded", historicalUnixFixturePath + ".bak", map[string]bool{}},
+		{"unrelated README excluded", "code/packages/go/unix-history-simulator/README.md", map[string]bool{}},
+	}
+	for _, platform := range []string{"linux", "darwin", "windows"} {
+		platformPackages := packagesForPlatform(packages, platform)
+		for _, tc := range cases {
+			t.Run(platform+"/"+tc.name, func(t *testing.T) {
+				got, err := repositoryInputConsumersForChange([]string{tc.path}, platformPackages, "all")
+				if err != nil {
+					t.Fatal(err)
+				}
+				if !reflect.DeepEqual(got, tc.want) {
+					t.Fatalf("selected %v, want %v", got, tc.want)
+				}
+			})
+		}
+	}
+	// Git's changed-path list reports either side of a rename. The old
+	// canonical path still selects all readers when the new path is unrelated.
+	got, err := repositoryInputConsumersForChange([]string{historicalUnixFixturePath, "docs/moved-fixture.json"}, packages, "all")
+	if err != nil || !reflect.DeepEqual(got, all) {
+		t.Fatalf("rename paths selected %v, err %v; want %v", got, err, all)
+	}
+	for _, language := range languages {
+		got, err := repositoryInputConsumersForChange([]string{historicalUnixFixturePath}, packages, language)
+		want := map[string]bool{language + "/unix-history-simulator": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("%s-only fixture selection = %v, err %v; want %v", language, got, err, want)
+		}
+	}
+	for _, language := range languages {
+		wantInputs := []string{historicalUnixFixturePath}
+		switch language {
+		case "c":
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixCAdapterPath)
+		case "cpp":
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixCppAdapterPath)
+		case "java":
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixJavaAdapterPath)
+		case "lua":
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixLuaAdapterPath)
+		}
+		name := language + "/unix-history-simulator"
+		if got := repositoryInputsForPackage(name); !reflect.DeepEqual(got, wantInputs) {
+			t.Errorf("%s hash inputs = %v, want %v", name, got, wantInputs)
+		}
+	}
+}
+
+func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
+	root := t.TempDir()
+	languages := []string{"c", "cpp", "go", "java", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
+	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(fixturePath, []byte("[]\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	before := make(map[string]string, len(languages))
+	for _, language := range languages {
+		name := language + "/unix-history-simulator"
+		packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(name))
+		if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(packageRoot, "simulator.go"), []byte("package sample\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		inputs := repositoryInputsForPackage(name)
+		for _, input := range inputs[1:] {
+			path := filepath.Join(root, filepath.FromSlash(input))
+			if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(path, []byte("source\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		pkg := discovery.Package{Name: name, Language: language, Path: packageRoot}
+		hash, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash %s with declared inputs: %v", name, err)
+		}
+		before[name] = hash
+	}
+	if err := os.WriteFile(fixturePath, []byte("[{\"case\":1}]\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, language := range languages {
+		name := language + "/unix-history-simulator"
+		pkg := discovery.Package{Name: name, Language: language, Path: filepath.Join(root, "code", "packages", filepath.FromSlash(name))}
+		after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, repositoryInputsForPackage(name))
+		if err != nil {
+			t.Fatalf("rehash %s after fixture edit: %v", name, err)
+		}
+		if before[name] == after {
+			t.Errorf("canonical fixture edit did not change %s hash", name)
+		}
+	}
+	// A package input list for a direct adapter consumer contains its exact
+	// helper sources, not the entire fixture tree or README.
+	cInputs := repositoryInputsForPackage("c/unix-history-simulator")
+	want := []string{historicalUnixFixturePath, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixCAdapterPath}
+	if !reflect.DeepEqual(cInputs, want) {
+		t.Fatalf("C package repository inputs = %v, want %v", cInputs, want)
 	}
 }
 
