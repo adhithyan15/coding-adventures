@@ -240,7 +240,18 @@ fn memory_bytes() -> Option<usize> {
 fn copy_live_input(pointer: i32, length: i32) -> Result<Vec<u8>, AbiError> {
     let address = pointer as u32 as usize;
     let length = length as u32 as usize;
-    if address == 0 || length == 0 || length > MAX_INPUT_BYTES {
+    let memory_limit =
+        memory_bytes().ok_or(AbiError::new(ERR_BOUNDS, "cannot inspect module memory"))?;
+    copy_live_span(address, length, MAX_INPUT_BYTES, memory_limit)
+}
+
+fn copy_live_span(
+    address: usize,
+    length: usize,
+    maximum_length: usize,
+    memory_limit: usize,
+) -> Result<Vec<u8>, AbiError> {
+    if address == 0 || length == 0 || length > maximum_length {
         return Err(AbiError::new(
             ERR_BOUNDS,
             "input pointer or length is outside ABI limits",
@@ -250,7 +261,7 @@ fn copy_live_input(pointer: i32, length: i32) -> Result<Vec<u8>, AbiError> {
         ERR_BOUNDS,
         "input range overflows address space",
     ))?;
-    if end > memory_bytes().ok_or(AbiError::new(ERR_BOUNDS, "cannot inspect module memory"))? {
+    if end > memory_limit {
         return Err(AbiError::new(
             ERR_BOUNDS,
             "input range is outside module memory",
@@ -749,6 +760,52 @@ mod tests {
         assert!(!registry.insert(16 + MAX_ALLOCATION_RECORDS * 8, 1, AllocationKind::Input));
         assert_eq!(registry.live_bytes, MAX_ALLOCATION_RECORDS);
         assert_eq!(registry.input_bytes, MAX_ALLOCATION_RECORDS);
+    }
+
+    #[test]
+    fn owned_input_copy_checks_live_span_and_boundary_arithmetic() {
+        let length = 16;
+        let address = allocate_registered(length, AllocationKind::Input)
+            .expect("bounded input allocation should succeed");
+        let owned = unsafe { std::slice::from_raw_parts_mut(address as *mut u8, length) };
+        assert!(owned.iter().all(|byte| *byte == 0));
+        owned.copy_from_slice(b"0123456789abcdef");
+
+        assert_eq!(
+            copy_live_span(address, length, MAX_INPUT_BYTES, usize::MAX).unwrap(),
+            b"0123456789abcdef"
+        );
+        assert_eq!(
+            copy_live_span(address + 1, length - 1, MAX_INPUT_BYTES, usize::MAX)
+                .unwrap_err()
+                .code,
+            ERR_INVALID_INPUT,
+            "interior pointer and shortened length must not match the live allocation"
+        );
+        assert_eq!(
+            copy_live_span(address, length, MAX_INPUT_BYTES, address + length - 1)
+                .unwrap_err()
+                .code,
+            ERR_BOUNDS,
+            "an otherwise live span must still fit within the supplied memory bound"
+        );
+        assert_eq!(
+            copy_live_span(usize::MAX - 7, length, MAX_INPUT_BYTES, usize::MAX)
+                .unwrap_err()
+                .code,
+            ERR_BOUNDS,
+            "pointer-plus-length overflow must fail before forming a slice"
+        );
+        assert_eq!(
+            copy_live_span(address, MAX_INPUT_BYTES + 1, MAX_INPUT_BYTES, usize::MAX)
+                .unwrap_err()
+                .code,
+            ERR_BOUNDS,
+            "oversized lengths must fail before forming a slice"
+        );
+        assert!(!release_registered(address, length - 1));
+        assert!(release_registered(address, length));
+        assert!(!release_registered(address, length));
     }
 
     #[test]
