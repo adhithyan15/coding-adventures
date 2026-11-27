@@ -330,6 +330,17 @@ def require_msvc_tools(environment: Mapping[str, str]) -> tuple[Path, Path]:
     return Path(compiler), Path(linker)
 
 
+def selected_clang_cl_executable(
+    selected: tuple[str, tuple[int, int, int]] | None,
+) -> str | None:
+    """Return the absolute executable selected by the PATH promotion policy."""
+
+    if selected is None:
+        return None
+    directory, _version = selected
+    return str((Path(directory) / "clang-cl.exe").resolve())
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arch", default="x64", choices=("x64", "x86", "arm64"))
@@ -349,6 +360,9 @@ def main() -> int:
     vcvarsall = find_vcvarsall(Path(program_files))
     after = capture_developer_environment(vcvarsall, args.arch, comspec=Path(comspec))
     after, clang_candidates, selected_clang = prefer_newest_clang_cl(after, args.arch)
+    clang_override = selected_clang_cl_executable(selected_clang)
+    if clang_override is not None:
+        after["ISO_CLANG_CL"] = clang_override
     stl_min_clang = msvc_stl_min_clang_major(after)
     compiler, linker = require_msvc_tools(after)
     changes = changed_environment(before, after)
