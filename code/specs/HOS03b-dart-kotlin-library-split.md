@@ -9,6 +9,8 @@ file access, filesystem output, or other host I/O in its runtime library.
 
 The two ports preserve the HOS00 path resolution, byte-range reads, descriptor
 allocation and offsets, kernel error codes, and `cat`/`ls` trace semantics.
+File bytes are copied on entry and callers receive copies, so mutation through
+constructor arguments, resolved nodes, or read results cannot alter the image.
 The canonical nine scenarios remain solely in
 `fixtures/historical-unix-v1/file-read.json`. Package unit tests cover component
 behavior without reading repository fixtures. An external adapter in the

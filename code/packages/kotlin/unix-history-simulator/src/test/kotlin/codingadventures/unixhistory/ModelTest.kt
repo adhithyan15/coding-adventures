@@ -8,6 +8,22 @@ import kotlin.test.assertTrue
 
 class ModelTest {
     @Test
+    fun `file contents are protected from constructor and getter mutation`() {
+        val source = byteArrayOf('A'.code.toByte(), 'B'.code.toByte())
+        val file = FileNode(source)
+        source[0] = 'X'.code.toByte()
+
+        val tree = FileSystem(mapOf(1 to DirectoryNode(mapOf("file" to 2)), 2 to file))
+        val exposed = (tree.resolve("/file").second as FileNode).bytes
+        exposed[1] = 'Y'.code.toByte()
+        val firstRead = tree.read(2, 0, 2)
+        firstRead[0] = 'Z'.code.toByte()
+
+        assertEquals("AB", tree.read(2, 0, 2).toString(Charsets.UTF_8))
+        assertEquals("AB", file.bytes.toString(Charsets.UTF_8))
+    }
+
+    @Test
     fun `resolves paths and rejects traversal through a regular file`() {
         val files = FileSystem.demo()
         assertEquals(1, files.resolve("//etc/../").first)

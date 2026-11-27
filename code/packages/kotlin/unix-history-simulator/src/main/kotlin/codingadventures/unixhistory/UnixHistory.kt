@@ -6,7 +6,16 @@ class DirectoryNode(entries: Map<String, Int>) : Node {
     val entries: Map<String, Int> = java.util.Collections.unmodifiableMap(LinkedHashMap(entries))
 }
 class FileNode(bytes: ByteArray) : Node {
-    val bytes: ByteArray = bytes.copyOf()
+    private val contents = bytes.copyOf()
+
+    /** Return a copy so callers cannot mutate the inode through this view. */
+    val bytes: ByteArray
+        get() = contents.copyOf()
+
+    internal val size: Int
+        get() = contents.size
+
+    internal fun readRange(start: Int, end: Int): ByteArray = contents.copyOfRange(start, end)
 }
 class FsError(val code: String) : RuntimeException(code)
 
@@ -49,8 +58,8 @@ class FileSystem(nodes: Map<Int, Node>) {
         val node = nodes[inode] ?: throw FsError("ENOENT")
         if (node !is FileNode) throw FsError("EISDIR")
         if (offset < 0 || count < 0) throw FsError("EINVAL")
-        val start = offset.coerceAtMost(node.bytes.size)
-        return node.bytes.copyOfRange(start, start + count.coerceAtMost(node.bytes.size - start))
+        val start = offset.coerceAtMost(node.size)
+        return node.readRange(start, start + count.coerceAtMost(node.size - start))
     }
 
     fun names(inode: Int): List<String> {
