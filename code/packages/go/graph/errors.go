@@ -1,6 +1,13 @@
 package graph
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+// ErrPathDistanceOverflow indicates that a topological path exists but every
+// candidate path distance overflows float64 during accumulation.
+var ErrPathDistanceOverflow = errors.New("shortest path distance exceeds float64 range")
 
 type NodeNotFoundError struct {
 	Node string

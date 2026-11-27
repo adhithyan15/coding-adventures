@@ -220,6 +220,11 @@ func ShortestPath(g *Graph, start, end string) ([]string, error) {
 		sort.Strings(keys)
 		for _, neighbor := range keys {
 			alt := dist[item.node] + neighbors[neighbor]
+			// Positive infinity is the unreachable marker. An overflowing
+			// candidate is not a finite path, so leave it out of the heap.
+			if math.IsInf(alt, 1) {
+				continue
+			}
 			if alt < dist[neighbor] {
 				dist[neighbor] = alt
 				prev[neighbor] = item.node
@@ -229,6 +234,17 @@ func ShortestPath(g *Graph, start, end string) ([]string, error) {
 	}
 
 	if math.IsInf(dist[end], 1) {
+		// Dijkstra cannot distinguish a disconnected target from a target
+		// reachable only through sums that overflow float64. Check topology
+		// only in this exceptional case to preserve the ordinary fast path.
+		reachable, err := BFS(g, start)
+		if err == nil {
+			for _, node := range reachable {
+				if node == end {
+					return nil, ErrPathDistanceOverflow
+				}
+			}
+		}
 		return []string{}, nil
 	}
 

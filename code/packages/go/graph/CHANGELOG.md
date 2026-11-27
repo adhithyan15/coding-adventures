@@ -8,6 +8,7 @@
 
 - Made `ShortestPath` reject graphs containing negative, NaN, or infinite edge weights before query shortcuts or Dijkstra traversal. Stored weights and minimum-spanning-tree behavior remain unchanged.
 - Added an exhaustive four-node simple-path model property, a negative control, and a time-bounded native fuzz target to `BUILD` and `BUILD_windows`.
+- Distinguished topologically reachable paths with no finite computed `float64` distance from truly unreachable targets; added a bounded overflow model property, fuzz target, and representation regressions.
 
 - Added graph, node, and edge property bags with canonical `weight` edge metadata.
 
