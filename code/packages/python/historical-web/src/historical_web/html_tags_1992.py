@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import re
 from collections.abc import Iterator, Set
 from dataclasses import dataclass, field
 
@@ -18,25 +17,12 @@ class Element:
 
 type Node = Element | str
 
-_SPACE = r"[ \t\n\r\f]"
-_NAME = r"[A-Za-z][A-Za-z0-9-]*"
-# Quoted attribute values may contain `>`. A fresh `<` starts a new
-# candidate, so malformed markup cannot swallow every later tag.
-_TAG = re.compile(rf"""<(/?)({_NAME})({_SPACE}(?:[^<>"']|"[^"<]*"|'[^'<]*')*)?>""")
-_ATTRIBUTE = re.compile(
-    rf"{_SPACE}+({_NAME})(?:{_SPACE}*={_SPACE}*"
-    r"""(?:"([^"]*)"|'([^']*)'|([^ \t\n\r\f"'=<>]+)))?"""
-)
 _ENTITIES = {"&lt;": "<", "&gt;": ">", "&amp;": "&"}
-_ENTITY = re.compile(r"&(?:lt|gt|amp);")
 _HEADINGS = frozenset({"h1", "h2", "h3", "h4", "h5", "h6"})
 _LISTS = frozenset({"ul", "menu", "dir"})
 _TERMS = frozenset({"dt", "dd"})
 _EMPTY = frozenset({"p", "isindex"})
-_END_LITERAL = {
-    name: re.compile(f"</{name}>", re.ASCII | re.IGNORECASE)
-    for name in ("xmp", "listing")
-}
+_END_LITERAL = frozenset(("xmp", "listing"))
 _KNOWN = (
     _HEADINGS
     | _LISTS
@@ -64,7 +50,87 @@ class _Tag:
 
 def _decode(text: str) -> str:
     # One replacement pass keeps `&amp;lt;` as literal `&lt;`.
-    return _ENTITY.sub(lambda match: _ENTITIES[match[0]], text)
+    result: list[str] = []
+    cursor = 0
+    while cursor < len(text):
+        start = text.find("&", cursor)
+        if start < 0:
+            result.append(text[cursor:])
+            break
+        result.append(text[cursor:start])
+        for entity, replacement in _ENTITIES.items():
+            if text.startswith(entity, start):
+                result.append(replacement)
+                cursor = start + len(entity)
+                break
+        else:
+            result.append("&")
+            cursor = start + 1
+    return "".join(result)
+
+
+def _is_space(character: str) -> bool:
+    return character in " \t\n\r\f"
+
+
+def _is_name_start(character: str) -> bool:
+    return "A" <= character <= "Z" or "a" <= character <= "z"
+
+
+def _is_name_character(character: str) -> bool:
+    return _is_name_start(character) or "0" <= character <= "9" or character == "-"
+
+
+def _tag_at(source: str, start: int) -> tuple[bool, str, str, int] | None:
+    """Parse one tag with the snapshot's deliberately small grammar."""
+    cursor = start + 1
+    closing = cursor < len(source) and source[cursor] == "/"
+    cursor += closing
+    if cursor >= len(source) or not _is_name_start(source[cursor]):
+        return None
+    name_start = cursor
+    cursor += 1
+    while cursor < len(source) and _is_name_character(source[cursor]):
+        cursor += 1
+    name = source[name_start:cursor]
+    if cursor == len(source) or source[cursor] == "<":
+        return None
+    if source[cursor] == ">":
+        return closing, name, "", cursor + 1
+    if not _is_space(source[cursor]):
+        return None
+    attributes_start = cursor
+    while cursor < len(source):
+        character = source[cursor]
+        if character == ">":
+            return closing, name, source[attributes_start:cursor], cursor + 1
+        if character == "<":
+            return None
+        if character in "\"'":
+            quote = character
+            cursor += 1
+            while cursor < len(source) and source[cursor] not in (quote, "<"):
+                cursor += 1
+            if cursor >= len(source) or source[cursor] != quote:
+                return None
+        cursor += 1
+    return None
+
+
+def _raw_end(source: str, cursor: int, name: str) -> tuple[int, int] | None:
+    """Find an ASCII-case-insensitive ``</name>`` without regex backtracking."""
+    needle = "</" + name + ">"
+    while True:
+        start = source.find("</", cursor)
+        if start < 0:
+            return None
+        candidate = source[start : start + len(needle)]
+        if len(candidate) == len(needle) and all(
+            left == right or ("A" <= left <= "Z" and left.lower() == right)
+            for left, right in zip(candidate, needle, strict=True)
+        ):
+            return start, start + len(needle)
+        cursor = start + 2
 
 
 def _tokens(source: str) -> Iterator[_Tag | str]:
@@ -85,42 +151,85 @@ def _tokens(source: str) -> Iterator[_Tag | str]:
             cursor = end + 3
             continue
 
-        match = _TAG.match(source, start)
+        match = _tag_at(source, start)
         if match is None:
             yield "<"
             cursor = start + 1
             continue
 
-        closing, name, attributes = match.groups()
+        closing, name, attributes, end = match
         name = name.lower()
         yield _Tag(name, bool(closing), attributes or "")
-        cursor = match.end()
+        cursor = end
         if closing:
             continue
         if name == "plaintext":
             yield source[cursor:]
             return
         if name in _END_LITERAL:
-            end_tag = _END_LITERAL[name].search(source, cursor)
+            end_tag = _raw_end(source, cursor, name)
             if end_tag is None:
                 yield source[cursor:]
                 return
-            yield source[cursor : end_tag.start()]
+            yield source[cursor : end_tag[0]]
             yield _Tag(name, True, "")
-            cursor = end_tag.end()
+            cursor = end_tag[1]
 
 
 def _anchor_attributes(source: str) -> dict[str, str | None]:
     attributes: dict[str, str | None] = {}
     cursor = 0
-    while (match := _ATTRIBUTE.match(source, cursor)) is not None:
-        name, *forms = match.groups()
+    while (match := _attribute_at(source, cursor)) is not None:
+        name, forms, cursor = match
         name = name.lower()
         if name in {"href", "name", "type"} and name not in attributes:
             value = next((form for form in forms if form is not None), None)
             attributes[name] = _decode(value) if value is not None else None
-        cursor = match.end()
     return attributes
+
+
+def _attribute_at(
+    source: str, cursor: int
+) -> tuple[str, tuple[str | None, ...], int] | None:
+    start = cursor
+    while cursor < len(source) and _is_space(source[cursor]):
+        cursor += 1
+    if cursor == start or cursor >= len(source) or not _is_name_start(source[cursor]):
+        return None
+    name_start = cursor
+    cursor += 1
+    while cursor < len(source) and _is_name_character(source[cursor]):
+        cursor += 1
+    name = source[name_start:cursor]
+    value_start = cursor
+    while cursor < len(source) and _is_space(source[cursor]):
+        cursor += 1
+    if cursor >= len(source) or source[cursor] != "=":
+        return name, (None,), value_start
+    cursor += 1
+    while cursor < len(source) and _is_space(source[cursor]):
+        cursor += 1
+    if cursor >= len(source):
+        return name, (None,), value_start
+    if source[cursor] in "\"'":
+        quote = source[cursor]
+        cursor += 1
+        value_start = cursor
+        while cursor < len(source) and source[cursor] != quote:
+            cursor += 1
+        if cursor >= len(source):
+            return name, (None,), value_start
+        return name, (source[value_start:cursor], None, None), cursor + 1
+    value_start = cursor
+    while (
+        cursor < len(source)
+        and not _is_space(source[cursor])
+        and source[cursor] not in "\"'=<>"
+    ):
+        cursor += 1
+    if cursor == value_start:
+        return name, (None,), value_start
+    return name, (None, None, source[value_start:cursor]), cursor
 
 
 def _closing_index(
