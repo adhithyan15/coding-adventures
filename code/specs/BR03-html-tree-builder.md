@@ -124,7 +124,17 @@ by side.
 2. Tables: `InTable` through `InCell`, foster parenting, `InTableText`.
 3. Foreign content: SVG and MathML adjustments, integration points, CDATA.
 4. Fragment parsing (§13.4).
-5. Errors by code and position.
+5. Compare diagnostics by code and position. Start with the explicitly named
+   tree-construction errors in the corpus's `#new-errors` sections. For
+   `non-void-html-element-start-tag-with-trailing-solidus`, compare the
+   tokenizer's emission point at `>` to the character before the exclusive
+   end of the upstream tag range. Check both scripting modes for unflagged
+   cases. For unnamed rules, use stable local codes and direct tests. In
+   §13.2.6.4.10, report one `non-whitespace-in-table-text` diagnostic at the
+   token that flushes a pending batch containing non-whitespace. Replaying
+   the batch uses the in-table fallback's foster-parenting steps without
+   issuing an extra diagnostic per run. The legacy `#errors` sections use
+   historical codes and position conventions and need a separate audit.
 6. The switch: `html-parser` delegates tree construction to the new crate. Its
    repair passes, `normalize_document_shell` and the synthetic fragment
    attribute are deleted.
