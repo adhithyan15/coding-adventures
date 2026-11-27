@@ -213,6 +213,9 @@ describe("paired microbenchmarks", () => {
     ];
     for (const text of invalid) expect(() => replayJson(text)).toThrow(/duplicate JSON object member/);
     expect(() => replayJson(`${valid.slice(0, -1)},}`)).toThrow();
+    for (const incomplete of [valid.slice(0, -1), `${valid} trailing`, `${valid} {}`]) {
+      expect(() => replayJson(incomplete)).toThrow();
+    }
 
     const unknown = { ...report, extra: true };
     expect(() => replayReport(unknown)).toThrow(/unknown report member/);

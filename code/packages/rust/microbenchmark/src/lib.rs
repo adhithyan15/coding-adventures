@@ -1052,6 +1052,16 @@ mod tests {
     }
 
     #[test]
+    fn raw_json_preserves_signed_64_bit_endpoints() {
+        let extreme = r#"{"config":{"pairs":1,"confidence_percent":95,"minimum_factor":1.05,"seed":-9223372036854775808,"target_ns":9223372036854775807,"max_batch":1},"batch_size":1,"pairs":[{"baseline_ns":9223372036854775807,"candidate_ns":9223372036854775807,"order":"baseline-first"}],"analysis":{"ratio":1.0,"interval":null,"verdict":"inconclusive"}}"#;
+        let replayed = Report::from_json(extreme).unwrap();
+        assert_eq!(replayed.config.seed, i64::MIN);
+        assert_eq!(replayed.config.target_ns, i64::MAX);
+        assert_eq!(replayed.pairs[0].baseline_ns, i64::MAX);
+        assert_eq!(replayed.pairs[0].candidate_ns, i64::MAX);
+    }
+
+    #[test]
     fn raw_json_accepts_maximum_balanced_report_with_reused_pair_member_names() {
         let config = Config {
             pairs: MAX_PAIRS,

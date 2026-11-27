@@ -145,6 +145,8 @@ class MicrobenchmarkReportTest < Minitest::Test
     ]
     invalid.each { |duplicate| assert_raises(ArgumentError) { MB.replay_json(duplicate) } }
     assert_raises(ArgumentError) { MB.replay_json(text.sub(/\}\z/, ",}")) }
+    incomplete = [text[0...-1], "#{text} trailing", "#{text} {}"]
+    incomplete.each { |document| assert_raises(ArgumentError) { MB.replay_json(document) } }
 
     assert_raises(ArgumentError) { MB.replay_report(complete.merge("extra" => true)) }
     assert_raises(ArgumentError) { MB.replay_json(JSON.generate(complete.merge("extra" => true))) }
