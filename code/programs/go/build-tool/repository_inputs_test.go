@@ -1497,7 +1497,15 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 }
 
 func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	for _, consumer := range repositoryInputConsumers {
+		if consumer.name == "ruby/unix-history-simulator" {
+			t.Fatal("historical Unix fixture must not register the absent Ruby package")
+		}
+	}
+	if inputs := repositoryInputsForPackage("ruby/unix-history-simulator"); inputs != nil {
+		t.Fatalf("absent Ruby historical Unix package has fallback inputs %v, want none", inputs)
+	}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "rust", "typescript"}
 	packages := make([]discovery.Package, 0, len(languages)+1)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
@@ -1609,7 +1617,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	root := t.TempDir()
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "typescript"}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "java", "kotlin", "lua", "perl", "python", "rust", "typescript"}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
 		t.Fatal(err)

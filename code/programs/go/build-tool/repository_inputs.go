@@ -636,7 +636,6 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("lua"),
 	historicalUnixFixtureRow("perl"),
 	historicalUnixFixtureRow("python"),
-	historicalUnixFixtureRow("ruby"),
 	historicalUnixFixtureRow("rust"),
 	historicalUnixFixtureRow("typescript"),
 	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
@@ -1901,7 +1900,7 @@ func repositoryInputsForPackage(packageName string) []string {
 			case "lua":
 				inputs = append(inputs, historicalUnixLuaAdapterPath)
 			}
-		case "go", "perl", "python", "ruby", "rust", "typescript":
+		case "go", "perl", "python", "rust", "typescript":
 		case "dart":
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixDartAdapterPath)
 		case "kotlin":
