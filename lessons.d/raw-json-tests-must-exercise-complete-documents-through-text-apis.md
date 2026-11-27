@@ -2,7 +2,7 @@
 category: Testing & coverage
 ---
 
-# A JSON reader regression must exercise complete documents through the public text API
+# Raw JSON tests must exercise complete documents through text APIs
 
 An ingress implementation can look correct because its underlying parser is expected to reject malformed input, while the tests only assert duplicate keys or a trailing comma. That leaves truncation, trailing non-JSON text, and a second top-level value without direct evidence at the package's public raw-text entry point.
 
