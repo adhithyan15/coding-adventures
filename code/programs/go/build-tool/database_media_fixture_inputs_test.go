@@ -18,9 +18,11 @@ func databaseMediaPackages(root string) []discovery.Package {
 		{Name: "python/nand-flash", Language: "python"},
 		{Name: "typescript/nand-flash", Language: "typescript"},
 		{Name: "c/nand-flash", Language: "c"},
+		{Name: "go/nand-flash", Language: "go"},
 		{Name: "python/hdd-simulator", Language: "python"},
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 		{Name: "c/hdd-simulator", Language: "c"},
+		{Name: "go/hdd-simulator", Language: "go"},
 	}
 	for index := range packages {
 		packages[index].Path = filepath.Join(root, filepath.FromSlash("code/packages/"+packages[index].Name))
@@ -37,22 +39,25 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		readers          map[string]bool
 		pythonReader     string
 		typescriptReader string
+		goReader         string
 		inputs           []string
 	}{
 		{
 			fixture:          nandFlashFixturePath,
 			predicate:        isNANDFlashFixture,
-			readers:          map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true},
+			readers:          map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true, "go/nand-flash": true},
 			pythonReader:     "python/nand-flash",
 			typescriptReader: "typescript/nand-flash",
+			goReader:         "go/nand-flash",
 			inputs:           nandFlashFixtureInputs,
 		},
 		{
 			fixture:          hddSimulatorFixturePath,
 			predicate:        isHDDSimulatorFixture,
-			readers:          map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true},
+			readers:          map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true, "go/hdd-simulator": true},
 			pythonReader:     "python/hdd-simulator",
 			typescriptReader: "typescript/hdd-simulator",
+			goReader:         "go/hdd-simulator",
 			inputs:           hddSimulatorFixtureInputs,
 		},
 	}
@@ -68,10 +73,15 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 				cReaders[packageName] = true
 			}
 		}
+		goReaders := map[string]bool{}
+		if tc.goReader != "" {
+			goReaders[tc.goReader] = true
+		}
 		for language, expected := range map[string]map[string]bool{
 			"python":     {tc.pythonReader: true},
 			"typescript": {tc.typescriptReader: true},
 			"c":          cReaders,
+			"go":         goReaders,
 		} {
 			got, err := repositoryInputConsumersForChange([]string{tc.fixture}, packages, language)
 			if err != nil || !reflect.DeepEqual(got, expected) {
@@ -81,7 +91,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		if !tc.predicate(tc.fixture) {
 			t.Errorf("exact predicate rejected %s", tc.fixture)
 		}
-		for _, packageName := range []string{tc.pythonReader, tc.typescriptReader, "c/nand-flash", "c/hdd-simulator"} {
+		for _, packageName := range []string{tc.pythonReader, tc.typescriptReader, tc.goReader, "c/nand-flash", "c/hdd-simulator"} {
 			if !tc.readers[packageName] {
 				continue
 			}
@@ -101,10 +111,13 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"code/specs/fixtures/database-media-v1/nand-flash.json/",
 		"code/specs/fixtures/database-media-v1ish/nand-flash.json",
 		"code/specs/fixtures/database-media-v1/hdd-simulator.json.bak",
+		"code/specs/fixtures/database-media-v2/hdd-simulator.json",
+		"code/specs/fixtures/database-media-v1/hdd-simulator.json/extra",
 		"code/specs/fixtures/database-media-v2/nand-flash.json",
 		"code/specs/fixtures/database-media-v1",
 		"code/specs/fixtures/other-database-media-v1/nand-flash.json",
 		`code\specs\fixtures\database-media-v1\nand-flash.json`,
+		`code\specs\fixtures\database-media-v1\hdd-simulator.json`,
 	}
 	for _, changed := range negativeControls {
 		if isNANDFlashFixture(changed) || isHDDSimulatorFixture(changed) {
@@ -124,9 +137,11 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"python/nand-flash":        {nandFlashFixturePath},
 		"typescript/nand-flash":    {nandFlashFixturePath},
 		"c/nand-flash":             {nandFlashFixturePath},
+		"go/nand-flash":            {nandFlashFixturePath},
 		"python/hdd-simulator":     {hddSimulatorFixturePath},
 		"typescript/hdd-simulator": {hddSimulatorFixturePath},
 		"c/hdd-simulator":          {hddSimulatorFixturePath},
+		"go/hdd-simulator":         {hddSimulatorFixturePath},
 	} {
 		var got []string
 		for _, pkg := range graph.Packages {
@@ -144,6 +159,35 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 	}
 }
 
+func TestDeletedHDDSimulatorFixtureStillSelectsEachReader(t *testing.T) {
+	root := t.TempDir()
+	packages := databaseMediaPackages(root)
+	missing := filepath.Join(root, filepath.FromSlash(hddSimulatorFixturePath))
+	if _, err := os.Stat(missing); !os.IsNotExist(err) {
+		t.Fatalf("fixture should be absent for deletion case: %v", err)
+	}
+	for _, language := range []string{"c", "go", "python", "typescript", "all"} {
+		got, err := repositoryInputConsumersForChange([]string{hddSimulatorFixturePath}, packages, language)
+		want := map[string]bool{"go/hdd-simulator": true}
+		switch language {
+		case "c":
+			want = map[string]bool{"c/hdd-simulator": true}
+		case "python":
+			want = map[string]bool{"python/hdd-simulator": true}
+		case "typescript":
+			want = map[string]bool{"typescript/hdd-simulator": true}
+		case "all":
+			want = map[string]bool{
+				"c/hdd-simulator": true, "go/hdd-simulator": true,
+				"python/hdd-simulator": true, "typescript/hdd-simulator": true,
+			}
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("deleted HDD timing fixture %s selection = %v, err %v; want %v", language, got, err, want)
+		}
+	}
+}
+
 func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T) {
 	fixtures := []struct {
 		path    string
@@ -151,11 +195,11 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 	}{
 		{
 			path:    nandFlashFixturePath,
-			readers: map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true},
+			readers: map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true, "go/nand-flash": true},
 		},
 		{
 			path:    hddSimulatorFixturePath,
-			readers: map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true},
+			readers: map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true, "go/hdd-simulator": true},
 		},
 	}
 	for _, fixture := range fixtures {
@@ -171,6 +215,8 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 					sourcePath += ".ts"
 				case "c":
 					sourcePath += ".c"
+				case "go":
+					sourcePath += ".go"
 				}
 				if err := os.MkdirAll(filepath.Dir(sourcePath), 0o755); err != nil {
 					t.Fatal(err)
@@ -238,12 +284,12 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 		{
 			id:      "repository-database-media-nand-fixture-inputs",
 			fixture: nandFlashFixturePath,
-			roots:   []string{"code/packages/c/nand-flash", "code/packages/python/nand-flash", "code/packages/typescript/nand-flash"},
+			roots:   []string{"code/packages/c/nand-flash", "code/packages/go/nand-flash", "code/packages/python/nand-flash", "code/packages/typescript/nand-flash"},
 		},
 		{
 			id:      "repository-database-media-hdd-fixture-inputs",
 			fixture: hddSimulatorFixturePath,
-			roots:   []string{"code/packages/c/hdd-simulator", "code/packages/python/hdd-simulator", "code/packages/typescript/hdd-simulator"},
+			roots:   []string{"code/packages/c/hdd-simulator", "code/packages/go/hdd-simulator", "code/packages/python/hdd-simulator", "code/packages/typescript/hdd-simulator"},
 		},
 	} {
 		found := false
