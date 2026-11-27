@@ -51,7 +51,7 @@ fn a_good_chain_exits_zero_with_a_json_report() {
     assert!(out.stderr.is_empty());
     assert!(out
         .stdout
-        .starts_with("{\"ok\":true,\"base_environment\":\""));
+        .starts_with("{\"ok\":true,\"pif_version\":1,\"logic_version\":1,\"base_environment\":\""));
     assert!(out
         .stdout
         .contains(&format!("\"digest\":\"{}\"", Digest::of(&p).hex())));
