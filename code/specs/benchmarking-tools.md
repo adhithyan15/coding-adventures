@@ -703,8 +703,9 @@ surface before the full TCP benchmark surface:
 - CLI parsing is driven by the repository's declarative Go `cli-builder`
   package, with the JSON CLI spec embedded into the `benchmark-tool` binary so
   the tool can be run locally from any directory.
-- `validate` currently validates benchmark manifests. Result-directory schema
-  validation remains future work.
+- `validate` validates benchmark manifests. The `report` and `compare` commands
+  validate the result files they consume; whole-directory validation remains
+  future work.
 - `run` initially executed only `driver = "command"` workloads. Phase three
   adds service startup and the first TCP/RESP workload driver.
 - The initial implemented run flags were `--out`, `--trials`, and `--warmup`.
@@ -773,6 +774,85 @@ summary-median printer into a verdict-producing comparison step:
 - The current implementation compares independent result directories. Paired
   trial ordering, outlier marking, and configurable thresholds remain future
   refinements.
+
+### Imported result data is bounded and strict
+
+The `report` and `compare` commands accept result-directory paths from their
+local caller. Manifests and commands are intentionally privileged operator
+inputs: `run` executes their build, subject, and service commands with the
+operator's authority. Result files read by `report` or `compare` are data, not
+commands, and may have come from an external or otherwise untrusted producer.
+Do not infer that a result file is trustworthy merely because its path is
+local. The current workflow uses manual `workflow_dispatch`; if an automated
+comment or PR-artifact import is added, it must retain the separate authorization
+and least-privilege rules in the untrusted-request section below.
+
+Before decoding an imported result file, the consumer rejects it if it exceeds
+these budgets; it never truncates a file or silently drops rows:
+
+| Input or operation | Limit |
+|---|---:|
+| `summary.json` bytes | 64 MiB |
+| Summary records | 100,000 |
+| Summary-document JSON values | 2,000,005 |
+| `trials.jsonl` bytes, per result directory | 512 MiB |
+| Nonblank trial records, per result directory | 2,000,000 |
+| One JSONL record | 64 KiB |
+| JSON values in one imported document or trial record | 200,000 |
+| RESP nesting depth | 64 values, with the top-level value at depth 1 |
+| `timeout_ms` | At most `MaxInt64 / 1 ms`, so conversion to `time.Duration` cannot overflow |
+
+The two-million-row ceiling permits the current maximum of one million warmup
+plus one million measurement trials for one subject/workload. A result file
+covering more subjects or workloads may exceed that import ceiling; in that
+case `report` or `compare` returns an explicit size/row error. This import
+ceiling does not lower the trial limit accepted by `run`, does not affect the
+automatic summary/report generation in that run, and does not change the
+existing valid result field encodings.
+
+Every imported summary document and every nonblank trial row must be one
+complete UTF-8 JSON value of the expected closed object shape. Reject duplicate
+decoded object keys (including escaped spellings of the same key), unknown
+fields, missing or wrongly typed fields, truncated values, and trailing
+non-whitespace data. Blank JSONL lines remain ignored. Duplicate keys in
+different nested objects are independent and remain valid. The existing paired
+replay document retains its own eight-MiB budget and schema.
+
+The 2,000,005-value summary ceiling accommodates the fixed root and all 18
+scalar fields plus row object for each of the 100,000 allowed summaries. Each
+trial record's JSON-value ceiling is 200,000; its 64-KiB byte ceiling is the
+tighter limit for the producer's current record format.
+
+The summary document requires `manifest_name`, `generated_at`, and `summaries`;
+each summary row requires `subject`, `workload`, `metric`, `count`, `min`,
+`max`, `mean`, `median`, `stddev`, `mad`, `p50`, `p90`, `p95`, `p99`,
+`mean_ci_low`, `mean_ci_high`, `median_ci_low`, and `median_ci_high`. Each
+trial row requires `subject`, `workload`, `trial`, `phase`, `ok`, and `metrics`;
+`error` is optional because the producer omits it when empty. `metrics` is an
+object from metric names to JSON numbers. This mirrors the current Go producer's
+JSON tags, including its omitted empty error string.
+
+Before allocating comparison resamples or running the quadratic Cliff's delta
+loop, preflight every common subject/workload group. Across the entire
+comparison, the sum of `base_count * candidate_count` must not exceed 10,000,000
+pair operations, and the sum of the 1,000-round bootstrap work estimate must
+not exceed 100,000,000 units. For one side with `n` successful measurements,
+its estimate is zero when `n = 0`, otherwise `1,000 * n * (1 + ceil(log2(n)))`;
+the `+1` charges the sample draw and ensures a one-sample group has nonzero
+cost. Sum both sides for each group, then sum all common groups using checked
+arithmetic. At most 10,000
+common groups may be compared. A comparison above any budget returns a clear
+error before the bootstrap arrays or Cliff's delta pair loop are allocated or
+run. These budgets cover import and statistical comparison only; they do not
+bound manifest growth, command output, total run time, or the resource use of a
+benchmark subject.
+
+The RESP parser also retains the independent 16-MiB frame limit. It rejects
+nesting deeper than 64 even when the encoded frame is below that byte limit.
+`timeout_ms` has no policy duration cap beyond the largest millisecond value
+representable as a `time.Duration`; a shorter operational timeout remains a
+workload choice. A negative value or a value whose unit conversion would
+overflow is invalid.
 
 ---
 
