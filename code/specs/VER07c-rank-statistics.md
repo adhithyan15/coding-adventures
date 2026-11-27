@@ -12,6 +12,12 @@ and the [delivery backlog](microbenchmark-backlog.md).
 
 Go accepts binary64 samples directly. Python normalizes real numeric inputs to finite binary64 values and rejects booleans. The median and interval refer to these normalized samples.
 
+Elixir accepts integer and floating-point real samples, normalizes each value to
+binary64 before sorting, and returns normalized values and interval endpoints.
+An integer whose conversion is not finite is rejected as a nonfinite sample;
+large representable integers follow binary64 rounding, including loss of
+integer precision above 2^53.
+
 `median(values)` accepts a non-empty finite sequence of real values, sorts a
 copy, and returns its middle value. For an even sample it returns the arithmetic
 midpoint of the two central values, rounded to nearest with ties to even in
