@@ -11,7 +11,7 @@ def _forbid(assignments: list[tuple[int, bool]]) -> tuple[int, ...]:
     return tuple(-var if value else var for var, value in assignments)
 
 
-def _cnf(*, guard_max_length: bool, require_negative_result: bool) -> str:
+def _cnf(*, guard_max_length: bool, require_negative_length: bool) -> str:
     """Encode the source's checked ``4 + length`` then ``addressEnd + 2``."""
     width = 32
     length = list(range(1, width + 1))
@@ -67,8 +67,8 @@ def _cnf(*, guard_max_length: bool, require_negative_result: bool) -> str:
                     ]
                 )
             )
-    if require_negative_result:
-        clauses.append((request_length[-1],))
+    if require_negative_length:
+        clauses.append((address_end[-1], request_length[-1]))
 
     count = 5 * width + 2
     lines = [f"p cnf {count} {len(clauses)}"]
@@ -93,16 +93,16 @@ def _solve(cnf: str) -> str:
 
 
 def main() -> None:
-    legal = _solve(_cnf(guard_max_length=True, require_negative_result=False))
-    guarded_overflow = _solve(_cnf(guard_max_length=True, require_negative_result=True))
-    mutant_overflow = _solve(_cnf(guard_max_length=False, require_negative_result=True))
+    legal = _solve(_cnf(guard_max_length=True, require_negative_length=False))
+    guarded_overflow = _solve(_cnf(guard_max_length=True, require_negative_length=True))
+    mutant_overflow = _solve(_cnf(guard_max_length=False, require_negative_length=True))
     expected = ("SAT", "UNSAT", "SAT")
     actual = (legal, guarded_overflow, mutant_overflow)
     if actual != expected:
         raise SystemExit(f"expected {expected}, got {actual}")
     print("checked `4 + length`, then `addressEnd + 2`: legal completion SAT")
-    print("max-length-guarded addition with negative wrapped length: UNSAT")
-    print("mutant without max-length guard and negative wrapped length: SAT")
+    print("max-length-guarded additions with negative intermediate/final: UNSAT")
+    print("mutant without max-length guard and negative intermediate/final: SAT")
 
 
 if __name__ == "__main__":

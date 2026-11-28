@@ -3,8 +3,8 @@
 Run from the repository root with the pinned tools:
 
 ```sh
-HWEB_GO=/workspace/.coding-adventures-tools/go/bin/go \
-  /workspace/.coding-adventures-tools/python/cpython-3.13.17-linux-x86_64-gnu/bin/python3.13 \
+HWEB_GO=/path/to/pinned/go/bin/go \
+  /path/to/pinned/python3 \
   code/packages/csharp/historical-web/verification/sat_http09_length.py
 ```
 
@@ -13,11 +13,10 @@ The model follows `Http09.EncodeRequest` in
 `Int32`, then the implementation evaluates `addressEnd = 4 + address.Length`
 and `requestLength = addressEnd + 2` in a C# `checked` block before allocating
 and copying the framed request. The SAT model bit-blasts those two 32-bit
-additions separately. It was matched against source commit
-`720891192cedf6e996142a370e6dbc69dd56f53b`. It checks that a valid length exists, that the
+additions separately. It checks that a valid length exists, that the
 successful checked-add input domain (`1..Int32.MaxValue - 6`) cannot produce a
-negative wrapped length, and that removing the upper-bound guard admits such
-a witness.
+negative intermediate or final length, and that removing the upper-bound
+guard admits such a witness.
 
 This is an arithmetic model of the checked length expression, not a proof of
 the C# compiler/runtime, span contents, array allocation success, maximum
