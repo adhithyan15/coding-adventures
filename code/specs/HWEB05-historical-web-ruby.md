@@ -16,8 +16,10 @@ constants and functions live in `CodingAdventures::HistoricalWeb`.
 returns a `Result` with either a validated address or `:invalid_address`.
 Addresses are copied to a frozen `ASCII-8BIT` string of printable ASCII bytes.
 `encode_http09_request(address)` returns a `Result` with a fresh binary string
-containing `GET `, the address, and CRLF. It rechecks a frozen snapshot of the
-address object's stored value, including for objects created with `allocate`.
+containing `GET `, the address, and CRLF; if the object's stored value is
+missing or fails validation, the error is `:invalid_address`. It rechecks a
+frozen snapshot of the address object's stored value, including for objects
+created with `allocate`.
 `parse_http09_request(wire)` treats a Ruby `String` as uninterpreted octets,
 accepts exactly one request line terminated by CRLF or LF, and returns an
 address or `:invalid_request`. `decode_http09_response(body)` checks each byte
@@ -40,11 +42,11 @@ does not recurse through the tree.
 
 ## Scanner and recovery
 
-The HTTP codec scans bytes and constructs output without converting or
-splattering an entire string. The HTML scanner indexes by byte offsets after
-admitting valid UTF-8 or US-ASCII. It folds only ASCII letters in tag names,
-attribute names, and raw-text end tags. CRLF becomes LF across the whole
-source, including quoted attribute values. The archived `&lt;`, `&gt;`, and
+The HTTP codec scans bytes and constructs output without converting or passing
+an entire string as positional arguments. The HTML scanner indexes by byte
+offsets after admitting valid UTF-8 or US-ASCII. It folds only ASCII letters
+in tag names, attribute names, and raw-text end tags. CRLF becomes LF across
+the whole source, including quoted attribute values. The archived `&lt;`, `&gt;`, and
 `&amp;` references decode once in ordinary text and anchor values; other
 references remain literal. Adjacent text fragments coalesce in linear time.
 
