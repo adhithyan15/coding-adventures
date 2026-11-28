@@ -18,3 +18,38 @@ The observed run reports 3 UNSAT SAT-model queries, a SAT negative control, and
 CR before LF is explicitly accounted for because the parser consumes it as the
 optional CRLF prefix. This is bounded model evidence and finite conformance,
 not a DRAT certificate, production proof, or claim about later HTTP versions.
+
+## HWEB06 paragraph / heading SAT slice
+
+`sat_html2_paragraphs.py` asks the repository Go CDCL solver about a separate
+strict structural subset. Its event alphabet is exactly `P`, `/P`, `H1`,
+`/H1`, and `EOF`; each query is exactly four event slots, with EOF in slot 4.
+The state is an explicit one-hot scope/depth value: root (depth 0), paragraph
+(depth 1), heading (depth 1), nested P/H1 (depth 2), or nested P/P (depth 2).
+A P start opens a paragraph; another P closes it and opens a distinct
+paragraph; `/P` closes an open paragraph; H1 start closes P before opening H1;
+H1 needs an explicit `/H1`; EOF closes P but rejects an open H1. Invalid
+transitions are refused and accepted traces end at root.
+
+The baseline has SAT legal traces (`P, H1, /H1, EOF` and `P, P, /P, EOF`)
+and an UNSAT query for any depth-2 scope in the full bounded transition
+relation. The repeated-P trace shows that the model permits distinct
+paragraphs. Two negative controls remove the P-to-H1 close and the P-to-P
+close; each returns SAT with the corresponding depth-2 nested-scope witness.
+This isolates closure effects rather than baking a one-paragraph limit into the
+representation.
+
+Run it from the repository root with the pinned tools:
+
+```sh
+HWEB_GO=/path/to/pinned/go/bin/go \
+  /path/to/pinned/python/bin/python3.13 \
+  code/packages/python/historical-web/verification/sat_html2_paragraphs.py
+```
+
+The model deliberately omits text, whitespace, attributes, byte/character
+scanning, and parser recovery. It is bounded transition-model evidence, not a
+proof that the Rust or Python implementation is equivalent to the model. The
+separate exhaustive replay of bounded inputs against the real parser is the
+source-level conformance evidence for the Python source so far; no equivalent
+exhaustive replay has yet been established for Rust.

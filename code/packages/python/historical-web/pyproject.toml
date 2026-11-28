@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-historical-web"
 version = "0.1.0"
-description = "Reference profiles for the 1991 HTTP protocol and archived 1992 HTML"
+description = "Reference profiles for HTTP/0.9, archived 1992 HTML, and an HTML 2.0 paragraph slice"
 requires-python = ">=3.12"
 license = "MIT"
 readme = "README.md"
