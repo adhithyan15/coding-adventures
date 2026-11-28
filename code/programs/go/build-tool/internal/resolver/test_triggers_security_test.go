@@ -44,7 +44,11 @@ func wantSubjectTriggers(t *testing.T, subjectCargo string, want ...string) {
 // manifest to stop with a *CargoManifestError naming the subject's manifest.
 func wantRefused(t *testing.T, subjectCargo string) {
 	t.Helper()
-	packages := devDepWorld(t, subjectCargo)
+	wantRefusedPackages(t, devDepWorld(t, subjectCargo))
+}
+
+func wantRefusedPackages(t *testing.T, packages []discovery.Package) {
+	t.Helper()
 	_, _, err := ResolveWithTestTriggers(packages)
 	var manifestErr *CargoManifestError
 	if !errors.As(err, &manifestErr) {
