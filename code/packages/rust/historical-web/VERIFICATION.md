@@ -19,6 +19,9 @@ attributes, UTF-8 preservation, one-pass entity decoding, SGML-era omitted
 by arena destruction. A focused raw-text regression places a multibyte UTF-8
 scalar at an unaligned search-window endpoint in both `xmp` and `listing`, then
 checks exact body text and tokenization of the following elements.
+Typed request and response errors are asserted from invalid public inputs, and
+the document arena accessor is checked for both an existing root and an
+out-of-range index.
 
 The suite also invokes the repository's VER06 Rust fuzz engine with fixed
 seeds and seed `0x485745423033`, 2,048 mutations per target, and a 256-byte
