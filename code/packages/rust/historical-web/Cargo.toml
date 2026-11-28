@@ -1,0 +1,11 @@
+[package]
+name = "coding_adventures_historical_web"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100.0"
+description = "The CERN 1991 HTTP/0.9 and archived 1992 HTML Tags profiles"
+license = "MIT"
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+serde_json = "1.0"
