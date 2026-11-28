@@ -629,7 +629,8 @@ def run_concurrent_probe(
         )
         expected_target_exit = 0
     else:
-        # A failing cargo test process uses Cargo's exit status 101.
+        # The retained Windows probe observed Cargo return the failing harness
+        # process's status (1) for this command and fault selector.
         target_oracle_valid = (
             target_events.get("first_tap_plan_s") is not None
             and target_events.get("first_not_ok_s") is not None
@@ -637,7 +638,7 @@ def run_concurrent_probe(
             and "1..1" in target_out
             and "not ok" in target_out
         )
-        expected_target_exit = 101
+        expected_target_exit = 1
     target["valid_negative_control"] = (
         target.get("exit_code") == expected_target_exit
         and target_oracle_valid
@@ -875,7 +876,7 @@ def main() -> int:
                 argv,
                 cwd,
                 env,
-                expected_exit_code=0 if wrapper_call else (101 if name == "direct-cargo" else 1),
+                expected_exit_code=0 if wrapper_call else 1,
                 wrapper_judge_expected=wrapper_call,
             )
             manifest["probes"].append(result)
