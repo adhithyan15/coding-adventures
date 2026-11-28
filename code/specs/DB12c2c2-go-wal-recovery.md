@@ -41,3 +41,19 @@ unacknowledged commit, incomplete transactions and repeated recovery
 with a second crash. Verify untouched log blocks and intervening
 non-data neighbors. Run both build lists, race, vet, guided inputs and
 controls for using a damaged tail or writing before full admission.
+
+## Local verification
+
+The implementation is in `8827977720e`. An independent caller checked
+66 actual commit barrier cuts through one restarted HDD. It classified
+12 intact commits, including 11 with absent acknowledgements, two
+vacant tails and 52 damaged tails. It crossed each intact commit
+with all 12 data-page barrier cuts for 144 interrupted or complete
+replay cases, then checked final replay convergence. It compared the
+whole device after every restart and preserved the log and guards.
+
+Both command lists passed on Linux at 100% statement coverage with
+race and vet. Module tidy, 100,000 guided inputs and both mutation
+controls passed. Native tests also checked every log-block read
+position and repeated recovery on memory and HDD. The build graph
+gained only the recovery package and its 17 expected edges per platform.
