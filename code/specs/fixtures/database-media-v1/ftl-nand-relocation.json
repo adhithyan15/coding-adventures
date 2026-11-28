@@ -1,0 +1,636 @@
+{
+  "schema": "coding-adventures.database-media.ftl-nand-relocation.v1",
+  "cases": [
+    {
+      "name": "zero-prefix-marker-and-media-complete-all-ones",
+      "logical_count": 1,
+      "physical_count": 3,
+      "page_size": 2,
+      "steps": [
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "1020",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "receipt": {
+              "physical": 0,
+              "published": true,
+              "acknowledged": true
+            },
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  0
+                ],
+                "physical_status": [
+                  "live",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "1020",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "ffff",
+          "cut": {
+            "kind": "after_prefix",
+            "prefix_bytes": 0
+          },
+          "expected": {
+            "receipt": {
+              "physical": 1,
+              "published": false,
+              "acknowledged": false
+            },
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  0
+                ],
+                "physical_status": [
+                  "live",
+                  "stale",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "1020",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "read",
+          "logical": 0,
+          "expected": {
+            "data_hex": "1020",
+            "present": true,
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  0
+                ],
+                "physical_status": [
+                  "live",
+                  "stale",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "1020",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "ffff",
+          "cut": {
+            "kind": "after_media"
+          },
+          "expected": {
+            "receipt": {
+              "physical": 2,
+              "published": true,
+              "acknowledged": false
+            },
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "1020",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "read",
+          "logical": 0,
+          "expected": {
+            "data_hex": "ffff",
+            "present": true,
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "1020",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "ff",
+          "cut": {
+            "kind": "unknown"
+          },
+          "expected": {
+            "error": "no_free_page",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "1020",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": true
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "before-accept-fresh-abort-and-partial-spent-abort",
+      "logical_count": 1,
+      "physical_count": 2,
+      "page_size": 2,
+      "steps": [
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "1122",
+          "cut": {
+            "kind": "before_accept"
+          },
+          "expected": {
+            "receipt": {
+              "physical": 0,
+              "published": false,
+              "acknowledged": false
+            },
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  -1
+                ],
+                "physical_status": [
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "read",
+          "logical": 0,
+          "expected": {
+            "data_hex": "",
+            "present": false,
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  -1
+                ],
+                "physical_status": [
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "aabb",
+          "cut": {
+            "kind": "after_prefix",
+            "prefix_bytes": 1
+          },
+          "expected": {
+            "receipt": {
+              "physical": 0,
+              "published": false,
+              "acknowledged": false
+            },
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  -1
+                ],
+                "physical_status": [
+                  "stale",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "aaff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "3344",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "receipt": {
+              "physical": 1,
+              "published": true,
+              "acknowledged": true
+            },
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "aaff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "3344",
+                  "programmed": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "read",
+          "logical": 0,
+          "expected": {
+            "data_hex": "3344",
+            "present": true,
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "aaff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "3344",
+                  "programmed": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "5566",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "no_free_page",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "aaff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "3344",
+                  "programmed": true
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "validation-and-reservation-rollback",
+      "logical_count": 1,
+      "physical_count": 2,
+      "page_size": 2,
+      "steps": [
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "10",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "wrong_payload_length",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  -1
+                ],
+                "physical_status": [
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "0102",
+          "cut": {
+            "kind": "after_prefix",
+            "prefix_bytes": 2
+          },
+          "expected": {
+            "error": "invalid_cut",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  -1
+                ],
+                "physical_status": [
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": -1,
+          "payload_hex": "0102",
+          "cut": {
+            "kind": "unknown"
+          },
+          "expected": {
+            "error": "invalid_logical_page",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  -1
+                ],
+                "physical_status": [
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "0102",
+          "cut": {
+            "kind": "before_accept"
+          },
+          "expected": {
+            "receipt": {
+              "physical": 0,
+              "published": false,
+              "acknowledged": false
+            },
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  -1
+                ],
+                "physical_status": [
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "op": "read",
+          "logical": 0,
+          "expected": {
+            "data_hex": "",
+            "present": false,
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  -1
+                ],
+                "physical_status": [
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ffff",
+                  "programmed": false
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

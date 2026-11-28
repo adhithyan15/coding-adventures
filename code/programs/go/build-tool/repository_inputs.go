@@ -418,6 +418,10 @@ var (
 	ftlCopyAwareVictimFixturePath     = "code/specs/fixtures/database-media-v1/ftl-copy-aware-victim.json"
 	ftlEvacuationPlanFixturePath      = "code/specs/fixtures/database-media-v1/ftl-evacuation-plan.json"
 	ftlRetirementDrainPlanFixturePath = "code/specs/fixtures/database-media-v1/ftl-retirement-drain-plan.json"
+	ftlNANDRelocationFixturePath      = "code/specs/fixtures/database-media-v1/ftl-nand-relocation.json"
+	ftlBlockReclamationFixturePath    = "code/specs/fixtures/database-media-v1/ftl-block-reclamation.json"
+	ftlLivePageCopyFixturePath        = "code/specs/fixtures/database-media-v1/ftl-live-page-copy.json"
+	ftlEvacuationFixturePath          = "code/specs/fixtures/database-media-v1/ftl-evacuation.json"
 	nandFlashFixtureInputs            = []string{nandFlashFixturePath}
 	nandPageProgramCutsFixtureInputs  = []string{nandPageProgramCutsFixturePath}
 	nandBlockEraseCutsFixtureInputs   = []string{nandBlockEraseCutsFixturePath}
@@ -426,6 +430,7 @@ var (
 	ftlPageMapFixtureInputs           = []string{ftlPageMapFixturePath, ftlPageReclamationFixturePath}
 	ftlEraseVictimFixtureInputs       = []string{ftlCopyAwareVictimFixturePath, ftlEraseVictimFixturePath}
 	ftlEvacuationPlanFixtureInputs    = []string{ftlEvacuationPlanFixturePath, ftlRetirementDrainPlanFixturePath}
+	ftlNANDRelocationFixtureInputs    = []string{ftlBlockReclamationFixturePath, ftlEvacuationFixturePath, ftlLivePageCopyFixturePath, ftlNANDRelocationFixturePath}
 	typescriptGameInputFrameInputs    = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -1231,6 +1236,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the exact DB05c3a evacuation and DB05d2b1 retirement-drain vectors",
 		matches:  isFTLEvacuationPlanFixture,
 		paths:    ftlEvacuationPlanFixtureInputs,
+	},
+	{
+		name:     "go/ftl-nand-relocation",
+		language: "go",
+		inputs:   "the four exact shared DB05 FTL relocation vectors",
+		matches:  isFTLNANDRelocationFixture,
+		paths:    ftlNANDRelocationFixtureInputs,
 	},
 	{
 		name:     "python/trig",
@@ -2306,6 +2318,8 @@ func repositoryInputsForPackage(packageName string) []string {
 		return ftlEraseVictimFixtureInputs
 	case "go/ftl-evacuation-plan":
 		return ftlEvacuationPlanFixtureInputs
+	case "go/ftl-nand-relocation":
+		return ftlNANDRelocationFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
 	default:
@@ -3030,6 +3044,13 @@ func isFTLEraseVictimFixture(changed string) bool {
 
 func isFTLEvacuationPlanFixture(changed string) bool {
 	return changed == ftlEvacuationPlanFixturePath || changed == ftlRetirementDrainPlanFixturePath
+}
+
+func isFTLNANDRelocationFixture(changed string) bool {
+	return changed == ftlNANDRelocationFixturePath ||
+		changed == ftlBlockReclamationFixturePath ||
+		changed == ftlLivePageCopyFixturePath ||
+		changed == ftlEvacuationFixturePath
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while

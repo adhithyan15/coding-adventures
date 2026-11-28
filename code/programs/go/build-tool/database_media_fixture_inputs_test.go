@@ -25,6 +25,7 @@ func databaseMediaPackages(root string) []discovery.Package {
 		{Name: "go/ftl-page-map", Language: "go"},
 		{Name: "go/ftl-erase-victim", Language: "go"},
 		{Name: "go/ftl-evacuation-plan", Language: "go"},
+		{Name: "go/ftl-nand-relocation", Language: "go"},
 		{Name: "python/hdd-simulator", Language: "python"},
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 		{Name: "c/hdd-simulator", Language: "c"},
@@ -132,6 +133,34 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 			goReader:  "go/ftl-evacuation-plan",
 			inputs:    ftlEvacuationPlanFixtureInputs,
 		},
+		{
+			fixture:   ftlBlockReclamationFixturePath,
+			predicate: isFTLNANDRelocationFixture,
+			readers:   map[string]bool{"go/ftl-nand-relocation": true},
+			goReader:  "go/ftl-nand-relocation",
+			inputs:    ftlNANDRelocationFixtureInputs,
+		},
+		{
+			fixture:   ftlEvacuationFixturePath,
+			predicate: isFTLNANDRelocationFixture,
+			readers:   map[string]bool{"go/ftl-nand-relocation": true},
+			goReader:  "go/ftl-nand-relocation",
+			inputs:    ftlNANDRelocationFixtureInputs,
+		},
+		{
+			fixture:   ftlLivePageCopyFixturePath,
+			predicate: isFTLNANDRelocationFixture,
+			readers:   map[string]bool{"go/ftl-nand-relocation": true},
+			goReader:  "go/ftl-nand-relocation",
+			inputs:    ftlNANDRelocationFixtureInputs,
+		},
+		{
+			fixture:   ftlNANDRelocationFixturePath,
+			predicate: isFTLNANDRelocationFixture,
+			readers:   map[string]bool{"go/ftl-nand-relocation": true},
+			goReader:  "go/ftl-nand-relocation",
+			inputs:    ftlNANDRelocationFixtureInputs,
+		},
 	}
 
 	for _, tc := range cases {
@@ -219,6 +248,18 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"code/specs/fixtures/database-media-v1/ftl-copy-aware-victim.json/extra",
 		"code/specs/fixtures/database-media-v1/ftl-evacuation-plan.json/extra",
 		"code/specs/fixtures/database-media-v1/ftl-retirement-drain-plan.json/extra",
+		ftlNANDRelocationFixturePath + ".bak",
+		ftlBlockReclamationFixturePath + ".bak",
+		ftlLivePageCopyFixturePath + ".bak",
+		ftlEvacuationFixturePath + ".bak",
+		"code/specs/fixtures/database-media-v2/ftl-nand-relocation.json",
+		"code/specs/fixtures/database-media-v2/ftl-block-reclamation.json",
+		"code/specs/fixtures/database-media-v2/ftl-live-page-copy.json",
+		"code/specs/fixtures/database-media-v2/ftl-evacuation.json",
+		"code/specs/fixtures/database-media-v1/ftl-nand-relocation.json/extra",
+		"code/specs/fixtures/database-media-v1/ftl-block-reclamation.json/extra",
+		"code/specs/fixtures/database-media-v1/ftl-live-page-copy.json/extra",
+		"code/specs/fixtures/database-media-v1/ftl-evacuation.json/extra",
 		"code/specs/fixtures/database-media-v1/hdd-write-crash-cuts/extra.json",
 		"code/specs/fixtures/database-media-v2/nand-flash.json",
 		"code/specs/fixtures/database-media-v1",
@@ -227,7 +268,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		`code\specs\fixtures\database-media-v1\hdd-simulator.json`,
 	}
 	for _, changed := range negativeControls {
-		if isNANDFlashFixture(changed) || isNANDPageProgramCutsFixture(changed) || isNANDBlockEraseCutsFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) || isFTLPageMapFixture(changed) || isFTLEraseVictimFixture(changed) || isFTLEvacuationPlanFixture(changed) {
+		if isNANDFlashFixture(changed) || isNANDPageProgramCutsFixture(changed) || isNANDBlockEraseCutsFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) || isFTLPageMapFixture(changed) || isFTLEraseVictimFixture(changed) || isFTLEvacuationPlanFixture(changed) || isFTLNANDRelocationFixture(changed) {
 			t.Errorf("media predicate accepted lookalike %q", changed)
 		}
 		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
@@ -256,6 +297,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"go/ftl-page-map":           {ftlPageMapFixturePath, ftlPageReclamationFixturePath},
 		"go/ftl-erase-victim":       {ftlCopyAwareVictimFixturePath, ftlEraseVictimFixturePath},
 		"go/ftl-evacuation-plan":    {ftlEvacuationPlanFixturePath, ftlRetirementDrainPlanFixturePath},
+		"go/ftl-nand-relocation":    {ftlBlockReclamationFixturePath, ftlEvacuationFixturePath, ftlLivePageCopyFixturePath, ftlNANDRelocationFixturePath},
 	} {
 		var got []string
 		for _, pkg := range graph.Packages {
@@ -412,6 +454,32 @@ func TestDeletedFTLPlanningFixturesStillSelectTheirGoReaders(t *testing.T) {
 	}
 }
 
+func TestDeletedFTLRelocationFixturesStillSelectTheirGoReader(t *testing.T) {
+	root := t.TempDir()
+	packages := databaseMediaPackages(root)
+	fixtures := []string{
+		ftlNANDRelocationFixturePath,
+		ftlBlockReclamationFixturePath,
+		ftlLivePageCopyFixturePath,
+		ftlEvacuationFixturePath,
+	}
+	for _, fixture := range fixtures {
+		if _, err := os.Stat(filepath.Join(root, filepath.FromSlash(fixture))); !os.IsNotExist(err) {
+			t.Fatalf("fixture should be absent for deletion case: %s (%v)", fixture, err)
+		}
+		for _, language := range []string{"go", "python", "all"} {
+			got, err := repositoryInputConsumersForChange([]string{fixture}, packages, language)
+			want := map[string]bool{}
+			if language == "go" || language == "all" {
+				want = map[string]bool{"go/ftl-nand-relocation": true}
+			}
+			if err != nil || !reflect.DeepEqual(got, want) {
+				t.Errorf("deleted FTL relocation fixture %s selection for %s = %v, err %v; want %v", fixture, language, got, err, want)
+			}
+		}
+	}
+}
+
 func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T) {
 	fixtures := []struct {
 		path    string
@@ -461,6 +529,22 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 			path:    ftlRetirementDrainPlanFixturePath,
 			readers: map[string]bool{"go/ftl-evacuation-plan": true},
 		},
+		{
+			path:    ftlNANDRelocationFixturePath,
+			readers: map[string]bool{"go/ftl-nand-relocation": true},
+		},
+		{
+			path:    ftlBlockReclamationFixturePath,
+			readers: map[string]bool{"go/ftl-nand-relocation": true},
+		},
+		{
+			path:    ftlLivePageCopyFixturePath,
+			readers: map[string]bool{"go/ftl-nand-relocation": true},
+		},
+		{
+			path:    ftlEvacuationFixturePath,
+			readers: map[string]bool{"go/ftl-nand-relocation": true},
+		},
 	}
 	for _, fixture := range fixtures {
 		t.Run(fixture.path, func(t *testing.T) {
@@ -490,7 +574,7 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 					t.Fatal(err)
 				}
 			}
-			for _, path := range []string{nandFlashFixturePath, nandPageProgramCutsFixturePath, nandBlockEraseCutsFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath, ftlPageMapFixturePath, ftlPageReclamationFixturePath, ftlEraseVictimFixturePath, ftlCopyAwareVictimFixturePath, ftlEvacuationPlanFixturePath, ftlRetirementDrainPlanFixturePath} {
+			for _, path := range []string{nandFlashFixturePath, nandPageProgramCutsFixturePath, nandBlockEraseCutsFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath, ftlPageMapFixturePath, ftlPageReclamationFixturePath, ftlEraseVictimFixturePath, ftlCopyAwareVictimFixturePath, ftlEvacuationPlanFixturePath, ftlRetirementDrainPlanFixturePath, ftlNANDRelocationFixturePath, ftlBlockReclamationFixturePath, ftlLivePageCopyFixturePath, ftlEvacuationFixturePath} {
 				fullPath := filepath.Join(root, filepath.FromSlash(path))
 				if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
 					t.Fatal(err)
@@ -597,6 +681,26 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 			id:      "repository-database-media-ftl-retirement-drain-plan-fixture-inputs",
 			fixture: ftlRetirementDrainPlanFixturePath,
 			roots:   []string{"code/packages/go/ftl-evacuation-plan"},
+		},
+		{
+			id:      "repository-database-media-ftl-nand-relocation-fixture-inputs",
+			fixture: ftlNANDRelocationFixturePath,
+			roots:   []string{"code/packages/go/ftl-nand-relocation"},
+		},
+		{
+			id:      "repository-database-media-ftl-block-reclamation-fixture-inputs",
+			fixture: ftlBlockReclamationFixturePath,
+			roots:   []string{"code/packages/go/ftl-nand-relocation"},
+		},
+		{
+			id:      "repository-database-media-ftl-live-page-copy-fixture-inputs",
+			fixture: ftlLivePageCopyFixturePath,
+			roots:   []string{"code/packages/go/ftl-nand-relocation"},
+		},
+		{
+			id:      "repository-database-media-ftl-evacuation-fixture-inputs",
+			fixture: ftlEvacuationFixturePath,
+			roots:   []string{"code/packages/go/ftl-nand-relocation"},
 		},
 	} {
 		found := false
