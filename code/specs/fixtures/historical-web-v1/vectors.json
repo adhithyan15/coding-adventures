@@ -1,0 +1,116 @@
+{
+  "http-0.9": {
+    "requests": [
+      {"address": "/index.html", "wire_hex": "474554202f696e6465782e68746d6c0d0a"},
+      {"address": "/?a+b", "wire_hex": "474554202f3f612b620a"},
+      {"address": "ftp://x/a", "wire_hex": "474554206674703a2f2f782f610d0a"}
+    ],
+    "invalid_addresses": ["", "/a b", "/\né", "/é", "/\t", "/\u007f"],
+    "invalid_request_hex": [
+      "474554202f",
+      "474554202f0d",
+      "474554202f20485454502f312e300d0a",
+      "47455420202f0a",
+      "676574202f0a",
+      "474554202f0d0a0d0a",
+      "474554202fff0a",
+      "474554200a"
+    ],
+    "responses": [
+      {"wire_hex": "", "body": ""},
+      {"wire_hex": "61620d0a630a64", "body": "ab\r\nc\nd"},
+      {"wire_hex": "485454502f312e30203530300d0a", "body": "HTTP/1.0 500\r\n"}
+    ],
+    "invalid_response_hex": ["80", "c3a9"]
+  },
+  "html-tags-1992": [
+    {
+      "id": "mixed-case-framing-and-anchor",
+      "source": "<HEADER><TITLE>A &amp; B</TITLE></HEADER><BODY><NEXTID 22><H1>Web</h1><P><A\nHREF=/index NAME=\"Intro\" TYPE='up>down' HREF=/ignored X=2>Read</A></BODY>",
+      "tree": [
+        {"tag": "title", "attributes": {}, "children": ["A & B"]},
+        {"tag": "h1", "attributes": {}, "children": ["Web"]},
+        {"tag": "p", "attributes": {}, "children": []},
+        {"tag": "a", "attributes": {"href": "/index", "name": "Intro", "type": "up>down"}, "children": ["Read"]}
+      ]
+    },
+    {
+      "id": "list-item-omission-and-local-scope",
+      "source": "<UL><LI>One<MENU><LI>Inner</MENU><LI>Two</UL>",
+      "tree": [
+        {"tag": "ul", "attributes": {}, "children": [
+          {"tag": "li", "attributes": {}, "children": ["One", {"tag": "menu", "attributes": {}, "children": [
+            {"tag": "li", "attributes": {}, "children": ["Inner"]}
+          ]}]},
+          {"tag": "li", "attributes": {}, "children": ["Two"]}
+        ]}
+      ]
+    },
+    {
+      "id": "definition-list-omission",
+      "source": "<DL><DT>HTTP<DD>Wire<DT>HTML<DD>Markup</DL>",
+      "tree": [
+        {"tag": "dl", "attributes": {}, "children": [
+          {"tag": "dt", "attributes": {}, "children": ["HTTP"]},
+          {"tag": "dd", "attributes": {}, "children": ["Wire"]},
+          {"tag": "dt", "attributes": {}, "children": ["HTML"]},
+          {"tag": "dd", "attributes": {}, "children": ["Markup"]}
+        ]}
+      ]
+    },
+    {
+      "id": "literal-text-modes",
+      "source": "<XMP><A>&amp;</xMp><LISTING>a\r\nb</LISTING><PLAINTEXT><P>&lt;</PLAINTEXT>",
+      "tree": [
+        {"tag": "xmp", "attributes": {}, "children": ["<A>&amp;"]},
+        {"tag": "listing", "attributes": {}, "children": ["a\nb"]},
+        {"tag": "plaintext", "attributes": {}, "children": ["<P>&lt;</PLAINTEXT>"]}
+      ]
+    },
+    {
+      "id": "unknown-tags-and-single-pass-entities",
+      "source": "é<!-- <P> -->x<future title='>'>y</future> &lt;&gt;&amp;lt; &quot; &#65; &LT; 1 < 2",
+      "tree": ["éxy <>&lt; &quot; &#65; &LT; 1 < 2"]
+    },
+    {
+      "id": "explicit-end-tags-and-eof",
+      "source": "</a><H1>First<H2>Second</h2><ISINDEX><A HREF='/a?x=1&amp;y=2'><ADDRESS>Here",
+      "tree": [
+        {"tag": "h1", "attributes": {}, "children": ["First"]},
+        {"tag": "h2", "attributes": {}, "children": ["Second"]},
+        {"tag": "isindex", "attributes": {}, "children": []},
+        {"tag": "a", "attributes": {"href": "/a?x=1&y=2"}, "children": [
+          {"tag": "address", "attributes": {}, "children": ["Here"]}
+        ]}
+      ]
+    },
+    {"id": "unclosed-literal-block", "source": "<XMP><P>", "tree": [
+      {"tag": "xmp", "attributes": {}, "children": ["<P>"]}
+    ]},
+    {"id": "unclosed-comment", "source": "one<!-- ignored", "tree": ["one"]},
+    {"id": "unmatched-end-tag-coalesces-text", "source": "one</TITLE>two", "tree": ["onetwo"]},
+    {"id": "non-ascii-space-is-text", "source": "<A\u00a0HREF=/x>text</A>", "tree": ["<A\u00a0HREF=/x>text"]},
+    {"id": "quoted-less-than-via-entity", "source": "<A TYPE='&lt;X'>a</A>", "tree": [
+      {"tag": "a", "attributes": {"type": "<X"}, "children": ["a"]}
+    ]},
+    {"id": "orphan-item-and-valueless-attribute", "source": "<LI><A NAME>x</a></li>", "tree": [
+      {"tag": "li", "attributes": {}, "children": [
+        {"tag": "a", "attributes": {"name": null}, "children": ["x"]}
+      ]}
+    ]},
+    {"id": "empty", "source": "", "tree": []}
+  ],
+  "exchanges": [
+    {
+      "address": "/",
+      "request_hex": "474554202f0d0a",
+      "response_hex": "3c5449544c453e48693c2f5449544c453e3c503e536565203c4120485245463d2f623e423c2f413e",
+      "tree": [
+        {"tag": "title", "attributes": {}, "children": ["Hi"]},
+        {"tag": "p", "attributes": {}, "children": []},
+        "See ",
+        {"tag": "a", "attributes": {"href": "/b"}, "children": ["B"]}
+      ]
+    }
+  ]
+}

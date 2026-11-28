@@ -321,6 +321,7 @@ var (
 	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
 	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
 	microbenchmarkPairsFixturePath = "code/specs/fixtures/microbenchmark-pairs-v1.json"
+	historicalWebVectorsPath       = "code/specs/fixtures/historical-web-v1/vectors.json"
 	fixedPointInputPaths           = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -374,8 +375,10 @@ var (
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
 	nandFlashFixturePath           = "code/specs/fixtures/database-media-v1/nand-flash.json"
 	hddSimulatorFixturePath        = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
+	hddWriteCrashCutsFixturePath   = "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json"
 	nandFlashFixtureInputs         = []string{nandFlashFixturePath}
 	hddSimulatorFixtureInputs      = []string{hddSimulatorFixturePath}
+	hddWriteCrashCutsFixtureInputs = []string{hddWriteCrashCutsFixturePath}
 	typescriptGameInputFrameInputs = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -653,6 +656,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("rust"),
 	historicalUnixFixtureRow("swift"),
 	historicalUnixFixtureRow("typescript"),
+	{
+		name:     "python/historical-web",
+		language: "python",
+		inputs:   "the shared HWEB-00 historical web vectors",
+		matches:  isHistoricalWebVectors,
+		paths:    []string{historicalWebVectorsPath},
+	},
+	{
+		name:     "go/historical-web",
+		language: "go",
+		inputs:   "the shared HWEB-00 historical web vectors",
+		matches:  isHistoricalWebVectors,
+		paths:    []string{historicalWebVectorsPath},
+	},
 	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
 	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
 	historicalUnixAdapterRow("java", historicalUnixJavaAdapterPath),
@@ -1005,6 +1022,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    nandFlashFixtureInputs,
 	},
 	{
+		name:     "cpp/nand-flash",
+		language: "cpp",
+		inputs:   "the exact DB01 shared NAND flash vector",
+		matches:  isNANDFlashFixture,
+		paths:    nandFlashFixtureInputs,
+	},
+	{
 		name:     "go/nand-flash",
 		language: "go",
 		inputs:   "the exact DB01 shared NAND flash vector",
@@ -1031,6 +1055,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the exact DB02 shared HDD simulator vector",
 		matches:  isHDDSimulatorFixture,
 		paths:    hddSimulatorFixtureInputs,
+	},
+	{
+		name:     "go/hdd-simulator",
+		language: "go",
+		inputs:   "the exact DB02 shared HDD simulator vector",
+		matches:  isHDDSimulatorFixture,
+		paths:    hddSimulatorFixtureInputs,
+	},
+	{
+		name:     "go/hdd-write-crash-cuts",
+		language: "go",
+		inputs:   "the exact DB04a shared HDD write crash-cut vector",
+		matches:  isHDDWriteCrashCutsFixture,
+		paths:    hddWriteCrashCutsFixtureInputs,
 	},
 	{
 		name:     "python/trig",
@@ -1937,6 +1975,10 @@ func isHistoricalUnixFixture(changed string) bool {
 	return changed == historicalUnixFixturePath
 }
 
+func isHistoricalWebVectors(changed string) bool {
+	return changed == historicalWebVectorsPath
+}
+
 func isOSArchitectureFixtureInput(changed string) bool {
 	switch changed {
 	case osArchitectureProfilesPath, osArchitectureVerifyPath,
@@ -2008,16 +2050,22 @@ func repositoryInputsForPackage(packageName string) []string {
 		return inputs
 	}
 	switch packageName {
+	case "python/historical-web":
+		return []string{historicalWebVectorsPath}
+	case "go/historical-web":
+		return []string{historicalWebVectorsPath}
 	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
 		return typescriptGameInputFrameInputs
-	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash", "go/nand-flash":
+	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash", "cpp/nand-flash", "go/nand-flash":
 		return nandFlashFixtureInputs
-	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator":
+	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator", "go/hdd-simulator":
 		return hddSimulatorFixtureInputs
+	case "go/hdd-write-crash-cuts":
+		return hddWriteCrashCutsFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
 	default:
@@ -2708,6 +2756,10 @@ func isNANDFlashFixture(changed string) bool {
 
 func isHDDSimulatorFixture(changed string) bool {
 	return changed == hddSimulatorFixturePath
+}
+
+func isHDDWriteCrashCutsFixture(changed string) bool {
+	return changed == hddWriteCrashCutsFixturePath
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while
