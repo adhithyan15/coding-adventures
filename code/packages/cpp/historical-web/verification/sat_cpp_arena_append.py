@@ -188,8 +188,6 @@ def _model(
         formula.clause(-source_below_target)
     elif query == "old_count_is_max":
         _fix(formula, old_count, no_index)
-    elif query == "post_count_is_zero":
-        _fix(formula, post_count, 0)
     elif query != "legal":
         raise ValueError(f"unknown model query: {query}")
 
@@ -197,7 +195,8 @@ def _model(
 
 
 def _solve(formula: CNF) -> str:
-    bridge = Path(__file__).with_name("go_sat")
+    repository_root = Path(__file__).resolve().parents[5]
+    bridge = repository_root / "code/packages/python/historical-web/verification/go_sat"
     go = os.environ.get("HWEB_GO", "go")
     result = subprocess.run(
         [go, "run", "."],
