@@ -108,3 +108,8 @@ file, clock, process, network, or environment access. `c/test-bootstrap`,
 `c/bounded-json`, and `c/iso-harness` are test/build dependencies only. The C
 assurance suite consumes [the shared HWEB00 vectors](fixtures/historical-web-v1/vectors.json)
 through the bounded JSON test dependency.
+
+The implementation uses C execution-character literals for the public tag
+names and ASCII grammar, so the target must use an ASCII-compatible execution
+character set (as GCC, Clang, MSVC, and clang-cl targets do). UTF-8 source data
+itself is validated and processed as explicit octets.
