@@ -19,6 +19,12 @@ WRAPPER = SCRIPTS / "warrant_negctl.py"
 
 
 class StreamCaptureTest(unittest.TestCase):
+    @staticmethod
+    def _wait_for_bytes(capture: diagnostic.StreamCapture, count: int) -> None:
+        deadline = diagnostic.time.perf_counter() + 2
+        while capture.total_bytes < count and diagnostic.time.perf_counter() < deadline:
+            diagnostic.time.sleep(0.001)
+
     def test_bailout_in_omitted_middle_is_still_detected(self) -> None:
         read_fd, write_fd = os.pipe()
         capture = diagnostic.StreamCapture()
@@ -34,6 +40,40 @@ class StreamCaptureTest(unittest.TestCase):
         self.assertFalse(reader.is_alive())
         self.assertIsNotNone(capture.first_bail_out_s)
         self.assertNotIn("Bail out!", capture.output())
+
+    def test_incomplete_marker_prefix_waits_for_line_terminator(self) -> None:
+        read_fd, write_fd = os.pipe()
+        capture = diagnostic.StreamCapture()
+        started = diagnostic.time.perf_counter()
+        read_stream = os.fdopen(read_fd, "rb")
+        reader = threading.Thread(target=capture.read, args=(read_stream, started))
+        reader.start()
+        with os.fdopen(write_fd, "wb", buffering=0) as writer:
+            writer.write(b"not ok 1")
+            self._wait_for_bytes(capture, len(b"not ok 1"))
+            self.assertIsNone(capture.first_not_ok_s)
+            writer.write(b"garbage\n")
+        reader.join(timeout=5)
+        read_stream.close()
+        self.assertFalse(reader.is_alive())
+        self.assertIsNone(capture.first_not_ok_s)
+
+    def test_valid_marker_split_across_reads_records_after_complete_line(self) -> None:
+        read_fd, write_fd = os.pipe()
+        capture = diagnostic.StreamCapture()
+        started = diagnostic.time.perf_counter()
+        read_stream = os.fdopen(read_fd, "rb")
+        reader = threading.Thread(target=capture.read, args=(read_stream, started))
+        reader.start()
+        with os.fdopen(write_fd, "wb", buffering=0) as writer:
+            writer.write(b"not ok ")
+            self._wait_for_bytes(capture, len(b"not ok "))
+            self.assertIsNone(capture.first_not_ok_s)
+            writer.write(b"1 - fixture\n")
+        reader.join(timeout=5)
+        read_stream.close()
+        self.assertFalse(reader.is_alive())
+        self.assertIsNotNone(capture.first_not_ok_s)
 
 
 class RealWrapperProbeTest(unittest.TestCase):

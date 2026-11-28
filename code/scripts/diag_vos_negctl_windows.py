@@ -31,6 +31,7 @@ CONCURRENT_REPORT_RESERVE_SECS = 15
 READER_JOIN_SECS = 8
 CAPTURE_LIMIT = 64 * 1024
 SAMPLE_INTERVAL_SECS = 5
+MARKER_LINE_LIMIT = 256
 
 
 class StreamCapture:
@@ -45,7 +46,8 @@ class StreamCapture:
         self.first_not_ok_s: float | None = None
         self.first_bail_out_s: float | None = None
         self.reader_error: str | None = None
-        self.marker_tail = b""
+        self.marker_line = b""
+        self.marker_line_overflow = False
         self.head = bytearray()
         self.tail = bytearray()
         self.lock = threading.Lock()
@@ -59,18 +61,7 @@ class StreamCapture:
                         self.first_byte_s = now
                     self.last_byte_s = now
                     self.total_bytes += len(chunk)
-                    searchable = self.marker_tail + chunk
-                    if self.first_tap_plan_s is None and re.search(
-                        rb"(?m)^1\.\.[0-9]+\r?(?:\n|$)", searchable
-                    ):
-                        self.first_tap_plan_s = now
-                    if self.first_not_ok_s is None and re.search(
-                        rb"(?m)^not ok[ \t]+[0-9]+(?:[ \t].*)?\r?(?:\n|$)", searchable
-                    ):
-                        self.first_not_ok_s = now
-                    if self.first_bail_out_s is None and re.search(rb"(?m)^Bail out!", searchable):
-                        self.first_bail_out_s = now
-                    self.marker_tail = searchable[-64:]
+                    self._consume_marker_bytes(chunk, now)
                     head_room = CAPTURE_LIMIT // 2 - len(self.head)
                     head_part = chunk[:head_room]
                     if head_part:
@@ -83,7 +74,42 @@ class StreamCapture:
                 self.reader_error = f"{type(exc).__name__}: {exc}"
         finally:
             with self.lock:
+                if self.eof_s is None and self.reader_error is None and self.marker_line:
+                    self._record_complete_line(
+                        self.marker_line,
+                        self.marker_line_overflow,
+                        time.perf_counter() - started,
+                    )
                 self.eof_s = time.perf_counter() - started
+
+    def _consume_marker_bytes(self, chunk: bytes, now: float) -> None:
+        pieces = (self.marker_line + chunk).split(b"\n")
+        previous_overflow = self.marker_line_overflow
+        for index, line in enumerate(pieces[:-1]):
+            overflow = previous_overflow if index == 0 else False
+            overflow = overflow or len(line) > MARKER_LINE_LIMIT
+            self._record_complete_line(line[:MARKER_LINE_LIMIT], overflow, now)
+        trailing = pieces[-1]
+        self.marker_line_overflow = (
+            (previous_overflow if len(pieces) == 1 else False)
+            or len(trailing) > MARKER_LINE_LIMIT
+        )
+        self.marker_line = trailing[:MARKER_LINE_LIMIT]
+
+    def _record_complete_line(self, line: bytes, overflow: bool, now: float) -> None:
+        line = line.removesuffix(b"\r")
+        if (
+            self.first_tap_plan_s is None
+            and not overflow
+            and re.fullmatch(rb"1\.\.[0-9]+", line)
+        ):
+            self.first_tap_plan_s = now
+        if self.first_not_ok_s is None and re.match(
+            rb"^not ok[ \t]+[0-9]+(?:[ \t]|$)", line
+        ):
+            self.first_not_ok_s = now
+        if self.first_bail_out_s is None and line.startswith(b"Bail out!"):
+            self.first_bail_out_s = now
 
     def output(self) -> str:
         with self.lock:
