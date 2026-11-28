@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "fsharp/historical-web",
+  "capabilities": [],
+  "justification": "The library parses caller-provided HTTP spans and HTML strings in memory. It performs no file, network, process, environment, or clock I/O. Fixture reads and compiler execution are confined to test/build tooling."
+}
