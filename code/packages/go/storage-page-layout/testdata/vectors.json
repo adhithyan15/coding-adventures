@@ -1,0 +1,41 @@
+{
+  "schema": "coding-adventures.storage-page-layout.v1",
+  "cases": [
+    {
+      "name": "offset-four-pages-two-blocks-each",
+      "geometry": {"block_count": 32, "bytes_per_block": 8},
+      "first_block": 5,
+      "page_count": 4,
+      "blocks_per_page": 2,
+      "page": 3,
+      "span": {"first_block": 11, "block_count": 2, "bytes_per_page": 16}
+    },
+    {
+      "name": "exact-fit-reservation-at-end",
+      "geometry": {"block_count": 32, "bytes_per_block": 8},
+      "first_block": 8,
+      "page_count": 6,
+      "blocks_per_page": 4,
+      "page": 5,
+      "span": {"first_block": 28, "block_count": 4, "bytes_per_page": 32}
+    },
+    {
+      "name": "maximum-page-width",
+      "geometry": {"block_count": 65536, "bytes_per_block": 1},
+      "first_block": 0,
+      "page_count": 1,
+      "blocks_per_page": 65536,
+      "page": 0,
+      "span": {"first_block": 0, "block_count": 65536, "bytes_per_page": 65536}
+    },
+    {
+      "name": "portable-address-ceiling",
+      "geometry": {"block_count": 9007199254740991, "bytes_per_block": 65536},
+      "first_block": 9007199254740990,
+      "page_count": 1,
+      "blocks_per_page": 1,
+      "page": 0,
+      "span": {"first_block": 9007199254740990, "block_count": 1, "bytes_per_page": 65536}
+    }
+  ]
+}
