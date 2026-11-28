@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Use a case-distinct Windows output directory so it does not alias the
+  tracked `BUILD` file on case-insensitive filesystems.
+
 ## 1.0.0
 
 - Add a host-import-free WAT guest for the bounded HOS00 file-read image.
