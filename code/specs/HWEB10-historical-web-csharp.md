@@ -21,7 +21,7 @@ public static class Http09
 
 public static class HtmlTags1992
 {
-    public static HtmlDocument Parse(string source);
+    public static HtmlDocument Parse(string? source);
 }
 ```
 
@@ -55,7 +55,8 @@ with `InvalidUnicode` at their code-unit offset. Strings returned in the tree
 are immutable .NET strings, and the document owns flat arrays of immutable
 nodes and attributes. It exposes read-only wrappers, never writable backing
 arrays, root/node/attribute counts, a first-root index (or `-1`), and
-bounds-checked indexed accessors. A
+bounds-checked indexed accessors that throw `ArgumentOutOfRangeException` for
+invalid indexes. A
 node has `Kind`, `ParentIndex`, `FirstChildIndex`, `NextSiblingIndex`, `Tag`,
 `Text`, `FirstAttributeIndex`, and `AttributeCount`. A valueless recognized
 anchor attribute has `Value == null`; an explicitly empty value is `""`.
