@@ -63,3 +63,19 @@ every bounded HDD barrier cut and lost response. Check untouched
 neighbors and earlier acknowledged log pages. Run both command
 lists, race, vet, guided inputs and clean controls for flushing
 after a failed page write or placing the record after the wrong gap.
+
+## Local verification
+
+The implementation is in `30c1d5819cd`. An independent caller checked
+all 66 modeled HDD barrier cuts across restart, including a complete
+durable record with a lost acknowledgement. It compared receipts,
+exact recovered bytes, neighboring blocks, and previously acknowledged
+records. It also verified the first write refusal and typed tail and
+sequence errors. Replay passed race and vet.
+
+Both command lists passed at 100% statement coverage with race and
+vet. Module tidy, 100,000 guided inputs and both mutation controls
+passed. The native suite checked every read position and every
+incomplete write prefix in its fixed reservation. Build discovery
+added only this package, with twelve expected edges per platform,
+and preserved all 6,014 existing graph rows and 6,013 recipes.
