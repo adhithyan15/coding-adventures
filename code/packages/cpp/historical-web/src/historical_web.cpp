@@ -236,34 +236,65 @@ const HtmlNode &HtmlDocument::node_at(std::size_t index) const { return nodes_.a
 const HtmlAttribute &HtmlDocument::attribute_at(std::size_t index) const { return attributes_.at(index); }
 
 std::string encode_http09_request(std::string_view address) {
-    if (address.empty()) throw ProfileError(ErrorKind::invalid_address, no_index, "invalid HTTP/0.9 address");
+    if (address.empty()) {
+        throw ProfileError(ErrorKind::invalid_address, no_index,
+                           "invalid HTTP/0.9 address");
+    }
     for (std::size_t i = 0; i < address.size(); ++i) {
         const auto c = static_cast<unsigned char>(address[i]);
-        if (c < 0x21 || c > 0x7e) throw ProfileError(ErrorKind::invalid_address, i, "invalid HTTP/0.9 address");
+        if (c < 0x21 || c > 0x7e) {
+            throw ProfileError(ErrorKind::invalid_address, i,
+                               "invalid HTTP/0.9 address");
+        }
     }
-    std::string result("GET "); result.append(address.data(), address.size()); result.append("\r\n", 2); return result;
+    std::string result("GET ");
+    result.append(address.data(), address.size());
+    result.append("\r\n", 2);
+    return result;
 }
 std::string parse_http09_request(std::string_view wire) {
     constexpr std::string_view prefix = "GET ";
     const auto prefix_length = std::min(wire.size(), prefix.size());
-    for (std::size_t i = 0; i < prefix_length; ++i)
-        if (wire[i] != prefix[i]) throw ProfileError(ErrorKind::invalid_request, i, "invalid HTTP/0.9 request");
-    if (wire.size() < prefix.size()) throw ProfileError(ErrorKind::invalid_request, wire.size(), "invalid HTTP/0.9 request");
+    for (std::size_t i = 0; i < prefix_length; ++i) {
+        if (wire[i] != prefix[i]) {
+            throw ProfileError(ErrorKind::invalid_request, i,
+                               "invalid HTTP/0.9 request");
+        }
+    }
+    if (wire.size() < prefix.size()) {
+        throw ProfileError(ErrorKind::invalid_request, wire.size(),
+                           "invalid HTTP/0.9 request");
+    }
     std::size_t end = wire.size();
-    if (end >= 2 && wire.substr(end - 2) == "\r\n") end -= 2;
-    else if (end >= 1 && wire[end - 1] == '\n') --end;
-    else throw ProfileError(ErrorKind::invalid_request, wire.size(), "invalid HTTP/0.9 request");
+    if (end >= 2 && wire.substr(end - 2) == "\r\n") {
+        end -= 2;
+    } else if (end >= 1 && wire[end - 1] == '\n') {
+        --end;
+    } else {
+        throw ProfileError(ErrorKind::invalid_request, wire.size(),
+                           "invalid HTTP/0.9 request");
+    }
     const auto address = wire.substr(prefix.size(), end - prefix.size());
-    if (address.empty()) throw ProfileError(ErrorKind::invalid_request, prefix.size(), "invalid HTTP/0.9 request");
+    if (address.empty()) {
+        throw ProfileError(ErrorKind::invalid_request, prefix.size(),
+                           "invalid HTTP/0.9 request");
+    }
     for (std::size_t i = 0; i < address.size(); ++i) {
         const auto c = static_cast<unsigned char>(address[i]);
-        if (c < 0x21 || c > 0x7e) throw ProfileError(ErrorKind::invalid_request, prefix.size() + i, "invalid HTTP/0.9 request");
+        if (c < 0x21 || c > 0x7e) {
+            throw ProfileError(ErrorKind::invalid_request, prefix.size() + i,
+                               "invalid HTTP/0.9 request");
+        }
     }
     return std::string(address);
 }
 std::string decode_http09_response(std::string_view body) {
-    for (std::size_t i = 0; i < body.size(); ++i) if (static_cast<unsigned char>(body[i]) > 0x7f)
-        throw ProfileError(ErrorKind::invalid_response, i, "non-ASCII HTTP/0.9 response");
+    for (std::size_t i = 0; i < body.size(); ++i) {
+        if (static_cast<unsigned char>(body[i]) > 0x7f) {
+            throw ProfileError(ErrorKind::invalid_response, i,
+                               "non-ASCII HTTP/0.9 response");
+        }
+    }
     return std::string(body);
 }
 
@@ -271,7 +302,10 @@ class HtmlParser {
 public:
     explicit HtmlParser(std::string_view original) {
         std::size_t bad = 0;
-        if (!valid_utf8(original, bad)) throw ProfileError(ErrorKind::invalid_utf8, bad, "invalid UTF-8 HTML source");
+        if (!valid_utf8(original, bad)) {
+            throw ProfileError(ErrorKind::invalid_utf8, bad,
+                               "invalid UTF-8 HTML source");
+        }
         source_.reserve(original.size());
         for (std::size_t i = 0; i < original.size(); ++i) {
             if (original[i] == '\r' && i + 1 < original.size() && original[i + 1] == '\n') {
@@ -343,7 +377,12 @@ public:
 private:
     // The published document owns values. These parser-only indexes let us
     // find matching open tags and last children without walking old nodes.
-    struct Meta { std::size_t previous = no_index, slot = no_index, last_child = no_index; Tag tag = unknown; };
+    struct Meta {
+        std::size_t previous = no_index;
+        std::size_t slot = no_index;
+        std::size_t last_child = no_index;
+        Tag tag = unknown;
+    };
     std::string source_;
     HtmlDocument document_;
     std::vector<Meta> meta_;
@@ -351,14 +390,18 @@ private:
     std::array<std::size_t, tag_count> latest_{};
     std::string pending_text_;
     Tag raw_ = unknown;
+    // A bounded search only accepts `</name>`; a short prefix or a larger
+    // tag-name candidate is examined as ordinary literal text instead.
 
     std::optional<std::pair<std::size_t, std::size_t>> raw_end(std::size_t cursor, Tag tag) const {
         const std::string needle = "</" + std::string(tag_names[tag]) + ">";
         while (true) {
             const auto start = source_.find("</", cursor);
             if (start == std::string::npos) return std::nullopt;
-            if (needle.size() <= source_.size() - start && equal_ascii_ci(std::string_view(source_).substr(start, needle.size()), needle))
+            if (needle.size() <= source_.size() - start &&
+                equal_ascii_ci(std::string_view(source_).substr(start, needle.size()), needle)) {
                 return std::make_pair(start, start + needle.size());
+            }
             cursor = start + 2;
         }
     }
@@ -392,37 +435,57 @@ private:
     std::size_t root_last_ = no_index;
 
     void append_text(std::string_view bytes, bool entities_on) {
-        if (bytes.empty()) return;
-        if (entities_on) pending_text_ += decode(bytes);
-        else pending_text_.append(bytes.data(), bytes.size());
+        if (bytes.empty()) {
+            return;
+        }
+        if (entities_on) {
+            pending_text_ += decode(bytes);
+        } else {
+            pending_text_.append(bytes.data(), bytes.size());
+        }
     }
     void flush_text() {
-        if (pending_text_.empty()) return;
+        if (pending_text_.empty()) {
+            return;
+        }
         const std::size_t parent = stack_.empty() ? no_index : stack_.back();
         const std::size_t last = parent == no_index ? root_last_ : meta_[parent].last_child;
         if (last != no_index && document_.nodes_[last].kind == NodeKind::text) {
             document_.nodes_[last].text += pending_text_;
         } else {
-            HtmlNode node; node.kind = NodeKind::text; node.parent_index = parent; node.text = std::move(pending_text_);
-            pending_text_.clear(); append_node(std::move(node));
+            HtmlNode node;
+            node.kind = NodeKind::text;
+            node.parent_index = parent;
+            node.text = std::move(pending_text_);
+            pending_text_.clear();
+            append_node(std::move(node));
         }
         pending_text_.clear();
     }
 
     std::size_t matching(Tag tag, Tag boundary1 = unknown, Tag boundary2 = unknown, Tag boundary3 = unknown) const {
         const auto candidate = latest_[tag];
-        if (candidate == no_index) return no_index;
+        if (candidate == no_index) {
+            return no_index;
+        }
+        // Sentinels are not positions: choose only present scopes before
+        // comparing stack slots. This is the implied-end scope invariant.
         std::size_t boundary = no_index;
         for (const Tag b : {boundary1, boundary2, boundary3}) {
             if (b != unknown && latest_[b] != no_index &&
-                (boundary == no_index || meta_[latest_[b]].slot > meta_[boundary].slot)) boundary = latest_[b];
+                (boundary == no_index || meta_[latest_[b]].slot > meta_[boundary].slot)) {
+                boundary = latest_[b];
+            }
         }
-        if (boundary != no_index && meta_[candidate].slot <= meta_[boundary].slot) return no_index;
+        if (boundary != no_index && meta_[candidate].slot <= meta_[boundary].slot) {
+            return no_index;
+        }
         return meta_[candidate].slot;
     }
     void close_to(std::size_t slot) {
         while (stack_.size() > slot) {
-            const auto index = stack_.back(); stack_.pop_back();
+            const auto index = stack_.back();
+            stack_.pop_back();
             latest_[meta_[index].tag] = meta_[index].previous;
         }
     }
