@@ -39,16 +39,20 @@ type scriptedDevice struct {
 	failFlush  int
 	readBlocks []int64
 	readErr    map[int64]error
+	badWidth   map[int64]bool
 }
 
 func newScripted(g blockdevicecontract.Geometry) *scriptedDevice {
-	return &scriptedDevice{geometry: g, blocks: make(map[int64][]byte), readErr: make(map[int64]error)}
+	return &scriptedDevice{geometry: g, blocks: make(map[int64][]byte), readErr: make(map[int64]error), badWidth: make(map[int64]bool)}
 }
 func (d *scriptedDevice) Geometry() blockdevicecontract.Geometry { return d.geometry }
 func (d *scriptedDevice) ReadBlock(block int64) ([]byte, error) {
 	d.readBlocks = append(d.readBlocks, block)
 	if err := d.readErr[block]; err != nil {
 		return nil, err
+	}
+	if d.badWidth[block] {
+		return []byte{1}, nil
 	}
 	if value, ok := d.blocks[block]; ok {
 		return append([]byte(nil), value...), nil

@@ -40,7 +40,9 @@ def mutate(label: str, old: str, new: str, test: str, subtest: str | None) -> No
 
 def main() -> None:
     witness("TestCaptureReadOrderAndSelect", "width-16", False, "clean physical-order witness")
-    witness("TestCapturePaddingPrecedesFrameSelection", None, False, "clean padding witness")
+    witness("TestCapturePaddingPrecedesFrameSelection", None, False, "clean Capture padding witness")
+    witness("TestReadPagesAdmitsRawPrefixes", "vacant", False, "clean raw-vacancy witness")
+    witness("TestReadPagesRejectsNonzeroPadding", "page-0", False, "clean raw-padding witness")
     mutate(
         "read-pages-in-reverse-ordinal",
         "pager.ReadPage(int64(ordinal))",
@@ -52,8 +54,18 @@ def main() -> None:
         "ignore-nonzero-padding",
         "if value != 0 {",
         "if value != 0 && len(page) == 0 {",
-        "TestCapturePaddingPrecedesFrameSelection",
-        None,
+        "TestReadPagesRejectsNonzeroPadding",
+        "page-0",
+    )
+    mutate(
+        "select-logical-state-before-returning-raw-pages",
+        "return pages, nil",
+        """if _, err := storagewalcheckpointselection.Select([2][]byte{pages[0][:storagewalcheckpointrecord.FrameBytes], pages[1][:storagewalcheckpointrecord.FrameBytes]}); err != nil {
+		return [2][]byte{}, err
+	}
+	return pages, nil""",
+        "TestReadPagesAdmitsRawPrefixes",
+        "vacant",
     )
 
 
