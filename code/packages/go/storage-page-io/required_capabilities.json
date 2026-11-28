@@ -1,0 +1,5 @@
+{
+  "package": "go/storage-page-io",
+  "capabilities": [],
+  "justification": "Page I/O composes local block and layout interfaces without external capabilities."
+}
