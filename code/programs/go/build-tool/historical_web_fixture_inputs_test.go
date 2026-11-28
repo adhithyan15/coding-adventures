@@ -24,8 +24,8 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "python"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true}) {
 		t.Fatalf("Python-only vector selection = %v, err %v", selected, err)
 	}
-	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "rust"); err != nil || len(selected) != 0 {
-		t.Fatalf("Rust-only vector selection = %v, err %v; want none", selected, err)
+	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "rust"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/historical-web": true}) {
+		t.Fatalf("Rust-only vector selection = %v, err %v", selected, err)
 	}
 
 	for _, changed := range []string{
