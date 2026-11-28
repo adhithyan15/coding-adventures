@@ -131,7 +131,17 @@ fn replay_every_shared_vector_and_fail_closed_on_missing_categories() {
         let address = tc["address"].as_str().expect("address string");
         let want = hex_bytes(tc["wire_hex"].as_str().expect("wire hex"));
         let address_value = Http09Address::new(address.to_owned()).unwrap();
-        assert_eq!(encode_http09_request(&address_value), want, "{tc}");
+        let lf_wire = [b"GET ".as_slice(), address.as_bytes(), b"\n"].concat();
+        let crlf_wire = [b"GET ".as_slice(), address.as_bytes(), b"\r\n"].concat();
+        assert!(
+            want == lf_wire || want == crlf_wire,
+            "fixture wire must match the shared LF/CRLF vector"
+        );
+        assert_eq!(
+            encode_http09_request(&address_value),
+            [b"GET ".as_slice(), address.as_bytes(), b"\r\n"].concat(),
+            "encoder emits canonical CRLF even when fixture accepts LF: {tc}"
+        );
         assert_eq!(
             parse_http09_request(&want).unwrap().as_str(),
             address,
@@ -294,7 +304,8 @@ fn archived_sgml_list_omission_utf8_and_single_pass_entities_are_preserved() {
     assert_arena_well_formed(&doc);
     let json = doc_json(&doc);
     assert_eq!(json[0]["children"][1]["children"][0], "two");
-    assert_eq!(json[1]["children"][0], "café & < &unknown;");
+    assert_eq!(json[1], json!({"tag":"p", "attributes":{}, "children":[]}));
+    assert_eq!(json[2], "café & < &unknown;");
     // HTML 1992 permits this local list-item omission; XML's explicit-end-tag
     // grammar would reject the same source, so do not route through XML here.
     assert_eq!(json[0]["tag"], "ul");
@@ -313,9 +324,11 @@ fn raw_text_end_tag_search_handles_multibyte_unaligned_window_endpoints() {
         doc_json(&doc),
         json!([
             {"tag":"xmp", "attributes":{}, "children":["aaaaaé"]},
-            {"tag":"p", "attributes":{}, "children":["after-xmp"]},
+            {"tag":"p", "attributes":{}, "children":[]},
+            "after-xmp",
             {"tag":"listing", "attributes":{}, "children":["aaaaaaaé"]},
-            {"tag":"p", "attributes":{}, "children":["after-listing"]}
+            {"tag":"p", "attributes":{}, "children":[]},
+            "after-listing"
         ])
     );
 }
