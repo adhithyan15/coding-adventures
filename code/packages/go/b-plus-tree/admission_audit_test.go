@@ -366,21 +366,35 @@ func TestIndependentBPlusAuditBorrowAndRootContraction(t *testing.T) {
 }
 
 func TestIndependentBPlusAuditPreservesSoundHistoricalFence(t *testing.T) {
-	tree := New[int, string](2, func(a, b int) bool { return a < b })
-	model := make(map[int]string)
-	for _, key := range []int{1, 2, 3, 4} {
-		tree.Insert(key, fmt.Sprintf("v%d", key))
-		model[key] = fmt.Sprintf("v%d", key)
-	}
-	tree.Delete(3)
-	delete(model, 3)
-	compareBPlusWithMap(t, tree, model)
-	root, ok := tree.root.(*bplusInternal[int, string])
-	if !ok || len(root.keys) != 1 || root.keys[0] != 3 {
-		t.Fatalf("expected preserved separator 3, root=%#v", tree.root)
-	}
-	if rightmost := root.children[1].(*bplusLeaf[int, string]); len(rightmost.keys) == 0 || rightmost.keys[0] != 4 {
-		t.Fatalf("expected right leaf minimum 4, got %#v", root.children[1])
+	for _, test := range []struct {
+		name     string
+		less     func(int, int) bool
+		inserts  []int
+		deleted  int
+		sep      int
+		rightMin int
+	}{
+		{name: "ascending", less: func(a, b int) bool { return a < b }, inserts: []int{1, 2, 3, 4}, deleted: 3, sep: 3, rightMin: 4},
+		{name: "descending", less: func(a, b int) bool { return a > b }, inserts: []int{4, 3, 2, 1}, deleted: 2, sep: 2, rightMin: 1},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			tree := New[int, string](2, test.less)
+			model := make(map[int]string)
+			for _, key := range test.inserts {
+				tree.Insert(key, fmt.Sprintf("v%d", key))
+				model[key] = fmt.Sprintf("v%d", key)
+			}
+			tree.Delete(test.deleted)
+			delete(model, test.deleted)
+			compareBPlusWithMap(t, tree, model)
+			root, ok := tree.root.(*bplusInternal[int, string])
+			if !ok || len(root.keys) != 1 || root.keys[0] != test.sep {
+				t.Fatalf("expected preserved separator %d, root=%#v", test.sep, tree.root)
+			}
+			if rightmost := root.children[1].(*bplusLeaf[int, string]); len(rightmost.keys) == 0 || rightmost.keys[0] != test.rightMin {
+				t.Fatalf("expected right leaf boundary %d, got %#v", test.rightMin, root.children[1])
+			}
+		})
 	}
 }
 
@@ -464,4 +478,233 @@ func TestIndependentBPlusAuditRejectsMalformedPrivateNodes(t *testing.T) {
 			}
 		})
 	}
+}
+
+func compareBPlusAuditCore(t *testing.T, tree *BPlusTree[int, string], model map[int]string) {
+	t.Helper()
+	report, err := auditBPlusTree(tree)
+	if err != nil {
+		t.Fatalf("independent audit: %v", err)
+	}
+	want := bplusExpected(tree, model)
+	if report.count != len(model) || !reflect.DeepEqual(report.entries, want) || tree.Len() != len(model) || !tree.IsValid() {
+		t.Fatalf("audit=%v count=%d IsValid=%t Len=%d model=%v", report.entries, report.count, tree.IsValid(), tree.Len(), want)
+	}
+	if got := tree.FullScan(); !reflect.DeepEqual(got, want) {
+		t.Fatalf("FullScan=%v, want %v", got, want)
+	}
+	for key := -8; key <= 8; key++ {
+		got, found := tree.Search(key)
+		value, present := model[key]
+		if found != present || got != value || tree.Contains(key) != present {
+			t.Fatalf("Search(%d)=(%q,%t), want (%q,%t)", key, got, found, value, present)
+		}
+	}
+}
+
+func TestIsValidRejectsMalformedPrivateStructures(t *testing.T) {
+	build := func() *BPlusTree[int, string] {
+		tree := New[int, string](2, func(a, b int) bool { return a < b })
+		for key := 1; key <= 32; key++ {
+			tree.Insert(key, fmt.Sprintf("v%d", key))
+		}
+		return tree
+	}
+	for _, test := range []struct {
+		name    string
+		corrupt func(*BPlusTree[int, string])
+	}{
+		{name: "misplaced separator", corrupt: func(tree *BPlusTree[int, string]) {
+			short := New[int, string](2, func(a, b int) bool { return a < b })
+			for _, key := range []int{1, 2, 3, 4} {
+				short.Insert(key, fmt.Sprintf("v%d", key))
+			}
+			tree.root, tree.firstLeaf, tree.size = short.root, short.firstLeaf, short.size
+			internal := tree.root.(*bplusInternal[int, string])
+			internal.keys[0] = 5
+		}},
+		{name: "deep inherited separator bound", corrupt: func(tree *BPlusTree[int, string]) {
+			root := tree.root.(*bplusInternal[int, string])
+			node := root.children[0]
+			for {
+				internal := node.(*bplusInternal[int, string])
+				if internal.children[0].isLeaf() {
+					internal.keys[len(internal.keys)-1] = root.keys[0]
+					return
+				}
+				node = internal.children[len(internal.children)-1]
+			}
+		}},
+		{name: "missing leaf value", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.firstLeaf.values = nil
+		}},
+		{name: "short leaf chain", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.firstLeaf.next = tree.firstLeaf.next.next
+		}},
+		{name: "foreign leaf", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.firstLeaf.next = &bplusLeaf[int, string]{keys: []int{33}, values: []string{"v33"}}
+		}},
+		{name: "cyclic leaf suffix", corrupt: func(tree *BPlusTree[int, string]) {
+			leaf := tree.firstLeaf
+			for leaf.next != nil {
+				leaf = leaf.next
+			}
+			leaf.next = tree.firstLeaf
+		}},
+		{name: "wrong first leaf", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.firstLeaf = tree.firstLeaf.next
+		}},
+		{name: "missing first leaf", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.firstLeaf = nil
+		}},
+		{name: "wrong record count", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.size++
+		}},
+		{name: "wrong internal child count", corrupt: func(tree *BPlusTree[int, string]) {
+			root := tree.root.(*bplusInternal[int, string])
+			root.children = root.children[:len(root.children)-1]
+		}},
+		{name: "unordered separators", corrupt: func(tree *BPlusTree[int, string]) {
+			root := tree.root.(*bplusInternal[int, string])
+			if len(root.keys) < 2 {
+				t.Fatal("test tree did not create multiple root separators")
+			}
+			root.keys[1] = root.keys[0]
+		}},
+		{name: "nil child", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.root.(*bplusInternal[int, string]).children[0] = nil
+		}},
+		{name: "typed nil child", corrupt: func(tree *BPlusTree[int, string]) {
+			var nilLeaf *bplusLeaf[int, string]
+			tree.root.(*bplusInternal[int, string]).children[0] = nilLeaf
+		}},
+		{name: "unknown non-comparable node", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.root.(*bplusInternal[int, string]).children[0] = bplusMalformedSliceNode{1, 2}
+		}},
+		{name: "repeated child", corrupt: func(tree *BPlusTree[int, string]) {
+			root := tree.root.(*bplusInternal[int, string])
+			root.children[1] = root.children[0]
+		}},
+		{name: "cyclic child", corrupt: func(tree *BPlusTree[int, string]) {
+			tree.root.(*bplusInternal[int, string]).children[0] = tree.root
+		}},
+		{name: "unequal leaf depth", corrupt: func(tree *BPlusTree[int, string]) {
+			leaf := func(key int) *bplusLeaf[int, string] {
+				return &bplusLeaf[int, string]{keys: []int{key}, values: []string{fmt.Sprintf("v%d", key)}}
+			}
+			first, second, third := leaf(2), leaf(7), leaf(12)
+			first.next, second.next = second, third
+			left := &bplusInternal[int, string]{keys: []int{5}, children: []bplusNode[int, string]{first, second}}
+			tree.root = &bplusInternal[int, string]{keys: []int{10}, children: []bplusNode[int, string]{left, third}}
+			tree.firstLeaf, tree.size = first, 5
+		}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			tree := build()
+			test.corrupt(tree)
+			if tree.IsValid() {
+				t.Fatal("IsValid accepted malformed private structure")
+			}
+		})
+	}
+}
+
+func TestIsValidRejectsMalformedEmptyTreeState(t *testing.T) {
+	less := func(a, b int) bool { return a < b }
+	tree := New[int, string](2, less)
+	tree.size = 1
+	if tree.IsValid() {
+		t.Fatal("IsValid accepted nil root with nonzero size")
+	}
+	tree.size = 0
+	tree.firstLeaf = &bplusLeaf[int, string]{keys: []int{1}, values: []string{"one"}}
+	if tree.IsValid() {
+		t.Fatal("IsValid accepted nil root with a first leaf")
+	}
+}
+
+func TestIsValidSupportsNonComparableKeysAndLargestDegree(t *testing.T) {
+	less := func(a, b []int) bool {
+		limit := len(a)
+		if len(b) < limit {
+			limit = len(b)
+		}
+		for i := 0; i < limit; i++ {
+			if a[i] != b[i] {
+				return a[i] < b[i]
+			}
+		}
+		return len(a) < len(b)
+	}
+	tree := New[[]int, string](2, less)
+	for index, key := range [][]int{{2}, {1}, {4}, {3}, {5}, {0}} {
+		tree.Insert(key, fmt.Sprintf("v%d", index))
+	}
+	if !tree.IsValid() {
+		t.Fatal("IsValid rejected non-comparable slice keys")
+	}
+
+	maxInt := int(^uint(0) >> 1)
+	for _, degree := range []int{maxInt/2 + 2, maxInt} {
+		large := New[int, string](degree, func(a, b int) bool { return a < b })
+		large.Insert(1, "one")
+		if !large.IsValid() {
+			t.Errorf("IsValid rejected a one-entry tree with degree %d", degree)
+		}
+	}
+}
+
+func TestIsValidLeavesTreeAndLeafChainUnchanged(t *testing.T) {
+	tree := New[int, string](2, func(a, b int) bool { return a < b })
+	for key := 1; key <= 32; key++ {
+		tree.Insert(key, fmt.Sprintf("v%d", key))
+	}
+	before := tree.FullScan()
+	var leaves []*bplusLeaf[int, string]
+	for leaf := tree.firstLeaf; leaf != nil; leaf = leaf.next {
+		leaves = append(leaves, leaf)
+	}
+	if !tree.IsValid() {
+		t.Fatal("valid tree rejected")
+	}
+	if got := tree.FullScan(); !reflect.DeepEqual(got, before) {
+		t.Fatalf("IsValid changed records: got %v want %v", got, before)
+	}
+	leaf := tree.firstLeaf
+	for index, want := range leaves {
+		if leaf != want {
+			t.Fatalf("IsValid changed leaf identity at %d", index)
+		}
+		leaf = leaf.next
+	}
+	if leaf != nil {
+		t.Fatal("IsValid changed leaf-chain terminator")
+	}
+}
+
+func FuzzIsValidMatchesIndependentAudit(f *testing.F) {
+	f.Add([]byte{0, 4, 8, 12, 1, 5, 9, 13})
+	f.Add([]byte{1, 1, 5, 9, 13, 17, 21})
+	f.Fuzz(func(t *testing.T, input []byte) {
+		if len(input) > 32 {
+			input = input[:32]
+		}
+		tree := New[int, string](2, func(a, b int) bool { return a < b })
+		model := make(map[int]string)
+		for step, command := range input {
+			key := int(command>>2)%17 - 8
+			if command&1 == 0 {
+				value := fmt.Sprintf("fuzz-%d-%d", key, step)
+				tree.Insert(key, value)
+				model[key] = value
+			} else if command&2 == 0 {
+				tree.Delete(key)
+				delete(model, key)
+			} else {
+				_, _ = tree.Search(key)
+			}
+			compareBPlusAuditCore(t, tree, model)
+		}
+		compareBPlusWithMap(t, tree, model)
+	})
 }
