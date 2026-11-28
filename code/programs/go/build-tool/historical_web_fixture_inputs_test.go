@@ -38,6 +38,9 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 	if selected, err := repositoryInputConsumersForChange([]string{historicalWebHTML2ParagraphsPath}, packages, "all"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true}) {
 		t.Fatalf("HTML 2.0 paragraphs selection = %v, err %v; want Python only", selected, err)
 	}
+	if selected, err := repositoryInputConsumersForChange([]string{historicalWebHTTP10RequestLinePath}, packages, "all"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true}) {
+		t.Fatalf("HTTP/1.0 request-line selection = %v, err %v; want Python only", selected, err)
+	}
 
 	for _, changed := range []string{
 		historicalWebVectorsPath + ".bak",
@@ -55,8 +58,8 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 		}
 	}
 
-	wantInputs := []string{historicalWebVectorsPath, historicalWebHTML2ParagraphsPath}
-	wantKilnInputs := []string{historicalWebHTML2ParagraphsPath, historicalWebVectorsPath}
+	wantInputs := []string{historicalWebVectorsPath, historicalWebHTML2ParagraphsPath, historicalWebHTTP10RequestLinePath}
+	wantKilnInputs := []string{historicalWebHTML2ParagraphsPath, historicalWebHTTP10RequestLinePath, historicalWebVectorsPath}
 	if got := repositoryInputsForPackage("python/historical-web"); !reflect.DeepEqual(got, wantInputs) {
 		t.Fatalf("fallback hash inputs = %v; want %v", got, wantInputs)
 	}
@@ -83,12 +86,19 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 	if err := os.WriteFile(paragraphVector, []byte("initial paragraphs\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
+	http10Vector := filepath.Join(root, filepath.FromSlash(historicalWebHTTP10RequestLinePath))
+	if err := os.MkdirAll(filepath.Dir(http10Vector), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(http10Vector, []byte("initial HTTP/1.0\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
 	pkg := discovery.Package{Name: "python/historical-web", Language: "python", Path: packageRoot}
 	before, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(paragraphVector, []byte("changed paragraphs\n"), 0o644); err != nil {
+	if err := os.WriteFile(http10Vector, []byte("changed HTTP/1.0\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
