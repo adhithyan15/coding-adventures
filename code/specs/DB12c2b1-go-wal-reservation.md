@@ -41,3 +41,19 @@ capacity and damaged tails with a blank suffix. Retain the exact append
 tests and rerun its independent HDD cuts. Check detached images, coverage,
 both build lists, race, vet, guided inputs and clean controls for stopping
 the capture at the first vacant page or reading outside the reservation.
+
+## Local verification
+
+The implementation and append refactor are in `62ae519af87`. An
+independent scripted reader matched 360 read and short-block refusals
+across all block positions at five log widths. It checked bounds before
+reads, failure order after an early damaged page, detached record images,
+and the distinction between a classified damage and a hard safety
+refusal. An independent caller replayed the 66 existing HDD append cuts
+and checked shared capacity error identity. Race and vet passed.
+
+Both command lists passed on Linux for both packages at 100% statement
+coverage with race and vet. Module tidy passed. Each package completed
+100,000 guided inputs and rejected both of its mutation controls.
+Build discovery added only the reservation, its eight platform edges
+and the incoming append edge. All existing recipes matched.
