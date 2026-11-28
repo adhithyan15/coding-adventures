@@ -254,6 +254,44 @@ enum RepositorySourceInputBoundaryProjection {
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
+              "id": "repository-database-media-ftl-page-map-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-page-map"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-page-map.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-page-map tests read their exact shared DB05a vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-database-media-ftl-page-reclamation-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-page-map"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-page-reclamation.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-page-map tests read their exact shared DB05c2a vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
               "id": "repository-database-media-hdd-crash-cuts-fixture-inputs",
               "input_origin": "repository",
               "applies_to": {

@@ -402,14 +402,17 @@ var (
 	gameInputFrameV1Paths            = []string{"code/specs/fixtures/game-input-frame-v1"}
 	nandFlashFixturePath             = "code/specs/fixtures/database-media-v1/nand-flash.json"
 	nandPageProgramCutsFixturePath   = "code/specs/fixtures/database-media-v1/nand-page-program-cuts.json"
-	nandBlockEraseCutsFixturePath     = "code/specs/fixtures/database-media-v1/nand-block-erase-cuts.json"
+	nandBlockEraseCutsFixturePath    = "code/specs/fixtures/database-media-v1/nand-block-erase-cuts.json"
 	hddSimulatorFixturePath          = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
 	hddWriteCrashCutsFixturePath     = "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json"
+	ftlPageMapFixturePath            = "code/specs/fixtures/database-media-v1/ftl-page-map.json"
+	ftlPageReclamationFixturePath    = "code/specs/fixtures/database-media-v1/ftl-page-reclamation.json"
 	nandFlashFixtureInputs           = []string{nandFlashFixturePath}
 	nandPageProgramCutsFixtureInputs = []string{nandPageProgramCutsFixturePath}
-	nandBlockEraseCutsFixtureInputs   = []string{nandBlockEraseCutsFixturePath}
+	nandBlockEraseCutsFixtureInputs  = []string{nandBlockEraseCutsFixturePath}
 	hddSimulatorFixtureInputs        = []string{hddSimulatorFixturePath}
 	hddWriteCrashCutsFixtureInputs   = []string{hddWriteCrashCutsFixturePath}
+	ftlPageMapFixtureInputs          = []string{ftlPageMapFixturePath, ftlPageReclamationFixturePath}
 	typescriptGameInputFrameInputs   = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -1156,6 +1159,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the exact DB04a shared HDD write crash-cut vector",
 		matches:  isHDDWriteCrashCutsFixture,
 		paths:    hddWriteCrashCutsFixtureInputs,
+	},
+	{
+		name:     "go/ftl-page-map",
+		language: "go",
+		inputs:   "the exact DB05a page-map and DB05c2a reclamation vectors",
+		matches:  isFTLPageMapFixture,
+		paths:    ftlPageMapFixtureInputs,
 	},
 	{
 		name:     "python/trig",
@@ -2202,6 +2212,8 @@ func repositoryInputsForPackage(packageName string) []string {
 		return hddSimulatorFixtureInputs
 	case "go/hdd-write-crash-cuts":
 		return hddWriteCrashCutsFixtureInputs
+	case "go/ftl-page-map":
+		return ftlPageMapFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
 	default:
@@ -2914,6 +2926,10 @@ func isHDDSimulatorFixture(changed string) bool {
 
 func isHDDWriteCrashCutsFixture(changed string) bool {
 	return changed == hddWriteCrashCutsFixturePath
+}
+
+func isFTLPageMapFixture(changed string) bool {
+	return changed == ftlPageMapFixturePath || changed == ftlPageReclamationFixturePath
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while
