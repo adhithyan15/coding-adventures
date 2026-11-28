@@ -64,3 +64,16 @@ crossed validation order, maximum page image, and changed header
 or image bytes. Check image ownership, bounded fuzzing, both
 command lists, race, vet and controlled field-order and data-copy
 failures. Stream replay will establish LSN order separately.
+
+## Local verification
+
+The implementation is in `6aef67b617b`. An independent caller matched
+3,150 crossed scalar and validation-order cases and 4,097 generated
+page images, including the maximum. It compared exact frame bytes,
+preserved lower checksum errors, checked detached results, and
+passed race and vet.
+
+Both command lists passed at 100% statement coverage with race and
+vet. Module tidy, 100,000 guided inputs and both controls passed.
+The build graph added only this package with the verified record
+frame and its checksum dependency.
