@@ -1,4 +1,4 @@
-"""Run a clean control and seven named HDD crash-cut mutants."""
+"""Run clean controls and named HDD crash-cut mutants."""
 
 from __future__ import annotations
 
@@ -69,6 +69,22 @@ MUTANTS = (
         "crash_cuts.go",
         "persisted, acknowledged, err := validateCut(cut)",
         "persisted, acknowledged, err := validateCut(cut)\n\tif cut.Kind == DuringMediaWrite && string(before[int(lba)]) == string(data) {\n\t\tpersisted = 0\n\t}",
+    ),
+    (
+        "describe-accepts-zero-progress",
+        "TestDescribeCrossesEveryKindAndNativePrefixShape",
+        'Describe("during_media_write",0)',
+        "crash_cuts.go",
+        "*cut.WrittenPrefix < 1",
+        "*cut.WrittenPrefix < 0",
+    ),
+    (
+        "describe-marks-lost-ack-as-acknowledged",
+        "TestDescribeCrossesEveryKindAndNativePrefixShape",
+        'Describe("after_media_write_before_response",<nil>)=(8,true',
+        "crash_cuts.go",
+        "return BytesPerSector, false, nil\n\tcase Acknowledged:",
+        "return BytesPerSector, true, nil\n\tcase Acknowledged:",
     ),
 )
 
