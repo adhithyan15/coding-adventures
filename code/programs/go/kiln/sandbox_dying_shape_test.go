@@ -361,6 +361,49 @@ func traceResultClass(text string) string {
 	return "other"
 }
 
+// safeRefusalLineShape reports only enum classes and byte counts for the raw
+// refused line. It is used when a trimmed event summary does not explain why
+// the closed shape regexp did not match; trace arguments are never included.
+func safeRefusalLineShape(line []byte) string {
+	trimmed := strings.TrimSpace(string(line))
+	leading := len(line) - len(bytes.TrimLeft(line, " \t\r"))
+	trailing := len(line) - len(bytes.TrimRight(line, " \t\r"))
+	shape := "not-resume"
+	tailPrefixBytes := 0
+	normalizedBareOpenat := bareOpenatUnknownResume.MatchString(trimmed)
+	if pidEnd := bytes.IndexByte(line, ' '); pidEnd > 0 {
+		rest := strings.TrimSpace(string(line[pidEnd+1:]))
+		if strings.HasPrefix(rest, "<... ") {
+			if resumeEnd := strings.Index(rest, " resumed>"); resumeEnd >= 0 {
+				name := rest[5:resumeEnd]
+				tail := strings.TrimSpace(rest[resumeEnd+len(" resumed>"):])
+				if name == "openat" {
+					switch {
+					case tail == ") = ?":
+						shape = "bare-close-plain-unknown"
+					case strings.HasSuffix(tail, ") = ?"):
+						prefix := strings.TrimSuffix(tail, ") = ?")
+						tailPrefixBytes = len(prefix)
+						if prefix == " <unfinished ...>" {
+							shape = "unfinished-marker-plain-unknown"
+						} else {
+							shape = "argument-tail-plain-unknown"
+						}
+					case strings.HasSuffix(tail, ") = ? <unavailable>"):
+						shape = "unavailable-tag"
+					default:
+						shape = "other-resume-tail"
+					}
+				} else {
+					shape = "other-resume-name"
+				}
+			}
+		}
+	}
+	return fmt.Sprintf("refusal_raw_line_bytes=%d leading_whitespace_bytes=%d trailing_whitespace_bytes=%d resume_tail_shape=%s resume_tail_prefix_bytes=%d normalized_bare_openat_unknown=%t",
+		len(line), leading, trailing, shape, tailPrefixBytes, normalizedBareOpenat)
+}
+
 var (
 	traceErrnoResult   = regexp.MustCompile(`\) = -1 (?:[A-Z][A-Z0-9]* \([^\n]*\)|\(errno [0-9]+\))$`)
 	traceNumericResult = regexp.MustCompile(`\) = -?[0-9]+$`)
@@ -438,6 +481,10 @@ func dyingRefusalDiagnostic(raw []byte, refusalLine, pid int) string {
 	}
 	for _, event := range selected {
 		out.WriteString(event.String())
+		out.WriteByte('\n')
+	}
+	if line := traceLineAt(raw, refusalLine); line != nil {
+		out.WriteString(safeRefusalLineShape(line))
 		out.WriteByte('\n')
 	}
 	if terminalLine > 0 {
@@ -706,6 +753,29 @@ func TestDyingRefusalDiagnosticLabelsNumericPIDReuseAsAmbiguous(t *testing.T) {
 	if !strings.Contains(diagnostic, "terminal_candidate_line=3 class=exit-status-zero linkage=same-numeric-pid-only-generation-unproven") ||
 		!strings.Contains(diagnostic, "spawn_candidate_line=2 class=child-pid-matches-refusal linkage=numeric-pid-reuse-possible") {
 		t.Fatalf("diagnostic overstated numeric-PID identity or omitted reuse evidence: %s", diagnostic)
+	}
+}
+
+func TestSafeRefusalLineShapeClassifiesWhitespaceAndArgumentTail(t *testing.T) {
+	whitespace := safeRefusalLineShape([]byte("202 <... openat resumed>) = ?  \t"))
+	for _, want := range []string{
+		"trailing_whitespace_bytes=3",
+		"resume_tail_shape=bare-close-plain-unknown",
+		"normalized_bare_openat_unknown=true",
+	} {
+		if !strings.Contains(whitespace, want) {
+			t.Fatalf("whitespace-only shape omitted %q: %s", want, whitespace)
+		}
+	}
+	argument := safeRefusalLineShape([]byte(`202 <... openat resumed> AT_FDCWD, "private-path") = ?`))
+	if !strings.Contains(argument, "resume_tail_shape=argument-tail-plain-unknown") ||
+		!strings.Contains(argument, "normalized_bare_openat_unknown=false") ||
+		strings.Contains(argument, "private-path") {
+		t.Fatalf("argument tail was not classified without leaking it: %s", argument)
+	}
+	unavailable := safeRefusalLineShape([]byte("202 <... openat resumed>) = ? <unavailable>"))
+	if !strings.Contains(unavailable, "resume_tail_shape=unavailable-tag") {
+		t.Fatalf("unavailable result was not distinguished: %s", unavailable)
 	}
 }
 
