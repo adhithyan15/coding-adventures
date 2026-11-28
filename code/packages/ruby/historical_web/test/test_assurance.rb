@@ -133,11 +133,11 @@ class TestHistoricalWebAssurance < Minitest::Test
     http.fetch("requests").each do |tc|
       address = value_of(HW::Http09Address.create(tc.fetch("address")), "fixture address")
       encoded = value_of(HW.encode_http09_request(address), "fixture encoding")
-      assert_equal "GET #{tc.fetch('address')}\r\n".b, encoded
+      assert_equal "GET #{tc.fetch("address")}\r\n".b, encoded
       wire = hex_bytes(tc.fetch("wire_hex"))
-      lf_wire = "GET #{tc.fetch('address')}\n".b
-      crlf_wire = "GET #{tc.fetch('address')}\r\n".b
-      assert_includes [lf_wire, crlf_wire], wire, "fixture framing for #{tc.fetch('address')}"
+      lf_wire = "GET #{tc.fetch("address")}\n".b
+      crlf_wire = "GET #{tc.fetch("address")}\r\n".b
+      assert_includes [lf_wire, crlf_wire], wire, "fixture framing for #{tc.fetch("address")}"
       assert_equal tc.fetch("address"), value_of(HW.parse_http09_request(wire), "fixture request").value
     end
     http.fetch("invalid_addresses").each do |address|
@@ -163,7 +163,7 @@ class TestHistoricalWebAssurance < Minitest::Test
     end
 
     vectors.fetch("html-tags-1992").each do |tc|
-      document = value_of(HW.parse_html_tags_1992(tc.fetch("source")), "HTML #{tc.fetch('id')}")
+      document = value_of(HW.parse_html_tags_1992(tc.fetch("source")), "HTML #{tc.fetch("id")}")
       assert_arena_well_formed(document)
       assert_equal tc.fetch("tree"), roots_json(document), tc.fetch("id")
     end
@@ -323,19 +323,19 @@ class TestHistoricalWebAssurance < Minitest::Test
       expected = wire_oracle(data)
       request = HW.parse_http09_request(data)
       wire_matches = if expected.nil?
-                       !request.ok?
-                     else
-                       request.ok? && request.value.value == expected
-                     end
+        !request.ok?
+      else
+        request.ok? && request.value.value == expected
+      end
       next FUZZ::Outcome.crash("wire-oracle-mismatch", ["assurance"]) unless wire_matches
 
       ascii = data.bytes.all? { |byte| byte <= 0x7f }
       response = HW.decode_http09_response(data)
       response_matches = if ascii
-                           response.ok? && response.value.bytes == data.bytes && response.value.encoding == Encoding::US_ASCII
-                         else
-                           !response.ok? && response.error == :non_ascii
-                         end
+        response.ok? && response.value.bytes == data.bytes && response.value.encoding == Encoding::US_ASCII
+      else
+        !response.ok? && response.error == :non_ascii
+      end
       next FUZZ::Outcome.crash("response-oracle-mismatch", ["assurance"]) unless response_matches
 
       source = data.dup.force_encoding(Encoding::UTF_8)
