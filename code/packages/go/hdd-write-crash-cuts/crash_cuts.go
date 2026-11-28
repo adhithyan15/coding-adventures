@@ -80,6 +80,12 @@ func Apply(before [][]byte, lba int64, data []byte, cut Cut) (Result, error) {
 	return Result{Image: image, Receipt: receipt, PersistedPrefixBytes: persisted}, nil
 }
 
+// Describe validates a cut and reports its exact persisted prefix and
+// acknowledgement without inspecting or allocating media bytes.
+func Describe(cut Cut) (persistedPrefixBytes int, acknowledged bool, err error) {
+	return validateCut(cut)
+}
+
 func validImage(image [][]byte) bool {
 	if len(image) != SectorCount {
 		return false

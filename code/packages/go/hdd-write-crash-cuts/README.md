@@ -34,6 +34,11 @@ The fixed-size receipt contains another copy of the acknowledged data. Crash
 cuts return no receipt, including a cut after all bytes reach media but before
 the response.
 
+`Describe(cut)` applies the same cut admission without inspecting an image or
+request. It reports the persisted byte count and whether the cut acknowledged;
+the full eight-byte unacknowledged cut therefore reports `8, false`. It
+allocates no bytes and has no media side effects.
+
 Refusals are returned in order as `ErrInvalidImageShape`, `ErrInvalidLBA`,
 `ErrInvalidDataLength`, `ErrInvalidCut`, and `ErrInvalidPrefix`. Callers can
 test their identity with `errors.Is`. A valid LBA has range `0..31`; a
@@ -56,9 +61,12 @@ The tests replay the exact shared DB04a vector only after a test-side
 byte-array oracle validates every case and complete declared medium. A
 separate exhaustive sweep covers all 320 LBA/cut combinations, including
 equal-byte interruptions and both LBA boundaries. Fixed-seed compositions
-check 5,000 transitions. Fixture fuzzing accepts malformed inputs as expected
-refusals and replays only completely valid, model-accepted vectors. The clean
-mutation control requires the intended native assertion for each fault.
+check 5,000 transitions. A descriptor cross-product covers every cut kind,
+absent and present prefixes, and native integer boundaries; a separate check
+requires zero allocations. Fixture fuzzing accepts malformed inputs as
+expected refusals and replays only completely valid, model-accepted vectors.
+The clean mutation control requires the intended native assertion for each
+fault.
 
 On Go 1.26.1/Linux/amd64, both `BUILD` and `BUILD_windows` passed with 97.6%
 statement coverage, race, and vet. `FuzzWriteCutHistory` passed 110,000 inputs
