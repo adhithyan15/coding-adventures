@@ -254,6 +254,25 @@ enum RepositorySourceInputBoundaryProjection {
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
+              "id": "repository-database-media-ftl-block-reclamation-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-nand-relocation"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-block-reclamation.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-nand-relocation tests read their exact shared DB05 FTL relocation vectors from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
               "id": "repository-database-media-ftl-copy-aware-victim-fixture-inputs",
               "input_origin": "repository",
               "applies_to": {
@@ -292,6 +311,25 @@ enum RepositorySourceInputBoundaryProjection {
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
+              "id": "repository-database-media-ftl-evacuation-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-nand-relocation"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-evacuation.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-nand-relocation tests read their exact shared DB05 FTL relocation vectors from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
               "id": "repository-database-media-ftl-evacuation-plan-fixture-inputs",
               "input_origin": "repository",
               "applies_to": {
@@ -308,6 +346,44 @@ enum RepositorySourceInputBoundaryProjection {
                 }
               ],
               "reason": "The Go ftl-evacuation-plan tests read their exact shared DB05c3a evacuation vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-database-media-ftl-live-page-copy-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-nand-relocation"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-live-page-copy.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-nand-relocation tests read their exact shared DB05 FTL relocation vectors from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-database-media-ftl-nand-relocation-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-nand-relocation"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-nand-relocation.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-nand-relocation tests read their exact shared DB05 FTL relocation vectors from the repository fixtures.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {

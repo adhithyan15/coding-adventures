@@ -1,0 +1,2148 @@
+{
+  "schema": "coding-adventures.database-media.ftl-evacuation.v1",
+  "cases": [
+    {
+      "name": "replan-after-spent-prefix-and-lost-erase-ack",
+      "logical_count": 1,
+      "physical_count": 6,
+      "page_size": 1,
+      "pages_per_block": 2,
+      "max_completed_erases": 2,
+      "steps": [
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "11",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  0
+                ],
+                "physical_status": [
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "11",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 0,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "22",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "11",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "22",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 1,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "begin",
+          "block": 0,
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "11",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "22",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 1,
+              "incomplete_erase": false
+            }
+          }
+        },
+        {
+          "op": "copy",
+          "cut": {
+            "kind": "after_prefix",
+            "prefix_bytes": 0
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "stale",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "11",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "22",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 1,
+              "incomplete_erase": false
+            },
+            "copy_receipt": {
+              "move": {
+                "logical": 0,
+                "source_physical": 1,
+                "destination_physical": 2
+              },
+              "receipt": {
+                "physical": 2,
+                "published": false,
+                "acknowledged": false
+              }
+            }
+          }
+        },
+        {
+          "op": "copy",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  3
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "11",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "22",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "22",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "copy_receipt": {
+              "move": {
+                "logical": 0,
+                "source_physical": 1,
+                "destination_physical": 3
+              },
+              "receipt": {
+                "physical": 3,
+                "published": true,
+                "acknowledged": true
+              }
+            }
+          }
+        },
+        {
+          "op": "finish",
+          "erase_cut": {
+            "kind": "after_media"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  3
+                ],
+                "physical_status": [
+                  "free",
+                  "free",
+                  "stale",
+                  "live",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "22",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 1,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "erase_receipt": {
+              "block": 0,
+              "released": true,
+              "acknowledged": false
+            }
+          }
+        },
+        {
+          "op": "read",
+          "logical": 0,
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  3
+                ],
+                "physical_status": [
+                  "free",
+                  "free",
+                  "stale",
+                  "live",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "22",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 1,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "read": {
+              "data_hex": "22",
+              "present": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancel-keeps-published-copy-and-host-write",
+      "logical_count": 1,
+      "physical_count": 6,
+      "page_size": 1,
+      "pages_per_block": 2,
+      "max_completed_erases": 2,
+      "steps": [
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "31",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  0
+                ],
+                "physical_status": [
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "31",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 0,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "32",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "31",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 1,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "begin",
+          "block": 0,
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "31",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 1,
+              "incomplete_erase": false
+            }
+          }
+        },
+        {
+          "op": "copy",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "31",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "copy_receipt": {
+              "move": {
+                "logical": 0,
+                "source_physical": 1,
+                "destination_physical": 2
+              },
+              "receipt": {
+                "physical": 2,
+                "published": true,
+                "acknowledged": true
+              }
+            }
+          }
+        },
+        {
+          "op": "cancel",
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "31",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "33",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  3
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "31",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "33",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 3,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "read",
+          "logical": 0,
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  3
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "31",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "32",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "33",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "read": {
+              "data_hex": "33",
+              "present": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "partial-erase-remains-fenced-through-lost-ack",
+      "logical_count": 1,
+      "physical_count": 6,
+      "page_size": 1,
+      "pages_per_block": 2,
+      "max_completed_erases": 2,
+      "steps": [
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "41",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  0
+                ],
+                "physical_status": [
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "41",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 0,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "42",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "41",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 1,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "begin",
+          "block": 0,
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "41",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 1,
+              "incomplete_erase": false
+            }
+          }
+        },
+        {
+          "op": "copy",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "41",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "copy_receipt": {
+              "move": {
+                "logical": 0,
+                "source_physical": 1,
+                "destination_physical": 2
+              },
+              "receipt": {
+                "physical": 2,
+                "published": true,
+                "acknowledged": true
+              }
+            }
+          }
+        },
+        {
+          "op": "finish",
+          "erase_cut": {
+            "kind": "after_prefix",
+            "prefix_pages": 1
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": true
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": true
+            },
+            "erase_receipt": {
+              "block": 0,
+              "released": false,
+              "acknowledged": false
+            }
+          }
+        },
+        {
+          "op": "cancel",
+          "expected": {
+            "error": "evacuation_block_incomplete",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": true
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": true
+            }
+          }
+        },
+        {
+          "op": "finish",
+          "erase_cut": {
+            "kind": "after_media"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "free",
+                  "free",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 1,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "erase_receipt": {
+              "block": 0,
+              "released": true,
+              "acknowledged": false
+            }
+          }
+        },
+        {
+          "op": "read",
+          "logical": 0,
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "free",
+                  "free",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "42",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 2,
+              "blocks": [
+                {
+                  "completed_erases": 1,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "read": {
+              "data_hex": "42",
+              "present": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "empty-active-target-erases-without-copy",
+      "logical_count": 1,
+      "physical_count": 6,
+      "page_size": 1,
+      "pages_per_block": 2,
+      "max_completed_erases": 1,
+      "steps": [
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "51",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  0
+                ],
+                "physical_status": [
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "51",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 1,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 0,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "52",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "51",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "52",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 1,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 1,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "begin",
+          "block": 0,
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  1
+                ],
+                "physical_status": [
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "51",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "52",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 1,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 1,
+              "incomplete_erase": false
+            }
+          }
+        },
+        {
+          "op": "write",
+          "logical": 0,
+          "payload_hex": "53",
+          "cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "stale",
+                  "stale",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "51",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "52",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "53",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 1,
+              "blocks": [
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": true,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "write_receipt": {
+              "physical": 2,
+              "published": true,
+              "acknowledged": true
+            }
+          }
+        },
+        {
+          "op": "finish",
+          "erase_cut": {
+            "kind": "complete"
+          },
+          "expected": {
+            "error": "",
+            "state": {
+              "map": {
+                "logical_to_physical": [
+                  2
+                ],
+                "physical_status": [
+                  "free",
+                  "free",
+                  "live",
+                  "free",
+                  "free",
+                  "free"
+                ],
+                "reservation": null
+              },
+              "pages": [
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "53",
+                  "programmed": true
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                },
+                {
+                  "bytes_hex": "ff",
+                  "programmed": false
+                }
+              ],
+              "pages_per_block": 2,
+              "max_completed_erases": 1,
+              "blocks": [
+                {
+                  "completed_erases": 1,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                },
+                {
+                  "completed_erases": 0,
+                  "incomplete_erase": false
+                }
+              ]
+            },
+            "active": false,
+            "progress": {
+              "block": 0,
+              "remaining_live_pages": 0,
+              "incomplete_erase": false
+            },
+            "erase_receipt": {
+              "block": 0,
+              "released": true,
+              "acknowledged": true
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

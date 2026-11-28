@@ -1,0 +1,1002 @@
+{
+  "schema": "coding-adventures.database-media.ftl-live-page-copy.v1",
+  "cases": [
+    {
+      "name": "before_accept_keeps_destination_free",
+      "logical_count": 4,
+      "physical_count": 9,
+      "page_size": 2,
+      "pages_per_block": 3,
+      "max_completed_erases": 2,
+      "setup_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "1020"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "3040"
+        },
+        {
+          "logical": 2,
+          "payload_hex": "ffff"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "5060"
+        }
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "move": {
+        "logical": 0,
+        "source_physical": 0,
+        "destination_physical": 4
+      },
+      "intervening_writes": [],
+      "cut": {
+        "kind": "before_accept"
+      },
+      "expected": {
+        "receipt": {
+          "physical": 4,
+          "published": false,
+          "acknowledged": false
+        },
+        "state": {
+          "map": {
+            "logical_to_physical": [
+              0,
+              3,
+              2,
+              -1
+            ],
+            "physical_status": [
+              "live",
+              "stale",
+              "live",
+              "live",
+              "free",
+              "free",
+              "free",
+              "free",
+              "free"
+            ],
+            "reservation": null
+          },
+          "pages": [
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "3040",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "5060",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            }
+          ],
+          "pages_per_block": 3,
+          "max_completed_erases": 2,
+          "blocks": [
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "zero_prefix_spends_destination",
+      "logical_count": 4,
+      "physical_count": 9,
+      "page_size": 2,
+      "pages_per_block": 3,
+      "max_completed_erases": 2,
+      "setup_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "1020"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "3040"
+        },
+        {
+          "logical": 2,
+          "payload_hex": "ffff"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "5060"
+        }
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "move": {
+        "logical": 0,
+        "source_physical": 0,
+        "destination_physical": 4
+      },
+      "intervening_writes": [],
+      "cut": {
+        "kind": "after_prefix",
+        "prefix_bytes": 0
+      },
+      "expected": {
+        "receipt": {
+          "physical": 4,
+          "published": false,
+          "acknowledged": false
+        },
+        "state": {
+          "map": {
+            "logical_to_physical": [
+              0,
+              3,
+              2,
+              -1
+            ],
+            "physical_status": [
+              "live",
+              "stale",
+              "live",
+              "live",
+              "stale",
+              "free",
+              "free",
+              "free",
+              "free"
+            ],
+            "reservation": null
+          },
+          "pages": [
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "3040",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "5060",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            }
+          ],
+          "pages_per_block": 3,
+          "max_completed_erases": 2,
+          "blocks": [
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "prefix_keeps_old_mapping",
+      "logical_count": 4,
+      "physical_count": 9,
+      "page_size": 2,
+      "pages_per_block": 3,
+      "max_completed_erases": 2,
+      "setup_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "1020"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "3040"
+        },
+        {
+          "logical": 2,
+          "payload_hex": "ffff"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "5060"
+        }
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "move": {
+        "logical": 0,
+        "source_physical": 0,
+        "destination_physical": 4
+      },
+      "intervening_writes": [],
+      "cut": {
+        "kind": "after_prefix",
+        "prefix_bytes": 1
+      },
+      "expected": {
+        "receipt": {
+          "physical": 4,
+          "published": false,
+          "acknowledged": false
+        },
+        "state": {
+          "map": {
+            "logical_to_physical": [
+              0,
+              3,
+              2,
+              -1
+            ],
+            "physical_status": [
+              "live",
+              "stale",
+              "live",
+              "live",
+              "stale",
+              "free",
+              "free",
+              "free",
+              "free"
+            ],
+            "reservation": null
+          },
+          "pages": [
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "3040",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "5060",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "10ff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            }
+          ],
+          "pages_per_block": 3,
+          "max_completed_erases": 2,
+          "blocks": [
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "media_completion_loses_ack",
+      "logical_count": 4,
+      "physical_count": 9,
+      "page_size": 2,
+      "pages_per_block": 3,
+      "max_completed_erases": 2,
+      "setup_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "1020"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "3040"
+        },
+        {
+          "logical": 2,
+          "payload_hex": "ffff"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "5060"
+        }
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "move": {
+        "logical": 0,
+        "source_physical": 0,
+        "destination_physical": 4
+      },
+      "intervening_writes": [],
+      "cut": {
+        "kind": "after_media"
+      },
+      "expected": {
+        "receipt": {
+          "physical": 4,
+          "published": true,
+          "acknowledged": false
+        },
+        "state": {
+          "map": {
+            "logical_to_physical": [
+              4,
+              3,
+              2,
+              -1
+            ],
+            "physical_status": [
+              "stale",
+              "stale",
+              "live",
+              "live",
+              "live",
+              "free",
+              "free",
+              "free",
+              "free"
+            ],
+            "reservation": null
+          },
+          "pages": [
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "3040",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "5060",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            }
+          ],
+          "pages_per_block": 3,
+          "max_completed_erases": 2,
+          "blocks": [
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "complete_copy",
+      "logical_count": 4,
+      "physical_count": 9,
+      "page_size": 2,
+      "pages_per_block": 3,
+      "max_completed_erases": 2,
+      "setup_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "1020"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "3040"
+        },
+        {
+          "logical": 2,
+          "payload_hex": "ffff"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "5060"
+        }
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "move": {
+        "logical": 0,
+        "source_physical": 0,
+        "destination_physical": 4
+      },
+      "intervening_writes": [],
+      "cut": {
+        "kind": "complete"
+      },
+      "expected": {
+        "receipt": {
+          "physical": 4,
+          "published": true,
+          "acknowledged": true
+        },
+        "state": {
+          "map": {
+            "logical_to_physical": [
+              4,
+              3,
+              2,
+              -1
+            ],
+            "physical_status": [
+              "stale",
+              "stale",
+              "live",
+              "live",
+              "live",
+              "free",
+              "free",
+              "free",
+              "free"
+            ],
+            "reservation": null
+          },
+          "pages": [
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "3040",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "5060",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            }
+          ],
+          "pages_per_block": 3,
+          "max_completed_erases": 2,
+          "blocks": [
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "all_ones_zero_prefix_is_spent",
+      "logical_count": 4,
+      "physical_count": 9,
+      "page_size": 2,
+      "pages_per_block": 3,
+      "max_completed_erases": 2,
+      "setup_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "1020"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "3040"
+        },
+        {
+          "logical": 2,
+          "payload_hex": "ffff"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "5060"
+        }
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "move": {
+        "logical": 2,
+        "source_physical": 2,
+        "destination_physical": 5
+      },
+      "intervening_writes": [],
+      "cut": {
+        "kind": "after_prefix",
+        "prefix_bytes": 0
+      },
+      "expected": {
+        "receipt": {
+          "physical": 5,
+          "published": false,
+          "acknowledged": false
+        },
+        "state": {
+          "map": {
+            "logical_to_physical": [
+              0,
+              3,
+              2,
+              -1
+            ],
+            "physical_status": [
+              "live",
+              "stale",
+              "live",
+              "live",
+              "free",
+              "stale",
+              "free",
+              "free",
+              "free"
+            ],
+            "reservation": null
+          },
+          "pages": [
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "3040",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "5060",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            }
+          ],
+          "pages_per_block": 3,
+          "max_completed_erases": 2,
+          "blocks": [
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "stale_source_after_host_write",
+      "logical_count": 4,
+      "physical_count": 9,
+      "page_size": 2,
+      "pages_per_block": 3,
+      "max_completed_erases": 2,
+      "setup_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "1020"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "3040"
+        },
+        {
+          "logical": 2,
+          "payload_hex": "ffff"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "5060"
+        }
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "move": {
+        "logical": 0,
+        "source_physical": 0,
+        "destination_physical": 4
+      },
+      "intervening_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "7071"
+        }
+      ],
+      "cut": {
+        "kind": "complete"
+      },
+      "expected": {
+        "error": "copy_source_changed",
+        "state": {
+          "map": {
+            "logical_to_physical": [
+              4,
+              3,
+              2,
+              -1
+            ],
+            "physical_status": [
+              "stale",
+              "stale",
+              "live",
+              "live",
+              "live",
+              "free",
+              "free",
+              "free",
+              "free"
+            ],
+            "reservation": null
+          },
+          "pages": [
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "3040",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "5060",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "7071",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            }
+          ],
+          "pages_per_block": 3,
+          "max_completed_erases": 2,
+          "blocks": [
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "planned_destination_became_occupied",
+      "logical_count": 4,
+      "physical_count": 9,
+      "page_size": 2,
+      "pages_per_block": 3,
+      "max_completed_erases": 2,
+      "setup_writes": [
+        {
+          "logical": 0,
+          "payload_hex": "1020"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "3040"
+        },
+        {
+          "logical": 2,
+          "payload_hex": "ffff"
+        },
+        {
+          "logical": 1,
+          "payload_hex": "5060"
+        }
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "move": {
+        "logical": 0,
+        "source_physical": 0,
+        "destination_physical": 4
+      },
+      "intervening_writes": [
+        {
+          "logical": 3,
+          "payload_hex": "8182"
+        }
+      ],
+      "cut": {
+        "kind": "complete"
+      },
+      "expected": {
+        "error": "copy_destination_unavailable",
+        "state": {
+          "map": {
+            "logical_to_physical": [
+              0,
+              3,
+              2,
+              4
+            ],
+            "physical_status": [
+              "live",
+              "stale",
+              "live",
+              "live",
+              "live",
+              "free",
+              "free",
+              "free",
+              "free"
+            ],
+            "reservation": null
+          },
+          "pages": [
+            {
+              "bytes_hex": "1020",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "3040",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "5060",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "8182",
+              "programmed": true
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            },
+            {
+              "bytes_hex": "ffff",
+              "programmed": false
+            }
+          ],
+          "pages_per_block": 3,
+          "max_completed_erases": 2,
+          "blocks": [
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            },
+            {
+              "completed_erases": 0,
+              "incomplete_erase": false
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
