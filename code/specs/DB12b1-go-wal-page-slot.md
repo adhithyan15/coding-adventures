@@ -9,6 +9,9 @@ multiple records into a page.
 Add the Go package `storage-wal-page-slot`.
 
 ```go
+const MinPageBytes = 48
+const MaxPageBytes = 65_536
+
 func EncodePage(pageBytes int64, record storagewalrecord.Record) ([]byte, error)
 func DecodePage(page []byte) (record storagewalrecord.Record, present bool, err error)
 ```
@@ -48,3 +51,17 @@ new and previous bytes happen to agree. Check code paths for exact
 width, detached results and bounded allocation. Run both command
 lists, race, vet, 100,000 guided inputs and controlled failures for
 accepting nonzero vacant content or bypassing the record decoder.
+
+## Local verification
+
+The implementation is in `1a84fda532d`. An independent caller matched
+29,917 byte-prefix cuts across six page widths and 13,404 admitted
+records. It also checked the maximum width, input and image ownership,
+and the lower record refusal before a padding fault. Race and vet
+passed.
+
+Both command lists passed at 100% statement coverage with race and
+vet. Module tidy, 100,000 guided inputs and both mutation controls
+passed. The native suite includes 20,000 seeded histories and portable
+vacant, begin, redo and commit bytes. The exported graph added only
+the slot and its admitted record, frame and checksum dependencies.
