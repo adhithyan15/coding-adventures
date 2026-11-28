@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-_METHODS = frozenset({"GET", "HEAD", "POST"})
+_METHOD_BYTES = frozenset({b"GET", b"HEAD", b"POST"})
 _TARGET_PUNCTUATION = frozenset(b"/._-")
+_REQUEST_LINE_SUFFIX = b" HTTP/1.0\r\n"
 
 
 def _valid_target_bytes(target: bytes) -> bool:
@@ -27,44 +28,29 @@ def _encode_argument(value: str) -> bytes:
 
 @dataclass(frozen=True, slots=True)
 class Http10RequestLine:
-    """Validated request-line fields; no headers or body are represented."""
+    """Request-line fields; no headers or body are represented."""
 
     method: str
     target: str
-
-    def __post_init__(self) -> None:
-        if type(self.method) is not str or type(self.target) is not str:
-            raise TypeError("method and target must be exact built-in str values")
-        if self.method not in _METHODS:
-            raise ValueError("unsupported HTTP/1.0 request method")
-        if not _valid_target_bytes(_encode_argument(self.target)):
-            raise ValueError("invalid HTTP/1.0 request target")
 
 
 def parse_http10_request_line(wire: bytes) -> Http10RequestLine:
     """Parse exactly one HTTP/1.0 line using the `http-1.0-request-line-1996` subset."""
     if type(wire) is not bytes:
         raise TypeError("wire must be an exact built-in bytes value")
-    if not wire.endswith(b"\r\n"):
-        raise ValueError("HTTP/1.0 request line must end with CRLF")
+    if not wire.endswith(_REQUEST_LINE_SUFFIX):
+        raise ValueError("request line must end with SP HTTP/1.0 CRLF")
 
-    line = wire[:-2]
-    first_space = line.find(b" ")
-    second_space = line.find(b" ", first_space + 1)
-    if first_space < 0 or second_space < 0:
-        raise ValueError("HTTP/1.0 request line needs two SP separators")
-    if line.find(b" ", second_space + 1) >= 0:
-        raise ValueError("HTTP/1.0 request line uses exactly two SP separators")
-
-    method_bytes = line[:first_space]
-    target_bytes = line[first_space + 1 : second_space]
-    version = line[second_space + 1 :]
-    if method_bytes not in (b"GET", b"HEAD", b"POST"):
+    suffix_start = len(wire) - len(_REQUEST_LINE_SUFFIX)
+    method_separator = wire.find(b" ", 0, 5)
+    if method_separator < 0:
+        raise ValueError("HTTP/1.0 request line needs a method SP target")
+    method_bytes = wire[:method_separator]
+    target_bytes = wire[method_separator + 1 : suffix_start]
+    if method_bytes not in _METHOD_BYTES:
         raise ValueError("unsupported HTTP/1.0 request method")
     if not _valid_target_bytes(target_bytes):
         raise ValueError("invalid HTTP/1.0 request target")
-    if version != b"HTTP/1.0":
-        raise ValueError("request line must use HTTP/1.0")
 
     return Http10RequestLine(
         method_bytes.decode("ascii"), target_bytes.decode("ascii")
@@ -77,7 +63,7 @@ def encode_http10_request_line(method: str, target: str) -> bytes:
         raise TypeError("method and target must be exact built-in str values")
     method_bytes = _encode_argument(method)
     target_bytes = _encode_argument(target)
-    if method not in _METHODS:
+    if method_bytes not in _METHOD_BYTES:
         raise ValueError("unsupported HTTP/1.0 request method")
     if not _valid_target_bytes(target_bytes):
         raise ValueError("invalid HTTP/1.0 request target")
