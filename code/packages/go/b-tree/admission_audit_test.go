@@ -73,15 +73,16 @@ func auditNode(
 	}
 	seen[node] = struct{}{}
 	n := len(node.keys)
+	maxKeys := 2*uint(tree.t) - 1
 	if n != len(node.values) {
 		return fmt.Errorf("key/value width mismatch at depth %d: %d/%d", depth, n, len(node.values))
 	}
 	if isRoot {
-		if n < 1 || n > 2*tree.t-1 {
-			return fmt.Errorf("root occupancy %d outside 1..%d", n, 2*tree.t-1)
+		if n < 1 || uint(n) > maxKeys {
+			return fmt.Errorf("root occupancy %d outside 1..%d", n, maxKeys)
 		}
-	} else if n < tree.t-1 || n > 2*tree.t-1 {
-		return fmt.Errorf("node occupancy %d outside %d..%d", n, tree.t-1, 2*tree.t-1)
+	} else if n < tree.t-1 || uint(n) > maxKeys {
+		return fmt.Errorf("node occupancy %d outside %d..%d", n, tree.t-1, maxKeys)
 	}
 	for index, key := range node.keys {
 		if index > 0 && !tree.less(node.keys[index-1], key) {
@@ -198,6 +199,27 @@ func compareTreeWithMap(t *testing.T, tree *BTree[int, string], model map[int]st
 				t.Fatalf("RangeQuery(%d,%d)=%v, want %v", low, high, got, expected)
 			}
 		}
+	}
+}
+
+func compareTreeStructureWithMap(t *testing.T, tree *BTree[int, string], model map[int]string) {
+	t.Helper()
+	walked, err := auditPrivateTree(tree)
+	if err != nil {
+		t.Fatalf("independent structural audit: %v", err)
+	}
+	want := auditExpected(tree, model)
+	if len(want) == 0 {
+		want = nil
+	}
+	if walked.keys != len(model) || !reflect.DeepEqual(walked.entries, want) {
+		t.Fatalf("private traversal=%v (%d keys), model=%v", walked.entries, walked.keys, want)
+	}
+	if tree.Len() != len(model) || !tree.IsValid() {
+		t.Fatalf("public Len/IsValid = %d/%t; want %d/true", tree.Len(), tree.IsValid(), len(model))
+	}
+	if got := tree.Inorder(); !reflect.DeepEqual(got, want) {
+		t.Fatalf("Inorder=%v, want %v", got, want)
 	}
 }
 
@@ -348,7 +370,7 @@ func TestIndependentAuditBorrowFromBothSiblingDirections(t *testing.T) {
 }
 
 func TestIndependentAuditRejectsCorruptBoundsLengthsAndIdentity(t *testing.T) {
-	t.Run("ancestor separator bound and known IsValid gap", func(t *testing.T) {
+	t.Run("ancestor separator violation", func(t *testing.T) {
 		tree := newIntTree(2)
 		for _, key := range []int{1, 2, 3, 4} {
 			tree.Insert(key, fmt.Sprintf("v%d", key))
@@ -416,5 +438,159 @@ func TestIndependentAuditRejectsCorruptBoundsLengthsAndIdentity(t *testing.T) {
 		if _, err := auditPrivateTree(tree); err == nil {
 			t.Fatal("walker accepted a cyclic child pointer")
 		}
+	})
+}
+
+func TestIsValidRejectsMalformedPrivateStructures(t *testing.T) {
+	leaf := func(keys ...int) *bTreeNode[int, string] {
+		values := make([]string, len(keys))
+		for i, key := range keys {
+			values[i] = fmt.Sprintf("v%d", key)
+		}
+		return &bTreeNode[int, string]{keys: append([]int(nil), keys...), values: values, isLeaf: true}
+	}
+	valid := func() *BTree[int, string] {
+		tree := newIntTree(2)
+		for _, key := range []int{1, 2, 3, 4} {
+			tree.Insert(key, fmt.Sprintf("v%d", key))
+		}
+		return tree
+	}
+
+	tests := []struct {
+		name    string
+		corrupt func(*BTree[int, string])
+	}{
+		{
+			name: "ancestor separator bound",
+			corrupt: func(tree *BTree[int, string]) {
+				tree.root.children[0].keys[0] = tree.root.keys[0] + 1
+			},
+		},
+		{
+			name: "mismatched key and value lengths",
+			corrupt: func(tree *BTree[int, string]) {
+				tree.root.values = nil
+			},
+		},
+		{
+			name: "nil child",
+			corrupt: func(tree *BTree[int, string]) {
+				tree.root.children[0] = nil
+			},
+		},
+		{
+			name: "shared child",
+			corrupt: func(tree *BTree[int, string]) {
+				tree.root.children[1] = tree.root.children[0]
+			},
+		},
+		{
+			name: "cycle",
+			corrupt: func(tree *BTree[int, string]) {
+				tree.root.children[0] = tree.root
+			},
+		},
+		{
+			name: "leaf with child",
+			corrupt: func(tree *BTree[int, string]) {
+				tree.root = leaf(7)
+				tree.root.children = []*bTreeNode[int, string]{leaf(8)}
+				tree.size = 1
+			},
+		},
+		{
+			name: "different leaf depths",
+			corrupt: func(tree *BTree[int, string]) {
+				tree.root = &bTreeNode[int, string]{
+					keys: []int{10}, values: []string{"v10"}, isLeaf: false,
+					children: []*bTreeNode[int, string]{
+						{keys: []int{5}, values: []string{"v5"}, isLeaf: false, children: []*bTreeNode[int, string]{leaf(2), leaf(7)}},
+						leaf(12),
+					},
+				}
+				tree.size = 5
+			},
+		},
+		{
+			name: "empty occupied root",
+			corrupt: func(tree *BTree[int, string]) {
+				tree.root = leaf()
+				tree.size = 0
+			},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tree := valid()
+			test.corrupt(tree)
+			if _, err := auditPrivateTree(tree); err == nil {
+				t.Fatal("independent audit accepted malformed tree")
+			}
+			if tree.IsValid() {
+				t.Fatal("IsValid accepted malformed private structure")
+			}
+		})
+	}
+}
+
+func TestIsValidSupportsNonComparableKeys(t *testing.T) {
+	less := func(a, b []int) bool {
+		limit := len(a)
+		if len(b) < limit {
+			limit = len(b)
+		}
+		for i := 0; i < limit; i++ {
+			if a[i] != b[i] {
+				return a[i] < b[i]
+			}
+		}
+		return len(a) < len(b)
+	}
+	tree := New[[]int, string](2, less)
+	for i, key := range [][]int{{2}, {1}, {4}, {3}, {5}, {0}} {
+		tree.Insert(key, fmt.Sprintf("value-%d", i))
+	}
+	if !tree.IsValid() {
+		t.Fatal("IsValid rejected a valid tree with non-comparable slice keys")
+	}
+}
+
+func TestIsValidHandlesLargeMinimumDegreesWithoutOverflow(t *testing.T) {
+	maxInt := int(^uint(0) >> 1)
+	for _, degree := range []int{2, maxInt/2 + 1, maxInt/2 + 2, maxInt} {
+		tree := newIntTree(degree)
+		tree.Insert(7, "seven")
+		if !tree.IsValid() {
+			t.Errorf("IsValid rejected a one-entry tree with degree %d", degree)
+		}
+		if _, err := auditPrivateTree(tree); err != nil {
+			t.Errorf("independent walker rejected a one-entry tree with degree %d: %v", degree, err)
+		}
+	}
+}
+
+func FuzzIsValidAgainstIndependentAudit(f *testing.F) {
+	f.Add([]byte{0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14})
+	f.Add([]byte{1, 5, 9, 13, 17, 21, 25, 29})
+	f.Fuzz(func(t *testing.T, input []byte) {
+		if len(input) > 64 {
+			input = input[:64]
+		}
+		tree := newIntTree(2)
+		model := make(map[int]string)
+		for step, command := range input {
+			key := int(command>>2)%31 - 15
+			if command%3 != 0 {
+				value := fmt.Sprintf("fuzz-%d-%d", key, step)
+				tree.Insert(key, value)
+				model[key] = value
+			} else {
+				tree.Delete(key)
+				delete(model, key)
+			}
+			compareTreeStructureWithMap(t, tree, model)
+		}
+		compareTreeWithMap(t, tree, model)
 	})
 }
