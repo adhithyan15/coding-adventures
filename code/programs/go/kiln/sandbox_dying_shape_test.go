@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -137,6 +138,11 @@ func spawnedTracePID(line []byte) int {
 	return parsedSpawnPID(line, nil, parent, pid)
 }
 
+func dyingTraceDigest(raw []byte) string {
+	digest := sha256.Sum256(raw)
+	return fmt.Sprintf("trace_sha256=%x trace_bytes=%d", digest, len(raw))
+}
+
 // parsedSplitSpawnPID accepts only a matching unfinished/resumed spawn pair
 // that the production parser turns into the expected parent/child processes.
 func parsedSplitSpawnPID(start, resumed []byte) int {
@@ -220,35 +226,277 @@ func parsedTerminalTracePID(line []byte) int {
 	return parsed.Exits[0].Pid
 }
 
-// dyingRefusalDiagnostic prints the refused line and a bounded sequence of
-// later events for the same numeric PID, including any parsed direct spawn
-// that could make a later terminal candidate belong to a reused generation.
+const (
+	maxDyingDiagnosticEvents = 18
+	maxDyingDiagnosticBytes  = 4096
+)
+
+type safeDyingEvent struct {
+	line   int
+	kind   string
+	name   string
+	result string
+	link   string
+}
+
+func (event safeDyingEvent) String() string {
+	text := fmt.Sprintf("line=%d event=%s", event.line, event.kind)
+	if event.name != "" {
+		text += " name=" + event.name
+	}
+	if event.result != "" {
+		text += " result=" + event.result
+	}
+	if event.link != "" {
+		text += " link=" + event.link
+	}
+	return text
+}
+
+func safeDyingRefusalReason(reason string) string {
+	switch reason {
+	case "unresumed-call", "unparsable-line", "result":
+		return reason
+	default:
+		return "other"
+	}
+}
+
+// summarizeDyingTraceLine converts one same-PID strace line to a small
+// whitelist of event, syscall, result, and linkage labels. It never returns
+// arguments, paths, environment values, or buffer contents.
+func summarizeDyingTraceLine(lineNo int, line []byte) (safeDyingEvent, bool) {
+	pid := linePID(line)
+	if pid <= 0 {
+		return safeDyingEvent{}, false
+	}
+	space := bytes.IndexByte(line, ' ')
+	if space < 0 || space+1 >= len(line) {
+		return safeDyingEvent{}, false
+	}
+	rest := strings.TrimSpace(string(line[space+1:]))
+	event := safeDyingEvent{line: lineNo}
+	switch {
+	case strings.HasPrefix(rest, "+++ exited with "):
+		fields := strings.Fields(rest)
+		if len(fields) == 5 && fields[0] == "+++" && fields[1] == "exited" && fields[2] == "with" && fields[4] == "+++" {
+			if fields[3] == "0" {
+				event.kind, event.result = "terminal", "exit-status-zero"
+			} else if _, err := strconv.ParseUint(fields[3], 10, 32); err == nil {
+				event.kind, event.result = "terminal", "exit-status-nonzero"
+			}
+		}
+		return event, event.kind != ""
+	case strings.HasPrefix(rest, "+++ killed by "):
+		fields := strings.Fields(rest)
+		if len(fields) == 5 && fields[0] == "+++" && fields[1] == "killed" && fields[2] == "by" && fields[4] == "+++" && safeSignal(fields[3]) {
+			event.kind, event.name = "terminal", fields[3]
+		}
+		return event, event.kind != ""
+	case strings.HasPrefix(rest, "--- SIG"):
+		nameEnd := strings.IndexByte(rest, ' ')
+		if nameEnd > 4 && safeSignal(rest[4:nameEnd]) {
+			event.kind, event.name = "signal", rest[4:nameEnd]
+		}
+		return event, event.kind != ""
+	case strings.HasPrefix(rest, "<... "):
+		end := strings.Index(rest, " resumed>")
+		if end < 0 || !safeSyscallName(rest[5:end]) {
+			return safeDyingEvent{}, false
+		}
+		event.kind, event.name = "resume", rest[5:end]
+		event.result = traceResultClass(rest[end+len(" resumed>"):])
+		return event, true
+	default:
+		open := strings.IndexByte(rest, '(')
+		if open <= 0 || !safeSyscallName(rest[:open]) {
+			return safeDyingEvent{}, false
+		}
+		event.kind, event.name = "call", rest[:open]
+		event.result = traceResultClass(rest)
+		return event, true
+	}
+}
+
+func safeSyscallName(name string) bool {
+	if name == "" || len(name) > 32 {
+		return false
+	}
+	for _, c := range name {
+		if !(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_') {
+			return false
+		}
+	}
+	return true
+}
+
+func safeSignal(name string) bool {
+	if !strings.HasPrefix(name, "SIG") || len(name) > 16 {
+		return false
+	}
+	for _, c := range name {
+		if !(c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
+			return false
+		}
+	}
+	return true
+}
+
+func traceResultClass(text string) string {
+	if strings.HasSuffix(text, "<unfinished ...>") {
+		return "unfinished"
+	}
+	if strings.HasSuffix(text, "= ? <unavailable>") {
+		return "unavailable"
+	}
+	if strings.HasSuffix(text, "= ?") {
+		return "unknown"
+	}
+	if traceErrnoResult.MatchString(text) {
+		return "error-errno"
+	}
+	if traceNumericResult.MatchString(text) {
+		return "numeric"
+	}
+	return "other"
+}
+
+// safeRefusalLineShape reports only enum classes and byte counts for the raw
+// refused line. It is used when a trimmed event summary does not explain why
+// the closed shape regexp did not match; trace arguments are never included.
+func safeRefusalLineShape(line []byte) string {
+	trimmed := strings.TrimSpace(string(line))
+	leading := len(line) - len(bytes.TrimLeft(line, " \t\r"))
+	trailing := len(line) - len(bytes.TrimRight(line, " \t\r"))
+	shape := "not-resume"
+	tailPrefixBytes := 0
+	normalizedBareOpenat := bareOpenatUnknownResume.MatchString(trimmed)
+	if pidEnd := bytes.IndexByte(line, ' '); pidEnd > 0 {
+		rest := strings.TrimSpace(string(line[pidEnd+1:]))
+		if strings.HasPrefix(rest, "<... ") {
+			if resumeEnd := strings.Index(rest, " resumed>"); resumeEnd >= 0 {
+				name := rest[5:resumeEnd]
+				tail := strings.TrimSpace(rest[resumeEnd+len(" resumed>"):])
+				if name == "openat" {
+					switch {
+					case tail == ") = ?":
+						shape = "bare-close-plain-unknown"
+					case strings.HasSuffix(tail, ") = ?"):
+						prefix := strings.TrimSuffix(tail, ") = ?")
+						tailPrefixBytes = len(prefix)
+						if prefix == " <unfinished ...>" {
+							shape = "unfinished-marker-plain-unknown"
+						} else {
+							shape = "argument-tail-plain-unknown"
+						}
+					case strings.HasSuffix(tail, ") = ? <unavailable>"):
+						shape = "unavailable-tag"
+					default:
+						shape = "other-resume-tail"
+					}
+				} else {
+					shape = "other-resume-name"
+				}
+			}
+		}
+	}
+	return fmt.Sprintf("refusal_raw_line_bytes=%d leading_whitespace_bytes=%d trailing_whitespace_bytes=%d resume_tail_shape=%s resume_tail_prefix_bytes=%d normalized_bare_openat_unknown=%t",
+		len(line), leading, trailing, shape, tailPrefixBytes, normalizedBareOpenat)
+}
+
+var (
+	traceErrnoResult   = regexp.MustCompile(`\) = -1 (?:[A-Z][A-Z0-9]* \([^\n]*\)|\(errno [0-9]+\))$`)
+	traceNumericResult = regexp.MustCompile(`\) = -?[0-9]+$`)
+)
+
+// dyingRefusalDiagnostic reports bounded, sanitized facts from the full trace.
+// The numeric-PID terminal candidate is explicitly not a process-generation
+// proof; this output is diagnostic only and never changes the refusal oracle.
 func dyingRefusalDiagnostic(raw []byte, refusalLine, pid int) string {
-	var out strings.Builder
-	shown := 0
-	appendLine := func(i int, line []byte) {
-		if shown >= 24 {
-			return
-		}
-		if len(line) > 300 {
-			line = append(bytes.Clone(line[:300]), []byte("...")...)
-		}
-		fmt.Fprintf(&out, "%d: %s\n", i+1, line)
-		shown++
+	if pid <= 0 {
+		return "diagnostic unavailable: invalid PID"
 	}
-	if refusalLine > 0 {
-		if line := traceLineAt(raw, refusalLine); line != nil {
-			appendLine(refusalLine-1, line)
+	var before []safeDyingEvent
+	var selected []safeDyingEvent
+	pending := map[string]int{}
+	terminalLine := 0
+	terminalKind := ""
+	spawnLine := 0
+	seenRefusal := false
+	var totalSamePID int
+	visitTraceLines(raw, 1, func(lineNo int, line []byte) bool {
+		if linePID(line) != pid {
+			if spawnedTracePID(line) == pid && lineNo > refusalLine && spawnLine == 0 {
+				if event, ok := summarizeDyingTraceLine(lineNo, line); ok && event.kind == "call" && (event.name == "clone" || event.name == "clone3" || event.name == "fork" || event.name == "vfork") {
+					spawnLine = lineNo
+				}
+			}
+			return true
 		}
-	}
-	visitTraceLines(raw, refusalLine+1, func(lineNo int, line []byte) bool {
-		if linePID(line) == pid || spawnedTracePID(line) == pid {
-			appendLine(lineNo-1, line)
+		totalSamePID++
+		event, ok := summarizeDyingTraceLine(lineNo, line)
+		if !ok {
+			event = safeDyingEvent{line: lineNo, kind: "unclassified"}
 		}
-		return shown < 24
+		if event.kind == "resume" {
+			if start, found := pending[event.name]; found {
+				event.link = fmt.Sprintf("unfinished-call-line-%d", start)
+				delete(pending, event.name)
+			} else {
+				event.link = "no-prior-unfinished-call"
+			}
+		}
+		if event.kind == "call" && event.result == "unfinished" {
+			pending[event.name] = lineNo
+		}
+		if event.kind == "terminal" && lineNo > refusalLine && terminalLine == 0 {
+			terminalLine, terminalKind = lineNo, event.result
+			if terminalKind == "" {
+				terminalKind = event.name
+			}
+			event.link = "same-numeric-pid-only-generation-unproven"
+		}
+		if lineNo < refusalLine {
+			before = append(before, event)
+			if len(before) > 6 {
+				before = before[len(before)-6:]
+			}
+			return true
+		}
+		if lineNo == refusalLine {
+			seenRefusal = true
+			selected = append(selected, event)
+			return true
+		}
+		if seenRefusal && len(selected) < maxDyingDiagnosticEvents {
+			selected = append(selected, event)
+		}
+		return true
 	})
-	if out.Len() == 0 {
-		return "no refusal/terminal context available"
+	var out strings.Builder
+	fmt.Fprintf(&out, "%s refusal_line=%d pid=%d same_pid_events=%d\n", dyingTraceDigest(raw), refusalLine, pid, totalSamePID)
+	for _, event := range before {
+		out.WriteString(event.String())
+		out.WriteByte('\n')
+	}
+	for _, event := range selected {
+		out.WriteString(event.String())
+		out.WriteByte('\n')
+	}
+	if line := traceLineAt(raw, refusalLine); line != nil {
+		out.WriteString(safeRefusalLineShape(line))
+		out.WriteByte('\n')
+	}
+	if terminalLine > 0 {
+		fmt.Fprintf(&out, "terminal_candidate_line=%d class=%s linkage=same-numeric-pid-only-generation-unproven\n", terminalLine, terminalKind)
+	} else {
+		out.WriteString("terminal_candidate=none-observed\n")
+	}
+	if spawnLine > 0 {
+		fmt.Fprintf(&out, "spawn_candidate_line=%d class=child-pid-matches-refusal linkage=numeric-pid-reuse-possible\n", spawnLine)
+	}
+	if out.Len() > maxDyingDiagnosticBytes {
+		return out.String()[:maxDyingDiagnosticBytes]
 	}
 	return out.String()
 }
@@ -437,10 +685,97 @@ func TestLaterBareOpenatExitRejectsReusedPIDFromResumedSpawn(t *testing.T) {
 }
 
 func TestLaterBareOpenatExitDiagnosticsAreBounded(t *testing.T) {
-	raw := []byte("202 " + strings.Repeat("x", 2000) + "\n202 +++ exited with 0 +++ " + strings.Repeat("y", 2000) + "\n")
+	raw := []byte("202 openat(" + strings.Repeat("x", 2000) + ") = 0\n202 +++ exited with 0 +++\n")
 	diagnostic := dyingRefusalDiagnostic(raw, 1, 202)
-	if len(diagnostic) > 700 || !strings.Contains(diagnostic, "1: ") || !strings.Contains(diagnostic, "2: ") || !strings.Contains(diagnostic, "...") {
+	if len(diagnostic) > maxDyingDiagnosticBytes || !strings.Contains(diagnostic, "refusal_line=1 pid=202") || !strings.Contains(diagnostic, "terminal_candidate_line=2") {
 		t.Fatalf("diagnostic was not bounded refusal/terminal context: %q", diagnostic)
+	}
+}
+
+func TestDyingRefusalDiagnosticRedactsAndLinksEvents(t *testing.T) {
+	raw := []byte(strings.Join([]string{
+		`101 fork() = 202`,
+		`202 openat(AT_FDCWD</private/checkout>, "secret-argv", O_RDONLY <unfinished ...>`,
+		`303 read(4</private/other>, "secret-buffer", 12) = 12`,
+		`202 <... openat resumed>) = ? <unavailable>`,
+		`202 +++ exited with 0 +++`,
+		`202 write(1, "secret-environment-value", 25) = 25`,
+	}, "\n") + "\n")
+	diagnostic := dyingRefusalDiagnostic(raw, 4, 202)
+	for _, forbidden := range []string{"/private", "secret-argv", "secret-buffer", "secret-environment-value", "pid=303"} {
+		if strings.Contains(diagnostic, forbidden) {
+			t.Fatalf("diagnostic leaked %q: %s", forbidden, diagnostic)
+		}
+	}
+	if len(diagnostic) > maxDyingDiagnosticBytes {
+		t.Fatalf("diagnostic bytes=%d, max=%d", len(diagnostic), maxDyingDiagnosticBytes)
+	}
+	if !strings.Contains(diagnostic, dyingTraceDigest(raw)) ||
+		!strings.Contains(diagnostic, "line=2 event=call name=openat result=unfinished") ||
+		!strings.Contains(diagnostic, "line=4 event=resume name=openat result=unavailable link=unfinished-call-line-2") ||
+		!strings.Contains(diagnostic, "terminal_candidate_line=5 class=exit-status-zero linkage=same-numeric-pid-only-generation-unproven") {
+		t.Fatalf("diagnostic omitted required safe trace facts: %s", diagnostic)
+	}
+	if strings.Index(diagnostic, "line=2 event=call") > strings.Index(diagnostic, "line=4 event=resume") ||
+		strings.Index(diagnostic, "line=4 event=resume") > strings.Index(diagnostic, "line=5 event=terminal") {
+		t.Fatalf("diagnostic events are not ordered: %s", diagnostic)
+	}
+}
+
+func TestDyingRefusalDiagnosticCapsEventCountAndOutput(t *testing.T) {
+	var raw strings.Builder
+	for i := 1; i <= 2000; i++ {
+		fmt.Fprintf(&raw, "202 openat(AT_FDCWD</private/%d>, \"secret-%d\", O_RDONLY) = 0\n", i, i)
+	}
+	raw.WriteString("202 +++ exited with 0 +++\n")
+	diagnostic := dyingRefusalDiagnostic([]byte(raw.String()), 1, 202)
+	if len(diagnostic) > maxDyingDiagnosticBytes {
+		t.Fatalf("diagnostic bytes=%d, max=%d", len(diagnostic), maxDyingDiagnosticBytes)
+	}
+	if strings.Count(diagnostic, "event=") > maxDyingDiagnosticEvents+6 {
+		t.Fatalf("diagnostic emitted too many events: %s", diagnostic)
+	}
+	if strings.Contains(diagnostic, "/private/") || strings.Contains(diagnostic, "secret-") {
+		t.Fatalf("diagnostic leaked trace payload: %s", diagnostic)
+	}
+	if !strings.Contains(diagnostic, "terminal_candidate_line=2001") {
+		t.Fatalf("diagnostic did not find a terminal event outside the event window: %s", diagnostic)
+	}
+}
+
+func TestDyingRefusalDiagnosticLabelsNumericPIDReuseAsAmbiguous(t *testing.T) {
+	raw := []byte(strings.Join([]string{
+		`202 openat("refused", O_RDONLY) = ? <unavailable>`,
+		`101 clone(child_stack=NULL, flags=SIGCHLD) = 202`,
+		`202 +++ exited with 0 +++`,
+	}, "\n") + "\n")
+	diagnostic := dyingRefusalDiagnostic(raw, 1, 202)
+	if !strings.Contains(diagnostic, "terminal_candidate_line=3 class=exit-status-zero linkage=same-numeric-pid-only-generation-unproven") ||
+		!strings.Contains(diagnostic, "spawn_candidate_line=2 class=child-pid-matches-refusal linkage=numeric-pid-reuse-possible") {
+		t.Fatalf("diagnostic overstated numeric-PID identity or omitted reuse evidence: %s", diagnostic)
+	}
+}
+
+func TestSafeRefusalLineShapeClassifiesWhitespaceAndArgumentTail(t *testing.T) {
+	whitespace := safeRefusalLineShape([]byte("202 <... openat resumed>) = ?  \t"))
+	for _, want := range []string{
+		"trailing_whitespace_bytes=3",
+		"resume_tail_shape=bare-close-plain-unknown",
+		"normalized_bare_openat_unknown=true",
+	} {
+		if !strings.Contains(whitespace, want) {
+			t.Fatalf("whitespace-only shape omitted %q: %s", want, whitespace)
+		}
+	}
+	argument := safeRefusalLineShape([]byte(`202 <... openat resumed> AT_FDCWD, "private-path") = ?`))
+	if !strings.Contains(argument, "resume_tail_shape=argument-tail-plain-unknown") ||
+		!strings.Contains(argument, "normalized_bare_openat_unknown=false") ||
+		strings.Contains(argument, "private-path") {
+		t.Fatalf("argument tail was not classified without leaking it: %s", argument)
+	}
+	unavailable := safeRefusalLineShape([]byte("202 <... openat resumed>) = ? <unavailable>"))
+	if !strings.Contains(unavailable, "resume_tail_shape=unavailable-tag") {
+		t.Fatalf("unavailable result was not distinguished: %s", unavailable)
 	}
 }
 

@@ -186,24 +186,24 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 	}, func(e *trace.Error) bool {
 		return e.Reason == "unresumed-call" || e.Reason == "unparsable-line" || e.Reason == "result"
 	})
+	raw, err := os.ReadFile(r.trf)
+	if err != nil {
+		t.Fatalf("read trace failed: %T", err)
+	}
 	// The loop must really have run, or nothing below proved anything.
 	want := "iterations=" + strconv.Itoa(dyingIterations) + " ok=" + strconv.Itoa(dyingIterations)
 	if !strings.Contains(r.stdout, want) {
-		t.Fatalf("the step's loop did not finish: %q, want %q (stderr %q)\n%s", r.stdout, want, r.stderr, r.tail(30))
-	}
-	raw, err := os.ReadFile(r.trf)
-	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("the step's loop did not finish: stdout_bytes=%d stderr_bytes=%d, expected %s\n%s", len(r.stdout), len(r.stderr), want, dyingTraceDigest(raw))
 	}
 	if n := len(dyingExitGroup.FindAll(raw, -1)); n < dyingIterations {
-		t.Fatalf("%d exit_group lines in the trace, want at least %d (one per child):\n%s", n, dyingIterations, r.tail(30))
+		t.Fatalf("%d exit_group lines in the trace, want at least %d (one per child)\n%s", n, dyingIterations, dyingTraceDigest(raw))
 	}
 	// A refusal that runStracedOr tolerated must be on a line of a dying shape.
-	// The line is our own synthetic Go fixture's, so it is safe to print.
+	// Log only a whitelisted summary of the trace line and related PID events.
 	if r.refusal != nil {
 		lines := strings.Split(string(raw), "\n")
 		if r.refusal.Line < 1 || r.refusal.Line > len(lines) {
-			t.Fatalf("the refusal %v names no line of the trace", r.refusal)
+			t.Fatalf("refusal reason=%s line=%d names no line of the trace\n%s", safeDyingRefusalReason(r.refusal.Reason), r.refusal.Line, dyingTraceDigest(raw))
 		}
 		text := lines[r.refusal.Line-1]
 		var shape string
@@ -221,7 +221,7 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 			if terminalLine == 0 {
 				pid, _ := strconv.Atoi(bareOpenatUnknownResume.FindStringSubmatch(text)[1])
 				t.Fatalf("refused as %s at line %d: bare resumed openat result has no unambiguous later same-pid terminal exit\n--- refusal and terminal candidate ---\n%s",
-					r.refusal.Reason, r.refusal.Line, dyingRefusalDiagnostic(raw, r.refusal.Line, pid))
+					safeDyingRefusalReason(r.refusal.Reason), r.refusal.Line, dyingRefusalDiagnostic(raw, r.refusal.Line, pid))
 			}
 			shape = fmt.Sprintf("bare resumed openat result, later same-pid terminal exit at line %d", terminalLine)
 		case bareGetdentsUnknown.MatchString(text):
@@ -229,13 +229,14 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 			if terminalLine == 0 {
 				pid, _ := strconv.Atoi(bareGetdentsUnknown.FindStringSubmatch(text)[1])
 				t.Fatalf("refused as %s at line %d: unavailable getdents64 result has no unambiguous later same-pid terminal exit\n--- refusal and terminal candidate ---\n%s",
-					r.refusal.Reason, r.refusal.Line, dyingRefusalDiagnostic(raw, r.refusal.Line, pid))
+					safeDyingRefusalReason(r.refusal.Reason), r.refusal.Line, dyingRefusalDiagnostic(raw, r.refusal.Line, pid))
 			}
 			shape = fmt.Sprintf("unavailable getdents64 result, later same-pid terminal exit at line %d", terminalLine)
 		default:
-			t.Fatalf("refused as %s at line %d, which is not a dying shape: %s\n%s", r.refusal.Reason, r.refusal.Line, text, r.tail(30))
+			t.Fatalf("refused as %s at line %d, which is not a recognized dying shape\n%s", safeDyingRefusalReason(r.refusal.Reason), r.refusal.Line, dyingRefusalDiagnostic(raw, r.refusal.Line, linePID([]byte(text))))
 		}
-		t.Logf("refused as %s at line %d: %s (%s)", r.refusal.Reason, r.refusal.Line, text, shape)
+		event, _ := summarizeDyingTraceLine(r.refusal.Line, []byte(text))
+		t.Logf("refused as %s at line %d: %s (%s)", safeDyingRefusalReason(r.refusal.Reason), r.refusal.Line, event.String(), shape)
 	}
 	// Both readers agree on the whole trace (the production path is the grammar
 	// path alone; the old scanner is the oracle).

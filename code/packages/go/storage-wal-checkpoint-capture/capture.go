@@ -20,29 +20,39 @@ type Snapshot struct {
 	Pages     [2][]byte
 }
 
-// Capture validates and reads both checkpoint pages in order, checks reserved
-// padding, and then selects from their exact frame prefixes.
-func Capture(device blockdevicecontract.Device, log, data, checkpoint storagepagelayout.Layout) (Snapshot, error) {
+// ReadPages validates and reads both complete checkpoint pages in physical
+// ordinal order. It checks reserved padding but does not inspect either frame.
+func ReadPages(device blockdevicecontract.Device, log, data, checkpoint storagepagelayout.Layout) ([2][]byte, error) {
 	if err := storagewalcheckpointlayout.Validate(log, data, checkpoint); err != nil {
-		return Snapshot{}, err
+		return [2][]byte{}, err
 	}
 	pager, err := storagepageio.Open(device, checkpoint)
 	if err != nil {
-		return Snapshot{}, err
+		return [2][]byte{}, err
 	}
 	var pages [2][]byte
 	for ordinal := range pages {
 		pages[ordinal], err = pager.ReadPage(int64(ordinal))
 		if err != nil {
-			return Snapshot{}, err
+			return [2][]byte{}, err
 		}
 	}
 	for _, page := range pages {
 		for _, value := range page[storagewalcheckpointrecord.FrameBytes:] {
 			if value != 0 {
-				return Snapshot{}, ErrCheckpointPadding
+				return [2][]byte{}, ErrCheckpointPadding
 			}
 		}
+	}
+	return pages, nil
+}
+
+// Capture validates and reads both checkpoint pages, checks their physical
+// padding, then selects from their exact frame prefixes.
+func Capture(device blockdevicecontract.Device, log, data, checkpoint storagepagelayout.Layout) (Snapshot, error) {
+	pages, err := ReadPages(device, log, data, checkpoint)
+	if err != nil {
+		return Snapshot{}, err
 	}
 	frames := [2][]byte{
 		pages[0][:storagewalcheckpointrecord.FrameBytes],
