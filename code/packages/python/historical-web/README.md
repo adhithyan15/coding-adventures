@@ -1,6 +1,7 @@
 # Historical Web
 
-Python reference for `http-0.9`, the 1991 CERN wire protocol, and
+Python reference for `http-0.9`, the 1991 CERN wire protocol, a closed
+`http-1.0-request-line-1996` request-line slice, and
 `html-tags-1992`, a markup profile based on the archived 1992 HTML Tags
 document. The wire codec handles bytes in memory. HTML parsers take characters
 and return ordered trees of elements and text. `parse_html2_paragraphs_1995`
@@ -11,14 +12,23 @@ parser.
 
 ```python
 from historical_web import (
+    Http10RequestLine,
     decode_http09_response,
     encode_http09_request,
+    encode_http10_request_line,
     parse_html2_paragraphs_1995,
+    parse_http10_request_line,
     parse_html_tags_1992,
 )
 
 request = encode_http09_request("/index.html")
 assert request == b"GET /index.html\r\n"
+
+line_bytes = encode_http10_request_line("HEAD", "/index.html")
+assert line_bytes == b"HEAD /index.html HTTP/1.0\r\n"
+assert parse_http10_request_line(line_bytes) == Http10RequestLine(
+    method="HEAD", target="/index.html"
+)
 
 # In a network client these bytes would be read until the server closes TCP.
 response = b"<TITLE>Early Web</TITLE><UL><LI>HTTP<LI>HTML</UL>"
@@ -41,6 +51,10 @@ The [HTML 2.0 paragraph slice](../../../specs/HWEB06-html2-paragraph-slice.md)
 is a separate profile: HTML 2.0 P elements contain text, unlike the 1992
 archive's empty paragraph marker. It keeps CRLF normalization and source text
 preservation distinct from SGML record handling and display whitespace rules.
+The [HTTP/1.0 request-line slice](../../../specs/HWEB08-http10-request-line.md)
+accepts only uppercase `GET`, `HEAD`, or `POST`, a restricted ASCII absolute
+path, the exact `HTTP/1.0` token, and terminal CRLF. It does not parse headers
+or bodies and does not change the earlier HTTP/0.9 API.
 
 Run `sh BUILD` to check the reference on Unix, or run `BUILD_windows` commands
 in `cmd.exe` on Windows. Future ports can replay the same

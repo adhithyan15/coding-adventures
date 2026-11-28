@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+
+- Add the versioned HTTP/1.0 request-line subset with exact framing, three
+  closed methods, and a restricted ASCII path alphabet.
+
 ## 0.2.0
 
 - Add the strict `html2-paragraphs-1995` text-only P/H1 profile, with omitted P

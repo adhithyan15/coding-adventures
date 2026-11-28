@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "profile": "http-1.0-request-line-1996",
+  "accepted": [
+    {"id": "get-root", "method": "GET", "target": "/", "wire_hex": "474554202f20485454502f312e300d0a"},
+    {"id": "head-robots", "method": "HEAD", "target": "/robots.txt", "wire_hex": "48454144202f726f626f74732e74787420485454502f312e300d0a"},
+    {"id": "post-form-path", "method": "POST", "target": "/form/v1_item-2", "wire_hex": "504f5354202f666f726d2f76315f6974656d2d3220485454502f312e300d0a"},
+    {"id": "nested-dots-and-dashes", "method": "GET", "target": "/a/../x-y_9", "wire_hex": "474554202f612f2e2e2f782d795f3920485454502f312e300d0a"}
+  ],
+  "invalid_wire": [
+    {"id": "lowercase-method", "wire_hex": "676574202f20485454502f312e300d0a"},
+    {"id": "unsupported-method", "wire_hex": "505554202f20485454502f312e300d0a"},
+    {"id": "empty-target", "wire_hex": "4745542020485454502f312e300d0a"},
+    {"id": "relative-target", "wire_hex": "474554207061746820485454502f312e300d0a"},
+    {"id": "query-target", "wire_hex": "474554202f613f6220485454502f312e300d0a"},
+    {"id": "percent-target", "wire_hex": "474554202f25323020485454502f312e300d0a"},
+    {"id": "extra-space-after-method", "wire_hex": "47455420202f20485454502f312e300d0a"},
+    {"id": "extra-space-before-version", "wire_hex": "474554202f2020485454502f312e300d0a"},
+    {"id": "tab-separator", "wire_hex": "474554092f20485454502f312e300d0a"},
+    {"id": "wrong-version", "wire_hex": "474554202f20485454502f312e310d0a"},
+    {"id": "lf-only", "wire_hex": "474554202f20485454502f312e300a"},
+    {"id": "cr-only", "wire_hex": "474554202f20485454502f312e300d"},
+    {"id": "trailing-byte", "wire_hex": "474554202f20485454502f312e300d0a78"},
+    {"id": "extra-line", "wire_hex": "474554202f20485454502f312e300d0a0d0a"},
+    {"id": "header-after-line", "wire_hex": "474554202f20485454502f312e300d0a486f73743a20780d0a"},
+    {"id": "embedded-nul", "wire_hex": "474554202f006120485454502f312e300d0a"},
+    {"id": "non-ascii-target", "wire_hex": "474554202fc3a920485454502f312e300d0a"}
+  ],
+  "invalid_methods": ["", "get", "Get", "PUT", "OPTIONS", "DELETE", "CONNECT", "TRACE"],
+  "invalid_targets": ["", "relative", "//example.test/path?x", "/a?b", "/a#b", "/%2f", "/has space", "/tab\t", "/é", "/\\path", "/colon:segment", "/nul\u0000path"],
+  "version_comparison": {
+    "legacy_fixture": "historical-web-v1/vectors.json",
+    "http10_rejects_legacy_accepted_requests": true,
+    "http09_rejects_http10_accepted_requests": true
+  }
+}

@@ -349,13 +349,14 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths                   = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths         = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths           = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
-	microbenchmarkPairsFixturePath   = "code/specs/fixtures/microbenchmark-pairs-v1.json"
-	historicalWebVectorsPath         = "code/specs/fixtures/historical-web-v1/vectors.json"
-	historicalWebHTML2ParagraphsPath = "code/specs/fixtures/historical-web-html2-paragraphs-v1/vectors.json"
-	fixedPointInputPaths             = []string{
+	rngCorpusPaths                     = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths           = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths             = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	microbenchmarkPairsFixturePath     = "code/specs/fixtures/microbenchmark-pairs-v1.json"
+	historicalWebVectorsPath           = "code/specs/fixtures/historical-web-v1/vectors.json"
+	historicalWebHTML2ParagraphsPath   = "code/specs/fixtures/historical-web-html2-paragraphs-v1/vectors.json"
+	historicalWebHTTP10RequestLinePath = "code/specs/fixtures/historical-web-http10-request-line-v1/vectors.json"
+	fixedPointInputPaths               = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -724,9 +725,9 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "python/historical-web",
 		language: "python",
-		inputs:   "the shared HWEB-00 and HTML 2.0 paragraph vectors",
+		inputs:   "the shared HWEB-00, HTML 2.0 paragraph, and HTTP/1.0 request-line vectors",
 		matches:  isHistoricalWebPythonInput,
-		paths:    []string{historicalWebVectorsPath, historicalWebHTML2ParagraphsPath},
+		paths:    []string{historicalWebVectorsPath, historicalWebHTML2ParagraphsPath, historicalWebHTTP10RequestLinePath},
 	},
 	{
 		name:     "go/historical-web",
@@ -2106,7 +2107,7 @@ func isHistoricalWebVectors(changed string) bool {
 }
 
 func isHistoricalWebPythonInput(changed string) bool {
-	return changed == historicalWebVectorsPath || changed == historicalWebHTML2ParagraphsPath
+	return changed == historicalWebVectorsPath || changed == historicalWebHTML2ParagraphsPath || changed == historicalWebHTTP10RequestLinePath
 }
 
 func isOSArchitectureFixtureInput(changed string) bool {
@@ -2209,7 +2210,7 @@ func repositoryInputsForPackage(packageName string) []string {
 	}
 	switch packageName {
 	case "python/historical-web":
-		return []string{historicalWebVectorsPath, historicalWebHTML2ParagraphsPath}
+		return []string{historicalWebVectorsPath, historicalWebHTML2ParagraphsPath, historicalWebHTTP10RequestLinePath}
 	case "go/historical-web":
 		return []string{historicalWebVectorsPath}
 	case "rust/historical-web":
