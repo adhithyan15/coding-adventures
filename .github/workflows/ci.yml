@@ -5124,6 +5124,22 @@ jobs:
             opam repository list --all --color=never
           )"
           if [ "$RUNNER_OS" = "Windows" ]; then
+            # setup-ocaml's MSYS2 mode provisions MinGW, but the compiler and
+            # archiver must also be visible through this switch's environment
+            # before opam builds ppxlib/menhir and the pinned formatter.
+            opam exec -- bash -c '
+              set -euo pipefail
+              command -v x86_64-w64-mingw32-gcc
+              command -v x86_64-w64-mingw32-ar
+              test "$(x86_64-w64-mingw32-gcc -dumpmachine)" = "x86_64-w64-mingw32"
+              x86_64-w64-mingw32-ar --version
+              work=$(mktemp -d)
+              trap "rm -rf \"$work\"" EXIT
+              printf "int ocaml_toolchain_probe(void) { return 0; }\n" > "$work/probe.c"
+              x86_64-w64-mingw32-gcc -c "$work/probe.c" -o "$work/probe.o"
+              x86_64-w64-mingw32-ar rcs "$work/libprobe.a" "$work/probe.o"
+              test -s "$work/libprobe.a"
+            '
             python_cmd=python
           else
             python_cmd=python3

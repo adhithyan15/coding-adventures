@@ -133,6 +133,16 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
     def test_checked_in_generic_ci_bootstrap_is_valid(self) -> None:
         toolchain.validate_generic_ci_workflow_text(self.manifest, self.workflow)
 
+    def test_generic_ci_provisions_mingw_but_dedicated_workflow_stays_cygwin(self) -> None:
+        # Generic CI runs on windows-2025 and provisions GCC through the
+        # setup action's supported MSYS2 mode. The evidence workflow is pinned
+        # separately to its Windows 2022 Cygwin solver target.
+        toolchain.validate_generic_ci_workflow_text(self.manifest, self.workflow)
+        dedicated = (
+            REPO_ROOT / ".github/workflows/build-ocaml.yml"
+        ).read_text(encoding="utf-8")
+        toolchain.validate_workflow_text(self.manifest, dedicated)
+
     def test_rejects_ci_yml_dropping_or_gating_its_own_lock_tests(self) -> None:
         """build-ocaml.yml no longer runs on ci.yml edits (OCAML03 "Triggers"),
         so ci.yml's contracts job must keep running this test, unconditionally."""
@@ -213,7 +223,7 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
             self.mutate_last("dune-cache: false", "dune-cache: true"),
             self.mutate("-${{ github.run_attempt }}-build-", "-build-"),
             self.mutate("windows-compiler: mingw", "windows-compiler: msvc"),
-            self.mutate("windows-environment: cygwin", "windows-environment: msys2"),
+            self.mutate("windows-environment: msys2", "windows-environment: cygwin"),
             self.mutate_last(
                 "github-token: ${{ github.token }}", "github-token: token"
             ),
@@ -224,6 +234,9 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
 
     def test_rejects_missing_runtime_repository_or_checksum_evidence(self) -> None:
         cases = (
+            self.mutate(
+                "              command -v x86_64-w64-mingw32-gcc\n", ""
+            ),
             self.mutate_last(
                 'test "$(opam --version)" = "2.5.2"',
                 'test "$(opam --version)" = "2.4.0"',

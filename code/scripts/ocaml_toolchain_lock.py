@@ -127,7 +127,7 @@ EXPECTED_RUN_SHA256 = {
     "locked.run": "68cdbecd8ce825ae00f1f1516f3ab73bd06198ac9e3f1c238f06518a00353929",
 }
 GENERIC_BOOTSTRAP_RUN_SHA256 = (
-    "da5d03fbce1c2766acb87fc9c381292704bf18b7b8b4a5bbf164c2e3922dbe56"
+    "854f4eca30d99f989fece7ea7f3c6434012c05947761aca18e0b230085e3c912"
 )
 GENERIC_MATRIX_PLAN_RUN_SHA256 = (
     # NN51 adds only native C++ dense training's dependency-aware Windows lane.
@@ -1390,7 +1390,7 @@ def validate_generic_ci_workflow_text(
                 "${{ github.run_attempt }}-build-${{ matrix.label }}"
             ),
             "windows-compiler": "mingw",
-            "windows-environment": "cygwin",
+            "windows-environment": "msys2",
             "github-token": "${{ github.token }}",
         },
     }
@@ -1413,6 +1413,12 @@ def validate_generic_ci_workflow_text(
     )
     required_bootstrap_fragments = (
         "set -euo pipefail",
+        'opam exec -- bash -c \'',
+        "command -v x86_64-w64-mingw32-gcc",
+        "command -v x86_64-w64-mingw32-ar",
+        'test "$(x86_64-w64-mingw32-gcc -dumpmachine)" = "x86_64-w64-mingw32"',
+        "x86_64-w64-mingw32-gcc -c \"$work/probe.c\" -o \"$work/probe.o\"",
+        "x86_64-w64-mingw32-ar rcs \"$work/libprobe.a\" \"$work/probe.o\"",
         f'test "$(opam --version)" = "{manifest["direct_versions"]["opam"]}"',
         f'test "$(opam exec -- ocamlc -version | tr -d \'\\r\')" = "{manifest["direct_versions"]["ocaml"]}"',
         "opam repository list --all --short --color=never",

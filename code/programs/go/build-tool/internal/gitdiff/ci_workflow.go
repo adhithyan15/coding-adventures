@@ -69,6 +69,8 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 		"needs_ocaml", "setup-ocaml", "ocaml-compiler", "ocaml-version",
 		"ocaml --version", "opam --version", "dune --version", "set up ocaml",
 		"windows-compiler", "windows-environment",
+		"opam exec -- bash -c",
+		"x86_64-w64-mingw32-gcc", "x86_64-w64-mingw32-ar",
 	},
 	"java": {
 		"needs_java", "setup-java", "java-version", "java --version",
