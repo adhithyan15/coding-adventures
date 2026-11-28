@@ -10,6 +10,11 @@ is the current status, receipt, and discovery record. The coordinator rows and
 dated snapshots below are historical overview; use the shard for current
 implementation state.
 
+For the repository-owned TLS 1.3 foundations plan,
+[tls-foundations.md](VER-BACKLOG.d/tls-foundations.md) tracks 18 bounded lanes, the
+RFC baseline, fixture provenance, dependencies, and definitions of done. It is a
+backlog only; no TLS implementation or conformance is claimed.
+
 For bringing the L0 harness, the property engine and the fuzz engine to every
 language lane, [polyglot-testing-tooling.md](VER-BACKLOG.d/polyglot-testing-tooling.md)
 holds the lane matrix, the definition of done (whole `pbt-v1`/`fuzz-v1` corpus
