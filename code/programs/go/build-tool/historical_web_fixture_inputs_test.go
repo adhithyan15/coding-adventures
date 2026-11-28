@@ -11,10 +11,13 @@ import (
 )
 
 func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
-	packages := []discovery.Package{{Name: "python/historical-web", Language: "python"}}
+	packages := []discovery.Package{
+		{Name: "python/historical-web", Language: "python"},
+		{Name: "go/historical-web", Language: "go"},
+	}
 	selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "all")
-	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true}) {
-		t.Fatalf("vector selection = %v, err %v; want the Python historical-web package", selected, err)
+	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true, "go/historical-web": true}) {
+		t.Fatalf("vector selection = %v, err %v; want both historical-web packages", selected, err)
 	}
 	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "python"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true}) {
 		t.Fatalf("Python-only vector selection = %v, err %v", selected, err)
@@ -76,6 +79,7 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 
 	checkout := toolchainFixtureRepoRoot(t)
 	packages[0].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/python/historical-web"))
+	packages[1].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/go/historical-web"))
 	graph, err := buildKilnLegacyGraph(packages, checkout)
 	if err != nil {
 		t.Fatalf("build Kiln graph: %v", err)
