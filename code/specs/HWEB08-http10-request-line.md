@@ -39,6 +39,11 @@ bytes, extra spaces, additional lines, headers, or body are accepted. The
 method is exactly one of uppercase `GET`, `HEAD`, or `POST`. Method casing is
 significant.
 
+This parser follows the single-SP Request-Line generation grammar in section
+5.1. RFC 1945 Appendix B separately recommends tolerant operational servers
+accept any amount of SP or HT between fields. This educational intake profile
+deliberately does not implement that tolerant parsing recommendation.
+
 The request target is a nonempty absolute path: it starts with `/`, then may
 contain only ASCII letters, digits, `/`, `.`, `_`, and `-`. The root path `/`
 is valid. This intentionally narrow path alphabet excludes queries,
