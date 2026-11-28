@@ -45,6 +45,11 @@ class StreamCapture:
         self.first_tap_plan_s: float | None = None
         self.first_not_ok_s: float | None = None
         self.first_bail_out_s: float | None = None
+        self.first_not_ok_number: int | None = None
+        self.tap_plan_count = 0
+        self.tap_plan_value: int | None = None
+        self.tap_point_count = 0
+        self.tap_not_ok_count = 0
         self.reader_error: str | None = None
         self.marker_line = b""
         self.marker_line_overflow = False
@@ -98,16 +103,20 @@ class StreamCapture:
 
     def _record_complete_line(self, line: bytes, overflow: bool, now: float) -> None:
         line = line.removesuffix(b"\r")
-        if (
-            self.first_tap_plan_s is None
-            and not overflow
-            and re.fullmatch(rb"1\.\.[0-9]+", line)
-        ):
-            self.first_tap_plan_s = now
-        if self.first_not_ok_s is None and re.match(
-            rb"^not ok[ \t]+[0-9]+(?:[ \t]|$)", line
-        ):
-            self.first_not_ok_s = now
+        plan = re.fullmatch(rb"1\.\.([0-9]+)", line) if not overflow else None
+        if plan is not None:
+            self.tap_plan_count += 1
+            if self.tap_plan_count == 1:
+                self.tap_plan_value = int(plan.group(1))
+                self.first_tap_plan_s = now
+        point = re.match(rb"^(not ok|ok)[ \t]+([0-9]+)(?:[ \t]|$)", line)
+        if point is not None:
+            self.tap_point_count += 1
+            if point.group(1) == b"not ok":
+                self.tap_not_ok_count += 1
+                if self.first_not_ok_s is None:
+                    self.first_not_ok_s = now
+                    self.first_not_ok_number = int(point.group(2))
         if self.first_bail_out_s is None and line.startswith(b"Bail out!"):
             self.first_bail_out_s = now
 
@@ -316,11 +325,12 @@ def run_probe(
         )
     else:
         oracle_valid = (
-            stdout.first_tap_plan_s is not None
-            and stdout.first_not_ok_s is not None
+            stdout.tap_plan_count == 1
+            and stdout.tap_plan_value == 1
+            and stdout.tap_point_count == 1
+            and stdout.tap_not_ok_count == 1
+            and stdout.first_not_ok_number == 1
             and stdout.first_bail_out_s is None
-            and "1..1" in captured_stdout
-            and "not ok" in captured_stdout
         )
     valid_fault_observation = (
         proc.returncode == expected_exit_code
@@ -355,7 +365,12 @@ def run_probe(
             "last_byte_s": stdout.last_byte_s,
             "eof_s": stdout.eof_s,
             "first_tap_plan_s": stdout.first_tap_plan_s,
+            "tap_plan_count": stdout.tap_plan_count,
+            "tap_plan_value": stdout.tap_plan_value,
+            "tap_point_count": stdout.tap_point_count,
             "first_not_ok_s": stdout.first_not_ok_s,
+            "first_not_ok_number": stdout.first_not_ok_number,
+            "tap_not_ok_count": stdout.tap_not_ok_count,
             "first_bail_out_s": stdout.first_bail_out_s,
             "reader_error": stdout.reader_error,
             "reader_finished": not any(t.is_alive() for t in readers[:1]),
@@ -568,7 +583,12 @@ def run_concurrent_probe(
                 "last_byte_s": stdout.last_byte_s,
                 "eof_s": stdout.eof_s,
                 "first_tap_plan_s": stdout.first_tap_plan_s,
+                "tap_plan_count": stdout.tap_plan_count,
+                "tap_plan_value": stdout.tap_plan_value,
+                "tap_point_count": stdout.tap_point_count,
                 "first_not_ok_s": stdout.first_not_ok_s,
+                "first_not_ok_number": stdout.first_not_ok_number,
+                "tap_not_ok_count": stdout.tap_not_ok_count,
                 "first_bail_out_s": stdout.first_bail_out_s,
                 "reader_error": stdout.reader_error,
                 "reader_finished": not reader_map[label][0].is_alive(),
@@ -663,11 +683,12 @@ def run_concurrent_probe(
         # The retained Windows probe observed Cargo return the failing harness
         # process's status (1) for this command and fault selector.
         target_oracle_valid = (
-            target_events.get("first_tap_plan_s") is not None
-            and target_events.get("first_not_ok_s") is not None
+            target_events.get("tap_plan_count") == 1
+            and target_events.get("tap_plan_value") == 1
+            and target_events.get("tap_point_count") == 1
+            and target_events.get("tap_not_ok_count") == 1
+            and target_events.get("first_not_ok_number") == 1
             and target_events.get("first_bail_out_s") is None
-            and "1..1" in target_out
-            and "not ok" in target_out
         )
         expected_target_exit = 1
     target["valid_negative_control"] = (

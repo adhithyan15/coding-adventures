@@ -165,6 +165,26 @@ class ConcurrentOverlapProbeTest(unittest.TestCase):
             )
         self.assertTrue(result["valid_fault_observation"], result)
 
+    def test_direct_failing_process_rejects_wrong_plan_or_point_number(self) -> None:
+        env = os.environ.copy()
+        fixtures = (
+            "import sys; print('1..1'); print('not ok 20 - wrong point'); sys.exit(1)",
+            "import sys; print('1..10'); print('not ok 20 - wrong plan and point'); sys.exit(1)",
+        )
+        with mock.patch.object(diagnostic, "process_snapshot", return_value={"processes": []}), mock.patch.object(
+            diagnostic, "kill_tree", return_value="taskkill exit=0"
+        ):
+            for code in fixtures:
+                with self.subTest(code=code):
+                    result = diagnostic.run_probe(
+                        "wrong-tap-fixture",
+                        [sys.executable, "-c", code],
+                        ROOT,
+                        env,
+                        expected_exit_code=1,
+                    )
+                    self.assertFalse(result["valid_fault_observation"], result)
+
     def test_surviving_process_tree_is_not_a_valid_observation(self) -> None:
         env = os.environ.copy()
         code = "import sys; print('TAP version 14'); print('1..1'); print('not ok 1 - fixture'); sys.exit(1)"
