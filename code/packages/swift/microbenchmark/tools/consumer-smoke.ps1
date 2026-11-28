@@ -13,6 +13,7 @@ import PackageDescription
 
 let package = Package(
     name: "Consumer",
+    platforms: [.macOS("10.15.4")],
     dependencies: [
         .package(path: "$rankRoot"),
         .package(path: "$microPackage"),
