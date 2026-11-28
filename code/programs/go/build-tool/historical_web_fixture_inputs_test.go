@@ -15,6 +15,7 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 		{Name: "python/historical-web", Language: "python"},
 		{Name: "go/historical-web", Language: "go"},
 		{Name: "rust/historical-web", Language: "rust"},
+		{Name: "rust/test-bootstrap", Language: "rust"},
 	}
 	selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "all")
 	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true, "go/historical-web": true, "rust/historical-web": true}) {
@@ -82,6 +83,7 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 	packages[0].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/python/historical-web"))
 	packages[1].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/go/historical-web"))
 	packages[2].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/rust/historical-web"))
+	packages[3].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/rust/test-bootstrap"))
 	graph, err := buildKilnLegacyGraph(packages, checkout)
 	if err != nil {
 		t.Fatalf("build Kiln graph: %v", err)
