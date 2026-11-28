@@ -1,0 +1,9 @@
+{
+  "vectors": [
+    {"name":"db02-first-sector","cylinders":4,"surfaces":2,"sectors_per_track":4,"head":0,"tick":0,"block":0,"target":{"cylinder":0,"surface":0,"sector":0},"seek":0,"rotation":0,"transfer":1,"total":1,"end_head":0,"end_tick":1},
+    {"name":"db02-last-sector","cylinders":4,"surfaces":2,"sectors_per_track":4,"head":0,"tick":0,"block":31,"target":{"cylinder":3,"surface":1,"sector":3},"seek":9,"rotation":2,"transfer":1,"total":12,"end_head":3,"end_tick":12},
+    {"name":"db02-downward-seek","cylinders":4,"surfaces":2,"sectors_per_track":4,"head":3,"tick":13,"block":0,"target":{"cylinder":0,"surface":0,"sector":0},"seek":9,"rotation":2,"transfer":1,"total":12,"end_head":0,"end_tick":25},
+    {"name":"large-16-cylinder","cylinders":16,"surfaces":2,"sectors_per_track":16,"head":0,"tick":0,"block":511,"target":{"cylinder":15,"surface":1,"sector":15},"seek":45,"rotation":2,"transfer":1,"total":48,"end_head":15,"end_tick":48},
+    {"name":"large-64-cylinder","cylinders":64,"surfaces":2,"sectors_per_track":4,"head":0,"tick":1,"block":511,"target":{"cylinder":63,"surface":1,"sector":3},"seek":189,"rotation":1,"transfer":1,"total":191,"end_head":63,"end_tick":192}
+  ]
+}
