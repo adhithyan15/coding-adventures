@@ -1,0 +1,182 @@
+{
+  "schema": "coding-adventures.database-media.nand-block-erase-cuts.v1",
+  "cases": [
+    {
+      "name": "zero-prefix-and-before-accept-preserve-state-before-retry",
+      "page_size": 2,
+      "ceiling": 3,
+      "initial_block": {
+        "pages": [
+          {"bytes_hex": "1001", "programmed": true},
+          {"bytes_hex": "ffff", "programmed": false},
+          {"bytes_hex": "aabb", "programmed": true}
+        ],
+        "completed_erases": 0,
+        "incomplete_erase": false
+      },
+      "steps": [
+        {
+          "cut": {"kind": "after_prefix", "prefix_pages": 0},
+          "expected": {
+            "block": {
+              "pages": [
+                {"bytes_hex": "1001", "programmed": true},
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "aabb", "programmed": true}
+              ],
+              "completed_erases": 0,
+              "incomplete_erase": true
+            },
+            "acknowledged": false
+          }
+        },
+        {
+          "cut": {"kind": "before_accept"},
+          "expected": {
+            "block": {
+              "pages": [
+                {"bytes_hex": "1001", "programmed": true},
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "aabb", "programmed": true}
+              ],
+              "completed_erases": 0,
+              "incomplete_erase": true
+            },
+            "acknowledged": false
+          }
+        },
+        {
+          "cut": {"kind": "complete"},
+          "expected": {
+            "block": {
+              "pages": [
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false}
+              ],
+              "completed_erases": 1,
+              "incomplete_erase": false
+            },
+            "acknowledged": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "prefix-preserves-suffix-then-media-and-acknowledged-retry",
+      "page_size": 2,
+      "ceiling": 4,
+      "initial_block": {
+        "pages": [
+          {"bytes_hex": "0102", "programmed": true},
+          {"bytes_hex": "ffff", "programmed": true},
+          {"bytes_hex": "0304", "programmed": true},
+          {"bytes_hex": "ffff", "programmed": false}
+        ],
+        "completed_erases": 1,
+        "incomplete_erase": false
+      },
+      "steps": [
+        {
+          "cut": {"kind": "after_prefix", "prefix_pages": 2},
+          "expected": {
+            "block": {
+              "pages": [
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "0304", "programmed": true},
+                {"bytes_hex": "ffff", "programmed": false}
+              ],
+              "completed_erases": 1,
+              "incomplete_erase": true
+            },
+            "acknowledged": false
+          }
+        },
+        {
+          "cut": {"kind": "after_media"},
+          "expected": {
+            "block": {
+              "pages": [
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false}
+              ],
+              "completed_erases": 2,
+              "incomplete_erase": false
+            },
+            "acknowledged": false
+          }
+        },
+        {
+          "cut": {"kind": "complete"},
+          "expected": {
+            "block": {
+              "pages": [
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false},
+                {"bytes_hex": "ffff", "programmed": false}
+              ],
+              "completed_erases": 3,
+              "incomplete_erase": false
+            },
+            "acknowledged": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "erased-state-consumes-cycle-and-rejects-following-command",
+      "page_size": 1,
+      "ceiling": 1,
+      "initial_block": {
+        "pages": [{"bytes_hex": "ff", "programmed": false}],
+        "completed_erases": 0,
+        "incomplete_erase": false
+      },
+      "steps": [
+        {
+          "cut": {"kind": "complete"},
+          "expected": {
+            "block": {
+              "pages": [{"bytes_hex": "ff", "programmed": false}],
+              "completed_erases": 1,
+              "incomplete_erase": false
+            },
+            "acknowledged": true
+          }
+        },
+        {"cut": {"kind": "complete"}, "expected": {"error": "erase_limit"}}
+      ]
+    },
+    {
+      "name": "invalid-cut-precedes-exhausted-erase-budget",
+      "page_size": 1,
+      "ceiling": 0,
+      "initial_block": {
+        "pages": [{"bytes_hex": "ff", "programmed": false}],
+        "completed_erases": 0,
+        "incomplete_erase": true
+      },
+      "steps": [
+        {"cut": {"kind": "unknown"}, "expected": {"error": "invalid_cut"}},
+        {"cut": {"kind": "after_prefix", "prefix_pages": 0}, "expected": {"error": "erase_limit"}}
+      ]
+    },
+    {
+      "name": "invalid-count-and-block-shape-precedence",
+      "page_size": 1,
+      "ceiling": 9007199254740992,
+      "initial_block": {
+        "pages": [{"bytes_hex": "00", "programmed": false}],
+        "completed_erases": 1,
+        "incomplete_erase": false
+      },
+      "steps": [
+        {"cut": {"kind": "unknown"}, "expected": {"error": "invalid_block_state"}}
+      ]
+    }
+  ]
+}

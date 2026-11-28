@@ -402,10 +402,12 @@ var (
 	gameInputFrameV1Paths            = []string{"code/specs/fixtures/game-input-frame-v1"}
 	nandFlashFixturePath             = "code/specs/fixtures/database-media-v1/nand-flash.json"
 	nandPageProgramCutsFixturePath   = "code/specs/fixtures/database-media-v1/nand-page-program-cuts.json"
+	nandBlockEraseCutsFixturePath     = "code/specs/fixtures/database-media-v1/nand-block-erase-cuts.json"
 	hddSimulatorFixturePath          = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
 	hddWriteCrashCutsFixturePath     = "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json"
 	nandFlashFixtureInputs           = []string{nandFlashFixturePath}
 	nandPageProgramCutsFixtureInputs = []string{nandPageProgramCutsFixturePath}
+	nandBlockEraseCutsFixtureInputs   = []string{nandBlockEraseCutsFixturePath}
 	hddSimulatorFixtureInputs        = []string{hddSimulatorFixturePath}
 	hddWriteCrashCutsFixtureInputs   = []string{hddWriteCrashCutsFixturePath}
 	typescriptGameInputFrameInputs   = []string{
@@ -1112,6 +1114,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the exact DB04b shared NAND page-program cut vector",
 		matches:  isNANDPageProgramCutsFixture,
 		paths:    nandPageProgramCutsFixtureInputs,
+	},
+	{
+		name:     "go/nand-block-erase-cuts",
+		language: "go",
+		inputs:   "the exact DB04d shared interrupted block-erase vector",
+		matches:  isNANDBlockEraseCutsFixture,
+		paths:    nandBlockEraseCutsFixtureInputs,
 	},
 	{
 		name:     "python/hdd-simulator",
@@ -2187,6 +2196,8 @@ func repositoryInputsForPackage(packageName string) []string {
 		return nandFlashFixtureInputs
 	case "go/nand-page-program-cuts":
 		return nandPageProgramCutsFixtureInputs
+	case "go/nand-block-erase-cuts":
+		return nandBlockEraseCutsFixtureInputs
 	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator", "go/hdd-simulator":
 		return hddSimulatorFixtureInputs
 	case "go/hdd-write-crash-cuts":
@@ -2891,6 +2902,10 @@ func isNANDFlashFixture(changed string) bool {
 
 func isNANDPageProgramCutsFixture(changed string) bool {
 	return changed == nandPageProgramCutsFixturePath
+}
+
+func isNANDBlockEraseCutsFixture(changed string) bool {
+	return changed == nandBlockEraseCutsFixturePath
 }
 
 func isHDDSimulatorFixture(changed string) bool {
