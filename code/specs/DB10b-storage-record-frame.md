@@ -53,3 +53,15 @@ with an independent encoder and verify detached results, stored CRC
 endianness and input preservation. Run both command lists, coverage,
 race, vet, 100,000 guided inputs and clean controls for admitting
 trailing bytes or omitting the header from checksum coverage.
+
+## Local verification
+
+The implementation is in `f312f5bbceb`. An independent encoder and
+decoder matched 49,664 exact one-bit refusals, all short truncations,
+8,192 generated frames, maximum width and detached byte ownership.
+The independent caller passed race and vet.
+
+Both command lists passed at 100% statement coverage with race and
+vet. Module tidy, 100,000 guided inputs and both mutation controls
+passed. The exported graph and recipes added only the record frame
+and its dependency on the admitted CRC-32C package.

@@ -41,3 +41,18 @@ in each of the short vectors and check zero allocations on both
 entry points. Run both command lists, race, vet, a 100,000-input
 guided comparison and clean controls for changing the polynomial
 or resetting the register between chunks.
+
+## Local verification
+
+The implementation is in `73c06e3ec8c`. An independent normal-order
+polynomial calculation and the Go standard library matched 131,328
+finite byte and seed choices and 8,192 generated buffers with chunk
+splits. Known vectors, changed bits and zero allocations also passed.
+The independent caller passed race and vet.
+
+Both command lists passed at 100% statement coverage with race and
+vet. Module tidy, 100,000 guided comparisons and both mutation
+controls passed. The exported graph and recipe added only this
+dependency-free package.
+The Linux/386 test suite passed under QEMU. The Windows/amd64 test
+binary compiled.
