@@ -53,6 +53,12 @@ func Publish(device blockdevicecontract.Device, log, data, checkpoint storagepag
 	}
 
 	destination := uint8(1 - current.Selection.Slot)
+	return publishPrepared(device, checkpoint, destination, current.Pages[destination], stagedFrame)
+}
+
+// publishPrepared performs the three guarded write/barrier steps against a
+// preflighted destination page. Callers own responsibility for admission.
+func publishPrepared(device blockdevicecontract.Device, checkpoint storagepagelayout.Layout, destination uint8, oldPage, stagedFrame []byte) (Receipt, error) {
 	span, err := checkpoint.Span(int64(destination))
 	if err != nil {
 		return Receipt{}, err
@@ -62,7 +68,7 @@ func Publish(device blockdevicecontract.Device, log, data, checkpoint storagepag
 	guardByteOffset := storagewalcheckpointslot.GuardOffset % bytesPerBlock
 	guardBlock := span.FirstBlock + int64(guardBlockOffset)
 	pageOffset := guardBlockOffset * bytesPerBlock
-	guard := append([]byte(nil), current.Pages[destination][pageOffset:pageOffset+bytesPerBlock]...)
+	guard := append([]byte(nil), oldPage[pageOffset:pageOffset+bytesPerBlock]...)
 	pager, err := storagepageio.Open(device, checkpoint)
 	if err != nil {
 		return Receipt{}, err
@@ -78,7 +84,7 @@ func Publish(device blockdevicecontract.Device, log, data, checkpoint storagepag
 		return receipt, err
 	}
 
-	stagedPage := make([]byte, len(current.Pages[destination]))
+	stagedPage := make([]byte, len(oldPage))
 	copy(stagedPage, stagedFrame)
 	receipt.Attempted = StageBody
 	receipt.BodyBlocks, err = pager.WritePage(int64(destination), stagedPage)
