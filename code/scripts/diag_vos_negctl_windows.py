@@ -23,7 +23,8 @@ FILTER = "/exhaustive/insert_oracle_lo"
 PRODUCTION_TIMEOUT_SECS = 1200
 DIAGNOSTIC_WRAPPER_TIMEOUT_SECS = 120
 PROBE_TIMEOUT_SECS = 180
-PROBE_KILL_RESERVE_SECS = 35
+PROBE_KILL_RESERVE_SECS = 40
+READER_JOIN_SECS = 8
 CAPTURE_LIMIT = 64 * 1024
 SAMPLE_INTERVAL_SECS = 5
 
@@ -175,11 +176,13 @@ def run_probe(name: str, argv: list[str], cwd: Path, env: dict[str, str]) -> dic
             pass
     snapshot_at = time.perf_counter()
     snapshots.append({"at_s": round(snapshot_at - started, 3), **process_snapshot(proc.pid)})
+    reader_deadline = time.perf_counter() + READER_JOIN_SECS
     for reader in readers:
-        reader.join(timeout=10)
+        reader.join(timeout=max(0, reader_deadline - time.perf_counter()))
     ended = time.perf_counter()
 
     readers_done = all(not reader.is_alive() for reader in readers)
+    elapsed_s = round(ended - started, 3)
     return {
         "name": name,
         "argv": argv,
@@ -187,9 +190,10 @@ def run_probe(name: str, argv: list[str], cwd: Path, env: dict[str, str]) -> dic
         "root_pid": proc.pid,
         "root_process_name": Path(argv[0]).name,
         "root_parent_pid": os.getpid(),
-        "elapsed_s": round(ended - started, 3),
+        "elapsed_s": elapsed_s,
         "exit_code": proc.returncode,
         "outer_timeout": timed_out,
+        "over_budget": elapsed_s > PROBE_TIMEOUT_SECS,
         "outer_kill": kill_result,
         "stdout": {
             "bytes": stdout.total_bytes,
@@ -338,7 +342,8 @@ def main() -> int:
             for probe in manifest["probes"]:
                 summary.write(
                     f"- `{probe['name']}`: exit `{probe['exit_code']}`, "
-                    f"outer-timeout `{probe['outer_timeout']}`, {probe['elapsed_s']}s, "
+                    f"outer-timeout `{probe['outer_timeout']}`, over-budget `{probe['over_budget']}`, "
+                    f"{probe['elapsed_s']}s, "
                     f"stdout/stderr EOF `{probe['stdout']['eof_s']}` / `{probe['stderr']['eof_s']}`.\n"
                 )
             if "setup_error" in manifest:
@@ -346,6 +351,7 @@ def main() -> int:
     print(f"\nDiagnostic report: {report_path}", flush=True)
     complete = len(manifest["probes"]) == 4 and all(
         probe["readers_finished"]
+        and not probe["over_budget"]
         and any("processes" in sample for sample in probe["process_tree_samples"])
         for probe in manifest["probes"]
     )
