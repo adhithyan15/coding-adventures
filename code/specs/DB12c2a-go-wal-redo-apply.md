@@ -60,3 +60,20 @@ again. Verify convergence and exact receipts for both crashes, including
 a lost acknowledgement. Verify plan errors precede writes, both build
 lists, race, vet, guided inputs and clean controls for issuing a flush
 after a failed write and reordering the committed images.
+
+## Local verification
+
+The implementation is in `eb853f7347b`. The independent caller crossed
+all 80 reachable interruption cases across four planned two-sector
+images for the first and second recovery attempt. It matched 6,400
+actual two-crash histories, checking byte-for-byte whole-device state,
+exact receipts and a third uninterrupted recovery. The workload
+included a repeated page, two committed transactions and one incomplete
+transaction. Race and vet passed.
+
+Both command lists passed on Linux at 100% statement coverage with
+race and vet. Module tidy, 100,000 guided inputs and both mutation
+controls passed. The native suite also exercised all 66 cuts on a
+seven-sector page and compared final HDD and memory states.
+Build discovery added only the new replay package and its eleven
+expected edges per platform.
