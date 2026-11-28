@@ -415,24 +415,45 @@ describe("bounded deterministic property campaigns", () => {
     expect(confidenceOccurrences.slice(1).every((count) => count > 0)).toBe(true);
   });
 
-  it("checks 2,048 seeded finite-binary64 arrays at all 99 confidences", () => {
+  describe("the 2,048-array finite-binary64 campaign", () => {
+    // Generate the stream once. Each ordinary `it.each` case below owns one
+    // disjoint contiguous slice, so Vitest's per-test timer applies to a
+    // bounded portion without changing the input sequence or oracle work.
     const campaign = finiteBinary64Campaign(0x52414e4b, 2048);
-    expect(campaign.arrays).toHaveLength(2048);
-    expect(Number.isSafeInteger(campaign.rejectedNonFiniteBitPatterns)).toBe(true);
-    const confidenceOccurrences = new Array<number>(100).fill(0);
-    let intervalAssertions = 0;
-    for (const values of campaign.arrays) {
-      expectMedianAgainstOracle(values, median(values));
-      for (let confidence = 1; confidence <= 99; confidence += 1) {
-        confidenceOccurrences[confidence] += 1;
-        const profile = campaignRankProfile(values.length, confidence);
-        expectIntervalAgainstRank(values, medianInterval(values, confidence), selectedRank(profile));
-        intervalAssertions += 1;
+    const slices = [
+      [0, 256],
+      [256, 512],
+      [512, 768],
+      [768, 1024],
+      [1024, 1280],
+      [1280, 1536],
+      [1536, 1792],
+      [1792, 2048],
+    ] as const;
+
+    it.each(slices)("checks finite-binary64 array indices [%i, %i)", (start, end) => {
+      expect(campaign.arrays).toHaveLength(2048);
+      expect(Number.isSafeInteger(campaign.rejectedNonFiniteBitPatterns)).toBe(true);
+      expect(end - start).toBe(256);
+      const confidenceOccurrences = new Array<number>(100).fill(0);
+      let medianAssertions = 0;
+      let intervalAssertions = 0;
+      for (let index = start; index < end; index += 1) {
+        const values = campaign.arrays[index];
+        expectMedianAgainstOracle(values, median(values));
+        medianAssertions += 1;
+        for (let confidence = 1; confidence <= 99; confidence += 1) {
+          confidenceOccurrences[confidence] += 1;
+          const profile = campaignRankProfile(values.length, confidence);
+          expectIntervalAgainstRank(values, medianInterval(values, confidence), selectedRank(profile));
+          intervalAssertions += 1;
+        }
       }
-    }
-    expect(intervalAssertions).toBe(2048 * 99);
-    expect(confidenceOccurrences.slice(1).every((count) => count === 2048)).toBe(true);
-  }, 20_000);
+      expect(medianAssertions).toBe(256);
+      expect(intervalAssertions).toBe(256 * 99);
+      expect(confidenceOccurrences.slice(1).every((count) => count === 256)).toBe(true);
+    }, 20_000);
+  });
 });
 
 describe("negative controls for the shared assertions", () => {
