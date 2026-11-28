@@ -42,10 +42,11 @@ class StreamCapture:
 
     def read(self, stream: Any, started: float) -> None:
         try:
-            while chunk := stream.read(8192):
+            while chunk := os.read(stream.fileno(), 8192):
                 now = time.perf_counter() - started
                 with self.lock:
-                    self.first_byte_s = self.first_byte_s or now
+                    if self.first_byte_s is None:
+                        self.first_byte_s = now
                     self.last_byte_s = now
                     self.total_bytes += len(chunk)
                     head_room = CAPTURE_LIMIT // 2 - len(self.head)
@@ -155,7 +156,7 @@ def run_probe(name: str, argv: list[str], cwd: Path, env: dict[str, str]) -> dic
     deadline = started + PROBE_TIMEOUT_SECS - PROBE_KILL_RESERVE_SECS
     while proc.poll() is None:
         now = time.perf_counter()
-        if now >= next_sample:
+        if now >= next_sample and deadline - now > 5:
             snapshots.append({"at_s": round(now - started, 3), **process_snapshot(proc.pid)})
             next_sample = now + SAMPLE_INTERVAL_SECS
         remaining = deadline - now
@@ -172,10 +173,11 @@ def run_probe(name: str, argv: list[str], cwd: Path, env: dict[str, str]) -> dic
             proc.wait(timeout=min(1, remaining))
         except subprocess.TimeoutExpired:
             pass
-    ended = time.perf_counter()
-    snapshots.append({"at_s": round(ended - started, 3), **process_snapshot(proc.pid)})
+    snapshot_at = time.perf_counter()
+    snapshots.append({"at_s": round(snapshot_at - started, 3), **process_snapshot(proc.pid)})
     for reader in readers:
         reader.join(timeout=10)
+    ended = time.perf_counter()
 
     readers_done = all(not reader.is_alive() for reader in readers)
     return {
