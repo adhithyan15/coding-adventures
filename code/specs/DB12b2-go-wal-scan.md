@@ -54,3 +54,16 @@ later nonblank pages. Check shape failure order, full and vacant
 reservations, detached image results, race and vet. Run both build
 lists, 100,000 guided inputs and controls for stopping at the first
 vacant page or admitting a skipped rank.
+
+## Local verification
+
+The implementation is in `df8c878483c`. An independent caller matched
+59,049 five-page histories, including 27 classified streams and the
+exact invalid-width, rank and later-page refusals. Its page-zero
+damage case caught the initial shape-classification error and passed
+after the correction. Detached records, race and vet also passed.
+
+Both command lists passed at 100% statement coverage with race and
+vet. Module tidy, 100,000 guided inputs and both mutation controls
+passed. The package checked 16,807 exhaustive five-page histories.
+The graph added only the scanner and its admitted WAL dependencies.
