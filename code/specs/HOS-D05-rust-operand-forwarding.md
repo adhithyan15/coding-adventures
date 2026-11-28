@@ -31,6 +31,10 @@ constructor, and snapshot shapes intact.
   retain their current behavior. The decoder trait gains a default forwarded
   execution method that delegates to the old method; implementations may opt in
   to consuming the named values.
+- In this opt-in Core path, a data-hazard hold freezes through the Decode slot
+  and inserts the bubble at Execute; Decode is not marked as using the EX ALU.
+  These corrections are scoped to the new constructor so the existing Core
+  hazard behavior remains unchanged.
 - A Core configured with a hardwired zero register never forwards a pending
   write to register zero. Other register-file configurations keep register zero
   as an ordinary register.
