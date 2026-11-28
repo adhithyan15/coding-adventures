@@ -34,21 +34,20 @@ def _cnf(width: int, include_guard: bool) -> str:
                 for out_value in (False, True):
                     for next_value in (False, True):
                         if (out_value, next_value) != (bool(total & 1), bool(total >> 1)):
-                            clauses.append(
-                                _clause_forbidden([
-                                    (a, a_value),
-                                    (carry_in, carry_value),
-                                    (out, out_value),
-                                    (carry_out, next_value),
-                                ])
-                            )
+                            clauses.append(_clause_forbidden([
+                                (a, a_value), (carry_in, carry_value),
+                                (out, out_value), (carry_out, next_value),
+                            ]))
 
     if include_guard:
         # Only six values violate x <= SIZE_MAX - 6. Exclude each exact value;
         # this is a compact, exact encoding for this fixed subtraction.
         maximum = (1 << width) - 1
         for value in range(maximum - 5, maximum + 1):
-            clauses.append(_clause_forbidden([(variable, bool(value & (1 << bit))) for bit, variable in enumerate(x)]))
+            clauses.append(_clause_forbidden([
+                (variable, bool(value & (1 << bit)))
+                for bit, variable in enumerate(x)
+            ]))
 
     body = [f"p cnf {3 * width + 1} {len(clauses)}"]
     body.extend(" ".join(map(str, clause)) + " 0" for clause in clauses)
@@ -58,7 +57,7 @@ def _cnf(width: int, include_guard: bool) -> str:
 def _solve(cnf: str) -> str:
     root = Path(__file__).resolve().parents[5]
     bridge = root / "code/packages/python/historical-web/verification/go_sat"
-    go = os.environ.get("HWEB_GO", "/workspace/.coding-adventures-tools/go/bin/go")
+    go = os.environ.get("HWEB_GO", "go")
     result = subprocess.run(
         [go, "run", "."], cwd=bridge, input=cnf, text=True,
         capture_output=True, check=True, timeout=60,
@@ -74,7 +73,8 @@ def main() -> None:
         if guarded != "UNSAT" or weakened != "SAT":
             raise SystemExit(f"width {width}: guarded={guarded}, weakened={weakened}")
         receipts.append(f"{width}-bit guarded=UNSAT weakened=SAT")
-    print("; ".join(receipts))
+    for receipt in receipts:
+        print(receipt)
     print("The claim is bounded arithmetic only; no C source, allocator, or pointer proof is made.")
 
 
