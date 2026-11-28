@@ -37,30 +37,22 @@ def parse_html2_paragraphs_1995(source: str) -> list[Node]:
     source = str.replace(source, "\r\n", "\n")
     roots: list[Node] = []
     active: Element | None = None
-    text: list[str] = []
     cursor = 0
-
-    def flush_text(*, outside: bool = False) -> None:
-        if not text:
-            return
-        value = _decode_archived_text("".join(text))
-        text.clear()
-        if outside:
-            if any(character not in _OUTSIDE_SPACE for character in value):
-                raise ValueError("text outside P or H1 is unsupported")
-            return
-        if value and active is not None:
-            active.children.append(value)
 
     while cursor < len(source):
         opening = source.find("<", cursor)
         if opening < 0:
-            text.append(source[cursor:])
-            cursor = len(source)
+            opening = len(source)
+        text = source[cursor:opening]
+        if text:
+            if active is None:
+                if any(character not in _OUTSIDE_SPACE for character in text):
+                    raise ValueError("text outside P or H1 is unsupported")
+            else:
+                decoded = _decode_archived_text(text)
+                active.children.append(decoded)
+        if opening == len(source):
             break
-        if opening > cursor:
-            text.append(source[cursor:opening])
-        flush_text(outside=active is None)
 
         parsed = _simple_tag_at(source, opening)
         if parsed is None:
@@ -87,7 +79,6 @@ def parse_html2_paragraphs_1995(source: str) -> list[Node]:
         roots.append(element)
         active = element
 
-    flush_text(outside=active is None)
     if active is not None and active.tag == "h1":
         raise ValueError("H1 requires an explicit closing tag")
     return roots
