@@ -72,13 +72,10 @@ The suite checks:
 
 ## Bounded proof scope
 
-The related C++ SAT model in the separate verification lane represents one
-three-bit bounded append step: a root, first child, and sibling have in-range
-indices and correct parent/backlink relationships. The intended constraints
-are satisfiable; forcing a referenced link to the one-past-count value is
-unsatisfiable. Removing the existing-parent precondition admits the negative
-control where the new node becomes its own child. This checks the local append
-relation and its negative control. It does not prove parser behavior for all
-inputs, arbitrary vector growth, C++ allocation behavior, or traversal
-termination; those claims are exercised by the independent runtime tests
-above.
+The optional symbolic proof in
+[`verification/README.md`](verification/README.md) computes the machine-width
+post-count under a successful append and checks the append index/link
+relations. The proof agent owns that checker and its README. This bounded
+model is not a proof of parser behavior for all inputs, arbitrary vector
+growth, allocation behavior, or traversal termination; those claims are
+exercised by the independent runtime tests above.
