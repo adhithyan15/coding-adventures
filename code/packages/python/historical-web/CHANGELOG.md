@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- Add the strict `html2-paragraphs-1995` text-only P/H1 profile, with omitted P
+  end handling and explicit H1 closure based on RFC 1866.
+
 ## 0.1.0
 
 - Encode and parse HTTP/0.9 request lines and decode completed ASCII responses.
