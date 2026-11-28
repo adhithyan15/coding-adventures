@@ -13,7 +13,7 @@ use sim_core::{
     simple_config,
 };
 
-use crate::decode;
+use riscv_simulator::decode;
 
 /// One initial little-endian word in a bounded D05 program image.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -282,17 +282,17 @@ impl D05RiscVDecoder {
         let rs2 = source_value(token.rs2, OperandSlot::Rs2, reg_file, forwarded);
         match token.opcode.as_str() {
             "addi" => {
-                token.write_data = rs1.wrapping_add(token.immediate);
+                token.write_data = (rs1 as u32).wrapping_add(token.immediate as u32) as i64;
                 token.alu_result = token.write_data;
             }
             "lw" | "sw" => {
-                token.alu_result = rs1.wrapping_add(token.immediate);
+                token.alu_result = (rs1 as u32).wrapping_add(token.immediate as u32) as i64;
                 if token.opcode == "sw" {
-                    token.write_data = rs2;
+                    token.write_data = rs2 as u32 as i64;
                 }
             }
             "beq" => {
-                token.branch_taken = rs1 == rs2;
+                token.branch_taken = (rs1 as u32) == (rs2 as u32);
                 token.branch_target = token.pc.wrapping_add(token.immediate);
                 token.alu_result = if token.branch_taken {
                     token.branch_target
@@ -322,5 +322,8 @@ fn source_value(
     forwarded
         .iter()
         .find(|value| value.operand == slot && value.register == register)
-        .map_or_else(|| reg_file.read(register), |value| value.value)
+        .map_or_else(
+            || reg_file.read(register) as u32 as i64,
+            |value| value.value as u32 as i64,
+        )
 }

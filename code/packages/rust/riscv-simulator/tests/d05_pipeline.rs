@@ -1,6 +1,8 @@
-use riscv_simulator::{
-    D05InitialWord, Rv32ISimulator, d05_pipeline::run_d05_pipeline,
-};
+#[path = "support/d05_pipeline_adapter.rs"]
+mod adapter;
+
+use adapter::{D05InitialWord, D05PipelineError, run_d05_pipeline};
+use riscv_simulator::Rv32ISimulator;
 
 const INPUT_JSON: &str =
     include_str!("../../../../specs/fixtures/go-riscv-d05-v1/input.json");
@@ -121,7 +123,33 @@ fn adapter_rejects_non_ecall_system_encoding_before_running() {
             .expect_err("unsupported system instruction");
         assert!(matches!(
             err,
-            riscv_simulator::D05PipelineError::UnsupportedInstruction { .. }
+            D05PipelineError::UnsupportedInstruction { .. }
         ));
     }
+}
+
+#[test]
+fn forwarded_and_committed_registers_compare_as_rv32_bit_patterns() {
+    use riscv_simulator::encoding::{assemble, encode_addi, encode_beq, encode_ecall};
+
+    let program = assemble(&[
+        encode_addi(2, 0, -1),
+        encode_addi(1, 0, -1),
+        encode_beq(1, 2, 8),
+        encode_addi(3, 0, 99),
+        encode_addi(4, 1, 1),
+        encode_ecall(),
+    ]);
+    let result = run_d05_pipeline(&program, 256, &[], 100).unwrap();
+    assert_eq!(result.retired_pcs, [0, 4, 8, 16, 20]);
+    assert_eq!(result.registers[1], u32::MAX);
+    assert_eq!(result.registers[2], u32::MAX);
+    assert_eq!(result.registers[3], 0, "wrong path did not execute");
+    assert_eq!(result.registers[4], 0, "RV32 addition wraps at 32 bits");
+
+    let mut oracle = Rv32ISimulator::new();
+    oracle.load_checked(&program).unwrap();
+    let expected = oracle.run_checked(100).unwrap();
+    assert_eq!(result.registers, expected.final_state.registers);
+    assert_eq!(result.memory, expected.final_state.memory[..256]);
 }

@@ -5,7 +5,6 @@
 
 pub mod core_adapter;
 pub mod csr;
-pub mod d05_pipeline;
 pub mod decode;
 pub mod encoding;
 pub mod execute;
@@ -14,9 +13,6 @@ pub mod opcodes;
 pub mod simulator;
 
 pub use core_adapter::RiscVISADecoder;
-pub use d05_pipeline::{
-    D05CycleObservation, D05InitialWord, D05PipelineError, D05PipelineResult, run_d05_pipeline,
-};
 pub use csr::CSRFile;
 pub use functional::{
     Rv32IError, Rv32IExecutionResult, Rv32ISimulator, Rv32IState, Rv32IStepTrace, RV32I_MEMORY_SIZE,
