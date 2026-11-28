@@ -12,7 +12,7 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB00 | P0 | Establish shared pairing and verdict semantics and the portable fixture. Land reusable Go and Python `rank-statistics` packages with independent exact validation and fuzz coverage. | None | Merged in [#20004](https://github.com/adhithyan15/coding-adventures/pull/20004) |
 | MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
 | MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Implemented locally; awaiting review |
-| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01 | Local prototypes |
+| MB02 | P1 | Language-specific rank-statistics foundations and, separately, collector harnesses/drivers. | MB01 | TS rank-only sub-slice selected; Rust/Ruby/C++ and all collectors remain separate follow-ups. |
 | MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Open |
 | MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Open |
 | MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Open |
@@ -23,6 +23,20 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
 
 ## Delivery evidence
+
+### Selected sub-slice: MB02-TS-RANK
+
+Implement the pure `@coding-adventures/rank-statistics` TypeScript package
+specified in [VER07c](VER07c-rank-statistics.md#typescript-package-profile).
+This sub-slice covers median and exact median confidence intervals, an
+independent bounded oracle, deterministic properties and edge vectors,
+canonical fixture replay and input registration, package/build metadata, and an
+offline installed-tarball consumer. It does not include a benchmark driver,
+clock, measurement collector, verdict policy, Warrant dependency or registry
+publication. The benchmark-only package profile remains subject to its own
+collector and approval requirements; selecting this pure library neither
+inherits nor grants that approval. Reconcile later collector integration only
+through the normal main/DAG review after this package merges.
 
 - MB00 merged on November 24, 2026 as `e7ba4e7a0`.
   [Ubuntu and Windows CI](https://github.com/adhithyan15/coding-adventures/actions/runs/45541548277)

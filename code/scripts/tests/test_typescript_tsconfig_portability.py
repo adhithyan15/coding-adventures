@@ -11,7 +11,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-import typescript_tsconfig_portability as portability  # noqa: E402
+import typescript_tsconfig_portability as portability
 
 
 def write_json(path: Path, value: object) -> None:
@@ -474,12 +474,14 @@ console.log(prose, nested);
         # -3 shared_projects: wave, analog-waveform, and discrete-waveform
         # migrated from tsconfig.base.json to standalone configs (PHY-W8-E).
         # +1: os-architecture-simulator is a standalone noEmit semantic package.
+        # +1: rank-statistics is the deterministic MB02 TypeScript foundation.
+        # Its shared compiler configuration adds one inherited rootDir and outDir.
         # +1: historical-web is the HWEB04 TypeScript profile package with
         # standalone TypeScript configuration and a pinned package lockfile.
-        self.assertEqual(summary.total_projects, 523)
-        self.assertEqual(summary.shared_projects, 305)
-        self.assertEqual(summary.inherited_root_dir, 136)
-        self.assertEqual(summary.inherited_out_dir, 139)
+        self.assertEqual(summary.total_projects, 524)
+        self.assertEqual(summary.shared_projects, 306)
+        self.assertEqual(summary.inherited_root_dir, 137)
+        self.assertEqual(summary.inherited_out_dir, 140)
         # forme-authoring-core, forme-authoring-editor,
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
@@ -665,8 +667,9 @@ console.log(prose, nested);
         # +1: unix-history-simulator locks its standalone compiler and test graph.
         # +1: the browser program locks its standalone compiler and test graph.
         # +1: os-architecture-simulator locks its standalone TypeScript compiler.
+        # +1: rank-statistics locks its standalone compiler and test graph.
         # +1: historical-web locks its standalone compiler and local test harness.
-        self.assertEqual(summary.locked_compilers, 536)
+        self.assertEqual(summary.locked_compilers, 537)
 
 
 if __name__ == "__main__":

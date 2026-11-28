@@ -6995,6 +6995,8 @@ is what the code does.
 
 ## 12. Tests that must exist
 
+**Go package validation budget.** The Kiln package BUILD must continue to run its full module build, vet, and `go test ./... -cover` suite on every supported platform. A macOS-specific `BUILD_mac` may give the complete Go test process a bounded 20-minute test timeout and enable verbose test timings (`go test ./... -cover -timeout=20m -v`) when the macOS suite needs more than Go's default alarm. This changes only the outer Go test alarm and timing output: keep every test, assertion, stress round, and operation-specific deadline unchanged. The timeout is not a CPU benchmark threshold and does not establish why the host run was slower.
+
 - **Absence.** An action probes a missing file and is recorded. Adding
   that file inside a package, outside every package, or as a **new nested
   package** makes lookup miss.

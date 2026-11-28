@@ -98,21 +98,23 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestMicrobenchmarkPairsFixtureSelectsFourConsumers(t *testing.T) {
+func TestMicrobenchmarkPairsFixtureSelectsFiveConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/microbenchmark", Language: "go"},
 		{Name: "go/rank-statistics", Language: "go"},
 		{Name: "python/microbenchmark", Language: "python"},
 		{Name: "python/rank-statistics", Language: "python"},
+		{Name: "typescript/rank-statistics", Language: "typescript"},
 	}
 	fixture := []string{microbenchmarkPairsFixturePath}
-	want := map[string]bool{"go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true}
+	want := map[string]bool{"go/microbenchmark": true, "go/rank-statistics": true, "python/microbenchmark": true, "python/rank-statistics": true, "typescript/rank-statistics": true}
 	if got, err := repositoryInputConsumersForChange(fixture, packages, "all"); err != nil || !reflect.DeepEqual(got, want) {
 		t.Fatalf("all-language fixture selection got %v, err %v; want %v", got, err, want)
 	}
 	for language, expected := range map[string]map[string]bool{
-		"go":     {"go/microbenchmark": true, "go/rank-statistics": true},
-		"python": {"python/microbenchmark": true, "python/rank-statistics": true},
+		"go":         {"go/microbenchmark": true, "go/rank-statistics": true},
+		"python":     {"python/microbenchmark": true, "python/rank-statistics": true},
+		"typescript": {"typescript/rank-statistics": true},
 	} {
 		if got, err := repositoryInputConsumersForChange(fixture, packages, language); err != nil || !reflect.DeepEqual(got, expected) {
 			t.Errorf("%s fixture selection got %v, err %v; want %v", language, got, err, expected)
@@ -1539,19 +1541,25 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 }
 
 func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
+	if inputs := repositoryInputsForPackage("ruby/unix_history_simulator"); !reflect.DeepEqual(inputs, []string{historicalUnixFixturePath}) {
+		t.Fatalf("actual Ruby package cache inputs = %v, want only the shared fixture", inputs)
+	}
 	for _, consumer := range repositoryInputConsumers {
 		if consumer.name == "ruby/unix-history-simulator" {
-			t.Fatal("historical Unix fixture must not register the nonexistent hyphenated Ruby package")
+			t.Fatal("historical Unix fixture must not register the obsolete hyphenated Ruby identity")
 		}
 	}
 	if inputs := repositoryInputsForPackage("ruby/unix-history-simulator"); inputs != nil {
-		t.Fatalf("nonexistent hyphenated Ruby package has fallback inputs %v, want none", inputs)
+		t.Fatalf("obsolete hyphenated Ruby identity has fallback inputs %v, want none", inputs)
 	}
 	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "rust", "swift", "typescript"}
 	packages := make([]discovery.Package, 0, len(languages)+3)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
 		name := language + "/unix-history-simulator"
+		if language == "ruby" {
+			name = "ruby/unix_history_simulator"
+		}
 		packages = append(packages, discovery.Package{Name: name, Language: language})
 		all[name] = true
 	}
@@ -1627,6 +1635,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		"dart": "dart/unix-history-simulator", "kotlin": "kotlin/unix-history-simulator",
 		"haskell": "haskell/unix-history-simulator", "ocaml": "ocaml/unix-history-simulator",
 		"swift": "swift/unix-history-simulator", "elixir": elixirPackageName,
+		"ruby": "ruby/unix_history_simulator",
 	} {
 		for _, tc := range cases {
 			want := map[string]bool{}
@@ -1647,7 +1656,11 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	}
 	for _, language := range languages {
 		got, err := repositoryInputConsumersForChange([]string{historicalUnixFixturePath}, packages, language)
-		want := map[string]bool{language + "/unix-history-simulator": true}
+		name := language + "/unix-history-simulator"
+		if language == "ruby" {
+			name = "ruby/unix_history_simulator"
+		}
+		want := map[string]bool{name: true}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Errorf("%s-only fixture selection = %v, err %v; want %v", language, got, err, want)
 		}
@@ -1681,6 +1694,9 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildNativePath, historicalUnixLuaAdapterPath)
 		}
 		name := language + "/unix-history-simulator"
+		if language == "ruby" {
+			name = "ruby/unix_history_simulator"
+		}
 		if language == "haskell" {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixHaskellCabalPath, historicalUnixHaskellMainPath)
 		}
@@ -1706,6 +1722,55 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	rubyWant := []string{historicalUnixFixturePath}
 	if !reflect.DeepEqual(rubyInputs, rubyWant) {
 		t.Errorf("Ruby package repository inputs = %v, want %v", rubyInputs, rubyWant)
+	}
+}
+
+func TestRubyHistoricalUnixFixtureUsesDiscoveredPackageIdentity(t *testing.T) {
+	root := t.TempDir()
+	packageNames := []string{
+		"c/unix-history-simulator", "cpp/unix-history-simulator", "csharp/unix-history-simulator",
+		"dart/unix-history-simulator", "elixir/unix_history_simulator", "fsharp/unix-history-simulator",
+		"go/unix-history-simulator", "haskell/unix-history-simulator", "java/unix-history-simulator",
+		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "ocaml/unix-history-simulator", "perl/unix-history-simulator",
+		"python/unix-history-simulator", "ruby/unix_history_simulator", "rust/unix-history-simulator",
+		"swift/unix-history-simulator", "typescript/unix-history-simulator",
+	}
+	for _, name := range packageNames {
+		packageRoot := filepath.Join(root, "code", "packages", filepath.FromSlash(name))
+		if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(packageRoot, "BUILD"), nil, 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	discovered := make(map[string]bool, len(packages))
+	for _, pkg := range packages {
+		discovered[pkg.Name] = true
+	}
+	if len(packages) != len(packageNames) || !discovered["ruby/unix_history_simulator"] || discovered["ruby/unix-history-simulator"] {
+		t.Fatalf("discovered Ruby identities are wrong: %v", discovered)
+	}
+	selected, err := repositoryInputConsumersForChange([]string{historicalUnixFixturePath}, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := make(map[string]bool, len(packageNames))
+	for _, name := range packageNames {
+		want[name] = true
+	}
+	if !reflect.DeepEqual(selected, want) {
+		t.Fatalf("canonical fixture selected %v, want %v", selected, want)
+	}
+	if selected["ruby/unix-history-simulator"] {
+		t.Fatal("fixture selection emitted the obsolete hyphenated Ruby identity")
+	}
+	if got := repositoryInputsForPackage("ruby/unix_history_simulator"); !reflect.DeepEqual(got, []string{historicalUnixFixturePath}) {
+		t.Fatalf("Ruby cache inputs = %v, want only the shared fixture", got)
 	}
 }
 

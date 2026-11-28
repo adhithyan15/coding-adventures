@@ -1124,6 +1124,15 @@ contains:
 2. **The relations the current build tool already knows**: the dependency
    graph, the repository-input boundary and the test-trigger relations,
    imported from the old tool's graph export (KILN03 §2).
+   A repository-input consumer's name must be the exact qualified package
+   identity produced by package discovery from its tracked BUILD location.
+   Discovery keeps the directory basename verbatim: for example,
+   `code/packages/ruby/unix_history_simulator` is
+   `ruby/unix_history_simulator`, not a normalized hyphenated spelling.
+   Fixture selection and repository-input cache-key dispatch must use that
+   same identity; tests should compare against discovered package names or
+   explicit canonical names, not derive their expected name from the selector
+   helper being tested.
 3. **Ecosystem globals**: `code/packages/rust/Cargo.toml` and its lockfile,
    shared `tsconfig` bases, and similar files, listed in the rule.
 4. **The legacy `BUILD` and `BUILD_windows` text**, the old build tool's

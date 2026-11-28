@@ -1,0 +1,38 @@
+{
+  "name": "@coding-adventures/rank-statistics",
+  "version": "0.1.0",
+  "description": "Pure sample median and exact median confidence intervals",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "testdata",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "required_capabilities.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:installed": "node tools/installed-smoke.mjs"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

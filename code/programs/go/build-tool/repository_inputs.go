@@ -750,6 +750,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    []string{microbenchmarkPairsFixturePath},
 	},
 	{
+		name:     "typescript/rank-statistics",
+		language: "typescript",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
 		name:     "dart/hash-map",
 		language: "dart",
 		inputs:   "the shared DT18 hash-map contract and v1 fixture",
@@ -1906,6 +1913,9 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 
 func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 	name := language + "/unix-history-simulator"
+	if language == "ruby" {
+		name = "ruby/unix_history_simulator"
+	}
 	return historicalUnixFixturePackageRow(name, language)
 }
 
@@ -2021,6 +2031,9 @@ func repositoryInputsForPackage(packageName string) []string {
 			osMachineRiscvPath, osMachineRiscvVerifyPath,
 		}
 	}
+	if packageName == "ruby/unix_history_simulator" {
+		return []string{historicalUnixFixturePath}
+	}
 	if packageName == "elixir/unix_history_simulator" {
 		return []string{
 			historicalUnixFixturePath, historicalUnixReplayPath,
@@ -2076,6 +2089,8 @@ func repositoryInputsForPackage(packageName string) []string {
 	case "typescript/historical-web":
 		return []string{historicalWebVectorsPath}
 	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+		return []string{microbenchmarkPairsFixturePath}
+	case "typescript/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths

@@ -1127,6 +1127,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/typescript/python-lexer",
                   "code/packages/typescript/python-parser",
                   "code/packages/typescript/radix-tree",
+                  "code/packages/typescript/rank-statistics",
                   "code/packages/typescript/register-vm",
                   "code/packages/typescript/repl",
                   "code/packages/typescript/resp-protocol",

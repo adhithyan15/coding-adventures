@@ -42,11 +42,36 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedOCamlChanges(t *testing.T) {
 
 func TestAnalyzeCIWorkflowPatchAllowsHaskellIndexBootstrapVerification(t *testing.T) {
 	patch := `
-@@ -1945,0 +1946,6 @@
-+      - name: Verify Haskell package index
+@@ -1017,0 +1018,1 @@
++          python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_cabal_config_bootstrap.py'
+@@ -1945,0 +1947,22 @@
++      - name: Set up Haskell
++        id: haskell
++        if: needs.detect.outputs.needs_haskell == 'true'
++        uses: haskell-actions/setup@pinned
++        with:
++          cabal-update: false
++      - name: Set up Haskell package index transport
 +        if: needs.detect.outputs.needs_haskell == 'true'
 +        shell: bash
++        env:
++          CABAL_STORE_DIR: ${{ steps.haskell.outputs.cabal-store }}
 +        run: |
++          if [[ -z "${RUNNER_TEMP:-}" || -z "${GITHUB_ENV:-}" ]]; then
++            printf '%s\\n' 'runner paths required' >&2
++            exit 1
++          fi
++          tmpdir="$(mktemp -d "$RUNNER_TEMP/cabal-https.XXXXXX")"
++          printf '%s\\n' 'repository hackage.haskell.org' '  url: https://hackage.haskell.org/' '  secure: True' > "$tmpdir/config"
++          printf 'store-dir: %s\\n' "$CABAL_STORE_DIR" >> "$tmpdir/config"
++          if [[ "$RUNNER_OS" == "Windows" ]]; then
++            printf '%s\\n' 'install-method: copy' 'overwrite-policy: always' >> "$tmpdir/config"
++          fi
++          printf 'CABAL_CONFIG=%s\\n' "$tmpdir/config" >> "$GITHUB_ENV"
++      - name: Verify Haskell package index
++        if: needs.detect.outputs.needs_haskell == 'true'
++        run: |
++          cabal update
 +          cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
 `
 
@@ -57,6 +82,48 @@ func TestAnalyzeCIWorkflowPatchAllowsHaskellIndexBootstrapVerification(t *testin
 	got := SortedToolchains(change.Toolchains)
 	if len(got) != 1 || got[0] != "haskell" {
 		t.Fatalf("expected Haskell toolchain only, got %v", got)
+	}
+}
+
+func TestAnalyzeCIWorkflowPatchKeepsUnscopedShellExitConservative(t *testing.T) {
+	patch := `
+@@ -1945,0 +1946,1 @@
++          exit 1
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if !change.RequiresFullRebuild {
+		t.Fatal("expected an unscoped shell exit to require a full rebuild")
+	}
+}
+
+func TestAnalyzeCIWorkflowPatchRecognizesIsolatedHaskellStepID(t *testing.T) {
+	patch := `
+@@ -5033,0 +5034,1 @@
++        id: haskell
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatal("expected the Haskell setup step ID to remain toolchain-scoped")
+	}
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 1 || got[0] != "haskell" {
+		t.Fatalf("expected Haskell toolchain only, got %v", got)
+	}
+}
+
+func TestAnalyzeCIWorkflowPatchKeepsSharedCheckoutUnsafe(t *testing.T) {
+	patch := `
+@@ -1945,0 +1946,3 @@
++      - name: Set up Haskell package index transport
++        uses: actions/checkout@v4
++        run: cabal update
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if !change.RequiresFullRebuild {
+		t.Fatal("expected shared checkout changes to remain unsafe even in a Haskell hunk")
 	}
 }
 

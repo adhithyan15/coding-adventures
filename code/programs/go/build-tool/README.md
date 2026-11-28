@@ -2,6 +2,12 @@
 
 The **primary build tool** for the coding-adventures monorepo. Compiled to a native binary for fast, dependency-free CI execution.
 
+Repository-input fixture relations use the exact package identities emitted by
+discovery. Names preserve the package directory basename: for example,
+`code/packages/ruby/unix_history_simulator` is registered as
+`ruby/unix_history_simulator`. The same identity is used for fixture selection
+and for the package's fallback cache inputs.
+
 Changes to the shared native Perl Windows helper or the Rust `perl-bridge`
 manifest, build script and source directory also select Conduit, IRC Server
 Native and Conduit Hello for all/Perl builds. These external inputs must still

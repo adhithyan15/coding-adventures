@@ -1,0 +1,12 @@
+{
+  "generator": "tests/generate-midpoint-vectors.py",
+  "python": "3.13.14",
+  "arithmetic": "fractions.Fraction.from_float exact rational mean, then Python binary64 conversion",
+  "special_value_count": 30,
+  "special_ordered_pair_count": 900,
+  "seed": "0x52415449",
+  "seeded_accepted_pairs": 256,
+  "seeded_rejected_nonfinite_bit_patterns": 0,
+  "vector_count": 1156,
+  "fixture_sha256": "ce2432e9433578bd8950620a372ee010f9a4860aff7813dcacca818208601c28"
+}
