@@ -20,14 +20,8 @@ import (
 // source edit must schedule its real same-language test consumers.
 func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 	root := toolchainFixtureRepoRoot(t)
-	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	graph, triggers, err := resolver.ResolveWithTestTriggers(packages)
-	if err != nil {
-		t.Fatalf("the repository dependency graph must resolve: %v", err)
-	}
+	packages, graph, triggers := repositoryTriggerSnapshotFor(t)
+	var err error
 	validationPackages := make([]discovery.Package, 0, 4)
 	for _, pkg := range packages {
 		switch pkg.Name {
