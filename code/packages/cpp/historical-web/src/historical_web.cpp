@@ -289,6 +289,9 @@ std::string parse_http09_request(std::string_view wire) {
     return std::string(address);
 }
 std::string decode_http09_response(std::string_view body) {
+    if (body.empty()) {
+        return {};
+    }
     for (std::size_t i = 0; i < body.size(); ++i) {
         if (static_cast<unsigned char>(body[i]) > 0x7f) {
             throw ProfileError(ErrorKind::invalid_response, i,
