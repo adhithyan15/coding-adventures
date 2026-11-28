@@ -40,6 +40,70 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedOCamlChanges(t *testing.T) {
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchSelectsOCamlForWindowsBootstrapInputs(t *testing.T) {
+	for _, test := range []struct {
+		name        string
+		changedLine string
+	}{
+		{name: "environment", changedLine: "-          windows-environment: cygwin\n+          windows-environment: msys2"},
+		{name: "compiler", changedLine: "-          windows-compiler: msvc\n+          windows-compiler: mingw"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			patch := "diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml\n" +
+				"@@ -1 +1 @@\n " +
+				"       - uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0\n" +
+				test.changedLine + "\n"
+
+			change := AnalyzeCIWorkflowPatch(patch)
+			if change.RequiresFullRebuild {
+				t.Fatal("expected OCaml Windows bootstrap input to stay toolchain-scoped")
+			}
+			got := SortedToolchains(change.Toolchains)
+			if len(got) != 1 || got[0] != "ocaml" {
+				t.Fatalf("expected OCaml toolchain only, got %v", got)
+			}
+		})
+	}
+}
+
+func TestAnalyzeCIWorkflowPatchSelectsOCamlForMinGWProbeAndPreservesLuaMSVC(t *testing.T) {
+	probe := `
+@@ -1,0 +2,13 @@
++            opam exec -- bash -c '
++              set -euo pipefail
++              command -v x86_64-w64-mingw32-gcc
++              command -v x86_64-w64-mingw32-ar
++              test "$(x86_64-w64-mingw32-gcc -dumpmachine)" = "x86_64-w64-mingw32"
++              x86_64-w64-mingw32-ar --version
++              tmpdir="$(mktemp -d)"
++              trap "rm -rf \"$tmpdir\"" EXIT
++              printf "int ocaml_toolchain_probe(void) { return 0; }\n" > "$tmpdir/probe.c"
++              x86_64-w64-mingw32-gcc -c "$tmpdir/probe.c" -o "$tmpdir/probe.o"
++              x86_64-w64-mingw32-ar rcs "$tmpdir/libprobe.a" "$tmpdir/probe.o"
++              test -s "$tmpdir/libprobe.a"
++            '
+`
+	change := AnalyzeCIWorkflowPatch(probe)
+	if change.RequiresFullRebuild {
+		t.Fatal("expected MinGW compiler probe to stay OCaml-toolchain-scoped")
+	}
+	if got := SortedToolchains(change.Toolchains); len(got) != 1 || got[0] != "ocaml" {
+		t.Fatalf("expected OCaml toolchain only for MinGW probe, got %v", got)
+	}
+
+	lua := `
+@@ -1,0 +2,1 @@
++          msvc --version
+`
+	change = AnalyzeCIWorkflowPatch(lua)
+	if change.RequiresFullRebuild {
+		t.Fatal("expected existing Lua MSVC marker to stay toolchain-scoped")
+	}
+	if got := SortedToolchains(change.Toolchains); len(got) != 1 || got[0] != "lua" {
+		t.Fatalf("expected Lua toolchain only for generic MSVC marker, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchAllowsHaskellIndexBootstrapVerification(t *testing.T) {
 	patch := `
 @@ -1945,0 +1946,6 @@

@@ -41,6 +41,21 @@ repository branch, tag, unpinned action version, `depext`, package pin, network
 fallback, cache that can substitute project dependencies, or skip-success path.
 Windows uses the setup action's MinGW compiler mode.
 
+The dedicated OCAML03 and OCAML07 workflows keep their reviewed Windows 2022
+target on `windows-environment: cygwin`; their solver lock and platform receipt
+remain scoped to that runner. Generic CI runs on Windows 2025 and MUST use the
+same pinned setup action with `windows-compiler: mingw` and
+`windows-environment: msys2`. That supported action mode installs the MinGW-w64
+GCC package needed by OCaml's configured native compiler. The generic CI
+validator MUST enforce this input independently from the dedicated workflow's
+Cygwin identity. This environment selection does not change the compiler,
+opam, Dune, repository, archive-mirror, or checksum identities above.
+Before installing generic Windows build dependencies, CI MUST verify through
+`opam exec` that the exact `x86_64-w64-mingw32-gcc` and
+`x86_64-w64-mingw32-ar` commands are available, check the compiler target
+triple, and compile/archive a small C probe. This proves both tools are usable
+inside the environment that builds `ppxlib`, `menhir`, and package C shims.
+
 The setup action's cache prefix MUST bind the exact source commit, workflow run,
 run attempt, target, and phase. Fresh-solve and locked-fixture phases MUST NOT
 share or restore a cache from any prior run or rerun, and each phase MUST fail
@@ -161,7 +176,10 @@ Both fixture kinds run sequentially on every target. Every nonblank line in the
 selected `BUILD` or `BUILD_windows` file is one independent command, matching
 the repository build tool's line-oriented behavior. Unix lines execute through
 a fresh POSIX shell; Windows lines execute through a fresh `cmd.exe` process
-while the setup action's Cygwin/MinGW toolchain remains on `PATH`. CI MUST NOT
+while the active switch's selected Cygwin/MinGW toolchain remains on `PATH`.
+The generic Windows 2025 build uses the setup action's MSYS2 environment to
+provide the configured MinGW compiler and binutils; the dedicated Windows 2022
+solver jobs use the setup action's Cygwin environment. CI MUST NOT
 use `continue-on-error`, conditional success, `|| true`, or an absent-tool
 skip. The run fails unless formatting, Alcotest, and measured `bisect_ppx`
 coverage all execute and produce a nonempty coverage artifact.

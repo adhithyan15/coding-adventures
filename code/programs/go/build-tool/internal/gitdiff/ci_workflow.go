@@ -68,6 +68,9 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	"ocaml": {
 		"needs_ocaml", "setup-ocaml", "ocaml-compiler", "ocaml-version",
 		"ocaml --version", "opam --version", "dune --version", "set up ocaml",
+		"windows-compiler", "windows-environment",
+		"opam exec -- bash -c",
+		"x86_64-w64-mingw32-gcc", "x86_64-w64-mingw32-ar",
 	},
 	"java": {
 		"needs_java", "setup-java", "java-version", "java --version",
@@ -215,6 +218,14 @@ func classifyCIWorkflowHunk(lines []string) (map[string]bool, bool) {
 func detectCIWorkflowToolchains(content string) map[string]bool {
 	found := make(map[string]bool)
 	normalized := strings.ToLower(content)
+	// These keys are setup-ocaml action inputs, even when their values name
+	// tools also used by another language (for example `msvc`). Keep their
+	// classification local to the OCaml bootstrap instead of letting value
+	// substrings route the hunk to an unrelated toolchain.
+	if strings.Contains(normalized, "windows-compiler:") ||
+		strings.Contains(normalized, "windows-environment:") {
+		return map[string]bool{"ocaml": true}
+	}
 
 	for toolchain, markers := range ciWorkflowToolchainMarkers {
 		for _, marker := range markers {
@@ -254,7 +265,11 @@ func isToolchainScopedStructuralLine(content string) bool {
 		strings.HasPrefix(normalized, "path:"),
 		strings.HasPrefix(normalized, "env:"),
 		strings.HasPrefix(normalized, "$"),
+		strings.HasPrefix(normalized, "set -euo pipefail"),
 		strings.HasPrefix(normalized, "tmpdir=\"$(mktemp "),
+		strings.HasPrefix(normalized, "trap "),
+		strings.HasPrefix(normalized, "test -s "),
+		normalized == "'",
 		strings.HasPrefix(normalized, "("),
 		strings.HasPrefix(normalized, ")"),
 		strings.HasPrefix(normalized, "["),
