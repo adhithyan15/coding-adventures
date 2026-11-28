@@ -1,7 +1,7 @@
 # needs-toolchain: typescript
 # needs-toolchain: python
-npm ci --ignore-scripts --no-audit --no-fund
+# needs-toolchain: rust
 if not exist wasm-output mkdir wasm-output
-node_modules\.bin\wat2wasm.cmd src\unix_history.wat -o wasm-output\unix_history.wasm
+cargo run --manifest-path ..\..\..\specs\fixtures\historical-unix-v1\test-adapters\wasm\Cargo.toml --bin wat-to-wasm --target-dir wasm-output\cargo-target --locked --offline -- src\unix_history.wat wasm-output\unix_history.wasm
 node ..\..\..\specs\fixtures\historical-unix-v1\test-adapters\wasm\component.test.mjs wasm-output\unix_history.wasm
 python ..\..\..\specs\fixtures\historical-unix-v1\replay_cli.py node ..\..\..\specs\fixtures\historical-unix-v1\test-adapters\wasm\fixture_cli.mjs wasm-output\unix_history.wasm

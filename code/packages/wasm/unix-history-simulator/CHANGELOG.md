@@ -2,8 +2,10 @@
 
 ## Unreleased
 
-- Use a case-distinct Windows output directory so it does not alias the
-  tracked `BUILD` file on case-insensitive filesystems.
+- Compile the WAT guest with the repository's locked, local Rust parser and
+  encoder crates instead of an unapproved npm WABT dependency.
+- Use `wasm-output` on both platform fronts because `build` aliases the
+  tracked `BUILD` file on case-insensitive filesystems such as macOS.
 
 ## 1.0.0
 

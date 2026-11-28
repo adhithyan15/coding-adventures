@@ -1,9 +1,0 @@
-{
-  "name": "hos-unix-history-wasm",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Bounded WebAssembly teaching guest for the HOS00 file-read image",
-  "devDependencies": {
-    "wabt": "1.0.39"
-  }
-}

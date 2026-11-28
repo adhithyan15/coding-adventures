@@ -1263,6 +1263,9 @@ func hashPackageWithRepositoryInputs(
 			append(append([]string{}, warrantAssurancePaths...), fixedPointReporterFileInputs...), fixedPointReporterTreePaths)
 	case "rust/warrant-ir":
 		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot, fixedPointWarrantIRFileInputs, fixedPointWarrantIRTreePaths)
+	case "wasm/unix-history-simulator":
+		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot,
+			repositoryInputsForPackage(pkg.Name), repositoryInputTreesForPackage(pkg.Name))
 	}
 	if inputs := repositoryInputsForPackage(pkg.Name); len(inputs) > 0 {
 		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, inputs)

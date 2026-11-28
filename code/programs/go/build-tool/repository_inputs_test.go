@@ -1607,6 +1607,14 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"Swift adapter source", historicalUnixSwiftMainPath, map[string]bool{"swift/unix-history-simulator": true}},
 		{"WAT fixture adapter", historicalUnixWasmAdapterPath, map[string]bool{"wasm/unix-history-simulator": true}},
 		{"WAT component test", historicalUnixWasmComponentPath, map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT compiler manifest", historicalUnixWasmCompilerRoot + "/Cargo.toml", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT compiler lockfile", historicalUnixWasmCompilerRoot + "/Cargo.lock", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT compiler source", historicalUnixWasmCompilerRoot + "/src/main.rs", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"parser dependency manifest", "code/packages/rust/wasm-wast-parser/Cargo.toml", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"parser dependency source", "code/packages/rust/wasm-wast-parser/src/module.rs", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"encoder dependency source", "code/packages/rust/wasm-module-encoder/src/lib.rs", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"dependency neighboring prefix excluded", "code/packages/rust/wasm-wast-parser/src-neighbor/module.rs", map[string]bool{}},
+		{"unrelated Rust crate excluded", "code/packages/rust/wasm-execution/src/lib.rs", map[string]bool{}},
 		{"WAT adapter lookalike excluded", historicalUnixWasmAdapterPath + ".bak", map[string]bool{}},
 		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
 		{"lookalike excluded", historicalUnixFixturePath + ".bak", map[string]bool{}},
@@ -1697,6 +1705,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		}
 		if language == "wasm" {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixWasmAdapterPath, historicalUnixWasmComponentPath)
+			wantInputs = append(wantInputs, historicalUnixWasmCompilerFiles...)
 		}
 		if got := repositoryInputsForPackage(name); !reflect.DeepEqual(got, wantInputs) {
 			t.Errorf("%s hash inputs = %v, want %v", name, got, wantInputs)
@@ -1726,12 +1735,106 @@ func TestWasmUnixGuestDeclaresExternalBuildToolchains(t *testing.T) {
 			t.Fatalf("read WAT package %s: %v", name, err)
 		}
 		fronts[name] = string(content)
+		if strings.Contains(string(content), "npm ") || strings.Contains(string(content), "wat2wasm") {
+			t.Errorf("%s still depends on an npm WAT compiler", name)
+		}
+		if !strings.Contains(string(content), "--locked --offline") || !strings.Contains(string(content), "wat-to-wasm") {
+			t.Errorf("%s must use the locked offline Rust helper", name)
+		}
+		if !strings.Contains(string(content), "wasm-output") || strings.Contains(string(content), "mkdir -p build") {
+			t.Errorf("%s must use a case-distinct output directory on every platform", name)
+		}
 	}
-	want := []string{"typescript", "python"}
+	want := []string{"typescript", "python", "rust"}
 	for _, platform := range []string{"linux", "windows"} {
 		if got := discovery.ExtraToolchainsForSnapshot(fronts, platform); !reflect.DeepEqual(got, want) {
 			t.Errorf("%s WAT BUILD toolchains = %v, want %v", platform, got, want)
 		}
+	}
+}
+
+func TestWasmCompilerSourceInputsAreTreeHashed(t *testing.T) {
+	root := t.TempDir()
+	packageRoot := filepath.Join(root, "code", "packages", "wasm", "unix-history-simulator")
+	if err := os.MkdirAll(filepath.Join(packageRoot, "src"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(packageRoot, "src", "unix_history.wat"), []byte("(module)\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, input := range repositoryInputsForPackage("wasm/unix-history-simulator") {
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("tracked input\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, tree := range repositoryInputTreesForPackage("wasm/unix-history-simulator") {
+		if err := os.MkdirAll(filepath.Join(root, filepath.FromSlash(tree)), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{
+		Name: "wasm/unix-history-simulator", Language: "wasm", Path: packageRoot,
+	}
+	hash := func() string {
+		t.Helper()
+		value, err := hashPackageWithRepositoryInputs(pkg, root, func(pkg discovery.Package) (string, error) {
+			return hasher.HashPackage(pkg)
+		})
+		if err != nil {
+			t.Fatalf("hash WAT package: %v", err)
+		}
+		return value
+	}
+	before := hash()
+	changedSource := filepath.Join(root, "code", "packages", "rust", "wasm-wast-parser", "src", "module.rs")
+	if err := os.WriteFile(changedSource, []byte("parser source\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if after := hash(); after == before {
+		t.Fatal("editing a local parser source tree did not change the WAT package hash")
+	}
+}
+
+func TestWasmCompilerInputSelectionFailsClosedAndRejectsLookalikes(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "wasm/unix-history-simulator", Language: "wasm"},
+		{Name: "wasm/adjacent", Language: "wasm"},
+		{Name: "rust/wasm-wast-parser", Language: "rust"},
+	}
+	accepted := []string{
+		historicalUnixWasmCompilerRoot + "/Cargo.toml",
+		historicalUnixWasmCompilerRoot + "/src/main.rs",
+		"code/packages/rust/wasm-wast-parser/Cargo.toml",
+		"code/packages/rust/wasm-wast-parser/src/module.rs",
+		"code/packages/rust/wasm-module-encoder/src/lib.rs",
+	}
+	for _, input := range accepted {
+		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "wasm")
+		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"wasm/unix-history-simulator": true}) {
+			t.Errorf("wasm-only %q selected %v, err %v", input, selected, err)
+		}
+	}
+	for _, input := range []string{
+		historicalUnixWasmCompilerRoot + "-adjacent/src/main.rs",
+		"code/packages/rust/wasm-wast-parser/src-neighbor/module.rs",
+		"code/packages/rust/wasm-execution/src/lib.rs",
+		"code/packages/rust/wasm-types/README.md",
+	} {
+		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || len(selected) != 0 {
+			t.Errorf("lookalike %q selected %v, err %v; want no external consumers", input, selected, err)
+		}
+	}
+	without := []discovery.Package{packages[1], packages[2]}
+	if selected, err := repositoryInputConsumersForChange([]string{accepted[0]}, without, "wasm"); err == nil || len(selected) != 0 {
+		t.Fatalf("missing WAT consumer selected %v, err %v; want fail closed", selected, err)
+	}
+	if selected, err := repositoryInputConsumersForChange([]string{accepted[0]}, packages, "rust"); err != nil || len(selected) != 0 {
+		t.Fatalf("Rust-only filter selected %v, err %v; want no WASM consumer", selected, err)
 	}
 }
 

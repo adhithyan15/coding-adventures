@@ -146,13 +146,33 @@ var (
 	historicalUnixSwiftMainPath       = "code/specs/fixtures/historical-unix-v1/test-adapters/swift/Sources/FixtureCLI/main.swift"
 	historicalUnixWasmAdapterPath     = "code/specs/fixtures/historical-unix-v1/test-adapters/wasm/fixture_cli.mjs"
 	historicalUnixWasmComponentPath   = "code/specs/fixtures/historical-unix-v1/test-adapters/wasm/component.test.mjs"
-	osArchitectureProfilesPath        = "code/specs/fixtures/os-architecture-v1/profiles.json"
-	osArchitectureVerifyPath          = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
-	osArchitectureGoConformancePath   = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
-	osMachineBoardsPath               = "code/specs/fixtures/os-machine-v1/boards.json"
-	osMachineVerifyPath               = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
-	osMachineRiscvPath                = "code/specs/fixtures/os-machine-v1/riscv.json"
-	osMachineRiscvVerifyPath          = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
+	historicalUnixWasmCompilerRoot    = "code/specs/fixtures/historical-unix-v1/test-adapters/wasm"
+	historicalUnixWasmCompilerFiles   = []string{
+		historicalUnixWasmCompilerRoot + "/Cargo.toml",
+		historicalUnixWasmCompilerRoot + "/Cargo.lock",
+		"code/packages/rust/wasm-wast-parser/Cargo.toml",
+		"code/packages/rust/wasm-module-encoder/Cargo.toml",
+		"code/packages/rust/wasm-types/Cargo.toml",
+		"code/packages/rust/wasm-opcodes/Cargo.toml",
+		"code/packages/rust/wasm-leb128/Cargo.toml",
+		"code/packages/rust/wasm-module-parser/Cargo.toml",
+	}
+	historicalUnixWasmCompilerTrees = []string{
+		historicalUnixWasmCompilerRoot + "/src",
+		"code/packages/rust/wasm-wast-parser/src",
+		"code/packages/rust/wasm-module-encoder/src",
+		"code/packages/rust/wasm-types/src",
+		"code/packages/rust/wasm-opcodes/src",
+		"code/packages/rust/wasm-leb128/src",
+		"code/packages/rust/wasm-module-parser/src",
+	}
+	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
+	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
+	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
+	osMachineBoardsPath             = "code/specs/fixtures/os-machine-v1/boards.json"
+	osMachineVerifyPath             = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
+	osMachineRiscvPath              = "code/specs/fixtures/os-machine-v1/riscv.json"
+	osMachineRiscvVerifyPath        = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
 	// kilnToolchainPinPaths are the pin sources Kiln's committed
 	// code/kiln/legacy/toolchains.json is checked against by its drift test
 	// (realpolicy_test.go). A toolchain bump that edits only these files must
@@ -660,6 +680,14 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("swift"),
 	historicalUnixFixtureRow("typescript"),
 	historicalUnixFixtureRow("wasm"),
+	{
+		name:      "wasm/unix-history-simulator",
+		language:  "wasm",
+		inputs:    "the locked fixture-side WAT compiler and its local Rust parser/encoder sources",
+		matches:   isHistoricalUnixWasmCompilerInput,
+		paths:     append(append([]string{}, historicalUnixWasmCompilerFiles...), historicalUnixWasmCompilerTrees...),
+		treePaths: historicalUnixWasmCompilerTrees,
+	},
 	{
 		name:     "python/historical-web",
 		language: "python",
@@ -1995,6 +2023,23 @@ func isHistoricalUnixFixture(changed string) bool {
 	return changed == historicalUnixFixturePath
 }
 
+func isHistoricalUnixWasmCompilerInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	for _, input := range historicalUnixWasmCompilerFiles {
+		if changed == input {
+			return true
+		}
+	}
+	for _, tree := range historicalUnixWasmCompilerTrees {
+		if changed == tree || strings.HasPrefix(changed, tree+"/") {
+			return true
+		}
+	}
+	return false
+}
+
 func isHistoricalWebVectors(changed string) bool {
 	return changed == historicalWebVectorsPath
 }
@@ -2069,6 +2114,7 @@ func repositoryInputsForPackage(packageName string) []string {
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixSwiftPackagePath, historicalUnixSwiftMainPath)
 		case "wasm":
 			inputs = append(inputs, historicalUnixReplayPath, historicalUnixWasmAdapterPath, historicalUnixWasmComponentPath)
+			inputs = append(inputs, historicalUnixWasmCompilerFiles...)
 		default:
 			return nil
 		}
@@ -2100,6 +2146,16 @@ func repositoryInputsForPackage(packageName string) []string {
 	default:
 		return nil
 	}
+}
+
+// repositoryInputTreesForPackage returns narrowly declared external source
+// trees. The WAT guest's fixture-side build helper compiles these local Rust
+// sources, so edits/additions/deletions must invalidate its package cache.
+func repositoryInputTreesForPackage(packageName string) []string {
+	if packageName == "wasm/unix-history-simulator" {
+		return append([]string{}, historicalUnixWasmCompilerTrees...)
+	}
+	return nil
 }
 
 // isDt18HashMapInput selects the two exact shared contracts and the

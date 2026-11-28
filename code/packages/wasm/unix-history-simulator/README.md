@@ -14,9 +14,12 @@ JSON dependency.
 ## Guest ABI
 
 The WAT source is `src/unix_history.wat`. Build it into a Wasm 1.0 module with
-WABT 1.0.39. The module exports `memory`, `reset`, `resolve`, `open`, `read`,
-`close`, `kind`, `descriptor_inode`, `descriptor_offset`, `entry_count`,
-`entry_name_ptr`, and `entry_name_len`.
+the fixture-side Rust helper, which uses the repository's `wasm-wast-parser`
+and `wasm-module-encoder` crates through local Cargo path dependencies. The
+helper is build/test tooling only; it is not part of the guest and adds no
+host imports to the generated module. The module exports `memory`, `reset`,
+`resolve`, `open`, `read`, `close`, `kind`, `descriptor_inode`,
+`descriptor_offset`, `entry_count`, `entry_name_ptr`, and `entry_name_len`.
 
 `resolve(pathPtr, pathLength)` accepts UTF-8 bytes in linear memory and returns
 an inode or a negative error code. `open(inode)` returns the lowest free
@@ -41,13 +44,12 @@ operations, not to arbitrary writes by a host that owns the instance.
 
 ## Build and tests
 
-The package BUILD installs its locked WABT tool and compiles the WAT module.
-It then runs component checks and the nine shared
-`historical-unix-v1/file-read.json` cases from fixture-adjacent adapters. The
-adapters are outside this package so the reusable guest remains free of host
-file and process capabilities. Replay evidence covers the combined WAT guest
-and host adapter.
+Each BUILD front invokes the fixture-side helper with the Rust 1.100.0 toolchain,
+locked Cargo dependencies, and Cargo offline mode. It then runs component checks
+and the nine shared `historical-unix-v1/file-read.json` cases from fixture-
+adjacent adapters. The adapters are outside this package so the reusable guest
+remains free of host file and process capabilities. Replay evidence covers the
+combined WAT guest and host adapter.
 
-The CI toolchain is Node 22.23.5 with npm 11.13.0; WABT is pinned to 1.0.39 in
-the package lockfile. On a local checkout, run `BUILD` from this package
-directory. The Windows counterpart is `BUILD_windows`.
+The CI toolchains are Node 22.23.5, Python 3.13.17, and Rust 1.100.0. Run
+`BUILD` from this package directory; the Windows counterpart is `BUILD_windows`.
