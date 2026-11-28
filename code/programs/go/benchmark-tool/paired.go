@@ -42,12 +42,18 @@ type pairedSummary struct {
 // The standard decoder handles syntax and escapes. This preliminary token walk
 // adds duplicate-key and resource checks before maps can discard evidence.
 func uniquePairedJSON(data []byte) error {
-	if len(data) > maxPairedBytes || !utf8.Valid(data) {
-		return fmt.Errorf("report must be UTF-8 JSON of at most %d bytes", maxPairedBytes)
+	return uniqueJSONDocument(data, maxPairedBytes, 200_000, 16, "report")
+}
+
+// uniqueJSONDocument performs bounded syntax, UTF-8, nesting, value-count, and
+// decoded-key uniqueness checks before a typed decoder can discard evidence.
+func uniqueJSONDocument(data []byte, maxBytes, maxValues, maxDepth int, label string) error {
+	if maxBytes < 0 || len(data) > maxBytes || !utf8.Valid(data) {
+		return fmt.Errorf("%s must be UTF-8 JSON of at most %d bytes", label, maxBytes)
 	}
 	d := json.NewDecoder(bytes.NewReader(data))
 	d.UseNumber()
-	budget := 200_000
+	budget := maxValues
 	var value func(int) error
 	value = func(depth int) error {
 		budget--
@@ -62,8 +68,8 @@ func uniquePairedJSON(data []byte) error {
 		if !container {
 			return nil
 		}
-		if depth >= 16 {
-			return fmt.Errorf("JSON nesting exceeds 16 containers")
+		if depth >= maxDepth {
+			return fmt.Errorf("%s JSON nesting exceeds %d containers", label, maxDepth)
 		}
 		switch delim {
 		case '{':
@@ -101,7 +107,7 @@ func uniquePairedJSON(data []byte) error {
 		return err
 	}
 	if _, err := d.Token(); err != io.EOF {
-		return fmt.Errorf("report must contain exactly one JSON value")
+		return fmt.Errorf("%s must contain exactly one JSON value", label)
 	}
 	return nil
 }

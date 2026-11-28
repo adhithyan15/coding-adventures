@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Treat imported `summary.json` and `trials.jsonl` as untrusted data: enforce
+  byte, row, record, JSON-value, and measurement-group budgets; reject duplicate
+  decoded keys, unknown/missing fields, malformed or trailing JSON, and return
+  explicit errors rather than truncating. Preflight aggregate Cliff's delta and
+  bootstrap work before statistical allocation/loops. The limits apply only to
+  explicit report/compare imports; `run` still writes its generated report
+  directly and keeps its existing trial limit.
+- Bound RESP response nesting to 64 values while retaining the 16 MiB frame
+  limit, and reject manifest `timeout_ms` values that cannot convert safely to
+  `time.Duration` without changing the existing zero-value defaults.
+- Exercise paired report, summary, and trial raw ingress with bounded active Go
+  fuzz campaigns in BUILD.
 - Require the complete six-field driver metadata group when any group member is
   present; permit `profile` only with that group. Reject U+0000 in metadata and
   invocation strings while preserving valid empty argv entries and an empty

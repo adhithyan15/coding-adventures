@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"math/bits"
 	"math/rand"
 	"net"
 	"os"
@@ -39,22 +40,35 @@ import (
 const version = "0.5.0"
 
 const (
-	defaultTCPTimeout          = 10 * time.Second
-	serviceReadyTimeout        = 10 * time.Second
-	serviceReadyProbeTimeout   = 100 * time.Millisecond
-	maxTCPConnections          = 10000
-	maxTCPConcurrency          = 10000
-	maxTCPRequestsPerConn      = 10000
-	maxTCPFrameBytes           = 16 * 1024 * 1024
-	maxTCPPayloadBytes         = 16 * 1024 * 1024
-	respDriver                 = "tcp-resp"
-	respReadMode               = "resp-frame"
-	respModeOneShot            = "one-shot"
-	respModePreconnectThenFire = "preconnect-then-fire"
-	respModePipeline           = "pipeline"
-	respModeIdle               = "idle"
-	respModeHold               = "hold"
-	maxTCPHoldMS               = 10 * 60 * 1000
+	defaultTCPTimeout            = 10 * time.Second
+	serviceReadyTimeout          = 10 * time.Second
+	serviceReadyProbeTimeout     = 100 * time.Millisecond
+	maxTCPConnections            = 10000
+	maxTCPConcurrency            = 10000
+	maxTCPRequestsPerConn        = 10000
+	maxTCPFrameBytes             = 16 * 1024 * 1024
+	maxTCPPayloadBytes           = 16 * 1024 * 1024
+	maxRESPDepth                 = 64
+	maxImportedSummaryBytes      = int64(64 << 20)
+	maxImportedSummaryRows       = 100_000
+	maxSummaryJSONValues         = 2_000_005
+	maxImportedTrialsBytes       = int64(512 << 20)
+	maxImportedTrialRows         = 2_000_000
+	maxTrialRecordBytes          = 64 * 1024
+	maxImportedMeasurementGroups = 10_000
+	maxComparisonGroups          = 10_000
+	comparisonBootstrapRounds    = 1_000
+	maxComparisonCliffPairs      = uint64(10_000_000)
+	maxComparisonBootstrapWork   = uint64(100_000_000)
+	maxTimeoutMS                 = int64((1<<63 - 1) / int64(time.Millisecond))
+	respDriver                   = "tcp-resp"
+	respReadMode                 = "resp-frame"
+	respModeOneShot              = "one-shot"
+	respModePreconnectThenFire   = "preconnect-then-fire"
+	respModePipeline             = "pipeline"
+	respModeIdle                 = "idle"
+	respModeHold                 = "hold"
+	maxTCPHoldMS                 = 10 * 60 * 1000
 )
 
 //go:embed benchmark-tool.json
@@ -567,15 +581,18 @@ func reportResultDir(dir string, stdout io.Writer) error {
 }
 
 func compareResultDirs(leftDir string, rightDir string, metric string, stdout io.Writer) error {
-	leftTrials, err := readTrials(filepath.Join(leftDir, "trials.jsonl"))
+	leftTrials, err := readTrials(filepath.Join(leftDir, "trials.jsonl"), metric)
 	if err != nil {
 		return err
 	}
-	rightTrials, err := readTrials(filepath.Join(rightDir, "trials.jsonl"))
+	rightTrials, err := readTrials(filepath.Join(rightDir, "trials.jsonl"), metric)
 	if err != nil {
 		return err
 	}
-	comparison := compareTrialSets(leftDir, rightDir, metric, leftTrials, rightTrials)
+	comparison, err := compareTrialMetricSets(leftDir, rightDir, metric, leftTrials, rightTrials)
+	if err != nil {
+		return err
+	}
 	if len(comparison.Comparisons) == 0 {
 		return fmt.Errorf("no common %q trial metrics found", metric)
 	}
@@ -605,9 +622,16 @@ func compareResultDirs(leftDir string, rightDir string, metric string, stdout io
 	return nil
 }
 
-func compareTrialSets(baseDir string, candidateDir string, metric string, baseTrials []Trial, candidateTrials []Trial) ComparisonFile {
+func compareTrialSets(baseDir string, candidateDir string, metric string, baseTrials []Trial, candidateTrials []Trial) (ComparisonFile, error) {
 	base := trialValuesByKey(baseTrials, metric)
 	candidate := trialValuesByKey(candidateTrials, metric)
+	return compareTrialMetricSets(baseDir, candidateDir, metric, base, candidate)
+}
+
+func compareTrialMetricSets(baseDir string, candidateDir string, metric string, base map[string]trialMetricSet, candidate map[string]trialMetricSet) (ComparisonFile, error) {
+	if err := validateComparisonWork(base, candidate); err != nil {
+		return ComparisonFile{}, err
+	}
 	keys := sortedCommonValueKeys(base, candidate)
 	rows := make([]Comparison, 0, len(keys))
 	for _, key := range keys {
@@ -626,7 +650,52 @@ func compareTrialSets(baseDir string, candidateDir string, metric string, baseTr
 		CandidateDir: candidateDir,
 		Metric:       metric,
 		Comparisons:  rows,
+	}, nil
+}
+
+// validateComparisonWork checks every common group before bootstrap arrays or
+// the quadratic Cliff's delta loop are allocated or run.
+func validateComparisonWork(base, candidate map[string]trialMetricSet) error {
+	keys := sortedCommonValueKeys(base, candidate)
+	if len(keys) > maxComparisonGroups {
+		return fmt.Errorf("comparison has %d common groups; maximum is %d", len(keys), maxComparisonGroups)
 	}
+	var cliffPairs uint64
+	var bootstrapWork uint64
+	for _, key := range keys {
+		baseCount := uint64(len(base[key].Values))
+		candidateCount := uint64(len(candidate[key].Values))
+		if baseCount != 0 && candidateCount > (maxComparisonCliffPairs-cliffPairs)/baseCount {
+			return fmt.Errorf("comparison exceeds %d Cliff's delta pair operations", maxComparisonCliffPairs)
+		}
+		cliffPairs += baseCount * candidateCount
+		for _, count := range []uint64{baseCount, candidateCount} {
+			work, ok := comparisonBootstrapWork(count)
+			if !ok || work > maxComparisonBootstrapWork-bootstrapWork {
+				return fmt.Errorf("comparison exceeds %d bootstrap work units", maxComparisonBootstrapWork)
+			}
+			bootstrapWork += work
+		}
+	}
+	return nil
+}
+
+func comparisonBootstrapWork(samples uint64) (uint64, bool) {
+	if samples == 0 {
+		return 0, true
+	}
+	// ceil(log2(samples)) is zero for one sample, but the added one accounts
+	// for each draw and keeps a one-sample group from having zero estimated cost.
+	factor := uint64(1 + bits.Len64(samples-1))
+	maxUint64 := ^uint64(0)
+	if samples > maxUint64/factor {
+		return 0, false
+	}
+	work := samples * factor
+	if work > maxUint64/uint64(comparisonBootstrapRounds) {
+		return 0, false
+	}
+	return work * uint64(comparisonBootstrapRounds), true
 }
 
 type trialMetricSet struct {
@@ -755,7 +824,7 @@ func bootstrapRelativeDifferenceCI(baseValues []float64, candidateValues []float
 		seed = seed<<8 + int64(seedBytes[i])
 	}
 	rng := rand.New(rand.NewSource(seed))
-	const rounds = 1000
+	const rounds = comparisonBootstrapRounds
 	estimates := make([]float64, rounds)
 	baseSample := make([]float64, len(baseValues))
 	candidateSample := make([]float64, len(candidateValues))
@@ -839,29 +908,110 @@ func renderComparisonReport(comparison ComparisonFile) string {
 	return b.String()
 }
 
-func readTrials(path string) ([]Trial, error) {
+func readTrials(path, metric string) (map[string]trialMetricSet, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
-	var trials []Trial
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" {
-			continue
-		}
-		var trial Trial
-		if err := json.Unmarshal([]byte(line), &trial); err != nil {
-			return nil, err
-		}
-		trials = append(trials, trial)
-	}
-	if err := scanner.Err(); err != nil {
+	info, err := file.Stat()
+	if err != nil {
 		return nil, err
 	}
-	return trials, nil
+	if err := checkImportedSize("trials.jsonl", info.Size(), maxImportedTrialsBytes); err != nil {
+		return nil, err
+	}
+	return readTrialMetrics(file, metric, maxImportedTrialsBytes, maxImportedTrialRows, maxTrialRecordBytes, maxImportedMeasurementGroups)
+}
+
+func readTrialMetrics(reader io.Reader, metric string, maxBytes int64, maxRows, maxRecordBytes, maxGroups int) (map[string]trialMetricSet, error) {
+	limited := &io.LimitedReader{R: reader, N: maxBytes + 1}
+	scanner := bufio.NewScanner(limited)
+	scanner.Buffer(make([]byte, min(64*1024, maxRecordBytes+2)), maxRecordBytes+2)
+	values := make(map[string]trialMetricSet)
+	var rows int
+	lineNumber := 0
+	for scanner.Scan() {
+		lineNumber++
+		line := scanner.Bytes()
+		if len(line) > maxRecordBytes {
+			return nil, fmt.Errorf("trials.jsonl line %d exceeds %d bytes", lineNumber, maxRecordBytes)
+		}
+		if len(bytes.TrimSpace(line)) == 0 {
+			continue
+		}
+		if err := checkImportedRows("trials.jsonl", rows+1, maxRows); err != nil {
+			return nil, err
+		}
+		rows++
+		trial, err := parseTrialRecordWithLimit(line, maxRecordBytes)
+		if err != nil {
+			return nil, fmt.Errorf("trials.jsonl line %d: %w", lineNumber, err)
+		}
+		if trial.Phase != "measurement" {
+			continue
+		}
+		key := trial.Subject + "/" + trial.Workload
+		entry, ok := values[key]
+		if !ok {
+			if len(values) >= maxGroups {
+				return nil, fmt.Errorf("trials.jsonl has more than %d measurement groups", maxGroups)
+			}
+			entry.Correct = true
+			entry.Seen = true
+		}
+		if !trial.OK {
+			entry.Correct = false
+		}
+		if value, ok := trial.Metrics[metric]; ok && trial.OK {
+			entry.Values = append(entry.Values, value)
+		}
+		values[key] = entry
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("read trials.jsonl: %w", err)
+	}
+	if limited.N == 0 {
+		return nil, fmt.Errorf("trials.jsonl exceeds %d bytes", maxImportedTrialsBytes)
+	}
+	return values, nil
+}
+
+func parseTrialRecord(data []byte) (Trial, error) {
+	return parseTrialRecordWithLimit(data, maxTrialRecordBytes)
+}
+
+func parseTrialRecordWithLimit(data []byte, maxRecordBytes int) (Trial, error) {
+	var trial Trial
+	if len(data) > maxRecordBytes {
+		return trial, fmt.Errorf("record exceeds %d bytes", maxRecordBytes)
+	}
+	if err := uniqueJSONDocument(data, maxRecordBytes, 200_000, 16, "trial record"); err != nil {
+		return trial, err
+	}
+	fields, err := pairedObject(data, []string{"subject", "workload", "trial", "phase", "ok", "metrics"}, []string{"error"})
+	if err != nil {
+		return trial, err
+	}
+	if raw, exists := fields["error"]; exists && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		return trial, fmt.Errorf("error must be a string when present")
+	}
+	var rawMetrics map[string]json.RawMessage
+	if err := json.Unmarshal(fields["metrics"], &rawMetrics); err != nil {
+		return trial, err
+	}
+	for name, raw := range rawMetrics {
+		if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return trial, fmt.Errorf("metric %q must be a JSON number", name)
+		}
+	}
+	if err := unmarshalClosedJSON(data, &trial); err != nil {
+		return trial, err
+	}
+	if trial.Metrics == nil {
+		return trial, fmt.Errorf("metrics must be an object")
+	}
+	return trial, nil
 }
 
 func LoadManifest(path string) (Manifest, error) {
@@ -1240,6 +1390,8 @@ func ValidateManifest(m Manifest) error {
 		}
 		if w.TimeoutMS < 0 {
 			problems = append(problems, where+".timeout_ms must be non-negative")
+		} else if int64(w.TimeoutMS) > maxTimeoutMS {
+			problems = append(problems, fmt.Sprintf("%s.timeout_ms must be <= %d to fit time.Duration", where, maxTimeoutMS))
 		}
 		if w.HoldMS < 0 {
 			problems = append(problems, where+".hold_ms must be non-negative")
@@ -1255,6 +1407,9 @@ func ValidateManifest(m Manifest) error {
 }
 
 func RunManifest(manifestPath string, manifest Manifest, outDir string) error {
+	if err := ValidateManifest(manifest); err != nil {
+		return err
+	}
 	benchmarkRoot := benchmarkRootForManifest(manifestPath)
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return err
@@ -1612,6 +1767,10 @@ func shellCommand(command string) *exec.Cmd {
 }
 
 func runCommandWorkload(subject PreparedSubject, workload Workload, defaults Defaults, samplesFile, trialsFile *os.File) ([]Trial, error) {
+	timeout, err := timeoutFromMilliseconds(workload.TimeoutMS, 0)
+	if err != nil {
+		return nil, err
+	}
 	if defaults.WarmupTrials < 0 || defaults.WarmupTrials > maxBenchmarkTrials {
 		return nil, fmt.Errorf("warmup_trials %d out of range [0, %d]", defaults.WarmupTrials, maxBenchmarkTrials)
 	}
@@ -1635,7 +1794,7 @@ func runCommandWorkload(subject PreparedSubject, workload Workload, defaults Def
 			command = workload.Command
 		}
 		workingDir := resolveSubjectWorkingDirectory(subject.Subject, subject.BenchmarkRoot)
-		result := runShell(command, workingDir, time.Duration(workload.TimeoutMS)*time.Millisecond)
+		result := runShell(command, workingDir, timeout)
 		metrics := map[string]float64{"elapsed_ms": result.ElapsedMS}
 		if workload.Operations > 0 && result.ElapsedMS > 0 {
 			metrics["operations"] = float64(workload.Operations)
@@ -1681,6 +1840,10 @@ type tcpRequestResult struct {
 }
 
 func runTCPRESPWorkload(subject PreparedSubject, workload Workload, defaults Defaults, address string, samplesFile, trialsFile *os.File) ([]Trial, error) {
+	timeout, err := timeoutFromMilliseconds(workload.TimeoutMS, defaultTCPTimeout)
+	if err != nil {
+		return nil, err
+	}
 	expectedFrames, err := splitRESPFrames([]byte(workload.Expect))
 	if err != nil && tcpWorkloadMode(workload) != respModeIdle {
 		return nil, fmt.Errorf("parse expected RESP frames for workload %s: %w", workload.Name, err)
@@ -1704,7 +1867,7 @@ func runTCPRESPWorkload(subject PreparedSubject, workload Workload, defaults Def
 			trialNumber = i + 1
 		}
 		start := time.Now()
-		results := executeTCPRESPTrial(address, workload, expectedFrames)
+		results := executeTCPRESPTrial(address, workload, expectedFrames, timeout)
 		elapsedMS := float64(time.Since(start).Microseconds()) / 1000.0
 		samples := tcpSamplesFromResults(subject.Subject.Name, workload.Name, trialNumber, phase, results)
 		trial := tcpTrialFromSamples(subject.Subject.Name, workload, trialNumber, phase, samples, elapsedMS)
@@ -1724,9 +1887,8 @@ func runTCPRESPWorkload(subject PreparedSubject, workload Workload, defaults Def
 	return trials, nil
 }
 
-func executeTCPRESPTrial(address string, workload Workload, expectedFrames [][]byte) []tcpRequestResult {
+func executeTCPRESPTrial(address string, workload Workload, expectedFrames [][]byte, timeout time.Duration) []tcpRequestResult {
 	mode := tcpWorkloadMode(workload)
-	timeout := tcpTimeout(workload)
 	connections := tcpConnections(workload)
 	concurrency := tcpConcurrency(workload, connections)
 	request := []byte(workload.Request)
@@ -1747,7 +1909,7 @@ func executeTCPRESPTrial(address string, workload Workload, expectedFrames [][]b
 			return executeTCPIdle(address, timeout)
 		})
 	case respModeHold:
-		return executeRESPHold(address, request, expectedFrames, connections, concurrency, timeout, tcpHoldDuration(workload))
+		return executeRESPHold(address, request, expectedFrames, connections, concurrency, timeout, tcpHoldDuration(workload, timeout))
 	default:
 		return []tcpRequestResult{{
 			OK:      false,
@@ -2113,18 +2275,24 @@ func tcpRequestsPerConnection(workload Workload) int {
 	return 1
 }
 
-func tcpTimeout(workload Workload) time.Duration {
-	if workload.TimeoutMS > 0 {
-		return time.Duration(workload.TimeoutMS) * time.Millisecond
+func timeoutFromMilliseconds(milliseconds int, zeroValue time.Duration) (time.Duration, error) {
+	if milliseconds < 0 {
+		return 0, fmt.Errorf("timeout_ms must be non-negative")
 	}
-	return defaultTCPTimeout
+	if int64(milliseconds) > maxTimeoutMS {
+		return 0, fmt.Errorf("timeout_ms must be <= %d to fit time.Duration", maxTimeoutMS)
+	}
+	if milliseconds == 0 {
+		return zeroValue, nil
+	}
+	return time.Duration(milliseconds) * time.Millisecond, nil
 }
 
-func tcpHoldDuration(workload Workload) time.Duration {
+func tcpHoldDuration(workload Workload, timeout time.Duration) time.Duration {
 	if workload.HoldMS > 0 {
 		return time.Duration(workload.HoldMS) * time.Millisecond
 	}
-	return tcpTimeout(workload)
+	return timeout
 }
 
 func elapsedMillis(start time.Time) float64 {
@@ -2160,6 +2328,13 @@ func readRESPFrame(reader *bufio.Reader, maxBytes int) ([]byte, error) {
 }
 
 func readRESPValue(reader *bufio.Reader, acc *respAccumulator) error {
+	return readRESPValueAtDepth(reader, acc, 1)
+}
+
+func readRESPValueAtDepth(reader *bufio.Reader, acc *respAccumulator, depth int) error {
+	if depth > maxRESPDepth {
+		return fmt.Errorf("RESP nesting exceeds %d values", maxRESPDepth)
+	}
 	prefix, err := reader.ReadByte()
 	if err != nil {
 		return err
@@ -2213,7 +2388,7 @@ func readRESPValue(reader *bufio.Reader, acc *respAccumulator) error {
 			return errors.New("RESP array exceeds maximum size")
 		}
 		for i := 0; i < count; i++ {
-			if err := readRESPValue(reader, acc); err != nil {
+			if err := readRESPValueAtDepth(reader, acc, depth+1); err != nil {
 				return err
 			}
 		}
@@ -2444,7 +2619,7 @@ func bootstrapCI(values []float64, estimator func([]float64) float64) (float64, 
 		seed = seed<<8 + int64(seedBytes[i])
 	}
 	rng := rand.New(rand.NewSource(seed))
-	const rounds = 1000
+	const rounds = comparisonBootstrapRounds
 	estimates := make([]float64, rounds)
 	sample := make([]float64, len(values))
 	for i := 0; i < rounds; i++ {
@@ -2591,15 +2766,113 @@ func writeJSONLine(w io.Writer, value any) error {
 }
 
 func readSummary(path string) (SummaryFile, error) {
-	var summary SummaryFile
-	data, err := os.ReadFile(path)
+	f, err := os.Open(path)
 	if err != nil {
+		return SummaryFile{}, err
+	}
+	defer f.Close()
+	info, err := f.Stat()
+	if err != nil {
+		return SummaryFile{}, err
+	}
+	if err := checkImportedSize("summary.json", info.Size(), maxImportedSummaryBytes); err != nil {
+		return SummaryFile{}, err
+	}
+	data, err := io.ReadAll(io.LimitReader(f, maxImportedSummaryBytes+1))
+	if err != nil {
+		return SummaryFile{}, err
+	}
+	if err := checkImportedSize("summary.json", int64(len(data)), maxImportedSummaryBytes); err != nil {
+		return SummaryFile{}, err
+	}
+	return parseSummaryDocument(data)
+}
+
+func checkImportedSize(name string, size, maximum int64) error {
+	if size < 0 || size > maximum {
+		return fmt.Errorf("%s is %d bytes; maximum is %d", name, size, maximum)
+	}
+	return nil
+}
+
+func checkImportedRows(name string, count, maximum int) error {
+	if count < 0 || count > maximum {
+		return fmt.Errorf("%s has %d records; maximum is %d", name, count, maximum)
+	}
+	return nil
+}
+
+func parseSummaryDocument(data []byte) (SummaryFile, error) {
+	var summary SummaryFile
+	if err := checkImportedSize("summary.json", int64(len(data)), maxImportedSummaryBytes); err != nil {
 		return summary, err
 	}
-	if err := json.Unmarshal(data, &summary); err != nil {
+	root, err := pairedObject(data, []string{"manifest_name", "generated_at", "summaries"}, nil)
+	if err != nil {
+		return summary, fmt.Errorf("summary.json: %w", err)
+	}
+	rows, err := decodeJSONArrayRaw(root["summaries"], maxImportedSummaryRows)
+	if err != nil {
+		return summary, fmt.Errorf("summary.json summaries: %w", err)
+	}
+	if err := uniqueJSONDocument(data, int(maxImportedSummaryBytes), maxSummaryJSONValues, 16, "summary.json"); err != nil {
 		return summary, err
+	}
+	for index, row := range rows {
+		if _, err := pairedObject(row, []string{
+			"subject", "workload", "metric", "count", "min", "max", "mean", "median", "stddev", "mad", "p50", "p90", "p95", "p99", "mean_ci_low", "mean_ci_high", "median_ci_low", "median_ci_high",
+		}, nil); err != nil {
+			return summary, fmt.Errorf("summary row %d: %w", index, err)
+		}
+	}
+	if err := unmarshalClosedJSON(data, &summary); err != nil {
+		return summary, fmt.Errorf("summary.json: %w", err)
+	}
+	if summary.Summaries == nil {
+		return SummaryFile{}, fmt.Errorf("summary.json summaries must be an array")
 	}
 	return summary, nil
+}
+
+func decodeJSONArrayRaw(data []byte, maximumRows int) ([]json.RawMessage, error) {
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	token, err := decoder.Token()
+	if err != nil {
+		return nil, err
+	}
+	if token != json.Delim('[') {
+		return nil, fmt.Errorf("must be an array")
+	}
+	rows := make([]json.RawMessage, 0)
+	for decoder.More() {
+		if err := checkImportedRows("summary.json", len(rows)+1, maximumRows); err != nil {
+			return nil, err
+		}
+		var row json.RawMessage
+		if err := decoder.Decode(&row); err != nil {
+			return nil, err
+		}
+		rows = append(rows, row)
+	}
+	if _, err := decoder.Token(); err != nil {
+		return nil, err
+	}
+	if _, err := decoder.Token(); err != io.EOF {
+		return nil, fmt.Errorf("must contain exactly one array")
+	}
+	return rows, nil
+}
+
+func unmarshalClosedJSON(data []byte, target any) error {
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(target); err != nil {
+		return err
+	}
+	if err := decoder.Decode(new(any)); err != io.EOF {
+		return fmt.Errorf("must contain exactly one JSON value")
+	}
+	return nil
 }
 
 func summaryByKey(summaries []Summary, metric string) map[string]Summary {
