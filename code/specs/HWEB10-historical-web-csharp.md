@@ -75,13 +75,16 @@ attribute names, preserve values, and decode only `&lt;`, `&gt;`, and `&amp;`
 once in regular text and anchor values. Tag whitespace is ASCII space, tab,
 LF, CR, or form feed. Anchor values accept single-quoted, double-quoted, and
 unquoted forms. The first `name`, `href`, and `type` attribute wins; malformed
-attribute sequences retain earlier recognized attributes.
+attribute sequences retain earlier recognized attributes. Passing a null source
+throws `ArgumentNullException`.
 
 Containers are `title`, `address`, `a`, headings, list containers/items, and
 glossary containers/entries. Paragraph and `isindex` tags create empty marker
-elements. A new heading closes the previous open heading. A new `li` closes an
-open `li` only inside the nearest list boundary. A new `dt`/`dd` closes the
-previous entry only inside the nearest `dl`. Matching end tags close through
+elements. A new heading closes the previous open heading. A new `li` closes
+the previous open `li` when it is newer than the newest open `ul`, `menu`, or
+`dir` boundary; when no such boundary is open, it closes the newest orphan
+`li`. A new `dt`/`dd` closes the previous entry newer than the newest open
+`dl`; without an open `dl`, it closes the newest orphan `dt` or `dd`. Matching end tags close through
 the nearest matching scope; unmatched ends are ignored and remaining scopes
 close at EOF. `xmp` and `listing` preserve literal text through their exact
 ASCII-case-insensitive end tag; `plaintext` preserves text through EOF.
