@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 
@@ -207,6 +208,47 @@ func TestRepositoryInputPathsAgreeWithPredicates(t *testing.T) {
 				t.Errorf("%s: declared path %q is not accepted by its predicate", consumer.name, p)
 			}
 		}
+	}
+}
+
+func TestWasmCompilerInputsAreExportedToKiln(t *testing.T) {
+	root := t.TempDir()
+	packageRoot := filepath.Join(root, "code", "packages", "wasm", "unix-history-simulator")
+	if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"BUILD", "BUILD_windows"} {
+		if err := os.WriteFile(filepath.Join(packageRoot, name), []byte("cargo run --offline\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	packages := []discovery.Package{{
+		Name: "wasm/unix-history-simulator", Language: "wasm", Path: packageRoot,
+	}}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var got []string
+	for _, pkg := range graph.Packages {
+		if pkg.Name == "wasm/unix-history-simulator" {
+			got = pkg.RepoInputs
+			if pkg.RepoInputsUnknown || len(pkg.RepoInputGlobs) != 0 {
+				t.Fatalf("WAT compiler inputs are not exact: unknown=%v globs=%v", pkg.RepoInputsUnknown, pkg.RepoInputGlobs)
+			}
+		}
+	}
+	want := []string{
+		historicalUnixFixturePath,
+		historicalUnixReplayPath,
+		historicalUnixWasmAdapterPath,
+		historicalUnixWasmComponentPath,
+	}
+	want = append(want, historicalUnixWasmCompilerFiles...)
+	want = append(want, historicalUnixWasmCompilerTrees...)
+	sort.Strings(want)
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("WAT repo_inputs = %v, want %v", got, want)
 	}
 }
 

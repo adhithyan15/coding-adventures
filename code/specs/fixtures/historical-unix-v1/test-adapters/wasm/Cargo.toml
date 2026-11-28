@@ -1,0 +1,12 @@
+[package]
+name = "historical-unix-wat-compiler"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "wat-to-wasm"
+path = "src/main.rs"
+
+[dependencies]
+wasm-wast-parser = { path = "../../../../../packages/rust/wasm-wast-parser" }
+wasm-module-encoder = { path = "../../../../../packages/rust/wasm-module-encoder" }
