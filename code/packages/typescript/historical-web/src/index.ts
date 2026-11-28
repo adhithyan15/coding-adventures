@@ -381,8 +381,14 @@ function anchorAttributes(source: string): Record<string, string | null> {
       i = nameEnd;
       value = null;
     }
-    if (name === "href" || name === "name" || name === "type") {
-      if (!Object.hasOwn(attributes, name)) attributes[name] = value;
+    // Keep the recognized attribute writes literal. The closed branches make
+    // the small schema visible to both readers and the strict capability scan.
+    if (name === "href") {
+      if (!Object.hasOwn(attributes, "href")) attributes.href = value;
+    } else if (name === "name") {
+      if (!Object.hasOwn(attributes, "name")) attributes.name = value;
+    } else if (name === "type") {
+      if (!Object.hasOwn(attributes, "type")) attributes.type = value;
     }
   }
   return attributes;
