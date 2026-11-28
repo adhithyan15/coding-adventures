@@ -1547,7 +1547,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	if inputs := repositoryInputsForPackage("ruby/unix-history-simulator"); inputs != nil {
 		t.Fatalf("nonexistent hyphenated Ruby package has fallback inputs %v, want none", inputs)
 	}
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "rust", "swift", "typescript"}
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "rust", "swift", "typescript", "wasm"}
 	packages := make([]discovery.Package, 0, len(languages)+3)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
@@ -1576,6 +1576,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			"haskell/unix-history-simulator": true, "elixir/unix_history_simulator": true,
 			"java/unix-history-simulator": true, "lua/unix-history-simulator": true,
 			"ocaml/unix-history-simulator": true, "swift/unix-history-simulator": true,
+			"wasm/unix-history-simulator": true,
 		}},
 		{"shared native driver", historicalUnixBuildNativePath, map[string]bool{
 			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
@@ -1604,6 +1605,17 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"OCaml adapter", historicalUnixOcamlAdapterPath, map[string]bool{"ocaml/unix-history-simulator": true}},
 		{"Swift adapter project", historicalUnixSwiftPackagePath, map[string]bool{"swift/unix-history-simulator": true}},
 		{"Swift adapter source", historicalUnixSwiftMainPath, map[string]bool{"swift/unix-history-simulator": true}},
+		{"WAT fixture adapter", historicalUnixWasmAdapterPath, map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT component test", historicalUnixWasmComponentPath, map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT compiler manifest", historicalUnixWasmCompilerRoot + "/Cargo.toml", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT compiler lockfile", historicalUnixWasmCompilerRoot + "/Cargo.lock", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"WAT compiler source", historicalUnixWasmCompilerRoot + "/src/main.rs", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"parser dependency manifest", "code/packages/rust/wasm-wast-parser/Cargo.toml", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"parser dependency source", "code/packages/rust/wasm-wast-parser/src/module.rs", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"encoder dependency source", "code/packages/rust/wasm-module-encoder/src/lib.rs", map[string]bool{"wasm/unix-history-simulator": true}},
+		{"dependency neighboring prefix excluded", "code/packages/rust/wasm-wast-parser/src-neighbor/module.rs", map[string]bool{}},
+		{"unrelated Rust crate excluded", "code/packages/rust/wasm-execution/src/lib.rs", map[string]bool{}},
+		{"WAT adapter lookalike excluded", historicalUnixWasmAdapterPath + ".bak", map[string]bool{}},
 		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
 		{"lookalike excluded", historicalUnixFixturePath + ".bak", map[string]bool{}},
 		{"unrelated README excluded", "code/packages/go/unix-history-simulator/README.md", map[string]bool{}},
@@ -1627,6 +1639,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		"dart": "dart/unix-history-simulator", "kotlin": "kotlin/unix-history-simulator",
 		"haskell": "haskell/unix-history-simulator", "ocaml": "ocaml/unix-history-simulator",
 		"swift": "swift/unix-history-simulator", "elixir": elixirPackageName,
+		"wasm": "wasm/unix-history-simulator",
 	} {
 		for _, tc := range cases {
 			want := map[string]bool{}
@@ -1690,6 +1703,10 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		if language == "swift" {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixSwiftPackagePath, historicalUnixSwiftMainPath)
 		}
+		if language == "wasm" {
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixWasmAdapterPath, historicalUnixWasmComponentPath)
+			wantInputs = append(wantInputs, historicalUnixWasmCompilerFiles...)
+		}
 		if got := repositoryInputsForPackage(name); !reflect.DeepEqual(got, wantInputs) {
 			t.Errorf("%s hash inputs = %v, want %v", name, got, wantInputs)
 		}
@@ -1709,6 +1726,118 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	}
 }
 
+func TestWasmUnixGuestDeclaresExternalBuildToolchains(t *testing.T) {
+	packageRoot := "../../../packages/wasm/unix-history-simulator"
+	fronts := make(map[string]string, 2)
+	for _, name := range []string{"BUILD", "BUILD_windows"} {
+		content, err := os.ReadFile(filepath.Join(packageRoot, name))
+		if err != nil {
+			t.Fatalf("read WAT package %s: %v", name, err)
+		}
+		fronts[name] = string(content)
+		if strings.Contains(string(content), "npm ") || strings.Contains(string(content), "wat2wasm") {
+			t.Errorf("%s still depends on an npm WAT compiler", name)
+		}
+		if !strings.Contains(string(content), "--locked --offline") || !strings.Contains(string(content), "wat-to-wasm") {
+			t.Errorf("%s must use the locked offline Rust helper", name)
+		}
+		if !strings.Contains(string(content), "wasm-output") || strings.Contains(string(content), "mkdir -p build") {
+			t.Errorf("%s must use a case-distinct output directory on every platform", name)
+		}
+	}
+	want := []string{"typescript", "python", "rust"}
+	for _, platform := range []string{"linux", "windows"} {
+		if got := discovery.ExtraToolchainsForSnapshot(fronts, platform); !reflect.DeepEqual(got, want) {
+			t.Errorf("%s WAT BUILD toolchains = %v, want %v", platform, got, want)
+		}
+	}
+}
+
+func TestWasmCompilerSourceInputsAreTreeHashed(t *testing.T) {
+	root := t.TempDir()
+	packageRoot := filepath.Join(root, "code", "packages", "wasm", "unix-history-simulator")
+	if err := os.MkdirAll(filepath.Join(packageRoot, "src"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(packageRoot, "src", "unix_history.wat"), []byte("(module)\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, input := range repositoryInputsForPackage("wasm/unix-history-simulator") {
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("tracked input\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, tree := range repositoryInputTreesForPackage("wasm/unix-history-simulator") {
+		if err := os.MkdirAll(filepath.Join(root, filepath.FromSlash(tree)), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{
+		Name: "wasm/unix-history-simulator", Language: "wasm", Path: packageRoot,
+	}
+	hash := func() string {
+		t.Helper()
+		value, err := hashPackageWithRepositoryInputs(pkg, root, func(pkg discovery.Package) (string, error) {
+			return hasher.HashPackage(pkg)
+		})
+		if err != nil {
+			t.Fatalf("hash WAT package: %v", err)
+		}
+		return value
+	}
+	before := hash()
+	changedSource := filepath.Join(root, "code", "packages", "rust", "wasm-wast-parser", "src", "module.rs")
+	if err := os.WriteFile(changedSource, []byte("parser source\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if after := hash(); after == before {
+		t.Fatal("editing a local parser source tree did not change the WAT package hash")
+	}
+}
+
+func TestWasmCompilerInputSelectionFailsClosedAndRejectsLookalikes(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "wasm/unix-history-simulator", Language: "wasm"},
+		{Name: "wasm/adjacent", Language: "wasm"},
+		{Name: "rust/wasm-wast-parser", Language: "rust"},
+	}
+	accepted := []string{
+		historicalUnixWasmCompilerRoot + "/Cargo.toml",
+		historicalUnixWasmCompilerRoot + "/src/main.rs",
+		"code/packages/rust/wasm-wast-parser/Cargo.toml",
+		"code/packages/rust/wasm-wast-parser/src/module.rs",
+		"code/packages/rust/wasm-module-encoder/src/lib.rs",
+	}
+	for _, input := range accepted {
+		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "wasm")
+		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"wasm/unix-history-simulator": true}) {
+			t.Errorf("wasm-only %q selected %v, err %v", input, selected, err)
+		}
+	}
+	for _, input := range []string{
+		historicalUnixWasmCompilerRoot + "-adjacent/src/main.rs",
+		"code/packages/rust/wasm-wast-parser/src-neighbor/module.rs",
+		"code/packages/rust/wasm-execution/src/lib.rs",
+		"code/packages/rust/wasm-types/README.md",
+	} {
+		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || len(selected) != 0 {
+			t.Errorf("lookalike %q selected %v, err %v; want no external consumers", input, selected, err)
+		}
+	}
+	without := []discovery.Package{packages[1], packages[2]}
+	if selected, err := repositoryInputConsumersForChange([]string{accepted[0]}, without, "wasm"); err == nil || len(selected) != 0 {
+		t.Fatalf("missing WAT consumer selected %v, err %v; want fail closed", selected, err)
+	}
+	if selected, err := repositoryInputConsumersForChange([]string{accepted[0]}, packages, "rust"); err != nil || len(selected) != 0 {
+		t.Fatalf("Rust-only filter selected %v, err %v; want no WASM consumer", selected, err)
+	}
+}
+
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	root := t.TempDir()
 	packageNames := []string{
@@ -1718,7 +1847,7 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "ocaml/unix-history-simulator", "perl/unix-history-simulator",
 		"python/unix-history-simulator", "rust/unix-history-simulator",
 		"ruby/unix_history_simulator",
-		"swift/unix-history-simulator", "typescript/unix-history-simulator",
+		"swift/unix-history-simulator", "typescript/unix-history-simulator", "wasm/unix-history-simulator",
 	}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
