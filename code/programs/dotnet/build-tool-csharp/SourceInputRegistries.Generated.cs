@@ -1169,6 +1169,25 @@ internal static class SourceInputRegistryProjection
       "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
     },
     {
+      "id": "repository-database-media-hdd-crash-cuts-fixture-inputs",
+      "input_origin": "repository",
+      "applies_to": {
+        "exact_roots": [
+          "code/packages/go/hdd-write-crash-cuts"
+        ],
+        "descendant_roots": [],
+        "excluded_roots": []
+      },
+      "inputs": [
+        {
+          "path": "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json",
+          "role": "cross_package_exact"
+        }
+      ],
+      "reason": "The Go hdd-write-crash-cuts tests read their exact shared DB04a crash-cut vector from the repository fixtures.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
       "id": "repository-database-media-hdd-fixture-inputs",
       "input_origin": "repository",
       "applies_to": {
