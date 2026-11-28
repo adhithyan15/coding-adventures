@@ -1,0 +1,54 @@
+{
+  "schema": "coding-adventures.database-media.ftl-copy-aware-victim.v1",
+  "cases": [
+    {
+      "name": "ratio beats stale count",
+      "status": ["stale", "stale", "stale", "live", "stale", "stale", "free", "free", "free", "free", "free", "free"],
+      "pages_per_block": 4,
+      "excluded_blocks": [],
+      "expected": {"found": true, "block": 1, "first_physical": 4, "page_count": 4, "stale_pages": 2, "live_pages": 0, "free_destinations": 4}
+    },
+    {
+      "name": "equal ratio favors larger stale count",
+      "status": ["stale", "live", "free", "free", "free", "free", "stale", "stale", "live", "live", "live", "free", "free", "free", "free", "free", "free", "free"],
+      "pages_per_block": 6,
+      "excluded_blocks": [],
+      "expected": {"found": true, "block": 1, "first_physical": 6, "page_count": 6, "stale_pages": 2, "live_pages": 3, "free_destinations": 10}
+    },
+    {
+      "name": "equal ratio and stale count favors low index",
+      "status": ["stale", "live", "free", "free", "stale", "live", "free", "free", "free", "free", "free", "free"],
+      "pages_per_block": 4,
+      "excluded_blocks": [],
+      "expected": {"found": true, "block": 0, "first_physical": 0, "page_count": 4, "stale_pages": 1, "live_pages": 1, "free_destinations": 6}
+    },
+    {
+      "name": "exact external spare capacity",
+      "status": ["stale", "live", "live", "free", "free", "live"],
+      "pages_per_block": 3,
+      "excluded_blocks": [],
+      "expected": {"found": true, "block": 0, "first_physical": 0, "page_count": 3, "stale_pages": 1, "live_pages": 2, "free_destinations": 2}
+    },
+    {
+      "name": "excluded free pages do not count as destinations",
+      "status": ["stale", "live", "free", "free", "live", "live"],
+      "pages_per_block": 2,
+      "excluded_blocks": [false, true, false],
+      "expected": {"found": false, "block": 0, "first_physical": 0, "page_count": 0, "stale_pages": 0, "live_pages": 0, "free_destinations": 0}
+    },
+    {
+      "name": "one short of required destinations",
+      "status": ["stale", "live", "live", "free", "live", "live"],
+      "pages_per_block": 3,
+      "excluded_blocks": [],
+      "expected": {"found": false, "block": 0, "first_physical": 0, "page_count": 0, "stale_pages": 0, "live_pages": 0, "free_destinations": 0}
+    },
+    {
+      "name": "all blocks excluded",
+      "status": ["stale", "free"],
+      "pages_per_block": 2,
+      "excluded_blocks": [true],
+      "expected": {"found": false, "block": 0, "first_physical": 0, "page_count": 0, "stale_pages": 0, "live_pages": 0, "free_destinations": 0}
+    }
+  ]
+}

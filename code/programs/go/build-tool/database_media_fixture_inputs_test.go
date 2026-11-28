@@ -23,6 +23,8 @@ func databaseMediaPackages(root string) []discovery.Package {
 		{Name: "go/nand-page-program-cuts", Language: "go"},
 		{Name: "go/nand-block-erase-cuts", Language: "go"},
 		{Name: "go/ftl-page-map", Language: "go"},
+		{Name: "go/ftl-erase-victim", Language: "go"},
+		{Name: "go/ftl-evacuation-plan", Language: "go"},
 		{Name: "python/hdd-simulator", Language: "python"},
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 		{Name: "c/hdd-simulator", Language: "c"},
@@ -102,6 +104,34 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 			goReader:  "go/ftl-page-map",
 			inputs:    ftlPageMapFixtureInputs,
 		},
+		{
+			fixture:   ftlEraseVictimFixturePath,
+			predicate: isFTLEraseVictimFixture,
+			readers:   map[string]bool{"go/ftl-erase-victim": true},
+			goReader:  "go/ftl-erase-victim",
+			inputs:    ftlEraseVictimFixtureInputs,
+		},
+		{
+			fixture:   ftlCopyAwareVictimFixturePath,
+			predicate: isFTLEraseVictimFixture,
+			readers:   map[string]bool{"go/ftl-erase-victim": true},
+			goReader:  "go/ftl-erase-victim",
+			inputs:    ftlEraseVictimFixtureInputs,
+		},
+		{
+			fixture:   ftlEvacuationPlanFixturePath,
+			predicate: isFTLEvacuationPlanFixture,
+			readers:   map[string]bool{"go/ftl-evacuation-plan": true},
+			goReader:  "go/ftl-evacuation-plan",
+			inputs:    ftlEvacuationPlanFixtureInputs,
+		},
+		{
+			fixture:   ftlRetirementDrainPlanFixturePath,
+			predicate: isFTLEvacuationPlanFixture,
+			readers:   map[string]bool{"go/ftl-evacuation-plan": true},
+			goReader:  "go/ftl-evacuation-plan",
+			inputs:    ftlEvacuationPlanFixtureInputs,
+		},
 	}
 
 	for _, tc := range cases {
@@ -174,9 +204,21 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		hddWriteCrashCutsFixturePath + ".bak",
 		ftlPageMapFixturePath + ".bak",
 		ftlPageReclamationFixturePath + ".bak",
+		ftlEraseVictimFixturePath + ".bak",
+		ftlCopyAwareVictimFixturePath + ".bak",
+		ftlEvacuationPlanFixturePath + ".bak",
+		ftlRetirementDrainPlanFixturePath + ".bak",
 		"code/specs/fixtures/database-media-v1/ftl-page-map.json/extra",
 		"code/specs/fixtures/database-media-v1/ftl-page-reclamation.json.bak",
 		"code/specs/fixtures/database-media-v2/ftl-page-map.json",
+		"code/specs/fixtures/database-media-v2/ftl-erase-victim.json",
+		"code/specs/fixtures/database-media-v2/ftl-copy-aware-victim.json",
+		"code/specs/fixtures/database-media-v2/ftl-evacuation-plan.json",
+		"code/specs/fixtures/database-media-v2/ftl-retirement-drain-plan.json",
+		"code/specs/fixtures/database-media-v1/ftl-erase-victim.json/extra",
+		"code/specs/fixtures/database-media-v1/ftl-copy-aware-victim.json/extra",
+		"code/specs/fixtures/database-media-v1/ftl-evacuation-plan.json/extra",
+		"code/specs/fixtures/database-media-v1/ftl-retirement-drain-plan.json/extra",
 		"code/specs/fixtures/database-media-v1/hdd-write-crash-cuts/extra.json",
 		"code/specs/fixtures/database-media-v2/nand-flash.json",
 		"code/specs/fixtures/database-media-v1",
@@ -185,7 +227,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		`code\specs\fixtures\database-media-v1\hdd-simulator.json`,
 	}
 	for _, changed := range negativeControls {
-		if isNANDFlashFixture(changed) || isNANDPageProgramCutsFixture(changed) || isNANDBlockEraseCutsFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) || isFTLPageMapFixture(changed) {
+		if isNANDFlashFixture(changed) || isNANDPageProgramCutsFixture(changed) || isNANDBlockEraseCutsFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) || isFTLPageMapFixture(changed) || isFTLEraseVictimFixture(changed) || isFTLEvacuationPlanFixture(changed) {
 			t.Errorf("media predicate accepted lookalike %q", changed)
 		}
 		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
@@ -212,6 +254,8 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"go/hdd-simulator":          {hddSimulatorFixturePath},
 		"go/hdd-write-crash-cuts":   {hddWriteCrashCutsFixturePath},
 		"go/ftl-page-map":           {ftlPageMapFixturePath, ftlPageReclamationFixturePath},
+		"go/ftl-erase-victim":       {ftlCopyAwareVictimFixturePath, ftlEraseVictimFixturePath},
+		"go/ftl-evacuation-plan":    {ftlEvacuationPlanFixturePath, ftlRetirementDrainPlanFixturePath},
 	} {
 		var got []string
 		for _, pkg := range graph.Packages {
@@ -339,6 +383,35 @@ func TestDeletedFTLPageMapFixturesStillSelectGoReader(t *testing.T) {
 	}
 }
 
+func TestDeletedFTLPlanningFixturesStillSelectTheirGoReaders(t *testing.T) {
+	root := t.TempDir()
+	packages := databaseMediaPackages(root)
+	fixtures := []struct {
+		path   string
+		reader string
+	}{
+		{ftlEraseVictimFixturePath, "go/ftl-erase-victim"},
+		{ftlCopyAwareVictimFixturePath, "go/ftl-erase-victim"},
+		{ftlEvacuationPlanFixturePath, "go/ftl-evacuation-plan"},
+		{ftlRetirementDrainPlanFixturePath, "go/ftl-evacuation-plan"},
+	}
+	for _, fixture := range fixtures {
+		if _, err := os.Stat(filepath.Join(root, filepath.FromSlash(fixture.path))); !os.IsNotExist(err) {
+			t.Fatalf("fixture should be absent for deletion case: %s (%v)", fixture.path, err)
+		}
+		for _, language := range []string{"go", "python", "all"} {
+			got, err := repositoryInputConsumersForChange([]string{fixture.path}, packages, language)
+			want := map[string]bool{}
+			if language == "go" || language == "all" {
+				want = map[string]bool{fixture.reader: true}
+			}
+			if err != nil || !reflect.DeepEqual(got, want) {
+				t.Errorf("deleted FTL planning fixture %s selection for %s = %v, err %v; want %v", fixture.path, language, got, err, want)
+			}
+		}
+	}
+}
+
 func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T) {
 	fixtures := []struct {
 		path    string
@@ -372,6 +445,22 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 			path:    ftlPageReclamationFixturePath,
 			readers: map[string]bool{"go/ftl-page-map": true},
 		},
+		{
+			path:    ftlEraseVictimFixturePath,
+			readers: map[string]bool{"go/ftl-erase-victim": true},
+		},
+		{
+			path:    ftlCopyAwareVictimFixturePath,
+			readers: map[string]bool{"go/ftl-erase-victim": true},
+		},
+		{
+			path:    ftlEvacuationPlanFixturePath,
+			readers: map[string]bool{"go/ftl-evacuation-plan": true},
+		},
+		{
+			path:    ftlRetirementDrainPlanFixturePath,
+			readers: map[string]bool{"go/ftl-evacuation-plan": true},
+		},
 	}
 	for _, fixture := range fixtures {
 		t.Run(fixture.path, func(t *testing.T) {
@@ -401,7 +490,7 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 					t.Fatal(err)
 				}
 			}
-			for _, path := range []string{nandFlashFixturePath, nandPageProgramCutsFixturePath, nandBlockEraseCutsFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath, ftlPageMapFixturePath, ftlPageReclamationFixturePath} {
+			for _, path := range []string{nandFlashFixturePath, nandPageProgramCutsFixturePath, nandBlockEraseCutsFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath, ftlPageMapFixturePath, ftlPageReclamationFixturePath, ftlEraseVictimFixturePath, ftlCopyAwareVictimFixturePath, ftlEvacuationPlanFixturePath, ftlRetirementDrainPlanFixturePath} {
 				fullPath := filepath.Join(root, filepath.FromSlash(path))
 				if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
 					t.Fatal(err)
@@ -488,6 +577,26 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 			id:      "repository-database-media-ftl-page-reclamation-fixture-inputs",
 			fixture: ftlPageReclamationFixturePath,
 			roots:   []string{"code/packages/go/ftl-page-map"},
+		},
+		{
+			id:      "repository-database-media-ftl-erase-victim-fixture-inputs",
+			fixture: ftlEraseVictimFixturePath,
+			roots:   []string{"code/packages/go/ftl-erase-victim"},
+		},
+		{
+			id:      "repository-database-media-ftl-copy-aware-victim-fixture-inputs",
+			fixture: ftlCopyAwareVictimFixturePath,
+			roots:   []string{"code/packages/go/ftl-erase-victim"},
+		},
+		{
+			id:      "repository-database-media-ftl-evacuation-plan-fixture-inputs",
+			fixture: ftlEvacuationPlanFixturePath,
+			roots:   []string{"code/packages/go/ftl-evacuation-plan"},
+		},
+		{
+			id:      "repository-database-media-ftl-retirement-drain-plan-fixture-inputs",
+			fixture: ftlRetirementDrainPlanFixturePath,
+			roots:   []string{"code/packages/go/ftl-evacuation-plan"},
 		},
 	} {
 		found := false

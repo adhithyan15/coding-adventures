@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "typescript",
       "package_root": "code/programs/typescript/visicalc-deno",
-      "boundary_sha256": "344c8e3d461639fc144c123ee5242f91ead1bd71e9e53bcfd58d7624baf6375a",
+      "boundary_sha256": "3bb37384b8749d8666e937688f969c467117d74d1f46c83fff534f438e14b806",
       "candidates": [
         {"path": "code/programs/typescript/visicalc-html/index.html", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
         {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
