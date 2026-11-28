@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-historical-web"
+version = "0.1.0"
+description = "Reference profiles for the 1991 HTTP protocol and archived 1992 HTML"
+requires-python = ">=3.12"
+license = "MIT"
+readme = "README.md"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "coding-adventures-test-bootstrap>=0.3.0",
+    "coding-adventures-ca-capability-analyzer>=0.1.0",
+]
+
+[tool.uv.sources]
+coding-adventures-test-bootstrap = { path = "../test-bootstrap", editable = true }
+coding-adventures-ca-capability-analyzer = { path = "../ca-capability-analyzer", editable = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/historical_web"]
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=historical_web --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+branch = true
