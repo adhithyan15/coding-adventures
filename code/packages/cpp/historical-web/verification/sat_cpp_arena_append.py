@@ -1,4 +1,5 @@
 """Symbolic SAT checks for the HWEB09 C++ append/link transition."""
+
 from __future__ import annotations
 
 import os
@@ -81,9 +82,7 @@ def _add_one(formula: CNF, value: tuple[int, ...]) -> tuple[tuple[int, ...], int
     return tuple(result), carry
 
 
-def _unsigned_less(
-    formula: CNF, left: tuple[int, ...], right: tuple[int, ...]
-) -> int:
+def _unsigned_less(formula: CNF, left: tuple[int, ...], right: tuple[int, ...]) -> int:
     """Encode unsigned `left < right`, with bit tuples in little-endian order."""
     if len(left) != len(right):
         raise ValueError("unsigned comparison widths differ")
