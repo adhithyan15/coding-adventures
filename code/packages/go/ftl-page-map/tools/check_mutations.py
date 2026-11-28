@@ -126,6 +126,25 @@ MUTATIONS = (
     ),
 )
 
+SCALAR_BYPASS_MUTATIONS = (
+    (
+        "page-map-scalar-check-bypass",
+        "fixture_test.go",
+        "TestPageMapFixtureRejectsInvalidUnicodeScalars",
+        "page-map fixture reader accepted invalid Unicode scalar spelling",
+        "if err := validateSurrogateEscapes(raw); err != nil {\n\t\treturn fixtureDocument{}, err\n\t}",
+        "if err := error(nil); err != nil {\n\t\treturn fixtureDocument{}, err\n\t}",
+    ),
+    (
+        "reclamation-scalar-check-bypass",
+        "reclamation_fixture_test.go",
+        "TestReclamationFixtureRejectsInvalidUnicodeScalars",
+        "reclamation fixture reader accepted invalid Unicode scalar spelling",
+        "if err := validateSurrogateEscapes(raw); err != nil {\n\t\treturn reclamationDocument{}, err\n\t}",
+        "if err := error(nil); err != nil {\n\t\treturn reclamationDocument{}, err\n\t}",
+    ),
+)
+
 
 def run(command: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, cwd=cwd, check=False, text=True, capture_output=True)
@@ -152,6 +171,14 @@ def apply_mutation(package: Path, old: str, new: str) -> None:
     source.write_text(content.replace(old, new, 1), encoding="utf-8")
 
 
+def apply_file_mutation(package: Path, filename: str, old: str, new: str) -> None:
+    source = package / filename
+    content = source.read_text(encoding="utf-8")
+    if content.count(old) != 1:
+        raise RuntimeError(f"{filename}: mutation anchor occurs {content.count(old)} times; expected one")
+    source.write_text(content.replace(old, new, 1), encoding="utf-8")
+
+
 def main() -> int:
     go = os.environ.get("GO", "go")
     with tempfile.TemporaryDirectory(prefix="ftl-page-map-mutations-") as temporary:
@@ -163,6 +190,17 @@ def main() -> int:
             raise RuntimeError("clean control failed")
         print("clean control: pass")
 
+        for _, _, test_name, _, _, _ in SCALAR_BYPASS_MUTATIONS:
+            result = run(
+                [go, "test", "-count=1", "-v", "-run", f"^{test_name}$", "."],
+                materialize(root / f"clean-{test_name}"),
+            )
+            output = result.stdout + result.stderr
+            if result.returncode != 0 or f"--- PASS: {test_name}" not in output:
+                print(output, end="")
+                raise RuntimeError(f"scalar clean control failed: {test_name}")
+            print(f"clean {test_name}: pass")
+
         for name, test_name, witness, old, new in MUTATIONS:
             package = materialize(root / name)
             apply_mutation(package, old, new)
@@ -173,6 +211,18 @@ def main() -> int:
             if f"--- FAIL: {test_name}" not in output or witness not in output:
                 print(output, end="")
                 raise RuntimeError(f"mutant did not reach the named witness: {name}")
+            print(f"killed {name}: {witness}")
+
+        for name, filename, test_name, witness, old, new in SCALAR_BYPASS_MUTATIONS:
+            package = materialize(root / name)
+            apply_file_mutation(package, filename, old, new)
+            result = run([go, "test", "-count=1", "-run", f"^{test_name}$", "."], package)
+            output = result.stdout + result.stderr
+            if result.returncode == 0:
+                raise RuntimeError(f"scalar mutant unexpectedly passed: {name}")
+            if f"--- FAIL: {test_name}" not in output or witness not in output:
+                print(output, end="")
+                raise RuntimeError(f"scalar mutant did not reach its named witness: {name}")
             print(f"killed {name}: {witness}")
     return 0
 

@@ -196,6 +196,9 @@ func parseFixture(raw []byte) (fixtureDocument, error) {
 	if len(raw) == 0 || len(raw) > fixtureLimit || !utf8.Valid(raw) {
 		return fixtureDocument{}, errors.New("invalid fixture size or UTF-8")
 	}
+	if err := validateSurrogateEscapes(raw); err != nil {
+		return fixtureDocument{}, err
+	}
 	if err := scanJSON(raw); err != nil {
 		return fixtureDocument{}, err
 	}

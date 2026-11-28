@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject isolated and malformed escaped surrogate sequences in both bounded
+  fixture adapters while preserving valid scalar pairs and replacement text.
 - Add a dependency-free logical-to-physical page map with lowest-free
   reservations, ready publication, fresh and spent abort dispositions, typed
   refusals, atomic transitions and detached snapshots.

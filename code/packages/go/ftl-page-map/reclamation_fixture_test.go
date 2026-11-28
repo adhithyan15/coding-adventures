@@ -117,6 +117,9 @@ func parseReclamationFixture(raw []byte) (reclamationDocument, error) {
 	if len(raw) == 0 || len(raw) > fixtureLimit || !utf8.Valid(raw) {
 		return reclamationDocument{}, errors.New("invalid reclamation fixture size or UTF-8")
 	}
+	if err := validateSurrogateEscapes(raw); err != nil {
+		return reclamationDocument{}, err
+	}
 	if err := scanJSON(raw); err != nil {
 		return reclamationDocument{}, err
 	}
