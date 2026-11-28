@@ -1,0 +1,6 @@
+# build-tool: deps=typescript/test-bootstrap
+call npm ci --quiet --prefix ..\test-bootstrap
+call npm run build --silent --prefix ..\test-bootstrap
+call npm ci --quiet
+call npm run build --silent
+call npm test --silent
