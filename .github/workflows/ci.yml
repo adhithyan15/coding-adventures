@@ -5084,7 +5084,7 @@ jobs:
           dune-cache: false
           cache-prefix: ocaml03-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-build-${{ matrix.label }}
           windows-compiler: mingw
-          windows-environment: cygwin
+          windows-environment: msys2
           github-token: ${{ github.token }}
 
       - name: Add the opam archive mirror

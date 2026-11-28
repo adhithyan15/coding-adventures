@@ -40,6 +40,32 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedOCamlChanges(t *testing.T) {
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchSelectsOCamlForWindowsBootstrapInputs(t *testing.T) {
+	for _, test := range []struct {
+		name        string
+		changedLine string
+	}{
+		{name: "environment", changedLine: "-          windows-environment: cygwin\n+          windows-environment: msys2"},
+		{name: "compiler", changedLine: "-          windows-compiler: msvc\n+          windows-compiler: mingw"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			patch := "diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml\n" +
+				"@@ -1 +1 @@\n " +
+				"       - uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0\n" +
+				test.changedLine + "\n"
+
+			change := AnalyzeCIWorkflowPatch(patch)
+			if change.RequiresFullRebuild {
+				t.Fatal("expected OCaml Windows bootstrap input to stay toolchain-scoped")
+			}
+			got := SortedToolchains(change.Toolchains)
+			if len(got) != 1 || got[0] != "ocaml" {
+				t.Fatalf("expected OCaml toolchain only, got %v", got)
+			}
+		})
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchAllowsHaskellIndexBootstrapVerification(t *testing.T) {
 	patch := `
 @@ -1945,0 +1946,6 @@
