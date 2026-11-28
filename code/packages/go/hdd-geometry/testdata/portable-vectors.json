@@ -1,0 +1,10 @@
+{
+  "vectors": [
+    {"name":"db02-first","cylinders":4,"surfaces":2,"sectors_per_track":4,"block":0,"cylinder":0,"surface":0,"sector":0},
+    {"name":"db02-last","cylinders":4,"surfaces":2,"sectors_per_track":4,"block":31,"cylinder":3,"surface":1,"sector":3},
+    {"name":"large-first-surface-edge","cylinders":16,"surfaces":2,"sectors_per_track":16,"block":16,"cylinder":0,"surface":1,"sector":0},
+    {"name":"large-first-next-cylinder","cylinders":16,"surfaces":2,"sectors_per_track":16,"block":32,"cylinder":1,"surface":0,"sector":0},
+    {"name":"large-last","cylinders":16,"surfaces":2,"sectors_per_track":16,"block":511,"cylinder":15,"surface":1,"sector":15},
+    {"name":"sixty-four-cylinder-last","cylinders":64,"surfaces":2,"sectors_per_track":4,"block":511,"cylinder":63,"surface":1,"sector":3}
+  ]
+}
