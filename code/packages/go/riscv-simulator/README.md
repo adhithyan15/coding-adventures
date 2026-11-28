@@ -12,8 +12,26 @@ When used through the configurable Go `core`, the RV32I adapter opts into typed
 `rs1`/`rs2` forwarding metadata. The core applies these values to decoded
 operands before arithmetic, branch comparison, or store data selection. Existing
 sequential `RiscVSimulator` behavior remains the independent architectural
-reference. This integration evidence covers classic five-stage forwarding and
-load-use stalls; it does not model precise stores or memory faults.
+reference. The default core integration covers classic five-stage forwarding
+and load-use stalls; precise word-memory behavior is a separate explicit mode
+described below.
+
+### Opt-in precise word-memory mode
+
+`NewRiscVCoreWithPreciseMemory(config, memorySize)` enables a separate bounded
+mode for aligned, in-range `LW` and `SW` over flat RAM. Stores commit when the
+instruction reaches WB; a younger same-address load can read the pending older
+store. An invalid or unaligned access becomes a terminal `PreciseFaultOutcome`
+after older instructions drain. The selected fault token is not counted as a
+successful retirement. Effective addresses wrap modulo 2^32 before alignment
+and bounds checks.
+
+This mode is opt-in and requires hazard detection and the classic
+IF/ID/EX/MEM/WB stage order. It does not implement privileged traps, MMIO,
+byte/halfword operations, fetch faults, or general rollback. Existing constructors retain their existing
+MEM-time store behavior. `Core.PreciseStoreReceipts()` returns copies of
+successful WB store commits; `Core.PreciseFaultOutcome()` returns the terminal
+fault identity when one was selected.
 
 ## Supported Instructions
 

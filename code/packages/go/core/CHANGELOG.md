@@ -4,6 +4,12 @@ All notable changes to the `core` package will be documented in this file.
 
 ## [0.3.0] - Unreleased
 
+### Added
+- Added explicit opt-in precise flat-RAM mode for checked aligned RV32I word
+  accesses, WB-ordered SW commits, and terminal typed data-fault outcomes.
+- Added store receipts and a pending-store-to-load bypass in the opt-in mode;
+  existing Core constructors retain MEM-time store behavior.
+
 ### Fixed
 - Core stage slots now report ALU use at EX, not at both ID and EX, so the
   structural detector no longer serializes ordinary adjacent ALU instructions.

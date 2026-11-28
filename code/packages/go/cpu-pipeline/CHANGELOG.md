@@ -3,6 +3,9 @@
 ## [0.3.0] - Unreleased
 
 ### Added
+- Added an opt-in precise-fault token outcome and pipeline transition that
+  squashes younger work, drains older work, and does not count the selected
+  fault token as a completed instruction.
 - Optional source-tagged `ForwardedOperand` records on hazard responses and
   pipeline tokens; existing scalar forwarding metadata and actions are kept.
 - Token snapshots deep-copy typed forwarding records.

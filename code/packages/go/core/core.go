@@ -1,6 +1,8 @@
 package core
 
 import (
+	"errors"
+
 	branchpredictor "github.com/adhithyan15/coding-adventures/code/packages/go/branch-predictor"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/cache"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/clock"
@@ -95,6 +97,37 @@ type Core struct {
 
 	// flushCount tracks total pipeline flush cycles.
 	flushCount int
+
+	// preciseWordMemory is an explicit opt-in policy used by the bounded
+	// RISC-V adapter. The default core retains legacy MEM-time effects.
+	preciseWordMemory bool
+	pendingStores     []pendingPreciseStore
+	storeReceipts     []PreciseStoreReceipt
+	preciseFault      *cpupipeline.PreciseFault
+}
+
+type pendingPreciseStore struct {
+	pc      int
+	address uint32
+	value   uint32
+}
+
+// PreciseStoreReceipt records a flat-RAM store when its instruction reaches
+// the opt-in WB commit boundary.
+type PreciseStoreReceipt struct {
+	PC      int
+	Address uint32
+	Value   uint32
+	Cycle   int
+}
+
+type preciseFaultResult struct {
+	fault cpupipeline.PreciseFault
+	ok    bool
+}
+
+type preciseStoreReceiptsResult struct {
+	receipts []PreciseStoreReceipt
 }
 
 // NewCore creates a fully-wired processor core from the given configuration
@@ -178,6 +211,66 @@ func NewCore(config CoreConfig, decoder ISADecoder) (*Core, error) {
 	return result, err
 }
 
+// EnablePreciseWordMemory opts this core into checked, retirement-ordered
+// aligned word accesses. It is intentionally explicit and must be called
+// before the first pipeline cycle. The mode is supported only by the classic
+// IF/ID/EX/MEM/WB topology; default Core construction is unchanged.
+func (c *Core) EnablePreciseWordMemory() error {
+	_, err := StartNew[struct{}]("core.Core.EnablePreciseWordMemory", struct{}{},
+		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if c.cycle != 0 || c.pipeline.Stats().TotalCycles != 0 {
+				return rf.Fail(struct{}{}, errors.New("precise word memory must be enabled before stepping the core"))
+			}
+			if !c.config.HazardDetection {
+				return rf.Fail(struct{}{}, errors.New("precise word memory requires hazard detection to be enabled"))
+			}
+			pipelineConfig := c.config.Pipeline
+			if len(pipelineConfig.Stages) == 0 {
+				pipelineConfig = cpupipeline.Classic5Stage()
+			}
+			want := []cpupipeline.StageCategory{
+				cpupipeline.StageFetch, cpupipeline.StageDecode, cpupipeline.StageExecute,
+				cpupipeline.StageMemory, cpupipeline.StageWriteback,
+			}
+			if len(pipelineConfig.Stages) != len(want) {
+				return rf.Fail(struct{}{}, errors.New("precise word memory requires the classic five-stage pipeline"))
+			}
+			for index, stage := range pipelineConfig.Stages {
+				if stage.Category != want[index] {
+					return rf.Fail(struct{}{}, errors.New("precise word memory requires the classic IF/ID/EX/MEM/WB stage order"))
+				}
+			}
+			c.preciseWordMemory = true
+			return rf.Generate(true, false, struct{}{})
+		}).GetResult()
+	return err
+}
+
+// PreciseFaultOutcome returns a copy of the terminal selected data fault, if
+// precise word memory is enabled and a faulting token has reached WB.
+func (c *Core) PreciseFaultOutcome() (cpupipeline.PreciseFault, bool) {
+	result, _ := StartNew[preciseFaultResult]("core.Core.PreciseFaultOutcome", preciseFaultResult{},
+		func(op *Operation[preciseFaultResult], rf *ResultFactory[preciseFaultResult]) *OperationResult[preciseFaultResult] {
+			if c.preciseFault == nil {
+				return rf.Generate(true, false, preciseFaultResult{})
+			}
+			return rf.Generate(true, false, preciseFaultResult{fault: *c.preciseFault, ok: true})
+		}).GetResult()
+	return result.fault, result.ok
+}
+
+// PreciseStoreReceipts returns caller-owned copies of successful opt-in WB
+// store commits. The default MEM-time path does not emit these receipts.
+func (c *Core) PreciseStoreReceipts() []PreciseStoreReceipt {
+	result, _ := StartNew[preciseStoreReceiptsResult]("core.Core.PreciseStoreReceipts", preciseStoreReceiptsResult{},
+		func(op *Operation[preciseStoreReceiptsResult], rf *ResultFactory[preciseStoreReceiptsResult]) *OperationResult[preciseStoreReceiptsResult] {
+			return rf.Generate(true, false, preciseStoreReceiptsResult{
+				receipts: append([]PreciseStoreReceipt(nil), c.storeReceipts...),
+			})
+		}).GetResult()
+	return result.receipts
+}
+
 // buildCacheHierarchy creates the L1I, L1D, and optional L2 caches.
 func (c *Core) buildCacheHierarchy(config CoreConfig, memLatency int) *cache.CacheHierarchy {
 	l1iCfg := config.L1ICache
@@ -226,8 +319,11 @@ func (c *Core) decodeCallback(raw int, token *cpupipeline.PipelineToken) *cpupip
 // executeCallback is called by the pipeline's EX stage.
 func (c *Core) executeCallback(token *cpupipeline.PipelineToken) *cpupipeline.PipelineToken {
 	result := c.decoder.Execute(token, c.regFile)
+	if c.preciseWordMemory && (result.MemRead || result.MemWrite) {
+		result.PreciseFault = c.checkPreciseWordAccess(result)
+	}
 
-	if result.IsBranch {
+	if result.IsBranch && result.PreciseFault == nil {
 		c.predictor.Update(result.PC, result.BranchTaken, result.BranchTarget)
 		if result.BranchTaken {
 			c.btb.Update(result.PC, result.BranchTarget, "conditional")
@@ -239,6 +335,29 @@ func (c *Core) executeCallback(token *cpupipeline.PipelineToken) *cpupipeline.Pi
 
 // memoryCallback is called by the pipeline's MEM stage.
 func (c *Core) memoryCallback(token *cpupipeline.PipelineToken) *cpupipeline.PipelineToken {
+	if c.preciseWordMemory {
+		if token.PreciseFault != nil {
+			return token
+		}
+		address := uint32(token.ALUResult)
+		if token.MemRead {
+			c.cacheHierarchy.Read(int(address), false, c.cycle)
+			if value, ok := c.pendingStoreValue(address); ok {
+				token.MemData = int(value)
+			} else {
+				token.MemData = c.memCtrl.ReadWord(int(address))
+			}
+			token.WriteData = token.MemData
+		} else if token.MemWrite {
+			if len(c.pendingStores) >= 2 {
+				panic("precise store intent queue exceeded classic pipeline bound")
+			}
+			c.pendingStores = append(c.pendingStores, pendingPreciseStore{
+				pc: token.PC, address: address, value: uint32(token.WriteData),
+			})
+		}
+		return token
+	}
 	if token.MemRead {
 		c.cacheHierarchy.Read(token.ALUResult, false, c.cycle)
 		token.MemData = c.memCtrl.ReadWord(token.ALUResult)
@@ -253,9 +372,80 @@ func (c *Core) memoryCallback(token *cpupipeline.PipelineToken) *cpupipeline.Pip
 
 // writebackCallback is called by the pipeline's WB stage.
 func (c *Core) writebackCallback(token *cpupipeline.PipelineToken) {
+	if token.PreciseFault != nil {
+		fault := *token.PreciseFault
+		c.preciseFault = &fault
+		return
+	}
+	if c.preciseWordMemory && token.MemWrite {
+		c.commitPreciseStore(token)
+		return
+	}
 	if token.RegWrite && token.Rd >= 0 {
 		c.regFile.Write(token.Rd, token.WriteData)
 	}
+}
+
+func (c *Core) checkPreciseWordAccess(token *cpupipeline.PipelineToken) *cpupipeline.PreciseFault {
+	access := "load"
+	unsupported := token.Opcode != "lw"
+	if token.MemWrite {
+		access = "store"
+		unsupported = token.Opcode != "sw"
+	}
+	address := uint32(token.ALUResult)
+	fault := &cpupipeline.PreciseFault{
+		PC: token.PC, RawInstruction: uint32(token.RawInstruction),
+		Access: access, Address: address, Width: 4,
+	}
+	if unsupported {
+		fault.Cause = "unsupported_memory_operation"
+		return fault
+	}
+	if address%4 != 0 {
+		if access == "load" {
+			fault.Cause = "load_address_misaligned"
+		} else {
+			fault.Cause = "store_address_misaligned"
+		}
+		return fault
+	}
+	if uint64(address)+4 > uint64(c.memCtrl.MemorySize()) {
+		if access == "load" {
+			fault.Cause = "load_access_fault"
+		} else {
+			fault.Cause = "store_access_fault"
+		}
+		return fault
+	}
+	return nil
+}
+
+func (c *Core) pendingStoreValue(address uint32) (uint32, bool) {
+	for i := len(c.pendingStores) - 1; i >= 0; i-- {
+		if c.pendingStores[i].address == address {
+			return c.pendingStores[i].value, true
+		}
+	}
+	return 0, false
+}
+
+func (c *Core) commitPreciseStore(token *cpupipeline.PipelineToken) {
+	if len(c.pendingStores) == 0 {
+		panic("precise store reached WB without a pending MEM intent")
+	}
+	intent := c.pendingStores[0]
+	address := uint32(token.ALUResult)
+	value := uint32(token.WriteData)
+	if intent.pc != token.PC || intent.address != address || intent.value != value {
+		panic("precise store WB token does not match oldest pending MEM intent")
+	}
+	c.cacheHierarchy.Write(int(address), []int{int(value & 0xff)}, c.cycle)
+	c.memCtrl.WriteWord(int(address), int(value))
+	c.storeReceipts = append(c.storeReceipts, PreciseStoreReceipt{
+		PC: token.PC, Address: address, Value: value, Cycle: c.cycle,
+	})
+	c.pendingStores = c.pendingStores[1:]
 }
 
 // hazardCallback is called at the start of each cycle to check for hazards.
@@ -267,7 +457,7 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 	}
 
 	var ifTok, idTok, exTok, memTok *cpupipeline.PipelineToken
-	idStageIndex := -1
+	idStageIndex, exStageIndex := -1, -1
 	for i, stage := range pipelineCfg.Stages {
 		if i >= numStages {
 			break
@@ -284,11 +474,17 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 		case cpupipeline.StageExecute:
 			if exTok == nil {
 				exTok = tok
+				exStageIndex = i
 			}
 		case cpupipeline.StageMemory:
 			if memTok == nil {
 				memTok = tok
 			}
+		}
+	}
+	if c.preciseWordMemory && exTok != nil && exTok.PreciseFault != nil {
+		return cpupipeline.HazardResponse{
+			Action: cpupipeline.HazardPreciseFault, PreciseFaultStageIndex: exStageIndex,
 		}
 	}
 

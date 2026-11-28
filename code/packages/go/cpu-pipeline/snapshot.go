@@ -110,7 +110,8 @@ type PipelineStats struct {
 	TotalCycles int
 
 	// InstructionsCompleted is the number of non-bubble instructions that
-	// have reached the final (writeback) stage.
+	// successfully retired at WB. An opt-in precise fault can reach WB as a
+	// terminal selection outcome without counting as a completed instruction.
 	InstructionsCompleted int
 
 	// StallCycles is the number of cycles where the pipeline was stalled.
