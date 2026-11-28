@@ -317,7 +317,7 @@ struct HasherTests {
         )
 
         #expect(checkedObject.isEqual(productionObject))
-        #expect(checked.boundaries.count == 31)
+        #expect(checked.boundaries.count == 32)
         #expect(checked.boundaries.flatMap(\.inputs).count == 46)
         #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 37)
         #expect(
