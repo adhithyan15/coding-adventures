@@ -25,7 +25,9 @@ module HtmlTags1992 =
 Inputs must remain stable for the duration of a call. Successful HTTP results
 own fresh byte arrays or strings. Output length arithmetic is checked before
 the request array is allocated; representational overflow raises the standard
-`OverflowException`.
+`OverflowException`. The encoder rejects a span longer than
+`Array.MaxLength - 6` before computing the prefix, address, and CRLF positions;
+the remaining integer additions are then checked explicitly.
 
 `HistoricalWebException` derives from `FormatException` and exposes
 `Kind: HistoricalWebErrorKind` and `Offset: int option`. HTTP offsets are byte
