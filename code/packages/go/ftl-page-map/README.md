@@ -48,6 +48,22 @@ maps to that exact physical page. It marks the removed slot stale, so it cannot
 be allocated until `ReleaseErased` receives a completed erase extent. Every
 refusal returns the unchanged value and preserves the validation order.
 
+`RecordUnownedProgram(physical)` records caller-supplied evidence that an
+otherwise free physical page was consumed by an unowned program. It marks
+only that slot stale and leaves every logical owner unchanged. Validation is
+geometry, signed physical address, pending reservation, then free target.
+Refusals return the original table. Allocation skips the stale slot until a
+completed erase is released through `ReleaseErased`.
+
+The unowned-program extension closes 14 states for geometry 1/2 and 128 states
+for geometry 2/3. It checks each physical address including signed and
+one-past-end boundaries, and exact-position `AbortSpent` parity for every
+eligible free slot. The seeded history executes 5,000 commands. The fixed
+fuzz smoke completed 5,598 inputs. The expanded package passed native tests,
+race, vet and QEMU Linux/386 execution with 100% statement coverage. A
+Windows/amd64 test binary cross-compiled. All 12 clean-controlled mutations
+in the package runner reached their named witnesses.
+
 Runtime imports use only the Go standard library. Tests read the exact
 `ftl-page-map.json` vector through an exact-key, exact-token-type,
 duplicate-key-rejecting JSON adapter capped at 64 KiB and depth 32. This keeps
@@ -66,6 +82,7 @@ go test -run=^$ -fuzz=FuzzParseFixture -fuzztime=2s -parallel=2
 go test -run=^$ -fuzz=FuzzPageMapHistory -fuzztime=2s -parallel=2
 go test -run=^$ -fuzz=FuzzParseReclamationFixture -fuzztime=2s -parallel=2
 go test -run=^$ -fuzz=FuzzReclamationHistory -fuzztime=2s -parallel=2
+go test -run=^$ -fuzz=FuzzRecordUnownedProgramHistories -fuzztime=2s -parallel=2
 GO=/path/to/go python3 tools/check_mutations.py
 ```
 
@@ -120,3 +137,12 @@ exact snapshot changes, predecessor retention, and reuse only after an
 explicit erased-extent release. The native BUILD, race, vet, Linux/386 QEMU,
 and Windows/amd64 compile checks passed with the invalidation transition
 included.
+
+Unowned-program tracking is checked against a separate model for every
+reachable state in geometries 1/2 and 2/3, with every physical address from
+the signed invalid boundary through the upper invalid boundary. Every free
+target is compared with an exact-position `BeginExcluding` followed by
+`AbortSpent`. Focused tests cover all four slot statuses, pending and address
+precedence, predecessor retention, allocation skipping and completed erase
+reuse. A seeded 5,000-command sequence and `FuzzRecordUnownedProgramHistories`
+extend the same model checks.

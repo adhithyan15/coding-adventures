@@ -15,3 +15,6 @@
   aliases in the original page-map test fixture adapter before model replay.
 - Add `InvalidateCurrent` to remove one exact mapping while retaining its
   physical slot as stale until an erased extent is explicitly released.
+- Add `RecordUnownedProgram` to mark one free physical page stale without
+  changing logical ownership, with exact refusal ordering and model-checked
+  allocation skipping and post-erase reuse.

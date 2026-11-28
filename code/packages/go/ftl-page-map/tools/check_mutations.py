@@ -23,8 +23,8 @@ MUTATIONS = (
         "invalidated-page-becomes-free",
         "TestInvalidateCurrentRemovesOnlyExactOwnerAndRetainsStaleSlot",
         "invalidation snapshot=",
-        "result.physical[int(physical)] = Stale",
-        "result.physical[int(physical)] = Free",
+        "result.logicalMap[int(logical)] = noMapping\n\tresult.physical[int(physical)] = Stale",
+        "result.logicalMap[int(logical)] = noMapping\n\tresult.physical[int(physical)] = Free",
     ),
     (
         "pending-owner-can-be-invalidated",
@@ -74,6 +74,27 @@ MUTATIONS = (
         "release did not preserve outside reservation",
         "result := table.clone()\n\tfor index := firstPhysical; index < end; index++ {",
         "result := table.clone()\n\tresult.pending = nil\n\tfor index := firstPhysical; index < end; index++ {",
+    ),
+    (
+        "unowned-program-does-not-mark-stale",
+        "TestRecordUnownedProgramMarksStaleAndPreservesOwners",
+        "unowned program transition mismatch",
+        "// supplies the evidence that programming occurred.\nfunc (table Table) RecordUnownedProgram(physical int64) (Table, error) {\n\tif !table.configured() {\n\t\treturn table, ErrInvalidGeometry\n\t}\n\tif physical < 0 || physical >= table.physicalCount {\n\t\treturn table, ErrInvalidPhysicalPage\n\t}\n\tif table.pending != nil {\n\t\treturn table, ErrReservationPending\n\t}\n\tif table.physical[int(physical)] != Free {\n\t\treturn table, ErrPhysicalPageUnavailable\n\t}\n\tresult := table.clone()\n\tresult.physical[int(physical)] = Stale\n\treturn result, nil\n}",
+        "// supplies the evidence that programming occurred.\nfunc (table Table) RecordUnownedProgram(physical int64) (Table, error) {\n\tif !table.configured() {\n\t\treturn table, ErrInvalidGeometry\n\t}\n\tif physical < 0 || physical >= table.physicalCount {\n\t\treturn table, ErrInvalidPhysicalPage\n\t}\n\tif table.pending != nil {\n\t\treturn table, ErrReservationPending\n\t}\n\tif table.physical[int(physical)] != Free {\n\t\treturn table, ErrPhysicalPageUnavailable\n\t}\n\tresult := table.clone()\n\tresult.physical[int(physical)] = Free\n\treturn result, nil\n}",
+    ),
+    (
+        "unowned-program-preserves-logical-owner",
+        "TestRecordUnownedProgramMarksStaleAndPreservesOwners",
+        "unowned program transition mismatch",
+        "// supplies the evidence that programming occurred.\nfunc (table Table) RecordUnownedProgram(physical int64) (Table, error) {\n\tif !table.configured() {\n\t\treturn table, ErrInvalidGeometry\n\t}\n\tif physical < 0 || physical >= table.physicalCount {\n\t\treturn table, ErrInvalidPhysicalPage\n\t}\n\tif table.pending != nil {\n\t\treturn table, ErrReservationPending\n\t}\n\tif table.physical[int(physical)] != Free {\n\t\treturn table, ErrPhysicalPageUnavailable\n\t}\n\tresult := table.clone()\n\tresult.physical[int(physical)] = Stale\n\treturn result, nil\n}",
+        "// supplies the evidence that programming occurred.\nfunc (table Table) RecordUnownedProgram(physical int64) (Table, error) {\n\tif !table.configured() {\n\t\treturn table, ErrInvalidGeometry\n\t}\n\tif physical < 0 || physical >= table.physicalCount {\n\t\treturn table, ErrInvalidPhysicalPage\n\t}\n\tif table.pending != nil {\n\t\treturn table, ErrReservationPending\n\t}\n\tif table.physical[int(physical)] != Free {\n\t\treturn table, ErrPhysicalPageUnavailable\n\t}\n\tresult := table.clone()\n\tresult.physical[int(physical)] = Stale\n\tresult.logicalMap[0] = noMapping\n\treturn result, nil\n}",
+    ),
+    (
+        "unowned-program-refuses-nonfree-target",
+        "TestRecordUnownedProgramRefusesEveryNonFreeStateAndPending",
+        "live page refusal",
+        "if table.physical[int(physical)] != Free {\n\t\treturn table, ErrPhysicalPageUnavailable\n\t}",
+        "if false {\n\t\treturn table, ErrPhysicalPageUnavailable\n\t}",
     ),
 )
 

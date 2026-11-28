@@ -12,17 +12,18 @@ const (
 
 // Refusal errors are stable classes for callers and model adapters.
 var (
-	ErrInvalidGeometry     = errors.New("invalid geometry")
-	ErrInvalidLogicalPage  = errors.New("invalid logical page")
-	ErrInvalidPhysicalPage = errors.New("invalid physical page")
-	ErrCurrentOwnerChanged = errors.New("current logical owner changed")
-	ErrReservationPending  = errors.New("reservation already pending")
-	ErrNoFreePage          = errors.New("no free physical page")
-	ErrNoReservation       = errors.New("no reservation")
-	ErrInvalidDisposition  = errors.New("invalid finish disposition")
-	ErrInvalidFence        = errors.New("invalid allocation fence")
-	ErrInvalidExtent       = errors.New("invalid erased extent")
-	ErrIneligibleExtent    = errors.New("erased extent contains a live or reserved page")
+	ErrInvalidGeometry         = errors.New("invalid geometry")
+	ErrInvalidLogicalPage      = errors.New("invalid logical page")
+	ErrInvalidPhysicalPage     = errors.New("invalid physical page")
+	ErrPhysicalPageUnavailable = errors.New("physical page unavailable")
+	ErrCurrentOwnerChanged     = errors.New("current logical owner changed")
+	ErrReservationPending      = errors.New("reservation already pending")
+	ErrNoFreePage              = errors.New("no free physical page")
+	ErrNoReservation           = errors.New("no reservation")
+	ErrInvalidDisposition      = errors.New("invalid finish disposition")
+	ErrInvalidFence            = errors.New("invalid allocation fence")
+	ErrInvalidExtent           = errors.New("invalid erased extent")
+	ErrIneligibleExtent        = errors.New("erased extent contains a live or reserved page")
 )
 
 // Disposition tells Finish what evidence the caller has for the reserved page.
@@ -130,6 +131,27 @@ func (table Table) InvalidateCurrent(logical, physical int64) (Table, error) {
 
 	result := table.clone()
 	result.logicalMap[int(logical)] = noMapping
+	result.physical[int(physical)] = Stale
+	return result, nil
+}
+
+// RecordUnownedProgram marks an independently consumed, currently free
+// physical page stale without changing any logical mapping. The caller
+// supplies the evidence that programming occurred.
+func (table Table) RecordUnownedProgram(physical int64) (Table, error) {
+	if !table.configured() {
+		return table, ErrInvalidGeometry
+	}
+	if physical < 0 || physical >= table.physicalCount {
+		return table, ErrInvalidPhysicalPage
+	}
+	if table.pending != nil {
+		return table, ErrReservationPending
+	}
+	if table.physical[int(physical)] != Free {
+		return table, ErrPhysicalPageUnavailable
+	}
+	result := table.clone()
 	result.physical[int(physical)] = Stale
 	return result, nil
 }
