@@ -1,36 +1,22 @@
 package rankstatistics
 
 import (
-	"bytes"
+	_ "embed"
 	"encoding/binary"
 	"encoding/json"
 	"math"
 	"math/bits"
 	"math/rand"
-	"os"
-	"path/filepath"
 	"slices"
 	"testing"
 )
 
+// The shared fixture is embedded so this pure package's test binary does not
+// read files at runtime. BUILD compares this copy with the canonical fixture.
+//go:embed testdata/microbenchmark-pairs-v1.json
+var sharedFixture []byte
+
 func TestSharedFixtureConformance(t *testing.T) {
-	data, err := os.ReadFile("testdata/microbenchmark-pairs-v1.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	fixtureDir := filepath.Join("..", "..", "..", "specs", "fixtures")
-	canonicalPath := filepath.Join(fixtureDir, "microbenchmark-pairs-v1.json")
-	if _, statErr := os.Stat(fixtureDir); statErr == nil {
-		canonical, readErr := os.ReadFile(canonicalPath)
-		if readErr != nil {
-			t.Fatalf("canonical fixture is missing: %v", readErr)
-		}
-		if !bytes.Equal(data, canonical) {
-			t.Fatal("module-local fixture copy differs from canonical repository fixture")
-		}
-	} else if !os.IsNotExist(statErr) {
-		t.Fatal(statErr)
-	}
 	var fixture struct {
 		Confidence int `json:"confidence_percent"`
 		Cases      []struct {
@@ -41,7 +27,7 @@ func TestSharedFixtureConformance(t *testing.T) {
 			Interval   []float64 `json:"interval"`
 		} `json:"cases"`
 	}
-	if err := json.Unmarshal(data, &fixture); err != nil {
+	if err := json.Unmarshal(sharedFixture, &fixture); err != nil {
 		t.Fatal(err)
 	}
 	for _, testCase := range fixture.Cases {
