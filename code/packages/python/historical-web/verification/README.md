@@ -84,12 +84,16 @@ HWEB_GO=/path/to/pinned/go/bin/go \
 ## HWEB09 C++ flat-arena append SAT slice
 
 `sat_cpp_arena_append.py` models one `append_node` transition from the HWEB09
-C++ implementation. The bounded index width is 3 bits: the pre-state has two
-nodes, the appended node is index 2, the post-state count is 3, and `no_index`
-is 7. This local arithmetic cannot wrap. The model checks a root append, the
-first child of an existing parent, and a next sibling after an existing child.
-Each link to the appended node is SAT in-range; requiring that same link to be
-one past the post-state count is UNSAT.
+C++ implementation with symbolic 32-bit and 64-bit `size_t` values. It derives
+`append_index = old_count` from vector append, then bit-blasts
+`post_count = old_count + 1`; successful append assumes the increment carry-out
+is zero. Root, first-child, and previous-sibling link targets are assigned from
+the append index by the modeled transition, not constrained to an in-range
+value independently. Legal root/child/sibling witnesses are SAT. Asking if a
+correctly linked target can be at or beyond `post_count` is UNSAT; an
+off-by-one mutant that links to `post_count` is SAT. The source/pre-state
+condition for child and sibling updates is `source < old_count`; under it,
+`source >= append_index` is UNSAT.
 
 For cycle reasoning, the forward traversal graph consists of
 `first_child_index` and `next_sibling_index`; `parent_index` is a backward
@@ -97,10 +101,11 @@ reference. The appended node begins with no first child or next sibling, while
 only pre-existing nodes gain a forward link to it. Given an already acyclic
 pre-state, this append transition adds a leaf and cannot create a traversal
 cycle. The model's stack-parent precondition is that a child parent is an
-existing index (or root uses `no_index`); this comes from the parser's
-`stack_.back()` origin, not a standalone runtime check in `append_node`.
-Weakening that precondition to let the parent equal the new node produces a
-SAT self-child cycle control.
+existing index; this comes from the parser's `stack_.back()` origin, not a
+standalone runtime check in `append_node`. Weakening that precondition to let
+the parent equal the new node produces a SAT self-child cycle control. A
+separate wrap control removes the successful-append no-wrap assumption and
+allows `old_count == SIZE_MAX` to wrap the post-count to zero.
 
 Run from the repository root with the pinned tools:
 
@@ -110,7 +115,7 @@ HWEB_GO=/path/to/pinned/go/bin/go \
   code/packages/python/historical-web/verification/sat_cpp_arena_append.py
 ```
 
-This is a small one-step model of the C++ append/link transition, not a proof
-of `std::vector`'s arbitrary-size growth, the no-wrap case at machine limits,
-all parser paths, or the whole C++ implementation. It adds no production
-runtime or platform requirement.
+This is a one-step model of the C++ append/link transition. It does not model
+`std::vector` allocation or `max_size()`, prove that every parser path
+preserves the stack-source precondition, or establish the whole C++ parser's
+correctness. It adds no production runtime or platform requirement.
