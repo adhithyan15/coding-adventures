@@ -1,6 +1,7 @@
 package storagewalcheckpointcapture
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"reflect"
@@ -297,6 +298,205 @@ func FuzzCaptureCheckpointPages(f *testing.F) {
 		}
 		if len(device.reads) < beforeReads || len(device.writes) != 0 || device.flushes != 0 {
 			t.Fatal("capture violated read-only behavior")
+		}
+	})
+}
+
+func cloneSpy(source *spyDevice) *spyDevice {
+	result := newSpy(source.geometry)
+	for block, value := range source.blocks {
+		result.blocks[block] = append([]byte(nil), value...)
+	}
+	for block, err := range source.readErr {
+		result.readErr[block] = err
+	}
+	for block, bad := range source.badWidth {
+		result.badWidth[block] = bad
+	}
+	return result
+}
+
+func TestReadPagesAdmitsRawPrefixes(t *testing.T) {
+	log, data, checkpoint := layouts(8)
+	t.Run("vacant", func(t *testing.T) {
+		device := newSpy(log.Geometry)
+		pages, err := ReadPages(device, log, data, checkpoint)
+		if err != nil || !reflect.DeepEqual(pages, [2][]byte{make([]byte, 40), make([]byte, 40)}) {
+			t.Fatalf("ReadPages vacant=(%x,%v)", pages, err)
+		}
+		if _, err := Capture(device, log, data, checkpoint); !errors.Is(err, storagewalcheckpointselection.ErrNoPublishedCheckpoint) {
+			t.Fatalf("Capture vacant error=%v", err)
+		}
+	})
+	t.Run("staged", func(t *testing.T) {
+		device := newSpy(log.Geometry)
+		frame, err := storagewalcheckpointslot.Stage(rec(storagewalcheckpointrecord.Resetting, 3, 2))
+		if err != nil {
+			t.Fatal(err)
+		}
+		installPage(device, checkpoint, 0, frame)
+		want := [2][]byte{append([]byte(nil), frame...), make([]byte, 40)}
+		pages, err := ReadPages(device, log, data, checkpoint)
+		if err != nil || !reflect.DeepEqual(pages, want) {
+			t.Fatalf("ReadPages staged=(%x,%v)", pages, err)
+		}
+		if _, err := Capture(cloneSpy(device), log, data, checkpoint); !errors.Is(err, storagewalcheckpointselection.ErrNoPublishedCheckpoint) {
+			t.Fatalf("Capture staged error=%v", err)
+		}
+	})
+	t.Run("corrupt-frame", func(t *testing.T) {
+		device := newSpy(log.Geometry)
+		corrupt := make([]byte, 40)
+		corrupt[0] = 0x7f
+		installPage(device, checkpoint, 1, corrupt)
+		pages, err := ReadPages(device, log, data, checkpoint)
+		want := [2][]byte{make([]byte, 40), corrupt}
+		if err != nil || !reflect.DeepEqual(pages, want) {
+			t.Fatalf("ReadPages corrupt=(%x,%v)", pages, err)
+		}
+		if _, err := Capture(cloneSpy(device), log, data, checkpoint); err == nil {
+			t.Fatal("Capture accepted corrupt frame")
+		}
+	})
+}
+
+func TestReadPagesTraceAndOwnershipMatchCapture(t *testing.T) {
+	for _, width := range []int64{8, 13, 53} {
+		t.Run(fmt.Sprintf("width-%d", width), func(t *testing.T) {
+			log, data, checkpoint := layouts(width)
+			base := newSpy(log.Geometry)
+			installSlot(base, checkpoint, 0, rec(storagewalcheckpointrecord.Resetting, 4, 11), 0)
+			installSlot(base, checkpoint, 1, rec(storagewalcheckpointrecord.Ready, 5, 12), 0)
+			rawDevice, captureDevice := cloneSpy(base), cloneSpy(base)
+			pages, err := ReadPages(rawDevice, log, data, checkpoint)
+			if err != nil {
+				t.Fatal(err)
+			}
+			snapshot, err := Capture(captureDevice, log, data, checkpoint)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !reflect.DeepEqual(pages, snapshot.Pages) {
+				t.Fatal("raw/capture page pair differs")
+			}
+			if !reflect.DeepEqual(rawDevice.reads, captureDevice.reads) {
+				t.Fatalf("trace raw=%v capture=%v", rawDevice.reads, captureDevice.reads)
+			}
+			original := append([]byte(nil), rawDevice.blocks[checkpoint.FirstBlock]...)
+			pages[0][0] ^= 0xff
+			if !reflect.DeepEqual(rawDevice.blocks[checkpoint.FirstBlock], original) {
+				t.Fatal("ReadPages result aliases device block")
+			}
+		})
+	}
+}
+
+func TestReadPagesRejectsNonzeroPadding(t *testing.T) {
+	log, data, checkpoint := layouts(13)
+	for _, ordinal := range []int64{0, 1} {
+		t.Run(fmt.Sprintf("page-%d", ordinal), func(t *testing.T) {
+			device := newSpy(log.Geometry)
+			pageBytes := make([]byte, int(checkpoint.BlocksPerPage*checkpoint.Geometry.BytesPerBlock))
+			pageBytes[storagewalcheckpointrecord.FrameBytes] = 0x5a
+			installPage(device, checkpoint, ordinal, pageBytes)
+			pages, err := ReadPages(device, log, data, checkpoint)
+			if !errors.Is(err, ErrCheckpointPadding) || !reflect.DeepEqual(pages, [2][]byte{}) {
+				t.Fatalf("padding=(%x,%v)", pages, err)
+			}
+			captureDevice := cloneSpy(device)
+			if snapshot, captureErr := Capture(captureDevice, log, data, checkpoint); !errors.Is(captureErr, ErrCheckpointPadding) || !reflect.DeepEqual(snapshot, Snapshot{}) {
+				t.Fatalf("Capture padding=(%+v,%v)", snapshot, captureErr)
+			}
+			if !reflect.DeepEqual(device.reads, captureDevice.reads) {
+				t.Fatalf("read traces differ: %v / %v", device.reads, captureDevice.reads)
+			}
+		})
+	}
+}
+
+func TestReadPagesRefusalParity(t *testing.T) {
+	log, data, checkpoint := layouts(16)
+	first, _ := checkpoint.Span(0)
+	second, _ := checkpoint.Span(1)
+	for failBlock := first.FirstBlock; failBlock < second.FirstBlock+second.BlockCount; failBlock++ {
+		t.Run(fmt.Sprintf("read-%d", failBlock), func(t *testing.T) {
+			base := newSpy(log.Geometry)
+			base.readErr[failBlock] = errReadInjected
+			rawDevice, captureDevice := cloneSpy(base), cloneSpy(base)
+			pages, rawErr := ReadPages(rawDevice, log, data, checkpoint)
+			snapshot, captureErr := Capture(captureDevice, log, data, checkpoint)
+			if rawErr != errReadInjected || captureErr != rawErr || !reflect.DeepEqual(pages, [2][]byte{}) || !reflect.DeepEqual(snapshot, Snapshot{}) {
+				t.Fatalf("read refusal raw=(%x,%v) capture=(%+v,%v)", pages, rawErr, snapshot, captureErr)
+			}
+			if !reflect.DeepEqual(rawDevice.reads, captureDevice.reads) {
+				t.Fatalf("trace mismatch %v / %v", rawDevice.reads, captureDevice.reads)
+			}
+		})
+	}
+	base := newSpy(log.Geometry)
+	base.badWidth[first.FirstBlock] = true
+	rawDevice, captureDevice := cloneSpy(base), cloneSpy(base)
+	pages, rawErr := ReadPages(rawDevice, log, data, checkpoint)
+	snapshot, captureErr := Capture(captureDevice, log, data, checkpoint)
+	if !errors.Is(rawErr, storagepageio.ErrBlockWidthMismatch) || captureErr != rawErr || !reflect.DeepEqual(pages, [2][]byte{}) || !reflect.DeepEqual(snapshot, Snapshot{}) {
+		t.Fatalf("width refusal raw=(%x,%v) capture=(%+v,%v)", pages, rawErr, snapshot, captureErr)
+	}
+	bad := checkpoint
+	bad.PageCount = 1
+	if pages, err := ReadPages(nil, log, data, bad); !errors.Is(err, storagewalcheckpointlayout.ErrCheckpointShape) || !reflect.DeepEqual(pages, [2][]byte{}) {
+		t.Fatalf("layout precedence=(%x,%v)", pages, err)
+	}
+	if snapshot, err := Capture(nil, log, data, bad); !errors.Is(err, storagewalcheckpointlayout.ErrCheckpointShape) || !reflect.DeepEqual(snapshot, Snapshot{}) {
+		t.Fatalf("Capture layout precedence=(%+v,%v)", snapshot, err)
+	}
+	if pages, err := ReadPages(nil, log, data, checkpoint); !errors.Is(err, storagepageio.ErrInvalidDevice) || !reflect.DeepEqual(pages, [2][]byte{}) {
+		t.Fatalf("nil device=(%x,%v)", pages, err)
+	}
+	if snapshot, err := Capture(nil, log, data, checkpoint); !errors.Is(err, storagepageio.ErrInvalidDevice) || !reflect.DeepEqual(snapshot, Snapshot{}) {
+		t.Fatalf("Capture nil device=(%+v,%v)", snapshot, err)
+	}
+	other := newSpy(log.Geometry)
+	other.geometry.BlockCount++
+	if pages, err := ReadPages(other, log, data, checkpoint); !errors.Is(err, storagepageio.ErrGeometryMismatch) || !reflect.DeepEqual(pages, [2][]byte{}) {
+		t.Fatalf("device geometry=(%x,%v)", pages, err)
+	}
+	other = newSpy(log.Geometry)
+	other.geometry.BlockCount++
+	if snapshot, err := Capture(other, log, data, checkpoint); !errors.Is(err, storagepageio.ErrGeometryMismatch) || !reflect.DeepEqual(snapshot, Snapshot{}) {
+		t.Fatalf("Capture device geometry=(%+v,%v)", snapshot, err)
+	}
+}
+
+func FuzzReadPagesRawPrefixes(f *testing.F) {
+	f.Add([]byte{})
+	f.Add(make([]byte, 80))
+	f.Add(bytes.Repeat([]byte{0xa5}, 80))
+	for _, phase := range []storagewalcheckpointrecord.Phase{storagewalcheckpointrecord.Resetting, storagewalcheckpointrecord.Ready} {
+		frame, _ := storagewalcheckpointrecord.Encode(rec(phase, 2, 1))
+		f.Add(append(append([]byte(nil), frame...), make([]byte, 40)...))
+	}
+	log, data, checkpoint := layouts(8)
+	f.Fuzz(func(t *testing.T, input []byte) {
+		if len(input) > 80 {
+			t.Skip()
+		}
+		device := newSpy(log.Geometry)
+		var want [2][]byte
+		for ordinal := 0; ordinal < 2; ordinal++ {
+			want[ordinal] = make([]byte, 40)
+			start := ordinal * 40
+			if start < len(input) {
+				end := start + 40
+				if end > len(input) {
+					end = len(input)
+				}
+				copy(want[ordinal], input[start:end])
+			}
+			installPage(device, checkpoint, int64(ordinal), want[ordinal])
+		}
+		pages, err := ReadPages(device, log, data, checkpoint)
+		if err != nil || !reflect.DeepEqual(pages, want) {
+			t.Fatalf("raw-prefix model=(%x,%v), want=%x", pages, err, want)
 		}
 	})
 }
