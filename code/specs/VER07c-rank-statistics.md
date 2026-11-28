@@ -111,6 +111,19 @@ assertion totals, oracle/vector identities and hashes, and fixture provenance.
 Do not invent a fixed minimum count of midpoint vectors: declare the semantic
 edge classes they cover and report the actual vector count and provenance.
 
+Run the finite-binary64 campaign as eight ordinary sequential Vitest tests over
+the contiguous array-index slices `[0, 256)`, `[256, 512)`, `[512, 768)`,
+`[768, 1024)`, `[1024, 1280)`, `[1280, 1536)`, `[1536, 1792)`, and
+`[1792, 2048)`. Generate the full seeded campaign once and share it across
+these tests; do not restart the generator for each slice. Each test checks all
+256 median results and all 99 interval confidences for each array, with exactly
+256 observations per confidence in that slice. Across the eight tests this
+retains all 2,048 median checks and 202,752 interval checks, as well as the
+full-campaign accepted-array and non-finite-rejection checks. Keep the existing
+20,000 ms per-test limit. This partition changes only scheduling granularity;
+it must not remove oracle calls, weaken assertions, make the tests concurrent,
+or alter the generated input stream.
+
 The independent mathematical interval oracle enumerates all `2^n` sign
 assignments for each `n` from 1 through 12, builds the signed-sum histogram,
 and checks every confidence percentage 1 through 99 and every candidate
