@@ -321,6 +321,7 @@ var (
 	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
 	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
 	microbenchmarkPairsFixturePath = "code/specs/fixtures/microbenchmark-pairs-v1.json"
+	historicalWebVectorsPath       = "code/specs/fixtures/historical-web-v1/vectors.json"
 	fixedPointInputPaths           = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -655,6 +656,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("rust"),
 	historicalUnixFixtureRow("swift"),
 	historicalUnixFixtureRow("typescript"),
+	{
+		name:     "python/historical-web",
+		language: "python",
+		inputs:   "the shared HWEB-00 historical web vectors",
+		matches:  isHistoricalWebVectors,
+		paths:    []string{historicalWebVectorsPath},
+	},
 	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
 	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
 	historicalUnixAdapterRow("java", historicalUnixJavaAdapterPath),
@@ -2204,6 +2212,10 @@ func isHistoricalUnixFixture(changed string) bool {
 	return changed == historicalUnixFixturePath
 }
 
+func isHistoricalWebVectors(changed string) bool {
+	return changed == historicalWebVectorsPath
+}
+
 func isOSArchitectureFixtureInput(changed string) bool {
 	switch changed {
 	case osArchitectureProfilesPath, osArchitectureVerifyPath,
@@ -2275,6 +2287,8 @@ func repositoryInputsForPackage(packageName string) []string {
 		return inputs
 	}
 	switch packageName {
+	case "python/historical-web":
+		return []string{historicalWebVectorsPath}
 	case "go/programs/benchmark-tool", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics",
 		"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics",
 		"rust/twig-guest-microbenchmark", "rust/wasm-guest-microbenchmark", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics",
