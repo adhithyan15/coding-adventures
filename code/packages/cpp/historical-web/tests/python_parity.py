@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+"""Compare C++ adapter trees with the public Python 1992 reference parser."""
+from __future__ import annotations
+
+import json
+import random
+import subprocess
+import sys
+from pathlib import Path
+
+root = Path(__file__).resolve().parents[5]
+sys.path.insert(0, str(root / "code/packages/python/historical-web/src"))
+from historical_web.html_tags_1992 import Element, parse_html_tags_1992  # noqa: E402
+
+
+def canonical(nodes: list[Element | str]) -> list[object]:
+    def one(node: Element | str) -> object:
+        if isinstance(node, str):
+            return node
+        return {"tag": node.tag, "attributes": node.attributes,
+                "children": [one(child) for child in node.children]}
+    return [one(node) for node in nodes]
+
+
+def main() -> int:
+    if len(sys.argv) not in (2, 3):
+        raise SystemExit("usage: python_parity.py ADAPTER [GENERATED_COUNT]")
+    fixture = root / "code/specs/fixtures/historical-web-v1/vectors.json"
+    data = json.loads(fixture.read_text(encoding="utf-8"))
+    sources = [case["source"] for case in data["html-tags-1992"]]
+    sources.extend(bytes.fromhex(exchange["response_hex"]).decode("utf-8") for exchange in data["exchanges"])
+    generated = int(sys.argv[2]) if len(sys.argv) == 3 else 0
+    rng = random.Random(0x485745423039)
+    atoms = [
+        "one", "é", "水", "🛰", "&lt;", "&amp;lt;", "&quot;", "&#65;", "<1", "<",
+        "<!-- comment <P> -->", "<!-- open", "<A HREF=/x>link</A>", "<A HREF HREF=x>v</A>",
+        "<A HREF='x>y'>q</A>", "<A HREF=\"a&amp;b\">v</A>", "<P>", "<LI>", "</A>",
+        "<UL>", "</UL>", "<MENU>", "</MENU>", "<DIR>", "</DIR>", "<DL>", "</DL>",
+        "<DT>", "</DT>", "<DD>", "</DD>", "<H1>", "</H1>", "<TITLE>", "</TITLE>",
+        "<ADDRESS>", "</ADDRESS>", "<XMP>raw &amp; <A></XMP>", "<LISTING>a\r\nb</LISTING>",
+        "<PLAINTEXT>tail <P>", "<unknown>skip</unknown>", "<A HREF==x>broken</A>",
+    ]
+    for _ in range(generated):
+        sources.append("".join(rng.choice(atoms) for _ in range(rng.randrange(1, 9))))
+    payload = "".join(source.encode("utf-8").hex() + "\n" for source in sources)
+    result = subprocess.run([sys.argv[1]], input=payload, text=True, encoding="utf-8",
+                            capture_output=True, check=True)
+    actual = [json.loads(line) for line in result.stdout.splitlines()]
+    if len(actual) != len(sources):
+        raise SystemExit(f"adapter returned {len(actual)} rows for {len(sources)} sources")
+    for index, source in enumerate(sources):
+        expected = canonical(parse_html_tags_1992(source))
+        if actual[index] != expected:
+            raise SystemExit(f"parity mismatch at fixture index {index}: {source!r}\n"
+                             f"expected={expected!r}\nactual={actual[index]!r}")
+    print(f"Python/C++ parity: {len(sources)} documents matched (14 fixtures, {generated} generated, seed=0x485745423039)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
