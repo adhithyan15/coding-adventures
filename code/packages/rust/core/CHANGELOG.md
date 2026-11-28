@@ -4,6 +4,9 @@
 
 ### Added
 
+- Checked atomic byte-range RAM initialization and copied byte observation for
+  `MemoryController` and individual `Core` instances. Existing loading and
+  memory access APIs are unchanged.
 - `Core::new_with_operand_forwarding` and the default-compatible decoder hook
   for per-source EX/MEM values; `Core::new` keeps the existing scalar path.
 

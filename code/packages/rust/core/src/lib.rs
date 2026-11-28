@@ -54,7 +54,7 @@ pub use decoder::{
     encode_nop, encode_program, encode_store, encode_sub,
 };
 pub use interrupt_controller::{AcknowledgedInterrupt, InterruptController, PendingInterrupt};
-pub use memory_controller::{MemoryController, MemoryReadResult};
+pub use memory_controller::{MemoryController, MemoryImageError, MemoryReadResult, MemorySegment};
 pub use multi_core::MultiCoreCPU;
 pub use register_file::RegisterFile;
 pub use stats::CoreStats;

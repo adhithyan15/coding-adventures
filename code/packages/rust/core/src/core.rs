@@ -36,7 +36,7 @@ use hazard_detection::types::{HazardAction as HazardDetectionAction, PipelineSlo
 
 use crate::config::{create_branch_predictor, CoreConfig};
 use crate::decoder::ISADecoder;
-use crate::memory_controller::MemoryController;
+use crate::memory_controller::{MemoryController, MemoryImageError, MemorySegment};
 use crate::register_file::RegisterFile;
 use crate::stats::CoreStats;
 
@@ -344,6 +344,27 @@ impl Core {
             .mem_ctrl
             .load_program(program, start_address);
         self.pipeline.set_pc(start_address as i64);
+    }
+
+    /// Initializes nonoverlapping byte ranges in this Core's RAM atomically.
+    ///
+    /// Unlike [`Core::load_program`], this operation does not set PC or change
+    /// registers, pipeline state, or execution counters. It is a bounded
+    /// byte-based setup API; it does not model MMIO or memory permissions.
+    pub fn initialize_memory_segments(
+        &mut self,
+        segments: &[MemorySegment<'_>],
+    ) -> Result<(), MemoryImageError> {
+        self.state.borrow_mut().mem_ctrl.initialize_segments(segments)
+    }
+
+    /// Copies a bounded byte range from this Core's RAM for observation.
+    pub fn read_memory_bytes(
+        &self,
+        address: usize,
+        length: usize,
+    ) -> Result<Vec<u8>, MemoryImageError> {
+        self.state.borrow().mem_ctrl.read_bytes(address, length)
     }
 
     /// Executes one clock cycle.
@@ -1104,6 +1125,44 @@ mod tests {
         assert!(c.is_halted());
         assert!(stats.total_cycles > 0);
         assert!(stats.instructions_completed > 0);
+    }
+
+    #[test]
+    fn checked_ram_image_seeds_data_without_changing_program_or_core_state() {
+        let mut core = make_simple_core();
+        let program = encode_program(&[encode_addi(1, 0, 42), encode_halt()]);
+        core.load_program(&program, 0);
+        let pc_before = core.pipeline().pc();
+        let cycle_before = core.cycle();
+        let register_before = core.read_register(1);
+
+        core.initialize_memory_segments(&[MemorySegment {
+            address: 128,
+            bytes: &[42, 0, 0, 0],
+        }])
+        .unwrap();
+
+        assert_eq!(core.read_memory_bytes(0, program.len()).unwrap(), program);
+        assert_eq!(core.read_memory_bytes(128, 4).unwrap(), [42, 0, 0, 0]);
+        assert_eq!(core.pipeline().pc(), pc_before);
+        assert_eq!(core.cycle(), cycle_before);
+        assert_eq!(core.read_register(1), register_before);
+
+        let original_data = core.read_memory_bytes(128, 4).unwrap();
+        assert!(core
+            .initialize_memory_segments(&[
+                MemorySegment {
+                    address: 128,
+                    bytes: &[1, 2, 3, 4],
+                },
+                MemorySegment {
+                    address: usize::MAX,
+                    bytes: &[9],
+                },
+            ])
+            .is_err());
+        assert_eq!(core.read_memory_bytes(128, 4).unwrap(), original_data);
+        assert_eq!(core.read_memory_bytes(0, program.len()).unwrap(), program);
     }
 
     #[test]
