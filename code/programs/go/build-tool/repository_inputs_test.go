@@ -1541,14 +1541,14 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	for _, consumer := range repositoryInputConsumers {
 		if consumer.name == "ruby/unix-history-simulator" {
-			t.Fatal("historical Unix fixture must not register the absent Ruby package")
+			t.Fatal("historical Unix fixture must not register the nonexistent hyphenated Ruby package")
 		}
 	}
 	if inputs := repositoryInputsForPackage("ruby/unix-history-simulator"); inputs != nil {
-		t.Fatalf("absent Ruby historical Unix package has fallback inputs %v, want none", inputs)
+		t.Fatalf("nonexistent hyphenated Ruby package has fallback inputs %v, want none", inputs)
 	}
-	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "perl", "python", "rust", "typescript"}
-	packages := make([]discovery.Package, 0, len(languages)+2)
+	languages := []string{"c", "cpp", "csharp", "dart", "fsharp", "go", "haskell", "java", "kotlin", "lua", "ocaml", "perl", "python", "rust", "swift", "typescript"}
+	packages := make([]discovery.Package, 0, len(languages)+3)
 	all := make(map[string]bool, len(languages))
 	for _, language := range languages {
 		name := language + "/unix-history-simulator"
@@ -1558,6 +1558,9 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	elixirPackageName := "elixir/unix_history_simulator"
 	packages = append(packages, discovery.Package{Name: elixirPackageName, Language: "elixir"})
 	all[elixirPackageName] = true
+	rubyPackageName := "ruby/unix_history_simulator"
+	packages = append(packages, discovery.Package{Name: rubyPackageName, Language: "ruby"})
+	all[rubyPackageName] = true
 	packages = append(packages, discovery.Package{Name: "go/adjacent", Language: "go"})
 
 	cases := []struct {
@@ -1572,6 +1575,7 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 			"dart/unix-history-simulator":    true,
 			"haskell/unix-history-simulator": true, "elixir/unix_history_simulator": true,
 			"java/unix-history-simulator": true, "lua/unix-history-simulator": true,
+			"ocaml/unix-history-simulator": true, "swift/unix-history-simulator": true,
 		}},
 		{"shared native driver", historicalUnixBuildNativePath, map[string]bool{
 			"c/unix-history-simulator": true, "cpp/unix-history-simulator": true,
@@ -1594,6 +1598,12 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		{"Elixir build and replay driver", historicalUnixElixirBuildPath, map[string]bool{"elixir/unix_history_simulator": true}},
 		{"Haskell adapter Cabal file", historicalUnixHaskellCabalPath, map[string]bool{"haskell/unix-history-simulator": true}},
 		{"Haskell adapter source", historicalUnixHaskellMainPath, map[string]bool{"haskell/unix-history-simulator": true}},
+		{"OCaml/Swift shared build driver", historicalUnixBuildOcamlSwiftPath, map[string]bool{
+			"ocaml/unix-history-simulator": true, "swift/unix-history-simulator": true,
+		}},
+		{"OCaml adapter", historicalUnixOcamlAdapterPath, map[string]bool{"ocaml/unix-history-simulator": true}},
+		{"Swift adapter project", historicalUnixSwiftPackagePath, map[string]bool{"swift/unix-history-simulator": true}},
+		{"Swift adapter source", historicalUnixSwiftMainPath, map[string]bool{"swift/unix-history-simulator": true}},
 		{"adapter README excluded", "code/specs/fixtures/historical-unix-v1/test-adapters/README.md", map[string]bool{}},
 		{"lookalike excluded", historicalUnixFixturePath + ".bak", map[string]bool{}},
 		{"unrelated README excluded", "code/packages/go/unix-history-simulator/README.md", map[string]bool{}},
@@ -1615,7 +1625,8 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	for language, wantConsumer := range map[string]string{
 		"csharp": "csharp/unix-history-simulator", "fsharp": "fsharp/unix-history-simulator",
 		"dart": "dart/unix-history-simulator", "kotlin": "kotlin/unix-history-simulator",
-		"haskell": "haskell/unix-history-simulator", "elixir": elixirPackageName,
+		"haskell": "haskell/unix-history-simulator", "ocaml": "ocaml/unix-history-simulator",
+		"swift": "swift/unix-history-simulator", "elixir": elixirPackageName,
 	} {
 		for _, tc := range cases {
 			want := map[string]bool{}
@@ -1645,6 +1656,10 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	if err != nil || !reflect.DeepEqual(got, map[string]bool{elixirPackageName: true}) {
 		t.Errorf("Elixir-only fixture selection = %v, err %v; want %v", got, err, map[string]bool{elixirPackageName: true})
 	}
+	got, err = repositoryInputConsumersForChange([]string{historicalUnixFixturePath}, packages, "ruby")
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{rubyPackageName: true}) {
+		t.Errorf("Ruby-only fixture selection = %v, err %v; want %v", got, err, map[string]bool{rubyPackageName: true})
+	}
 	for _, language := range languages {
 		wantInputs := []string{historicalUnixFixturePath}
 		switch language {
@@ -1669,6 +1684,12 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 		if language == "haskell" {
 			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixHaskellCabalPath, historicalUnixHaskellMainPath)
 		}
+		if language == "ocaml" {
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixOcamlAdapterPath)
+		}
+		if language == "swift" {
+			wantInputs = append(wantInputs, historicalUnixReplayPath, historicalUnixBuildOcamlSwiftPath, historicalUnixSwiftPackagePath, historicalUnixSwiftMainPath)
+		}
 		if got := repositoryInputsForPackage(name); !reflect.DeepEqual(got, wantInputs) {
 			t.Errorf("%s hash inputs = %v, want %v", name, got, wantInputs)
 		}
@@ -1681,6 +1702,11 @@ func TestHistoricalUnixFixtureRoutesOnlyActualReaders(t *testing.T) {
 	if !reflect.DeepEqual(elixirInputs, elixirWant) {
 		t.Errorf("Elixir package repository inputs = %v, want %v", elixirInputs, elixirWant)
 	}
+	rubyInputs := repositoryInputsForPackage(rubyPackageName)
+	rubyWant := []string{historicalUnixFixturePath}
+	if !reflect.DeepEqual(rubyInputs, rubyWant) {
+		t.Errorf("Ruby package repository inputs = %v, want %v", rubyInputs, rubyWant)
+	}
 }
 
 func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
@@ -1689,9 +1715,10 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 		"c/unix-history-simulator", "cpp/unix-history-simulator", "csharp/unix-history-simulator",
 		"dart/unix-history-simulator", "elixir/unix_history_simulator", "fsharp/unix-history-simulator",
 		"go/unix-history-simulator", "haskell/unix-history-simulator", "java/unix-history-simulator",
-		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "perl/unix-history-simulator",
+		"kotlin/unix-history-simulator", "lua/unix-history-simulator", "ocaml/unix-history-simulator", "perl/unix-history-simulator",
 		"python/unix-history-simulator", "rust/unix-history-simulator",
-		"typescript/unix-history-simulator",
+		"ruby/unix_history_simulator",
+		"swift/unix-history-simulator", "typescript/unix-history-simulator",
 	}
 	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
 	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
@@ -1775,6 +1802,67 @@ func TestHistoricalUnixRepositoryInputsHashExactDeclaredFiles(t *testing.T) {
 	kotlinWant := []string{historicalUnixFixturePath, historicalUnixKotlinAdapterPath}
 	if !reflect.DeepEqual(kotlinInputs, kotlinWant) {
 		t.Errorf("Kotlin package repository inputs = %v, want %v", kotlinInputs, kotlinWant)
+	}
+	rubyInputs := repositoryInputsForPackage("ruby/unix_history_simulator")
+	rubyWant := []string{historicalUnixFixturePath}
+	if !reflect.DeepEqual(rubyInputs, rubyWant) {
+		t.Fatalf("Ruby package repository inputs = %v, want %v", rubyInputs, rubyWant)
+	}
+}
+
+func TestRubyHistoricalUnixFixtureHashIsExactAndIsolated(t *testing.T) {
+	root := t.TempDir()
+	fixturePath := filepath.Join(root, filepath.FromSlash(historicalUnixFixturePath))
+	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(fixturePath, []byte("[]\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	rubyRoot := filepath.Join(root, "code", "packages", "ruby", "unix_history_simulator")
+	if err := os.MkdirAll(rubyRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(rubyRoot, "simulator.rb"), []byte("module Sample; end\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	ruby := discovery.Package{Name: "ruby/unix_history_simulator", Language: "ruby", Path: rubyRoot}
+	rubyInputs := repositoryInputsForPackage(ruby.Name)
+	if !reflect.DeepEqual(rubyInputs, []string{historicalUnixFixturePath}) {
+		t.Fatalf("Ruby repository inputs = %v, want only %s", rubyInputs, historicalUnixFixturePath)
+	}
+	rubyBefore, err := hasher.HashPackageWithRepositoryInputs(ruby, root, rubyInputs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	otherRoot := filepath.Join(root, "code", "packages", "go", "adjacent")
+	if err := os.MkdirAll(otherRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(otherRoot, "main.go"), []byte("package adjacent\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	other := discovery.Package{Name: "go/adjacent", Language: "go", Path: otherRoot}
+	otherBefore, err := hasher.HashPackageWithRepositoryInputs(other, root, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(fixturePath, []byte("[{\"command\":\"cat /hello\"}]\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	rubyAfter, err := hasher.HashPackageWithRepositoryInputs(ruby, root, rubyInputs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rubyBefore == rubyAfter {
+		t.Fatal("editing file-read.json did not change the Ruby package hash")
+	}
+	otherAfter, err := hasher.HashPackageWithRepositoryInputs(other, root, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if otherBefore != otherAfter {
+		t.Fatal("editing file-read.json changed an unrelated package hash")
 	}
 }
 

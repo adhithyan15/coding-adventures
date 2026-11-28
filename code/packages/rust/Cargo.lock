@@ -4822,6 +4822,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_historical_web"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "serde_json",
+]
+
+[[package]]
 name = "coding_adventures_hkdf"
 version = "0.1.0"
 dependencies = [
