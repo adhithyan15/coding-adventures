@@ -3,6 +3,7 @@ package storagewalrecovery
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"testing"
 
 	blockdevicecontract "github.com/adhithyan15/coding-adventures/code/packages/go/block-device-contract"
@@ -597,6 +598,153 @@ func FuzzRecoverAdmissionAndReplay(f *testing.F) {
 			if string(after) != string(beforeLog[block]) {
 				t.Fatalf("log block %d changed", block)
 			}
+		}
+	})
+}
+
+func TestRecoverWithBoundaryReportsLastAdmittedRank(t *testing.T) {
+	g := testGeometry()
+	image := []byte{1, 4, 9, 16, 25, 36, 49, 64}
+	cases := []struct {
+		name    string
+		records []storagewalrecord.Record
+		last    uint64
+		writes  int
+	}{
+		{name: "empty"},
+		{name: "unfinished begin", records: []storagewalrecord.Record{{Kind: storagewalrecord.BeginTransaction, LSN: 1, TxID: 3}}, last: 1},
+		{name: "unfinished image", records: baseRecords(image, 0)[:2], last: 2},
+		{name: "full with unfinished next transaction", records: append(baseRecords(image, 0), storagewalrecord.Record{Kind: storagewalrecord.BeginTransaction, LSN: 4, TxID: 8}), last: 4, writes: 1},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			device := newTraced(g)
+			seedRecords(t, device, tc.records...)
+			result, err := RecoverWithBoundary(device, logLayout(g), dataLayout(g))
+			wantReplay := storagewalredoapply.Receipt{}
+			if tc.writes != 0 {
+				wantReplay.AcknowledgedWrites = tc.writes
+			}
+			if err != nil || result != (Result{Replay: wantReplay, LastLSN: tc.last}) {
+				t.Fatalf("RecoverWithBoundary=(%+v,%v), want replay=%+v last=%d", result, err, wantReplay, tc.last)
+			}
+			if len(device.reads) != 28 {
+				t.Fatalf("captured WAL %d block reads, want one 28-block capture", len(device.reads))
+			}
+		})
+	}
+}
+
+func TestRecoverWithBoundaryIncludesUnfinishedTrailingRecord(t *testing.T) {
+	g := testGeometry()
+	device := newTraced(g)
+	image := []byte{2, 4, 6, 8, 10, 12, 14, 16}
+	records := append(baseRecords(image, 0), storagewalrecord.Record{Kind: storagewalrecord.BeginTransaction, LSN: 4, TxID: 11})
+	seedRecords(t, device, records...)
+	result, err := RecoverWithBoundary(device, logLayout(g), dataLayout(g))
+	want := Result{Replay: storagewalredoapply.Receipt{AcknowledgedWrites: 1}, LastLSN: 4}
+	if err != nil || result != want {
+		t.Fatalf("RecoverWithBoundary=(%+v,%v), want %+v", result, err, want)
+	}
+}
+
+func TestRecoverWithBoundaryPreservesLegacyAndPartialReplayResults(t *testing.T) {
+	g := testGeometry()
+	image := []byte{8, 7, 6, 5, 4, 3, 2, 1}
+	makeDevice := func() *tracedDevice {
+		device := newTraced(g)
+		seedRecords(t, device, baseRecords(image, 1)...)
+		device.writeErr[29] = errInjected
+		return device
+	}
+	boundaryDevice := makeDevice()
+	result, boundaryErr := RecoverWithBoundary(boundaryDevice, logLayout(g), dataLayout(g))
+	legacyDevice := makeDevice()
+	legacyReceipt, legacyErr := Recover(legacyDevice, logLayout(g), dataLayout(g))
+	wantReceipt := storagewalredoapply.Receipt{Interrupted: true, PageID: 1, RecordLSN: 2, WrittenBlocks: 0}
+	if boundaryErr != errInjected || legacyErr != boundaryErr || result != (Result{Replay: wantReceipt}) || legacyReceipt != wantReceipt {
+		t.Fatalf("boundary=(%+v,%v), legacy=(%+v,%v)", result, boundaryErr, legacyReceipt, legacyErr)
+	}
+	if len(boundaryDevice.reads) != 28 || !reflect.DeepEqual(boundaryDevice.reads, legacyDevice.reads) || !reflect.DeepEqual(boundaryDevice.writes, legacyDevice.writes) || boundaryDevice.flushes != legacyDevice.flushes {
+		t.Fatalf("old/new call traces differ: boundary reads=%d writes=%v flush=%d legacy reads=%d writes=%v flush=%d", len(boundaryDevice.reads), boundaryDevice.writes, boundaryDevice.flushes, len(legacyDevice.reads), legacyDevice.writes, legacyDevice.flushes)
+	}
+}
+
+func TestRecoverWithBoundaryRefusalHasZeroRank(t *testing.T) {
+	g := testGeometry()
+	device := newTraced(g)
+	bad := pageBytes(t, storagewalrecord.Record{Kind: storagewalrecord.BeginTransaction, LSN: 1, TxID: 2})
+	bad[len(bad)-1] = 1
+	seedPage(device, 0, bad)
+	result, err := RecoverWithBoundary(device, logLayout(g), dataLayout(g))
+	var damaged *storagewalappend.DamagedTailError
+	if result != (Result{}) || !errors.As(err, &damaged) || damaged.Page != 0 || len(device.writes) != 0 {
+		t.Fatalf("damaged boundary=(%+v,%v) writes=%v", result, err, device.writes)
+	}
+}
+
+func FuzzRecoverWithBoundary(f *testing.F) {
+	for mode := byte(0); mode < 6; mode++ {
+		f.Add([]byte{mode, 9, 8, 7, 6, 5, 4, 3, 2})
+	}
+	f.Fuzz(func(t *testing.T, raw []byte) {
+		if len(raw) == 0 || len(raw) > 32 {
+			t.Skip()
+		}
+		mode := raw[0] % 6
+		g := testGeometry()
+		device := newTraced(g)
+		image := make([]byte, 8)
+		for index := range image {
+			if index+1 < len(raw) {
+				image[index] = raw[index+1]
+			}
+		}
+		var last uint64
+		want := storagewalredoapply.Receipt{}
+		switch mode {
+		case 0:
+		case 1:
+			record := storagewalrecord.Record{Kind: storagewalrecord.BeginTransaction, LSN: 1, TxID: 4}
+			seedRecords(t, device, record)
+			last = record.LSN
+		case 2:
+			records := baseRecords(image, 1)
+			seedRecords(t, device, records...)
+			last = records[len(records)-1].LSN
+			want.AcknowledgedWrites = 1
+		case 3:
+			records := baseRecords(image, 1)
+			records = append(records, storagewalrecord.Record{Kind: storagewalrecord.BeginTransaction, LSN: 4, TxID: 5})
+			seedRecords(t, device, records...)
+			last = records[len(records)-1].LSN
+			want.AcknowledgedWrites = 1
+		case 4:
+			bad := pageBytes(t, storagewalrecord.Record{Kind: storagewalrecord.BeginTransaction, LSN: 1, TxID: 1})
+			bad[len(bad)-1] = 1
+			seedPage(device, 0, bad)
+		case 5:
+			records := baseRecords(image, 1)
+			seedRecords(t, device, records...)
+			device.writeErr[29] = errInjected
+		}
+		result, err := RecoverWithBoundary(device, logLayout(g), dataLayout(g))
+		if mode == 4 {
+			var damaged *storagewalappend.DamagedTailError
+			if result != (Result{}) || !errors.As(err, &damaged) || damaged.Page != 0 || len(device.writes) != 0 {
+				t.Fatalf("damaged result=(%+v,%v)", result, err)
+			}
+			return
+		}
+		if mode == 5 {
+			partial := storagewalredoapply.Receipt{Interrupted: true, PageID: 1, RecordLSN: 2}
+			if result != (Result{Replay: partial}) || err != errInjected || result.LastLSN != 0 {
+				t.Fatalf("partial result=(%+v,%v)", result, err)
+			}
+			return
+		}
+		if err != nil || result != (Result{Replay: want, LastLSN: last}) {
+			t.Fatalf("mode %d result=(%+v,%v) want replay=%+v last=%d", mode, result, err, want, last)
 		}
 	})
 }
