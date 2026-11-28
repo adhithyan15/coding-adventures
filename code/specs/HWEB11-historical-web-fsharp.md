@@ -52,9 +52,11 @@ attribute arrays. Immutable records link nodes by parent, first-child, and
 next-sibling indexes, so parsing and teardown do not recurse with document
 depth. The public collections implement only `IReadOnlyList` operations and do
 not expose the backing arrays. `NodeAt` and `AttributeAt` throw
-`ArgumentOutOfRangeException` for invalid indexes. A first attribute index of
-`-1` and count of zero means that the element has no recognized attributes; a
-null attribute value means valueless, while `""` is explicitly empty.
+`ArgumentOutOfRangeException` for invalid indexes. `FirstRoot` is available
+both as a property and through indexed access to `Nodes`; it is `-1` when there
+are no roots. A first attribute index of `-1` and count of zero means that the
+element has no recognized attributes. `HtmlAttribute.Value = None` means the
+attribute is valueless, while `Some ""` is explicitly empty.
 
 ## HTML Tags 1992 behavior
 
