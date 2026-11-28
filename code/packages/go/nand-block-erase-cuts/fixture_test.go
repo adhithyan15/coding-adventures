@@ -104,6 +104,58 @@ func TestFixtureReaderRejectsMalformedAndUnboundedDocuments(t *testing.T) {
 	}
 }
 
+func TestFixtureReaderRejectsInvalidUnicodeScalars(t *testing.T) {
+	canonical := readCanonicalFixture(t)
+	name := `"name": "zero-prefix-and-before-accept-preserve-state-before-retry"`
+	for label, replacement := range map[string]string{
+		"isolated-high":    `"name": "case-\ud800"`,
+		"isolated-low":     `"name": "case-\udc00"`,
+		"reversed-pair":    `"name": "case-\udc00\ud800"`,
+		"missing-low-half": `"name": "case-\ud800`,
+		"incomplete-hex":   `"name": "case-\u12"`,
+		"malformed-hex":    `"name": "case-\u12G4"`,
+	} {
+		t.Run(label, func(t *testing.T) {
+			raw := bytes.Replace(canonical, []byte(name), []byte(replacement), 1)
+			if bytes.Equal(raw, canonical) {
+				t.Fatal("case-name mutation anchor was not found")
+			}
+			if _, err := parseFixture(raw); err == nil {
+				t.Fatal("fixture reader accepted an invalid Unicode scalar")
+			}
+		})
+	}
+}
+
+func TestFixtureReaderAcceptsValidUnicodeScalarSpellings(t *testing.T) {
+	canonical := readCanonicalFixture(t)
+	name := `"name": "zero-prefix-and-before-accept-preserve-state-before-retry"`
+	for label, testCase := range map[string]struct{ replacement, wantName string }{
+		"surrogate-pair":      {`"name": "case-\ud83d\ude00"`, "case-😀"},
+		"literal-replacement": {`"name": "case-�"`, "case-�"},
+		"escaped-replacement": {`"name": "case-\ufffd"`, "case-�"},
+		"escaped-backslash":   {`"name": "case-\\uD800"`, `case-\uD800`},
+	} {
+		t.Run(label, func(t *testing.T) {
+			raw := bytes.Replace(canonical, []byte(name), []byte(testCase.replacement), 1)
+			if bytes.Equal(raw, canonical) {
+				t.Fatal("case-name mutation anchor was not found")
+			}
+			document, err := parseFixture(raw)
+			if err != nil {
+				t.Fatalf("valid Unicode spelling refused: %v", err)
+			}
+			if got := document.Cases[0].Name; got != testCase.wantName {
+				t.Fatalf("decoded name %q, want %q", got, testCase.wantName)
+			}
+			if !fixtureMatchesModel(document) {
+				t.Fatal("Unicode-only name edit changed the independent erase model")
+			}
+			replayFixture(t, document)
+		})
+	}
+}
+
 func TestWellFormedLateStateCorruptionFailsIndependentModel(t *testing.T) {
 	document, err := parseFixture(readCanonicalFixture(t))
 	if err != nil {
@@ -155,6 +207,9 @@ func FuzzBlockHistory(f *testing.F) {
 func parseFixture(raw []byte) (fixtureDocument, error) {
 	if len(raw) == 0 || len(raw) > fixtureMaxBytes || !utf8.Valid(raw) {
 		return fixtureDocument{}, errors.New("invalid fixture byte sequence or size")
+	}
+	if err := validateSurrogateEscapes(raw); err != nil {
+		return fixtureDocument{}, err
 	}
 	if err := scanJSON(raw); err != nil {
 		return fixtureDocument{}, err
@@ -407,6 +462,76 @@ func isLowerHex(value string) bool {
 		}
 	}
 	return true
+}
+
+// encoding/json replaces unpaired UTF-16 surrogates with U+FFFD. Reject those
+// escaped code units before token decoding so fixture names remain exact.
+func validateSurrogateEscapes(raw []byte) error {
+	for index := 0; index < len(raw); {
+		if raw[index] != '"' {
+			index++
+			continue
+		}
+		index++
+		for index < len(raw) && raw[index] != '"' {
+			if raw[index] != '\\' {
+				index++
+				continue
+			}
+			if index+1 >= len(raw) {
+				return errors.New("truncated JSON string escape")
+			}
+			if raw[index+1] != 'u' {
+				index += 2
+				continue
+			}
+			unit, ok := jsonHexUnit(raw[index+2:])
+			if !ok {
+				return errors.New("invalid JSON Unicode escape")
+			}
+			if unit >= 0xDC00 && unit <= 0xDFFF {
+				return errors.New("unpaired low surrogate in JSON string")
+			}
+			if unit >= 0xD800 && unit <= 0xDBFF {
+				if index+11 >= len(raw) || raw[index+6] != '\\' || raw[index+7] != 'u' {
+					return errors.New("unpaired high surrogate in JSON string")
+				}
+				low, lowOK := jsonHexUnit(raw[index+8:])
+				if !lowOK || low < 0xDC00 || low > 0xDFFF {
+					return errors.New("unpaired high surrogate in JSON string")
+				}
+				index += 12
+				continue
+			}
+			index += 6
+		}
+		if index >= len(raw) {
+			return errors.New("unterminated JSON string")
+		}
+		index++
+	}
+	return nil
+}
+
+func jsonHexUnit(raw []byte) (uint16, bool) {
+	if len(raw) < 4 {
+		return 0, false
+	}
+	var result uint16
+	for _, digit := range raw[:4] {
+		result <<= 4
+		switch {
+		case digit >= '0' && digit <= '9':
+			result |= uint16(digit - '0')
+		case digit >= 'a' && digit <= 'f':
+			result |= uint16(digit-'a') + 10
+		case digit >= 'A' && digit <= 'F':
+			result |= uint16(digit-'A') + 10
+		default:
+			return 0, false
+		}
+	}
+	return result, true
 }
 
 func scanJSON(raw []byte) error {

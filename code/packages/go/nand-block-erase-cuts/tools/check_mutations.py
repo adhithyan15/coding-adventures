@@ -57,8 +57,8 @@ def materialize(root: Path) -> Path:
     return package
 
 
-def mutate(package: Path, old: str, replacement: str) -> None:
-    source = package / SOURCE_NAME
+def mutate(package: Path, old: str, replacement: str, source_name: str = SOURCE_NAME) -> None:
+    source = package / source_name
     content = source.read_text(encoding="utf-8")
     if content.count(old) != 1:
         raise RuntimeError(f"mutation anchor occurs {content.count(old)} times; expected exactly once")
@@ -77,6 +77,27 @@ def main() -> int:
             print("clean control failed", file=os.sys.stderr)
             return 1
         print("clean control: pass")
+
+        scalar_test = "TestFixtureReaderRejectsInvalidUnicodeScalars"
+        scalar_clean = run([go, "test", "-count=1", "-v", "-run", f"^{scalar_test}$", "./..."], clean_package)
+        scalar_pass = f"--- PASS: {scalar_test}"
+        if scalar_clean.returncode != 0 or scalar_pass not in scalar_clean.stdout:
+            print(scalar_clean.stdout, end="")
+            raise RuntimeError("clean Unicode-scalar control failed")
+        print(f"clean control: {scalar_pass}")
+        bypass_package = materialize(root / "surrogate-validation-bypass")
+        mutate(
+            bypass_package,
+            "if err := validateSurrogateEscapes(raw); err != nil {\n\t\treturn fixtureDocument{}, err\n\t}",
+            "if err := error(nil); err != nil {\n\t\treturn fixtureDocument{}, err\n\t}",
+            "fixture_test.go",
+        )
+        bypass = run([go, "test", "-count=1", "-v", "-run", f"^{scalar_test}$", "./..."], bypass_package)
+        bypass_output = bypass.stdout + bypass.stderr
+        if bypass.returncode == 0 or f"--- FAIL: {scalar_test}" not in bypass_output or "fixture reader accepted an invalid Unicode scalar" not in bypass_output:
+            print(bypass_output, end="")
+            raise RuntimeError("Unicode scalar-admission bypass mutant survived or missed its witness")
+        print(f"killed surrogate-validation-bypass: --- FAIL: {scalar_test}; assertion=fixture reader accepted an invalid Unicode scalar")
 
         for name, test_name, witness, old, replacement in MUTATIONS:
             package = materialize(root / name)
