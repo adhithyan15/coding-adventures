@@ -6,3 +6,8 @@ description = "RISC-V RV32I simulator with M-mode privileged extensions"
 
 [dependencies]
 cpu-simulator = { path = "../cpu-simulator" }
+cpu-pipeline = { path = "../cpu-pipeline" }
+sim-core = { package = "core", path = "../core" }
+
+[dev-dependencies]
+serde_json = "1"

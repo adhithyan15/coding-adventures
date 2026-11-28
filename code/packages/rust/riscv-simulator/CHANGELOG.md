@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added
+
+- A bounded RV32I adapter that drives the reusable five-stage Core for the
+  shared D05 `addi`/`sw`/`lw`/`beq`/exact-ECALL fixture and captures actual
+  Core snapshots, forwarding, retirement PCs, registers, and RAM.
+
 - Added the normative `Rv32ISimulator` machine boundary with exact 64 KiB
   state, five M-mode CSRs, checked origin-aware loading and restore/direct
   access, typed fail-closed faults, complete transition traces, atomic steps,

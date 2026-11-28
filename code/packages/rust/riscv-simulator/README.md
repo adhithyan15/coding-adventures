@@ -74,3 +74,16 @@ The checked lifecycle is covered by seven focused suites and a reproducible
 256-case Python one-step full-state corpus. All 106 Rust test functions pass;
 strict Rustfmt, Clippy, and rustdoc are green. Package line coverage is 91.46%
 (1,125/1,230).
+
+## Bounded D05 Core pipeline adapter
+
+The `d05_pipeline` module can drive the reusable Rust `core::Core` through a
+small RV32I subset: `addi`, `sw`, `lw`, `beq`, and exact ECALL (`0x00000073`).
+It returns snapshots from actual Core cycles, bypass values, WB PCs, register
+state, and bounded flat RAM. The package test runs the shared
+`go-riscv-d05-v1/input.json` program through this pipeline and compares final
+registers and RAM with the separate checked `Rv32ISimulator` engine.
+
+This is evidence for that subset and fixture only. It does not claim full
+RV32I pipeline support, Go cycle parity, precise faults, store-at-retirement,
+MMIO, or OS boot. Stores are committed by the existing Core in MEM.
