@@ -1,0 +1,5 @@
+{
+  "package": "go/storage-page-layout",
+  "capabilities": [],
+  "justification": "The page layout performs pure signed arithmetic and only depends on the logical block contract."
+}
