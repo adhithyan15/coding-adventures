@@ -99,8 +99,31 @@ module CodingAdventures
         # `basename#label`, with every character outside [A-Za-z0-9._<>$/#-] made
         # `_`, so no frame contains `:`.
         def self.normalise_frame(path, label)
-          "#{File.basename(path.to_s)}##{label}".gsub(NAME_CHARS, "_")
+          "#{portable_basename(path.to_s)}##{label}".gsub(NAME_CHARS, "_")
         end
+
+        # Ruby's File.basename follows the host platform. In particular, Windows
+        # treats a colon in a POSIX filename as a drive/stream delimiter. Frames
+        # are platform-independent, so split on either slash style using bytes.
+        def self.portable_basename(path)
+          length = path.bytesize
+          length -= 1 while length.positive? && path_separator?(path.getbyte(length - 1))
+
+          return "" if path.empty?
+          # Keep a root separator as the root's basename. Drive roots retain
+          # their drive marker as well.
+          return path.byteslice(0, 1) if length.zero?
+
+          index = length - 1
+          index -= 1 while index >= 0 && !path_separator?(path.getbyte(index))
+          path.byteslice(index + 1, length - index - 1)
+        end
+        private_class_method :portable_basename
+
+        def self.path_separator?(byte)
+          byte == 0x2f || byte == 0x5c
+        end
+        private_class_method :path_separator?
 
         # Drops consecutive duplicates (a recursive crash hashes alike at any depth)
         # and keeps the innermost MAX_FRAMES.
