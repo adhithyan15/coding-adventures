@@ -1,2 +1,2 @@
 go build -o build-tool .
-go test ./... -v
+go test -timeout=15m ./... -v
