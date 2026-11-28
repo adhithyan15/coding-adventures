@@ -4,6 +4,7 @@ import json
 import random
 import statistics
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -463,6 +464,16 @@ def test_array_workload_correctness_and_cli_json_entrypoint(capsys, monkeypatch)
         return collect(baseline, candidate, checksum, config, fixed_clock([1, 1, 1, 1]))
 
     monkeypatch.setattr(array_driver, "collect", deterministic_collect)
+    monkeypatch.setattr(
+        array_driver.platform,
+        "system",
+        lambda: pytest.fail("CLI metadata must not probe the host OS"),
+    )
+    monkeypatch.setattr(
+        array_driver.platform,
+        "machine",
+        lambda: pytest.fail("CLI metadata must not probe the host architecture"),
+    )
     array_driver.main(args)
     first = capsys.readouterr().out
     array_driver.main(args)
@@ -473,9 +484,31 @@ def test_array_workload_correctness_and_cli_json_entrypoint(capsys, monkeypatch)
     assert result["revision"] == "abc123"
     assert isinstance(result["invocation"], list)
     assert all(key in result for key in ("runtime", "os", "arch"))
+    assert result["os"], "OS metadata must remain nonempty"
+    assert result["arch"], "architecture metadata must remain nonempty"
+    assert (result["os"], result["arch"]) == array_driver._platform_metadata()
     assert Report.from_dict(
         {key: result[key] for key in ("config", "batch_size", "pairs", "analysis")}
     )
+
+
+def test_platform_metadata_uses_constants_and_nonempty_fallback(monkeypatch):
+    monkeypatch.setattr(
+        array_driver,
+        "sys",
+        SimpleNamespace(
+            platform="test-os",
+            implementation=SimpleNamespace(_multiarch="test-arch"),
+        ),
+    )
+    assert array_driver._platform_metadata() == ("test-os", "test-arch")
+
+    monkeypatch.setattr(
+        array_driver,
+        "sys",
+        SimpleNamespace(platform="", implementation=SimpleNamespace()),
+    )
+    assert array_driver._platform_metadata() == ("unknown", "unknown")
 
 
 def test_cli_help_and_invalid_configuration_are_user_facing(monkeypatch, capsys):

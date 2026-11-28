@@ -6,6 +6,7 @@ import io
 import json
 import random
 from collections.abc import Callable
+from types import SimpleNamespace
 
 import pytest
 from microbenchmark import Report
@@ -41,7 +42,9 @@ def test_builders_match_same_input_and_checksum_without_draining_inputs() -> Non
     assert baseline(4) == candidate(4) == per_instance * 4
 
 
-def test_driver_uses_fake_clock_and_emits_replayable_standard_report() -> None:
+def test_driver_uses_fake_clock_and_emits_replayable_standard_report(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     stdout = io.StringIO()
     stderr = io.StringIO()
     argv = [
@@ -56,6 +59,14 @@ def test_driver_uses_fake_clock_and_emits_replayable_standard_report() -> None:
         "--revision",
         "spec-test",
     ]
+    monkeypatch.setattr(
+        "heap_construction_benchmark.driver.platform.system",
+        lambda: pytest.fail("CLI metadata must not probe the host OS"),
+    )
+    monkeypatch.setattr(
+        "heap_construction_benchmark.driver.platform.machine",
+        lambda: pytest.fail("CLI metadata must not probe the host architecture"),
+    )
     assert driver.run(argv, stdout, stderr, ticking_clock()) == 0
     document = json.loads(stdout.getvalue())
     core = {key: document[key] for key in ("config", "batch_size", "pairs", "analysis")}
@@ -68,8 +79,30 @@ def test_driver_uses_fake_clock_and_emits_replayable_standard_report() -> None:
     assert document["runtime"]
     assert document["os"]
     assert document["arch"]
+    assert (document["os"], document["arch"]) == driver._platform_metadata()
     assert [pair.order for pair in report.pairs].count("baseline-first") == 3
     assert [pair.order for pair in report.pairs].count("candidate-first") == 2
+
+
+def test_platform_metadata_uses_constants_and_nonempty_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        driver,
+        "sys",
+        SimpleNamespace(
+            platform="test-os",
+            implementation=SimpleNamespace(_multiarch="test-arch"),
+        ),
+    )
+    assert driver._platform_metadata() == ("test-os", "test-arch")
+
+    monkeypatch.setattr(
+        driver,
+        "sys",
+        SimpleNamespace(platform="", implementation=SimpleNamespace()),
+    )
+    assert driver._platform_metadata() == ("unknown", "unknown")
 
 
 @pytest.mark.parametrize(

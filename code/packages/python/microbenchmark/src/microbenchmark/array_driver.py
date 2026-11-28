@@ -11,6 +11,23 @@ ARRAY = [(17 * index + 3) % 251 for index in range(4096)]
 ONE_PASS = sum(ARRAY)
 
 
+def _platform_metadata() -> tuple[str, str]:
+    """Use interpreter constants without probing the host OS at runtime.
+
+    `platform.system()` and `platform.machine()` may spawn commands, read
+    environment variables, or query the registry on some supported hosts.
+    `sys.platform` and CPython's `_multiarch` are compile/runtime identifiers;
+    implementations without `_multiarch` report the truthful fallback.
+    """
+    os_name = sys.platform
+    if not isinstance(os_name, str) or not os_name:
+        os_name = "unknown"
+    architecture = getattr(sys.implementation, "_multiarch", None)
+    if not isinstance(architecture, str) or not architecture:
+        architecture = "unknown"
+    return os_name, architecture
+
+
 def indexed(batch: int) -> int:
     total = 0
     for _ in range(batch):
@@ -57,14 +74,15 @@ def main(argv: list[str] | None = None) -> int:
     except (ValueError, OverflowError) as error:
         parser().error(str(error))
     document = report.to_dict()
+    os_name, architecture = _platform_metadata()
     document.update(
         {
             "workload": "indexed-array-sum-4096",
             "invocation": [sys.argv[0], *(sys.argv[1:] if argv is None else argv)],
             "revision": args.revision,
             "runtime": platform.python_version(),
-            "os": platform.system(),
-            "arch": platform.machine(),
+            "os": os_name,
+            "arch": architecture,
         }
     )
     rendered = json.dumps(document, indent=2, sort_keys=True) + "\n"
