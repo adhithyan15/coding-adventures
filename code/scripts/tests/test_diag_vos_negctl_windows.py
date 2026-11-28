@@ -26,7 +26,7 @@ class StreamCaptureTest(unittest.TestCase):
         read_stream = os.fdopen(read_fd, "rb")
         reader = threading.Thread(target=capture.read, args=(read_stream, started))
         reader.start()
-        payload = b"A" * 40_000 + b"Bail out! hidden in omitted bytes\n" + b"Z" * 40_000
+        payload = b"A" * 40_000 + b"\nBail out! hidden in omitted bytes\n" + b"Z" * 40_000
         with os.fdopen(write_fd, "wb") as writer:
             writer.write(payload)
         reader.join(timeout=5)
@@ -60,6 +60,7 @@ class RealWrapperProbeTest(unittest.TestCase):
         self.assertTrue(result["valid_fault_observation"], result)
         self.assertIn("negctl: fault caught", result["stdout"]["captured"])
         self.assertIsNone(result["stdout"]["first_tap_plan_s"])
+        self.assertIsNone(result["stdout"]["first_not_ok_s"])
 
     def test_wrapper_rejection_does_not_count_as_a_completed_fault_observation(self) -> None:
         code = "import sys; print('1..1'); print('not ok 1 - fixture'); sys.exit(0)"

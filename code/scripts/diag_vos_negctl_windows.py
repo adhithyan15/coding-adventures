@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -59,13 +60,17 @@ class StreamCapture:
                     self.last_byte_s = now
                     self.total_bytes += len(chunk)
                     searchable = self.marker_tail + chunk
-                    if self.first_tap_plan_s is None and b"1.." in searchable:
+                    if self.first_tap_plan_s is None and re.search(
+                        rb"(?m)^1\.\.[0-9]+\r?(?:\n|$)", searchable
+                    ):
                         self.first_tap_plan_s = now
-                    if self.first_not_ok_s is None and b"not ok" in searchable:
+                    if self.first_not_ok_s is None and re.search(
+                        rb"(?m)^not ok[ \t]+[0-9]+(?:[ \t].*)?\r?(?:\n|$)", searchable
+                    ):
                         self.first_not_ok_s = now
-                    if self.first_bail_out_s is None and b"Bail out!" in searchable:
+                    if self.first_bail_out_s is None and re.search(rb"(?m)^Bail out!", searchable):
                         self.first_bail_out_s = now
-                    self.marker_tail = searchable[-16:]
+                    self.marker_tail = searchable[-64:]
                     head_room = CAPTURE_LIMIT // 2 - len(self.head)
                     head_part = chunk[:head_room]
                     if head_part:
