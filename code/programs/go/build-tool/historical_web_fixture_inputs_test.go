@@ -29,9 +29,11 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 		{Name: "cpp/test-bootstrap", Language: "cpp"},
 		{Name: "csharp/historical-web", Language: "csharp"},
 		{Name: "csharp/test-bootstrap", Language: "csharp"},
+		{Name: "fsharp/historical-web", Language: "fsharp"},
+		{Name: "fsharp/test-bootstrap", Language: "fsharp"},
 	}
 	selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "all")
-	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true, "go/historical-web": true, "rust/historical-web": true, "typescript/historical-web": true, "ruby/historical_web": true, "c/historical-web": true, "cpp/historical-web": true, "csharp/historical-web": true}) {
+	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true, "go/historical-web": true, "rust/historical-web": true, "typescript/historical-web": true, "ruby/historical_web": true, "c/historical-web": true, "cpp/historical-web": true, "csharp/historical-web": true, "fsharp/historical-web": true}) {
 		t.Fatalf("vector selection = %v, err %v; want all historical-web packages", selected, err)
 	}
 	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "python"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true}) {
@@ -132,6 +134,8 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 	packages[14].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/cpp/test-bootstrap"))
 	packages[15].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/csharp/historical-web"))
 	packages[16].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/csharp/test-bootstrap"))
+	packages[17].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/fsharp/historical-web"))
+	packages[18].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/fsharp/test-bootstrap"))
 	graph, err := buildKilnLegacyGraph(packages, checkout)
 	if err != nil {
 		t.Fatalf("build Kiln graph: %v", err)
