@@ -52,3 +52,18 @@ lost commit acknowledgement, and restart classification. Preserve
 the data interval and neighboring blocks. Run both build lists,
 coverage, race, vet, guided inputs and clean controls for continuing
 after a failed append or acknowledging the transaction early.
+
+## Local verification
+
+The implementation is in `285170445f4`. An independent caller crossed
+all 66 HDD barrier cuts at each of the three record positions, and
+checked each of 21 possible first block-write failures. Exact result
+fields, increasing write addresses, complete restarted device bytes
+and guarded data blocks matched. Race and vet passed.
+
+Both command lists passed on Linux at 100% statement coverage
+with race and vet. Module tidy and 100,000 guided inputs passed.
+The mutation runner observed the exact named test pass on clean
+source and fail on each intentional control. Its private runtime
+source matched the archived bytes after restoration. The graph
+added only the publication package and its 17 expected edges.

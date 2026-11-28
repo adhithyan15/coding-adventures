@@ -56,3 +56,20 @@ through the existing redo planner and replay on memory, at starting
 LSNs 1, 3, 19 and 1,000. It checked original write and commit ranks,
 a fully durable page with a lost response, a complete replay, and
 untouched neighbors. Race and vet passed.
+
+## Local verification
+
+The implementation is in `23756dc4a9e`. The exact independent
+caller checked 66 HDD commit barrier cuts and all 12 data-page
+barrier cuts after an acknowledged log. It compared entire
+device images across restart, data application, and another
+recovery. It verified that a complete commit with a lost response
+can survive, with data effects deferred until recovery. A memory
+trace committed two separate transactions and verified that the
+second wrote only its new data at its original log ranks.
+Race and vet passed.
+
+Both command lists passed on Linux at 100% statement coverage
+with race and vet. Module tidy, 100,000 guided inputs and both
+clean-controlled mutation witnesses passed. The graph added
+only the commit package and its 19 expected module edges.

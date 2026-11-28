@@ -52,3 +52,16 @@ slices and crossed faults. Verify exact slot encoding of every
 generated record. Run both build lists, race, vet, guided inputs
 and clean controls for dropping the commit reservation or using
 an incorrect first rank.
+
+## Local verification
+
+The implementation is in `307ab7f5d78`. An independent record and
+transaction oracle matched 8,064 capacity, rank, grammar and page
+decisions. It encoded each record in all 512 admitted sequences
+with the actual slot codec. It also verified that records adopt
+separate copies of overlapping input images. Race and vet passed.
+
+Both command lists passed on Linux with 100% statement coverage,
+race and vet. Module tidy, 100,000 guided inputs and both mutation
+controls passed. Build discovery added only the preflight package
+and its eleven expected edges per platform.
