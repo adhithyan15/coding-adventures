@@ -651,6 +651,14 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	// HOS-07b: the staged Rust adapter consumes only the canonical instruction
+	// input. Its independent architectural oracle is local to the Rust test.
+	{
+		name: "rust/riscv-simulator", language: "rust",
+		inputs:  "the canonical D05 RV32I input program",
+		matches: isRustRiscvD05Input,
+		paths:   []string{goRiscvD05FixtureInputPath},
+	},
 	// HOS-D05-GO4: the Go RISC-V package BUILD replays this exact external
 	// input, captured trace, and public-API adapter. Keep predicate and hash
 	// inputs limited to the three files the adapter reads or is run from.
@@ -2117,6 +2125,10 @@ func isGoOSArchitectureFixtureInput(changed string) bool {
 	return changed == osArchitectureProfilesPath || changed == osArchitectureGoConformancePath
 }
 
+func isRustRiscvD05Input(changed string) bool {
+	return changed == goRiscvD05FixtureInputPath
+}
+
 func isGoRiscvD05FixtureInput(changed string) bool {
 	for _, path := range goRiscvD05FixturePaths {
 		if changed == path {
@@ -2138,6 +2150,9 @@ func isGoRiscvDmemReadyFixtureInput(changed string) bool {
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
+	if packageName == "rust/riscv-simulator" {
+		return []string{goRiscvD05FixtureInputPath}
+	}
 	if packageName == "go/riscv-simulator" {
 		inputs := append([]string(nil), goRiscvD05FixturePaths...)
 		return append(inputs, goRiscvDmemReadyPackagePaths...)
