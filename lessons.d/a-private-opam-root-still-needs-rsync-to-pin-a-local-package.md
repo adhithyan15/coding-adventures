@@ -4,9 +4,6 @@ category: Supply chain & CI pinning
 
 # A private opam root still needs rsync to pin a local package path
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
-# A private opam root still needs rsync to pin a local package path
-
 `opam pin add --working-dir ../rank-statistics` failed on the bare executor
 because `rsync` was absent. The repository's OCaml setup action provides it,
 but a private `OPAMROOT` only isolates opam state; it does not supply host
