@@ -24,6 +24,7 @@ func databaseMediaPackages(root string) []discovery.Package {
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 		{Name: "c/hdd-simulator", Language: "c"},
 		{Name: "go/hdd-simulator", Language: "go"},
+		{Name: "go/hdd-write-crash-cuts", Language: "go"},
 	}
 	for index := range packages {
 		packages[index].Path = filepath.Join(root, filepath.FromSlash("code/packages/"+packages[index].Name))
@@ -63,6 +64,13 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 			goReader:         "go/hdd-simulator",
 			inputs:           hddSimulatorFixtureInputs,
 		},
+		{
+			fixture:   hddWriteCrashCutsFixturePath,
+			predicate: isHDDWriteCrashCutsFixture,
+			readers:   map[string]bool{"go/hdd-write-crash-cuts": true},
+			goReader:  "go/hdd-write-crash-cuts",
+			inputs:    hddWriteCrashCutsFixtureInputs,
+		},
 	}
 
 	for _, tc := range cases {
@@ -84,13 +92,18 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		if tc.cppReader != "" {
 			cppReaders[tc.cppReader] = true
 		}
-		for language, expected := range map[string]map[string]bool{
-			"python":     {tc.pythonReader: true},
-			"typescript": {tc.typescriptReader: true},
-			"c":          cReaders,
-			"cpp":        cppReaders,
-			"go":         goReaders,
-		} {
+		languageReaders := map[string]map[string]bool{"c": cReaders, "cpp": cppReaders, "go": goReaders}
+		if tc.pythonReader != "" {
+			languageReaders["python"] = map[string]bool{tc.pythonReader: true}
+		} else {
+			languageReaders["python"] = map[string]bool{}
+		}
+		if tc.typescriptReader != "" {
+			languageReaders["typescript"] = map[string]bool{tc.typescriptReader: true}
+		} else {
+			languageReaders["typescript"] = map[string]bool{}
+		}
+		for language, expected := range languageReaders {
 			got, err := repositoryInputConsumersForChange([]string{tc.fixture}, packages, language)
 			if err != nil || !reflect.DeepEqual(got, expected) {
 				t.Errorf("%s-only %s selection = %v, err %v; want %v", language, tc.fixture, got, err, expected)
@@ -121,6 +134,8 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"code/specs/fixtures/database-media-v1/hdd-simulator.json.bak",
 		"code/specs/fixtures/database-media-v2/hdd-simulator.json",
 		"code/specs/fixtures/database-media-v1/hdd-simulator.json/extra",
+		hddWriteCrashCutsFixturePath + ".bak",
+		"code/specs/fixtures/database-media-v1/hdd-write-crash-cuts/extra.json",
 		"code/specs/fixtures/database-media-v2/nand-flash.json",
 		"code/specs/fixtures/database-media-v1",
 		"code/specs/fixtures/other-database-media-v1/nand-flash.json",
@@ -128,7 +143,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		`code\specs\fixtures\database-media-v1\hdd-simulator.json`,
 	}
 	for _, changed := range negativeControls {
-		if isNANDFlashFixture(changed) || isHDDSimulatorFixture(changed) {
+		if isNANDFlashFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) {
 			t.Errorf("media predicate accepted lookalike %q", changed)
 		}
 		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
@@ -151,6 +166,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"typescript/hdd-simulator": {hddSimulatorFixturePath},
 		"c/hdd-simulator":          {hddSimulatorFixturePath},
 		"go/hdd-simulator":         {hddSimulatorFixturePath},
+		"go/hdd-write-crash-cuts":  {hddWriteCrashCutsFixturePath},
 	} {
 		var got []string
 		for _, pkg := range graph.Packages {
@@ -232,6 +248,10 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 			path:    hddSimulatorFixturePath,
 			readers: map[string]bool{"python/hdd-simulator": true, "typescript/hdd-simulator": true, "c/hdd-simulator": true, "go/hdd-simulator": true},
 		},
+		{
+			path:    hddWriteCrashCutsFixturePath,
+			readers: map[string]bool{"go/hdd-write-crash-cuts": true},
+		},
 	}
 	for _, fixture := range fixtures {
 		t.Run(fixture.path, func(t *testing.T) {
@@ -261,7 +281,7 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 					t.Fatal(err)
 				}
 			}
-			for _, path := range []string{nandFlashFixturePath, hddSimulatorFixturePath} {
+			for _, path := range []string{nandFlashFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath} {
 				fullPath := filepath.Join(root, filepath.FromSlash(path))
 				if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
 					t.Fatal(err)
@@ -323,6 +343,11 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 			id:      "repository-database-media-hdd-fixture-inputs",
 			fixture: hddSimulatorFixturePath,
 			roots:   []string{"code/packages/c/hdd-simulator", "code/packages/go/hdd-simulator", "code/packages/python/hdd-simulator", "code/packages/typescript/hdd-simulator"},
+		},
+		{
+			id:      "repository-database-media-hdd-crash-cuts-fixture-inputs",
+			fixture: hddWriteCrashCutsFixturePath,
+			roots:   []string{"code/packages/go/hdd-write-crash-cuts"},
 		},
 	} {
 		found := false

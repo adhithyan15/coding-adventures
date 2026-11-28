@@ -1,0 +1,1 @@
+- Registered `go/hdd-write-crash-cuts` as the exact reader of the shared DB04a crash-cut vector. Its source hash and Kiln inputs now include that vector, with a separate route from the HDD timing and logical NAND fixtures.
