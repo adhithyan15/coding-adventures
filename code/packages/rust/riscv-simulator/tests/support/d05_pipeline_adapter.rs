@@ -211,8 +211,8 @@ fn validate_program(program: &[u8]) -> Result<(), D05PipelineError> {
             length: program.len(),
         });
     }
-    for (index, bytes) in program.chunks_exact(4).enumerate() {
-        let raw = u32::from_le_bytes(bytes.try_into().expect("four-byte instruction"));
+    for (index, bytes) in program.as_chunks::<4>().0.iter().enumerate() {
+        let raw = u32::from_le_bytes(*bytes);
         let decoded = decode::decode(raw, (index * 4) as i32);
         let supported = matches!(decoded.mnemonic.as_str(), "addi" | "sw" | "lw" | "beq")
             || (decoded.mnemonic == "ecall" && raw == 0x0000_0073);

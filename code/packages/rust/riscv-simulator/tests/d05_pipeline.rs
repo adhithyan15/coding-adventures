@@ -16,7 +16,9 @@ fn fixture() -> (Vec<u8>, usize, usize, Vec<D05InitialWord>) {
     assert_eq!(hex.len() % 2, 0);
     let program = hex
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| {
             let byte = std::str::from_utf8(pair).expect("ASCII hex");
             u8::from_str_radix(byte, 16).expect("valid hex byte")
