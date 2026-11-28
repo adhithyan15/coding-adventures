@@ -36,6 +36,7 @@ jobs:
         with:
           ref: 635df1be42522aaed21cb0f20fa83a9b39a2dd7e
           path: source
+          fetch-depth: 2
           persist-credentials: false
       - name: Verify source and harness identities
         env:
