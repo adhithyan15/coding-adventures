@@ -20,6 +20,7 @@ func databaseMediaPackages(root string) []discovery.Package {
 		{Name: "c/nand-flash", Language: "c"},
 		{Name: "cpp/nand-flash", Language: "cpp"},
 		{Name: "go/nand-flash", Language: "go"},
+		{Name: "go/nand-page-program-cuts", Language: "go"},
 		{Name: "python/hdd-simulator", Language: "python"},
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 		{Name: "c/hdd-simulator", Language: "c"},
@@ -54,6 +55,13 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 			goReader:         "go/nand-flash",
 			cppReader:        "cpp/nand-flash",
 			inputs:           nandFlashFixtureInputs,
+		},
+		{
+			fixture:   nandPageProgramCutsFixturePath,
+			predicate: isNANDPageProgramCutsFixture,
+			readers:   map[string]bool{"go/nand-page-program-cuts": true},
+			goReader:  "go/nand-page-program-cuts",
+			inputs:    nandPageProgramCutsFixtureInputs,
 		},
 		{
 			fixture:          hddSimulatorFixturePath,
@@ -128,6 +136,9 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 
 	negativeControls := []string{
 		nandFlashFixturePath + ".bak",
+		nandPageProgramCutsFixturePath + ".bak",
+		"code/specs/fixtures/database-media-v1/nand-page-program-cuts/extra.json",
+		"code/specs/fixtures/database-media-v2/nand-page-program-cuts.json",
 		"code/specs/fixtures/database-media-v1/nand-flash/extra.json",
 		"code/specs/fixtures/database-media-v1/nand-flash.json/",
 		"code/specs/fixtures/database-media-v1ish/nand-flash.json",
@@ -143,7 +154,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		`code\specs\fixtures\database-media-v1\hdd-simulator.json`,
 	}
 	for _, changed := range negativeControls {
-		if isNANDFlashFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) {
+		if isNANDFlashFixture(changed) || isNANDPageProgramCutsFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) {
 			t.Errorf("media predicate accepted lookalike %q", changed)
 		}
 		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
@@ -157,16 +168,17 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		t.Fatalf("build Kiln graph with database media inputs: %v", err)
 	}
 	for packageName, expected := range map[string][]string{
-		"python/nand-flash":        {nandFlashFixturePath},
-		"typescript/nand-flash":    {nandFlashFixturePath},
-		"c/nand-flash":             {nandFlashFixturePath},
-		"cpp/nand-flash":           {nandFlashFixturePath},
-		"go/nand-flash":            {nandFlashFixturePath},
-		"python/hdd-simulator":     {hddSimulatorFixturePath},
-		"typescript/hdd-simulator": {hddSimulatorFixturePath},
-		"c/hdd-simulator":          {hddSimulatorFixturePath},
-		"go/hdd-simulator":         {hddSimulatorFixturePath},
-		"go/hdd-write-crash-cuts":  {hddWriteCrashCutsFixturePath},
+		"python/nand-flash":         {nandFlashFixturePath},
+		"typescript/nand-flash":     {nandFlashFixturePath},
+		"c/nand-flash":              {nandFlashFixturePath},
+		"cpp/nand-flash":            {nandFlashFixturePath},
+		"go/nand-flash":             {nandFlashFixturePath},
+		"go/nand-page-program-cuts": {nandPageProgramCutsFixturePath},
+		"python/hdd-simulator":      {hddSimulatorFixturePath},
+		"typescript/hdd-simulator":  {hddSimulatorFixturePath},
+		"c/hdd-simulator":           {hddSimulatorFixturePath},
+		"go/hdd-simulator":          {hddSimulatorFixturePath},
+		"go/hdd-write-crash-cuts":   {hddWriteCrashCutsFixturePath},
 	} {
 		var got []string
 		for _, pkg := range graph.Packages {
@@ -235,6 +247,25 @@ func TestDeletedNANDFixtureStillSelectsEachReader(t *testing.T) {
 	}
 }
 
+func TestDeletedNANDPageProgramCutsFixtureStillSelectsGoReader(t *testing.T) {
+	root := t.TempDir()
+	packages := databaseMediaPackages(root)
+	missing := filepath.Join(root, filepath.FromSlash(nandPageProgramCutsFixturePath))
+	if _, err := os.Stat(missing); !os.IsNotExist(err) {
+		t.Fatalf("fixture should be absent for deletion case: %v", err)
+	}
+	for _, language := range []string{"go", "c", "cpp", "python", "typescript", "all"} {
+		got, err := repositoryInputConsumersForChange([]string{nandPageProgramCutsFixturePath}, packages, language)
+		want := map[string]bool{}
+		if language == "go" || language == "all" {
+			want = map[string]bool{"go/nand-page-program-cuts": true}
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("deleted NAND page-program fixture %s selection = %v, err %v; want %v", language, got, err, want)
+		}
+	}
+}
+
 func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T) {
 	fixtures := []struct {
 		path    string
@@ -243,6 +274,10 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 		{
 			path:    nandFlashFixturePath,
 			readers: map[string]bool{"python/nand-flash": true, "typescript/nand-flash": true, "c/nand-flash": true, "cpp/nand-flash": true, "go/nand-flash": true},
+		},
+		{
+			path:    nandPageProgramCutsFixturePath,
+			readers: map[string]bool{"go/nand-page-program-cuts": true},
 		},
 		{
 			path:    hddSimulatorFixturePath,
@@ -281,7 +316,7 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 					t.Fatal(err)
 				}
 			}
-			for _, path := range []string{nandFlashFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath} {
+			for _, path := range []string{nandFlashFixturePath, nandPageProgramCutsFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath} {
 				fullPath := filepath.Join(root, filepath.FromSlash(path))
 				if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
 					t.Fatal(err)
@@ -338,6 +373,11 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 			id:      "repository-database-media-nand-fixture-inputs",
 			fixture: nandFlashFixturePath,
 			roots:   []string{"code/packages/c/nand-flash", "code/packages/cpp/nand-flash", "code/packages/go/nand-flash", "code/packages/python/nand-flash", "code/packages/typescript/nand-flash"},
+		},
+		{
+			id:      "repository-database-media-nand-page-program-cuts-fixture-inputs",
+			fixture: nandPageProgramCutsFixturePath,
+			roots:   []string{"code/packages/go/nand-page-program-cuts"},
 		},
 		{
 			id:      "repository-database-media-hdd-fixture-inputs",
