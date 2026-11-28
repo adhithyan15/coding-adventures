@@ -653,7 +653,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixFixtureRow("ocaml"),
 	historicalUnixFixtureRow("perl"),
 	historicalUnixFixtureRow("python"),
-	historicalUnixFixtureRow("ruby"),
+	historicalUnixFixturePackageRow("ruby/unix_history_simulator", "ruby"),
 	historicalUnixFixtureRow("rust"),
 	historicalUnixFixtureRow("swift"),
 	historicalUnixFixtureRow("typescript"),
@@ -674,6 +674,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/historical-web",
 		language: "rust",
+		inputs:   "the shared HWEB-00 historical web vectors",
+		matches:  isHistoricalWebVectors,
+		paths:    []string{historicalWebVectorsPath},
+	},
+	{
+		name:     "typescript/historical-web",
+		language: "typescript",
 		inputs:   "the shared HWEB-00 historical web vectors",
 		matches:  isHistoricalWebVectors,
 		paths:    []string{historicalWebVectorsPath},
@@ -2033,6 +2040,9 @@ func repositoryInputsForPackage(packageName string) []string {
 			historicalUnixElixirBuildPath, historicalUnixElixirAdapterPath,
 		}
 	}
+	if packageName == "ruby/unix_history_simulator" {
+		return []string{historicalUnixFixturePath}
+	}
 	if strings.HasSuffix(packageName, "/unix-history-simulator") {
 		language := strings.TrimSuffix(packageName, "/unix-history-simulator")
 		inputs := []string{historicalUnixFixturePath}
@@ -2075,6 +2085,8 @@ func repositoryInputsForPackage(packageName string) []string {
 	case "go/historical-web":
 		return []string{historicalWebVectorsPath}
 	case "rust/historical-web":
+		return []string{historicalWebVectorsPath}
+	case "typescript/historical-web":
 		return []string{historicalWebVectorsPath}
 	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}

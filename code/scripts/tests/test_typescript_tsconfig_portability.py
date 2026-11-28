@@ -476,7 +476,9 @@ console.log(prose, nested);
         # +1: os-architecture-simulator is a standalone noEmit semantic package.
         # +1: rank-statistics is the deterministic MB02 TypeScript foundation.
         # Its shared compiler configuration adds one inherited rootDir and outDir.
-        self.assertEqual(summary.total_projects, 523)
+        # +1: historical-web is the HWEB04 TypeScript profile package with
+        # standalone TypeScript configuration and a pinned package lockfile.
+        self.assertEqual(summary.total_projects, 524)
         self.assertEqual(summary.shared_projects, 306)
         self.assertEqual(summary.inherited_root_dir, 137)
         self.assertEqual(summary.inherited_out_dir, 140)
@@ -496,8 +498,9 @@ console.log(prose, nested);
         # are isolated standalone emitters (TS-W7-A).
         # +3: wave, analog-waveform, and discrete-waveform are isolated
         # standalone emitters (PHY-W8-E).
-        self.assertEqual(summary.standalone_emit_projects, 183)
-        self.assertEqual(summary.isolated_standalone_projects, 183)
+        # +1: historical-web has an isolated TypeScript output configuration.
+        self.assertEqual(summary.standalone_emit_projects, 184)
+        self.assertEqual(summary.isolated_standalone_projects, 184)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -665,7 +668,8 @@ console.log(prose, nested);
         # +1: the browser program locks its standalone compiler and test graph.
         # +1: os-architecture-simulator locks its standalone TypeScript compiler.
         # +1: rank-statistics locks its standalone compiler and test graph.
-        self.assertEqual(summary.locked_compilers, 536)
+        # +1: historical-web locks its standalone compiler and local test harness.
+        self.assertEqual(summary.locked_compilers, 537)
 
 
 if __name__ == "__main__":

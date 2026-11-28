@@ -1,0 +1,17 @@
+{
+  "name": "@coding-adventures/historical-web",
+  "version": "0.1.0",
+  "description": "The CERN 1991 HTTP/0.9 and archived 1992 HTML Tags profiles",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
+    "typescript": "^5.0.0"
+  }
+}
