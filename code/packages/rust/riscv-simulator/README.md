@@ -74,3 +74,18 @@ The checked lifecycle is covered by seven focused suites and a reproducible
 256-case Python one-step full-state corpus. All 106 Rust test functions pass;
 strict Rustfmt, Clippy, and rustdoc are green. Package line coverage is 91.46%
 (1,125/1,230).
+
+## D05 Core pipeline integration evidence
+
+The test-only integration adapter under `tests/support` connects the
+reusable Rust `core::Core` to the canonical
+`go-riscv-d05-v1/input.json` program. It validates that fixture's
+`addi`/`sw`/`lw`/`beq`/exact ECALL subset, records actual Core snapshots and
+bypasses, and compares final registers and RAM with the separate checked
+`Rv32ISimulator` engine. Core and pipeline crates are test-only dependencies;
+the library exposes no arbitrary-program pipeline runner.
+
+This is evidence for that subset and fixture only. It does not claim full
+RV32I pipeline support, Go cycle parity, runtime fetch/data fault checking,
+code-modification safety, precise faults, store-at-retirement, MMIO, or OS
+boot. Stores are committed by the existing Core in MEM.

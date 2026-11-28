@@ -2083,19 +2083,32 @@ func TestOSArchitectureFixtureRoutesGoAndTypescriptConsumers(t *testing.T) {
 func TestGoRiscvD05FixtureRoutesOnlyItsExactConsumerAndInputs(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "go/riscv-simulator", Language: "go"},
+		{Name: "rust/riscv-simulator", Language: "rust"},
 		{Name: "go/os-architecture-simulator", Language: "go"},
 		{Name: "ruby/unix_history_simulator", Language: "ruby"},
 		{Name: "rust/wasm-leb128", Language: "rust"},
 	}
 	for _, changed := range goRiscvD05FixturePaths {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		want := map[string]bool{"go/riscv-simulator": true}
-		if err != nil || !reflect.DeepEqual(got, want) {
-			t.Errorf("%s selected %v, err %v; want only %v", changed, got, err, want)
+		wantAll := map[string]bool{"go/riscv-simulator": true}
+		if changed == goRiscvD05FixtureInputPath {
+			wantAll["rust/riscv-simulator"] = true
 		}
+		if err != nil || !reflect.DeepEqual(got, wantAll) {
+			t.Errorf("%s selected %v, err %v; want %v", changed, got, err, wantAll)
+		}
+		wantGo := map[string]bool{"go/riscv-simulator": true}
 		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "go")
-		if err != nil || !reflect.DeepEqual(got, want) {
-			t.Errorf("Go-only %s selected %v, err %v; want %v", changed, got, err, want)
+		if err != nil || !reflect.DeepEqual(got, wantGo) {
+			t.Errorf("Go-only %s selected %v, err %v; want %v", changed, got, err, wantGo)
+		}
+		wantRust := map[string]bool{}
+		if changed == goRiscvD05FixtureInputPath {
+			wantRust["rust/riscv-simulator"] = true
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "rust")
+		if err != nil || !reflect.DeepEqual(got, wantRust) {
+			t.Errorf("Rust-only %s selected %v, err %v; want %v", changed, got, err, wantRust)
 		}
 		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "ruby")
 		if err != nil || len(got) != 0 {
@@ -2118,7 +2131,7 @@ func TestGoRiscvD05FixtureRoutesOnlyItsExactConsumerAndInputs(t *testing.T) {
 		}
 	}
 	got, err := repositoryInputConsumersForChange([]string{goRiscvD05FixtureInputPath, "docs/renamed-input.json"}, packages, "all")
-	if want := map[string]bool{"go/riscv-simulator": true}; err != nil || !reflect.DeepEqual(got, want) {
+	if want := map[string]bool{"go/riscv-simulator": true, "rust/riscv-simulator": true}; err != nil || !reflect.DeepEqual(got, want) {
 		t.Errorf("rename away selected %v, err %v; want %v", got, err, want)
 	}
 	if got, err := repositoryInputConsumersForChange([]string{"docs/renamed-input.json"}, packages, "all"); err != nil || len(got) != 0 {
@@ -2353,6 +2366,129 @@ func TestGoOSArchitectureRepositoryInputsHashEveryExactFile(t *testing.T) {
 		if before == after {
 			t.Errorf("editing declared Go input %s did not change package hash", input)
 		}
+	}
+}
+
+func TestRustD05InputSelectsOnlyRustSimulatorAndHashesExactInput(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/riscv-simulator", Language: "rust"},
+		{Name: "go/riscv-simulator", Language: "go"},
+		{Name: "typescript/riscv-core-adapter", Language: "typescript"},
+	}
+	for _, tc := range []struct {
+		language string
+		want     map[string]bool
+	}{
+		{"all", map[string]bool{"go/riscv-simulator": true, "rust/riscv-simulator": true}},
+		{"rust", map[string]bool{"rust/riscv-simulator": true}},
+		{"go", map[string]bool{"go/riscv-simulator": true}},
+		{"typescript", map[string]bool{}},
+	} {
+		got, err := repositoryInputConsumersForChange([]string{goRiscvD05FixtureInputPath}, packages, tc.language)
+		if err != nil || !reflect.DeepEqual(got, tc.want) {
+			t.Errorf("D05 input under %s selected %v, err %v; want %v", tc.language, got, err, tc.want)
+		}
+	}
+	for _, lookalike := range []string{
+		"code/specs/fixtures/go-riscv-d05-v1",
+		goRiscvD05FixtureInputPath + ".bak",
+		"code/specs/fixtures/go-riscv-d05-v1/expected_trace.json",
+		"code/specs/fixtures/go-riscv-d05-v1/test-adapters/go/main.go",
+		"code/specs/fixtures/go-riscv-d05-v1/test-adapters/typescript/adapter.test.ts",
+		"code/specs/fixtures/go-riscv-d05-v1/other.json",
+	} {
+		if isRustRiscvD05Input(lookalike) {
+			t.Errorf("Rust D05 selector accepted unrelated path %q", lookalike)
+		}
+		got, err := repositoryInputConsumersForChange([]string{lookalike}, packages, "all")
+		want := map[string]bool{}
+		if lookalike == "code/specs/fixtures/go-riscv-d05-v1/expected_trace.json" ||
+			lookalike == "code/specs/fixtures/go-riscv-d05-v1/test-adapters/go/main.go" {
+			want = map[string]bool{"go/riscv-simulator": true}
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("unrelated Rust D05 path %q selected %v, err %v; want %v", lookalike, got, err, want)
+		}
+	}
+	if got := repositoryInputsForPackage("rust/riscv-simulator"); !reflect.DeepEqual(got, []string{goRiscvD05FixtureInputPath}) {
+		t.Fatalf("Rust cache inputs = %v; want only canonical input", got)
+	}
+
+	root := t.TempDir()
+	packageRoot := filepath.Join(root, "code", "packages", "rust", "riscv-simulator")
+	if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(packageRoot, "Cargo.toml"), []byte("[package]\nname='riscv-simulator'\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	input := filepath.Join(root, filepath.FromSlash(goRiscvD05FixtureInputPath))
+	if err := os.MkdirAll(filepath.Dir(input), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(input, []byte("initial input\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	pkg := discovery.Package{Name: "rust/riscv-simulator", Language: "rust", Path: packageRoot}
+	inputs := repositoryInputsForPackage(pkg.Name)
+	before, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(input, []byte("changed input\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if before == after {
+		t.Fatal("editing the declared D05 input did not change the Rust package hash")
+	}
+}
+
+func TestRustD05RouteMatchesPhysicalPackageAndBothBuildFronts(t *testing.T) {
+	root, err := filepath.Abs(filepath.Join("..", "..", "..", ".."))
+	if err != nil {
+		t.Fatal(err)
+	}
+	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code", "packages", "rust"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var pkg *discovery.Package
+	for i := range packages {
+		if packages[i].Name == "rust/riscv-simulator" {
+			pkg = &packages[i]
+			break
+		}
+	}
+	if pkg == nil {
+		t.Fatal("physical rust/riscv-simulator package was not discovered")
+	}
+	for _, platform := range []string{"linux", "windows"} {
+		got, err := repositoryInputConsumersForChange([]string{goRiscvD05FixtureInputPath}, []discovery.Package{*pkg}, "rust")
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/riscv-simulator": true}) {
+			t.Fatalf("%s route selected %v, err %v", platform, got, err)
+		}
+		build := discovery.GetBuildFileForPlatform(pkg.Path, platform)
+		contents, err := os.ReadFile(build)
+		if err != nil {
+			t.Fatalf("read %s BUILD front %s: %v", platform, build, err)
+		}
+		if !strings.Contains(string(contents), "cargo test -p riscv-simulator") {
+			t.Errorf("%s BUILD front does not run the routed package: %s", platform, build)
+		}
+		selectedRoots, _, err := selectPackageRoots([]string{goRiscvD05FixtureInputPath}, nil, packages, root, platform, "rust")
+		if err != nil {
+			t.Fatalf("%s ordinary package selection: %v", platform, err)
+		}
+		if len(selectedRoots) != 0 {
+			t.Errorf("%s fixture-only change unexpectedly selected ordinary roots: %v", platform, selectedRoots)
+		}
+	}
+	if got, err := repositoryInputConsumersForChange([]string{goRiscvD05FixtureInputPath}, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/riscv-simulator": true}) {
+		t.Errorf("physical Rust-only route selected %v, err %v", got, err)
 	}
 }
 

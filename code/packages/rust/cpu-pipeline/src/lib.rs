@@ -58,5 +58,9 @@ pub mod snapshot;
 
 // Re-export key types for convenience.
 pub use token::{PipelineToken, PipelineStage, PipelineConfig, StageCategory};
-pub use pipeline::{Pipeline, HazardAction, HazardResponse, FetchFn, DecodeFn, ExecuteFn, MemoryFn, WritebackFn, HazardFn, PredictFn};
+pub use pipeline::{
+    DecodeFn, ExecuteFn, ExecuteWithOperandsFn, FetchFn, ForwardedOperand, HazardAction,
+    HazardFn, HazardResponse, MemoryFn, OperandForwardingFn, OperandForwardingStage,
+    OperandSlot, Pipeline, PredictFn, WritebackFn,
+};
 pub use snapshot::{PipelineSnapshot, PipelineStats};

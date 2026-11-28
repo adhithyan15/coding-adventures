@@ -2,6 +2,14 @@
 
 All notable changes to the `cpu-pipeline` crate will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- An opt-in operand-indexed bypass callback and per-step applied-value
+  accessor. The new sidecar path preserves `PipelineToken`, `HazardResponse`,
+  snapshots, and legacy scalar forwarding behavior.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

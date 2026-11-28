@@ -12107,7 +12107,10 @@ version = "0.1.0"
 name = "riscv-simulator"
 version = "0.1.0"
 dependencies = [
+ "core",
+ "cpu-pipeline",
  "cpu-simulator",
+ "serde_json",
 ]
 
 [[package]]

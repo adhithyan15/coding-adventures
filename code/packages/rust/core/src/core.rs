@@ -28,15 +28,15 @@ use branch_predictor::{BranchPredictor, BranchTargetBuffer};
 use cpu_cache::{Cache, CacheConfig, CacheHierarchy};
 use clock::Clock;
 use cpu_pipeline::{
-    HazardAction, HazardResponse, Pipeline, PipelineConfig, PipelineSnapshot, PipelineToken,
-    StageCategory,
+    ForwardedOperand, HazardAction, HazardResponse, OperandForwardingStage, OperandSlot, Pipeline,
+    PipelineConfig, PipelineSnapshot, PipelineToken, StageCategory,
 };
 use hazard_detection::hazard_unit::HazardUnit;
 use hazard_detection::types::{HazardAction as HazardDetectionAction, PipelineSlot};
 
 use crate::config::{create_branch_predictor, CoreConfig};
 use crate::decoder::ISADecoder;
-use crate::memory_controller::MemoryController;
+use crate::memory_controller::{MemoryController, MemoryImageError, MemorySegment};
 use crate::register_file::RegisterFile;
 use crate::stats::CoreStats;
 
@@ -84,6 +84,9 @@ struct CoreState {
 
     /// Pipeline configuration (needed in hazard callback).
     pipeline_config: PipelineConfig,
+
+    /// Whether the opt-in operand-indexed hazard boundary is active.
+    operand_indexed_forwarding: bool,
 }
 
 /// A complete processor core that composes all D-series sub-components.
@@ -131,6 +134,39 @@ impl Core {
     ///
     /// Returns an error if the pipeline configuration is invalid.
     pub fn new(config: CoreConfig, decoder: Box<dyn ISADecoder>) -> Result<Self, String> {
+        Self::new_internal(config, decoder, false)
+    }
+
+    /// Creates a core with the opt-in operand-indexed EX/MEM bypass path.
+    ///
+    /// Unlike [`Core::new`], this path sends one named value per matching
+    /// source to `ISADecoder::execute_with_forwarding`. It requires both
+    /// forwarding and hazard detection in the configuration so a load-use
+    /// dependency is held until its MEM value is available. The opt-in path
+    /// currently supports only a scalar, ordered Fetch/Decode/Execute/Memory/
+    /// Writeback pipeline; split or reordered stage layouts are rejected.
+    pub fn new_with_operand_forwarding(
+        config: CoreConfig,
+        decoder: Box<dyn ISADecoder>,
+    ) -> Result<Self, String> {
+        if !config.forwarding || !config.hazard_detection {
+            return Err(
+                "operand-indexed forwarding requires forwarding and hazard detection".to_string(),
+            );
+        }
+        if !supports_operand_forwarding_topology(&config) {
+            return Err(
+                "operand-indexed forwarding requires scalar Fetch/Decode/Execute/Memory/Writeback stages in order".to_string(),
+            );
+        }
+        Self::new_internal(config, decoder, true)
+    }
+
+    fn new_internal(
+        config: CoreConfig,
+        decoder: Box<dyn ISADecoder>,
+        operand_indexed_forwarding: bool,
+    ) -> Result<Self, String> {
         // --- 1. Register File ---
         let reg_file = RegisterFile::new(config.register_file.as_ref());
 
@@ -175,6 +211,7 @@ impl Core {
             stall_count: 0,
             flush_count: 0,
             pipeline_config: pipeline_config.clone(),
+            operand_indexed_forwarding,
         }));
 
         // Create pipeline callbacks that reference the shared state.
@@ -197,29 +234,7 @@ impl Core {
         let execute_fn: cpu_pipeline::ExecuteFn =
             Box::new(move |token: PipelineToken| -> PipelineToken {
                 let mut s = execute_state.borrow_mut();
-                let result = s.decoder.execute(token, &s.reg_file);
-
-                // Update branch predictor with actual outcome.
-                if result.is_branch {
-                    s.predictor.update(
-                        result.pc as u64,
-                        result.branch_taken,
-                        if result.branch_taken {
-                            Some(result.branch_target as u64)
-                        } else {
-                            None
-                        },
-                    );
-                    if result.branch_taken {
-                        s.btb.update(
-                            result.pc as u64,
-                            result.branch_target as u64,
-                            "conditional",
-                        );
-                    }
-                }
-
-                result
+                execute_and_update_predictor(&mut s, token, None)
             });
 
         let memory_state = Rc::clone(&state);
@@ -260,6 +275,21 @@ impl Core {
             memory_fn,
             writeback_fn,
         )?;
+
+        if operand_indexed_forwarding {
+            let forwarding_state = Rc::clone(&state);
+            let forwarding_fn: cpu_pipeline::OperandForwardingFn = Box::new(move |stages| {
+                let s = forwarding_state.borrow();
+                resolve_operand_forwarding(&s, stages)
+            });
+            let forwarded_execute_state = Rc::clone(&state);
+            let forwarded_execute_fn: cpu_pipeline::ExecuteWithOperandsFn =
+                Box::new(move |token, forwarded| {
+                    let mut s = forwarded_execute_state.borrow_mut();
+                    execute_and_update_predictor(&mut s, token, Some(forwarded))
+                });
+            pipeline.set_operand_forwarding(forwarding_fn, forwarded_execute_fn);
+        }
 
         // Wire hazard callback.
         if config.hazard_detection {
@@ -314,6 +344,27 @@ impl Core {
             .mem_ctrl
             .load_program(program, start_address);
         self.pipeline.set_pc(start_address as i64);
+    }
+
+    /// Initializes nonoverlapping byte ranges in this Core's RAM atomically.
+    ///
+    /// Unlike [`Core::load_program`], this operation does not set PC or change
+    /// registers, pipeline state, or execution counters. It is a bounded
+    /// byte-based setup API; it does not model MMIO or memory permissions.
+    pub fn initialize_memory_segments(
+        &mut self,
+        segments: &[MemorySegment<'_>],
+    ) -> Result<(), MemoryImageError> {
+        self.state.borrow_mut().mem_ctrl.initialize_segments(segments)
+    }
+
+    /// Copies a bounded byte range from this Core's RAM for observation.
+    pub fn read_memory_bytes(
+        &self,
+        address: usize,
+        length: usize,
+    ) -> Result<Vec<u8>, MemoryImageError> {
+        self.state.borrow().mem_ctrl.read_bytes(address, length)
     }
 
     /// Executes one clock cycle.
@@ -419,9 +470,142 @@ impl Core {
 
 }
 
+/// The operand-indexed Core resolver models one producer position for each
+/// pipeline category. Keep that opt-in assumption explicit until split-stage
+/// age and readiness rules are defined; the general Core constructor remains
+/// free to use any valid `PipelineConfig`.
+fn supports_operand_forwarding_topology(config: &CoreConfig) -> bool {
+    let pipeline = &config.pipeline;
+    if pipeline.execution_width != 1 {
+        return false;
+    }
+    if pipeline.stages.is_empty() {
+        // An empty stage list is the existing Core shorthand for the classic
+        // five-stage configuration.
+        return true;
+    }
+
+    let categories: Vec<_> = pipeline.stages.iter().map(|stage| stage.category).collect();
+    categories
+        == [
+            StageCategory::Fetch,
+            StageCategory::Decode,
+            StageCategory::Execute,
+            StageCategory::Memory,
+            StageCategory::Writeback,
+        ]
+}
+
 // =========================================================================
 // Helper functions
 // =========================================================================
+
+/// Runs the ISA execute callback and keeps predictor updates identical for
+/// the legacy and operand-indexed paths.
+fn execute_and_update_predictor(
+    state: &mut CoreState,
+    token: PipelineToken,
+    forwarded: Option<&[ForwardedOperand]>,
+) -> PipelineToken {
+    let result = match forwarded {
+        Some(operands) => state
+            .decoder
+            .execute_with_forwarding(token, &state.reg_file, operands),
+        None => state.decoder.execute(token, &state.reg_file),
+    };
+
+    if result.is_branch {
+        state.predictor.update(
+            result.pc as u64,
+            result.branch_taken,
+            if result.branch_taken {
+                Some(result.branch_target as u64)
+            } else {
+                None
+            },
+        );
+        if result.branch_taken {
+            state
+                .btb
+                .update(result.pc as u64, result.branch_target as u64, "conditional");
+        }
+    }
+
+    result
+}
+
+/// Resolves each source independently, preferring the youngest EX producer.
+/// A matching EX load deliberately yields no MEM fallback: the hazard unit
+/// must stall this consumer until that load reaches MEM.
+fn resolve_operand_forwarding(
+    state: &CoreState,
+    stages: &[Option<PipelineToken>],
+) -> Vec<ForwardedOperand> {
+    let mut decode_token: Option<&PipelineToken> = None;
+    let mut execute_token: Option<&PipelineToken> = None;
+    let mut memory_token: Option<&PipelineToken> = None;
+
+    for (index, stage) in state.pipeline_config.stages.iter().enumerate() {
+        let Some(token) = stages.get(index).and_then(Option::as_ref) else {
+            continue;
+        };
+        if token.is_bubble {
+            continue;
+        }
+        match stage.category {
+            StageCategory::Decode => decode_token = Some(token),
+            StageCategory::Execute if execute_token.is_none() => execute_token = Some(token),
+            StageCategory::Memory if memory_token.is_none() => memory_token = Some(token),
+            _ => {}
+        }
+    }
+
+    let Some(consumer) = decode_token else {
+        return Vec::new();
+    };
+    let register_config = state.reg_file.config();
+    let mut forwarded = Vec::with_capacity(2);
+    for (operand, register) in [
+        (OperandSlot::Rs1, consumer.rs1),
+        (OperandSlot::Rs2, consumer.rs2),
+    ] {
+        if register < 0 || (register_config.zero_register && register == 0) {
+            continue;
+        }
+        if let Some(value) = resolve_one_operand(register, execute_token, memory_token) {
+            forwarded.push(ForwardedOperand {
+                operand,
+                register,
+                value,
+                source_stage: if execute_token.is_some_and(|token| {
+                    token.reg_write && token.rd == register && !token.mem_read
+                }) {
+                    OperandForwardingStage::Execute
+                } else {
+                    OperandForwardingStage::Memory
+                },
+            });
+        }
+    }
+    forwarded
+}
+
+fn resolve_one_operand(
+    register: i64,
+    execute_token: Option<&PipelineToken>,
+    memory_token: Option<&PipelineToken>,
+) -> Option<i64> {
+    if let Some(token) = execute_token.filter(|token| token.reg_write && token.rd == register) {
+        return if token.mem_read {
+            None
+        } else {
+            Some(token.write_data)
+        };
+    }
+    memory_token
+        .filter(|token| token.reg_write && token.rd == register)
+        .map(|token| token.write_data)
+}
 
 /// Builds the L1I, L1D, and optional L2 cache hierarchy.
 fn build_cache_hierarchy(config: &CoreConfig, mem_latency: usize) -> CacheHierarchy {
@@ -491,7 +675,13 @@ fn hazard_callback(
 
     // Convert PipelineTokens to PipelineSlots for the hazard unit.
     let if_slot = token_to_slot(if_tok);
-    let id_slot = token_to_slot(id_tok);
+    let mut id_slot = token_to_slot(id_tok);
+    if state.operand_indexed_forwarding {
+        // Decode identifies source registers but does not execute an ALU
+        // operation. In this opt-in path, do not mistake ID/EX overlap for a
+        // single-ALU collision that would discard a ready bypass consumer.
+        id_slot.uses_alu = false;
+    }
     let ex_slot = token_to_slot(ex_tok);
     let mem_slot = token_to_slot(mem_tok);
 
@@ -504,7 +694,16 @@ fn hazard_callback(
     match result.action {
         HazardDetectionAction::Stall => {
             response.action = HazardAction::Stall;
-            response.stall_stages = result.stall_cycles as usize;
+            response.stall_stages = if state.operand_indexed_forwarding {
+                pipeline_cfg
+                    .stages
+                    .iter()
+                    .position(|stage| stage.category == StageCategory::Execute)
+                    .unwrap_or(1)
+                    .max(1)
+            } else {
+                result.stall_cycles as usize
+            };
             state.stall_count += 1;
         }
         HazardDetectionAction::Flush => {
@@ -610,6 +809,8 @@ mod tests {
         encode_add, encode_addi, encode_halt, encode_load, encode_nop, encode_program,
         encode_store, encode_sub, MockDecoder,
     };
+    use std::cell::RefCell as TestRefCell;
+    use std::rc::Rc as TestRc;
 
     fn make_simple_core() -> Core {
         Core::new(simple_config(), Box::new(MockDecoder::new())).expect("failed to create core")
@@ -618,6 +819,287 @@ mod tests {
     fn make_default_core() -> Core {
         Core::new(CoreConfig::default(), Box::new(MockDecoder::new()))
             .expect("failed to create core")
+    }
+
+    fn forwarding_token(pc: i64, rs1: i64, rs2: i64, rd: i64, value: i64) -> PipelineToken {
+        let mut token = PipelineToken::new();
+        token.pc = pc;
+        token.rs1 = rs1;
+        token.rs2 = rs2;
+        token.rd = rd;
+        token.write_data = value;
+        token.reg_write = true;
+        token
+    }
+
+    #[test]
+    fn operand_forwarding_resolves_independent_ex_and_mem_sources() {
+        let core = make_simple_core();
+        let state = core.state.borrow();
+        let consumer = forwarding_token(12, 2, 1, -1, 0);
+        let execute_producer = forwarding_token(8, -1, -1, 2, 128);
+        let memory_producer = forwarding_token(4, -1, -1, 1, 0);
+        let stages = vec![
+            None,
+            Some(consumer),
+            Some(execute_producer),
+            Some(memory_producer),
+            None,
+        ];
+
+        let forwarded = resolve_operand_forwarding(&state, &stages);
+
+        assert_eq!(
+            forwarded,
+            vec![
+                ForwardedOperand {
+                    operand: OperandSlot::Rs1,
+                    register: 2,
+                    value: 128,
+                    source_stage: OperandForwardingStage::Execute,
+                },
+                ForwardedOperand {
+                    operand: OperandSlot::Rs2,
+                    register: 1,
+                    value: 0,
+                    source_stage: OperandForwardingStage::Memory,
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn operand_forwarding_chooses_youngest_ex_producer_per_register() {
+        let core = make_simple_core();
+        let state = core.state.borrow();
+        let stages = vec![
+            None,
+            Some(forwarding_token(12, 5, -1, -1, 0)),
+            Some(forwarding_token(8, -1, -1, 5, 11)),
+            Some(forwarding_token(4, -1, -1, 5, 7)),
+            None,
+        ];
+
+        let forwarded = resolve_operand_forwarding(&state, &stages);
+
+        assert_eq!(forwarded.len(), 1);
+        assert_eq!(forwarded[0].operand, OperandSlot::Rs1);
+        assert_eq!(forwarded[0].register, 5);
+        assert_eq!(forwarded[0].value, 11);
+        assert_eq!(forwarded[0].source_stage, OperandForwardingStage::Execute);
+    }
+
+    #[test]
+    fn operand_forwarding_does_not_use_older_mem_value_around_ex_load() {
+        let core = make_simple_core();
+        let state = core.state.borrow();
+        let mut load = forwarding_token(8, -1, -1, 5, 0);
+        load.mem_read = true;
+        let stages = vec![
+            None,
+            Some(forwarding_token(12, 5, -1, -1, 0)),
+            Some(load),
+            Some(forwarding_token(4, -1, -1, 5, 7)),
+            None,
+        ];
+
+        assert!(resolve_operand_forwarding(&state, &stages).is_empty());
+    }
+
+    #[test]
+    fn operand_forwarding_respects_zero_register_configuration() {
+        let core = make_simple_core();
+        let state = core.state.borrow();
+        let stages = vec![
+            None,
+            Some(forwarding_token(12, 0, -1, -1, 0)),
+            Some(forwarding_token(8, -1, -1, 0, 99)),
+            None,
+            None,
+        ];
+        assert!(resolve_operand_forwarding(&state, &stages).is_empty());
+
+        drop(state);
+        let mut config = simple_config();
+        config.register_file.as_mut().unwrap().zero_register = false;
+        let core = Core::new(config, Box::new(MockDecoder::new())).unwrap();
+        let state = core.state.borrow();
+        let forwarded = resolve_operand_forwarding(&state, &stages);
+        assert_eq!(forwarded.len(), 1);
+        assert_eq!(forwarded[0].register, 0);
+        assert_eq!(forwarded[0].value, 99);
+    }
+
+    struct ForwardingProbeDecoder {
+        observed: TestRc<TestRefCell<Vec<Vec<ForwardedOperand>>>>,
+    }
+
+    impl ISADecoder for ForwardingProbeDecoder {
+        fn decode(&self, raw: i64, mut token: PipelineToken) -> PipelineToken {
+            match raw {
+                1 => {
+                    token.opcode = "PRODUCE".to_string();
+                    token.rd = 1;
+                    token.reg_write = true;
+                }
+                2 => {
+                    token.opcode = "CONSUME".to_string();
+                    token.rs1 = 1;
+                    token.rd = 2;
+                    token.reg_write = true;
+                }
+                3 => {
+                    token.opcode = "LOAD_ZERO".to_string();
+                    token.rd = 3;
+                    token.mem_read = true;
+                    token.reg_write = true;
+                }
+                4 => {
+                    token.opcode = "CONSUME_LOAD".to_string();
+                    token.rs1 = 3;
+                    token.rd = 4;
+                    token.reg_write = true;
+                }
+                255 => {
+                    token.opcode = "HALT".to_string();
+                    token.is_halt = true;
+                }
+                _ => token.opcode = "NOP".to_string(),
+            }
+            token
+        }
+
+        fn execute(&self, mut token: PipelineToken, _reg_file: &RegisterFile) -> PipelineToken {
+            if token.opcode == "PRODUCE" {
+                token.write_data = 5;
+            } else if token.opcode == "LOAD_ZERO" {
+                token.alu_result = 128;
+            } else if token.opcode == "CONSUME" {
+                // Legacy execution intentionally ignores bypasses.
+                token.write_data = -1;
+            }
+            token
+        }
+
+        fn execute_with_forwarding(
+            &self,
+            mut token: PipelineToken,
+            reg_file: &RegisterFile,
+            forwarded: &[ForwardedOperand],
+        ) -> PipelineToken {
+            self.observed.borrow_mut().push(forwarded.to_vec());
+            if token.opcode == "CONSUME" || token.opcode == "CONSUME_LOAD" {
+                let value = forwarded
+                    .iter()
+                    .find(|value| value.operand == OperandSlot::Rs1)
+                    .map(|value| value.value)
+                    .unwrap_or_else(|| reg_file.read(token.rs1));
+                token.write_data = value + 1;
+            } else if token.opcode == "PRODUCE" {
+                token.write_data = 5;
+            } else if token.opcode == "LOAD_ZERO" {
+                token.alu_result = 128;
+            }
+            token
+        }
+
+        fn instruction_size(&self) -> i64 {
+            4
+        }
+    }
+
+    #[test]
+    fn core_opt_in_delivers_named_forward_value_to_decoder() {
+        let observed = TestRc::new(TestRefCell::new(Vec::new()));
+        let decoder = ForwardingProbeDecoder {
+            observed: observed.clone(),
+        };
+        let mut core = Core::new_with_operand_forwarding(simple_config(), Box::new(decoder))
+            .expect("opt-in forwarding core should construct");
+        let program = [1u32, 2, 255]
+            .into_iter()
+            .flat_map(u32::to_le_bytes)
+            .collect::<Vec<_>>();
+        core.load_program(&program, 0);
+        core.run(100);
+
+        assert!(core.is_halted());
+        assert_eq!(core.read_register(1), 5);
+        assert_eq!(core.read_register(2), 6, "forwarded callbacks: {:?}", observed.borrow());
+        assert!(observed.borrow().iter().any(|operands| {
+            operands
+                .iter()
+                .any(|operand| operand.operand == OperandSlot::Rs1 && operand.value == 5)
+        }));
+    }
+
+    #[test]
+    fn core_opt_in_holds_load_use_then_forwards_the_mem_result() {
+        let observed = TestRc::new(TestRefCell::new(Vec::new()));
+        let decoder = ForwardingProbeDecoder {
+            observed: observed.clone(),
+        };
+        let mut core = Core::new_with_operand_forwarding(simple_config(), Box::new(decoder))
+            .expect("opt-in forwarding core should construct");
+        let program = [3u32, 4, 255]
+            .into_iter()
+            .flat_map(u32::to_le_bytes)
+            .collect::<Vec<_>>();
+        core.load_program(&program, 0);
+        core.write_register(3, 99);
+        core.run(100);
+
+        assert!(core.is_halted());
+        assert_eq!(core.read_register(3), 0);
+        assert_eq!(core.read_register(4), 1);
+        assert_eq!(core.stats().stall_count, 1);
+        assert!(observed.borrow().iter().any(|operands| {
+            operands.iter().any(|operand| {
+                operand.operand == OperandSlot::Rs1
+                    && operand.register == 3
+                    && operand.value == 0
+                    && operand.source_stage == OperandForwardingStage::Memory
+            })
+        }));
+    }
+
+    #[test]
+    fn core_opt_in_requires_hazards_and_forwarding_enabled() {
+        let mut config = simple_config();
+        config.forwarding = false;
+        assert!(Core::new_with_operand_forwarding(config, Box::new(MockDecoder::new())).is_err());
+
+        let mut config = simple_config();
+        config.hazard_detection = false;
+        assert!(Core::new_with_operand_forwarding(config, Box::new(MockDecoder::new())).is_err());
+    }
+
+    #[test]
+    fn core_opt_in_rejects_split_or_reordered_stage_topologies() {
+        let mut deep = simple_config();
+        deep.pipeline = PipelineConfig::deep_13_stage();
+        let error = Core::new_with_operand_forwarding(deep, Box::new(MockDecoder::new()))
+            .err()
+            .expect("split stage topology has no defined forwarding age rule");
+        assert!(error.contains("scalar Fetch/Decode/Execute/Memory/Writeback"));
+
+        let mut reordered = simple_config();
+        reordered.pipeline.stages.swap(1, 2);
+        assert!(Core::new_with_operand_forwarding(reordered, Box::new(MockDecoder::new())).is_err());
+    }
+
+    #[test]
+    fn core_opt_in_rejects_non_scalar_execution_width() {
+        let mut config = simple_config();
+        config.pipeline.execution_width = 2;
+        assert!(Core::new_with_operand_forwarding(config, Box::new(MockDecoder::new())).is_err());
+    }
+
+    #[test]
+    fn default_core_still_accepts_deep_pipeline_configuration() {
+        let mut config = simple_config();
+        config.pipeline = PipelineConfig::deep_13_stage();
+        assert!(Core::new(config, Box::new(MockDecoder::new())).is_ok());
     }
 
     #[test]
@@ -643,6 +1125,44 @@ mod tests {
         assert!(c.is_halted());
         assert!(stats.total_cycles > 0);
         assert!(stats.instructions_completed > 0);
+    }
+
+    #[test]
+    fn checked_ram_image_seeds_data_without_changing_program_or_core_state() {
+        let mut core = make_simple_core();
+        let program = encode_program(&[encode_addi(1, 0, 42), encode_halt()]);
+        core.load_program(&program, 0);
+        let pc_before = core.pipeline().pc();
+        let cycle_before = core.cycle();
+        let register_before = core.read_register(1);
+
+        core.initialize_memory_segments(&[MemorySegment {
+            address: 128,
+            bytes: &[42, 0, 0, 0],
+        }])
+        .unwrap();
+
+        assert_eq!(core.read_memory_bytes(0, program.len()).unwrap(), program);
+        assert_eq!(core.read_memory_bytes(128, 4).unwrap(), [42, 0, 0, 0]);
+        assert_eq!(core.pipeline().pc(), pc_before);
+        assert_eq!(core.cycle(), cycle_before);
+        assert_eq!(core.read_register(1), register_before);
+
+        let original_data = core.read_memory_bytes(128, 4).unwrap();
+        assert!(core
+            .initialize_memory_segments(&[
+                MemorySegment {
+                    address: 128,
+                    bytes: &[1, 2, 3, 4],
+                },
+                MemorySegment {
+                    address: usize::MAX,
+                    bytes: &[9],
+                },
+            ])
+            .is_err());
+        assert_eq!(core.read_memory_bytes(128, 4).unwrap(), original_data);
+        assert_eq!(core.read_memory_bytes(0, program.len()).unwrap(), program);
     }
 
     #[test]

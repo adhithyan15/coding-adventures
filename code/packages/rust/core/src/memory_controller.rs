@@ -15,6 +15,50 @@
 //! The underlying memory is a flat byte array. Word reads/writes use
 //! little-endian byte ordering, matching modern ARM and x86 architectures.
 
+use std::fmt;
+
+/// A byte range supplied to the checked RAM image initializer.
+#[derive(Debug, Clone, Copy)]
+pub struct MemorySegment<'a> {
+    /// Starting byte address within RAM.
+    pub address: usize,
+    /// Bytes to copy into the range.
+    pub bytes: &'a [u8],
+}
+
+/// Bounds or layout error from checked RAM initialization and observation.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum MemoryImageError {
+    /// A byte range extends past the end of RAM.
+    OutOfBounds {
+        address: usize,
+        length: usize,
+        memory_size: usize,
+    },
+    /// Two nonempty segments in one image overlap.
+    OverlappingSegments { first: usize, second: usize },
+}
+
+impl fmt::Display for MemoryImageError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::OutOfBounds {
+                address,
+                length,
+                memory_size,
+            } => write!(
+                f,
+                "RAM byte range {address}..+{length} exceeds memory size {memory_size}"
+            ),
+            Self::OverlappingSegments { first, second } => {
+                write!(f, "RAM image segments {first} and {second} overlap")
+            }
+        }
+    }
+}
+
+impl std::error::Error for MemoryImageError {}
+
 /// An in-flight read request.
 #[derive(Debug, Clone)]
 struct MemoryRequest {
@@ -179,6 +223,65 @@ impl MemoryController {
         self.memory.len()
     }
 
+    /// Initializes multiple nonoverlapping byte ranges atomically.
+    ///
+    /// Every range is checked before any bytes are written. Empty ranges are
+    /// accepted at any address through `memory_size()`, including exactly at
+    /// the end of RAM. Existing bytes outside the supplied ranges are kept.
+    pub fn initialize_segments(
+        &mut self,
+        segments: &[MemorySegment<'_>],
+    ) -> Result<(), MemoryImageError> {
+        for segment in segments {
+            self.validate_range(segment.address, segment.bytes.len())?;
+        }
+
+        for first in 0..segments.len() {
+            let first_segment = segments[first];
+            if first_segment.bytes.is_empty() {
+                continue;
+            }
+            let first_end = first_segment.address + first_segment.bytes.len();
+            for (second, second_segment) in segments.iter().enumerate().skip(first + 1) {
+                if second_segment.bytes.is_empty() {
+                    continue;
+                }
+                let second_end = second_segment.address + second_segment.bytes.len();
+                if first_segment.address < second_end && second_segment.address < first_end {
+                    return Err(MemoryImageError::OverlappingSegments { first, second });
+                }
+            }
+        }
+
+        for segment in segments {
+            let end = segment.address + segment.bytes.len();
+            self.memory[segment.address..end].copy_from_slice(segment.bytes);
+        }
+        Ok(())
+    }
+
+    /// Returns a copy of one bounded byte range from RAM.
+    pub fn read_bytes(
+        &self,
+        address: usize,
+        length: usize,
+    ) -> Result<Vec<u8>, MemoryImageError> {
+        self.validate_range(address, length)?;
+        Ok(self.memory[address..address + length].to_vec())
+    }
+
+    /// Validates a range without adding untrusted address and length values.
+    fn validate_range(&self, address: usize, length: usize) -> Result<(), MemoryImageError> {
+        if address > self.memory.len() || length > self.memory.len() - address {
+            return Err(MemoryImageError::OutOfBounds {
+                address,
+                length,
+                memory_size: self.memory.len(),
+            });
+        }
+        Ok(())
+    }
+
     /// Returns the number of in-flight requests.
     pub fn pending_count(&self) -> usize {
         self.pending_reads.len() + self.pending_writes.len()
@@ -289,5 +392,116 @@ mod tests {
         mc.write_word(0, 0x01020304);
         // Byte 0 = 0x04 (least significant), Byte 3 = 0x01 (most significant).
         assert_eq!(mc.read_word(0), 0x01020304);
+    }
+
+    #[test]
+    fn checked_image_writes_disjoint_ranges_and_keeps_other_bytes() {
+        let mut mc = MemoryController::new(vec![0xAA; 16], 1);
+        mc.initialize_segments(&[
+            MemorySegment {
+                address: 2,
+                bytes: &[1, 2],
+            },
+            MemorySegment {
+                address: 12,
+                bytes: &[3, 4],
+            },
+        ])
+        .unwrap();
+
+        assert_eq!(
+            mc.read_bytes(0, 16).unwrap(),
+            [
+                0xAA, 0xAA, 1, 2, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 3, 4,
+                0xAA, 0xAA
+            ]
+        );
+    }
+
+    #[test]
+    fn checked_image_accepts_exact_end_and_empty_end_ranges() {
+        let mut mc = MemoryController::new(vec![0; 256], 1);
+        mc.initialize_segments(&[
+            MemorySegment {
+                address: 252,
+                bytes: &[1, 2, 3, 4],
+            },
+            MemorySegment {
+                address: 256,
+                bytes: &[],
+            },
+        ])
+        .unwrap();
+        assert_eq!(mc.read_bytes(252, 4).unwrap(), [1, 2, 3, 4]);
+        assert!(mc.read_bytes(256, 0).unwrap().is_empty());
+    }
+
+    #[test]
+    fn checked_image_rejects_invalid_batch_without_partial_writes() {
+        let original = vec![0xA5; 8];
+        let mut mc = MemoryController::new(original.clone(), 1);
+        let error = mc
+            .initialize_segments(&[
+                MemorySegment {
+                    address: 1,
+                    bytes: &[1, 2],
+                },
+                MemorySegment {
+                    address: 7,
+                    bytes: &[3, 4],
+                },
+            ])
+            .unwrap_err();
+        assert_eq!(
+            error,
+            MemoryImageError::OutOfBounds {
+                address: 7,
+                length: 2,
+                memory_size: 8,
+            }
+        );
+        assert_eq!(mc.read_bytes(0, 8).unwrap(), original);
+
+        let overflow = mc.read_bytes(usize::MAX, 1).unwrap_err();
+        assert_eq!(
+            overflow,
+            MemoryImageError::OutOfBounds {
+                address: usize::MAX,
+                length: 1,
+                memory_size: 8,
+            }
+        );
+    }
+
+    #[test]
+    fn checked_image_rejects_overlap_atomically() {
+        let original = vec![0xA5; 8];
+        let mut mc = MemoryController::new(original.clone(), 1);
+        assert_eq!(
+            mc.initialize_segments(&[
+                MemorySegment {
+                    address: 1,
+                    bytes: &[1, 2, 3],
+                },
+                MemorySegment {
+                    address: 3,
+                    bytes: &[4, 5],
+                },
+            ]),
+            Err(MemoryImageError::OverlappingSegments {
+                first: 0,
+                second: 1,
+            })
+        );
+        assert_eq!(mc.read_bytes(0, 8).unwrap(), original);
+    }
+
+    #[test]
+    fn checked_read_returns_an_independent_copy() {
+        let mc = MemoryController::new(vec![1, 2, 3, 4], 1);
+        let mut observed = mc.read_bytes(0, 4).unwrap();
+        observed[0] = 99;
+        assert_eq!(mc.read_bytes(0, 4).unwrap(), [1, 2, 3, 4]);
+        assert!(mc.read_bytes(3, 2).is_err());
     }
 }

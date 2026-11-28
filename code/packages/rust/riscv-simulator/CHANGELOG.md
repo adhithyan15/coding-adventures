@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added
+
+- Test-only integration evidence that the shared D05
+  `addi`/`sw`/`lw`/`beq`/exact-ECALL fixture runs on the reusable five-stage
+  Core with actual snapshots, forwarding, retirement PCs, registers, and RAM.
+
 - Added the normative `Rv32ISimulator` machine boundary with exact 64 KiB
   state, five M-mode CSRs, checked origin-aware loading and restore/direct
   access, typed fail-closed faults, complete transition traces, atomic steps,
