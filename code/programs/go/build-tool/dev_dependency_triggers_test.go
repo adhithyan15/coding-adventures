@@ -1,13 +1,11 @@
 package main
 
 import (
-	"path/filepath"
 	"reflect"
 	"runtime"
 	"testing"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
 )
 
@@ -118,14 +116,7 @@ func TestWithDevDependentsEdgeCases(t *testing.T) {
 // artifact builder. Before dev-dependency triggers, neither was selected.
 func TestRealRepositoryEmitterChangeSelectsMosaicSuites(t *testing.T) {
 	root := toolchainFixtureRepoRoot(t)
-	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	graph, triggers, err := resolver.ResolveWithTestTriggers(packages)
-	if err != nil {
-		t.Fatalf("the repository's Cargo dev-dependency tables must all be readable: %v", err)
-	}
+	packages, graph, triggers := repositoryTriggerSnapshotFor(t)
 	if _, err := graph.IndependentGroups(); err != nil {
 		t.Fatalf("the build graph must stay acyclic: %v", err)
 	}
@@ -165,14 +156,7 @@ func TestRealRepositoryEmitterChangeSelectsMosaicSuites(t *testing.T) {
 // to engram-core is linked into engram-app's tests, so it must select it.
 func TestRealRepositoryOrphanCrateDependenciesAreFollowed(t *testing.T) {
 	root := toolchainFixtureRepoRoot(t)
-	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	graph, triggers, err := resolver.ResolveWithTestTriggers(packages)
-	if err != nil {
-		t.Fatal(err)
-	}
+	packages, graph, triggers := repositoryTriggerSnapshotFor(t)
 	changedFile := "code/packages/rust/engram-core/src/lib.rs"
 	changed, err := changedPackageRootsForPlatformAndLanguage([]string{changedFile}, packages, root, runtime.GOOS, "all")
 	if err != nil {
