@@ -559,18 +559,17 @@ impl Pipeline {
                 // into the first stage.
 
                 // Handle forwarding if needed.
-                if hazard.action == HazardAction::ForwardFromEX
-                    || hazard.action == HazardAction::ForwardFromMEM
+                if (hazard.action == HazardAction::ForwardFromEX
+                    || hazard.action == HazardAction::ForwardFromMEM)
+                    && self.operand_forwarding_fn.is_none()
                 {
-                    if self.operand_forwarding_fn.is_none() {
-                        for (i, s) in self.config.stages.iter().enumerate() {
-                            if s.category == StageCategory::Decode {
-                                if let Some(ref mut tok) = self.stages[i] {
-                                    if !tok.is_bubble {
-                                        tok.alu_result = hazard.forward_value;
-                                        tok.forwarded_from = hazard.forward_source.clone();
-                                        break;
-                                    }
+                    for (i, s) in self.config.stages.iter().enumerate() {
+                        if s.category == StageCategory::Decode {
+                            if let Some(ref mut tok) = self.stages[i] {
+                                if !tok.is_bubble {
+                                    tok.alu_result = hazard.forward_value;
+                                    tok.forwarded_from = hazard.forward_source.clone();
+                                    break;
                                 }
                             }
                         }
@@ -599,7 +598,7 @@ impl Pipeline {
                                 .is_some_and(|token| !token.is_bubble)
                     })
                     .map(|(i, _)| i)
-                    .last();
+                    .next_back();
                 let execute_index = self
                     .config
                     .stages
@@ -1382,9 +1381,9 @@ mod tests {
         ForwardedOperand { operand, register, value, source_stage }
     }
 
-    fn typed_record_execute(
-        received: Rc<RefCell<Vec<(i64, Vec<ForwardedOperand>)>>>,
-    ) -> ExecuteWithOperandsFn {
+    type ReceivedOperands = Rc<RefCell<Vec<(i64, Vec<ForwardedOperand>)>>>;
+
+    fn typed_record_execute(received: ReceivedOperands) -> ExecuteWithOperandsFn {
         Box::new(move |token, forwarded| {
             received
                 .borrow_mut()
