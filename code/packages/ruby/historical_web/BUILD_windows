@@ -1,0 +1,5 @@
+# build-tool: deps=ruby/test_bootstrap
+bundle config set path vendor/bundle
+bundle install --quiet --full-index
+bundle exec standardrb --no-fix --except Layout/EndOfLine lib/ test/
+bundle exec rake test

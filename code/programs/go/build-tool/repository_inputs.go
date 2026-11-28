@@ -685,6 +685,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isHistoricalWebVectors,
 		paths:    []string{historicalWebVectorsPath},
 	},
+	{
+		name:     "ruby/historical_web",
+		language: "ruby",
+		inputs:   "the shared HWEB-00 historical web vectors",
+		matches:  isHistoricalWebVectors,
+		paths:    []string{historicalWebVectorsPath},
+	},
 	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
 	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
 	historicalUnixAdapterRow("java", historicalUnixJavaAdapterPath),
@@ -2074,6 +2081,8 @@ func repositoryInputsForPackage(packageName string) []string {
 	case "rust/historical-web":
 		return []string{historicalWebVectorsPath}
 	case "typescript/historical-web":
+		return []string{historicalWebVectorsPath}
+	case "ruby/historical_web":
 		return []string{historicalWebVectorsPath}
 	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}

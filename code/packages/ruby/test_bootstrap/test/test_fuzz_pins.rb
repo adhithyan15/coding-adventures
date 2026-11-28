@@ -294,6 +294,12 @@ class TestFuzzPins < Minitest::Test
     assert_equal "a.rb#block_in_Foo#bar", n.normalise_frame("/x/y/a.rb", "block in Foo#bar")
     assert_equal "a_b.rb#x__y", n.normalise_frame("/p/a:b.rb", "x::y")
     refute_includes n.normalise_frame("/p/a:b.rb", "x::y"), ":"
+    assert_equal "file.rb#x", n.normalise_frame("C:\\path\\file.rb", "x")
+    assert_equal "a.rb#x", n.normalise_frame("/p/a.rb///", "x")
+    assert_equal "a.rb#x", n.normalise_frame("C:\\path\\a.rb\\\\", "x")
+    assert_equal "C_#root", n.normalise_frame("C:\\", "root")
+    assert_equal "/#root", n.normalise_frame("/", "root")
+    assert_equal "#empty", n.normalise_frame("", "empty")
     assert_equal "Foo.Bar", n.normalise_kind("Foo::Bar")
     assert_equal "<anonymous>", n.normalise_kind(nil)
     assert_equal "a_b", n.normalise_kind("a b")
