@@ -7,7 +7,7 @@
 
 use coding_adventures_historical_web::{
     decode_http09_response, encode_http09_request, parse_html_tags_1992, parse_http09_request,
-    HtmlDocument, HtmlNodeKind, Http09Address,
+    HtmlDocument, HtmlNodeKind, Http09Address, Http09RequestError, Http09ResponseError,
 };
 use coding_adventures_test_bootstrap::fuzz::{
     fuzz_target, CoverageBitmap, FuzzOptions, FuzzOutcome,
@@ -23,9 +23,10 @@ fn fixture() -> Value {
 }
 
 fn hex_bytes(raw: &str) -> Vec<u8> {
-    assert_eq!(raw.len() % 2, 0, "odd-length fixture hex: {raw}");
-    raw.as_bytes()
-        .chunks_exact(2)
+    let (pairs, remainder) = raw.as_bytes().as_chunks::<2>();
+    assert!(remainder.is_empty(), "odd-length fixture hex: {raw}");
+    pairs
+        .iter()
         .map(|pair| {
             let digit = |b: u8| match b {
                 b'0'..=b'9' => b - b'0',
@@ -260,6 +261,42 @@ fn deterministic_properties_cover_request_and_response_algebras() {
             .collect();
         assert_eq!(decode_http09_response(&body).unwrap().as_bytes(), body);
     }
+}
+
+#[test]
+fn public_errors_and_arena_node_accessor_return_typed_results() {
+    assert_eq!(
+        Http09Address::new("/bad address"),
+        Err(Http09RequestError::InvalidAddress)
+    );
+    assert_eq!(
+        Http09RequestError::InvalidAddress.to_string(),
+        "invalid HTTP/0.9 document address"
+    );
+    assert_eq!(
+        parse_http09_request(b"POST /\n"),
+        Err(Http09RequestError::InvalidRequest)
+    );
+    assert_eq!(
+        Http09RequestError::InvalidRequest.to_string(),
+        "invalid HTTP/0.9 request"
+    );
+    assert_eq!(
+        decode_http09_response(&[0x80]),
+        Err(Http09ResponseError::NonAscii)
+    );
+    assert_eq!(
+        Http09ResponseError::NonAscii.to_string(),
+        "HTTP/0.9 response is not ASCII"
+    );
+
+    let doc = parse_html_tags_1992("<A>linked</A>").unwrap();
+    let root = doc.roots[0];
+    assert!(matches!(
+        doc.node(root).map(|node| &node.kind),
+        Some(HtmlNodeKind::Element { tag, .. }) if tag == "a"
+    ));
+    assert!(doc.node(doc.nodes.len()).is_none());
 }
 
 #[test]
