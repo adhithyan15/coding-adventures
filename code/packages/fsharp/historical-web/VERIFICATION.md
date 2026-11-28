@@ -26,9 +26,11 @@ production assembly only.
 - `tests/parity_audit.py` optionally compares all shared HTML source cases and
   5,000 fixed-seed grammar-bearing mixed documents against the Python reference.
   Its subprocesses have a 180-second bound and honor `PYTHON` and `DOTNET`.
-- The repository's bounded shared SAT model is a language-level proof with a
-  finite byte bound, not a substitute for runtime execution or arbitrary-input
-  parser verification.
+- [`verification/README.md`](verification/README.md) records the symbolic
+  UTF-16 high-surrogate two-code-unit advance proof. It checks that the guarded
+  `remaining - 2` transition cannot advance beyond the source; removing the
+  next-unit bounds condition produces a SAT counterexample. This is a one-step
+  range model, not a parser-wide Unicode proof.
 
 Python parity is an optional local audit; it is not part of either portable
 build front because its reference runtime is not a declared package input on
@@ -46,3 +48,6 @@ propagation. The optional parity command matched 5,014 sources (all fixture
 HTML sources plus 5,000 generated), seed `0x48454211`, using Python 3.13.17 and
 .NET 9.0.319. Both checks ran against production commit
 `fcb27850ed94b571cd0d7b7002873f15d5736ccb`.
+
+The full-wire HTTP oracle also guards the framing distinction that stripping
+both the explicit CRLF terminator and a preceding payload CR would be wrong.
