@@ -2124,12 +2124,86 @@ func TestGoRiscvD05FixtureRoutesOnlyItsExactConsumerAndInputs(t *testing.T) {
 	if got, err := repositoryInputConsumersForChange([]string{"docs/renamed-input.json"}, packages, "all"); err != nil || len(got) != 0 {
 		t.Errorf("new non-fixture name selected %v, err %v; want none", got, err)
 	}
-	if got := repositoryInputsForPackage("go/riscv-simulator"); !reflect.DeepEqual(got, goRiscvD05FixturePaths) {
-		t.Fatalf("Go RISC-V package hash inputs = %v, want exactly %v", got, goRiscvD05FixturePaths)
+	wantInputs := append(append([]string(nil), goRiscvD05FixturePaths...), goRiscvDmemReadyPackagePaths...)
+	if got := repositoryInputsForPackage("go/riscv-simulator"); !reflect.DeepEqual(got, wantInputs) {
+		t.Fatalf("Go RISC-V package hash inputs = %v, want exact D05+D-MEM inputs %v", got, wantInputs)
 	}
 }
 
-func TestGoRiscvD05RepositoryInputsHashEveryExactFile(t *testing.T) {
+func TestGoRiscvDmemReadyFixtureRoutesExactInputsAndCache(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/riscv-simulator", Language: "go"},
+		{Name: "go/os-architecture-simulator", Language: "go"},
+		{Name: "typescript/os-architecture-simulator", Language: "typescript"},
+		{Name: "ruby/unix_history_simulator", Language: "ruby"},
+	}
+	want := map[string]bool{"go/riscv-simulator": true}
+	for _, platform := range []string{"linux", "darwin", "windows"} {
+		platformPackages := packagesForPlatform(packages, platform)
+		for _, changed := range goRiscvDmemReadyFixturePaths {
+			got, err := repositoryInputConsumersForChange([]string{changed}, platformPackages, "all")
+			if err != nil || !reflect.DeepEqual(got, want) {
+				t.Errorf("%s %s selected %v, err %v; want %v", platform, changed, got, err, want)
+			}
+			got, err = repositoryInputConsumersForChange([]string{changed}, platformPackages, "go")
+			if err != nil || !reflect.DeepEqual(got, want) {
+				t.Errorf("Go-only %s %s selected %v, err %v; want %v", platform, changed, got, err, want)
+			}
+			got, err = repositoryInputConsumersForChange([]string{changed}, platformPackages, "ruby")
+			if err != nil || len(got) != 0 {
+				t.Errorf("Ruby-only %s %s selected %v, err %v; want none", platform, changed, got, err)
+			}
+		}
+	}
+	for _, unrelated := range []string{
+		"code/specs/fixtures/go-riscv-dmem-ready-v1",
+		"code/specs/fixtures/go-riscv-dmem-ready-v1/README.md",
+		"code/specs/fixtures/go-riscv-dmem-ready-v1/input.schema.json",
+		"code/specs/fixtures/go-riscv-dmem-ready-v1/expected_oracle.schema.json",
+		"code/specs/fixtures/go-riscv-dmem-ready-v1/expected_trace.schema.json",
+		goRiscvDmemReadyInputPath + ".bak",
+		goRiscvDmemReadyAdapterPath + ".bak",
+		"code/specs/fixtures/go-riscv-dmem-ready-v1/test-adapters/rust/main.go",
+		"code/specs/fixtures/go-riscv-dmem-ready-v1/input.json/child",
+		"code/specs/fixtures/go-riscv-d05-v1/schema.json",
+		"code/specs/fixtures/go-riscv-d05-v1/README.md",
+	} {
+		if isGoRiscvDmemReadyFixtureInput(unrelated) {
+			t.Errorf("D-MEM selector accepted unrelated path %q", unrelated)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{unrelated}, packages, "all"); err != nil || len(got) != 0 {
+			t.Errorf("unrelated path %q selected %v, err %v; want none", unrelated, got, err)
+		}
+	}
+	if isGoRiscvDmemReadyFixtureInput(goRiscvD05FixtureAdapterPath) {
+		t.Error("D-MEM selector must not claim the D05 adapter, which has its own row")
+	}
+	for _, renamed := range goRiscvDmemReadyFixturePaths {
+		got, err := repositoryInputConsumersForChange([]string{renamed, "docs/renamed-fixture.json"}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("rename removal side %s selected %v, err %v; want %v", renamed, got, err, want)
+		}
+	}
+	if got, err := repositoryInputConsumersForChange([]string{"docs/renamed-fixture.json"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Errorf("rename destination selected %v, err %v; want none", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange([]string{goRiscvDmemReadyInputPath}, packages[1:], "all"); err == nil || len(got) != 0 {
+		t.Errorf("missing Go RISC-V consumer selected %v, err %v; want fail-closed no selection", got, err)
+	}
+	wantInputs := append(append([]string(nil), goRiscvD05FixturePaths...), goRiscvDmemReadyPackagePaths...)
+	if got := repositoryInputsForPackage("go/riscv-simulator"); !reflect.DeepEqual(got, wantInputs) {
+		t.Fatalf("Go RISC-V package hash inputs = %v, want exact union %v", got, wantInputs)
+	}
+	seen := map[string]bool{}
+	for _, input := range wantInputs {
+		if seen[input] {
+			t.Fatalf("duplicate package hash input %q", input)
+		}
+		seen[input] = true
+	}
+}
+
+func TestGoRiscvPipelineRepositoryInputsHashEveryExactFile(t *testing.T) {
 	root := t.TempDir()
 	inputs := repositoryInputsForPackage("go/riscv-simulator")
 	packageRoot := filepath.Join(root, "code", "packages", "go", "riscv-simulator")
@@ -2163,15 +2237,18 @@ func TestGoRiscvD05RepositoryInputsHashEveryExactFile(t *testing.T) {
 			t.Fatalf("hash after editing %s: %v", input, err)
 		}
 		if before == after {
-			t.Errorf("editing declared Go D05 input %s did not change package hash", input)
+			t.Errorf("editing declared Go RISC-V input %s did not change package hash", input)
 		}
 	}
 }
 
-func TestGoRiscvD05BuildFrontsRunTheExternalReplay(t *testing.T) {
+func TestGoRiscvPipelineBuildFrontsRunBothExternalReplays(t *testing.T) {
 	root := findRepoRoot("")
 	packageRoot := filepath.Join(root, "code", "packages", "go", "riscv-simulator")
-	want := "go run ../../../specs/fixtures/go-riscv-d05-v1/test-adapters/go/main.go"
+	wants := []string{
+		"go run ../../../specs/fixtures/go-riscv-d05-v1/test-adapters/go/main.go",
+		"go run ../../../specs/fixtures/go-riscv-dmem-ready-v1/test-adapters/go/main.go",
+	}
 	for _, platform := range []string{"linux", "darwin", "windows"} {
 		buildFile := discovery.GetBuildFileForPlatform(packageRoot, platform)
 		if buildFile == "" {
@@ -2181,14 +2258,19 @@ func TestGoRiscvD05BuildFrontsRunTheExternalReplay(t *testing.T) {
 		if err != nil {
 			t.Fatalf("read %s build front: %v", platform, err)
 		}
-		found := false
+		found := make(map[string]bool, len(wants))
 		for _, line := range strings.Split(string(content), "\n") {
-			if strings.TrimSpace(line) == want {
-				found = true
+			line = strings.TrimSpace(line)
+			for _, want := range wants {
+				if line == want {
+					found[want] = true
+				}
 			}
 		}
-		if !found {
-			t.Errorf("%s build front %s does not run %q", platform, buildFile, want)
+		for _, want := range wants {
+			if !found[want] {
+				t.Errorf("%s build front %s does not run %q", platform, buildFile, want)
+			}
 		}
 	}
 }
