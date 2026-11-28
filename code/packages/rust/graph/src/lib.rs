@@ -3,9 +3,12 @@ pub mod graph;
 
 pub use algorithms::{
     bfs, connected_components, dfs, has_cycle, is_connected, minimum_spanning_tree, shortest_path,
-    TraversalGraph,
+    try_shortest_path, TraversalGraph,
 };
-pub use graph::{Graph, GraphError, GraphPropertyBag, GraphPropertyValue, GraphRepr, WeightedEdge};
+pub use graph::{
+    Graph, GraphError, GraphPropertyBag, GraphPropertyValue, GraphRepr, InvalidPathWeight,
+    WeightedEdge,
+};
 
 #[cfg(test)]
 mod tests {

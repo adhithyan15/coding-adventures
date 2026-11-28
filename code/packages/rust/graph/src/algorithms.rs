@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
-use crate::graph::{Graph, GraphError, WeightedEdge};
+use crate::graph::{Graph, GraphError, InvalidPathWeight, WeightedEdge};
 
 pub trait TraversalGraph {
     type Error;
@@ -114,20 +114,48 @@ pub fn has_cycle(graph: &Graph) -> bool {
     false
 }
 
-pub fn shortest_path(graph: &Graph, start: &str, end: &str) -> Vec<String> {
+/// Find a minimum-cost path after validating all stored edge weights.
+///
+/// Validation precedes endpoint and `start == end` checks, so an invalid weight
+/// anywhere in the graph is reported consistently, including in a disconnected
+/// component. Missing endpoints and unreachable destinations remain represented
+/// by an empty path.
+pub fn try_shortest_path(
+    graph: &Graph,
+    start: &str,
+    end: &str,
+) -> Result<Vec<String>, InvalidPathWeight> {
+    for (left, right, weight) in graph.edges() {
+        if !weight.is_finite() || weight < 0.0 {
+            let (left, right) = if left <= right {
+                (left, right)
+            } else {
+                (right, left)
+            };
+            return Err(InvalidPathWeight { left, right });
+        }
+    }
+
     if !graph.has_node(start) || !graph.has_node(end) {
-        return Vec::new();
+        return Ok(Vec::new());
     }
     if start == end {
-        return vec![start.to_string()];
+        return Ok(vec![start.to_string()]);
     }
 
     let all_unit = graph.edges().iter().all(|edge| edge.2 == 1.0);
     if all_unit {
-        bfs_shortest_path(graph, start, end)
+        Ok(bfs_shortest_path(graph, start, end))
     } else {
-        dijkstra_shortest_path(graph, start, end)
+        Ok(dijkstra_shortest_path(graph, start, end))
     }
+}
+
+/// Compatibility path query. Invalid weights produce an empty path; use
+/// [`try_shortest_path`] when callers need to distinguish that case from an
+/// absent or unreachable endpoint.
+pub fn shortest_path(graph: &Graph, start: &str, end: &str) -> Vec<String> {
+    try_shortest_path(graph, start, end).unwrap_or_default()
 }
 
 fn bfs_shortest_path(graph: &Graph, start: &str, end: &str) -> Vec<String> {

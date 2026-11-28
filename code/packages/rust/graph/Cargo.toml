@@ -6,3 +6,7 @@ description = "Weighted undirected graph with adjacency-list and adjacency-matri
 license = "MIT"
 
 [dependencies]
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+cdcl-sat = { path = "../cdcl-sat" }

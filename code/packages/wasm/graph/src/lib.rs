@@ -341,6 +341,17 @@ mod tests {
     }
 
     #[test]
+    fn invalid_shortest_path_weights_keep_the_empty_array_shape() {
+        for repr in ["adjacency_list", "adjacency_matrix"] {
+            let mut graph = WasmGraph::with_representation(repr).unwrap();
+            graph.add_edge("A", "B", -1.0);
+            graph.add_node("C");
+            assert!(graph.shortest_path("A", "A").is_empty());
+            assert!(graph.shortest_path("A", "C").is_empty());
+        }
+    }
+
+    #[test]
     fn wrapper_exposes_json_helpers_and_algorithms() {
         let graph = make_graph();
         assert!(graph.is_connected());
