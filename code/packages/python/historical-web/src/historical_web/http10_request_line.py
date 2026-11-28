@@ -62,9 +62,9 @@ def encode_http10_request_line(method: str, target: str) -> bytes:
     if type(method) is not str or type(target) is not str:
         raise TypeError("method and target must be exact built-in str values")
     method_bytes = _encode_argument(method)
-    target_bytes = _encode_argument(target)
     if method_bytes not in _METHOD_BYTES:
         raise ValueError("unsupported HTTP/1.0 request method")
+    target_bytes = _encode_argument(target)
     if not _valid_target_bytes(target_bytes):
         raise ValueError("invalid HTTP/1.0 request target")
-    return method_bytes + b" " + target_bytes + b" HTTP/1.0\r\n"
+    return method_bytes + b" " + target_bytes + _REQUEST_LINE_SUFFIX
