@@ -55,6 +55,14 @@ geometry, signed physical address, pending reservation, then free target.
 Refusals return the original table. Allocation skips the stale slot until a
 completed erase is released through `ReleaseErased`.
 
+`Restore(logicalCount, physicalCount, snapshot)` reconstructs a settled table
+from a detached snapshot. It accepts only `Free`, `Live` and `Stale` physical
+roles, requires every mapped page to be live exactly once, and rejects any
+unowned live page. Validation checks signed geometry, exact array lengths,
+absence of a reservation, physical roles, logical mappings and final live
+coverage in that order. Failures return the zero `Table`; success copies both
+input arrays, so later caller mutations cannot alter the restored value.
+
 The unowned-program extension closes 14 states for geometry 1/2 and 128 states
 for geometry 2/3. It checks each physical address including signed and
 one-past-end boundaries, and exact-position `AbortSpent` parity for every
@@ -146,3 +154,12 @@ target is compared with an exact-position `BeginExcluding` followed by
 precedence, predecessor retention, allocation skipping and completed erase
 reuse. A seeded 5,000-command sequence and `FuzzRecordUnownedProgramHistories`
 extend the same model checks.
+
+`Restore` additionally compares the complete 1/2 and 2/3 snapshot matrices
+against an independent ownership-map oracle, checks 5,000 seeded snapshots,
+signed and maximum geometry bounds, and verifies round-trip continuation
+equivalence for reachable settled tables. The native suite reports 100%
+statement coverage. The restore-history fuzz target completed 88,189 inputs
+in a fixed two-second run. Four new disposable restore mutations each failed
+at their named witnesses after the clean control passed. The expanded Linux
+suite passed under QEMU/i386, and the Windows/amd64 test binary cross-compiled.

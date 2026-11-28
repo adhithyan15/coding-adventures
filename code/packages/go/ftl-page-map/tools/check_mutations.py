@@ -96,6 +96,34 @@ MUTATIONS = (
         "if table.physical[int(physical)] != Free {\n\t\treturn table, ErrPhysicalPageUnavailable\n\t}",
         "if false {\n\t\treturn table, ErrPhysicalPageUnavailable\n\t}",
     ),
+    (
+        "restore-accepts-reserved-role",
+        "TestRestoreRejectsReservedAndUnknownPhysicalRoles",
+        "Restore accepted invalid physical role",
+        "case Free, Live, Stale:",
+        "case Free, Reserved, Live, Stale:",
+    ),
+    (
+        "restore-omits-live-coverage",
+        "TestRestoreRejectsUnownedLivePage",
+        "Restore left live page without an owner",
+        "if status == Live && !owned[physical] {\n\t\t\treturn Table{}, ErrUnownedLivePage\n\t\t}",
+        "if status == Live && !owned[physical] {\n\t\t\tcontinue\n\t\t}",
+    ),
+    (
+        "restore-accepts-duplicate-owners",
+        "TestRestoreRejectsDuplicateLogicalOwners",
+        "Restore accepted duplicate logical owners",
+        "if owned[int(physical)] {\n\t\t\treturn Table{}, ErrDuplicatePhysicalMapping\n\t\t}",
+        "if owned[int(physical)] {\n\t\t\tcontinue\n\t\t}",
+    ),
+    (
+        "restore-aliases-caller-arrays",
+        "TestRestoreOwnsSnapshotArrays",
+        "restore retained caller arrays",
+        "logicalMap:    append([]int64(nil), snapshot.LogicalToPhysical...),\n\t\tphysical:      append([]PhysicalStatus(nil), snapshot.PhysicalStatus...),",
+        "logicalMap:    snapshot.LogicalToPhysical,\n\t\tphysical:      snapshot.PhysicalStatus,",
+    ),
 )
 
 

@@ -12,18 +12,23 @@ const (
 
 // Refusal errors are stable classes for callers and model adapters.
 var (
-	ErrInvalidGeometry         = errors.New("invalid geometry")
-	ErrInvalidLogicalPage      = errors.New("invalid logical page")
-	ErrInvalidPhysicalPage     = errors.New("invalid physical page")
-	ErrPhysicalPageUnavailable = errors.New("physical page unavailable")
-	ErrCurrentOwnerChanged     = errors.New("current logical owner changed")
-	ErrReservationPending      = errors.New("reservation already pending")
-	ErrNoFreePage              = errors.New("no free physical page")
-	ErrNoReservation           = errors.New("no reservation")
-	ErrInvalidDisposition      = errors.New("invalid finish disposition")
-	ErrInvalidFence            = errors.New("invalid allocation fence")
-	ErrInvalidExtent           = errors.New("invalid erased extent")
-	ErrIneligibleExtent        = errors.New("erased extent contains a live or reserved page")
+	ErrInvalidGeometry          = errors.New("invalid geometry")
+	ErrInvalidLogicalPage       = errors.New("invalid logical page")
+	ErrInvalidPhysicalPage      = errors.New("invalid physical page")
+	ErrPhysicalPageUnavailable  = errors.New("physical page unavailable")
+	ErrCurrentOwnerChanged      = errors.New("current logical owner changed")
+	ErrReservationPending       = errors.New("reservation already pending")
+	ErrNoFreePage               = errors.New("no free physical page")
+	ErrNoReservation            = errors.New("no reservation")
+	ErrInvalidDisposition       = errors.New("invalid finish disposition")
+	ErrInvalidFence             = errors.New("invalid allocation fence")
+	ErrInvalidExtent            = errors.New("invalid erased extent")
+	ErrIneligibleExtent         = errors.New("erased extent contains a live or reserved page")
+	ErrInvalidSnapshotShape     = errors.New("invalid snapshot shape")
+	ErrInvalidPhysicalStatus    = errors.New("invalid physical status")
+	ErrMappingRoleMismatch      = errors.New("logical mapping does not point to a live page")
+	ErrDuplicatePhysicalMapping = errors.New("physical page has multiple logical owners")
+	ErrUnownedLivePage          = errors.New("live physical page has no logical owner")
 )
 
 // Disposition tells Finish what evidence the caller has for the reserved page.
@@ -67,11 +72,15 @@ type Table struct {
 	pending       *Reservation
 }
 
+func validGeometry(logicalCount, physicalCount int64) bool {
+	return logicalCount >= minLogicalPages && logicalCount <= maxLogicalPages &&
+		physicalCount >= minPhysicalPages && physicalCount <= maxPhysicalPages &&
+		physicalCount > logicalCount
+}
+
 // New constructs an empty table after checking the supported geometry.
 func New(logicalCount, physicalCount int64) (Table, error) {
-	if logicalCount < minLogicalPages || logicalCount > maxLogicalPages ||
-		physicalCount < minPhysicalPages || physicalCount > maxPhysicalPages ||
-		physicalCount <= logicalCount {
+	if !validGeometry(logicalCount, physicalCount) {
 		return Table{}, ErrInvalidGeometry
 	}
 	logicalMap := make([]int64, int(logicalCount))
@@ -83,6 +92,61 @@ func New(logicalCount, physicalCount int64) (Table, error) {
 		physicalCount: physicalCount,
 		logicalMap:    logicalMap,
 		physical:      make([]PhysicalStatus, int(physicalCount)),
+	}, nil
+}
+
+// Restore rebuilds a settled table from a detached public snapshot. The
+// snapshot is validated completely before the returned table allocates or
+// stores its private arrays. A refusal returns the zero Table.
+func Restore(logicalCount, physicalCount int64, snapshot Snapshot) (Table, error) {
+	if !validGeometry(logicalCount, physicalCount) {
+		return Table{}, ErrInvalidGeometry
+	}
+	if len(snapshot.LogicalToPhysical) != int(logicalCount) ||
+		len(snapshot.PhysicalStatus) != int(physicalCount) {
+		return Table{}, ErrInvalidSnapshotShape
+	}
+	if snapshot.Reservation != nil {
+		return Table{}, ErrReservationPending
+	}
+
+	for _, status := range snapshot.PhysicalStatus {
+		switch status {
+		case Free, Live, Stale:
+			// These roles are stable across a restore boundary.
+		default:
+			return Table{}, ErrInvalidPhysicalStatus
+		}
+	}
+
+	var owned [maxPhysicalPages]bool
+	for _, physical := range snapshot.LogicalToPhysical {
+		if physical == noMapping {
+			continue
+		}
+		if physical < 0 || physical >= physicalCount {
+			return Table{}, ErrInvalidPhysicalPage
+		}
+		if snapshot.PhysicalStatus[int(physical)] != Live {
+			return Table{}, ErrMappingRoleMismatch
+		}
+		if owned[int(physical)] {
+			return Table{}, ErrDuplicatePhysicalMapping
+		}
+		owned[int(physical)] = true
+	}
+
+	for physical, status := range snapshot.PhysicalStatus {
+		if status == Live && !owned[physical] {
+			return Table{}, ErrUnownedLivePage
+		}
+	}
+
+	return Table{
+		logicalCount:  logicalCount,
+		physicalCount: physicalCount,
+		logicalMap:    append([]int64(nil), snapshot.LogicalToPhysical...),
+		physical:      append([]PhysicalStatus(nil), snapshot.PhysicalStatus...),
 	}, nil
 }
 

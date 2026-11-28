@@ -18,3 +18,8 @@
 - Add `RecordUnownedProgram` to mark one free physical page stale without
   changing logical ownership, with exact refusal ordering and model-checked
   allocation skipping and post-erase reuse.
+- Add `Restore` for settled snapshots, with geometry/shape/role/ownership
+  validation, typed refusals and copied private arrays.
+- Check settled and inconsistent snapshots against an independent finite
+  model, including signed bounds, full geometry, continuations, seeded cases
+  and four clean-controlled restore mutations.
