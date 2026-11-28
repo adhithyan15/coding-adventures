@@ -20,9 +20,13 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 		{Name: "typescript/test-bootstrap", Language: "typescript"},
 		{Name: "ruby/historical_web", Language: "ruby"},
 		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "c/historical-web", Language: "c"},
+		{Name: "c/iso-harness", Language: "c"},
+		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "c/bounded-json", Language: "c"},
 	}
 	selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "all")
-	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true, "go/historical-web": true, "rust/historical-web": true, "typescript/historical-web": true, "ruby/historical_web": true}) {
+	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true, "go/historical-web": true, "rust/historical-web": true, "typescript/historical-web": true, "ruby/historical_web": true, "c/historical-web": true}) {
 		t.Fatalf("vector selection = %v, err %v; want all historical-web packages", selected, err)
 	}
 	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "python"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true}) {
@@ -104,6 +108,10 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 	packages[5].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/typescript/test-bootstrap"))
 	packages[6].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/ruby/historical_web"))
 	packages[7].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/ruby/test_bootstrap"))
+	packages[8].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/historical-web"))
+	packages[9].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/iso-harness"))
+	packages[10].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/test-bootstrap"))
+	packages[11].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/bounded-json"))
 	graph, err := buildKilnLegacyGraph(packages, checkout)
 	if err != nil {
 		t.Fatalf("build Kiln graph: %v", err)
