@@ -16,7 +16,9 @@ printable-address encode/parse round trips and response identity over 257
 ASCII bodies. Regressions exercise quoted and valueless first-wins anchor
 attributes, UTF-8 preservation, one-pass entity decoding, SGML-era omitted
 `LI` ends, malformed unmatched ends, and 20,000-level hostile nesting followed
-by arena destruction.
+by arena destruction. A focused raw-text regression places a multibyte UTF-8
+scalar at an unaligned search-window endpoint in both `xmp` and `listing`, then
+checks exact body text and tokenization of the following elements.
 
 The suite also invokes the repository's VER06 Rust fuzz engine with fixed
 seeds and seed `0x485745423033`, 2,048 mutations per target, and a 256-byte

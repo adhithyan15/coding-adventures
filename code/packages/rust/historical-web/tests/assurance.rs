@@ -301,6 +301,26 @@ fn archived_sgml_list_omission_utf8_and_single_pass_entities_are_preserved() {
 }
 
 #[test]
+fn raw_text_end_tag_search_handles_multibyte_unaligned_window_endpoints() {
+    // Each multibyte `é` lands beside a candidate search-window boundary. A
+    // byte-oriented scan must never slice the UTF-8 source at that boundary.
+    // Both raw-text elements must retain the complete body and resume normal
+    // tokenization immediately after their matching end tags.
+    let source = "<XMP>aaaaaé</XMP><P>after-xmp</P><LISTING>aaaaaaaé</LISTING><P>after-listing</P>";
+    let doc = parse_html_tags_1992(source).expect("raw-text scan must preserve UTF-8 boundaries");
+    assert_arena_well_formed(&doc);
+    assert_eq!(
+        doc_json(&doc),
+        json!([
+            {"tag":"xmp", "attributes":{}, "children":["aaaaaé"]},
+            {"tag":"p", "attributes":{}, "children":["after-xmp"]},
+            {"tag":"listing", "attributes":{}, "children":["aaaaaaaé"]},
+            {"tag":"p", "attributes":{}, "children":["after-listing"]}
+        ])
+    );
+}
+
+#[test]
 fn deep_malformed_html_parses_and_arena_drop_is_non_recursive() {
     let mut source = String::new();
     for _ in 0..20_000 {
