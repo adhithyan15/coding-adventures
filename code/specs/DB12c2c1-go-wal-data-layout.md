@@ -41,3 +41,27 @@ encoder over valid page images. Exercise the largest admitted image
 and its next width. Run both command lists, race, vet, guided inputs
 and controls for accepting one overlapping block or dropping one
 byte from the framing overhead.
+
+## Encoder boundary audit
+
+An independent caller checked 1,119 actual encoding decisions at 225
+log slot widths under race and vet. It tested data images on both
+sides of the 48-byte overhead boundary, including the maximum log
+slot and its largest admitted image. The writer and layout admission
+will use this existing encoder contract.
+
+## Local verification
+
+The implementation is in `a3410161deb`. An independent model marked
+the occupied block addresses and matched 142,560 layout decisions,
+including 633 admitted pairs. It verified the last legal device
+address, one shared block, one extra image byte, the reservation
+size boundary and zero allocations at the portable ceiling.
+Race and vet passed.
+
+Both command lists passed on Linux at 100% statement coverage
+with race and vet. Module tidy, 100,000 guided inputs and both
+mutation controls passed. The native interval model checked
+15,711,268 decisions, and actual encoding matched the image-fit
+boundary. The graph gained only this package and its nine
+expected edges per platform.
