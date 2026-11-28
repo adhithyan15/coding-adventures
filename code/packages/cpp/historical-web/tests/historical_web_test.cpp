@@ -445,7 +445,7 @@ void test_html_arena_edges_ownership_and_utf8() {
     const std::vector<std::pair<std::string, std::size_t>> invalid = {
         {std::string("\xc3", 1), 1}, {std::string("\xe2\x82", 2), 2},
         {std::string("\xf0\x9f\x8c", 3), 3}, {std::string("\xe2X\x82", 3), 1},
-        {std::string("\xf0\x9fX\x8c", 4), 2}};
+        {std::string("\xf0\x9fX\x8c", 4), 2}, {std::string("\xf0\x9f\x8cX", 4), 3}};
     for (const auto& pair : invalid) {
         bool failed = false;
         try { (void)hw::parse_html_tags_1992(pair.first); }
