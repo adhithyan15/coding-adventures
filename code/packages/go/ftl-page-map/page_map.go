@@ -12,15 +12,17 @@ const (
 
 // Refusal errors are stable classes for callers and model adapters.
 var (
-	ErrInvalidGeometry    = errors.New("invalid geometry")
-	ErrInvalidLogicalPage = errors.New("invalid logical page")
-	ErrReservationPending = errors.New("reservation already pending")
-	ErrNoFreePage         = errors.New("no free physical page")
-	ErrNoReservation      = errors.New("no reservation")
-	ErrInvalidDisposition = errors.New("invalid finish disposition")
-	ErrInvalidFence       = errors.New("invalid allocation fence")
-	ErrInvalidExtent      = errors.New("invalid erased extent")
-	ErrIneligibleExtent   = errors.New("erased extent contains a live or reserved page")
+	ErrInvalidGeometry     = errors.New("invalid geometry")
+	ErrInvalidLogicalPage  = errors.New("invalid logical page")
+	ErrInvalidPhysicalPage = errors.New("invalid physical page")
+	ErrCurrentOwnerChanged = errors.New("current logical owner changed")
+	ErrReservationPending  = errors.New("reservation already pending")
+	ErrNoFreePage          = errors.New("no free physical page")
+	ErrNoReservation       = errors.New("no reservation")
+	ErrInvalidDisposition  = errors.New("invalid finish disposition")
+	ErrInvalidFence        = errors.New("invalid allocation fence")
+	ErrInvalidExtent       = errors.New("invalid erased extent")
+	ErrIneligibleExtent    = errors.New("erased extent contains a live or reserved page")
 )
 
 // Disposition tells Finish what evidence the caller has for the reserved page.
@@ -104,6 +106,32 @@ func (table Table) Lookup(logical int64) (physical int64, present bool, err erro
 		return 0, false, nil
 	}
 	return physical, true, nil
+}
+
+// InvalidateCurrent removes one exact mapping and marks its old slot stale.
+// The slot stays unavailable until ReleaseErased receives completed-media
+// evidence from the caller.
+func (table Table) InvalidateCurrent(logical, physical int64) (Table, error) {
+	if !table.configured() {
+		return table, ErrInvalidGeometry
+	}
+	if logical < 0 || logical >= table.logicalCount {
+		return table, ErrInvalidLogicalPage
+	}
+	if physical < 0 || physical >= table.physicalCount {
+		return table, ErrInvalidPhysicalPage
+	}
+	if table.pending != nil {
+		return table, ErrReservationPending
+	}
+	if table.logicalMap[int(logical)] != physical {
+		return table, ErrCurrentOwnerChanged
+	}
+
+	result := table.clone()
+	result.logicalMap[int(logical)] = noMapping
+	result.physical[int(physical)] = Stale
+	return result, nil
 }
 
 // Begin reserves the lowest free page. On refusal it returns the original

@@ -181,6 +181,17 @@ func FuzzPageMapHistory(f *testing.F) {
 	})
 }
 
+func FuzzInvalidateCurrentHistories(f *testing.F) {
+	f.Add([]byte{0, 0, 1, 0, 2, 1, 0, 2, 1, 0, 2, 0})
+	f.Add([]byte{0, 1, 1, 2, 0, 3, 1, 0, 2, 1, 0, 3})
+	f.Fuzz(func(t *testing.T, raw []byte) {
+		if len(raw) > 4096 {
+			return
+		}
+		checkInvalidateFuzzHistory(t, raw)
+	})
+}
+
 func parseFixture(raw []byte) (fixtureDocument, error) {
 	if len(raw) == 0 || len(raw) > fixtureLimit || !utf8.Valid(raw) {
 		return fixtureDocument{}, errors.New("invalid fixture size or UTF-8")
@@ -578,6 +589,35 @@ func checkFuzzHistory(t *testing.T, raw []byte) {
 			if next, ok := modelFinish(model, disposition); ok {
 				model = next
 			}
+		}
+		checkRuntimeInvariants(t, table)
+		checkModelInvariants(t, model)
+	}
+}
+
+func checkInvalidateFuzzHistory(t *testing.T, raw []byte) {
+	t.Helper()
+	model := modelInitial(2, 4)
+	table, _ := New(2, 4)
+	for index := 0; index+1 < len(raw) && index < 128; index += 2 {
+		logical := int64(int(raw[index])%4 - 1)
+		switch raw[index+1] % 4 {
+		case 0:
+			physical := int64(int(raw[index])%6 - 1)
+			table, model, _ = compareInvalidateCurrent(t, model, table, logical, physical)
+		case 1:
+			table = compareBegin(t, model, table, logical)
+			if next, ok := modelBegin(model, logical); ok {
+				model = next
+			}
+		case 2:
+			disposition := Disposition(raw[index] % 4)
+			table = compareFinish(t, model, table, disposition)
+			if next, ok := modelFinish(model, disposition); ok {
+				model = next
+			}
+		case 3:
+			checkLookup(t, model, table, logical)
 		}
 		checkRuntimeInvariants(t, table)
 		checkModelInvariants(t, model)

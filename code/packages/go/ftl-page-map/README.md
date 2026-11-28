@@ -42,6 +42,12 @@ changing any page. It preserves mappings, live pages, and reservations outside
 the extent. The media adapter must establish full erase completion and block
 alignment before it calls this metadata-only operation.
 
+`InvalidateCurrent(logical, physical)` removes a mapping only when both
+addresses are valid, no reservation is pending, and the logical page still
+maps to that exact physical page. It marks the removed slot stale, so it cannot
+be allocated until `ReleaseErased` receives a completed erase extent. Every
+refusal returns the unchanged value and preserves the validation order.
+
 Runtime imports use only the Go standard library. Tests read the exact
 `ftl-page-map.json` vector through an exact-key, exact-token-type,
 duplicate-key-rejecting JSON adapter capped at 64 KiB and depth 32. This keeps
@@ -106,3 +112,11 @@ The independent review used reverse physical ownership to compare
 100 percent of runtime statements. The Linux/386 suite ran under
 QEMU and the Windows/amd64 suite compiled. The existing relocation
 and erase-victim suites both passed against this page map.
+
+Invalidation is included in the small-state closure and a separate 4,000-step
+seeded sequence, with its own `FuzzInvalidateCurrentHistories` target. Tests
+exercise absent and stale owner pairs, signed endpoints, pending precedence,
+exact snapshot changes, predecessor retention, and reuse only after an
+explicit erased-extent release. The native BUILD, race, vet, Linux/386 QEMU,
+and Windows/amd64 compile checks passed with the invalidation transition
+included.

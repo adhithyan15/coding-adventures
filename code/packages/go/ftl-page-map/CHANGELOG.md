@@ -13,3 +13,5 @@
   bounded fixture and history fuzzing, and three reclamation mutation controls.
 - Reject null integer items, incomplete reservations, and case-insensitive JSON
   aliases in the original page-map test fixture adapter before model replay.
+- Add `InvalidateCurrent` to remove one exact mapping while retaining its
+  physical slot as stale until an erased extent is explicitly released.

@@ -13,6 +13,27 @@ FIXTURES = [PACKAGE.parents[2] / "specs/fixtures/database-media-v1" / name for n
 
 MUTATIONS = (
     (
+        "invalidate-retains-mapping",
+        "TestInvalidateCurrentRemovesOnlyExactOwnerAndRetainsStaleSlot",
+        "invalidation snapshot=",
+        "result.logicalMap[int(logical)] = noMapping",
+        "result.logicalMap[int(logical)] = physical",
+    ),
+    (
+        "invalidated-page-becomes-free",
+        "TestInvalidateCurrentRemovesOnlyExactOwnerAndRetainsStaleSlot",
+        "invalidation snapshot=",
+        "result.physical[int(physical)] = Stale",
+        "result.physical[int(physical)] = Free",
+    ),
+    (
+        "pending-owner-can-be-invalidated",
+        "TestInvalidateCurrentSignedValidationAndPrecedence",
+        "pending InvalidateCurrent",
+        "func (table Table) InvalidateCurrent(logical, physical int64) (Table, error) {\n\tif !table.configured() {\n\t\treturn table, ErrInvalidGeometry\n\t}\n\tif logical < 0 || logical >= table.logicalCount {\n\t\treturn table, ErrInvalidLogicalPage\n\t}\n\tif physical < 0 || physical >= table.physicalCount {\n\t\treturn table, ErrInvalidPhysicalPage\n\t}\n\tif table.pending != nil {",
+        "func (table Table) InvalidateCurrent(logical, physical int64) (Table, error) {\n\tif !table.configured() {\n\t\treturn table, ErrInvalidGeometry\n\t}\n\tif logical < 0 || logical >= table.logicalCount {\n\t\treturn table, ErrInvalidLogicalPage\n\t}\n\tif physical < 0 || physical >= table.physicalCount {\n\t\treturn table, ErrInvalidPhysicalPage\n\t}\n\tif false {",
+    ),
+    (
         "publish-at-reservation",
         "TestReservationKeepsOldMappingUntilReadyAndInvalidatesItAtomically",
         "pending relocation published early",

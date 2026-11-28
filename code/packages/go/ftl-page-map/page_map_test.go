@@ -55,6 +55,18 @@ func TestReachableStatesCloseUnderCommands(t *testing.T) {
 					}
 				}
 
+				for logical := int64(-1); logical <= geometry.logical; logical++ {
+					for physical := int64(-1); physical <= geometry.physical; physical++ {
+						nextTable, next, accepted := compareInvalidateCurrent(t, state, actual, logical, physical)
+						if accepted {
+							if key := modelKey(next); !seen[key] {
+								seen[key] = true
+								queue = append(queue, reachable{model: next, table: nextTable})
+							}
+						}
+					}
+				}
+
 				// Also issue invalid address and command combinations from every
 				// state to prove refusal precedence and atomicity.
 				checkBegin(t, state, actual, -1)
@@ -167,6 +179,47 @@ func modelFinish(state modelState, disposition Disposition) (modelState, bool) {
 		result.physical[slot] = Stale
 	}
 	return result, true
+}
+
+func modelInvalidateCurrent(state modelState, logical, physical int64) (modelState, error) {
+	if len(state.logicalMap) == 0 || len(state.physical) == 0 {
+		return state, ErrInvalidGeometry
+	}
+	if logical < 0 || logical >= state.logicalCount {
+		return state, ErrInvalidLogicalPage
+	}
+	if physical < 0 || physical >= int64(len(state.physical)) {
+		return state, ErrInvalidPhysicalPage
+	}
+	if state.pending != nil {
+		return state, ErrReservationPending
+	}
+	if state.logicalMap[int(logical)] != physical {
+		return state, ErrCurrentOwnerChanged
+	}
+	result := state.clone()
+	result.logicalMap[int(logical)] = noMapping
+	result.physical[int(physical)] = Stale
+	return result, nil
+}
+
+func compareInvalidateCurrent(t *testing.T, state modelState, table Table, logical, physical int64) (Table, modelState, bool) {
+	t.Helper()
+	want, wantErr := modelInvalidateCurrent(state, logical, physical)
+	got, err := table.InvalidateCurrent(logical, physical)
+	if err != wantErr {
+		t.Fatalf("InvalidateCurrent(%d,%d) error=%v want=%v", logical, physical, err, wantErr)
+	}
+	if wantErr != nil {
+		if !reflect.DeepEqual(got.Snapshot(), table.Snapshot()) {
+			t.Fatalf("InvalidateCurrent(%d,%d) refusal changed predecessor", logical, physical)
+		}
+		return table, state, false
+	}
+	if !reflect.DeepEqual(got.Snapshot(), modelSnapshot(want)) {
+		t.Fatalf("InvalidateCurrent(%d,%d) result mismatch", logical, physical)
+	}
+	return got, want, true
 }
 
 func modelKey(state modelState) string {
@@ -522,6 +575,23 @@ func TestEightThousandSeededCommandsMatchIndependentModel(t *testing.T) {
 				model = next
 			}
 		}
+		checkRuntimeInvariants(t, table)
+		checkModelInvariants(t, model)
+	}
+}
+
+func TestFourThousandSeededInvalidationCommandsMatchIndependentModel(t *testing.T) {
+	random := rand.New(rand.NewSource(0xDB05C6B2A))
+	model := modelInitial(3, 7)
+	table, _ := New(3, 7)
+	for step := 0; step < 4_000; step++ {
+		if step > 0 && step%29 == 0 {
+			model = modelInitial(3, 7)
+			table, _ = New(3, 7)
+		}
+		logical := int64(random.Intn(5) - 1)
+		physical := int64(random.Intn(9) - 1)
+		table, model, _ = compareInvalidateCurrent(t, model, table, logical, physical)
 		checkRuntimeInvariants(t, table)
 		checkModelInvariants(t, model)
 	}
