@@ -21,12 +21,7 @@ static void set_error(HwebError *error, HwebStatus status, size_t byte_offset) {
     }
 }
 
-static HwebStatus fail(HwebBytes *out, HwebError *error, HwebStatus status,
-                       size_t byte_offset) {
-    if (out != NULL) {
-        out->data = NULL;
-        out->length = 0;
-    }
+static HwebStatus fail(HwebError *error, HwebStatus status, size_t byte_offset) {
     set_error(error, status, byte_offset);
     return status;
 }
@@ -38,8 +33,8 @@ static int printable_address_byte(uint8_t byte) {
 HwebStatus hweb_http09_encode_request(const uint8_t *address,
                                       size_t address_length,
                                       HwebBytes *out, HwebError *error) {
-    static const uint8_t prefix[] = {'G', 'E', 'T', ' '};
-    static const uint8_t suffix[] = {'\r', '\n'};
+    static const uint8_t prefix[] = {0x47u, 0x45u, 0x54u, 0x20u};
+    static const uint8_t suffix[] = {0x0du, 0x0au};
     size_t wire_length;
     uint8_t *wire;
     size_t i;
@@ -48,33 +43,34 @@ HwebStatus hweb_http09_encode_request(const uint8_t *address,
         set_error(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
         return HWEB_ERR_ARGUMENT;
     }
-    out->data = NULL;
-    out->length = 0;
     set_error(error, HWEB_OK, HWEB_NO_INDEX);
+    if (out->data != NULL || out->length != 0) {
+        return fail(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
+    }
 
     if (address == NULL && address_length != 0) {
-        return fail(out, error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
     }
     if (address_length == 0) {
-        return fail(out, error, HWEB_ERR_PROTOCOL, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_PROTOCOL, HWEB_NO_INDEX);
     }
 
     /* The exact wire length is address_length + 4 prefix + 2 CRLF bytes.
      * Guard before the data loop so malformed size values cannot wrap. */
     if (address_length > SIZE_MAX - 6u) {
-        return fail(out, error, HWEB_ERR_OVERFLOW, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_OVERFLOW, HWEB_NO_INDEX);
     }
     wire_length = address_length + 6u;
 
     for (i = 0; i < address_length; i++) {
         if (!printable_address_byte(address[i])) {
-            return fail(out, error, HWEB_ERR_PROTOCOL, i);
+            return fail(error, HWEB_ERR_PROTOCOL, i);
         }
     }
 
     wire = (uint8_t *)malloc(wire_length);
     if (wire == NULL) {
-        return fail(out, error, HWEB_ERR_NO_MEMORY, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_NO_MEMORY, HWEB_NO_INDEX);
     }
     memcpy(wire, prefix, sizeof(prefix));
     memcpy(wire + sizeof(prefix), address, address_length);
@@ -87,7 +83,7 @@ HwebStatus hweb_http09_encode_request(const uint8_t *address,
 HwebStatus hweb_http09_parse_request(const uint8_t *request,
                                      size_t request_length,
                                      HwebBytes *out, HwebError *error) {
-    static const uint8_t prefix[] = {'G', 'E', 'T', ' '};
+    static const uint8_t prefix[] = {0x47u, 0x45u, 0x54u, 0x20u};
     size_t line_end;
     size_t address_length;
     size_t i;
@@ -97,47 +93,45 @@ HwebStatus hweb_http09_parse_request(const uint8_t *request,
         set_error(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
         return HWEB_ERR_ARGUMENT;
     }
-    out->data = NULL;
-    out->length = 0;
     set_error(error, HWEB_OK, HWEB_NO_INDEX);
+    if (out->data != NULL || out->length != 0) {
+        return fail(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
+    }
 
     if (request == NULL && request_length != 0) {
-        return fail(out, error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
     }
     if (request_length < sizeof(prefix)) {
-        return fail(out, error, HWEB_ERR_PROTOCOL, request_length);
+        return fail(error, HWEB_ERR_PROTOCOL, request_length);
     }
     for (i = 0; i < sizeof(prefix); i++) {
         if (request[i] != prefix[i]) {
-            return fail(out, error, HWEB_ERR_PROTOCOL, i);
+            return fail(error, HWEB_ERR_PROTOCOL, i);
         }
     }
-    if (request_length == 0 || request[request_length - 1] != '\n') {
-        return fail(out, error, HWEB_ERR_PROTOCOL, request_length);
+    if (request[request_length - 1] != 0x0au) {
+        return fail(error, HWEB_ERR_PROTOCOL, request_length);
     }
 
     /* Accept LF or CRLF, removing only the terminator at the end. Any second
      * line or stray CR remains in the address span and fails printable ASCII. */
     line_end = request_length - 1;
-    if (line_end > sizeof(prefix) && request[line_end - 1] == '\r') {
+    if (line_end > sizeof(prefix) && request[line_end - 1] == 0x0du) {
         line_end--;
-    }
-    if (line_end < sizeof(prefix)) {
-        return fail(out, error, HWEB_ERR_PROTOCOL, line_end);
     }
     address_length = line_end - sizeof(prefix);
     if (address_length == 0) {
-        return fail(out, error, HWEB_ERR_PROTOCOL, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_PROTOCOL, HWEB_NO_INDEX);
     }
     for (i = 0; i < address_length; i++) {
         if (!printable_address_byte(request[sizeof(prefix) + i])) {
-            return fail(out, error, HWEB_ERR_PROTOCOL, sizeof(prefix) + i);
+            return fail(error, HWEB_ERR_PROTOCOL, sizeof(prefix) + i);
         }
     }
 
     address = (uint8_t *)malloc(address_length);
     if (address == NULL) {
-        return fail(out, error, HWEB_ERR_NO_MEMORY, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_NO_MEMORY, HWEB_NO_INDEX);
     }
     memcpy(address, request + sizeof(prefix), address_length);
     out->data = address;
@@ -155,16 +149,17 @@ HwebStatus hweb_http09_decode_response(const uint8_t *response,
         set_error(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
         return HWEB_ERR_ARGUMENT;
     }
-    out->data = NULL;
-    out->length = 0;
     set_error(error, HWEB_OK, HWEB_NO_INDEX);
+    if (out->data != NULL || out->length != 0) {
+        return fail(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
+    }
 
     if (response == NULL && response_length != 0) {
-        return fail(out, error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_ARGUMENT, HWEB_NO_INDEX);
     }
     for (i = 0; i < response_length; i++) {
         if (response[i] > 0x7fu) {
-            return fail(out, error, HWEB_ERR_UTF8, i);
+            return fail(error, HWEB_ERR_PROTOCOL, i);
         }
     }
     if (response_length == 0) {
@@ -173,7 +168,7 @@ HwebStatus hweb_http09_decode_response(const uint8_t *response,
 
     body = (uint8_t *)malloc(response_length);
     if (body == NULL) {
-        return fail(out, error, HWEB_ERR_NO_MEMORY, HWEB_NO_INDEX);
+        return fail(error, HWEB_ERR_NO_MEMORY, HWEB_NO_INDEX);
     }
     memcpy(body, response, response_length);
     out->data = body;
