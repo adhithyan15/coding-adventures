@@ -18,11 +18,13 @@ reach into parser internals.
   as CRLF framing.
 - Exercise output handles initialized to NULL, preservation of pre-owned
   outputs on rejected calls, stable canaries, returned byte ownership, and
-  HTML document view lifetime after input mutation/free.
+  HTML document view lifetime after input mutation/free. Cover null output and
+  input pairs, zero-length inputs, and exact protocol/UTF-8 diagnostic offsets.
 - Check HTML fixtures and focused regressions for empty `<P>` markers,
   SGML-style omitted list ends, first recognized duplicate/valueless anchor
   attributes, literal XMP/LISTING/PLAINTEXT regions, UTF-8 near raw end-tag
-  search boundaries, embedded NUL text, and malformed source recovery.
+  search boundaries, embedded NUL text, malformed source recovery, and the
+  valueless recovery for `<A HREF=>` and `<A HREF==x>`.
 - Walk deep nested and malformed documents iteratively through public node
   accessors. Check parent/child/sibling/root bounds, reachability, and UTF-8
   span validity; repeated unmatched `</A>` tags inside the nested ADDRESS
@@ -45,6 +47,18 @@ not prove C source pointers, HTML behavior, allocation, ownership, or arbitrary
 length inputs. No solver is duplicated in this package. These checks are
 evidence for the specified profile, not a claim of complete protocol or browser
 conformance.
+
+An optional GNU ld allocation-failure sweep is documented in
+[`verification/test_allocation_failures.c`](verification/test_allocation_failures.c).
+It fails each real allocation in turn for representative public API calls and
+checks that failures return `HWEB_ERR_NO_MEMORY` without exposing partial
+outputs. It is deliberately not part of the portable package test target.
+
+On the GCC 14.2 snapshot used for this receipt, gcov line coverage was 95.79%
+for HTTP and 92.00% for HTML from the normal test target. Combining the normal
+suite with the optional allocation-failure sweep raised those figures to
+98.95% and 95.71%, respectively. These measurements exclude test-bootstrap
+and bounded JSON lines.
 
 ## Local validation
 
