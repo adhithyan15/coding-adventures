@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/hdd-timed-media",
+  "capabilities": [],
+  "justification": "The timed HDD medium stores sparse caller-selected sectors and applies deterministic local seek and write-cut models."
+}
