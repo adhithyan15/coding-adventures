@@ -540,5 +540,5 @@ int main() {
     test_fuzz_public_oracles();
     test_html_arena_edges_ownership_and_utf8();
     test_html_scope_boundaries_copy_and_move();
-    return 0;
+    return ISO_TEST_RESULT();
 }
