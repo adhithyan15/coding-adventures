@@ -10,6 +10,8 @@ advances time and applies only the described byte prefix.
 caller-serialized. `Snapshot` returns a detached sparse map, and `Restart`
 preserves that durable map while resetting head and tick to zero. Snapshots and
 reads return fixed byte arrays, so their contents do not alias internal media.
+`Position` returns the current head and tick by value without copying the sparse
+map or changing either value.
 
 Write validation is ordered as geometry, block, exact payload width, cut
 descriptor, and service timing. No bytes or state change until every check

@@ -193,6 +193,57 @@ func compareSnapshot(t testing.TB, actual *Medium, model *referenceMedium) {
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("snapshot got=%+v want=%+v", got, want)
 	}
+	comparePosition(t, actual, model.state)
+}
+
+func comparePosition(t testing.TB, actual *Medium, want hddseektiming.State) {
+	t.Helper()
+	got, err := actual.Position()
+	if err != nil || got != want {
+		t.Fatalf("position got=%+v,%v want=%+v", got, err, want)
+	}
+}
+
+func TestPositionAdmissionAndZeroAllocations(t *testing.T) {
+	var nilMedium *Medium
+	if got, err := nilMedium.Position(); err != blockdevicecontract.ErrInvalidGeometry || got != (hddseektiming.State{}) {
+		t.Fatalf("nil position=(%+v,%v)", got, err)
+	}
+	zero := &Medium{}
+	if got, err := zero.Position(); err != blockdevicecontract.ErrInvalidGeometry || got != (hddseektiming.State{}) {
+		t.Fatalf("zero receiver position=(%+v,%v)", got, err)
+	}
+
+	medium, err := New(hddgeometry.Geometry{Cylinders: 16, Surfaces: 2, SectorsPerTrack: 16})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, err := medium.Position(); err != nil || got != (hddseektiming.State{}) {
+		t.Fatalf("empty position=(%+v,%v)", got, err)
+	}
+	if _, err := medium.ReadSector(47); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := medium.WriteSector(3, patternedData(3, 1), hddwritecrashcuts.Cut{Kind: hddwritecrashcuts.Acknowledged}); err != nil {
+		t.Fatal(err)
+	}
+	state, err := medium.Position()
+	if err != nil {
+		t.Fatal(err)
+	}
+	snapshot, err := medium.Snapshot()
+	if err != nil || state != snapshot.State || len(snapshot.Sectors) != 1 {
+		t.Fatalf("populated position=%+v snapshot=%+v error=%v", state, snapshot, err)
+	}
+	allocations := testing.AllocsPerRun(1000, func() {
+		got, err := medium.Position()
+		if err != nil || got != state {
+			panic("Position changed or refused during allocation measurement")
+		}
+	})
+	if allocations != 0 {
+		t.Fatalf("Position allocated %.2f objects per call", allocations)
+	}
 }
 
 func TestBoth512GeometriesMatchSteppedByteAndTickModel(t *testing.T) {
@@ -296,6 +347,7 @@ func TestSparseSnapshotsRestartZeroOverwriteAndSecondWrite(t *testing.T) {
 	if afterRestart.State != (hddseektiming.State{}) || !reflect.DeepEqual(afterRestart.Sectors, preRestart.Sectors) {
 		t.Fatalf("restart state/data=%+v, want reset clock and preserved sparse data", afterRestart)
 	}
+	comparePosition(t, restarted, afterRestart.State)
 	if _, err := restarted.WriteSector(78, data, hddwritecrashcuts.Cut{Kind: hddwritecrashcuts.AfterMediaWriteBeforeResponse}); err != nil {
 		t.Fatal(err)
 	}
@@ -363,6 +415,7 @@ func TestHugeSparseGeometryAndTimingCeiling(t *testing.T) {
 	if snapshot.State.Tick != referenceMaxTick-1 || len(snapshot.Sectors) != 0 {
 		t.Fatalf("refused before-media cut changed medium: %+v", snapshot)
 	}
+	comparePosition(t, medium, snapshot.State)
 	if result, err := medium.ReadSector(0); !errors.Is(err, hddseektiming.ErrClockOverflow) || result != (ReadResult{}) {
 		t.Fatalf("exhausted read=(%+v,%v)", result, err)
 	}
@@ -421,6 +474,7 @@ func TestModuloWrapAndBeforeMediaSeekOverflow(t *testing.T) {
 	if state.State != (hddseektiming.State{}) || len(state.Sectors) != 0 {
 		t.Fatalf("seek overflow mutated medium: %+v", state)
 	}
+	comparePosition(t, farMedium, state.State)
 }
 
 func TestBeforeMediaRequiresFullServiceAdmission(t *testing.T) {
@@ -439,6 +493,7 @@ func TestBeforeMediaRequiresFullServiceAdmission(t *testing.T) {
 	if err != nil || state.State.Tick != referenceMaxTick-1 || len(state.Sectors) != 0 {
 		t.Fatalf("refused before-media write mutated medium: %+v,%v", state, err)
 	}
+	comparePosition(t, medium, state.State)
 }
 
 func TestRefusalPrecedenceNilAndZeroReceivers(t *testing.T) {
@@ -477,6 +532,10 @@ func TestRefusalPrecedenceNilAndZeroReceivers(t *testing.T) {
 	}
 	data := make([]byte, sectorBytes)
 	badCut := hddwritecrashcuts.Cut{Kind: "unknown"}
+	before, err := medium.Position()
+	if err != nil {
+		t.Fatal(err)
+	}
 	if _, err := medium.WriteSector(-1, nil, badCut); !errors.Is(err, blockdevicecontract.ErrInvalidBlock) {
 		t.Fatalf("address should precede payload/cut, got %v", err)
 	}
@@ -497,6 +556,7 @@ func TestRefusalPrecedenceNilAndZeroReceivers(t *testing.T) {
 	if got, err := medium.ReadSector(math.MinInt64); !errors.Is(err, blockdevicecontract.ErrInvalidBlock) || got != (ReadResult{}) {
 		t.Fatalf("signed read address=(%+v,%v)", got, err)
 	}
+	comparePosition(t, medium, before)
 }
 
 func TestFixedSeededHistoryAgainstIndependentModel(t *testing.T) {

@@ -97,10 +97,7 @@ func (medium *Medium) WriteSector(block int64, data []byte, cut hddwritecrashcut
 
 // Snapshot returns a detached copy of the sparse nonzero durable sectors.
 func (medium *Medium) Snapshot() (Snapshot, error) {
-	if medium == nil {
-		return Snapshot{}, blockdevicecontract.ErrInvalidGeometry
-	}
-	if _, err := medium.geometry.BlockGeometry(); err != nil {
+	if err := medium.validateGeometry(); err != nil {
 		return Snapshot{}, err
 	}
 	sectors := make(map[int64][sectorBytes]byte, len(medium.sectors))
@@ -108,6 +105,22 @@ func (medium *Medium) Snapshot() (Snapshot, error) {
 		sectors[block] = sector
 	}
 	return Snapshot{Geometry: medium.geometry, State: medium.state, Sectors: sectors}, nil
+}
+
+// Position returns the current head and clock without copying sparse media.
+func (medium *Medium) Position() (hddseektiming.State, error) {
+	if err := medium.validateGeometry(); err != nil {
+		return hddseektiming.State{}, err
+	}
+	return medium.state, nil
+}
+
+func (medium *Medium) validateGeometry() error {
+	if medium == nil {
+		return blockdevicecontract.ErrInvalidGeometry
+	}
+	_, err := medium.geometry.BlockGeometry()
+	return err
 }
 
 // Restart returns an independent medium with the same durable bytes and fresh

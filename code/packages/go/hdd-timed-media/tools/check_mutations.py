@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Kill exact HDD timed-media byte-suffix and lost-ack mutants."""
+"""Kill exact HDD timed-media position, byte-suffix, and lost-ack mutants."""
 from __future__ import annotations
 
 import os
@@ -18,6 +18,13 @@ DEPENDENCIES = (
     "hdd-write-crash-cuts",
 )
 MUTANTS = (
+    (
+        "return-initial-position-after-motion",
+        "TestPositionAdmissionAndZeroAllocations",
+        "populated position=",
+        "return medium.state, nil",
+        "return hddseektiming.State{}, nil",
+    ),
     (
         "overwrite-unwritten-suffix",
         "TestBoth512GeometriesMatchSteppedByteAndTickModel",
@@ -83,6 +90,11 @@ def main() -> None:
         if clean.returncode or "--- PASS: TestBoth512GeometriesMatchSteppedByteAndTickModel" not in clean.stdout:
             raise SystemExit(f"clean named control failed\n{clean.stdout}")
         print("CLEAN PASS TestBoth512GeometriesMatchSteppedByteAndTickModel")
+
+        position = run(go, baseline, root / "cache", "TestPositionAdmissionAndZeroAllocations")
+        if position.returncode or "--- PASS: TestPositionAdmissionAndZeroAllocations" not in position.stdout:
+            raise SystemExit(f"clean position control failed\n{position.stdout}")
+        print("CLEAN PASS TestPositionAdmissionAndZeroAllocations")
 
         for name, test, witness, anchor, replacement in MUTANTS:
             package = materialize(root / name)
