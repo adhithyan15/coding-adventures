@@ -418,8 +418,8 @@ void test_html_arena_edges_ownership_and_utf8() {
     ISO_CHECK(*attrs.attribute_at(a.first_attribute_index + 1).value == "x");
     ISO_CHECK(attrs.attribute_at(a.first_attribute_index + 2).name == "type");
     ISO_CHECK(!attrs.attribute_at(a.first_attribute_index + 2).value.has_value());
-    for (const std::string& source : {std::string("<A HREF=>x</A>"), std::string("<A HREF==x>y</A>")}) {
-        const auto malformed_value = hw::parse_html_tags_1992(source);
+    for (const std::string& malformed_source : {std::string("<A HREF=>x</A>"), std::string("<A HREF==x>y</A>")}) {
+        const auto malformed_value = hw::parse_html_tags_1992(malformed_source);
         const auto& anchor = malformed_value.node_at(malformed_value.first_root());
         ISO_CHECK(anchor.tag == "a");
         ISO_CHECK_EQ_UINT(anchor.attribute_count, 1u);
