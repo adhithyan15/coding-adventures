@@ -318,8 +318,8 @@ struct HasherTests {
 
         #expect(checkedObject.isEqual(productionObject))
         #expect(checked.boundaries.count == 32)
-        #expect(checked.boundaries.flatMap(\.inputs).count == 46)
-        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 37)
+        #expect(checked.boundaries.flatMap(\.inputs).count == 47)
+        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 38)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
                 == "caad10f74ff8fa8acc602c5723b3361864b77cc2b941da1d47cd4cd185c7a7b4"
