@@ -147,6 +147,25 @@ pub struct DriverRecord {
     pub lengths: Option<Vec<u64>>,
 }
 
+/// Every method a driver record names (VER04k 3.4 rule 6): the context
+/// function, constructor, step method and finish method, in that order.
+/// Each counts as bound for the independent export analyzer; a method named
+/// by no op and no driver is still unbound. That analyzer is not-live
+/// (VER04 section 6), so nothing calls this yet — this is the one definition
+/// of the set.
+pub fn driver_named_methods(record: &DriverRecord) -> Vec<&str> {
+    let mut out = Vec::new();
+    if let Some(ctx) = &record.ctx {
+        out.push(ctx.func.as_str());
+    }
+    out.push(record.new.func.as_str());
+    out.push(record.step.method.as_str());
+    if let Some(finish) = &record.finish {
+        out.push(finish.method.as_str());
+    }
+    out
+}
+
 pub(crate) fn is_capped_ident(text: &str) -> bool {
     text.len() <= MAX_DRIVER_IDENT_BYTES && is_rust_identifier(text)
 }
@@ -640,6 +659,8 @@ fn ty_name(t: &Ty) -> String {
         Ty::U64 => "U64".to_string(),
         Ty::Nat | Ty::NatCount => "Nat".to_string(),
         Ty::Bytes => "Bytes".to_string(),
+        Ty::BytesHinted(_) => "Bytes".to_string(),
+        Ty::ListDriven => "List".to_string(),
         Ty::BytesN(n) => format!("Bytes<{n}>"),
         Ty::Fx(f) | Ty::FxEdge(f) => f.suffix().to_uppercase(),
         Ty::Tuple(ts) => {

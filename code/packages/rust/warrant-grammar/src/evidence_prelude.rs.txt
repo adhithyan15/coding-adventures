@@ -1855,6 +1855,11 @@ pub enum Ty {
     Nat,
     Bytes,
     BytesN(usize),
+//@if lengths
+    /// WX-F: a `Bytes` binder plus the `00`/`a5` fills at each hinted length
+    /// (VER04k 3.7).
+    BytesHinted(&'static [u64]),
+//@endif
 //@if v1
     /// A fixed-width binder at its default domain: every value of a narrow
     /// type (`U8 I8 U16 I16`), the edge set of a wide one.
@@ -1878,6 +1883,12 @@ pub enum Ty {
     /// `List<T>`: every list of length 0..=2 over the first 16 elements of `T`,
     /// plus length-3 lists over its first 4.
     List(&'static Ty),
+//@endif
+//@if rechunk
+    /// WX-F: a `List<Bytes>` binder of a claim calling a driven operation.
+    /// Enumerates, sizes and draws exactly like `List<Bytes>`; the mark
+    /// exists so relation bias re-chunks pairs of them (VER04k 3.7).
+    ListDriven,
 //@endif
 }
 
@@ -1927,6 +1938,9 @@ pub fn domain(ty: Ty) -> Vec<V> {
             domain_take(ty, domain_size(ty).map_or(0, |n| n as usize))
         }
 //@endif
+//@if rechunk
+        Ty::ListDriven => domain(Ty::List(&Ty::Bytes)),
+//@endif
         Ty::Bytes => {
             let mut v: Vec<Vec<u8>> = vec![Vec::new()];
             v.extend((0..=255u8).map(|b| vec![b]));
@@ -1952,6 +1966,18 @@ pub fn domain(ty: Ty) -> Vec<V> {
             }
             v.into_iter().map(V::Bytes).collect()
         }
+//@if lengths
+        // The base domain plus the `00`/`a5` fills at each hinted length,
+        // in that order (`domain.rs` mirrors it).
+        Ty::BytesHinted(ls) => {
+            let mut v = domain(Ty::Bytes);
+            for &l in ls.iter() {
+                v.push(V::Bytes(vec![0x00; l as usize]));
+                v.push(V::Bytes(vec![0xa5; l as usize]));
+            }
+            v
+        }
+//@endif
     }
 }
 
@@ -1991,16 +2017,30 @@ pub fn domain_size(ty: Ty) -> Option<u64> {
         }
 //@endif
         Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
+//@if rechunk
+        Ty::ListDriven => domain_size(Ty::List(&Ty::Bytes)),
+//@endif
         Ty::BytesN(n) if n as u64 > MAX_FIXED_WIDTH => None,
         Ty::BytesN(0) => Some(1),
         Ty::BytesN(1) => Some(256),
         Ty::BytesN(n) if n <= 3 => 4u64.checked_pow(n as u32),
         Ty::BytesN(n) => 3u64.checked_mul(n as u64)?.checked_add(4),
+//@if lengths
+        Ty::BytesHinted(ls) => 347u64.checked_add((ls.len() as u64).checked_mul(2)?),
+//@endif
     }
 }
 
 /// Upper bound on the memory [`domain`] materialises, in bytes.
 pub fn domain_bytes(ty: Ty) -> Option<u64> {
+//@if lengths
+    // Mirror of the generator's `elem_cost` for hinted binders: the longest
+    // fill (or the base 8-byte payload) plus the node, times the size.
+    if let Ty::BytesHinted(ls) = ty {
+        let longest = ls.iter().copied().max().unwrap_or(0).max(8);
+        return domain_size(ty)?.checked_mul(VALUE_OVERHEAD.checked_add(longest)?);
+    }
+//@endif
 //@if comp
     if is_comp(ty) {
         return domain_size(ty)?.checked_mul(elem_cost(ty)?);
@@ -2017,6 +2057,9 @@ pub fn domain_bytes(ty: Ty) -> Option<u64> {
 //@if comp
 fn is_comp(ty: Ty) -> bool {
     matches!(ty, Ty::Tuple(_) | Ty::Data(..) | Ty::Opt(_) | Ty::Res(..) | Ty::List(_))
+//@if rechunk
+    || matches!(ty, Ty::ListDriven)
+//@endif
 }
 
 /// Size of the Cartesian product of component domains (`None` on overflow).
@@ -2037,6 +2080,9 @@ fn elem_cost(ty: Ty) -> Option<u64> {
     match ty {
         Ty::Bytes => node.checked_add(8),
         Ty::BytesN(n) => node.checked_add(n as u64),
+//@if rechunk
+        Ty::ListDriven => elem_cost(Ty::List(&Ty::Bytes)),
+//@endif
         Ty::Tuple(cs) => {
             let mut c = node;
             for t in cs {
@@ -2074,6 +2120,9 @@ pub fn domain_take(ty: Ty, k: usize) -> Vec<V> {
         return Vec::new();
     }
     match ty {
+//@if rechunk
+        Ty::ListDriven => domain_take(Ty::List(&Ty::Bytes), k),
+//@endif
         Ty::Tuple(cs) => product(cs, k).into_iter().map(V::Tup).collect(),
         Ty::Data(name, ctors) => {
             let mut out = Vec::new();
@@ -2197,6 +2246,19 @@ fn describe(tys: &[Ty], names: &[&str]) -> String {
                 return format!("{n}: {}", describe_ty(*t));
             }
 //@endif
+//@if lengths
+            if let Ty::BytesHinted(ls) = t {
+                let mut s = String::from("bytes_d1+lengths(");
+                for (i, l) in ls.iter().enumerate() {
+                    if i > 0 {
+                        s.push(',');
+                    }
+                    s.push_str(&l.to_string());
+                }
+                s.push(')');
+                return format!("{n}: {s}");
+            }
+//@endif
             let size = domain_size(*t).map_or_else(|| "over-budget".to_string(), |n| n.to_string());
             let (ty, kind) = match t {
                 Ty::Fx(f) if f.bits() <= 16 => (format!("{f:?}"), "full"),
@@ -2246,6 +2308,9 @@ fn describe_ty(ty: Ty) -> String {
             "List<{}> size({size}) [len 0..=2 over the first 16, len 3 over the first 4]",
             describe_ty(*t)
         ),
+//@if rechunk
+        Ty::ListDriven => describe_ty(Ty::List(&Ty::Bytes)),
+//@endif
         other => leaf(format!("{other:?}"), "set"),
     }
 }
@@ -2472,11 +2537,28 @@ fn fresh(ty: Ty, src: &mut dyn Src) -> V {
             V::List((0..n).map(|_| fresh(*t, src)).collect())
         }
 //@endif
+//@if rechunk
+        Ty::ListDriven => fresh(Ty::List(&Ty::Bytes), src),
+//@endif
         Ty::Bytes => {
             let len = src.bounded(65) as usize;
             V::Bytes((0..len).map(|_| src.byte()).collect())
         }
         Ty::BytesN(n) => V::Bytes((0..n).map(|_| src.byte()).collect()),
+//@if lengths
+        // A hinted length with probability 1/4 (VER04k 3.7): uniform over
+        // the fills, else the base byte-string draw.
+        Ty::BytesHinted(ls) => {
+            if !ls.is_empty() && src.bounded(4) == 0 {
+                let i = src.bounded((ls.len() * 2) as u64) as usize;
+                let l = ls[i / 2] as usize;
+                V::Bytes(vec![if i % 2 == 0 { 0x00 } else { 0xa5 }; l])
+            } else {
+                let len = src.bounded(65) as usize;
+                V::Bytes((0..len).map(|_| src.byte()).collect())
+            }
+        }
+//@endif
     }
 }
 
@@ -2491,6 +2573,31 @@ fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
 //@endif
     match (prev, mode) {
         (_, 0) | (_, 1) => fresh(ty, src),
+//@if rechunk
+        // Re-chunking (VER04k 3.7): for a driven `List<Bytes>` pair the
+        // second list carries the first list's bytes under a new random
+        // split, so split claims meet unequal chunkings of equal content.
+        // Modes 2-3 mean "same content, related form" here instead of a
+        // clone; a re-split can still reproduce the original chunking.
+        // Non-`Bytes` elements cannot occur on a marked binder and fall
+        // through to the clone below.
+        (V::List(vs), 2) | (V::List(vs), 3)
+            if matches!(ty, Ty::ListDriven)
+                && vs.iter().all(|v| matches!(v, V::Bytes(_))) =>
+        {
+            let bytes: Vec<u8> = vs.iter().fold(Vec::new(), |mut acc, v| {
+                if let V::Bytes(b) = v {
+                    acc.extend_from_slice(b);
+                }
+                acc
+            });
+            let k = src.bounded(bytes.len() as u64 + 1) as usize;
+            V::List(vec![
+                V::Bytes(bytes[..k].to_vec()),
+                V::Bytes(bytes[k..].to_vec()),
+            ])
+        }
+//@endif
         (p, 2) | (p, 3) => p.clone(),
         (V::Bytes(b), 4) | (V::Bytes(b), 5) if !b.is_empty() => {
             let mut o = b.clone();
@@ -2568,6 +2675,16 @@ fn relate_comp(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> Option<V> {
             o[i] = relate(&vs[i], *t, mode, src);
             Some(V::List(o))
         }
+//@if rechunk
+        // Modes 4+: one-element change, like any list (re-chunking owns
+        // modes 2-3 only).
+        (V::List(vs), Ty::ListDriven) if !vs.is_empty() => {
+            let i = src.bounded(vs.len() as u64) as usize;
+            let mut o = vs.clone();
+            o[i] = relate(&vs[i], Ty::Bytes, mode, src);
+            Some(V::List(o))
+        }
+//@endif
         _ => None,
     }
 }
@@ -2686,6 +2803,9 @@ fn shrink_value(ty: Ty, v: &V, holds: &dyn Fn(&V) -> bool, steps: &mut usize) ->
         !holds(c)
     };
     match (v, ty) {
+//@if rechunk
+        (v, Ty::ListDriven) => shrink_value(Ty::List(&Ty::Bytes), v, holds, steps),
+//@endif
         (V::Tup(vs), Ty::Tuple(cs)) => {
             let mut cur = vs.clone();
             for i in 0..cur.len() {

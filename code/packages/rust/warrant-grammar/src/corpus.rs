@@ -33,6 +33,37 @@ pub struct InoutDescriptor {
     pub post_slot: &'static str,
 }
 
+/// What a lane runner needs to know about a driven operation (VER04k
+/// section 3.9): the driven parameter's name, emitted as
+/// `corpus.json.ops.<op>.driven` beside the otherwise ordinary entry, so the
+/// lane can implement the drive loop once in `warrant-corpus`.
+///
+/// The corpus compiler below is still the v0 `ct_compare` profile and refuses
+/// every v1-only form, so nothing emits this yet; the v1 profile will, and
+/// this function is the one definition of the field (the WX-G precedent
+/// directly above).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DrivenDescriptor {
+    /// The driven parameter's name.
+    pub driven: String,
+}
+
+/// The descriptor of `op`, or `None` when it has no driver record.
+pub fn driven_descriptor(
+    bindings: &crate::binding::EvidenceBindingFile,
+    op: &str,
+) -> Option<DrivenDescriptor> {
+    let drive = bindings
+        .manifest
+        .bindings
+        .get(op)?
+        .driver
+        .as_ref()?
+        .drive
+        .clone();
+    Some(DrivenDescriptor { driven: drive })
+}
+
 /// The descriptor of `op`, or `None` when it has no `inout` parameter.
 pub fn inout_descriptor(
     file: &WarrantFile<'_>,
@@ -984,5 +1015,17 @@ mod tests {
             .unwrap_err()
             .0
             .contains("outside the closed ct_compare"));
+    }
+
+    #[test]
+    fn driven_descriptor_names_the_drive_param() {
+        let text = "package t\nrevision 0\nspec s\noutput o\nseed 1\nproperty_cases 1\nfuzz_iterations 1\nnegctl_fuzz_iterations 1\nexhaustive_budget 1\nop d driver faults=drop-last-chunk\ndriver d state=S new=new() drive=chunks step=u(mut,elem:bytes) result=collect\nop e export=e args=bytes faults=flip-result-bit\n";
+        let b = crate::binding::parse_evidence_bindings(text).expect("bindings parse");
+        assert_eq!(
+            driven_descriptor(&b, "d"),
+            Some(DrivenDescriptor { driven: "chunks".into() })
+        );
+        assert_eq!(driven_descriptor(&b, "e"), None);
+        assert_eq!(driven_descriptor(&b, "missing"), None);
     }
 }

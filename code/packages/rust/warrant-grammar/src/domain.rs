@@ -117,7 +117,7 @@
 //!   produce is the caller's responsibility.
 
 pub use crate::checker::{resolve_post_slot, slot_shape, PostSlot, SlotShape};
-pub use crate::corpus::{inout_descriptor, InoutDescriptor};
+pub use crate::corpus::{driven_descriptor, inout_descriptor, DrivenDescriptor, InoutDescriptor};
 use crate::codegen::{CodegenError, EvalValue};
 use crate::evidence::{resolve_claim_tys, ty_of_type, TyEnv};
 pub use crate::evidence::{
@@ -220,6 +220,18 @@ impl Domain {
             Domain::Fx(f) if f.bits() <= 16 => EvalValue::from_fixed(*f, FixedTy::min(*f) + i128::from(i)),
             Domain::Fx(f) | Domain::FxEdge(f) => EvalValue::from_fixed(*f, fixed::edge_domain(*f)[i as usize]),
             Domain::Bytes => EvalValue::Bytes(bytes_d1_nth(i)),
+            // The base domain, then the `00`/`a5` fills per hinted length,
+            // in the same order the prelude enumerates.
+            Domain::BytesHinted(ls) => {
+                if i < 347 {
+                    EvalValue::Bytes(bytes_d1_nth(i))
+                } else {
+                    let j = i - 347;
+                    let l = ls[(j / 2) as usize] as usize;
+                    let b = if j.is_multiple_of(2) { 0x00 } else { 0xa5 };
+                    EvalValue::Bytes(vec![b; l])
+                }
+            }
             Domain::BytesN(n) => EvalValue::Bytes(bytes_n_nth(*n, i)),
             Domain::Tuple(cs) => EvalValue::Tuple(unrank_components(cs, i)),
             Domain::Data { name, ctors, record } => {
@@ -254,6 +266,9 @@ impl Domain {
                     EvalValue::Result(Err((err.0.clone(), cases[(i - n) as usize].clone())))
                 }
             }
+            // A marked binder enumerates exactly like `List<Bytes>`; only the
+            // property relation differs (re-chunking in the prelude).
+            Domain::ListDriven => Domain::List(Box::new(Domain::Bytes)).nth_in_range(i),
             Domain::List(t) => {
                 let n = t.domain_size().expect("size checked by the caller");
                 let (d, e) = (n.min(16), n.min(4));

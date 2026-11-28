@@ -1,0 +1,39 @@
+-- sha256: the WX-F fallible pilot (VER04k section 3, test plan "third,
+-- sha256's fallible `try_update`"). `digest_try` is DRIVEN through
+-- `Sha256Hasher::new/try_update/digest`, one step per chunk; the step's
+-- `Result` maps through `errors=`. `MessageTooLong` needs a 2^64-bit
+-- message, so no test observes `Err` (the `missing-error` fault is
+-- correctly unlisted: it would be uncatchable); the pilot exercises the
+-- fallible plumbing (Result shaping, SkipSeq, error mapping) instead.
+warrant sha256 v1
+  error E = TOO_LONG
+  op digest_try(chunks: List<Bytes>) -> Result<Bytes<32>, E>
+  op sha256(data: Bytes) -> Bytes<32>
+
+  labels digest_try:
+    chunks public
+  labels sha256:
+    data public
+  input digest_try.chunks:
+    hostile
+    ensures no_panic, terminates
+  input sha256.data:
+    hostile
+    ensures no_panic, terminates
+  bound digest_try:
+    steps <= 200000
+  bound sha256:
+    steps <= 200000
+
+  example empty_stream_is_the_empty_digest:
+    digest_try([]) == Ok(b"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+  example two_chunks_absorb_in_order:
+    digest_try([b"00", b"01"]) == Ok(b"b413f47d13ee2fe6c845b2ee141af81de858df4ec549a58b7970bb96645bc8d2")
+  example one_shot_pins_the_digest:
+    sha256(b"0001") == b"b413f47d13ee2fe6c845b2ee141af81de858df4ec549a58b7970bb96645bc8d2"
+  claim one_shot_agrees:
+    forall m: Bytes. digest_try([m]) == Ok(sha256(m))
+  claim split_independent:
+    forall a: Bytes, b: Bytes. digest_try([a, b]) == digest_try([concat(a, b)])
+  claim any_two_way_split:
+    forall m: Bytes, k: Nat. digest_try([take(m, k), drop(m, k)]) == Ok(sha256(m))

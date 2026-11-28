@@ -937,7 +937,7 @@ fn minimal_v(t: &Ty) -> String {
         Ty::U8 | Ty::U64 => "V::Fixed(F::U8, 0)".to_string(),
         Ty::Fx(f) | Ty::FxEdge(f) => format!("V::Fixed(F::{}, 0)", f.name()),
         Ty::Nat | Ty::NatCount => "V::Int(0)".to_string(),
-        Ty::Bytes | Ty::BytesN(_) => "V::Bytes(vec![])".to_string(),
+        Ty::Bytes | Ty::BytesN(_) | Ty::BytesHinted(_) => "V::Bytes(vec![])".to_string(),
         Ty::Tuple(cs) => {
             let items: Vec<String> = cs.iter().map(minimal_v).collect();
             format!("V::Tup(vec![{}])", items.join(", "))
@@ -955,7 +955,7 @@ fn minimal_v(t: &Ty) -> String {
         }
         Ty::Opt(_) => "V::Opt(None)".to_string(),
         Ty::Res(t, _, _) => format!("V::Ok(Box::new({}))", minimal_v(t)),
-        Ty::List(_) => "V::List(vec![])".to_string(),
+        Ty::List(_) | Ty::ListDriven => "V::List(vec![])".to_string(),
     }
 }
 
@@ -963,8 +963,12 @@ fn minimal_v(t: &Ty) -> String {
 /// lists, which get one minimal element.
 fn nonempty_v(t: &Ty) -> String {
     match t {
-        Ty::Bytes | Ty::BytesN(_) => "V::Bytes(vec![0xa5])".to_string(),
+        Ty::Bytes | Ty::BytesN(_) | Ty::BytesHinted(_) => "V::Bytes(vec![0xa5])".to_string(),
         Ty::List(u) => format!("V::List(vec![{}])", minimal_v(u)),
+        Ty::ListDriven => format!(
+            "V::List(vec![{}])",
+            minimal_v(&Ty::Bytes)
+        ),
         _ => minimal_v(t),
     }
 }

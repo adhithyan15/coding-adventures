@@ -761,6 +761,10 @@ pub enum Ty {
     /// `List<T>`: every list of length 0..=2 over the first 16 elements of `T`,
     /// plus length-3 lists over its first 4.
     List(&'static Ty),
+    /// WX-F: a `List<Bytes>` binder of a claim calling a driven operation.
+    /// Enumerates, sizes and draws exactly like `List<Bytes>`; the mark
+    /// exists so relation bias re-chunks pairs of them (VER04k 3.7).
+    ListDriven,
 }
 
 const ALPHABET: [u8; 4] = [0x00, 0x01, 0x80, 0xff];
@@ -794,6 +798,7 @@ pub fn domain(ty: Ty) -> Vec<V> {
         Ty::Tuple(_) | Ty::Data(..) | Ty::Opt(_) | Ty::Res(..) | Ty::List(_) => {
             domain_take(ty, domain_size(ty).map_or(0, |n| n as usize))
         }
+        Ty::ListDriven => domain(Ty::List(&Ty::Bytes)),
         Ty::Bytes => {
             let mut v: Vec<Vec<u8>> = vec![Vec::new()];
             v.extend((0..=255u8).map(|b| vec![b]));
@@ -849,6 +854,7 @@ pub fn domain_size(ty: Ty) -> Option<u64> {
             1u64.checked_add(d)?.checked_add(d * d)?.checked_add(e * e * e)
         }
         Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
+        Ty::ListDriven => domain_size(Ty::List(&Ty::Bytes)),
         Ty::BytesN(n) if n as u64 > MAX_FIXED_WIDTH => None,
         Ty::BytesN(0) => Some(1),
         Ty::BytesN(1) => Some(256),
@@ -872,6 +878,7 @@ pub fn domain_bytes(ty: Ty) -> Option<u64> {
 
 fn is_comp(ty: Ty) -> bool {
     matches!(ty, Ty::Tuple(_) | Ty::Data(..) | Ty::Opt(_) | Ty::Res(..) | Ty::List(_))
+    || matches!(ty, Ty::ListDriven)
 }
 
 /// Size of the Cartesian product of component domains (`None` on overflow).
@@ -892,6 +899,7 @@ fn elem_cost(ty: Ty) -> Option<u64> {
     match ty {
         Ty::Bytes => node.checked_add(8),
         Ty::BytesN(n) => node.checked_add(n as u64),
+        Ty::ListDriven => elem_cost(Ty::List(&Ty::Bytes)),
         Ty::Tuple(cs) => {
             let mut c = node;
             for t in cs {
@@ -929,6 +937,7 @@ pub fn domain_take(ty: Ty, k: usize) -> Vec<V> {
         return Vec::new();
     }
     match ty {
+        Ty::ListDriven => domain_take(Ty::List(&Ty::Bytes), k),
         Ty::Tuple(cs) => product(cs, k).into_iter().map(V::Tup).collect(),
         Ty::Data(name, ctors) => {
             let mut out = Vec::new();
@@ -1081,6 +1090,7 @@ fn describe_ty(ty: Ty) -> String {
             "List<{}> size({size}) [len 0..=2 over the first 16, len 3 over the first 4]",
             describe_ty(*t)
         ),
+        Ty::ListDriven => describe_ty(Ty::List(&Ty::Bytes)),
         other => leaf(format!("{other:?}"), "set"),
     }
 }
@@ -1269,6 +1279,7 @@ fn fresh(ty: Ty, src: &mut dyn Src) -> V {
             let n = src.bounded(4) as usize;
             V::List((0..n).map(|_| fresh(*t, src)).collect())
         }
+        Ty::ListDriven => fresh(Ty::List(&Ty::Bytes), src),
         Ty::Bytes => {
             let len = src.bounded(65) as usize;
             V::Bytes((0..len).map(|_| src.byte()).collect())
@@ -1286,6 +1297,29 @@ fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
     }
     match (prev, mode) {
         (_, 0) | (_, 1) => fresh(ty, src),
+        // Re-chunking (VER04k 3.7): for a driven `List<Bytes>` pair the
+        // second list carries the first list's bytes under a new random
+        // split, so split claims meet unequal chunkings of equal content.
+        // Modes 2-3 mean "same content, related form" here instead of a
+        // clone; a re-split can still reproduce the original chunking.
+        // Non-`Bytes` elements cannot occur on a marked binder and fall
+        // through to the clone below.
+        (V::List(vs), 2) | (V::List(vs), 3)
+            if matches!(ty, Ty::ListDriven)
+                && vs.iter().all(|v| matches!(v, V::Bytes(_))) =>
+        {
+            let bytes: Vec<u8> = vs.iter().fold(Vec::new(), |mut acc, v| {
+                if let V::Bytes(b) = v {
+                    acc.extend_from_slice(b);
+                }
+                acc
+            });
+            let k = src.bounded(bytes.len() as u64 + 1) as usize;
+            V::List(vec![
+                V::Bytes(bytes[..k].to_vec()),
+                V::Bytes(bytes[k..].to_vec()),
+            ])
+        }
         (p, 2) | (p, 3) => p.clone(),
         (V::Bytes(b), 4) | (V::Bytes(b), 5) if !b.is_empty() => {
             let mut o = b.clone();
@@ -1343,6 +1377,14 @@ fn relate_comp(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> Option<V> {
             let i = src.bounded(vs.len() as u64) as usize;
             let mut o = vs.clone();
             o[i] = relate(&vs[i], *t, mode, src);
+            Some(V::List(o))
+        }
+        // Modes 4+: one-element change, like any list (re-chunking owns
+        // modes 2-3 only).
+        (V::List(vs), Ty::ListDriven) if !vs.is_empty() => {
+            let i = src.bounded(vs.len() as u64) as usize;
+            let mut o = vs.clone();
+            o[i] = relate(&vs[i], Ty::Bytes, mode, src);
             Some(V::List(o))
         }
         _ => None,
@@ -1438,6 +1480,7 @@ fn shrink_value(ty: Ty, v: &V, holds: &dyn Fn(&V) -> bool, steps: &mut usize) ->
         !holds(c)
     };
     match (v, ty) {
+        (v, Ty::ListDriven) => shrink_value(Ty::List(&Ty::Bytes), v, holds, steps),
         (V::Tup(vs), Ty::Tuple(cs)) => {
             let mut cur = vs.clone();
             for i in 0..cur.len() {
@@ -2171,7 +2214,7 @@ const CLAIM_C_NAMES: &[&str] = &["chunks"];
 
 const CLAIM_C_DEMOTED: &[&str] = &[];
 
-const CLAIM_C_TYS: &[Ty] = &[Ty::List(&Ty::Bytes)];
+const CLAIM_C_TYS: &[Ty] = &[Ty::ListDriven];
 
 #[allow(unused_variables)]
 fn claim_c_admit(env: &[V]) -> bool {
@@ -2217,7 +2260,7 @@ const CLAIM_C2_NAMES: &[&str] = &["key", "chunks"];
 
 const CLAIM_C2_DEMOTED: &[&str] = &[];
 
-const CLAIM_C2_TYS: &[Ty] = &[Ty::Fx(F::U8), Ty::List(&Ty::Bytes)];
+const CLAIM_C2_TYS: &[Ty] = &[Ty::Fx(F::U8), Ty::ListDriven];
 
 #[allow(unused_variables)]
 fn claim_c2_admit(env: &[V]) -> bool {
@@ -2265,7 +2308,7 @@ const CLAIM_C3_NAMES: &[&str] = &["chunks"];
 
 const CLAIM_C3_DEMOTED: &[&str] = &[];
 
-const CLAIM_C3_TYS: &[Ty] = &[Ty::List(&Ty::Bytes)];
+const CLAIM_C3_TYS: &[Ty] = &[Ty::ListDriven];
 
 #[allow(unused_variables)]
 fn claim_c3_admit(env: &[V]) -> bool {

@@ -12,5 +12,5 @@ negctl_fuzz_iterations 1000
 exhaustive_budget 400000
 
 op digest_chunks driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step proofs_not_live=driver
-driver digest_chunks state=coding_adventures_sha1::Digest new=new() drive=chunks step=update(mut,elem:bytes) finish=sum1(ref)->bytes result=finish
+driver digest_chunks state=coding_adventures_sha1::Digest new=new() drive=chunks step=update(mut,elem:bytes) finish=sum1(ref)->bytes result=finish lengths=55,56,63,64,65,119,120,127,128,129
 op sum1 export=sum1 args=bytes faults=flip-result-bit,drop-last-result-byte

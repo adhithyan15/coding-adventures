@@ -1,0 +1,11 @@
+warrant wxf_lengths v1
+  op scan(chunks: List<Bytes>) -> Bytes<20>
+  labels scan:
+    chunks public
+  claim c:
+    forall m: Bytes. scan([m, m]) == scan([m, m])
+  -- A driven `List<Bytes>` binder pair: the property generator relates `ys`
+  -- to `xs` by re-chunking (same bytes, new split). `ys` is intentionally
+  -- unused: the claim holds trivially; the pairing path is what executes.
+  claim pair:
+    forall xs: List<Bytes>, ys: List<Bytes>. scan(xs) == scan(xs)
