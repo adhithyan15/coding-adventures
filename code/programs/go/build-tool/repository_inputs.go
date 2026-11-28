@@ -322,6 +322,7 @@ var (
 	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
 	microbenchmarkPairsFixturePath = "code/specs/fixtures/microbenchmark-pairs-v1.json"
 	historicalWebVectorsPath       = "code/specs/fixtures/historical-web-v1/vectors.json"
+	wasmMicrobenchmarkConsumerPath = "code/tests/wasm-microbenchmark-consumer/consumer.mjs"
 	fixedPointInputPaths           = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -712,6 +713,16 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared paired microbenchmark results fixture",
 		matches:  isMicrobenchmarkPairsFixture,
 		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	// The WASM package BUILD runs the independent Node consumer after producing
+	// the artifact. Keep the exact script in both selection and hash inputs; the
+	// test directory is not a separately discovered package root.
+	{
+		name:     "wasm/microbenchmark",
+		language: "wasm",
+		inputs:   "the external Node consumer that loads and exercises the emitted WASM artifact",
+		matches:  isWasmMicrobenchmarkConsumer,
+		paths:    []string{wasmMicrobenchmarkConsumerPath},
 	},
 	{
 		name:     "rust/wasm-guest-microbenchmark",
@@ -2134,6 +2145,12 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 	return changed == microbenchmarkPairsFixturePath
 }
 
+// isWasmMicrobenchmarkConsumer matches only the external host script that the
+// WASM package BUILD executes against its emitted artifact.
+func isWasmMicrobenchmarkConsumer(changed string) bool {
+	return changed == wasmMicrobenchmarkConsumerPath
+}
+
 func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 	name := language + "/unix-history-simulator"
 	return historicalUnixFixturePackageRow(name, language)
@@ -2298,6 +2315,8 @@ func repositoryInputsForPackage(packageName string) []string {
 		return []string{historicalWebVectorsPath}
 	case "go/historical-web":
 		return []string{historicalWebVectorsPath}
+	case "wasm/microbenchmark":
+		return []string{wasmMicrobenchmarkConsumerPath}
 	case "go/programs/benchmark-tool", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics",
 		"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics",
 		"rust/twig-guest-microbenchmark", "rust/wasm-guest-microbenchmark", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics",
