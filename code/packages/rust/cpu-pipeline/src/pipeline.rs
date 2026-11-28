@@ -55,6 +55,45 @@ pub type DecodeFn = Box<dyn FnMut(i64, PipelineToken) -> PipelineToken>;
 /// Receives a decoded token and returns it with ALU results.
 pub type ExecuteFn = Box<dyn FnMut(PipelineToken) -> PipelineToken>;
 
+/// Identifies one architectural source operand whose value is being bypassed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OperandSlot {
+    /// The instruction's first register source.
+    Rs1,
+    /// The instruction's second register source.
+    Rs2,
+}
+
+/// Identifies the pipeline stage that currently owns a producer value.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OperandForwardingStage {
+    /// The producer has completed execute and has not yet reached MEM.
+    Execute,
+    /// The producer has completed its memory stage and has not yet reached WB.
+    Memory,
+}
+
+/// A typed bypass value for one source of the instruction currently in ID.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ForwardedOperand {
+    /// Which source slot consumes the value.
+    pub operand: OperandSlot,
+    /// Register number read by the consumer.
+    pub register: i64,
+    /// Value supplied instead of the committed register-file value.
+    pub value: i64,
+    /// Stage containing the youngest matching producer.
+    pub source_stage: OperandForwardingStage,
+}
+
+/// Computes all independent source bypasses for the current pipeline slots.
+pub type OperandForwardingFn =
+    Box<dyn FnMut(&[Option<PipelineToken>]) -> Vec<ForwardedOperand>>;
+
+/// Executes one token with the bypass records associated with its stage slot.
+pub type ExecuteWithOperandsFn =
+    Box<dyn FnMut(PipelineToken, &[ForwardedOperand]) -> PipelineToken>;
+
 /// Performs memory access (load/store) for the instruction.
 /// For loads: fills in mem_data. For stores: writes to data cache.
 pub type MemoryFn = Box<dyn FnMut(PipelineToken) -> PipelineToken>;
@@ -186,6 +225,13 @@ pub struct Pipeline {
     /// None means the stage is empty.
     stages: Vec<Option<PipelineToken>>,
 
+    /// Bypass values traveling beside their consumer until its first EX step.
+    /// Kept outside PipelineToken to preserve the existing public token shape.
+    stage_operand_contexts: Vec<Vec<ForwardedOperand>>,
+
+    /// Bypasses applied in the most recently completed cycle.
+    last_forwarded_operands: Vec<ForwardedOperand>,
+
     /// Current program counter (address of next instruction to fetch).
     pc: i64,
 
@@ -211,6 +257,8 @@ pub struct Pipeline {
     // --- Optional callbacks ---
     hazard_fn: Option<HazardFn>,
     predict_fn: Option<PredictFn>,
+    operand_forwarding_fn: Option<OperandForwardingFn>,
+    execute_with_operands_fn: Option<ExecuteWithOperandsFn>,
 }
 
 impl Pipeline {
@@ -234,6 +282,8 @@ impl Pipeline {
         Ok(Pipeline {
             config,
             stages: vec![None; num_stages],
+            stage_operand_contexts: vec![Vec::new(); num_stages],
+            last_forwarded_operands: Vec::new(),
             pc: 0,
             cycle: 0,
             halted: false,
@@ -246,6 +296,8 @@ impl Pipeline {
             writeback_fn,
             hazard_fn: None,
             predict_fn: None,
+            operand_forwarding_fn: None,
+            execute_with_operands_fn: None,
         })
     }
 
@@ -257,6 +309,29 @@ impl Pipeline {
     /// Sets the optional branch prediction callback.
     pub fn set_predict_fn(&mut self, f: PredictFn) {
         self.predict_fn = Some(f);
+    }
+
+    /// Enables the opt-in operand-indexed forwarding path.
+    ///
+    /// The legacy [`HazardResponse`] scalar behavior remains in effect until
+    /// this pair of callbacks is installed. In the opt-in path, forwarding
+    /// records travel beside the decoded token and are passed to the execute
+    /// callback without overwriting `PipelineToken::alu_result`.
+    pub fn set_operand_forwarding(
+        &mut self,
+        resolve: OperandForwardingFn,
+        execute: ExecuteWithOperandsFn,
+    ) {
+        self.operand_forwarding_fn = Some(resolve);
+        self.execute_with_operands_fn = Some(execute);
+    }
+
+    /// Returns the operand forwards delivered to Execute in the last step.
+    ///
+    /// This is separate from snapshots so their established structure and
+    /// serialization remain unchanged.
+    pub fn last_forwarded_operands(&self) -> &[ForwardedOperand] {
+        &self.last_forwarded_operands
     }
 
     /// Sets the program counter.
@@ -345,11 +420,28 @@ impl Pipeline {
             HazardResponse::default()
         };
 
+        // Resolve bypasses from the same pre-advance slots as hazards. A
+        // redirect or hold wins: in either case the decoded consumer does not
+        // enter EX this cycle, so no new operand record is created.
+        let resolved_operands = if matches!(
+            hazard.action,
+            HazardAction::Stall | HazardAction::Flush
+        ) {
+            Vec::new()
+        } else if let Some(ref mut forwarding_fn) = self.operand_forwarding_fn {
+            let stages_copy: Vec<Option<PipelineToken>> = self.stages.clone();
+            forwarding_fn(&stages_copy)
+        } else {
+            Vec::new()
+        };
+
         // --- Phase 2: Compute next state ---
         //
         // We build the next state in a new vec, then swap it in at the end.
         // This ensures all transitions are "simultaneous".
         let mut next_stages: Vec<Option<PipelineToken>> = vec![None; num_stages];
+        let mut next_operand_contexts: Vec<Vec<ForwardedOperand>> =
+            vec![Vec::new(); num_stages];
         let mut stalled = false;
         let mut flushing = false;
 
@@ -384,6 +476,7 @@ impl Pipeline {
                 for i in (flush_count..num_stages).rev() {
                     if i > 0 && i > flush_count {
                         next_stages[i] = self.stages[i - 1].clone();
+                        next_operand_contexts[i] = self.stage_operand_contexts[i - 1].clone();
                     } else if i > 0 {
                         let mut bubble = PipelineToken::new_bubble();
                         bubble.stage_entered.insert(
@@ -440,6 +533,7 @@ impl Pipeline {
                 // Stages AFTER the stall point advance normally.
                 for i in (stall_point + 1..num_stages).rev() {
                     next_stages[i] = self.stages[i - 1].clone();
+                    next_operand_contexts[i] = self.stage_operand_contexts[i - 1].clone();
                 }
 
                 // Insert bubble at the stall point.
@@ -452,6 +546,8 @@ impl Pipeline {
 
                 // Stages BEFORE the stall point are frozen.
                 next_stages[..stall_point].clone_from_slice(&self.stages[..stall_point]);
+                next_operand_contexts[..stall_point]
+                    .clone_from_slice(&self.stage_operand_contexts[..stall_point]);
 
                 // PC does NOT advance during a stall.
             }
@@ -466,13 +562,15 @@ impl Pipeline {
                 if hazard.action == HazardAction::ForwardFromEX
                     || hazard.action == HazardAction::ForwardFromMEM
                 {
-                    for (i, s) in self.config.stages.iter().enumerate() {
-                        if s.category == StageCategory::Decode {
-                            if let Some(ref mut tok) = self.stages[i] {
-                                if !tok.is_bubble {
-                                    tok.alu_result = hazard.forward_value;
-                                    tok.forwarded_from = hazard.forward_source.clone();
-                                    break;
+                    if self.operand_forwarding_fn.is_none() {
+                        for (i, s) in self.config.stages.iter().enumerate() {
+                            if s.category == StageCategory::Decode {
+                                if let Some(ref mut tok) = self.stages[i] {
+                                    if !tok.is_bubble {
+                                        tok.alu_result = hazard.forward_value;
+                                        tok.forwarded_from = hazard.forward_source.clone();
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -482,6 +580,35 @@ impl Pipeline {
                 // Shift tokens forward (from back to front).
                 for i in (1..num_stages).rev() {
                     next_stages[i] = self.stages[i - 1].clone();
+                    next_operand_contexts[i] = self.stage_operand_contexts[i - 1].clone();
+                }
+
+                // The resolver describes the current last Decode token. Put
+                // its values in the adjacent slot so the sidecar follows that
+                // token until its first Execute callback, even in a pipeline
+                // with intervening stage categories.
+                let decode_index = self
+                    .config
+                    .stages
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, stage)| {
+                        stage.category == StageCategory::Decode
+                            && self.stages[*i]
+                                .as_ref()
+                                .is_some_and(|token| !token.is_bubble)
+                    })
+                    .map(|(i, _)| i)
+                    .last();
+                let execute_index = self
+                    .config
+                    .stages
+                    .iter()
+                    .position(|stage| stage.category == StageCategory::Execute);
+                if let (Some(decode_index), Some(execute_index)) = (decode_index, execute_index) {
+                    if decode_index < execute_index && decode_index + 1 < num_stages {
+                        next_operand_contexts[decode_index + 1] = resolved_operands.clone();
+                    }
                 }
 
                 // Fetch new instruction into IF stage.
@@ -492,6 +619,8 @@ impl Pipeline {
 
         // --- Phase 3: Commit the new state ---
         self.stages = next_stages;
+        self.stage_operand_contexts = next_operand_contexts;
+        self.last_forwarded_operands.clear();
 
         // --- Phase 4: Execute stage callbacks ---
         //
@@ -541,7 +670,17 @@ impl Pipeline {
                         .unwrap_or(false);
                     if entered_this_cycle {
                         if let Some(tok) = self.stages[i].take() {
-                            let executed = (self.execute_fn)(tok);
+                            let executed = if let Some(ref mut execute_fn) =
+                                self.execute_with_operands_fn
+                            {
+                                let operands = &self.stage_operand_contexts[i];
+                                self.last_forwarded_operands.extend(operands.iter().cloned());
+                                let result = execute_fn(tok, operands);
+                                self.stage_operand_contexts[i].clear();
+                                result
+                            } else {
+                                (self.execute_fn)(tok)
+                            };
                             self.stages[i] = Some(executed);
                         }
                     }
@@ -1232,6 +1371,193 @@ mod tests {
 
         let ex_tok = p.stage_contents("EX").expect("expected token in EX");
         assert_eq!(ex_tok.forwarded_from, "MEM");
+    }
+
+    fn record(
+        operand: OperandSlot,
+        register: i64,
+        value: i64,
+        source_stage: OperandForwardingStage,
+    ) -> ForwardedOperand {
+        ForwardedOperand { operand, register, value, source_stage }
+    }
+
+    fn typed_record_execute(
+        received: Rc<RefCell<Vec<(i64, Vec<ForwardedOperand>)>>>,
+    ) -> ExecuteWithOperandsFn {
+        Box::new(move |token, forwarded| {
+            received
+                .borrow_mut()
+                .push((token.pc, forwarded.to_vec()));
+            token
+        })
+    }
+
+    /// Typed bypasses keep each source's identity and do not overwrite the
+    /// legacy scalar `alu_result` slot.
+    #[test]
+    fn test_operand_forwarding_delivers_both_sources_to_execute() {
+        let mut p = new_test_pipeline(Vec::new(), None);
+        let received = Rc::new(RefCell::new(Vec::new()));
+        let callback_records = vec![
+            record(OperandSlot::Rs1, 2, 128, OperandForwardingStage::Execute),
+            record(OperandSlot::Rs2, 1, 0, OperandForwardingStage::Memory),
+        ];
+        p.set_operand_forwarding(
+            Box::new(move |_| callback_records.clone()),
+            typed_record_execute(received.clone()),
+        );
+        p.set_hazard_fn(Box::new(|_| HazardResponse {
+            action: HazardAction::ForwardFromEX,
+            forward_value: 999,
+            forward_source: "EX".to_string(),
+            ..Default::default()
+        }));
+
+        let mut consumer = PipelineToken::new();
+        consumer.pc = 12;
+        consumer.opcode = "SW".to_string();
+        consumer.rs1 = 2;
+        consumer.rs2 = 1;
+        p.stages[1] = Some(consumer);
+        let mut ex_producer = PipelineToken::new();
+        ex_producer.pc = 8;
+        ex_producer.rd = 2;
+        ex_producer.reg_write = true;
+        ex_producer.write_data = 128;
+        p.stages[2] = Some(ex_producer);
+        let mut mem_producer = PipelineToken::new();
+        mem_producer.pc = 4;
+        mem_producer.rd = 1;
+        mem_producer.reg_write = true;
+        mem_producer.write_data = 0;
+        p.stages[3] = Some(mem_producer);
+
+        p.step();
+
+        assert_eq!(
+            *received.borrow(),
+            vec![(
+                12,
+                vec![
+                    record(OperandSlot::Rs1, 2, 128, OperandForwardingStage::Execute),
+                    record(OperandSlot::Rs2, 1, 0, OperandForwardingStage::Memory),
+                ],
+            )]
+        );
+        let ex_consumer = p.stage_contents("EX").expect("consumer entered EX");
+        assert_eq!(
+            ex_consumer.alu_result, 0,
+            "typed path must not clobber alu_result"
+        );
+        assert!(ex_consumer.forwarded_from.is_empty());
+        assert_eq!(
+            p.last_forwarded_operands(),
+            &[
+                record(OperandSlot::Rs1, 2, 128, OperandForwardingStage::Execute),
+                record(OperandSlot::Rs2, 1, 0, OperandForwardingStage::Memory),
+            ]
+        );
+
+        p.step();
+        assert!(p.last_forwarded_operands().is_empty());
+    }
+
+    /// A load-use hold does not deliver records; the following cycle may
+    /// deliver the value after the load has advanced to MEM.
+    #[test]
+    fn test_operand_forwarding_waits_for_load_use_stall() {
+        let mut p = new_test_pipeline(Vec::new(), None);
+        let received = Rc::new(RefCell::new(Vec::new()));
+        p.set_operand_forwarding(
+            Box::new(|_| vec![record(
+                OperandSlot::Rs1,
+                3,
+                42,
+                OperandForwardingStage::Memory,
+            )]),
+            typed_record_execute(received.clone()),
+        );
+        let hazard_cycle = Rc::new(RefCell::new(0));
+        let hazard_cycle_clone = hazard_cycle.clone();
+        p.set_hazard_fn(Box::new(move |_| {
+            *hazard_cycle_clone.borrow_mut() += 1;
+            if *hazard_cycle_clone.borrow() == 1 {
+                HazardResponse {
+                    action: HazardAction::Stall,
+                    stall_stages: 2,
+                    ..Default::default()
+                }
+            } else {
+                HazardResponse {
+                    action: HazardAction::ForwardFromMEM,
+                    forward_value: 42,
+                    forward_source: "MEM".to_string(),
+                    ..Default::default()
+                }
+            }
+        }));
+
+        let mut consumer = PipelineToken::new();
+        consumer.pc = 20;
+        consumer.opcode = "ADD".to_string();
+        consumer.rs1 = 3;
+        p.stages[1] = Some(consumer);
+        let mut load = PipelineToken::new();
+        load.pc = 16;
+        load.opcode = "LOAD".to_string();
+        load.rd = 3;
+        load.reg_write = true;
+        load.mem_read = true;
+        load.write_data = 42;
+        p.stages[2] = Some(load);
+
+        let stalled = p.step();
+        assert!(stalled.stalled);
+        assert!(received.borrow().is_empty());
+        assert!(p.last_forwarded_operands().is_empty());
+        assert_eq!(p.stage_contents("ID").unwrap().pc, 20);
+
+        p.step();
+        assert_eq!(received.borrow().len(), 1);
+        assert_eq!(received.borrow()[0].0, 20);
+        assert_eq!(received.borrow()[0].1, vec![record(
+            OperandSlot::Rs1,
+            3,
+            42,
+            OperandForwardingStage::Memory,
+        )]);
+    }
+
+    #[test]
+    fn test_operand_forwarding_is_not_delivered_when_consumer_is_flushed() {
+        let mut p = new_test_pipeline(Vec::new(), None);
+        let received = Rc::new(RefCell::new(Vec::new()));
+        p.set_operand_forwarding(
+            Box::new(|_| vec![record(
+                OperandSlot::Rs1,
+                2,
+                128,
+                OperandForwardingStage::Execute,
+            )]),
+            typed_record_execute(received.clone()),
+        );
+        p.set_hazard_fn(Box::new(|_| HazardResponse {
+            action: HazardAction::Flush,
+            flush_count: 2,
+            redirect_pc: 32,
+            ..Default::default()
+        }));
+        let mut consumer = PipelineToken::new();
+        consumer.pc = 12;
+        consumer.rs1 = 2;
+        p.stages[1] = Some(consumer);
+
+        p.step();
+
+        assert!(received.borrow().is_empty());
+        assert!(p.last_forwarded_operands().is_empty());
+        assert!(p.stage_contents("EX").unwrap().is_bubble);
     }
 
     // =====================================================================

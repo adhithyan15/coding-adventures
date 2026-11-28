@@ -25,7 +25,7 @@
 //!
 //! These map directly to the ID and EX stages of the pipeline.
 
-use cpu_pipeline::PipelineToken;
+use cpu_pipeline::{ForwardedOperand, PipelineToken};
 
 use crate::register_file::RegisterFile;
 
@@ -58,6 +58,21 @@ pub trait ISADecoder {
     ///   - branch_target (where does the branch go?)
     ///   - write_data (final value to write to Rd, if reg_write is true)
     fn execute(&self, token: PipelineToken, reg_file: &RegisterFile) -> PipelineToken;
+
+    /// Executes with named register operands that were forwarded into EX.
+    ///
+    /// Existing decoders keep their legacy behavior by inheriting this
+    /// default. An ISA adapter that opts into `Core::new_with_operand_forwarding`
+    /// can override the method and substitute each named value for its
+    /// committed register-file value.
+    fn execute_with_forwarding(
+        &self,
+        token: PipelineToken,
+        reg_file: &RegisterFile,
+        _forwarded: &[ForwardedOperand],
+    ) -> PipelineToken {
+        self.execute(token, reg_file)
+    }
 
     /// Returns the size of one instruction in bytes.
     ///
