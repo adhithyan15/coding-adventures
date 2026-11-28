@@ -8,8 +8,7 @@ production encoder or parser to decide expected results.
 
 The suite's deterministic property loop performs 1,000 printable-address
 round trips and checks four malformed-wire negatives. Native Go fuzz targets
-were run with the pinned toolchain at `/workspace/.coding-adventures-tools/go`
-for three seconds each:
+were run with the repository's pinned Go toolchain for three seconds each:
 
 | Target | Executions | Result |
 | --- | ---: | --- |
@@ -22,3 +21,9 @@ The HTML fuzz invariant is iterative: every emitted element has a lowercase,
 non-empty tag and every child is a recognized text or element node. These are
 bounded conformance and campaign receipts, not source-level proof or claims
 about behavior outside the stated domains.
+
+Focused parser regressions also cover CRLF normalization inside quoted
+attributes, valueless attributes followed by another attribute, malformed
+attribute prefixes, deeply nested trees, and adjacent text around malformed
+tags. Run them with `go test -run '^TestHTMLParserRegression' .` from this
+package directory.

@@ -26,6 +26,24 @@ func TestHTMLParserRegressionNormalizationAndAttributes(t *testing.T) {
 	}
 }
 
+func TestHTMLParserRegressionValuelessAttributes(t *testing.T) {
+	for _, source := range []string{`<a href NAME=x>`, `<a href href=x NAME=y>`} {
+		nodes, err := historicalweb.ParseHTMLTags1992(source)
+		if err != nil {
+			t.Fatal(err)
+		}
+		e := nodes[0].(historicalweb.Element)
+		if value, exists := e.Attributes["href"]; !exists || value != nil {
+			t.Errorf("%q: href = %#v, want valueless", source, value)
+		}
+		if value, exists := e.Attributes["name"]; !exists || value == nil || *value != "y" {
+			if source == `<a href href=x NAME=y>` {
+				t.Errorf("%q: name = %#v, want y", source, value)
+			}
+		}
+	}
+}
+
 func TestHTMLParserRegressionDepthAndAdjacentText(t *testing.T) {
 	const depth = 12000
 	source := strings.Repeat("<address>", depth) + "x" + strings.Repeat("</address>", depth)

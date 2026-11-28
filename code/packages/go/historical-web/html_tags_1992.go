@@ -110,6 +110,7 @@ func anchorAttrs(source string) map[string]*string {
 		for i < len(source) && isNameChar(source[i]) {
 			i++
 		}
+		nameEnd := i
 		name := lowerASCII(source[start:i])
 		for i < len(source) && isSpace(source[i]) {
 			i++
@@ -121,6 +122,10 @@ func anchorAttrs(source string) map[string]*string {
 				i++
 			}
 			value = attrValue(source, &i)
+		} else {
+			// The skipped whitespace belongs to the next attribute. Leave the
+			// cursor at the end of this name so its leading-space check can see it.
+			i = nameEnd
 		}
 		if name == "href" || name == "name" || name == "type" {
 			if _, exists := result[name]; exists {
@@ -238,7 +243,7 @@ func ParseHTMLTags1992(source string) ([]Node, error) {
 		if end <= textStart {
 			return
 		}
-		text := decodeEntities(strings.ReplaceAll(source[textStart:end], "\r\n", "\n"))
+		text := decodeEntities(source[textStart:end])
 		if len(stack) == 0 {
 			appendText(&root, text)
 		} else {
@@ -285,7 +290,7 @@ func ParseHTMLTags1992(source string) ([]Node, error) {
 		if !token.closing && name == "plaintext" {
 			e := &Element{Tag: name, Attributes: map[string]*string{}}
 			appendElement(&root, stack, e)
-			appendText(&e.Children, strings.ReplaceAll(source[token.end:], "\r\n", "\n"))
+			appendText(&e.Children, source[token.end:])
 			return publicNodes(root), nil
 		}
 		if !token.closing && (name == "xmp" || name == "listing") {
@@ -294,10 +299,10 @@ func ParseHTMLTags1992(source string) ([]Node, error) {
 			needle := "</" + name + ">"
 			end := indexFold(source, needle, token.end)
 			if end < 0 {
-				appendText(&e.Children, strings.ReplaceAll(source[token.end:], "\r\n", "\n"))
+				appendText(&e.Children, source[token.end:])
 				return publicNodes(root), nil
 			}
-			appendText(&e.Children, strings.ReplaceAll(source[token.end:end], "\r\n", "\n"))
+			appendText(&e.Children, source[token.end:end])
 			i = end + len(needle)
 			textStart = i
 			continue
@@ -403,10 +408,6 @@ func convertList(nodes []Node, converted map[*Element]Element) []Node {
 		case *Element:
 			flush()
 			out = append(out, converted[v])
-		case Element:
-			flush()
-			v.Children = convertList(v.Children, converted)
-			out = append(out, v)
 		}
 	}
 	flush()
