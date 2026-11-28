@@ -1,0 +1,111 @@
+{
+  "schema": "coding-adventures.database-media.ftl-page-map.v1",
+  "cases": [
+    {
+      "name": "publish-rewrite-only-after-ready-and-reuse-fresh-abort",
+      "logical_count": 1,
+      "physical_count": 3,
+      "steps": [
+        {
+          "op": "begin",
+          "logical": 0,
+          "expected": {
+            "reservation": {"logical": 0, "physical": 0},
+            "state": {"logical_to_physical": [-1], "physical_status": ["reserved", "free", "free"], "reservation": {"logical": 0, "physical": 0}}
+          }
+        },
+        {
+          "op": "finish",
+          "disposition": "media_ready",
+          "expected": {
+            "state": {"logical_to_physical": [0], "physical_status": ["live", "free", "free"], "reservation": null}
+          }
+        },
+        {
+          "op": "begin",
+          "logical": 0,
+          "expected": {
+            "reservation": {"logical": 0, "physical": 1},
+            "state": {"logical_to_physical": [0], "physical_status": ["live", "reserved", "free"], "reservation": {"logical": 0, "physical": 1}}
+          }
+        },
+        {
+          "op": "lookup",
+          "logical": 0,
+          "expected": {
+            "physical": 0,
+            "present": true,
+            "state": {"logical_to_physical": [0], "physical_status": ["live", "reserved", "free"], "reservation": {"logical": 0, "physical": 1}}
+          }
+        },
+        {
+          "op": "finish",
+          "disposition": "abort_fresh",
+          "expected": {
+            "state": {"logical_to_physical": [0], "physical_status": ["live", "free", "free"], "reservation": null}
+          }
+        },
+        {
+          "op": "begin",
+          "logical": 0,
+          "expected": {
+            "reservation": {"logical": 0, "physical": 1},
+            "state": {"logical_to_physical": [0], "physical_status": ["live", "reserved", "free"], "reservation": {"logical": 0, "physical": 1}}
+          }
+        },
+        {
+          "op": "finish",
+          "disposition": "media_ready",
+          "expected": {
+            "state": {"logical_to_physical": [1], "physical_status": ["stale", "live", "free"], "reservation": null}
+          }
+        }
+      ]
+    },
+    {
+      "name": "spent-aborts-stay-unavailable-until-exhaustion",
+      "logical_count": 1,
+      "physical_count": 2,
+      "steps": [
+        {
+          "op": "begin",
+          "logical": 0,
+          "expected": {
+            "reservation": {"logical": 0, "physical": 0},
+            "state": {"logical_to_physical": [-1], "physical_status": ["reserved", "free"], "reservation": {"logical": 0, "physical": 0}}
+          }
+        },
+        {
+          "op": "finish",
+          "disposition": "abort_spent",
+          "expected": {
+            "state": {"logical_to_physical": [-1], "physical_status": ["stale", "free"], "reservation": null}
+          }
+        },
+        {
+          "op": "begin",
+          "logical": 0,
+          "expected": {
+            "reservation": {"logical": 0, "physical": 1},
+            "state": {"logical_to_physical": [-1], "physical_status": ["stale", "reserved"], "reservation": {"logical": 0, "physical": 1}}
+          }
+        },
+        {
+          "op": "finish",
+          "disposition": "abort_spent",
+          "expected": {
+            "state": {"logical_to_physical": [-1], "physical_status": ["stale", "stale"], "reservation": null}
+          }
+        },
+        {
+          "op": "begin",
+          "logical": 0,
+          "expected": {
+            "error": "no_free_page",
+            "state": {"logical_to_physical": [-1], "physical_status": ["stale", "stale"], "reservation": null}
+          }
+        }
+      ]
+    }
+  ]
+}

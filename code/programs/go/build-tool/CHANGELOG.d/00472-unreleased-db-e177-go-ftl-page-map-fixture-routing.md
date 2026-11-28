@@ -1,0 +1,1 @@
+- Route the exact DB05a page-map and DB05c2a reclamation vectors to `go/ftl-page-map` for selection and Kiln content hashing.

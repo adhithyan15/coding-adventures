@@ -159,8 +159,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
-        self.assertEqual(summary["repository_source_boundary_count"], 32)
-        self.assertEqual(summary["repository_source_input_count"], 47)
+        self.assertEqual(summary["repository_source_boundary_count"], 34)
+        self.assertEqual(summary["repository_source_input_count"], 49)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -444,15 +444,15 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary,
             {
-                "boundary_count": 32,
-                "input_count": 47,
-                "scope_count": 528,
-                "authorization_count": 549,
+                "boundary_count": 34,
+                "input_count": 49,
+                "scope_count": 530,
+                "authorization_count": 551,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "caad10f74ff8fa8acc602c5723b3361864b77cc2b941da1d47cd4cd185c7a7b4",
+            "344c8e3d461639fc144c123ee5242f91ead1bd71e9e53bcfd58d7624baf6375a",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         dart_hash_map = by_id["dart-hash-map-v1-corpus-input"]
