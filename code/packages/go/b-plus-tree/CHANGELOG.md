@@ -2,6 +2,12 @@
 
 All notable changes to `go/b-plus-tree` are documented here.
 
+## [Unreleased]
+
+### Fixed
+- `IsValid()` validates inherited routing bounds, key/value pairs, node identity,
+  and the exact linked-leaf chain without overflowing at large degrees.
+
 ## [0.1.0] — 2026-04-11
 
 ### Added

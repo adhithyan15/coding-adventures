@@ -794,42 +794,60 @@ func (tr *BTree[K, V]) Height() int {
 // IsValid checks all B-tree invariants and returns true if the tree is
 // structurally correct.  Useful for testing and debugging.
 //
-// Checks:
-//  1. Root has at most 2t-1 keys.
-//  2. Root has at least 1 key (if non-empty, non-leaf).
-//  3. Every non-root node has t-1 ≤ len(keys) ≤ 2t-1.
-//  4. Keys within each node are sorted.
-//  5. All leaves are at the same depth.
-//  6. Internal nodes have exactly len(keys)+1 children.
-//  7. Total key count matches tr.size.
+// Checks node occupancy, key/value and child pairing, strict ordering under
+// the configured comparator, inherited separator bounds, leaf purity and
+// depth, unique child identities, and the total key count. It does not mutate
+// the tree.
 func (tr *BTree[K, V]) IsValid() bool {
 	if tr.root == nil {
 		return tr.size == 0
 	}
-	if len(tr.root.keys) == 0 {
-		return tr.size == 0
+	if tr.t < 2 || tr.less == nil {
+		return false
 	}
 
 	var counted int
 	leafDepth := -1
-	ok := tr.validateNode(tr.root, true, 0, &leafDepth, &counted)
+	seen := make(map[*bTreeNode[K, V]]struct{})
+	ok := tr.validateNode(tr.root, true, 0, nil, nil, seen, &leafDepth, &counted)
 	if !ok {
 		return false
 	}
 	return counted == tr.size
 }
 
-func (tr *BTree[K, V]) validateNode(node *bTreeNode[K, V], isRoot bool, depth int, leafDepth *int, counted *int) bool {
+func (tr *BTree[K, V]) validateNode(
+	node *bTreeNode[K, V],
+	isRoot bool,
+	depth int,
+	lower, upper *K,
+	seen map[*bTreeNode[K, V]]struct{},
+	leafDepth *int,
+	counted *int,
+) bool {
+	if node == nil {
+		return false
+	}
+	if _, exists := seen[node]; exists {
+		return false
+	}
+	seen[node] = struct{}{}
+
 	t := tr.t
 	n := len(node.keys)
+	if n != len(node.values) {
+		return false
+	}
 
 	// Check key count bounds.
+	// Since n is nonnegative, n/2 >= t is equivalent to n > 2*t-1
+	// without overflowing for a large configured minimum degree.
 	if isRoot {
-		if n > 2*t-1 {
+		if n < 1 || n/2 >= t {
 			return false
 		}
 	} else {
-		if n < t-1 || n > 2*t-1 {
+		if n < t-1 || n/2 >= t {
 			return false
 		}
 	}
@@ -840,8 +858,17 @@ func (tr *BTree[K, V]) validateNode(node *bTreeNode[K, V], isRoot bool, depth in
 			return false
 		}
 	}
+	if lower != nil && !tr.less(*lower, node.keys[0]) {
+		return false
+	}
+	if upper != nil && !tr.less(node.keys[n-1], *upper) {
+		return false
+	}
 
 	if node.isLeaf {
+		if len(node.children) != 0 {
+			return false
+		}
 		// All leaves must be at the same depth.
 		if *leafDepth == -1 {
 			*leafDepth = depth
@@ -857,9 +884,17 @@ func (tr *BTree[K, V]) validateNode(node *bTreeNode[K, V], isRoot bool, depth in
 		return false
 	}
 
-	// Recurse into children.
-	for _, child := range node.children {
-		if !tr.validateNode(child, false, depth+1, leafDepth, counted) {
+	// Recurse into each child with the separator bounds that route to it.
+	for i, child := range node.children {
+		childLower := lower
+		childUpper := upper
+		if i > 0 {
+			childLower = &node.keys[i-1]
+		}
+		if i < n {
+			childUpper = &node.keys[i]
+		}
+		if !tr.validateNode(child, false, depth+1, childLower, childUpper, seen, leafDepth, counted) {
 			return false
 		}
 	}

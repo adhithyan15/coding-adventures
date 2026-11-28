@@ -756,58 +756,74 @@ func (tr *BPlusTree[K, V]) Height() int {
 // IsValid
 // ---------------------------------------------------------------------------
 
-// IsValid checks all B+ tree structural invariants.
-//
-// Invariants checked:
-//  1. All leaves at same depth.
-//  2. Each non-root node has t-1 ≤ len(keys) ≤ 2t-1.
-//  3. Root has 1 ≤ len(keys) ≤ 2t-1 (if non-empty, non-leaf).
-//  4. Keys sorted within each node.
-//  5. Correct child count in internal nodes.
-//  6. Leaf linked list is in ascending order.
-//  7. Total key count matches tr.size.
-//  8. firstLeaf points to the actual leftmost leaf.
+// IsValid checks occupancy, leaf key/value pairing, inherited separator
+// bounds, node identity, equal leaf depth, and the exact linked-leaf sequence.
+// The check is read-only and counts only records stored in leaves.
 func (tr *BPlusTree[K, V]) IsValid() bool {
 	if tr.root == nil {
 		return tr.size == 0 && tr.firstLeaf == nil
 	}
+	if tr.t < 2 || tr.less == nil {
+		return false
+	}
+	seen := make(map[bplusNode[K, V]]struct{})
 	var counted int
 	leafDepth := -1
 	var prevLeaf *bplusLeaf[K, V]
-	if !tr.validateNode(tr.root, true, 0, &leafDepth, &counted, &prevLeaf) {
+	if !tr.validateNode(tr.root, true, 0, nil, nil, seen, &leafDepth, &counted, &prevLeaf) {
 		return false
 	}
-	if counted != tr.size {
-		return false
-	}
-	// Verify firstLeaf == actual leftmost leaf.
-	node := tr.root
-	for !node.isLeaf() {
-		internal := node.(*bplusInternal[K, V])
-		node = internal.children[0]
-	}
-	return node.(*bplusLeaf[K, V]) == tr.firstLeaf
+	return counted == tr.size && prevLeaf != nil && prevLeaf.next == nil
 }
 
 func (tr *BPlusTree[K, V]) validateNode(
 	node bplusNode[K, V],
 	isRoot bool,
 	depth int,
+	lower, upper *K,
+	seen map[bplusNode[K, V]]struct{},
 	leafDepth *int,
 	counted *int,
 	prevLeaf **bplusLeaf[K, V],
 ) bool {
+	if node == nil {
+		return false
+	}
+	// Validate the concrete identity before using an interface as a map key.
+	// The known node implementations are pointers (and therefore comparable);
+	// package-local test or future nodes need not be.
+	switch current := node.(type) {
+	case *bplusLeaf[K, V]:
+		if current == nil {
+			return false
+		}
+	case *bplusInternal[K, V]:
+		if current == nil {
+			return false
+		}
+	default:
+		return false
+	}
+	if _, duplicate := seen[node]; duplicate {
+		return false
+	}
+	seen[node] = struct{}{}
+
 	t := tr.t
 
 	if node.isLeaf() {
 		leaf := node.(*bplusLeaf[K, V])
 		n := len(leaf.keys)
-
-		// Key count.
-		if !isRoot && n < t-1 {
+		if n != len(leaf.values) {
 			return false
 		}
-		if n > 2*t-1 {
+
+		// Key count.
+		if isRoot {
+			if n < 1 || n/2 >= t {
+				return false
+			}
+		} else if n < t-1 || n/2 >= t {
 			return false
 		}
 
@@ -824,9 +840,22 @@ func (tr *BPlusTree[K, V]) validateNode(
 				return false
 			}
 		}
+		if lower != nil && tr.less(leaf.keys[0], *lower) {
+			return false
+		}
+		if upper != nil && !tr.less(leaf.keys[n-1], *upper) {
+			return false
+		}
 
 		// Leaf chain order.
-		if *prevLeaf != nil && n > 0 && len((*prevLeaf).keys) > 0 {
+		if *prevLeaf == nil {
+			if tr.firstLeaf != leaf {
+				return false
+			}
+		} else {
+			if (*prevLeaf).next != leaf {
+				return false
+			}
 			lastPrev := (*prevLeaf).keys[len((*prevLeaf).keys)-1]
 			if !tr.less(lastPrev, leaf.keys[0]) {
 				return false
@@ -842,11 +871,11 @@ func (tr *BPlusTree[K, V]) validateNode(
 
 	// Key count for internal nodes.
 	if isRoot {
-		if n < 1 || n > 2*t-1 {
+		if n < 1 || n/2 >= t {
 			return false
 		}
 	} else {
-		if n < t-1 || n > 2*t-1 {
+		if n < t-1 || n/2 >= t {
 			return false
 		}
 	}
@@ -857,14 +886,28 @@ func (tr *BPlusTree[K, V]) validateNode(
 			return false
 		}
 	}
+	if lower != nil && tr.less(internal.keys[0], *lower) {
+		return false
+	}
+	if upper != nil && !tr.less(internal.keys[n-1], *upper) {
+		return false
+	}
 
 	// Child count.
 	if len(internal.children) != n+1 {
 		return false
 	}
 
-	for _, child := range internal.children {
-		if !tr.validateNode(child, false, depth+1, leafDepth, counted, prevLeaf) {
+	for i, child := range internal.children {
+		childLower := lower
+		childUpper := upper
+		if i > 0 {
+			childLower = &internal.keys[i-1]
+		}
+		if i < n {
+			childUpper = &internal.keys[i]
+		}
+		if !tr.validateNode(child, false, depth+1, childLower, childUpper, seen, leafDepth, counted, prevLeaf) {
 			return false
 		}
 	}
