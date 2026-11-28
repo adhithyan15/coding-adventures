@@ -20,7 +20,9 @@ and its line endings, returning an `Http09ResponseError` tagged `non-ascii` if
 any byte exceeds `0x7f`.
 
 `parseHtmlTags1992(source: string)` returns a `Result<HtmlDocument,
-HtmlParseError>`. The document is a flat arena: `nodes: HtmlNode[]` and
+HtmlParseError>`. Its errors are tagged `invalid-source` for a non-string call
+from untyped JavaScript or `invalid-tree-state` for an impossible arena
+invariant. The document is a flat arena: `nodes: HtmlNode[]` and
 `roots: NodeId[]` contain integer references into that same array. A node is
 either `{ kind: "text", text }` or `{ kind: "element", tag, attributes,
 children }`; attributes map the recognized anchor names to strings or `null`
