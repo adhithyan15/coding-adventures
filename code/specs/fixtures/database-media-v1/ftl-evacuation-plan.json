@@ -1,0 +1,195 @@
+{
+  "schema": "coding-adventures.database-media.ftl-evacuation-plan.v1",
+  "cases": [
+    {
+      "name": "two-live-sources-exact-spare-reserve",
+      "logical_count": 4,
+      "physical_count": 9,
+      "pages_per_block": 3,
+      "program_logicals": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        false,
+        true
+      ],
+      "expected": {
+        "plan": {
+          "block": 0,
+          "first_physical": 0,
+          "page_count": 3,
+          "copies": [
+            {
+              "logical": 0,
+              "source_physical": 0,
+              "destination_physical": 4
+            },
+            {
+              "logical": 2,
+              "source_physical": 2,
+              "destination_physical": 5
+            }
+          ]
+        },
+        "state": {
+          "logical_to_physical": [
+            0,
+            3,
+            2,
+            -1
+          ],
+          "physical_status": [
+            "live",
+            "stale",
+            "live",
+            "live",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free"
+          ]
+        }
+      }
+    },
+    {
+      "name": "zero-mask-empty-plan",
+      "logical_count": 2,
+      "physical_count": 8,
+      "pages_per_block": 2,
+      "program_logicals": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "block": 0,
+      "excluded_blocks": [],
+      "expected": {
+        "plan": {
+          "block": 0,
+          "first_physical": 0,
+          "page_count": 2,
+          "copies": []
+        },
+        "state": {
+          "logical_to_physical": [
+            2,
+            3
+          ],
+          "physical_status": [
+            "stale",
+            "stale",
+            "live",
+            "live",
+            "free",
+            "free",
+            "free",
+            "free"
+          ]
+        }
+      }
+    },
+    {
+      "name": "capacity-one-short",
+      "logical_count": 3,
+      "physical_count": 6,
+      "pages_per_block": 3,
+      "program_logicals": [
+        0,
+        1,
+        2,
+        1,
+        1
+      ],
+      "block": 0,
+      "excluded_blocks": [],
+      "expected": {
+        "error": "insufficient_capacity",
+        "state": {
+          "logical_to_physical": [
+            0,
+            4,
+            2
+          ],
+          "physical_status": [
+            "live",
+            "stale",
+            "live",
+            "stale",
+            "live",
+            "free"
+          ]
+        }
+      }
+    },
+    {
+      "name": "excluded-target-refusal",
+      "logical_count": 4,
+      "physical_count": 9,
+      "pages_per_block": 3,
+      "program_logicals": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        true,
+        false,
+        true
+      ],
+      "expected": {
+        "error": "excluded_block",
+        "state": {
+          "logical_to_physical": [
+            0,
+            3,
+            2,
+            -1
+          ],
+          "physical_status": [
+            "live",
+            "stale",
+            "live",
+            "live",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free"
+          ]
+        }
+      }
+    },
+    {
+      "name": "no-stale-page-refusal",
+      "logical_count": 1,
+      "physical_count": 4,
+      "pages_per_block": 2,
+      "program_logicals": [],
+      "block": 0,
+      "excluded_blocks": [],
+      "expected": {
+        "error": "no_stale_page",
+        "state": {
+          "logical_to_physical": [
+            -1
+          ],
+          "physical_status": [
+            "free",
+            "free",
+            "free",
+            "free"
+          ]
+        }
+      }
+    }
+  ]
+}

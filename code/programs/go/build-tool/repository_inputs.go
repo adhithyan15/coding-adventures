@@ -405,22 +405,28 @@ var (
 		"code/specs/fixtures/game-clock-v1/cases.json",
 		"code/specs/game-clock.warrant",
 	}
-	typescriptGameClockCorpusPaths   = []string{"code/specs/fixtures/game-clock-v1"}
-	gameInputFrameV1Paths            = []string{"code/specs/fixtures/game-input-frame-v1"}
-	nandFlashFixturePath             = "code/specs/fixtures/database-media-v1/nand-flash.json"
-	nandPageProgramCutsFixturePath   = "code/specs/fixtures/database-media-v1/nand-page-program-cuts.json"
-	nandBlockEraseCutsFixturePath    = "code/specs/fixtures/database-media-v1/nand-block-erase-cuts.json"
-	hddSimulatorFixturePath          = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
-	hddWriteCrashCutsFixturePath     = "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json"
-	ftlPageMapFixturePath            = "code/specs/fixtures/database-media-v1/ftl-page-map.json"
-	ftlPageReclamationFixturePath    = "code/specs/fixtures/database-media-v1/ftl-page-reclamation.json"
-	nandFlashFixtureInputs           = []string{nandFlashFixturePath}
-	nandPageProgramCutsFixtureInputs = []string{nandPageProgramCutsFixturePath}
-	nandBlockEraseCutsFixtureInputs  = []string{nandBlockEraseCutsFixturePath}
-	hddSimulatorFixtureInputs        = []string{hddSimulatorFixturePath}
-	hddWriteCrashCutsFixtureInputs   = []string{hddWriteCrashCutsFixturePath}
-	ftlPageMapFixtureInputs          = []string{ftlPageMapFixturePath, ftlPageReclamationFixturePath}
-	typescriptGameInputFrameInputs   = []string{
+	typescriptGameClockCorpusPaths    = []string{"code/specs/fixtures/game-clock-v1"}
+	gameInputFrameV1Paths             = []string{"code/specs/fixtures/game-input-frame-v1"}
+	nandFlashFixturePath              = "code/specs/fixtures/database-media-v1/nand-flash.json"
+	nandPageProgramCutsFixturePath    = "code/specs/fixtures/database-media-v1/nand-page-program-cuts.json"
+	nandBlockEraseCutsFixturePath     = "code/specs/fixtures/database-media-v1/nand-block-erase-cuts.json"
+	hddSimulatorFixturePath           = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
+	hddWriteCrashCutsFixturePath      = "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json"
+	ftlPageMapFixturePath             = "code/specs/fixtures/database-media-v1/ftl-page-map.json"
+	ftlPageReclamationFixturePath     = "code/specs/fixtures/database-media-v1/ftl-page-reclamation.json"
+	ftlEraseVictimFixturePath         = "code/specs/fixtures/database-media-v1/ftl-erase-victim.json"
+	ftlCopyAwareVictimFixturePath     = "code/specs/fixtures/database-media-v1/ftl-copy-aware-victim.json"
+	ftlEvacuationPlanFixturePath      = "code/specs/fixtures/database-media-v1/ftl-evacuation-plan.json"
+	ftlRetirementDrainPlanFixturePath = "code/specs/fixtures/database-media-v1/ftl-retirement-drain-plan.json"
+	nandFlashFixtureInputs            = []string{nandFlashFixturePath}
+	nandPageProgramCutsFixtureInputs  = []string{nandPageProgramCutsFixturePath}
+	nandBlockEraseCutsFixtureInputs   = []string{nandBlockEraseCutsFixturePath}
+	hddSimulatorFixtureInputs         = []string{hddSimulatorFixturePath}
+	hddWriteCrashCutsFixtureInputs    = []string{hddWriteCrashCutsFixturePath}
+	ftlPageMapFixtureInputs           = []string{ftlPageMapFixturePath, ftlPageReclamationFixturePath}
+	ftlEraseVictimFixtureInputs       = []string{ftlCopyAwareVictimFixturePath, ftlEraseVictimFixturePath}
+	ftlEvacuationPlanFixtureInputs    = []string{ftlEvacuationPlanFixturePath, ftlRetirementDrainPlanFixturePath}
+	typescriptGameInputFrameInputs    = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -1196,6 +1202,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the exact DB05a page-map and DB05c2a reclamation vectors",
 		matches:  isFTLPageMapFixture,
 		paths:    ftlPageMapFixtureInputs,
+	},
+	{
+		name:     "go/ftl-erase-victim",
+		language: "go",
+		inputs:   "the exact DB05c1 and DB05c3c victim-selection vectors",
+		matches:  isFTLEraseVictimFixture,
+		paths:    ftlEraseVictimFixtureInputs,
+	},
+	{
+		name:     "go/ftl-evacuation-plan",
+		language: "go",
+		inputs:   "the exact DB05c3a evacuation and DB05d2b1 retirement-drain vectors",
+		matches:  isFTLEvacuationPlanFixture,
+		paths:    ftlEvacuationPlanFixtureInputs,
 	},
 	{
 		name:     "python/trig",
@@ -2258,6 +2278,10 @@ func repositoryInputsForPackage(packageName string) []string {
 		return hddWriteCrashCutsFixtureInputs
 	case "go/ftl-page-map":
 		return ftlPageMapFixtureInputs
+	case "go/ftl-erase-victim":
+		return ftlEraseVictimFixtureInputs
+	case "go/ftl-evacuation-plan":
+		return ftlEvacuationPlanFixtureInputs
 	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
 	default:
@@ -2974,6 +2998,14 @@ func isHDDWriteCrashCutsFixture(changed string) bool {
 
 func isFTLPageMapFixture(changed string) bool {
 	return changed == ftlPageMapFixturePath || changed == ftlPageReclamationFixturePath
+}
+
+func isFTLEraseVictimFixture(changed string) bool {
+	return changed == ftlEraseVictimFixturePath || changed == ftlCopyAwareVictimFixturePath
+}
+
+func isFTLEvacuationPlanFixture(changed string) bool {
+	return changed == ftlEvacuationPlanFixturePath || changed == ftlRetirementDrainPlanFixturePath
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while

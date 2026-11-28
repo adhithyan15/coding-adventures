@@ -1,0 +1,149 @@
+{
+  "schema": "coding-adventures.database-media.ftl-retirement-drain-plan.v1",
+  "cases": [
+    {
+      "name": "all-live-draining-target-and-zero-erase-budget",
+      "logical_count": 4,
+      "physical_count": 15,
+      "pages_per_block": 3,
+      "program_logicals": [
+        0,
+        1,
+        2
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "expected": {
+        "state": {
+          "logical_to_physical": [
+            0,
+            1,
+            2,
+            -1
+          ],
+          "physical_status": [
+            "live",
+            "live",
+            "live",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free"
+          ]
+        },
+        "plan": {
+          "block": 0,
+          "first_physical": 0,
+          "page_count": 3,
+          "copies": [
+            {
+              "logical": 0,
+              "source_physical": 0,
+              "destination_physical": 12
+            },
+            {
+              "logical": 1,
+              "source_physical": 1,
+              "destination_physical": 13
+            },
+            {
+              "logical": 2,
+              "source_physical": 2,
+              "destination_physical": 14
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "empty-fenced-target-locates-empty-plan",
+      "logical_count": 2,
+      "physical_count": 8,
+      "pages_per_block": 2,
+      "program_logicals": [],
+      "block": 0,
+      "excluded_blocks": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "expected": {
+        "state": {
+          "logical_to_physical": [
+            -1,
+            -1
+          ],
+          "physical_status": [
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free"
+          ]
+        },
+        "plan": {
+          "block": 0,
+          "first_physical": 0,
+          "page_count": 2,
+          "copies": []
+        }
+      }
+    },
+    {
+      "name": "all-live-target-with-no-eligible-spare-is-atomic-refusal",
+      "logical_count": 3,
+      "physical_count": 9,
+      "pages_per_block": 3,
+      "program_logicals": [
+        0,
+        1,
+        2
+      ],
+      "block": 0,
+      "excluded_blocks": [
+        false,
+        true,
+        true
+      ],
+      "expected": {
+        "state": {
+          "logical_to_physical": [
+            0,
+            1,
+            2
+          ],
+          "physical_status": [
+            "live",
+            "live",
+            "live",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free",
+            "free"
+          ]
+        },
+        "error": "insufficient_capacity"
+      }
+    }
+  ]
+}

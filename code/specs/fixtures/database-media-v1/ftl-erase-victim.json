@@ -1,0 +1,35 @@
+{
+  "schema": "coding-adventures.database-media.ftl-erase-victim.v1",
+  "cases": [
+    {
+      "name": "highest-stale-score",
+      "status": ["stale", "free", "stale", "stale", "live", "stale", "free", "stale"],
+      "pages_per_block": 2,
+      "expected": {"found": true, "block": 1, "first_physical": 2, "page_count": 2, "stale_pages": 2}
+    },
+    {
+      "name": "lowest-index-tie",
+      "status": ["stale", "free", "free", "stale", "stale", "free"],
+      "pages_per_block": 2,
+      "expected": {"found": true, "block": 0, "first_physical": 0, "page_count": 2, "stale_pages": 1}
+    },
+    {
+      "name": "reserved-block-is-ineligible",
+      "status": ["stale", "reserved", "live", "stale"],
+      "pages_per_block": 2,
+      "expected": {"found": false, "block": 0, "first_physical": 0, "page_count": 0, "stale_pages": 0}
+    },
+    {
+      "name": "free-only-has-no-victim",
+      "status": ["free", "free", "free", "free"],
+      "pages_per_block": 2,
+      "expected": {"found": false, "block": 0, "first_physical": 0, "page_count": 0, "stale_pages": 0}
+    },
+    {
+      "name": "last-whole-block-extent",
+      "status": ["live", "free", "free", "free", "stale", "stale", "free", "stale"],
+      "pages_per_block": 4,
+      "expected": {"found": true, "block": 1, "first_physical": 4, "page_count": 4, "stale_pages": 3}
+    }
+  ]
+}

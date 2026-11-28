@@ -254,6 +254,63 @@ enum RepositorySourceInputBoundaryProjection {
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
+              "id": "repository-database-media-ftl-copy-aware-victim-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-erase-victim"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-copy-aware-victim.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-erase-victim tests read their exact shared DB05c3c copy-aware victim-selection vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-database-media-ftl-erase-victim-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-erase-victim"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-erase-victim.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-erase-victim tests read their exact shared DB05c1 victim-selection vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-database-media-ftl-evacuation-plan-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-evacuation-plan"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-evacuation-plan.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-evacuation-plan tests read their exact shared DB05c3a evacuation vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
               "id": "repository-database-media-ftl-page-map-fixture-inputs",
               "input_origin": "repository",
               "applies_to": {
@@ -289,6 +346,25 @@ enum RepositorySourceInputBoundaryProjection {
                 }
               ],
               "reason": "The Go ftl-page-map tests read their exact shared DB05c2a vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-database-media-ftl-retirement-drain-plan-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/ftl-evacuation-plan"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/ftl-retirement-drain-plan.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go ftl-evacuation-plan tests read their exact shared DB05d2b1 retirement-drain vector from the repository fixtures.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
