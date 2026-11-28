@@ -11,6 +11,11 @@ ordinal order. A set program marker must be supported by the retained stale
 mask. Every error returns a nil role slice. A successful result is a detached
 slice and the input arrays must remain stable until the call returns.
 
+`ValidateGeometry` exposes the same bounded dimension and portable erase-count
+checks for recovery layers that need to admit an entire image before selecting
+any individual incomplete block. `Qualify` calls it first, so the geometry
+and erase-ceiling refusal order has one implementation.
+
 ```go
 geometry := ftleraseroleevidence.Geometry{
     BlockCount: 2, PagesPerBlock: 3, MaxCompletedErases: 4,
@@ -35,10 +40,13 @@ the raw interrupted-media restore path for byte and feasible-prefix checks.
 
 The tests independently enumerate all 1,364 marker/stale combinations across
 one to five pages and compare 5,000 fixed-seed evidence tuples against a
-separate ordered model. They also recreate two identical marker observations
-whose original stale roles differ, verify maximum supported geometry and
-detached results, and exercise malformed precedence. The runtime has no
-dependencies beyond the local page-map value definitions.
+separate ordered model. Geometry admission also checks more than 90,000
+dimension/ceiling combinations, signed extrema, maximum-product factorizations,
+zero budget and the portable ceiling boundary. Tests also recreate two
+identical marker observations whose original stale roles differ, verify
+maximum supported geometry and detached results, and exercise malformed
+precedence. The runtime has no dependencies beyond the local page-map value
+definitions.
 
 Run from this module directory with Go 1.26.1 and `GOTOOLCHAIN=local`:
 

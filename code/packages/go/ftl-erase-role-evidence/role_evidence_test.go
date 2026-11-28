@@ -186,6 +186,81 @@ func FuzzQualifyEvidence(f *testing.F) {
 	})
 }
 
+func TestValidateGeometryExhaustiveDimensionsAndCeilings(t *testing.T) {
+	const portableCeiling = uint64(9007199254740991)
+	dimensions := make([]int64, 0, 140)
+	for value := int64(-2); value <= 130; value++ {
+		dimensions = append(dimensions, value)
+	}
+	dimensions = append(dimensions, -1<<63, 1<<63-1)
+	ceilings := []uint64{0, 1, portableCeiling, portableCeiling + 1, ^uint64(0)}
+	checked, accepted, refusedGeometry, refusedCount := 0, 0, 0, 0
+	for _, blocks := range dimensions {
+		for _, pages := range dimensions {
+			for _, ceiling := range ceilings {
+				geometry := Geometry{BlockCount: blocks, PagesPerBlock: pages, MaxCompletedErases: ceiling}
+				want := modelGeometryError(geometry)
+				got := ValidateGeometry(geometry)
+				if got != want {
+					t.Fatalf("ValidateGeometry(%+v)=%v; want %v", geometry, got, want)
+				}
+				checked++
+				switch got {
+				case nil:
+					accepted++
+				case ErrInvalidGeometry:
+					refusedGeometry++
+				case ErrInvalidEraseCount:
+					refusedCount++
+				}
+			}
+		}
+	}
+	if checked < 90000 || accepted == 0 || refusedGeometry == 0 || refusedCount == 0 {
+		t.Fatalf("checked=%d accepted=%d invalidGeometry=%d invalidCount=%d", checked, accepted, refusedGeometry, refusedCount)
+	}
+	t.Logf("validated %d dimension/ceiling combinations (%d accepted, %d geometry refusals, %d ceiling refusals)", checked, accepted, refusedGeometry, refusedCount)
+}
+
+func TestValidateGeometryMaximumProductsAndPrecedence(t *testing.T) {
+	const portableCeiling = uint64(9007199254740991)
+	for _, pair := range [][2]int64{{1, 2}, {1, 128}, {2, 64}, {4, 32}, {8, 16}, {16, 8}, {32, 4}, {64, 2}, {128, 1}} {
+		geometry := Geometry{BlockCount: pair[0], PagesPerBlock: pair[1], MaxCompletedErases: portableCeiling}
+		if err := ValidateGeometry(geometry); err != nil {
+			t.Fatalf("maximum-product geometry %+v refused: %v", geometry, err)
+		}
+	}
+	if err := ValidateGeometry(Geometry{BlockCount: 1, PagesPerBlock: 1}); err != ErrInvalidGeometry {
+		t.Fatalf("single-cell geometry error=%v; want %v", err, ErrInvalidGeometry)
+	}
+	if err := ValidateGeometry(Geometry{BlockCount: 129, PagesPerBlock: 1, MaxCompletedErases: portableCeiling + 1}); err != ErrInvalidGeometry {
+		t.Fatalf("bad dimensions must precede excessive ceiling, got %v", err)
+	}
+	if err := ValidateGeometry(Geometry{BlockCount: 2, PagesPerBlock: 1, MaxCompletedErases: portableCeiling + 1}); err != ErrInvalidEraseCount {
+		t.Fatalf("valid dimensions with excessive ceiling error=%v", err)
+	}
+	if err := ValidateGeometry(Geometry{BlockCount: 2, PagesPerBlock: 1, MaxCompletedErases: 0}); err != nil {
+		t.Fatalf("zero erase budget is valid geometry: %v", err)
+	}
+}
+
+func modelGeometryError(geometry Geometry) error {
+	blocks, pages := geometry.BlockCount, geometry.PagesPerBlock
+	if blocks < 1 || pages < 1 || blocks > 128 || pages > 128 {
+		return ErrInvalidGeometry
+	}
+	// Bounds above make this multiplication safe; the oracle uses the literal
+	// product domain rather than the runtime's division-based overflow guard.
+	product := blocks * pages
+	if product < 2 || product > 128 {
+		return ErrInvalidGeometry
+	}
+	if geometry.MaxCompletedErases > 9007199254740991 {
+		return ErrInvalidEraseCount
+	}
+	return nil
+}
+
 func seedFor(raw []byte) int64 {
 	var seed uint64 = 1469598103934665603
 	for _, value := range raw {

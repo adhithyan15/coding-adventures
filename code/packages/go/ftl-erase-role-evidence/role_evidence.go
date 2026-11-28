@@ -56,11 +56,8 @@ type BlockObservation struct {
 // Qualify reconstructs detached page roles for the observed block. Sequence
 // is the nonzero erase-intent sequence selected by the recovery stream.
 func Qualify(geometry Geometry, sequence uint64, intent RetainedIntent, observed BlockObservation) ([]ftlpagemap.PhysicalStatus, error) {
-	if !validGeometry(geometry) {
-		return nil, ErrInvalidGeometry
-	}
-	if geometry.MaxCompletedErases > maxSafeEraseCount {
-		return nil, ErrInvalidEraseCount
+	if err := ValidateGeometry(geometry); err != nil {
+		return nil, err
 	}
 	if observed.Block < 0 || observed.Block >= geometry.BlockCount {
 		return nil, ErrInvalidBlock
@@ -109,6 +106,19 @@ func Qualify(geometry Geometry, sequence uint64, intent RetainedIntent, observed
 		}
 	}
 	return roles, nil
+}
+
+// ValidateGeometry checks the bounded physical dimensions before the portable
+// erase-count ceiling. It is shared by callers that must validate an image even
+// when no individual block will be qualified.
+func ValidateGeometry(geometry Geometry) error {
+	if !validGeometry(geometry) {
+		return ErrInvalidGeometry
+	}
+	if geometry.MaxCompletedErases > maxSafeEraseCount {
+		return ErrInvalidEraseCount
+	}
+	return nil
 }
 
 func validGeometry(geometry Geometry) bool {
