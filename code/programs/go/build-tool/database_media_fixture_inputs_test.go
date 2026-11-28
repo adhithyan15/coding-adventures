@@ -22,6 +22,7 @@ func databaseMediaPackages(root string) []discovery.Package {
 		{Name: "go/nand-flash", Language: "go"},
 		{Name: "go/nand-page-program-cuts", Language: "go"},
 		{Name: "go/nand-block-erase-cuts", Language: "go"},
+		{Name: "go/ftl-page-map", Language: "go"},
 		{Name: "python/hdd-simulator", Language: "python"},
 		{Name: "typescript/hdd-simulator", Language: "typescript"},
 		{Name: "c/hdd-simulator", Language: "c"},
@@ -86,6 +87,20 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 			readers:   map[string]bool{"go/hdd-write-crash-cuts": true},
 			goReader:  "go/hdd-write-crash-cuts",
 			inputs:    hddWriteCrashCutsFixtureInputs,
+		},
+		{
+			fixture:   ftlPageMapFixturePath,
+			predicate: isFTLPageMapFixture,
+			readers:   map[string]bool{"go/ftl-page-map": true},
+			goReader:  "go/ftl-page-map",
+			inputs:    ftlPageMapFixtureInputs,
+		},
+		{
+			fixture:   ftlPageReclamationFixturePath,
+			predicate: isFTLPageMapFixture,
+			readers:   map[string]bool{"go/ftl-page-map": true},
+			goReader:  "go/ftl-page-map",
+			inputs:    ftlPageMapFixtureInputs,
 		},
 	}
 
@@ -157,6 +172,11 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"code/specs/fixtures/database-media-v2/hdd-simulator.json",
 		"code/specs/fixtures/database-media-v1/hdd-simulator.json/extra",
 		hddWriteCrashCutsFixturePath + ".bak",
+		ftlPageMapFixturePath + ".bak",
+		ftlPageReclamationFixturePath + ".bak",
+		"code/specs/fixtures/database-media-v1/ftl-page-map.json/extra",
+		"code/specs/fixtures/database-media-v1/ftl-page-reclamation.json.bak",
+		"code/specs/fixtures/database-media-v2/ftl-page-map.json",
 		"code/specs/fixtures/database-media-v1/hdd-write-crash-cuts/extra.json",
 		"code/specs/fixtures/database-media-v2/nand-flash.json",
 		"code/specs/fixtures/database-media-v1",
@@ -165,7 +185,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		`code\specs\fixtures\database-media-v1\hdd-simulator.json`,
 	}
 	for _, changed := range negativeControls {
-		if isNANDFlashFixture(changed) || isNANDPageProgramCutsFixture(changed) || isNANDBlockEraseCutsFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) {
+		if isNANDFlashFixture(changed) || isNANDPageProgramCutsFixture(changed) || isNANDBlockEraseCutsFixture(changed) || isHDDSimulatorFixture(changed) || isHDDWriteCrashCutsFixture(changed) || isFTLPageMapFixture(changed) {
 			t.Errorf("media predicate accepted lookalike %q", changed)
 		}
 		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
@@ -191,6 +211,7 @@ func TestDatabaseMediaFixtureSelectionAndKilnInputsAreExact(t *testing.T) {
 		"c/hdd-simulator":           {hddSimulatorFixturePath},
 		"go/hdd-simulator":          {hddSimulatorFixturePath},
 		"go/hdd-write-crash-cuts":   {hddWriteCrashCutsFixturePath},
+		"go/ftl-page-map":           {ftlPageMapFixturePath, ftlPageReclamationFixturePath},
 	} {
 		var got []string
 		for _, pkg := range graph.Packages {
@@ -297,6 +318,27 @@ func TestDeletedNANDBlockEraseCutsFixtureStillSelectsGoReader(t *testing.T) {
 	}
 }
 
+func TestDeletedFTLPageMapFixturesStillSelectGoReader(t *testing.T) {
+	root := t.TempDir()
+	packages := databaseMediaPackages(root)
+	for _, fixture := range []string{ftlPageMapFixturePath, ftlPageReclamationFixturePath} {
+		missing := filepath.Join(root, filepath.FromSlash(fixture))
+		if _, err := os.Stat(missing); !os.IsNotExist(err) {
+			t.Fatalf("fixture should be absent for deletion case: %v", err)
+		}
+		for _, language := range []string{"go", "python", "all"} {
+			got, err := repositoryInputConsumersForChange([]string{fixture}, packages, language)
+			want := map[string]bool{}
+			if language == "go" || language == "all" {
+				want = map[string]bool{"go/ftl-page-map": true}
+			}
+			if err != nil || !reflect.DeepEqual(got, want) {
+				t.Errorf("deleted FTL fixture %s selection for %s = %v, err %v; want %v", fixture, language, got, err, want)
+			}
+		}
+	}
+}
+
 func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T) {
 	fixtures := []struct {
 		path    string
@@ -321,6 +363,14 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 		{
 			path:    hddWriteCrashCutsFixturePath,
 			readers: map[string]bool{"go/hdd-write-crash-cuts": true},
+		},
+		{
+			path:    ftlPageMapFixturePath,
+			readers: map[string]bool{"go/ftl-page-map": true},
+		},
+		{
+			path:    ftlPageReclamationFixturePath,
+			readers: map[string]bool{"go/ftl-page-map": true},
 		},
 	}
 	for _, fixture := range fixtures {
@@ -351,7 +401,7 @@ func TestDatabaseMediaFixtureContentChangesOnlyItsReadersCacheHash(t *testing.T)
 					t.Fatal(err)
 				}
 			}
-			for _, path := range []string{nandFlashFixturePath, nandPageProgramCutsFixturePath, nandBlockEraseCutsFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath} {
+			for _, path := range []string{nandFlashFixturePath, nandPageProgramCutsFixturePath, nandBlockEraseCutsFixturePath, hddSimulatorFixturePath, hddWriteCrashCutsFixturePath, ftlPageMapFixturePath, ftlPageReclamationFixturePath} {
 				fullPath := filepath.Join(root, filepath.FromSlash(path))
 				if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
 					t.Fatal(err)
@@ -428,6 +478,16 @@ func TestDatabaseMediaFixtureBoundaryMatchesExactPackageInputs(t *testing.T) {
 			id:      "repository-database-media-hdd-crash-cuts-fixture-inputs",
 			fixture: hddWriteCrashCutsFixturePath,
 			roots:   []string{"code/packages/go/hdd-write-crash-cuts"},
+		},
+		{
+			id:      "repository-database-media-ftl-page-map-fixture-inputs",
+			fixture: ftlPageMapFixturePath,
+			roots:   []string{"code/packages/go/ftl-page-map"},
+		},
+		{
+			id:      "repository-database-media-ftl-page-reclamation-fixture-inputs",
+			fixture: ftlPageReclamationFixturePath,
+			roots:   []string{"code/packages/go/ftl-page-map"},
 		},
 	} {
 		found := false
