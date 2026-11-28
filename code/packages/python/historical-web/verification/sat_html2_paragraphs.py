@@ -124,35 +124,51 @@ def _solve(formula: CNF) -> str:
 def run() -> None:
     legal = ("P", "H1", "/H1", "EOF")
     repeated_paragraphs = ("P", "P", "/P", "EOF")
-    assert _solve(_model(mutant=None, fixed_trace=legal, seek_nested=False)) == "SAT"
-    assert (
-        _solve(
+    queries = (
+        (
+            "legal P/H1 trace",
+            _model(mutant=None, fixed_trace=legal, seek_nested=False),
+            "SAT",
+        ),
+        (
+            "distinct repeated-P trace",
             _model(
                 mutant=None,
                 fixed_trace=repeated_paragraphs,
                 seek_nested=False,
-            )
-        )
-        == "SAT"
-    )
-    assert _solve(_model(mutant=None, fixed_trace=None, seek_nested=True)) == "UNSAT"
-    assert (
-        _solve(
+            ),
+            "SAT",
+        ),
+        (
+            "baseline nested-scope invariant",
+            _model(mutant=None, fixed_trace=None, seek_nested=True),
+            "UNSAT",
+        ),
+        (
+            "P-to-H1 close-removal mutant",
             _model(
                 mutant="P-to-H1 close removed",
                 fixed_trace=legal,
                 seek_nested=True,
-            )
-        )
-        == "SAT"
+            ),
+            "SAT",
+        ),
+        (
+            "P-to-P close-removal mutant",
+            _model(
+                mutant="P-to-P close removed",
+                fixed_trace=repeated_paragraphs,
+                seek_nested=True,
+            ),
+            "SAT",
+        ),
     )
-    assert _solve(
-        _model(
-            mutant="P-to-P close removed",
-            fixed_trace=repeated_paragraphs,
-            seek_nested=True,
-        )
-    ) == "SAT"
+    for label, formula, expected in queries:
+        actual = _solve(formula)
+        if actual != expected:
+            raise RuntimeError(
+                f"{label}: solver returned {actual}, expected {expected}"
+            )
     print(
         "Go CDCL bounded HWEB06 model: token alphabet {P, /P, H1, /H1, EOF}; "
         "exactly 4 tokens; EOF final"
