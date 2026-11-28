@@ -6,13 +6,13 @@
 //! with an iterative graph walk so the verifier itself tolerates deep trees.
 
 use coding_adventures_historical_web::{
-    decode_http09_response, encode_http09_request, parse_html_tags_1992, parse_http09_request,
     HtmlDocument, HtmlNodeKind, Http09Address, Http09RequestError, Http09ResponseError,
+    decode_http09_response, encode_http09_request, parse_html_tags_1992, parse_http09_request,
 };
 use coding_adventures_test_bootstrap::fuzz::{
-    fuzz_target, CoverageBitmap, FuzzOptions, FuzzOutcome,
+    CoverageBitmap, FuzzOptions, FuzzOutcome, fuzz_target,
 };
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::VecDeque;
 
 const FIXTURE: &str = "../../../specs/fixtures/historical-web-v1/vectors.json";
