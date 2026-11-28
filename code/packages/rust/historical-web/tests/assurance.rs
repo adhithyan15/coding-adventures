@@ -23,9 +23,10 @@ fn fixture() -> Value {
 }
 
 fn hex_bytes(raw: &str) -> Vec<u8> {
-    assert_eq!(raw.len() % 2, 0, "odd-length fixture hex: {raw}");
-    raw.as_bytes()
-        .chunks_exact(2)
+    let (pairs, remainder) = raw.as_bytes().as_chunks::<2>();
+    assert!(remainder.is_empty(), "odd-length fixture hex: {raw}");
+    pairs
+        .iter()
         .map(|pair| {
             let digit = |b: u8| match b {
                 b'0'..=b'9' => b - b'0',
