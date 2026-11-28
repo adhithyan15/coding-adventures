@@ -63,3 +63,17 @@ limits, exact length and precedence across mixed faults. Flip each
 bit of a small valid framed record and check the typed lower
 refusal. Run both build lists, coverage, race, vet, guided inputs
 and clean controls for admitting a reserved byte or epoch zero.
+
+## Local verification
+
+The implementation is in `28ba54fe3ad`. An independent bitwise
+CRC-32C model matched 405 phase, epoch and prior-rank cases.
+It matched 84 admitted frames byte for byte and preserved lower
+typed refusals for all 320 single-bit changes to one valid
+checkpoint frame. Mixed header faults and payload lengths matched,
+and race and vet passed.
+
+Both command lists passed on Linux at 100% statement coverage
+with race and vet. Module tidy, 100,000 guided decoder inputs and
+both clean-controlled mutation tests passed. Build discovery
+added only the checkpoint codec and its two expected edges.

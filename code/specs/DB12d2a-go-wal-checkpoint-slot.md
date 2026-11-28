@@ -52,3 +52,16 @@ original or new admitted record throughout actual HDD cuts on the
 inactive slot. Run both build lists, coverage, race, vet, guided
 inputs and clean controls for admitting a staged body or recomputing
 its checksum with the staged guard.
+
+## Local verification
+
+The implementation is in `1cc818d56eb`. The independent model matched
+288 physical HDD cuts across the first guard write, five-sector body
+write and final guard publication. It checked the exact entire disk,
+the untouched alternate frame and the selected slot observation.
+
+Both command lists passed with 100% statement coverage, race, vet
+and tidy. The package passed 100,000 guided inputs. Clean controls
+caught premature admission of a staged frame and a checksum computed
+over the staged guard. The build graph gained one package with its
+seven expected edges.

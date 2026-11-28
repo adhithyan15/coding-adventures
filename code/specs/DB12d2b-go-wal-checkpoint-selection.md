@@ -45,3 +45,16 @@ Check exact slot identity as well as phase and record. Run both
 build lists, coverage, race, vet, guided inputs and clean mutation
 controls for choosing a lower epoch and accepting conflicting
 prior ranks in the same epoch.
+
+## Local verification
+
+The implementation is in `37009667851`. An independent caller
+constructed actual checkpoint bytes with a bitwise checksum and
+matched 7,921 crossed slot observations. It checked exact winning
+physical ordinal, same-epoch conflicts, error identity and
+unchanged inputs. Race and vet passed.
+
+Both command lists passed at 100% statement coverage with race,
+vet and tidy. The package passed 100,000 guided inputs and two
+clean mutation controls. The build graph gained only this selector
+and its four expected edges.
