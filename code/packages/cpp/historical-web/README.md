@@ -23,6 +23,9 @@ are avoided so deep documents can be built and destroyed iteratively. The
 result owns its text and remains independent of the source buffer. A
 `ProfileError` reports a typed profile error and source-relative byte offset.
 Allocation failures remain standard C++ allocation exceptions.
+Copy assignment preserves the old document if copying fails; self-assignment
+preserves state. Move operations transfer both arenas and leave the source as
+an empty document.
 
 ## What the archived profile includes
 

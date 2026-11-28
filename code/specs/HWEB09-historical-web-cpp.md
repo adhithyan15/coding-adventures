@@ -32,7 +32,10 @@ text nodes carry text. Roots have `parent_index == no_index`. A valueless
 recognized anchor attribute has `std::nullopt`; an explicitly empty value is
 an engaged optional containing an empty string. Strings own their contents,
 including any embedded NUL bytes, and remain valid independently of the input
-buffer.
+buffer. Copy assignment has the strong exception guarantee and self-assignment
+preserves the document. Moving transfers both arenas and the root count and
+leaves the source document empty (`node_count() == 0`, `attribute_count() == 0`,
+`root_count() == 0`, `first_root() == no_index`).
 
 Invalid protocol inputs and malformed UTF-8 raise `ProfileError`, derived
 from `std::runtime_error`, with a typed `ErrorKind` and source-relative
@@ -41,8 +44,13 @@ from `std::runtime_error`, with a typed `ErrorKind` and source-relative
 nonprintable HTTP address byte, the first invalid request byte or first
 missing framing byte (input length), the first non-ASCII response byte, or
 the first invalid UTF-8 byte. A truncated UTF-8 sequence reports input length.
-Empty address uses `no_index`. Invalid HTML markup follows HWEB00's recovery
-rules instead of raising a protocol exception. Standard allocation failures
+Request diagnostics check the `GET ` prefix first: a mismatch reports its byte
+position and a short prefix reports the input length. After a valid prefix,
+missing terminal LF is reported at the input length; with valid framing, an
+empty address reports offset 4 and a nonprintable address byte reports its
+first position. Empty address encoding uses `no_index`. Invalid HTML markup
+follows HWEB00's recovery rules instead of raising a protocol exception.
+Standard allocation failures
 (`std::bad_alloc`) and container size exhaustion (`std::length_error`) remain
 standard exceptions, distinct from invalid input; the parser publishes no
 partial document when construction throws.
