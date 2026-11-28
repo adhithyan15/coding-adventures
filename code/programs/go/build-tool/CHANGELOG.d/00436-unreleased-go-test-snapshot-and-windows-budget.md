@@ -10,6 +10,7 @@
   The Windows CI run used 363 seconds in the repository-wide DSP test before
   entering the six-input CLI emit/replay regression and timed out at Go's
   default 10-minute package limit. The active test had completed three input
-  iterations; the additional budget allows the existing full suite to finish
-  without weakening its assertions. This does not establish that a future
-  timeout is a deadlock or that increasing the budget cures one.
+  iterations; the additional budget is intended to let the existing full suite
+  finish without weakening its assertions. Exact-head Windows CI must confirm
+  that it is sufficient. This does not establish that a future timeout is a
+  deadlock or that increasing the budget cures one.
