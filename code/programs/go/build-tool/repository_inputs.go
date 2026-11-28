@@ -671,6 +671,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isHistoricalWebVectors,
 		paths:    []string{historicalWebVectorsPath},
 	},
+	{
+		name:     "rust/historical-web",
+		language: "rust",
+		inputs:   "the shared HWEB-00 historical web vectors",
+		matches:  isHistoricalWebVectors,
+		paths:    []string{historicalWebVectorsPath},
+	},
 	historicalUnixAdapterRow("c", historicalUnixCAdapterPath),
 	historicalUnixAdapterRow("cpp", historicalUnixCppAdapterPath),
 	historicalUnixAdapterRow("java", historicalUnixJavaAdapterPath),
@@ -2067,7 +2074,11 @@ func repositoryInputsForPackage(packageName string) []string {
 		return []string{historicalWebVectorsPath}
 	case "go/historical-web":
 		return []string{historicalWebVectorsPath}
-	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics", "typescript/rank-statistics":
+	case "rust/historical-web":
+		return []string{historicalWebVectorsPath}
+	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+		return []string{microbenchmarkPairsFixturePath}
+	case "typescript/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths

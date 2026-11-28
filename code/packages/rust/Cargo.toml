@@ -22,6 +22,7 @@ members = [
     "browser-navigation",
     "browser-form-controls",
     "browser-form-submission",
+    "historical-web",
     "adj-lang",
     "adj-lang-cli",
     "adj-constraint-solver",
