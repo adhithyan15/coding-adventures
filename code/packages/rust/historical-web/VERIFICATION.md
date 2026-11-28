@@ -22,9 +22,14 @@ checks exact body text and tokenization of the following elements.
 
 The suite also invokes the repository's VER06 Rust fuzz engine with fixed
 seeds and seed `0x485745423033`, 2,048 mutations per target, and a 256-byte
-input cap. The wire target uses an independent acceptance oracle; the response
-target checks ASCII identity; the markup target checks the independent arena
-invariant. Reports are asserted free of crashes, timeouts, and OOM outcomes.
+input cap. Every mutation in the mixed wire/markup campaign is checked against
+the independent HTTP acceptance oracle, even when it has an invalid method
+prefix. Every valid UTF-8 mutation is also parsed as markup; parser errors fail
+the campaign because this profile recovers malformed markup. Invalid UTF-8
+bytes remain in the HTTP domain and are not replacement-decoded into a
+different markup input. A separate response target checks ASCII identity, and
+the markup path checks the independent arena invariant. Reports are asserted
+free of crashes, timeouts, and OOM outcomes.
 These deterministic in-test campaigns are reproducible receipts, not claims of
 native coverage or unbounded parser safety.
 
