@@ -31,6 +31,12 @@ constructor, and snapshot shapes intact.
   retain their current behavior. The decoder trait gains a default forwarded
   execution method that delegates to the old method; implementations may opt in
   to consuming the named values.
+- The opt-in Core resolver supports only a scalar, ordered five-category
+  pipeline: Fetch, Decode, Execute, Memory, Writeback, with exactly one stage
+  in each category. It rejects split or reordered category layouts at
+  construction because the current resolver and hazard boundary do not define
+  producer age/eligibility across multiple same-category stages. This
+  restriction does not apply to `Core::new` or to `cpu-pipeline` itself.
 - In this opt-in Core path, a data-hazard hold freezes through the Decode slot
   and inserts the bubble at Execute; Decode is not marked as using the EX ALU.
   These corrections are scoped to the new constructor so the existing Core
