@@ -150,7 +150,9 @@ not replace them with a successful retry without recording both.
 
 | Milestone | Bounded work | Prerequisites | Definition of done / evidence boundary | Status |
 |---|---|---|---|---|
-| TLS-F01 | Specify and evidence the existing Rust `tls13-hkdf-label` public encoding | Repository already contains `code/packages/rust/tls13-hkdf-label`; inspect the current API/implementation and RFC 9846 before scoping the gap. This first work documents/tests the existing encoder; it adds no decoder, public API, or replacement encoder. | Specify and fixture only the public `HkdfLabel` wire framing/encoding operation. A caller label is 1..=249 opaque bytes (non-ASCII is allowed); context is 0..=255 bytes and may be empty. The public framing value stores any u16 output length, including 0 and 65535; distinguish that two-byte wire field from the separate HKDF-Expand limit (`255 * HashLen`) enforced by expansion. Include exact bytes, boundary/error and no-mutation controls, and independent encoding derivation. Expansion/output-secret cases belong to F08/F12. Do not add decode/round-trip requirements. | Proposed; first gap closure; implementation exists, evidence/spec status to reconcile |
+| TLS-F01 | Specify and evidence the existing Rust `tls13-hkdf-label` public encoding | Repository contains `code/packages/rust/tls13-hkdf-label`; reconcile the current API/implementation and RFC 9846 before scoping. This parent indexes two row-sized children; neither adds a decoder or replacement encoder. | Specify and fixture only the public `HkdfLabel` encoding. Labels are 1..=249 opaque bytes; context is 0..=255 bytes. Any u16 output length is valid for framing; distinguish its wire field from HKDF-Expand limit (`255 * HashLen`). Exact bytes, boundaries, error precedence, no-mutation controls, and independent derivation are required. Expansion/output-secret cases belong to F08/F12; no decode/round-trip requirement. | Proposed; children F01a/F01b below |
+| TLS-F01a | Normative spec for Rust `HkdfLabel` public encoding | TLS-F01 parent; existing Rust API and RFC 9846 §7.1 reconciliation. | Add [the encoding contract](../tls-hkdf-label-encoding.md) for exact wire bytes, limits, validation/error precedence, capacity and mutation behavior, public surface, mathematical model, and evidence boundaries. Docs only: no corpus, tests, proof, or tool-support claim. | Contract drafted; exact merge receipt pending |
+| TLS-F01b | Canonical corpus and independent evidence for Rust encoder | TLS-F01a contract. | Add provenance-bearing finite corpus, independently derived expected bytes, boundary/negative/mutation controls, and run it against the existing public Rust API. Record exact commands and receipts. No decoder, API change, or proof claim. | Proposed; depends on F01a |
 | TLS-F02 | Second-lane API replay and portable fixture provenance | F01 corpus; Rust API and one additional public language API are needed. | Replay the corpus through the existing Rust public encoder and an actual second-lane public implementation (start with a Python public encoder port); compare both against independently derived expected bytes. Python stdlib may separately replay/reference-check expected fixture records, but label that as oracle/reference replay, not TLS lane implementation evidence. Verify corpus digest/version and stable bounded diagnostics. This proves only the two APIs and cases exercised, not general cross-language TLS parity. | Proposed; depends on F01 |
 | TLS-F03 | Fixed-width integer and carry/borrow arithmetic | None; foundational math contract before field/curve code. | Specify supported widths, overflow/underflow, constant-time constraints and checked/unchecked boundaries; exhaustive small-width plus independent big-integer oracle tests. No general arbitrary-precision API or claim about compiler-generated machine code. | Proposed |
 | TLS-F04 | Prime-field arithmetic for selected TLS groups | F03; selected group and limb layout explicitly scoped. | Independently checked add/subtract/multiply/reduce/invert/square operations with canonical encoding, zero/noncanonical controls, arithmetic invariants, and target-specific timing review. Does not imply curve correctness. | Proposed; depends on F03 |
@@ -172,16 +174,25 @@ not replace them with a successful retry without recording both.
 ## Dependency and prioritization notes
 
 F01 is intentionally first: TLS uses a compact, independently testable encoding
-for HKDF labels, and the Rust encoder already exists. Its first PR should
-specify and fixture the existing public encoding operation with provenance and
-independent byte derivations; add no encoder replacement, decoder, or API. F02
-then checks those vectors against a real second-lane public API as well as a
-separate independent oracle replay. F03-F11 establish mathematical and
-cryptographic leaves; F12-F16 compose secrets, handshake messages, identity,
-traffic keys, and records; F17a is the first no-PSK client composition, followed
-by server/full-profile children; F18 is the wider conformance phase. Independent
+for HKDF labels, and the Rust encoder already exists. Its spec-first child F01a
+specifies the public encoding contract; F01b adds a provenance-bearing corpus
+and independent byte derivations. F01b must not add an encoder replacement,
+decoder, or API. The pre-existing Rust unit tests exercise encoding, including
+boundaries and output-buffer behavior; their presence is discovery context, not
+a corpus receipt. F02 then checks the canonical vectors against a real
+second-lane public API as well as a separate independent oracle replay. F03-F11
+establish mathematical and cryptographic leaves; F12-F16 compose secrets,
+handshake messages, identity, traffic keys, and records. F17a is the first
+no-PSK client composition, followed by server/full-profile children; F18 is the wider conformance phase. Independent
 leaves can proceed in parallel only after their chosen implementation and
 oracle dependencies are explicitly reconciled.
+
+Backlog receipt: PR #20269 merged as squash commit
+`5bfd7a52089491bc2ca1b55fd3267389935ffd34` from reviewed head
+`795732ecd93594b4b77051b6f5ad99bacae03014`. The CI gate was run
+`46174216962` (job `141071389408`) and Books was run `46174217076`
+(job `141069232600`). This receipt records backlog integration only. It is
+not evidence for a TLS implementation or security claim.
 
 The current `tls-platform.md` describes OS-backed TLS and is not evidence for
 any lane above. `tls-server-identity.md` specifies a narrow already-decoded SAN
