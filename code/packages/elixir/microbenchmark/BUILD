@@ -1,0 +1,1 @@
+mix deps.get --quiet && mix format --check-formatted mix.exs lib/microbenchmark.ex lib/array_workload.ex lib/array_microbenchmark.ex test/test_helper.exs test/microbenchmark_test.exs tool/native_report_replay.exs && mix test --cover && mix escript.build && sh tool/native_smoke.sh && sh tool/consumer_smoke.sh

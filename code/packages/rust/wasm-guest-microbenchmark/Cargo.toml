@@ -1,0 +1,21 @@
+[package]
+name = "coding_adventures_wasm_guest_microbenchmark"
+version = "0.1.0"
+edition = "2021"
+description = "Paired host-timed benchmarks of prepared WASM interpreter guest programs"
+license = "MIT"
+repository = "https://github.com/adhithyan15/coding-adventures"
+
+[dependencies]
+coding_adventures_microbenchmark = { version = "0.1.0", path = "../microbenchmark" }
+coding_adventures_guest_microbenchmark_support = { version = "0.1.0", path = "../guest-microbenchmark-support" }
+wasm-module-encoder = { version = "0.2.13", path = "../wasm-module-encoder" }
+wasm-runtime = { version = "0.6.38", path = "../wasm-runtime" }
+wasm-types = { version = "0.1.28", path = "../wasm-types" }
+
+[dev-dependencies]
+serde_json = { version = "1", features = ["float_roundtrip"] }
+
+[[bin]]
+name = "wasm-guest-microbenchmark"
+path = "src/bin/wasm-guest-microbenchmark.rs"

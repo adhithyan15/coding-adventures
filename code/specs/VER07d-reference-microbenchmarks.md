@@ -78,8 +78,13 @@ Order values are `baseline-first` and `candidate-first`. Each duration is a
 positive signed 64-bit integer. Convert both durations to binary64 before
 dividing the candidate duration by the baseline duration. The analysis API
 accepts these raw pairs and the confidence and factor. It returns the VER07b result and rejects missing
-pairs or invalid observations or parameters. A JSON round trip must preserve
-the raw pairs and support replaying the same verdict, ratio and interval.
+pairs or invalid observations or parameters. The public Go `Analyze` and
+Python `analyze` entry points accept at most 10,000 pairs and reject a larger
+input before allocating or transforming per-pair ratios. This matches the
+collector and report limits. The generic rank-statistics APIs remain
+independent and do not inherit this microbenchmark-specific cap. A JSON round
+trip must preserve the raw pairs and support replaying the same verdict, ratio
+and interval.
 
 ## Indexed-array driver
 
@@ -100,3 +105,14 @@ boundaries and insufficient data. Use fake clocks for exact order,
 calibration, raw-report replay, and failure tests. Include generated cases
 with a reproducible seed or corpus, and cover the indexed workload's
 correctness and JSON entry point without requiring real timing thresholds.
+
+### Python workload metadata during value replay
+
+Before projecting a report to its core result, Python `Report.from_dict`
+validates an optional workload identifier according to VER07ab: it is a valid
+Unicode string containing no NUL and is neither empty nor entirely ASCII
+whitespace. Other valid Unicode identifiers, including U+2003, are accepted
+without changing the input mapping. Metadata-free core reports remain valid.
+This value API does not inspect duplicate keys in the original JSON bytes.
+Tests cover valid generic and array labels, Unicode, blank/NUL/type failures,
+and malformed surrogate strings independently of the stored numeric analysis.

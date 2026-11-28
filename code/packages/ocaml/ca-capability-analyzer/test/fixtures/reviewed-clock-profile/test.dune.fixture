@@ -1,0 +1,4 @@
+(test
+ (name test_microbenchmark)
+ (libraries alcotest coding_adventures_microbenchmark yojson)
+ (deps ../testdata/microbenchmark-pairs-v1.json))

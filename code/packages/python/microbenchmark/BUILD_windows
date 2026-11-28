@@ -3,3 +3,4 @@ uv pip install --python .venv -e ../rank-statistics -e .[dev]
 .venv\Scripts\python -m ruff check src tests
 .venv\Scripts\python -m ruff format --check src tests
 .venv\Scripts\python -m pytest -q
+python ../../../../code/scripts/microbenchmark-installed-consumer.py python

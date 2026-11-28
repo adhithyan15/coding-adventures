@@ -1,0 +1,4 @@
+perl -Ilib t\rank_statistics.t
+if errorlevel 1 exit /b %ERRORLEVEL%
+perl tools\installed_consumer_smoke.pl
+if errorlevel 1 exit /b %ERRORLEVEL%

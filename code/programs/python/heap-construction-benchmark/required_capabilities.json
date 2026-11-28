@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/heap-construction-benchmark",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The CLI supplies time.monotonic_ns as the collector clock."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The CLI emits a JSON report to stdout and argparse diagnostics to stderr."
+    }
+  ],
+  "justification": "The program parses argv, measures with the monotonic clock, and writes JSON or CLI diagnostics to standard streams. Input generation uses random.Random with an explicit seed. OS and architecture labels come from sys.platform and sys.implementation._multiarch compile/runtime constants; absent architecture metadata is reported as unknown without probing the host OS."
+}

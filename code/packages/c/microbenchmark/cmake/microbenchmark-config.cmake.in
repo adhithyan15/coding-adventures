@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+find_dependency(rank_statistics 0.1 CONFIG REQUIRED)
+find_dependency(bounded_json 0.1 CONFIG REQUIRED)
+include("${CMAKE_CURRENT_LIST_DIR}/microbenchmark-targets.cmake")

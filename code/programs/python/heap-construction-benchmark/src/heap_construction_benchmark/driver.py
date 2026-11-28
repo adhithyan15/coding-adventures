@@ -21,6 +21,23 @@ CHECKSUM_MULTIPLIER = 1009
 HeapBuilder = Callable[[Sequence[int]], BoundedHeap[int]]
 
 
+def _platform_metadata() -> tuple[str, str]:
+    """Return interpreter platform constants without host OS probing.
+
+    `platform.system()` and `platform.machine()` can spawn commands, read
+    environment variables, or query the registry on some supported hosts.
+    `sys.platform` and CPython's `_multiarch` are compile/runtime identifiers;
+    implementations without `_multiarch` report the truthful fallback.
+    """
+    os_name = sys.platform
+    if not isinstance(os_name, str) or not os_name:
+        os_name = "unknown"
+    architecture = getattr(sys.implementation, "_multiarch", None)
+    if not isinstance(architecture, str) or not architecture:
+        architecture = "unknown"
+    return os_name, architecture
+
+
 def build_by_repeated_push(values: Sequence[int]) -> BoundedHeap[int]:
     """Construct a new bounded heap by inserting every input value."""
     heap = BoundedHeap(len(values), _less_int)
@@ -137,14 +154,15 @@ def run(
             argument_parser.error(str(error))
 
     document = report.to_dict()
+    os_name, architecture = _platform_metadata()
     document.update(
         {
             "workload": WORKLOAD,
             "invocation": [sys.argv[0], *argv],
             "revision": arguments.revision,
             "runtime": platform.python_version(),
-            "os": platform.system(),
-            "arch": platform.machine(),
+            "os": os_name,
+            "arch": architecture,
         }
     )
     stdout.write(json.dumps(document, indent=2, sort_keys=True) + "\n")

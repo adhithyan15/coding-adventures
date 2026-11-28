@@ -472,13 +472,16 @@ func TestCompareResultDirsWritesVerdictArtifacts(t *testing.T) {
 }
 
 func TestCompareVerdictsRespectThroughputDirectionAndCorrectness(t *testing.T) {
-	throughput := compareTrialSets(
+	throughput, err := compareTrialSets(
 		"base",
 		"candidate",
 		"ops_per_second",
 		trialsForTest([]float64{1000, 1010, 990}, nil, "ops_per_second", "svc", "ping"),
 		trialsForTest([]float64{900, 910, 890}, nil, "ops_per_second", "svc", "ping"),
 	)
+	if err != nil {
+		t.Fatalf("compare throughput: %v", err)
+	}
 	if got := throughput.Comparisons[0].Verdict; got != "regression" {
 		t.Fatalf("throughput verdict = %q row=%#v", got, throughput.Comparisons[0])
 	}
@@ -486,13 +489,16 @@ func TestCompareVerdictsRespectThroughputDirectionAndCorrectness(t *testing.T) {
 		t.Fatalf("throughput direction = %q", got)
 	}
 
-	correctness := compareTrialSets(
+	correctness, err := compareTrialSets(
 		"base",
 		"candidate",
 		"elapsed_ms",
 		trialsForTest([]float64{100, 101, 99}, nil, "elapsed_ms", "svc", "ping"),
 		trialsForTest([]float64{50, 51, 49}, map[int]string{1: "wrong response"}, "elapsed_ms", "svc", "ping"),
 	)
+	if err != nil {
+		t.Fatalf("compare correctness: %v", err)
+	}
 	if got := correctness.Comparisons[0].Verdict; got != "correctness_failed" {
 		t.Fatalf("correctness verdict = %q row=%#v", got, correctness.Comparisons[0])
 	}

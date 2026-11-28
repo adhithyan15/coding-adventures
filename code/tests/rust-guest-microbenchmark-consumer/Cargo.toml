@@ -1,0 +1,10 @@
+[package]
+name = "guest-envelope-consumer-smoke"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+coding_adventures_guest_microbenchmark_support = { version = "0.1.0", path = "../../packages/rust/guest-microbenchmark-support" }
+coding_adventures_microbenchmark = { version = "0.1.0", path = "../../packages/rust/microbenchmark" }
+
+[workspace]

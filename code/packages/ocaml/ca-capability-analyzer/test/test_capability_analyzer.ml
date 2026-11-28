@@ -35,6 +35,24 @@ let write_file path contents =
   Out_channel.with_open_bin path (fun channel ->
       Out_channel.output_string channel contents)
 
+let copy_file source destination =
+  let contents = In_channel.with_open_bin source In_channel.input_all in
+  write_file destination contents
+
+let replace_once source needle replacement =
+  let source_length = String.length source
+  and needle_length = String.length needle in
+  let rec find index =
+    if index + needle_length > source_length then
+      Alcotest.failf "fixture text did not contain %S" needle
+    else if String.sub source index needle_length = needle then index
+    else find (index + 1)
+  in
+  let index = find 0 in
+  String.sub source 0 index ^ replacement
+  ^ String.sub source (index + needle_length)
+      (source_length - index - needle_length)
+
 let rec remove_tree path =
   match (Unix.lstat path).st_kind with
   | Unix.S_DIR ->
@@ -696,6 +714,11 @@ let test_extended_source_resolution () =
      let _ = input_line stdin\n\
      let _ = Stdlib.input_char stdin\n"
     [] [];
+  check "recursive shadowed value"
+    "let run () = let rec input_line _ = \"local\" in input_line stdin\n" [] [];
+  check "shadowed modules"
+    "module Unix = struct let system _ = () end\nlet () = Unix.system \"\"\n" []
+    [];
   check "expression open" "let run () = let open Unix in send_reviewed ()\n"
     [ "net:connect:*" ] [];
   check "marshal closures"
@@ -975,6 +998,28 @@ let test_directory_input_boundaries () =
       | Error _ -> ()
       | Ok _ -> Alcotest.fail "Dune workspace was accepted")
 
+let test_directory_dune_lexical_boundaries () =
+  with_temp_directory (fun directory ->
+      write_file (Filename.concat directory "input.ml") "let value = 1\n";
+      write_file
+        (Filename.concat directory "dune-project")
+        "(lang\tdune 3.16)\r\n(name generated)\n";
+      write_file
+        (Filename.concat directory "dune")
+        "(library\t(name generated)\r\n\
+        \ (libraries\tfoo)\n\
+        \ ; (preprocess (pps unreviewed_ppx))\n\
+        \ (preprocessor-dependencies ignored-by-the-analyzer)\n\
+        \ (flags-extra ignored-by-the-analyzer))\n";
+      match analyze_directory directory with
+      | Ok result ->
+          Alcotest.(check bool)
+            "comments, whitespace, and longer atom names stay distinct" true
+            (passed result)
+      | Error message ->
+          Alcotest.failf "safe Dune lexical boundaries were rejected: %s"
+            message)
+
 let test_manifest_identity_and_kind () =
   with_temp_directory (fun directory ->
       let manifest = Filename.concat directory "required_capabilities.json" in
@@ -1110,6 +1155,27 @@ let test_directory_depth_limit () =
       | Error _ -> ()
       | Ok _ -> Alcotest.fail "over-deep source tree was accepted")
 
+let test_directory_source_file_count_limit () =
+  with_temp_directory (fun directory ->
+      for index = 0 to 9_999 do
+        write_file
+          (Filename.concat directory (Printf.sprintf "source-%05d.ml" index))
+          ""
+      done;
+      (match analyze_directory directory with
+      | Ok _ -> ()
+      | Error message ->
+          Alcotest.failf "source-count limit rejected exactly 10,000 files: %s"
+            message);
+      write_file (Filename.concat directory "source-10000.ml") "";
+      match analyze_directory directory with
+      | Error message
+        when contains_substring message "source file count exceeds limit" ->
+          ()
+      | Error message ->
+          Alcotest.failf "unexpected source-count error: %s" message
+      | Ok _ -> Alcotest.fail "over-limit source count was accepted")
+
 let test_directory_manifest_and_generated_boundaries () =
   with_temp_directory (fun root ->
       let manifest = Filename.concat root "required_capabilities.json" in
@@ -1129,6 +1195,147 @@ let test_directory_manifest_and_generated_boundaries () =
       | Error message ->
           Alcotest.failf "unexpected generated-source error: %s" message
       | Ok _ -> Alcotest.fail "generated parser input was accepted")
+
+let with_reviewed_clock_copy callback =
+  with_temp_directory (fun root ->
+      let rec find_adjacent_source remaining directory =
+        let candidate =
+          Filename.concat directory "code/packages/ocaml/microbenchmark"
+        in
+        if Sys.file_exists (Filename.concat candidate "src/native_clock.ml")
+        then Some candidate
+        else if remaining = 0 then None
+        else find_adjacent_source (remaining - 1) (Filename.dirname directory)
+      in
+      let adjacent = find_adjacent_source 16 (Sys.getcwd ()) in
+      let source =
+        Filename.concat
+          (Filename.dirname (fixture_root ()))
+          "reviewed-clock-profile"
+      in
+      let destination = Filename.concat root "microbenchmark" in
+      Unix.mkdir destination 0o700;
+      List.iter
+        (fun name -> Unix.mkdir (Filename.concat destination name) 0o700)
+        [ "bin"; "src"; "test" ];
+      Unix.mkdir (Filename.concat destination "_build") 0o700;
+      List.iter
+        (fun (stored, installed) ->
+          copy_file
+            (Filename.concat source stored)
+            (Filename.concat destination installed))
+        [
+          ("dune-project.fixture", "dune-project");
+          ("bin.dune.fixture", "bin/dune");
+          ("src.dune.fixture", "src/dune");
+          ("test.dune.fixture", "test/dune");
+          ("native_clock.ml.fixture", "src/native_clock.ml");
+          ("monotonic_clock.c.fixture", "src/monotonic_clock.c");
+        ];
+      callback destination adjacent)
+
+let valid_clock_manifest =
+  {|{"version":1,"package":"ocaml/microbenchmark","capabilities":[{"category":"ffi","action":"call","target":"monotonic_clock","justification":"Calls the reviewed monotonic clock shim."},{"category":"time","action":"read","target":"*","justification":"Reads monotonic elapsed time for paired measurements."},{"category":"stdout","action":"write","target":"*","justification":"Writes CLI reports and diagnostics to output streams."},{"category":"env","action":"read","target":"*","justification":"Reads documented CLI environment options."},{"category":"fs","action":"read","target":"*","justification":"Reads replay reports and package fixtures."},{"category":"fs","action":"list","target":"*","justification":"Checks package fixture paths before opening inputs."}],"justification":"Uses a pinned native monotonic clock shim and declared CLI effects.","banned_construct_exceptions":[{"construct":"external","language":"ocaml","justification":"Allows only the three pinned native clock bindings."}]}|}
+
+let expect_reviewed_clock_rejected directory label =
+  match analyze_directory directory with
+  | Error _ -> ()
+  | Ok _ -> Alcotest.failf "reviewed clock profile did not reject %s" label
+
+let test_reviewed_clock_profile () =
+  with_reviewed_clock_copy (fun directory adjacent ->
+      (* Keep the checked-in plain fixture as the mutation baseline even when
+         the adjacent package already opts into its reviewed coverage profile.
+         Analyze that real package separately instead of layering a second
+         instrumentation stanza onto its Dune files. *)
+      Option.iter
+        (fun package ->
+          let adjacent_result = unwrap (analyze_directory package) in
+          Alcotest.(check bool)
+            "actual adjacent clock profile" true (passed adjacent_result))
+        adjacent;
+      write_file
+        (Filename.concat directory "required_capabilities.json")
+        valid_clock_manifest;
+      let result = unwrap (analyze_directory directory) in
+      Alcotest.(check bool) "pinned clock profile" true (passed result);
+      Alcotest.(check bool)
+        "FFI is detected" true
+        (List.exists
+           (fun (item : detection) -> item.capability.category = "ffi")
+           result.detected);
+      let bin_path = Filename.concat directory "bin/dune" in
+      let src_path = Filename.concat directory "src/dune" in
+      let wrapper_path = Filename.concat directory "src/native_clock.ml" in
+      let c_path = Filename.concat directory "src/monotonic_clock.c" in
+      let bin = In_channel.with_open_bin bin_path In_channel.input_all in
+      let src = In_channel.with_open_bin src_path In_channel.input_all in
+      let wrapper =
+        In_channel.with_open_bin wrapper_path In_channel.input_all
+      in
+      let c_source = In_channel.with_open_bin c_path In_channel.input_all in
+      write_file bin_path
+        (replace_once bin " (libraries"
+           " (instrumentation\n  (backend bisect_ppx))\n (libraries");
+      write_file src_path
+        (replace_once src " (wrapped"
+           " (instrumentation\n  (backend bisect_ppx))\n (wrapped");
+      let coverage_result = unwrap (analyze_directory directory) in
+      Alcotest.(check bool)
+        "pinned coverage context" true (passed coverage_result);
+      write_file bin_path bin;
+      write_file src_path src;
+      write_file wrapper_path (wrapper ^ "(* changed *)\n");
+      expect_reviewed_clock_rejected directory "OCaml wrapper drift";
+      write_file wrapper_path wrapper;
+      write_file c_path (c_source ^ "/* changed */\n");
+      expect_reviewed_clock_rejected directory "C shim drift";
+      write_file c_path c_source;
+      write_file src_path (src ^ "\n(flags (:standard -w -a))\n");
+      expect_reviewed_clock_rejected directory "Dune flag drift";
+      write_file src_path src;
+      write_file (Filename.concat directory "dune") "(lang dune 3.17)\n";
+      expect_reviewed_clock_rejected directory "an extra Dune context";
+      Sys.remove (Filename.concat directory "dune");
+      write_file (Filename.concat directory "src/extra.h") "/* extra */\n";
+      expect_reviewed_clock_rejected directory "an extra native header";
+      Sys.remove (Filename.concat directory "src/extra.h");
+      let deep_root = Filename.concat directory "src/deep" in
+      let rec create_deep_tree remaining path =
+        if remaining = 0 then ()
+        else (
+          Unix.mkdir path 0o700;
+          create_deep_tree (remaining - 1) (Filename.concat path "d"))
+      in
+      create_deep_tree 66 deep_root;
+      expect_reviewed_clock_rejected directory "excessive native-input depth";
+      remove_tree deep_root;
+      (try
+         let link = Filename.concat directory "src/linked.h" in
+         Unix.symlink c_path link;
+         expect_reviewed_clock_rejected directory "a symlinked native input";
+         Sys.remove link
+       with Unix.Unix_error _ -> ());
+      let extra = Filename.concat directory "src/extra.ml" in
+      write_file extra "external surprise : unit -> int = \"surprise\"\n";
+      expect_reviewed_clock_rejected directory "an extra external declaration";
+      Sys.remove extra;
+      write_file
+        (Filename.concat directory "required_capabilities.json")
+        (replace_once valid_clock_manifest "monotonic_clock" "other_clock");
+      expect_reviewed_clock_rejected directory "a mistargeted FFI capability";
+      write_file
+        (Filename.concat directory "required_capabilities.json")
+        (replace_once valid_clock_manifest "\"time\",\"action\":\"read\""
+           "\"time\",\"action\":\"write\"");
+      expect_reviewed_clock_rejected directory "a missing time read";
+      write_file
+        (Filename.concat directory "required_capabilities.json")
+        (replace_once valid_clock_manifest
+           ",\"banned_construct_exceptions\":[{\"construct\":\"external\",\"language\":\"ocaml\",\"justification\":\"Allows \
+            only the three pinned native clock bindings.\"}]"
+           "");
+      expect_reviewed_clock_rejected directory "a missing external exception")
 
 let test_directory_analysis () =
   with_temp_directory (fun root ->
@@ -1279,6 +1486,8 @@ let () =
           Alcotest.test_case "directory" `Quick test_directory_analysis;
           Alcotest.test_case "input boundaries" `Quick
             test_directory_input_boundaries;
+          Alcotest.test_case "Dune lexical boundaries" `Quick
+            test_directory_dune_lexical_boundaries;
           Alcotest.test_case "manifest identity" `Quick
             test_manifest_identity_and_kind;
           Alcotest.test_case "safe inputs and exclusions" `Quick
@@ -1287,8 +1496,12 @@ let () =
             test_directory_instrumentation_boundaries;
           Alcotest.test_case "directory depth limit" `Quick
             test_directory_depth_limit;
+          Alcotest.test_case "source file count limit" `Quick
+            test_directory_source_file_count_limit;
           Alcotest.test_case "manifest and generated boundaries" `Quick
             test_directory_manifest_and_generated_boundaries;
+          Alcotest.test_case "reviewed monotonic clock profile" `Quick
+            test_reviewed_clock_profile;
           Alcotest.test_case "CLI" `Quick test_cli_results;
         ] );
     ]

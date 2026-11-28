@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+- Treat imported `summary.json` and `trials.jsonl` as untrusted data: enforce
+  byte, row, record, JSON-value, and measurement-group budgets; reject duplicate
+  decoded keys, unknown/missing fields, malformed or trailing JSON, and return
+  explicit errors rather than truncating. Preflight aggregate Cliff's delta and
+  bootstrap work before statistical allocation/loops. The limits apply only to
+  explicit report/compare imports; `run` still writes its generated report
+  directly and keeps its existing trial limit.
+- Bound RESP response nesting to 64 values while retaining the 16 MiB frame
+  limit, and reject manifest `timeout_ms` values that cannot convert safely to
+  `time.Duration` without changing the existing zero-value defaults.
+- Exercise paired report, summary, and trial raw ingress with bounded active Go
+  fuzz campaigns in BUILD.
+- Require the complete six-field driver metadata group when any group member is
+  present; permit `profile` only with that group. Reject U+0000 in metadata and
+  invocation strings while preserving valid empty argv entries and an empty
+  invocation vector. Workload labels remain producer-defined: only the six
+  ASCII whitespace characters count as blank, and malformed escaped surrogate
+  pairs are rejected while valid Unicode is preserved.
+- Match VER07y's field distinction: descriptive metadata and `profile` reject
+  only empty strings, while only `workload` rejects ASCII-whitespace-only IDs.
+- Add `paired-replay REPORT [--out DIRECTORY]`: bounded duplicate-aware UTF-8
+  ingress preserves signed-64 integer observations, verifies schedule and stored
+  analysis, and recomputes the exact median interval through `microbenchmark`.
+  Optional export retains byte-identical raw JSON, SHA-256, configuration and a
+  readable summary in a newly reserved directory. Independent-result bootstrap
+  comparisons retain their existing behavior.
+- Add an unsigned whole-program capability profile for caller-selected files and
+  commands, measured time, child-process control, loopback-only TCP, the Windows
+  kernel32 process-tree calls, and three named production goroutine/channel
+  roles for Unix signal forwarding, service waits, and bounded benchmark clients.
+  This is a review proposal, not an approval.
+
 - **Fix: bound benchmark trial counts before slice allocation (`go/allocation-size-overflow`,
   alerts `#259`–`#260`).** Added `maxBenchmarkTrials` (`1_000_000`) bounds checks in
   `ValidateManifest`, `runCommandWorkload`, and `runTCPRESPWorkload` before summing

@@ -1,0 +1,17 @@
+name: coding_adventures_microbenchmark
+version: 0.1.0
+description: Paired monotonic microbenchmark collection and replay.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+environment:
+  sdk: ^3.0.0
+dependencies:
+  coding_adventures_json_lexer:
+    path: ../json-lexer
+  coding_adventures_lexer:
+    path: ../lexer
+  coding_adventures_rank_statistics:
+    path: ../rank-statistics
+dev_dependencies:
+  coverage: ^1.16.1
+  test: ^1.25.0

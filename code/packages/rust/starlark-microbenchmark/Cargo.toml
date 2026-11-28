@@ -1,0 +1,14 @@
+[package]
+name = "coding_adventures_starlark_microbenchmark"
+version = "0.1.0"
+edition = "2021"
+description = "Paired source-compiled and hand-assembled Starlark VM bytecode microbenchmark"
+
+[dependencies]
+coding_adventures_guest_microbenchmark_support = { version = "0.1.0", path = "../guest-microbenchmark-support" }
+coding_adventures_microbenchmark = { version = "0.1.0", path = "../microbenchmark" }
+starlark-interpreter = { package = "starlark-interpreter", version = "0.1.0", path = "../starlark-interpreter" }
+
+[[bin]]
+name = "starlark-microbenchmark"
+path = "src/bin/main.rs"

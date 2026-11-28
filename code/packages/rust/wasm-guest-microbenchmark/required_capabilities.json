@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/wasm-guest-microbenchmark",
+  "capabilities": [
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The benchmark command emits the replayable core report and validation results to stdout."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The native host runner measures workloads with std::time::Instant."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "The optional replay command reads a report file selected by the user."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "*",
+      "justification": "The optional sidecar writer creates its selected output file with create_new semantics."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "The benchmark command writes the guest-boundary sidecar to the selected path."
+    }
+  ],
+  "justification": "The command writes its report and sidecar and optionally reads a report for replay."
+}

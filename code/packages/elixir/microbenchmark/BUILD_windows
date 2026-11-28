@@ -1,0 +1,1 @@
+mix deps.get --quiet && mix format --check-formatted mix.exs lib/microbenchmark.ex lib/array_workload.ex lib/array_microbenchmark.ex test/test_helper.exs test/microbenchmark_test.exs tool/native_report_replay.exs && mix test --cover && mix escript.build && powershell -NoProfile -File tool/native_smoke.ps1 && powershell -NoProfile -File tool/consumer_smoke.ps1

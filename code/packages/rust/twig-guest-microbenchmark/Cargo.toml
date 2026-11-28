@@ -1,0 +1,20 @@
+[package]
+name = "coding_adventures_twig_guest_microbenchmark"
+version = "0.1.0"
+edition = "2021"
+description = "Paired host-timed benchmarks of prepared Twig VM guest programs"
+license = "MIT"
+repository = "https://github.com/adhithyan15/coding-adventures"
+
+[dependencies]
+coding_adventures_microbenchmark = { version = "0.1.0", path = "../microbenchmark" }
+coding_adventures_guest_microbenchmark_support = { version = "0.1.0", path = "../guest-microbenchmark-support" }
+interpreter-ir = { version = "0.15.0", path = "../interpreter-ir" }
+twig-vm = { version = "0.25.0", path = "../twig-vm" }
+
+[dev-dependencies]
+serde_json = { version = "1", features = ["float_roundtrip"] }
+
+[[bin]]
+name = "twig-guest-microbenchmark"
+path = "src/bin/twig-guest-microbenchmark.rs"

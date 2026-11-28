@@ -322,6 +322,7 @@ var (
 	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
 	microbenchmarkPairsFixturePath = "code/specs/fixtures/microbenchmark-pairs-v1.json"
 	historicalWebVectorsPath       = "code/specs/fixtures/historical-web-v1/vectors.json"
+	wasmMicrobenchmarkConsumerPath = "code/tests/wasm-microbenchmark-consumer/consumer.mjs"
 	fixedPointInputPaths           = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -707,6 +708,177 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	historicalUnixBuildOcamlSwiftRow("ocaml"),
 	historicalUnixBuildOcamlSwiftRow("swift"),
 	{
+		name:     "rust/twig-guest-microbenchmark",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	// The WASM package BUILD runs the independent Node consumer after producing
+	// the artifact. Keep the exact script in both selection and hash inputs; the
+	// test directory is not a separately discovered package root.
+	{
+		name:     "wasm/microbenchmark",
+		language: "wasm",
+		inputs:   "the external Node consumer that loads and exercises the emitted WASM artifact",
+		matches:  isWasmMicrobenchmarkConsumer,
+		paths:    []string{wasmMicrobenchmarkConsumerPath},
+	},
+	{
+		name:     "rust/wasm-guest-microbenchmark",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "go/programs/benchmark-tool",
+		language: "go",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "csharp/microbenchmark",
+		language: "csharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "csharp/rank-statistics",
+		language: "csharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "fsharp/microbenchmark",
+		language: "fsharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "fsharp/rank-statistics",
+		language: "fsharp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "java/microbenchmark",
+		language: "java",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "java/rank-statistics",
+		language: "java",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "kotlin/microbenchmark",
+		language: "kotlin",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "kotlin/rank-statistics",
+		language: "kotlin",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "c/microbenchmark",
+		language: "c",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "c/rank-statistics",
+		language: "c",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "swift/microbenchmark",
+		language: "swift",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "swift/rank-statistics",
+		language: "swift",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "cpp/microbenchmark",
+		language: "cpp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "cpp/rank-statistics",
+		language: "cpp",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "ruby/microbenchmark",
+		language: "ruby",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "ruby/rank_statistics",
+		language: "ruby",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "rust/microbenchmark",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "rust/rank-statistics",
+		language: "rust",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "typescript/microbenchmark",
+		language: "typescript",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "typescript/rank-statistics",
+		language: "typescript",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
 		name:     "go/microbenchmark",
 		language: "go",
 		inputs:   "the shared paired microbenchmark results fixture",
@@ -730,6 +902,90 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "python/rank-statistics",
 		language: "python",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "dart/microbenchmark",
+		language: "dart",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "dart/rank-statistics",
+		language: "dart",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "elixir/microbenchmark",
+		language: "elixir",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "elixir/rank_statistics",
+		language: "elixir",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "lua/microbenchmark",
+		language: "lua",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "lua/rank_statistics",
+		language: "lua",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "perl/microbenchmark",
+		language: "perl",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "perl/rank-statistics",
+		language: "perl",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "haskell/microbenchmark",
+		language: "haskell",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "haskell/rank-statistics",
+		language: "haskell",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "ocaml/microbenchmark",
+		language: "ocaml",
+		inputs:   "the shared paired microbenchmark results fixture",
+		matches:  isMicrobenchmarkPairsFixture,
+		paths:    []string{microbenchmarkPairsFixturePath},
+	},
+	{
+		name:     "ocaml/rank-statistics",
+		language: "ocaml",
 		inputs:   "the shared paired microbenchmark results fixture",
 		matches:  isMicrobenchmarkPairsFixture,
 		paths:    []string{microbenchmarkPairsFixturePath},
@@ -1889,6 +2145,12 @@ func isMicrobenchmarkPairsFixture(changed string) bool {
 	return changed == microbenchmarkPairsFixturePath
 }
 
+// isWasmMicrobenchmarkConsumer matches only the external host script that the
+// WASM package BUILD executes against its emitted artifact.
+func isWasmMicrobenchmarkConsumer(changed string) bool {
+	return changed == wasmMicrobenchmarkConsumerPath
+}
+
 func historicalUnixFixtureRow(language string) repositoryInputConsumer {
 	name := language + "/unix-history-simulator"
 	return historicalUnixFixturePackageRow(name, language)
@@ -2053,7 +2315,22 @@ func repositoryInputsForPackage(packageName string) []string {
 		return []string{historicalWebVectorsPath}
 	case "go/historical-web":
 		return []string{historicalWebVectorsPath}
-	case "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics":
+	case "wasm/microbenchmark":
+		return []string{wasmMicrobenchmarkConsumerPath}
+	case "go/programs/benchmark-tool", "go/microbenchmark", "go/rank-statistics", "python/microbenchmark", "python/rank-statistics",
+		"cpp/microbenchmark", "cpp/rank-statistics", "ruby/microbenchmark", "ruby/rank_statistics",
+		"rust/twig-guest-microbenchmark", "rust/wasm-guest-microbenchmark", "rust/microbenchmark", "rust/rank-statistics", "typescript/microbenchmark", "typescript/rank-statistics",
+		"c/microbenchmark", "c/rank-statistics", "swift/microbenchmark", "swift/rank-statistics",
+		"csharp/microbenchmark", "csharp/rank-statistics",
+		"fsharp/microbenchmark", "fsharp/rank-statistics",
+		"java/microbenchmark", "java/rank-statistics",
+		"kotlin/microbenchmark", "kotlin/rank-statistics",
+		"dart/microbenchmark", "dart/rank-statistics",
+		"elixir/microbenchmark", "elixir/rank_statistics",
+		"lua/microbenchmark", "lua/rank_statistics",
+		"perl/microbenchmark", "perl/rank-statistics",
+		"haskell/microbenchmark", "haskell/rank-statistics",
+		"ocaml/microbenchmark", "ocaml/rank-statistics":
 		return []string{microbenchmarkPairsFixturePath}
 	case "rust/game-clock":
 		return gameClockInputPaths

@@ -1393,6 +1393,186 @@ let read_file ~max_bytes path =
   with Sys_error message ->
     Error (Printf.sprintf "reading %s: %s" path message)
 
+let reviewed_clock_common_inputs =
+  [
+    ( "src/native_clock.ml",
+      "fafe791c3237c183c09425a0e8926374719cfd789e22c8c2daa9d227a1fa6e6d" );
+    ( "src/monotonic_clock.c",
+      "8bdbb842a125ff4199a819ffa60eb13e88e149a4757ba8d4eb09310ddbe2d86d" );
+  ]
+
+let reviewed_clock_contexts =
+  [
+    [
+      ( "dune-project",
+        "1c370421547869ef0737e151d707375828230bdd1b01e35a8f28e0fe8896ad25" );
+      ( "bin/dune",
+        "b18f0c6eb1d5e3fbf9e3db649baacbf4507ff66944cc25f4ba7a4c2f0c0a5277" );
+      ( "src/dune",
+        "0ec6c89861cdf189084f0c56f487c5b4db035c7f090a89ae96dca39546215d90" );
+      ( "test/dune",
+        "44fab3370f8023882b7c9b0e1dac5d477f8e8e4e5e777e8f0559e8ff3fcdfccd" );
+    ];
+    [
+      ( "dune-project",
+        "1c370421547869ef0737e151d707375828230bdd1b01e35a8f28e0fe8896ad25" );
+      ( "bin/dune",
+        "d7d97a75f9e25c23c32d1a69e3e87a2b83c20b74742f224282c98522b313ce3e" );
+      ( "src/dune",
+        "cf007d48b1d097fd2678810bb875557508724f269c92f515935df3cac75386b3" );
+      ( "test/dune",
+        "44fab3370f8023882b7c9b0e1dac5d477f8e8e4e5e777e8f0559e8ff3fcdfccd" );
+    ];
+  ]
+
+let sha256_string source =
+  Digestif.SHA256.digest_string source |> Digestif.SHA256.to_hex
+
+let reviewed_clock_manifest (manifest : manifest) =
+  List.sort Capability.compare manifest.capabilities
+  = List.sort Capability.compare
+      [
+        Capability.make ~category:"ffi" ~action:"call" ~target:"monotonic_clock";
+        Capability.make ~category:"time" ~action:"read" ~target:"*";
+        Capability.make ~category:"stdout" ~action:"write" ~target:"*";
+        Capability.make ~category:"env" ~action:"read" ~target:"*";
+        Capability.make ~category:"fs" ~action:"read" ~target:"*";
+        Capability.make ~category:"fs" ~action:"list" ~target:"*";
+      ]
+  && List.length manifest.exceptions = 1
+  && exception_exists manifest "external"
+
+let validate_reviewed_clock_profile root (manifest : manifest) =
+  if manifest.package <> "ocaml/microbenchmark" then Ok false
+  else if Filename.basename root <> "microbenchmark" then
+    Error
+      "reviewed native-clock profile requires the microbenchmark package \
+       directory"
+  else
+    let path_of_relative relative =
+      List.fold_left Filename.concat root (String.split_on_char '/' relative)
+    in
+    let verify (relative, expected) =
+      let path = path_of_relative relative in
+      let* contents = read_file ~max_bytes:max_manifest_bytes path in
+      if sha256_string contents <> expected then
+        Error ("reviewed native-clock profile input hash mismatch: " ^ relative)
+      else Ok ()
+    in
+    let rec verify_all = function
+      | [] -> Ok ()
+      | item :: rest ->
+          let* () = verify item in
+          verify_all rest
+    in
+    let* () = verify_all reviewed_clock_common_inputs in
+    let* context_matches =
+      List.fold_left
+        (fun result context ->
+          let* matched = result in
+          if matched then Ok true
+          else
+            match verify_all context with
+            | Ok () -> Ok true
+            | Error _ -> Ok false)
+        (Ok false) reviewed_clock_contexts
+    in
+    if not context_matches then
+      Error
+        "reviewed native-clock Dune context does not match a complete pinned \
+         bundle"
+    else if not (reviewed_clock_manifest manifest) then
+      Error
+        "reviewed native-clock profile requires ffi:call:monotonic_clock, \
+         time:read:*, and the OCaml external exception"
+    else Ok true
+
+let validate_reviewed_native_inputs root =
+  let native_suffixes =
+    [
+      ".c";
+      ".h";
+      ".cc";
+      ".cpp";
+      ".cxx";
+      ".c++";
+      ".m";
+      ".mm";
+      ".hpp";
+      ".hxx";
+      ".h++";
+      ".s";
+      ".asm";
+      ".o";
+      ".obj";
+      ".a";
+      ".lib";
+      ".so";
+      ".dylib";
+      ".dll";
+      ".cmx";
+      ".cmxa";
+      ".cmxs";
+      ".cma";
+      ".bc";
+      ".ll";
+      ".wasm";
+    ]
+  in
+  let relative path =
+    let prefix = root ^ Filename.dir_sep in
+    String.sub path (String.length prefix)
+      (String.length path - String.length prefix)
+    |> fun path ->
+    if Filename.dir_sep = "/" then path
+    else String.map (fun c -> if c = '\\' then '/' else c) path
+  in
+  let excluded name =
+    List.mem name [ "_build"; ".git"; "_opam"; "node_modules" ]
+  in
+  let visited = ref 0 in
+  let rec walk depth directory =
+    if depth > max_directory_depth then
+      raise (Failure "reviewed native profile directory depth exceeds limit");
+    let entries =
+      try Sys.readdir directory |> Array.to_list
+      with Sys_error message -> raise (Failure message)
+    in
+    List.iter
+      (fun name ->
+        incr visited;
+        if !visited > max_source_files then
+          raise (Failure "reviewed native profile input count exceeds limit");
+        let path = Filename.concat directory name in
+        let stats = Unix.lstat path in
+        match stats.st_kind with
+        | Unix.S_LNK ->
+            raise (Failure ("symlinked native profile input: " ^ relative path))
+        | Unix.S_DIR when excluded name -> ()
+        | Unix.S_DIR -> walk (depth + 1) path
+        | Unix.S_REG ->
+            let lowered = String.lowercase_ascii name in
+            if
+              List.exists
+                (fun suffix ->
+                  String.ends_with
+                    ~suffix:(String.lowercase_ascii suffix)
+                    lowered)
+                native_suffixes
+            then
+              let rel = relative path in
+              if rel <> "src/monotonic_clock.c" then
+                raise (Failure ("unreviewed native profile input: " ^ rel))
+        | _ ->
+            raise
+              (Failure ("non-regular native profile input: " ^ relative path)))
+      entries
+  in
+  try
+    walk 0 root;
+    Ok ()
+  with Failure message -> Error message
+
 let empty_manifest package = { package; capabilities = []; exceptions = [] }
 
 let load_manifest directory =
@@ -1427,7 +1607,7 @@ let normalize_relative path =
       (fun character -> if character = '\\' then '/' else character)
       path
 
-let discover_sources root =
+let discover_sources ?(reviewed_clock = false) root =
   let sources = ref [] in
   let source_count = ref 0 in
   let total_bytes = ref 0 in
@@ -1505,19 +1685,34 @@ let discover_sources root =
                           "Dune workspace input is unsupported by capability \
                            analysis: %s"
                           child_relative))
-                else if name = "dune" || name = "dune-project" then
+                else if name = "dune" || name = "dune-project" then (
                   let contents =
                     match read_file ~max_bytes:max_manifest_bytes absolute with
                     | Ok contents -> contents
                     | Error message -> raise (Failure message)
                   in
                   let normalized_child = normalize_relative child_relative in
+                  if
+                    reviewed_clock
+                    && not
+                         (List.mem normalized_child
+                            [
+                              "dune-project";
+                              "bin/dune";
+                              "src/dune";
+                              "test/dune";
+                            ])
+                  then
+                    raise
+                      (Failure
+                         ("unreviewed Dune context input: " ^ child_relative));
                   let allow_bisect =
                     List.mem normalized_child
                       [ "bin/dune"; "src/dune"; "test/dune" ]
                   in
                   let unsupported =
-                    unsafe_dune_construct ~allow_bisect contents
+                    if reviewed_clock && normalized_child = "src/dune" then None
+                    else unsafe_dune_construct ~allow_bisect contents
                   in
                   Option.iter
                     (fun stanza ->
@@ -1526,7 +1721,7 @@ let discover_sources root =
                            (Printf.sprintf
                               "unsupported generated-source stanza %s in %s"
                               stanza child_relative)))
-                    unsupported)
+                    unsupported))
         | _ -> ())
       entries
   in
@@ -1542,7 +1737,53 @@ let analyze_directory directory =
   try
     let root = Unix.realpath directory in
     let* manifest = load_manifest root in
-    let* sources = discover_sources root in
+    let* reviewed_clock = validate_reviewed_clock_profile root manifest in
+    let* () =
+      if reviewed_clock then validate_reviewed_native_inputs root else Ok ()
+    in
+    let* sources = discover_sources ~reviewed_clock root in
+    let external_names = ref [] in
+    let rec collect_external_declarations = function
+      | [] -> Ok ()
+      | (relative, absolute, kind) :: rest ->
+          let* source = read_file ~max_bytes:max_source_file_bytes absolute in
+          let* parsed = parse_source ~filename:relative kind source in
+          let iterator =
+            {
+              Ast_iterator.default_iterator with
+              value_description =
+                (fun self description ->
+                  if description.pval_prim <> [] then
+                    external_names :=
+                      (relative, description.pval_name.txt) :: !external_names;
+                  Ast_iterator.default_iterator.value_description self
+                    description);
+            }
+          in
+          (match parsed with
+          | `Implementation structure -> iterator.structure iterator structure
+          | `Interface signature -> iterator.signature iterator signature);
+          collect_external_declarations rest
+    in
+    let* () = collect_external_declarations sources in
+    let expected_external_names =
+      [
+        ("src/native_clock.ml", "architecture");
+        ("src/native_clock.ml", "now_ns");
+        ("src/native_clock.ml", "os_name");
+      ]
+    in
+    let* () =
+      if not reviewed_clock then Ok ()
+      else if
+        List.sort compare !external_names
+        = List.sort compare expected_external_names
+      then Ok ()
+      else
+        Error
+          "reviewed native-clock profile has missing or additional external \
+           declarations"
+    in
     let rec analyze detections banned = function
       | [] -> Ok (detections, banned)
       | (relative, absolute, kind) :: rest ->

@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "package": "ocaml/microbenchmark",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "monotonic_clock",
+      "justification": "Reads elapsed time through the reviewed monotonic clock shim."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads monotonic elapsed time for paired measurements."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes CLI reports and diagnostics to the output streams."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads documented runtime and report options from environment variables."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads replay reports and the shared fixture in package tests."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Checks package fixture paths before opening test inputs."
+    }
+  ],
+  "justification": "Uses one pinned native shim for monotonic elapsed time.",
+  "banned_construct_exceptions": [
+    {
+      "construct": "external",
+      "language": "ocaml",
+      "justification": "Allows only three pinned bindings to the monotonic clock shim."
+    }
+  ]
+}

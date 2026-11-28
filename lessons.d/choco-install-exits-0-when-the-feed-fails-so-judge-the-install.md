@@ -31,7 +31,10 @@ suppress the failure: if the feed stays down, `qpdf --version` still fails the
 step and names qpdf. Simulated locally with a stub `choco` in both directions:
 it recovers on attempt three, and it still exits 127 when nothing installs.
 
-Do differently: when a package manager installs a tool a later step needs,
-check for the tool, not the installer's exit code, and retry around a public
-feed. Compare `apt-install.sh`, which handles the same kind of failure for
-apt.
+For a one-off recovery, the result check and bounded retry above prevent
+Chocolatey's false success from hiding a missing executable. For a required
+oracle whose community feed has repeatedly failed, use the upstream's fixed
+release artifact instead: pin the exact URL and published digest, verify the
+digest before extracting, then require the exact tool version. The Windows
+qpdf step uses this approach; Linux apt and macOS Homebrew remain separate.
+Compare `apt-install.sh`, which handles the same kind of failure for apt.

@@ -39,6 +39,6 @@ Report the ratio, interval, verdict, batch size, and raw pairs so consumers can 
 
 | Package lanes | Status |
 |---|---|
-| Go, Python | MB00: reusable rank-statistics packages and shared fixture conformance. MB01 specifies the [reference collectors and indexed-array workload](VER07d-reference-microbenchmarks.md). |
-| C, C++, C#, Dart, Elixir, F#, Haskell, Java, Kotlin, Lua, OCaml, Perl, Ruby, Rust, Swift, TypeScript | Pending native rank-statistics ports and benchmark drivers. See the [delivery backlog](microbenchmark-backlog.md). |
-| Mosaic, Starlark, Twig, WASM | Pending investigation of the timing entry point in each lane. Hosted workloads can use a monotonic host clock around guest batches where the guest has no suitable clock. Record the runtime and any boundary overhead. |
+| Go, Python | Reusable statistics and reference collectors merged. The Windows Go clock repair and fixture-registration foundation are also merged. |
+| C, C++, C#, Dart, Elixir, F#, Haskell, Java, Kotlin, Lua, OCaml, Perl, Ruby, Rust, Swift, TypeScript | Native statistics libraries, collectors and indexed-array drivers implemented and locally reviewed. Dependency-order PRs and required CI remain open; see the [delivery backlog](microbenchmark-backlog.md). |
+| Mosaic, Starlark, Twig, WASM | Guest entrypoints implemented with Rust host collection/statistics, explicit boundaries and separate raw overhead diagnostics. These use workload forms actually supported by each VM: rendering/event traversal, bytecode addition, Twig recursion and WASM recursion/loops. They are not four independent statistics ports or cross-language measurements of an identical array kernel. Required CI and release checks remain open. |

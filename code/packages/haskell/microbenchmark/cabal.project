@@ -1,0 +1,4 @@
+packages: . ../rank-statistics
+
+package microbenchmark
+  coverage: True

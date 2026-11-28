@@ -1,0 +1,6 @@
+(library
+ (name coding_adventures_rank_statistics)
+ (public_name coding-adventures-rank-statistics)
+ (instrumentation
+  (backend bisect_ppx))
+ (wrapped false))

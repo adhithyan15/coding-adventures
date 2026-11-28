@@ -1,0 +1,15 @@
+# Changelog
+
+## 0.1.0
+
+- Add paired collection, exact-rank analysis, and strict signed-64-bit replay.
+- Add the native indexed-array CLI and deterministic fixture/property tests.
+- Require complete standard metadata on replay, ignore blank revision environment values, reject blank CLI revisions, and reject negative batch counts.
+- Reject explicit JSON null for present metadata keys while preserving metadata-free replay and nullable analysis intervals.
+- Apply the shared ASCII-whitespace workload-label rule and keep other Unicode whitespace valid.
+- Launch the installed-package consumer verifier explicitly through PowerShell from Windows BUILD files.
+- Restore the installed consumer with a temporary NuGet.Config that maps CodingAdventures packages only to the packed local feed, plus an isolated cache and guarded temp cleanup.
+- Declare the actual clock, revision environment, and standard-stream capabilities; bound direct analysis inputs to the documented pair limit.
+- Invoke the installed consumer verifier with `pwsh` from the POSIX BUILD recipe.
+- Replay the native 40-pair CLI report through the separately installed NuGet consumer.
+- Reject NUL in every metadata value and preserve empty invocation arguments during replay.

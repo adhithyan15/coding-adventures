@@ -4804,6 +4804,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_guest_microbenchmark_support"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_microbenchmark",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "coding_adventures_hash_analysis"
 version = "0.1.0"
 dependencies = [
@@ -4849,6 +4858,27 @@ dependencies = [
 [[package]]
 name = "coding_adventures_md5"
 version = "0.1.0"
+
+[[package]]
+name = "coding_adventures_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_rank_statistics",
+ "coding_adventures_test_bootstrap",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "coding_adventures_mosaic_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+ "mosaic-analyzer",
+ "mosaic-vm",
+ "serde_json",
+]
 
 [[package]]
 name = "coding_adventures_music_analysis"
@@ -4976,6 +5006,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_rank_statistics"
+version = "0.1.0"
+
+[[package]]
 name = "coding_adventures_scrypt"
 version = "0.1.0"
 dependencies = [
@@ -5033,6 +5067,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_starlark_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+ "starlark-interpreter",
+]
+
+[[package]]
 name = "coding_adventures_storage_fs"
 version = "0.1.0"
 dependencies = [
@@ -5044,6 +5087,17 @@ dependencies = [
 [[package]]
 name = "coding_adventures_test_bootstrap"
 version = "0.5.2"
+
+[[package]]
+name = "coding_adventures_twig_guest_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+ "interpreter-ir",
+ "serde_json",
+ "twig-vm",
+]
 
 [[package]]
 name = "coding_adventures_uuid"
@@ -5477,6 +5531,18 @@ dependencies = [
  "coding_adventures_warrant_grammar",
  "drat-check",
  "toml 0.8.23",
+]
+
+[[package]]
+name = "coding_adventures_wasm_guest_microbenchmark"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_guest_microbenchmark_support",
+ "coding_adventures_microbenchmark",
+ "serde_json",
+ "wasm-module-encoder",
+ "wasm-runtime",
+ "wasm-types",
 ]
 
 [[package]]

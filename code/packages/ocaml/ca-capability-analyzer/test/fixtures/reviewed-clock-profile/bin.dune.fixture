@@ -1,0 +1,4 @@
+(executable
+ (name array_microbenchmark)
+ (public_name coding-adventures-array-microbenchmark)
+ (libraries coding_adventures_microbenchmark))

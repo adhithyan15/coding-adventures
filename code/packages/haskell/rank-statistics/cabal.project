@@ -1,0 +1,4 @@
+packages: .
+
+package rank-statistics
+  coverage: True

@@ -1425,7 +1425,8 @@ jobs:
             # in one run of N, and a log tail loses exactly that run's message.
             python3 "$report" --failures "$json1"
             python3 "$report" --failures "$json2"
-            tail -n 40 "$log" | tr -d '\r' | sed 's/^/| /'
+            # Also preserve the original assertion text after the structured failures.
+            cat "$log" | tr -d '\r' | sed 's/^/| /'
           fi
           # strace has a known race on a dying thread (PTRACE_LISTEN, EIO); the
           # sandbox tests re-run a step that hit exactly that, and each test logs
@@ -4693,23 +4694,38 @@ jobs:
           elif [ "$RUNNER_OS" = "macOS" ]; then
             brew install qpdf
           else
-            # The community Chocolatey feed answers 504 often enough to fail
-            # a required job outright, and when it does choco installs
-            # "0/0 packages" and EXITS 0, so its status says nothing. Judge
-            # by the result instead: retry until qpdf is actually on PATH,
-            # three attempts with a growing pause. A feed that stays down
-            # still fails below, at `qpdf --version`, naming qpdf -- loud,
-            # not skipped.
-            for attempt in 1 2 3; do
-              choco install qpdf -y --no-progress || true
-              if command -v qpdf >/dev/null 2>&1; then break; fi
-              if [ "$attempt" -lt 3 ]; then
-                echo "choco attempt $attempt did not install qpdf; retrying in $((attempt * 30))s"
-                sleep $((attempt * 30))
-              fi
-            done
+            # The Chocolatey community feed has repeatedly returned 504 for
+            # qpdf 12.4.2. Use qpdf's fixed MSVC x64 release asset so the PDF
+            # oracle remains independent and available without a package-feed
+            # lookup. Verify the release digest before extracting any files.
+            qpdf_version=12.4.2
+            qpdf_sha256=db87077e683630c1217e0e8f9a20a9749d952ab676e881c3689187763a5de25d
+            qpdf_url="https://github.com/qpdf/qpdf/releases/download/v${qpdf_version}/qpdf-${qpdf_version}-msvc64.zip"
+            qpdf_root="$(cygpath -u "$RUNNER_TEMP")/qpdf-${qpdf_version}"
+            qpdf_archive="${qpdf_root}.zip"
+            mkdir -p "$qpdf_root"
+            curl --fail --location --retry 3 --retry-all-errors \
+              --connect-timeout 20 --max-time 180 \
+              --output "$qpdf_archive" "$qpdf_url"
+            printf '%s  %s\n' "$qpdf_sha256" "$qpdf_archive" | sha256sum --check --strict
+            unzip -q -o "$qpdf_archive" -d "$qpdf_root"
+            qpdf_bin="$qpdf_root/qpdf-${qpdf_version}-msvc64/bin"
+            test -x "$qpdf_bin/qpdf.exe"
+            export PATH="$qpdf_bin:$PATH"
+            # GitHub's path file needs a native Windows path, while Bash needs
+            # the cygpath form above for this step.
+            cygpath -w "$qpdf_bin" >> "$GITHUB_PATH"
           fi
-          qpdf --version
+          qpdf_output="$(qpdf --version)"
+          printf '%s\n' "$qpdf_output"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            qpdf_first_line="${qpdf_output%%$'\n'*}"
+            qpdf_first_line="${qpdf_first_line%$'\r'}"
+            if [ "$qpdf_first_line" != "qpdf version ${qpdf_version}" ]; then
+              echo "expected qpdf ${qpdf_version}, got: $qpdf_first_line" >&2
+              exit 1
+            fi
+          fi
 
       # qpdf proves the file is well FORMED. It cannot prove the page is the
       # right way up: an upside-down page is structurally perfect, and PDF's
@@ -4933,9 +4949,6 @@ jobs:
             }
           }
 
-          foreach ($entry in $newPathEntries) {
-            $entry | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          }
           if ($newPathEntries.Count -gt 0) {
             $env:Path = "$env:Path;$($newPathEntries -join ';')"
           }
@@ -4963,10 +4976,13 @@ jobs:
 
           $toolchainBin = Split-Path -Parent $swiftExe
           if (-not $currentPathSet.ContainsKey($toolchainBin)) {
-            $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
             $env:Path = "$env:Path;$toolchainBin"
             $currentPathSet[$toolchainBin] = $true
           }
+          # GITHUB_PATH prepends entries in later steps. Keep the Swift
+          # directories at the end of PATH so the earlier MSVC/LLVM ordering
+          # still selects the intended cl.exe, link.exe, and clang-cl.exe.
+          "PATH=$env:Path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "Using Swift from $swiftExe"
 
           $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'User')
@@ -4988,6 +5004,11 @@ jobs:
           }
 
           where.exe swift
+
+      - name: Re-promote the compatible Visual Studio Clang after Swift setup
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true' && (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.needs_c_bounded_json_windows == 'true' || needs.detect.outputs.needs_c_neural_framework_windows == 'true' || needs.detect.outputs.needs_cpp_bounded_json_windows == 'true' || needs.detect.outputs.needs_cpp_neural_framework_windows == 'true')
+        shell: pwsh
+        run: python code/scripts/setup_msvc_dev_cmd.py --arch x64 --promote-vs-clang-cl
 
       # ── Java / Kotlin ──────────────────────────────────────────
       #
@@ -5024,10 +5045,10 @@ jobs:
             sudo apt-get install -y cpanminus
             # Pre-install Test2::V0 to the system Perl location (requires sudo).
             # Without sudo, cpanm falls back to ~/perl5 which prove cannot find.
-            sudo cpanm --quiet --notest Test2::V0
+            sudo cpanm --quiet --notest Test2::V0 Devel::Cover@1.52
           elif [ "$RUNNER_OS" = "macOS" ]; then
             brew install cpanminus
-            cpanm --quiet --notest Test2::V0
+            cpanm --quiet --notest Test2::V0 Devel::Cover@1.52
           fi
 
       - name: Set up Haskell

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "swift/microbenchmark",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The collector measures adjacent native batches with the monotonic Dispatch uptime clock."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GIT_REVISION",
+      "justification": "The executable records a supplied build revision in its report."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GITHUB_SHA",
+      "justification": "The executable accepts the standard CI revision variable as a fallback."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The command writes one JSON experiment report to standard output."
+    }
+  ],
+  "justification": "The library is in-memory; the CLI needs a monotonic clock, optional revision metadata, and JSON output."
+}

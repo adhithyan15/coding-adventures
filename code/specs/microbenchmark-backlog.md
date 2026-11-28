@@ -11,18 +11,51 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
 |---|---|---|---|---|
 | MB00 | P0 | Establish shared pairing and verdict semantics and the portable fixture. Land reusable Go and Python `rank-statistics` packages with independent exact validation and fuzz coverage. | None | Merged in [#20004](https://github.com/adhithyan15/coding-adventures/pull/20004) |
 | MB01 | P0 | Go and Python benchmark reference libraries and first indexed-array drivers. Import the independently tested statistics libraries. | MB00 | Merged in [#20040](https://github.com/adhithyan15/coding-adventures/pull/20040) |
-| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Implemented locally; awaiting review |
-| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01 | Local prototypes |
-| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Open |
-| MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Open |
-| MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | Open |
-| MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Open |
-| MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Open |
+| MB03 | P1 | Reference fixture registration across build lanes. Make shared-fixture changes select all consumers and verify that packaged test sources can find the fixture where applicable. | MB01 | Merged in [#20064](https://github.com/adhithyan15/coding-adventures/pull/20064) |
+| MB02 | P1 | Rust, TypeScript, Ruby, and C++ harnesses and array drivers. Evaluate reuse of Rust `statistics-core`, add reusable statistics packages where needed, and replay the same fixture. | MB01, MB03 | [#20073](https://github.com/adhithyan15/coding-adventures/pull/20073) current-head CI blocked by Rust capability manifests: rank-statistics is schema-v1; microbenchmark awaits signed approval for CLI time/stdout capabilities before its package-wide profile can be declared. |
+| MB04 | P1 | Native C and Swift harnesses and array drivers using the repository's compiler and test conventions. | MB01 | Reviewed locally; draft [#20080](https://github.com/adhithyan15/coding-adventures/pull/20080) awaits parent integration |
+| MB05 | P1 | C# and F# harnesses and array drivers. Reuse runtime statistics helpers where the public APIs remain idiomatic. | MB01 | Implemented and locally validated; review corrections completed |
+| MB06 | P1 | Java and Kotlin harnesses and array drivers. Reuse JVM helpers where practical. | MB01 | POSIX BUILD portability repair implemented; Windows BUILD and wide-cutoff tests validated locally; Linux validation awaits CI |
+| MB07 | P1 | Dart, Elixir, Lua, and Perl harnesses and array drivers. Use distinct PRs when toolchains or review scope warrant it. | MB01 | Implemented and reviewed; 37-consumer fixture integration pending review |
+| MB08 | P1 | Haskell and OCaml harnesses and array drivers. | MB01 | Implemented and reviewed; 37-consumer fixture integration pending review |
 | MB09 | P1 | Mosaic, Starlark, Twig, and WASM benchmark entry points. Verify the execution boundary and time guest batches using a monotonic host clock where appropriate. | MB01 | Open |
 | MB10 | P2 | Connect paired observations to the existing benchmark runner and VER07 evidence workflows. Exercise lossless export and replay. | MB01, MB02 | Open |
 | MB11 | P2 | Reproducible experiment manifest and walkthrough covering indexed traversal and growth policy. Record compiler/runtime, host, configuration, and raw samples. | MB01, MB10 | Open |
+| MB-WIN-RUBY | P0 | Keep both Ruby microbenchmark Windows BUILD fronts aligned with the repository StandardRB line-ending contract. | MB02 | Fixed on the current MB02 branch; CI recheck pending |
+| MB12 | P1 | Align the full JSON report readers on an explicit unique-member input profile, with escaped-key duplicate, lossless-integer, malformed-text, and metadata conformance cases. Keep map-only analysis APIs distinct from raw JSON ingress. | MB01, MB02, MB04, MB10 | Swift duplicate-aware replay in progress; remaining reader profiles pending |
+| MB-RUBY-JSON-DUP | P0 | Preserve recursive duplicate-member rejection in Ruby raw-report replay across JSON gem versions; explicitly disable parser duplicate acceptance while retaining the duplicate-aware object fallback. | MB12 | Fix implemented locally; JSON 2.21.2, bundled 3.2.0, and older 2.9.1 suites pass; CI-loaded version remains unrecorded |
 
 ## Delivery evidence
+
+- MB07 and MB08 native packages are implemented and reviewed on the current
+  integration branch. The pending integration registers their twelve actual
+  readers alongside the existing twenty-five, including the Go benchmark
+  runner; it is not merged, and the full twenty-two-lane rollout is not
+  complete.
+- Local native validation on November 25: the 37-reader Go selector, export,
+  fallback-cache tests and `go vet` pass. Dart VM/Node tests and its native
+  forty-pair replay and consumer smoke pass; Elixir tests, native replay and
+  consumer smoke pass; Lua tests, native CLI and consumer replay pass; Perl
+  tests and actual native forty-pair replay pass; Haskell tests and native
+  forty-pair replay pass; OCaml `dune build @fmt @all`, `dune runtest`, and
+  native forty-pair replay pass in the installed `coding-adventures` opam
+  switch. These are local validations, not merge or all-lane completion claims.
+- MB05 Windows consumer follow-up: passing a local package feed and a public
+  NuGet URL as repeated `dotnet restore -s` arguments resolved the URL as a
+  relative path on Windows PowerShell 5.1/.NET 9. The C# and F# verifiers now
+  write a temporary `NuGet.Config` with package-source mapping, sending only
+  `CodingAdventures.*` packages to that feed and other dependencies to nuget.org.
+  The scripts use an isolated package cache and guard recursive cleanup to the
+  canonical GUID child of the temp directory. Both installed consumers pass
+  locally; Linux CI remains the cross-platform validation.
+
+- MB06 follow-up: the Unix-like Java and Kotlin `BUILD` files had invoked
+  PowerShell for installed-consumer checks, so the benchmark-tool's POSIX shell
+  reported `powershell: not found` after Gradle succeeded. The package `BUILD`
+  fronts now call POSIX helpers; `BUILD_windows` retains the existing PowerShell
+  checks. Gradle tests, coverage gates, `installDist`, POM generation, and the
+  installed consumer with 40-pair replay passed locally on Windows. This host
+  has no Linux runtime, so end-to-end Unix-like verification remains pending CI.
 
 - MB00 merged on November 24, 2026 as `e7ba4e7a0`.
   [Ubuntu and Windows CI](https://github.com/adhithyan15/coding-adventures/actions/runs/45541548277)
@@ -30,21 +63,42 @@ Complete the all-22-lane rollout before returning to CPU simulator completion.
   Validation covered the exact sign-count oracle, Go race tests and fuzz targets,
   and 28 Python tests with 100% statement coverage. The Python source distribution
   includes the shared fixture.
-- MB01 delivers the Go and Python reference collectors and indexed-array drivers.
-  MB03 moves ahead of MB02 so fixture-only edits will select all existing consumers
-  before additional lanes depend on the fixture. MB03 will also verify fixture access
-  from packaged test sources.
-- MB03 registers the canonical fixture as an exact repository input for the four
-  current Go/Python consumers and verifies both language-filtered selection and
-  Kiln graph export. Go package tests, race/coverage suites, both fuzz targets per
-  package, vet, and builds passed. Python 3.13 suites passed (69 microbenchmark,
-  28 rank-statistics); Ruff passed. Both Python sdists were built, extracted, and
-  checked for byte-identical fixture access before their extracted test suites
-  passed (69 and 28 tests respectively). Focused build-tool registration/export
-  tests and `go vet ./...` passed. The broad build-tool suite was attempted; its
-  Windows executor tests fail because the nested `cmd.exe` environment cannot
-  resolve `ping`, even though the executable is present on the host; the full
-  suite is not recorded as passing.
+- MB01 merged on November 24, 2026 as `62f1f9ff`. The Go and Python
+  collectors and indexed-array drivers passed
+  [Ubuntu and Windows CI](https://github.com/adhithyan15/coding-adventures/actions/runs/45550346426).
+  The Windows performance-counter follow-up
+  [#20061](https://github.com/adhithyan15/coding-adventures/pull/20061) merged
+  on November 25 as `82235dcd` after
+  [CI passed](https://github.com/adhithyan15/coding-adventures/actions/runs/45573731687).
+  Native-driver smoke checks now complement controlled-clock tests so each
+  lane verifies positive durations at its default calibration settings.
+- MB03 merged on November 25, 2026 as `6739ca23`.
+  [CI passed](https://github.com/adhithyan15/coding-adventures/actions/runs/45574566075).
+  The planner selects the four original consumers when the fixture changes,
+  and both Kiln export and legacy fallback cache keys include its bytes.
+  Standalone Go sources and extracted Python source distributions replayed
+  the fixture without the repository fixture directory.
+- MB02 is the active item. Its four native ports extend the fixture
+  registration and replay checks. MB04 remains queued behind MB02.
+- Rust `rank-statistics` uses only caller-provided in-memory values and has an
+  explicit empty schema-v1 profile. The Rust `microbenchmark` package also ships
+  a CLI that reads the host clock and writes stdout. Its package-root profile
+  therefore needs `time.read` and `stdout.write` declarations with scope settled
+  by capability review; schema policy requires
+  hardware-key-signed approval for non-empty profiles. No matching approval is
+  present in the repository. Do not declare the package empty or add unsigned
+  grants; resolve the approval before the [full-schema CI gate](https://github.com/adhithyan15/coding-adventures/actions/runs/45807004828/job/139875431748) can pass.
+- The [Windows Venture acceptance step](https://github.com/adhithyan15/coding-adventures/actions/runs/45807004828/job/139875432412) in CI failed to resolve
+  `vitest` after npm installed 118 packages. The preceding Windows run passed
+  that same step with the same install count. The available logs do not
+  establish the reason for the missing command. Recheck the step on the next
+  CI run before changing Venture or shared toolchain setup.
+
+- MB03 and the Windows native clock repair [#20061](https://github.com/adhithyan15/coding-adventures/pull/20061)
+  merged with their required CI gates passing on November 25, 2026. The local
+  executor lookup problem was traced to an oversized inherited Windows PATH;
+  both previously failing timeout tests passed with a short child PATH. This
+  resolves those two failures, without claiming a complete local build-tool run.
 
 ### MB03 fixture-registration contract
 
@@ -66,7 +120,80 @@ at the tests' existing package-local fallback path. Keep runtime wheels free of
 test fixtures. MB03 does not add consumers for future language lanes; each new
 lane adds its reader and registration with its benchmark package.
 
+### MB02 integration contract
+
+Each of the four ports adds two real fixture consumers: a standalone statistics
+package and a paired benchmark package. Rust’s existing `statistics-core`
+uses R vector semantics. The Rust harness uses its standalone
+`rank-statistics` package for exact finite-sample interval cutoffs.
+Register the ports’ exact discovery names
+alongside the existing Go/Python consumers (twelve total), including Ruby's
+`ruby/rank_statistics` directory spelling. Fixture-only edits must select all
+twelve, language filters must select only that lane, and graph export must name
+the same canonical file for each consumer. Do not register unimplemented lanes.
+The legacy hash dispatcher must include the same file; a fixture-only bytes
+change must alter each consumer's cache key without touching package sources.
+
+Validate installed artifacts as well as source trees. Runtime metadata must
+describe the toolchain that built the executable; the installed Rust executable
+must not require a compiler on its runtime PATH. Collect forty positive native
+pairs per lane and replay the raw reports across lanes without imposing a speed
+threshold. Keep coverage, toolchain limitations, and publication status explicit.
+
+The C++ standalone rank-statistics profile limits a sample to 10,000 values so
+its private fixed-factor integer arithmetic has a documented bound. The shared
+paired-report contract already limits reports to 10,000 pairs; this profile does
+not change any portable benchmark fixture or report limit.
+
+The Ruby raw-report reader must reject duplicate decoded object members across
+the JSON gem versions used by its development and CI environments. Some parser
+versions warn and keep the last duplicate instead of routing both assignments
+through the supplied object class. Keep the duplicate-aware object class and
+explicitly disable duplicate acceptance in the parser; do not broaden this item
+into a dependency upgrade. Validate nested and escaped-key duplicates against
+the task-local JSON 2.21.2 reproduction and the normal bundled Ruby test suite.
+The CI log records JSON 2.21.2 being fetched and a duplicate-key warning, but it
+does not establish which version the failing test process loaded.
+
+Local integration validation replayed six native forty-pair reports (Go,
+Python, Rust, TypeScript, Ruby, C++) through all six implementations: all 36
+combinations reproduced their recorded analyses. These timings came from a
+shared development host and establish replay compatibility, not performance
+rankings between languages. The Go check calls the analysis API directly;
+the other five checks exercise each lane's full report replay reader.
+
 ## Completion criteria
+
+### MB04 integration contract
+
+The C and Swift ports add four actual canonical-fixture consumers to the
+twelve already implemented consumers. Register `c/microbenchmark`,
+`c/rank-statistics`, `swift/microbenchmark`, and `swift/rank-statistics` in
+selection, graph export, and fallback hash dispatch. Test exact-path filtering,
+each missing consumer, and cache invalidation on a fixture-only bytes change.
+
+C CLI validation covers unsigned-width negative wrapping, malformed UTF-8,
+and buffered output failures. Both timed array paths read the same prepared
+data; matching checksums alone do not establish matching work. Swift replay
+must preserve Int64 tokens and reject duplicate member names before Codable
+decoding can collapse them. Each lane needs a real native report and replay;
+the integration expands the cross-language report checks.
+
+The C lane's native acceptance also verifies test-link and installed-artifact
+portability: POSIX rank-statistics tests pass `-lm` after source inputs, while
+the installed-consumer helper builds, installs, and runs dependencies under one
+explicit CMake configuration. The library target does not inherit this
+test-only math link flag.
+
+On Windows CI, when Swift setup contributes another Clang directory after the
+Visual Studio bootstrap, re-promote the already selected Visual Studio
+`clang-cl` directory and verify it still meets the active MSVC STL minimum.
+
+Swift statistics and collection libraries target 95% source line coverage and
+the executable targets 80%, with actual instrumented paths reported separately.
+The external SwiftPM consumer uses local package paths. A sibling path dependency
+does not establish independent registry release readiness; release resolution
+remains an explicit follow-up before publication.
 
 - Each lane exposes a callable benchmark API, or a host entry point for a guest
   runtime, and runs the shared fixture and array workload.

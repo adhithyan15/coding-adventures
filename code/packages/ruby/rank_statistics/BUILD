@@ -1,0 +1,4 @@
+bundle config set path vendor/bundle
+bundle install --quiet --full-index
+bundle exec standardrb --no-fix lib/ test/
+bundle exec rake test

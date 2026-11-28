@@ -15,3 +15,11 @@ shared machines; use the library's injected clock for deterministic tests.
 The Windows native clock uses `QueryPerformanceCounter`; other platforms use
 Go's monotonic `time.Since`. Nanoseconds are the reporting unit, not a promise
 of nanosecond clock resolution. Invalid native readings fail the experiment.
+
+The public `Analyze` API accepts at most 10,000 pairs, matching collection and
+report limits. The generic rank-statistics API remains uncapped.
+
+The module currently requires the repository's sibling `rank-statistics`
+module through a local `replace`. BUILD exercises an external consumer module
+with explicit local replacements for both modules; it does not claim a
+published or registry-installed Go artifact.

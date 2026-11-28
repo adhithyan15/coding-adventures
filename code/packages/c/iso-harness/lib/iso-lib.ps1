@@ -26,7 +26,11 @@
         Iso-ExpectCompileFail -Lang c|cpp -Source f       → assert every compiler rejects f
 
     Environment knobs (same names as iso-lib.sh):
-        ISO_REQUIRE, ISO_CLANG_CL, ISO_INCLUDE, ISO_BUILD_DIR (default _build), ISO_CSTD, ISO_CXXSTD.
+        ISO_REQUIRE, ISO_CLANG_CL, ISO_INCLUDE, ISO_LINK_ARGS,
+        ISO_BUILD_DIR (default _build), ISO_CSTD, ISO_CXXSTD.
+        ISO_CLANG_CL is an optional absolute path pin for the selected clang-cl.exe.
+        ISO_LINK_ARGS is a space-separated list of linker arguments appended
+        after `/link` (leave empty for MSVC math APIs supplied by the C runtime).
 
     `cl.exe` must already be on PATH — in CI the msvc-dev-cmd action puts it
     there; locally, run from a "Developer Command Prompt" / after vcvars64.bat.
@@ -134,6 +138,8 @@ function Iso-BuildAndRun {
         throw "iso-harness: no $Lang compiler found (need cl.exe or clang-cl.exe on PATH)"
     }
     $buildDir = Iso-BuildDir
+    $linkArgs = @()
+    if ($env:ISO_LINK_ARGS) { $linkArgs = @($env:ISO_LINK_ARGS -split '\s+' | Where-Object { $_ }) }
     New-Item -ItemType Directory -Force -Path $buildDir | Out-Null
     foreach ($cc in $compilers) {
         $compiler = Iso-CompilerExecutable -Compiler $cc
@@ -146,7 +152,7 @@ function Iso-BuildAndRun {
         # default is 1 MiB, so a test that is fine elsewhere (a deep recursive
         # formatter, a large automatic buffer) overflowed here and looked like a
         # portability bug when it was only a smaller default.
-        & $compiler @flags $Sources "/Fe:$exe" "/Fo:$buildDir\" /link /STACK:8388608
+        & $compiler @flags $Sources "/Fe:$exe" "/Fo:$buildDir\" /link /STACK:8388608 @linkArgs
         if ($LASTEXITCODE -ne 0) { throw "iso-harness: [$cc] COMPILE FAILED for $Name" }
         Write-Host "iso-harness: [$cc] running $Name"
         & $exe

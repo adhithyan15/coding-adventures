@@ -1,0 +1,17 @@
+[package]
+name = "coding_adventures_microbenchmark"
+version = "0.1.0"
+edition = "2021"
+description = "Paired microbenchmark collection and replay for VER07"
+
+[dependencies]
+coding_adventures_rank_statistics = { version = "0.1.0", path = "../rank-statistics" }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { version = "0.5.2", path = "../test-bootstrap" }
+
+[[bin]]
+name = "array-microbenchmark"
+path = "src/bin/array-microbenchmark.rs"

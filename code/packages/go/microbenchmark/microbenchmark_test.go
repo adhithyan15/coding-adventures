@@ -131,6 +131,20 @@ func TestAnalyzeRejectsInvalidInput(t *testing.T) {
 	}
 }
 
+func TestAnalyzePairLimitBeforeRatioWork(t *testing.T) {
+	pairs := make([]Pair, 10_001)
+	if _, err := Analyze(pairs, 95, 1.05); err == nil {
+		t.Fatal("expected oversized analysis input to be rejected")
+	}
+	pairs = make([]Pair, 10_000)
+	for i := range pairs {
+		pairs[i] = Pair{BaselineNS: 1, CandidateNS: 1, Order: "baseline-first"}
+	}
+	if _, err := Analyze(pairs, 95, 1.05); err != nil {
+		t.Fatalf("maximum supported input rejected: %v", err)
+	}
+}
+
 func TestCollectRejectsConfigurationAndDependencies(t *testing.T) {
 	c := Config{Pairs: 1, ConfidencePercent: 95, MinimumFactor: 1.05, TargetNS: 1, MaxBatch: 1}
 	if _, err := Collect(CollectOptions{Config: c}); err == nil {

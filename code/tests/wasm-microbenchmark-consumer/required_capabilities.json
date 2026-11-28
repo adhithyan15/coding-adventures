@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "wasm/microbenchmark-consumer",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../packages/wasm/microbenchmark/target/wasm32-unknown-unknown/release/microbenchmark_wasm.wasm",
+      "justification": "The external Node consumer reads the built WebAssembly artifact from the producer package's release target directory."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The consumer prints one concise success summary after all artifact assertions pass."
+    }
+  ],
+  "justification": "This independent Node host loads the generated WASM artifact, supplies its explicit clock/workload imports, and verifies the public ABI."
+}

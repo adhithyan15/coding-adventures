@@ -85,6 +85,10 @@ taxonomy, declaration matching, dual FFI opt-in, hard bans, deterministic
 recursive discovery, first-class sensitive references, constrained includes,
 CLI entrypoint arguments and exits, and fail-closed parse, generated-source,
 Dune include/workspace/preprocessor, attribute, and extension handling.
+Directory tests also pin the inclusive source-file-count ceiling and the
+reviewed native-profile depth limit. Dune scanner tests cover whitespace,
+comments, and token-name boundaries; they test analyzer recognition rather
+than compile the synthetic Dune input.
 The exact `bisect_ppx` coverage stanza is accepted only in package-local
 `src/dune`, `bin/dune`, and `test/dune` files; root-level instrumentation and
 all other instrumentation backends remain rejected.
@@ -99,5 +103,10 @@ python test/check_coverage.py --coverage-glob "bisect*.coverage" \
   --source bin/main.ml --minimum 95
 ```
 
-The BUILD contracts require at least 95% measured production coverage and an
-installable release build.
+Pass Dune aliases as literal arguments when checking them from PowerShell; use
+`'@fmt'` rather than bare `@fmt`. The independent CI build runs this check
+from a copied package, so the test suite also covers the reviewed profile and
+its excluded build-output directories without requiring an adjacent package.
+
+The BUILD contracts require at least 95% Bisect-PPX source-point coverage and
+an installable release build. This metric is not line or branch coverage.

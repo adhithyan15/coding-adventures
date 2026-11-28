@@ -26,6 +26,9 @@ the standard does not require:
 actually turn "uses a non-ISO extension" into an error.
 Clang's MSVC-compatible driver needs its explicit pedantic switch as well:
 `/permissive-` alone accepted the negative GNU-extension fixtures in actual CI.
+On Windows CI, the selected Visual Studio `clang-cl` is re-promoted after Swift
+setup adds its toolchain to `GITHUB_PATH`; the helper verifies that this Clang
+still meets the active MSVC STL minimum before changing later-step precedence.
 
 ## Coverage is across the CI matrix
 
@@ -84,6 +87,7 @@ Iso-BuildAndRun -Lang c -Name ring-tests -Sources @('tests\ring_test.c', 'src\ri
 | `ISO_REQUIRE`   | space-separated compilers that MUST be present (else fail)     | *(none)* |
 | `ISO_CLANG_CL`  | selected absolute `clang-cl.exe` from MSVC setup; invalid explicit paths fail | PATH lookup |
 | `ISO_INCLUDE`   | space-separated include dirs (each becomes `-I`/`/I`)          | *(none)* |
+| `ISO_LINK_ARGS` | space-separated linker args; POSIX args follow source inputs, Windows args follow `/link` | *(none)* |
 | `ISO_CSTD`      | C standard                                                     | `c17`   |
 | `ISO_CXXSTD`    | C++ standard                                                   | `c++17` |
 | `ISO_BUILD_DIR` | output dir (never `build` — collides with `BUILD`)            | `_build` |

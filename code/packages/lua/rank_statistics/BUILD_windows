@@ -1,0 +1,4 @@
+lua tests\run.lua
+if errorlevel 1 exit /b %ERRORLEVEL%
+call tools\installed-consumer-smoke.cmd
+if errorlevel 1 exit /b %ERRORLEVEL%

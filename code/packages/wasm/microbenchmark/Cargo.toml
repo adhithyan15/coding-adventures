@@ -1,0 +1,23 @@
+[workspace]
+resolver = "2"
+
+[package]
+name = "microbenchmark-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded reusable WASM ABI for paired microbenchmark collection, analysis, and replay"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+coding_adventures_microbenchmark = { version = "0.1.0", path = "../../rust/microbenchmark" }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+panic = "abort"

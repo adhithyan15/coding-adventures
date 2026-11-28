@@ -10,7 +10,7 @@ from unittest.mock import patch
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-import setup_msvc_dev_cmd as msvc  # noqa: E402
+import setup_msvc_dev_cmd as msvc
 
 
 class EnvironmentParsingTests(unittest.TestCase):
@@ -121,6 +121,22 @@ class GitHubEnvironmentFileTests(unittest.TestCase):
                 destination.read_text(encoding="utf-8"),
             )
 
+    def test_appends_one_path_entry_for_later_steps(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "github-path"
+            msvc.append_github_path(destination, r"C:\VS\VC\Tools\Llvm\x64\bin")
+            self.assertEqual(
+                "C:\\VS\\VC\\Tools\\Llvm\\x64\\bin\n",
+                destination.read_text(encoding="utf-8"),
+            )
+
+    def test_rejects_multiline_path_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "github-path"
+            with self.assertRaises(ValueError):
+                msvc.append_github_path(destination, "C:\\valid\n::warning::injected")
+            self.assertFalse(destination.exists())
+
 
 class ClangClSelectionTests(unittest.TestCase):
     def test_selected_executable_is_absolute_and_preserves_spaces(self) -> None:
@@ -188,6 +204,82 @@ class ClangClSelectionTests(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertEqual(22, msvc.msvc_stl_min_clang_major({"INCLUDE": directory}))
+
+    def test_selects_compatible_vcvars_clang_after_swift_path_contribution(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            header = Path(directory) / "yvals_core.h"
+            header.write_text(
+                "#error STL1000: Unexpected compiler version, expected Clang 22 or newer.\n",
+                encoding="utf-8",
+            )
+            vs_clang = r"C:\VS\VC\Tools\Llvm\x64\bin"
+            environment = {
+                "PATH": r"C:\VS\VC\bin;C:\Swift\Toolchain\usr\bin",
+                "llvmX64": vs_clang,
+                "INCLUDE": directory,
+            }
+            selected = msvc.select_compatible_vs_clang_cl(
+                environment,
+                "x64",
+                has_clang_cl=lambda value: value == vs_clang,
+                probe_version=lambda value: (22, 1, 3) if value == vs_clang else None,
+            )
+            self.assertEqual((vs_clang, (22, 1, 3), 22), selected)
+
+    def test_rejects_vcvars_clang_older_than_the_active_msvc_stl(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            header = Path(directory) / "yvals_core.h"
+            header.write_text(
+                "#error STL1000: Unexpected compiler version, expected Clang 22 or newer.\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(RuntimeError, "older than MSVC STL minimum"):
+                msvc.select_compatible_vs_clang_cl(
+                    {"llvmX64": r"C:\VS\LLVM", "INCLUDE": directory},
+                    "x64",
+                    has_clang_cl=lambda _: True,
+                    probe_version=lambda _: (21, 1, 3),
+                )
+
+
+class WindowsMixedToolchainWorkflowTests(unittest.TestCase):
+    def test_swift_paths_are_appended_without_preempting_msvc_or_llvm(self) -> None:
+        repository = Path(__file__).resolve().parents[3]
+        workflow = (repository / ".github/workflows/ci.yml").read_text(
+            encoding="utf-8"
+        )
+        marker = "      - name: Set up Swift (Windows)\n"
+        self.assertIn(marker, workflow)
+        swift_step = workflow.split(marker, 1)[1].split("\n      - name:", 1)[0]
+
+        # GITHUB_PATH prepends paths in subsequent steps. Swift's installer
+        # therefore updates the existing ordered PATH through GITHUB_ENV,
+        # keeping MSVC bin and the selected LLVM bin ahead of Swift.
+        self.assertNotIn("$env:GITHUB_PATH", swift_step)
+        self.assertIn('$env:Path = "$env:Path;$($newPathEntries -join \';\')"', swift_step)
+        self.assertIn('$env:Path = "$env:Path;$toolchainBin"', swift_step)
+        self.assertIn('"PATH=$env:Path" | Out-File -FilePath $env:GITHUB_ENV', swift_step)
+        self.assertLess(
+            swift_step.index('$env:Path = "$env:Path;$($newPathEntries -join \';\')"'),
+            swift_step.index('"PATH=$env:Path" | Out-File'),
+        )
+        self.assertLess(
+            swift_step.index('$env:Path = "$env:Path;$toolchainBin"'),
+            swift_step.index('"PATH=$env:Path" | Out-File'),
+        )
+
+        # The dedicated Swift build, affected package build, and full build
+        # all observe the exported PATH. MSVC setup occurs earlier and its
+        # precedence is preserved because Swift no longer writes GITHUB_PATH.
+        msvc_setup = workflow.index("- name: Set up MSVC (Lua + C/C++ + Venture + LANG)")
+        swift_setup = workflow.index(marker)
+        swift_build = workflow.index("- name: Build and test affected Swift packages on Windows")
+        affected_build = workflow.index("- name: Build and test affected packages")
+        full_build = workflow.index("- name: Full build on main merge")
+        self.assertLess(msvc_setup, swift_setup)
+        self.assertLess(swift_setup, swift_build)
+        self.assertLess(swift_setup, affected_build)
+        self.assertLess(swift_setup, full_build)
 
 
 if __name__ == "__main__":
