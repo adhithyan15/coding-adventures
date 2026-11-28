@@ -50,3 +50,20 @@ Verify layout and payload error order and include histories with
 several simultaneous faults. Run both build lists, coverage, race,
 vet, 100,000 guided inputs and controls for applying uncommitted
 writes or reversing commit order.
+
+## Local verification
+
+The implementation is in `8fe69bcd01a`. An independent caller used a
+backward history search for each transaction state and collected images
+from the original stream at each commit. It matched 117,649 six-record
+histories, including 228 admitted histories and six that distinguish
+commit order from global write order. It checked 120 mixed-fault
+histories, layout failure precedence, and detached images even when
+several input records shared the same byte slice. It passed race and
+vet.
+
+Both command lists passed at 100% statement coverage with race and
+vet. Module tidy, 100,000 guided inputs and both mutation controls
+passed. The native suite also passed 6,561 finite and 1,000 seeded
+histories. Build discovery added only this package and its five
+expected edges per platform.
