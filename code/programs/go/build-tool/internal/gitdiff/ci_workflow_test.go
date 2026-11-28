@@ -68,11 +68,20 @@ func TestAnalyzeCIWorkflowPatchSelectsOCamlForWindowsBootstrapInputs(t *testing.
 
 func TestAnalyzeCIWorkflowPatchSelectsOCamlForMinGWProbeAndPreservesLuaMSVC(t *testing.T) {
 	probe := `
-@@ -1,0 +2,4 @@
+@@ -1,0 +2,13 @@
 +            opam exec -- bash -c '
++              set -euo pipefail
 +              command -v x86_64-w64-mingw32-gcc
 +              command -v x86_64-w64-mingw32-ar
-+              x86_64-w64-mingw32-gcc -c "$work/probe.c" -o "$work/probe.o"
++              test "$(x86_64-w64-mingw32-gcc -dumpmachine)" = "x86_64-w64-mingw32"
++              x86_64-w64-mingw32-ar --version
++              tmpdir="$(mktemp -d)"
++              trap "rm -rf \"$tmpdir\"" EXIT
++              printf "int ocaml_toolchain_probe(void) { return 0; }\n" > "$tmpdir/probe.c"
++              x86_64-w64-mingw32-gcc -c "$tmpdir/probe.c" -o "$tmpdir/probe.o"
++              x86_64-w64-mingw32-ar rcs "$tmpdir/libprobe.a" "$tmpdir/probe.o"
++              test -s "$tmpdir/libprobe.a"
++            '
 `
 	change := AnalyzeCIWorkflowPatch(probe)
 	if change.RequiresFullRebuild {

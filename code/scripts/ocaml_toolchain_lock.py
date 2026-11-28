@@ -127,7 +127,7 @@ EXPECTED_RUN_SHA256 = {
     "locked.run": "68cdbecd8ce825ae00f1f1516f3ab73bd06198ac9e3f1c238f06518a00353929",
 }
 GENERIC_BOOTSTRAP_RUN_SHA256 = (
-    "854f4eca30d99f989fece7ea7f3c6434012c05947761aca18e0b230085e3c912"
+    "b2e3544686f070af83e397c53e43296247a0165b9130602284a5cdb64fb60fe9"
 )
 GENERIC_MATRIX_PLAN_RUN_SHA256 = (
     # NN51 adds only native C++ dense training's dependency-aware Windows lane.
@@ -1417,8 +1417,8 @@ def validate_generic_ci_workflow_text(
         "command -v x86_64-w64-mingw32-gcc",
         "command -v x86_64-w64-mingw32-ar",
         'test "$(x86_64-w64-mingw32-gcc -dumpmachine)" = "x86_64-w64-mingw32"',
-        "x86_64-w64-mingw32-gcc -c \"$work/probe.c\" -o \"$work/probe.o\"",
-        "x86_64-w64-mingw32-ar rcs \"$work/libprobe.a\" \"$work/probe.o\"",
+        "x86_64-w64-mingw32-gcc -c \"$tmpdir/probe.c\" -o \"$tmpdir/probe.o\"",
+        "x86_64-w64-mingw32-ar rcs \"$tmpdir/libprobe.a\" \"$tmpdir/probe.o\"",
         f'test "$(opam --version)" = "{manifest["direct_versions"]["opam"]}"',
         f'test "$(opam exec -- ocamlc -version | tr -d \'\\r\')" = "{manifest["direct_versions"]["ocaml"]}"',
         "opam repository list --all --short --color=never",
