@@ -51,6 +51,10 @@ func TestGoHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) 
 	if !reflect.DeepEqual(inputs, []string{historicalWebVectorsPath}) {
 		t.Fatalf("fallback hash inputs = %v; want exactly vectors.json", inputs)
 	}
+	rustInputs := repositoryInputsForPackage("rust/historical-web")
+	if !reflect.DeepEqual(rustInputs, []string{historicalWebVectorsPath}) {
+		t.Fatalf("Rust fallback hash inputs = %v; want exactly vectors.json", rustInputs)
+	}
 	root := t.TempDir()
 	packageRoot := filepath.Join(root, "code", "packages", "go", "historical-web")
 	if err := os.MkdirAll(packageRoot, 0o755); err != nil {
@@ -91,13 +95,21 @@ func TestGoHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) 
 	if err != nil {
 		t.Fatalf("build Kiln graph: %v", err)
 	}
+	foundGo, foundRust := false, false
 	for _, node := range graph.Packages {
+		if node.Name != "go/historical-web" && node.Name != "rust/historical-web" {
+			continue
+		}
+		if !reflect.DeepEqual(node.RepoInputs, []string{historicalWebVectorsPath}) || len(node.RepoInputGlobs) != 0 || node.RepoInputsUnknown {
+			t.Fatalf("Kiln inputs for %s = %v, globs = %v, unknown = %v; want only vectors.json", node.Name, node.RepoInputs, node.RepoInputGlobs, node.RepoInputsUnknown)
+		}
 		if node.Name == "go/historical-web" {
-			if !reflect.DeepEqual(node.RepoInputs, []string{historicalWebVectorsPath}) || len(node.RepoInputGlobs) != 0 || node.RepoInputsUnknown {
-				t.Fatalf("Kiln inputs = %v, globs = %v, unknown = %v; want only vectors.json", node.RepoInputs, node.RepoInputGlobs, node.RepoInputsUnknown)
-			}
-			return
+			foundGo = true
+		} else {
+			foundRust = true
 		}
 	}
-	t.Fatal("go/historical-web missing from Kiln graph")
+	if !foundGo || !foundRust {
+		t.Fatalf("Kiln graph missing historical-web nodes: Go=%v Rust=%v", foundGo, foundRust)
+	}
 }
