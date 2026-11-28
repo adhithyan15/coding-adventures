@@ -36,3 +36,20 @@ leaf depth. Test valid historical fences, noncomparable keys and the
 largest supported degree. Run both build lists, race, vet, guided
 inputs and clean controls for skipping an inherited bound or the
 actual leaf link check.
+
+## Local verification
+
+The implementation is in `7790d7a1f49`. An independent caller
+checked 2,940 isolated refusals across every leaf position in
+eight reachable shapes. It included an otherwise ordered foreign
+tail, cloned leaves with matching contents, short or cyclic links,
+typed nil, unknown slice-backed nodes and noncomparable key types.
+It accepted valid large-degree trees. These checks passed on
+Linux/amd64 with race and vet and in emulated Linux/386.
+
+Both command lists passed on Linux at 96.7% statement coverage
+with race, vet and module tidy. The package passed 100,000 guided
+inputs and both mutation controls. The retained audit passed all
+327,680 bounded and 32,768 seeded transitions against the updated
+validator. All 6,022 build graph rows and 6,021 emitted recipes
+matched exactly.

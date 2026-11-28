@@ -8,7 +8,9 @@ replacement, search, deletion and scans.
 Keep `(*BTree[K,V]).IsValid() bool` as the public entry point.
 A nil root is valid exactly when the tree reports zero entries.
 An occupied root contains at least one key. Every other node uses
-the existing degree-dependent occupancy limits. All node key and
+the existing degree-dependent occupancy limits. Evaluate the upper
+key count without overflow across the constructor's accepted integer
+degrees. All node key and
 value counts must agree. Leaves have no children. Internal nodes
 have one more child than keys.
 
@@ -30,3 +32,27 @@ Use both build lists, coverage, race, vet, guided inputs and clean
 controls for dropping the inherited bound or the key/value pairing
 check. Retain exact evidence before admitting the validator for the
 reference engine.
+
+## Degree boundary reproduction
+
+An independent caller inserted one key into separate valid trees at
+four large constructor degrees. The existing upper key bound rejected
+the occupied root at `MaxInt/2 + 2` and `MaxInt` on the 64-bit host.
+Check whether the nonnegative key count divided by two reaches the
+degree. This expresses the same integer boundary without multiplying
+the degree.
+
+## Local verification
+
+The implementation is in `c18265fcfcb`. An independent caller
+matched 3,010 isolated malformed-node decisions across eight
+reachable base shapes. It also checked unequal leaf depth with
+an exact count, generic slice keys in both comparator directions,
+and the full supported degree ceiling. The same caller passed
+race and vet on Linux/amd64 and passed in an emulated Linux/386 run.
+
+Both command lists passed on Linux at 97.4% statement coverage.
+The full package passed race, vet, module tidy, 100,000 guided
+inputs and both mutation controls. The independent structural and
+public ordered-map histories passed with the revised validator.
+All 6,019 build graph rows and all 6,018 emitted recipes matched.
