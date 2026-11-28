@@ -317,12 +317,12 @@ struct HasherTests {
         )
 
         #expect(checkedObject.isEqual(productionObject))
-        #expect(checked.boundaries.count == 30)
-        #expect(checked.boundaries.flatMap(\.inputs).count == 45)
-        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 36)
+        #expect(checked.boundaries.count == 31)
+        #expect(checked.boundaries.flatMap(\.inputs).count == 46)
+        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 37)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "f8c6f1af1010ed1cd435cd9dea6708d49fe013c0e67c099e2df1e7c724297694"
+                == "d59c69c8b1116c6ad93c19c19bab6c027e1b1891df6cf058cbebd751e29e776a"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)

@@ -1,0 +1,1 @@
+- Register the exact DB04b NAND page-program vector as an input to `go/nand-page-program-cuts`. Its selection and Kiln source hash now include only that shared fixture. The repository boundary has 31 rules, 46 inputs, 37 distinct paths, 525 exact roots, 527 scopes, and 548 authorizations (digest `d59c69c8`).

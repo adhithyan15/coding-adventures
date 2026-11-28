@@ -371,15 +371,17 @@ var (
 		"code/specs/fixtures/game-clock-v1/cases.json",
 		"code/specs/game-clock.warrant",
 	}
-	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
-	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
-	nandFlashFixturePath           = "code/specs/fixtures/database-media-v1/nand-flash.json"
-	hddSimulatorFixturePath        = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
-	hddWriteCrashCutsFixturePath   = "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json"
-	nandFlashFixtureInputs         = []string{nandFlashFixturePath}
-	hddSimulatorFixtureInputs      = []string{hddSimulatorFixturePath}
-	hddWriteCrashCutsFixtureInputs = []string{hddWriteCrashCutsFixturePath}
-	typescriptGameInputFrameInputs = []string{
+	typescriptGameClockCorpusPaths   = []string{"code/specs/fixtures/game-clock-v1"}
+	gameInputFrameV1Paths            = []string{"code/specs/fixtures/game-input-frame-v1"}
+	nandFlashFixturePath             = "code/specs/fixtures/database-media-v1/nand-flash.json"
+	nandPageProgramCutsFixturePath   = "code/specs/fixtures/database-media-v1/nand-page-program-cuts.json"
+	hddSimulatorFixturePath          = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
+	hddWriteCrashCutsFixturePath     = "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json"
+	nandFlashFixtureInputs           = []string{nandFlashFixturePath}
+	nandPageProgramCutsFixtureInputs = []string{nandPageProgramCutsFixturePath}
+	hddSimulatorFixtureInputs        = []string{hddSimulatorFixturePath}
+	hddWriteCrashCutsFixtureInputs   = []string{hddWriteCrashCutsFixturePath}
+	typescriptGameInputFrameInputs   = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -1055,6 +1057,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the exact DB01 shared NAND flash vector",
 		matches:  isNANDFlashFixture,
 		paths:    nandFlashFixtureInputs,
+	},
+	{
+		name:     "go/nand-page-program-cuts",
+		language: "go",
+		inputs:   "the exact DB04b shared NAND page-program cut vector",
+		matches:  isNANDPageProgramCutsFixture,
+		paths:    nandPageProgramCutsFixtureInputs,
 	},
 	{
 		name:     "python/hdd-simulator",
@@ -2092,6 +2101,8 @@ func repositoryInputsForPackage(packageName string) []string {
 		return typescriptGameInputFrameInputs
 	case "python/nand-flash", "typescript/nand-flash", "c/nand-flash", "cpp/nand-flash", "go/nand-flash":
 		return nandFlashFixtureInputs
+	case "go/nand-page-program-cuts":
+		return nandPageProgramCutsFixtureInputs
 	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator", "go/hdd-simulator":
 		return hddSimulatorFixtureInputs
 	case "go/hdd-write-crash-cuts":
@@ -2782,6 +2793,10 @@ func isTypeScriptGameInputFrameInput(changed string) bool {
 // file-exact so sibling devices and similarly named vectors stay independent.
 func isNANDFlashFixture(changed string) bool {
 	return changed == nandFlashFixturePath
+}
+
+func isNANDPageProgramCutsFixture(changed string) bool {
+	return changed == nandPageProgramCutsFixturePath
 }
 
 func isHDDSimulatorFixture(changed string) bool {

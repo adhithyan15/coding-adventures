@@ -318,6 +318,25 @@ enum RepositorySourceInputBoundaryProjection {
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
+              "id": "repository-database-media-nand-page-program-cuts-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/nand-page-program-cuts"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/nand-page-program-cuts.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go nand-page-program-cuts tests read their exact shared DB04b interrupted-program vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
               "id": "repository-human-language-grammar-cell-inputs",
               "input_origin": "repository",
               "applies_to": {

@@ -1,0 +1,311 @@
+{
+  "schema": "coding-adventures.database-media.nand-page-program-cuts.v1",
+  "cases": [
+    {
+      "name": "before-accept",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 0,
+        "prefix_bytes": 0
+      },
+      "result": {
+        "state": {
+          "bytes": "ffffffff",
+          "programmed": false
+        },
+        "acknowledged": false
+      }
+    },
+    {
+      "name": "after-prefix-0",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 1,
+        "prefix_bytes": 0
+      },
+      "result": {
+        "state": {
+          "bytes": "ffffffff",
+          "programmed": true
+        },
+        "acknowledged": false
+      }
+    },
+    {
+      "name": "after-prefix-1",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 1,
+        "prefix_bytes": 1
+      },
+      "result": {
+        "state": {
+          "bytes": "10ffffff",
+          "programmed": true
+        },
+        "acknowledged": false
+      }
+    },
+    {
+      "name": "after-prefix-2",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 1,
+        "prefix_bytes": 2
+      },
+      "result": {
+        "state": {
+          "bytes": "1020ffff",
+          "programmed": true
+        },
+        "acknowledged": false
+      }
+    },
+    {
+      "name": "after-prefix-3",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 1,
+        "prefix_bytes": 3
+      },
+      "result": {
+        "state": {
+          "bytes": "102030ff",
+          "programmed": true
+        },
+        "acknowledged": false
+      }
+    },
+    {
+      "name": "after-media-no-ack",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 2,
+        "prefix_bytes": 0
+      },
+      "result": {
+        "state": {
+          "bytes": "10203040",
+          "programmed": true
+        },
+        "acknowledged": false
+      }
+    },
+    {
+      "name": "complete-acknowledged",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 3,
+        "prefix_bytes": 0
+      },
+      "result": {
+        "state": {
+          "bytes": "10203040",
+          "programmed": true
+        },
+        "acknowledged": true
+      }
+    },
+    {
+      "name": "all-ones-complete-still-marked",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "ffffffff",
+      "cut": {
+        "kind": 3,
+        "prefix_bytes": 0
+      },
+      "result": {
+        "state": {
+          "bytes": "ffffffff",
+          "programmed": true
+        },
+        "acknowledged": true
+      }
+    },
+    {
+      "name": "zero-prefix-all-ones-marked",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "ffffffff",
+      "cut": {
+        "kind": 1,
+        "prefix_bytes": 0
+      },
+      "result": {
+        "state": {
+          "bytes": "ffffffff",
+          "programmed": true
+        },
+        "acknowledged": false
+      }
+    },
+    {
+      "name": "refuse-reprogrammed-all-ones-page",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": true
+      },
+      "payload": "ffffffff",
+      "cut": {
+        "kind": 3,
+        "prefix_bytes": 0
+      },
+      "error": "already_programmed"
+    },
+    {
+      "name": "refuse-reprogrammed-partial-page",
+      "page_size": 4,
+      "before": {
+        "bytes": "10ffffff",
+        "programmed": true
+      },
+      "payload": "01020304",
+      "cut": {
+        "kind": 3,
+        "prefix_bytes": 0
+      },
+      "error": "already_programmed"
+    },
+    {
+      "name": "invalid-clear-marker-bytes",
+      "page_size": 4,
+      "before": {
+        "bytes": "00ffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 0,
+        "prefix_bytes": 0
+      },
+      "error": "invalid_page_state"
+    },
+    {
+      "name": "invalid-state-length",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 0,
+        "prefix_bytes": 0
+      },
+      "error": "invalid_page_state"
+    },
+    {
+      "name": "payload-length-before-invalid-cut",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "010203",
+      "cut": {
+        "kind": 255,
+        "prefix_bytes": -1
+      },
+      "error": "wrong_payload_length"
+    },
+    {
+      "name": "invalid-prefix-equals-size",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 1,
+        "prefix_bytes": 4
+      },
+      "error": "invalid_cut"
+    },
+    {
+      "name": "invalid-cut-kind-byte",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 255,
+        "prefix_bytes": 0
+      },
+      "error": "invalid_cut"
+    },
+    {
+      "name": "nonzero-prefix-on-before-accept",
+      "page_size": 4,
+      "before": {
+        "bytes": "ffffffff",
+        "programmed": false
+      },
+      "payload": "10203040",
+      "cut": {
+        "kind": 0,
+        "prefix_bytes": 1
+      },
+      "error": "invalid_cut"
+    },
+    {
+      "name": "invalid-zero-page-size",
+      "page_size": 0,
+      "before": {
+        "bytes": "",
+        "programmed": false
+      },
+      "payload": "",
+      "cut": {
+        "kind": 0,
+        "prefix_bytes": 0
+      },
+      "error": "invalid_page_size"
+    }
+  ]
+}
