@@ -53,3 +53,30 @@ proof that the Rust or Python implementation is equivalent to the model. The
 separate exhaustive replay of bounded inputs against the real parser is the
 source-level conformance evidence for the Python source so far; no equivalent
 exhaustive replay has yet been established for Rust.
+
+## HWEB08 request-line boundary SAT slice
+
+`sat_http10_request_line.py` uses the repository Go CDCL solver for a bounded
+byte-level miter between HWEB08 and HWEB00. It gives each octet in the complete
+request line eight Boolean variables, fixes the common GET prefix and
+` SP HTTP/1.0 CRLF` suffix, and checks total target lengths 1, 2, and 3. The
+target is `/` followed by zero to two ASCII letters, digits, `/`, `.`, `_`, or
+`-`. The HWEB00 miter constrains the same wire coordinates `wire[4:-2]` as its
+printable nonspace address. The internal H10 separator is an SP in that slice,
+so no shared-wire acceptance assignment exists in the checked domain.
+
+For every bounded target length, a legal HWEB08 line alone is SAT, strict
+HWEB08/HWEB00 shared-wire acceptance is UNSAT, and the negative control that
+relaxes the H00 printable-nonspace guard is SAT. This gives a concrete witness
+that the HWEB00 guard is material. The model fixes GET, excludes targets longer
+than three bytes, and models language conditions rather than either parser's
+scanner implementation. It does not prove scanner/source equivalence. HWEB08
+requires canonical CRLF; HWEB00 independently accepts LF or CRLF.
+
+Run from the repository root with the pinned tools:
+
+```sh
+HWEB_GO=/path/to/pinned/go/bin/go \
+  /path/to/pinned/python/bin/python3.13 \
+  code/packages/python/historical-web/verification/sat_http10_request_line.py
+```
