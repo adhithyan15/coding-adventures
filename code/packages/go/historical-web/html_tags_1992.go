@@ -99,15 +99,16 @@ func decodeEntities(s string) string {
 func anchorAttrs(source string) map[string]*string {
 	result := make(map[string]*string)
 	for i := 0; i < len(source); {
+		spaceStart := i
 		for i < len(source) && isSpace(source[i]) {
 			i++
+		}
+		if i == spaceStart || i >= len(source) || !isNameStart(source[i]) {
+			break
 		}
 		start := i
 		for i < len(source) && isNameChar(source[i]) {
 			i++
-		}
-		if start == i {
-			break
 		}
 		name := lowerASCII(source[start:i])
 		for i < len(source) && isSpace(source[i]) {
@@ -168,13 +169,6 @@ func appendText(nodes *[]Node, text string) {
 	if text == "" {
 		return
 	}
-	if len(*nodes) > 0 {
-		if prior, ok := (*nodes)[len(*nodes)-1].(TextNode); ok {
-			prior.Text += text
-			(*nodes)[len(*nodes)-1] = prior
-			return
-		}
-	}
 	*nodes = append(*nodes, TextNode{Text: text})
 }
 
@@ -233,6 +227,9 @@ func asciiEqualFold(left, right string) bool {
 
 // ParseHTMLTags1992 builds the HWEB00 teaching profile tree.
 func ParseHTMLTags1992(source string) ([]Node, error) {
+	// Python's source normalization happens before tokenization, including inside
+	// quoted attributes. Normalize once so every scanner sees the same input.
+	source = strings.ReplaceAll(source, "\r\n", "\n")
 	var root []Node
 	stack := make([]*Element, 0)
 	positions := make(map[string][]int)
@@ -361,18 +358,57 @@ func appendElement(root *[]Node, stack []*Element, element *Element) {
 }
 
 func publicNodes(nodes []Node) []Node {
-	result := make([]Node, len(nodes))
-	for i, node := range nodes {
-		switch value := node.(type) {
-		case TextNode:
-			result[i] = value
-		case *Element:
-			copy := Element{Tag: value.Tag, Attributes: value.Attributes, Children: publicNodes(value.Children)}
-			result[i] = copy
-		case Element:
-			value.Children = publicNodes(value.Children)
-			result[i] = value
+	// Build a postorder list without recursion; deeply nested input must not use
+	// the Go call stack. Text fragments are coalesced with one builder per list.
+	type frame struct {
+		source []Node
+		index  int
+	}
+	order := make([]*Element, 0)
+	stack := []frame{{source: nodes}}
+	for len(stack) > 0 {
+		f := &stack[len(stack)-1]
+		if f.index == len(f.source) {
+			stack = stack[:len(stack)-1]
+			continue
+		}
+		n, ok := f.source[f.index].(*Element)
+		f.index++
+		if ok {
+			order = append(order, n)
+			stack = append(stack, frame{source: n.Children})
 		}
 	}
-	return result
+	converted := make(map[*Element]Element, len(order))
+	for i := len(order) - 1; i >= 0; i-- {
+		e := order[i]
+		converted[e] = Element{Tag: e.Tag, Attributes: e.Attributes, Children: convertList(e.Children, converted)}
+	}
+	return convertList(nodes, converted)
+}
+
+func convertList(nodes []Node, converted map[*Element]Element) []Node {
+	out := make([]Node, 0, len(nodes))
+	var pending strings.Builder
+	flush := func() {
+		if pending.Len() > 0 {
+			out = append(out, TextNode{Text: pending.String()})
+			pending.Reset()
+		}
+	}
+	for _, n := range nodes {
+		switch v := n.(type) {
+		case TextNode:
+			pending.WriteString(v.Text)
+		case *Element:
+			flush()
+			out = append(out, converted[v])
+		case Element:
+			flush()
+			v.Children = convertList(v.Children, converted)
+			out = append(out, v)
+		}
+	}
+	flush()
+	return out
 }
