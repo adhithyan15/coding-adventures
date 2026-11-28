@@ -66,3 +66,17 @@ The following page I/O slice assembles and splits one page over the
 validated span and preserves lower-layer failures. A crash can cut a
 multi-block update between blocks. The WAL and recovery work will
 address that boundary with the backing device's explicit guarantees.
+
+## Local verification
+
+The implementation is in `c3f45303d4f`. Independent checks matched
+90,000 explicit occupied-block decisions and 200,000 comparisons
+against wide integer arithmetic. The maximum portable span passed
+with zero allocations. The independent test also passed race and vet.
+
+The package checked 29,760 small geometry and layout combinations,
+including 1,840 fitting reservations, and retains four portable JSON
+vectors. Both command lists passed at 100% statement coverage with
+race and vet. Module tidy, 100,000 guided inputs and both controlled
+failures passed. The build graph added only the layout package and
+its verified block-contract dependency.

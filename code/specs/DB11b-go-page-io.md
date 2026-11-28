@@ -56,3 +56,17 @@ coverage, race, vet, 100,000 guided inputs and clean controls that
 skip an earlier error or write a block at the wrong offset. The
 runtime depends on the layout and block contract. Backend modules
 participate in tests.
+
+## Local verification
+
+The implementation is in `78e145810a8`. Independent checks matched
+4,860 scripted call and fault decisions and 39 actual HDD page flush
+cuts and restarts, with a memory comparator. The caller checked exact
+block order, partial write counts, returned byte ownership, and both
+blocks adjacent to the written page. It also passed race and vet.
+
+The native suite exercised 20,000 seeded operations and all 75
+barrier cut cases for an eight-sector page. Both command lists
+passed at 100% statement coverage with race and vet. Module tidy,
+100,000 guided inputs and both mutation controls passed. The graph
+and recipes added only the pager and its expected dependencies.
