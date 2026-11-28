@@ -12,39 +12,47 @@ def _forbid(assignments: list[tuple[int, bool]]) -> tuple[int, ...]:
 
 
 def _cnf(*, guard_max_length: bool, require_negative_result: bool) -> str:
-    """Encode a positive int32 length and the 32-bit result of adding six."""
+    """Encode the source's checked ``4 + length`` then ``addressEnd + 2``."""
     width = 32
-    constant = 6
     length = list(range(1, width + 1))
-    result = list(range(width + 1, 2 * width + 1))
-    carry = list(range(2 * width + 1, 3 * width + 2))
-    clauses: list[tuple[int, ...]] = [(-carry[0],)]
+    address_end = list(range(width + 1, 2 * width + 1))
+    request_length = list(range(2 * width + 1, 3 * width + 1))
+    carry_first = list(range(3 * width + 1, 4 * width + 2))
+    carry_second = list(range(4 * width + 2, 5 * width + 3))
+    clauses: list[tuple[int, ...]] = [(-carry_first[0],), (-carry_second[0],)]
 
     # The encoder rejects empty addresses, and Span.Length is a nonnegative Int32.
     clauses.append((-length[-1],))
     clauses.append(tuple(length[:-1]))
-    for bit in range(width):
-        a, out, cin, cout = length[bit], result[bit], carry[bit], carry[bit + 1]
-        addend = bool(constant & (1 << bit))
-        for a_value in (False, True):
-            for carry_value in (False, True):
-                total = int(a_value) + int(carry_value) + int(addend)
-                for out_value in (False, True):
-                    for next_value in (False, True):
-                        if (out_value, next_value) != (
-                            bool(total & 1),
-                            bool(total >> 1),
-                        ):
-                            clauses.append(
-                                _forbid(
-                                    [
-                                        (a, a_value),
-                                        (cin, carry_value),
-                                        (out, out_value),
-                                        (cout, next_value),
-                                    ]
+
+    def add_constant(
+        source: list[int], output: list[int], carry: list[int], value: int
+    ) -> None:
+        for bit in range(width):
+            a, out, cin, cout = source[bit], output[bit], carry[bit], carry[bit + 1]
+            addend = bool(value & (1 << bit))
+            for a_value in (False, True):
+                for carry_value in (False, True):
+                    total = int(a_value) + int(carry_value) + int(addend)
+                    for out_value in (False, True):
+                        for next_value in (False, True):
+                            if (out_value, next_value) != (
+                                bool(total & 1),
+                                bool(total >> 1),
+                            ):
+                                clauses.append(
+                                    _forbid(
+                                        [
+                                            (a, a_value),
+                                            (cin, carry_value),
+                                            (out, out_value),
+                                            (cout, next_value),
+                                        ]
+                                    )
                                 )
-                            )
+
+    add_constant(length, address_end, carry_first, 4)
+    add_constant(address_end, request_length, carry_second, 2)
 
     # A successful checked Int32 addition requires Length <= Int32.MaxValue - 6.
     # The only excluded nonnegative values are the final six Int32 values.
@@ -60,9 +68,9 @@ def _cnf(*, guard_max_length: bool, require_negative_result: bool) -> str:
                 )
             )
     if require_negative_result:
-        clauses.append((result[-1],))
+        clauses.append((request_length[-1],))
 
-    count = 3 * width + 1
+    count = 5 * width + 2
     lines = [f"p cnf {count} {len(clauses)}"]
     lines.extend(" ".join(map(str, clause)) + " 0" for clause in clauses)
     return "\n".join(lines) + "\n"
@@ -92,7 +100,7 @@ def main() -> None:
     actual = (legal, guarded_overflow, mutant_overflow)
     if actual != expected:
         raise SystemExit(f"expected {expected}, got {actual}")
-    print("int32 requestLength = address.Length + 6: legal completion SAT")
+    print("checked `4 + length`, then `addressEnd + 2`: legal completion SAT")
     print("max-length-guarded addition with negative wrapped length: UNSAT")
     print("mutant without max-length guard and negative wrapped length: SAT")
 
