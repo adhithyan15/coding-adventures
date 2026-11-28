@@ -322,7 +322,6 @@ static int arena_invariants(const HwebHtmlDoc *doc) {
 
 static void ownership_and_boundaries(void) {
     static const uint8_t nul_html[] = {'a',0,'b'};
-    static const uint8_t bad_utf8[] = {0xf0,0x80,0x80,0x80};
     static const uint8_t response[] = {0x41,0x00,0x7f};
     uint8_t owned_source[] = "<A HREF='original'>text</A>";
     uint8_t address[] = {'/','o','k'}; uint8_t original_address[] = {'/','o','k'};
@@ -334,22 +333,46 @@ static void ownership_and_boundaries(void) {
     ISO_CHECK(bytes.length == 9 && memcmp(bytes.data, "GET /ok\r\n", 9) == 0);
     hweb_bytes_free(&bytes); ISO_CHECK(bytes.data == NULL && bytes.length == 0);
     hweb_bytes_free(&bytes); ISO_CHECK(bytes.data == NULL && bytes.length == 0);
+    hweb_bytes_free(NULL);
+    ISO_CHECK(hweb_http09_encode_request((const uint8_t *)"/ok", 3, NULL, &error) == HWEB_ERR_ARGUMENT);
+    ISO_CHECK(error.status == HWEB_ERR_ARGUMENT && error.byte_offset == HWEB_NO_INDEX);
+    ISO_CHECK(hweb_http09_parse_request((const uint8_t *)"GET /\n", 6, NULL, &error) == HWEB_ERR_ARGUMENT);
+    ISO_CHECK(hweb_http09_encode_request(NULL, 1, &bytes, &error) == HWEB_ERR_ARGUMENT);
+    ISO_CHECK(bytes.data == NULL && bytes.length == 0 && error.byte_offset == HWEB_NO_INDEX);
+    ISO_CHECK(hweb_http09_parse_request(NULL, 1, &bytes, &error) == HWEB_ERR_ARGUMENT);
+    ISO_CHECK(bytes.data == NULL && bytes.length == 0);
+    ISO_CHECK(hweb_http09_parse_request(NULL, 0, &bytes, &error) == HWEB_ERR_PROTOCOL);
+    ISO_CHECK(bytes.data == NULL && bytes.length == 0);
+    ISO_CHECK(hweb_http09_decode_response(response, sizeof response, NULL, &error) == HWEB_ERR_ARGUMENT);
+    ISO_CHECK(hweb_http09_decode_response(NULL, 1, &bytes, &error) == HWEB_ERR_ARGUMENT);
+    ISO_CHECK(bytes.data == NULL && bytes.length == 0);
+    ISO_CHECK(hweb_http09_decode_response(NULL, 0, &bytes, &error) == HWEB_OK);
+    ISO_CHECK(bytes.data == NULL && bytes.length == 0);
     ISO_CHECK(hweb_http09_encode_request((const uint8_t *)"/bad address", 12, &bytes, &error) == HWEB_ERR_PROTOCOL);
-    ISO_CHECK(bytes.data == NULL && bytes.length == 0 && error.status == HWEB_ERR_PROTOCOL);
+    ISO_CHECK(bytes.data == NULL && bytes.length == 0 && error.status == HWEB_ERR_PROTOCOL && error.byte_offset == 4);
     ISO_CHECK(hweb_http09_decode_response(response, sizeof response, &bytes, &error) == HWEB_OK);
     ISO_CHECK(bytes.length == sizeof response && memcmp(bytes.data, response, sizeof response) == 0);
     hweb_bytes_free(&bytes);
     ISO_CHECK(hweb_http09_decode_response((const uint8_t *)"\x80", 1, &bytes, &error) == HWEB_ERR_PROTOCOL);
-    ISO_CHECK(bytes.data == NULL && bytes.length == 0);
+    ISO_CHECK(bytes.data == NULL && bytes.length == 0 && error.byte_offset == 0);
     bytes.data = (uint8_t *)malloc(1); bytes.length = 1;
     if (bytes.data != NULL) {
         uint8_t *owned = bytes.data; bytes.data[0] = 0x5a;
-        ISO_CHECK(hweb_http09_decode_response((const uint8_t *)"\x80", 1, &bytes, &error) == HWEB_ERR_ARGUMENT);
+        ISO_CHECK(hweb_http09_encode_request((const uint8_t *)"/ok", 3, &bytes, &error) == HWEB_ERR_ARGUMENT);
+        ISO_CHECK(bytes.data == owned && bytes.length == 1 && bytes.data[0] == 0x5a);
+        ISO_CHECK(hweb_http09_parse_request((const uint8_t *)"GET /\n", 6, &bytes, &error) == HWEB_ERR_ARGUMENT);
+        ISO_CHECK(bytes.data == owned && bytes.length == 1 && bytes.data[0] == 0x5a);
+        ISO_CHECK(hweb_http09_decode_response((const uint8_t *)"A", 1, &bytes, &error) == HWEB_ERR_ARGUMENT);
         ISO_CHECK(bytes.data == owned && bytes.length == 1 && bytes.data[0] == 0x5a);
         hweb_bytes_free(&bytes);
     } else ISO_CHECK(0);
-    ISO_CHECK(hweb_parse_html_tags_1992(bad_utf8, sizeof bad_utf8, &doc, &error) == HWEB_ERR_UTF8);
-    ISO_CHECK(doc == NULL && error.status == HWEB_ERR_UTF8);
+    ISO_CHECK(hweb_parse_html_tags_1992((const uint8_t *)"<P>", 3, NULL, &error) == HWEB_ERR_ARGUMENT);
+    ISO_CHECK(error.status == HWEB_ERR_ARGUMENT && error.byte_offset == HWEB_NO_INDEX);
+    ISO_CHECK(hweb_parse_html_tags_1992(NULL, 1, &doc, &error) == HWEB_ERR_ARGUMENT);
+    ISO_CHECK(doc == NULL && error.byte_offset == HWEB_NO_INDEX);
+    ISO_CHECK(hweb_parse_html_tags_1992(NULL, 0, &doc, &error) == HWEB_OK);
+    ISO_CHECK(doc != NULL && hweb_html_node_count(doc) == 0 && hweb_html_root_first(doc) == HWEB_NO_INDEX);
+    hweb_html_doc_free(&doc);
     ISO_CHECK(hweb_parse_html_tags_1992(nul_html, sizeof nul_html, &doc, &error) == HWEB_OK);
     ISO_CHECK(doc != NULL && arena_invariants(doc) && hweb_html_node_count(doc) == 1);
     if (doc != NULL) {
@@ -381,6 +404,49 @@ static void ownership_and_boundaries(void) {
     }
     hweb_html_doc_free(&doc);
     ISO_CHECK(memcmp(canary, "\xa5\xa5\xa5\xa5\xa5\xa5\xa5\xa5\xa5\xa5\xa5\xa5", sizeof canary) == 0);
+}
+
+static void utf8_boundaries_and_malformed_attributes(void) {
+    static const uint8_t valid[] = {'a',0xe2,0x82,0xac,0xf0,0x9f,0x98,0x80,'z'};
+    static const struct { uint8_t bytes[4]; size_t length; size_t offset; } invalid[] = {
+        {{0xe2,0x82,0,0}, 2, 2},       /* truncated three-byte scalar */
+        {{0xf0,0x9f,0,0}, 2, 2},       /* four-byte scalar missing byte 3 */
+        {{0xf0,0x9f,0x98,0}, 3, 3},    /* four-byte scalar missing byte 4 */
+        {{0xe2,'A',0,0}, 2, 1},         /* bad continuation 2 */
+        {{0xe2,0x82,'A',0}, 3, 2},      /* bad continuation 3 */
+        {{0xf0,0x9f,'A',0x80}, 4, 2},   /* bad continuation 3 */
+        {{0xf0,0x9f,0x98,'A'}, 4, 3}    /* bad continuation 4 */
+    };
+    static const char *const malformed[] = {"<A HREF=>text</A>", "<A HREF==x>text</A>"};
+    size_t i;
+    HwebHtmlDoc *doc = NULL; HwebError error;
+    ISO_CHECK(hweb_parse_html_tags_1992(valid, sizeof valid, &doc, &error) == HWEB_OK);
+    ISO_CHECK(doc != NULL && hweb_html_node_count(doc) == 1 && arena_invariants(doc));
+    if (doc != NULL) {
+        const HwebNode *text = hweb_html_node_at(doc, 0);
+        ISO_CHECK(text && text->kind == HWEB_NODE_TEXT && text->text.length == sizeof valid &&
+                  memcmp(text->text.data, valid, sizeof valid) == 0);
+    }
+    hweb_html_doc_free(&doc);
+    for (i = 0; i < sizeof invalid / sizeof invalid[0]; i++) {
+        doc = NULL;
+        ISO_CHECK(hweb_parse_html_tags_1992(invalid[i].bytes, invalid[i].length, &doc, &error) == HWEB_ERR_UTF8);
+        ISO_CHECK(doc == NULL && error.status == HWEB_ERR_UTF8 && error.byte_offset == invalid[i].offset);
+    }
+    for (i = 0; i < sizeof malformed / sizeof malformed[0]; i++) {
+        const HwebNode *anchor, *text;
+        const HwebAttribute *attribute;
+        doc = NULL;
+        ISO_CHECK(hweb_parse_html_tags_1992((const uint8_t *)malformed[i], strlen(malformed[i]), &doc, &error) == HWEB_OK);
+        ISO_CHECK(doc != NULL && arena_invariants(doc) && hweb_html_node_count(doc) == 2);
+        anchor = doc ? hweb_html_node_at(doc, hweb_html_root_first(doc)) : NULL;
+        attribute = anchor ? hweb_html_attribute_at(doc, anchor->first_attribute_index) : NULL;
+        text = anchor ? hweb_html_node_at(doc, anchor->first_child_index) : NULL;
+        ISO_CHECK(anchor && anchor->kind == HWEB_NODE_ELEMENT && view_eq(anchor->tag, "a") && anchor->attribute_count == 1);
+        ISO_CHECK(attribute && view_eq(attribute->name, "href") && !attribute->has_value && attribute->value.length == 0);
+        ISO_CHECK(text && text->kind == HWEB_NODE_TEXT && view_eq(text->text, "text"));
+        hweb_html_doc_free(&doc);
+    }
 }
 
 static void deep_and_raw_utf8(void) {
@@ -536,6 +602,7 @@ int main(void) {
     fixture_replay();
     exhaustive_http_short_wire();
     ownership_and_boundaries();
+    utf8_boundaries_and_malformed_attributes();
     deep_and_raw_utf8();
     property_and_fuzz();
     return ISO_TEST_RESULT();
