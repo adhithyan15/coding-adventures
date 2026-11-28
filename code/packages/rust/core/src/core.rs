@@ -142,7 +142,9 @@ impl Core {
     /// Unlike [`Core::new`], this path sends one named value per matching
     /// source to `ISADecoder::execute_with_forwarding`. It requires both
     /// forwarding and hazard detection in the configuration so a load-use
-    /// dependency is held until its MEM value is available.
+    /// dependency is held until its MEM value is available. The opt-in path
+    /// currently supports only a scalar, ordered Fetch/Decode/Execute/Memory/
+    /// Writeback pipeline; split or reordered stage layouts are rejected.
     pub fn new_with_operand_forwarding(
         config: CoreConfig,
         decoder: Box<dyn ISADecoder>,
@@ -150,6 +152,11 @@ impl Core {
         if !config.forwarding || !config.hazard_detection {
             return Err(
                 "operand-indexed forwarding requires forwarding and hazard detection".to_string(),
+            );
+        }
+        if !supports_operand_forwarding_topology(&config) {
+            return Err(
+                "operand-indexed forwarding requires scalar Fetch/Decode/Execute/Memory/Writeback stages in order".to_string(),
             );
         }
         Self::new_internal(config, decoder, true)
@@ -440,6 +447,32 @@ impl Core {
         &mut self.pipeline
     }
 
+}
+
+/// The operand-indexed Core resolver models one producer position for each
+/// pipeline category. Keep that opt-in assumption explicit until split-stage
+/// age and readiness rules are defined; the general Core constructor remains
+/// free to use any valid `PipelineConfig`.
+fn supports_operand_forwarding_topology(config: &CoreConfig) -> bool {
+    let pipeline = &config.pipeline;
+    if pipeline.execution_width != 1 {
+        return false;
+    }
+    if pipeline.stages.is_empty() {
+        // An empty stage list is the existing Core shorthand for the classic
+        // five-stage configuration.
+        return true;
+    }
+
+    let categories: Vec<_> = pipeline.stages.iter().map(|stage| stage.category).collect();
+    categories
+        == [
+            StageCategory::Fetch,
+            StageCategory::Decode,
+            StageCategory::Execute,
+            StageCategory::Memory,
+            StageCategory::Writeback,
+        ]
 }
 
 // =========================================================================
@@ -1018,6 +1051,34 @@ mod tests {
         let mut config = simple_config();
         config.hazard_detection = false;
         assert!(Core::new_with_operand_forwarding(config, Box::new(MockDecoder::new())).is_err());
+    }
+
+    #[test]
+    fn core_opt_in_rejects_split_or_reordered_stage_topologies() {
+        let mut deep = simple_config();
+        deep.pipeline = PipelineConfig::deep_13_stage();
+        let error = Core::new_with_operand_forwarding(deep, Box::new(MockDecoder::new()))
+            .err()
+            .expect("split stage topology has no defined forwarding age rule");
+        assert!(error.contains("scalar Fetch/Decode/Execute/Memory/Writeback"));
+
+        let mut reordered = simple_config();
+        reordered.pipeline.stages.swap(1, 2);
+        assert!(Core::new_with_operand_forwarding(reordered, Box::new(MockDecoder::new())).is_err());
+    }
+
+    #[test]
+    fn core_opt_in_rejects_non_scalar_execution_width() {
+        let mut config = simple_config();
+        config.pipeline.execution_width = 2;
+        assert!(Core::new_with_operand_forwarding(config, Box::new(MockDecoder::new())).is_err());
+    }
+
+    #[test]
+    fn default_core_still_accepts_deep_pipeline_configuration() {
+        let mut config = simple_config();
+        config.pipeline = PipelineConfig::deep_13_stage();
+        assert!(Core::new(config, Box::new(MockDecoder::new())).is_ok());
     }
 
     #[test]
