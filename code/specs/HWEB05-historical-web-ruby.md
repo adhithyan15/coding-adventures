@@ -19,7 +19,7 @@ Addresses are copied to a frozen `ASCII-8BIT` string of printable ASCII bytes.
 containing `GET `, the address, and CRLF; if the object's stored value is
 missing or fails validation, the error is `:invalid_address`. It rechecks a
 frozen snapshot of the address object's stored value, including for objects
-created with `allocate`.
+created with `allocate`. The successful wire string is frozen.
 `parse_http09_request(wire)` treats a Ruby `String` as uninterpreted octets,
 accepts exactly one request line terminated by CRLF or LF, and returns an
 address or `:invalid_request`. `decode_http09_response(body)` checks each byte
@@ -36,7 +36,9 @@ The returned document has flat `nodes` and `roots` arrays. `NodeId` values are
 integer indices into the same node array. `HtmlTextNode` has `kind: :text` and
 `text`; `HtmlElementNode` has `kind: :element`, `tag`, string-keyed
 `attributes`, and ordered `children` indices. A `nil` attribute value means
-that a recognized anchor attribute was present without a value. No node
+that a recognized anchor attribute was present without a value. The arena,
+node records, child arrays, attribute hashes, and attribute values are frozen.
+No node
 recursively owns another node, so building and dropping deeply nested input
 does not recurse through the tree.
 
