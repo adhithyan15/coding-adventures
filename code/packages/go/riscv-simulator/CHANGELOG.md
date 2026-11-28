@@ -5,9 +5,16 @@
 ### Added
 - Added `NewRiscVCoreWithPreciseMemory` for opt-in classic-pipeline aligned
   `LW`/`SW` bounds checking, WB store commits, and terminal data-fault results.
+- Added `NewRiscVCoreWithPreciseMemoryLatency` and the opt-in
+  `DataMemoryLatencyCycles` setting for deterministic one-outstanding flat-RAM
+  wait cycles while preserving precise WB-only stores.
+- Exposed detached precise memory request timing evidence for issue, waits, and
+  readiness, separately from architectural store commits.
 - Opted the RV32I core adapter into typed source-operand forwarding and added
   a dependent pipeline-vs-sequential regression including load-use, branch,
   and store-register operands.
+- Added bounded generated and fuzzed in-memory pipeline-vs-sequential checks
+  for dependency spacing, aligned store/load, x0, and branch paths.
 - Added opt-in host byte I/O syscalls for compiler end-to-end tests.
 
 ## [0.3.0] - 2026-04-02

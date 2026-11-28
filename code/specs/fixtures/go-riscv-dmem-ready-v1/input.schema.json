@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "go-riscv-dmem-ready-input-v1",
+  "title": "RV32I D-MEM ready/wait fixture input",
+  "type": "object",
+  "properties": {
+    "schema": {"const": "go-riscv-dmem-ready-input-v1"},
+    "cases": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {"$ref": "#/$defs/d05CompatibilityCase"},
+        {"$ref": "#/$defs/delayedStoreLoadCase"},
+        {"$ref": "#/$defs/storeBeforeFaultCase"}
+      ],
+      "items": false
+    }
+  },
+  "required": ["schema", "cases"],
+  "additionalProperties": false,
+  "$defs": {
+    "initialWord": {
+      "type": "object",
+      "properties": {
+        "address": {"type": "integer", "minimum": 0, "maximum": 65532, "multipleOf": 4},
+        "value": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+      },
+      "required": ["address", "value"],
+      "additionalProperties": false
+    },
+    "baseCase": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string"},
+        "mode": {"const": "precise-flat-ram"},
+        "latency_cycles": {"type": "integer", "minimum": 1, "maximum": 400},
+        "ram_bytes": {"type": "integer", "minimum": 4, "maximum": 65536, "multipleOf": 4},
+        "max_cycles": {"type": "integer", "minimum": 1, "maximum": 400},
+        "program_bytes_hex": {"type": "string", "minLength": 8, "maxLength": 256, "pattern": "^(?:[0-9a-f]{2})+$"},
+        "initial_memory_words": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/initialWord"}
+        }
+      },
+      "required": ["id", "mode", "latency_cycles", "ram_bytes", "max_cycles", "program_bytes_hex", "initial_memory_words"]
+    },
+    "d05CompatibilityCase": {
+      "allOf": [
+        {"$ref": "#/$defs/baseCase"},
+        {
+          "type": "object",
+          "properties": {
+            "id": {"const": "d05-precise-latency-one"},
+            "latency_cycles": {"const": 1},
+            "ram_bytes": {"const": 256},
+            "max_cycles": {"const": 100},
+            "program_bytes_hex": {"const": "13003006930000001301000823201100930110008321010063841100930230061382110073000000"},
+            "initial_memory_words": {
+              "type": "array",
+              "prefixItems": [{"type": "object", "properties": {"address": {"const": 128}, "value": {"const": 42}}, "required": ["address", "value"], "additionalProperties": false}],
+              "minItems": 1,
+              "maxItems": 1
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "fixture": {"const": "go-riscv-d05-v1/input.json"},
+                "input_sha256": {"const": "fcf69bf2c614f0119c10c2b5d8a1b742c2bf9c1e7d847650ee6c09e736930744"}
+              },
+              "required": ["fixture", "input_sha256"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["source"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "delayedStoreLoadCase": {
+      "allOf": [
+        {"$ref": "#/$defs/baseCase"},
+        {
+          "type": "object",
+          "properties": {
+            "id": {"const": "delayed-store-load"},
+            "latency_cycles": {"const": 3},
+            "ram_bytes": {"const": 256},
+            "max_cycles": {"const": 100},
+            "program_bytes_hex": {"const": "1305000893007003232015000321050073000000"},
+            "initial_memory_words": {"const": [{"address": 128, "value": 7}]}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "storeBeforeFaultCase": {
+      "allOf": [
+        {"$ref": "#/$defs/baseCase"},
+        {
+          "type": "object",
+          "properties": {
+            "id": {"const": "older-store-before-younger-fault"},
+            "latency_cycles": {"const": 3},
+            "ram_bytes": {"const": 256},
+            "max_cycles": {"const": 100},
+            "program_bytes_hex": {"const": "9300a0022320100803210010930f3006"},
+            "initial_memory_words": {"const": [{"address": 128, "value": 7}]}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

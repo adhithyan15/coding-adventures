@@ -1,0 +1,36 @@
+{
+  "schema": "go-riscv-dmem-ready-input-v1",
+  "cases": [
+    {
+      "id": "d05-precise-latency-one",
+      "mode": "precise-flat-ram",
+      "latency_cycles": 1,
+      "ram_bytes": 256,
+      "max_cycles": 100,
+      "program_bytes_hex": "13003006930000001301000823201100930110008321010063841100930230061382110073000000",
+      "initial_memory_words": [{"address": 128, "value": 42}],
+      "source": {
+        "fixture": "go-riscv-d05-v1/input.json",
+        "input_sha256": "fcf69bf2c614f0119c10c2b5d8a1b742c2bf9c1e7d847650ee6c09e736930744"
+      }
+    },
+    {
+      "id": "delayed-store-load",
+      "mode": "precise-flat-ram",
+      "latency_cycles": 3,
+      "ram_bytes": 256,
+      "max_cycles": 100,
+      "program_bytes_hex": "1305000893007003232015000321050073000000",
+      "initial_memory_words": [{"address": 128, "value": 7}]
+    },
+    {
+      "id": "older-store-before-younger-fault",
+      "mode": "precise-flat-ram",
+      "latency_cycles": 3,
+      "ram_bytes": 256,
+      "max_cycles": 100,
+      "program_bytes_hex": "9300a0022320100803210010930f3006",
+      "initial_memory_words": [{"address": 128, "value": 7}]
+    }
+  ]
+}

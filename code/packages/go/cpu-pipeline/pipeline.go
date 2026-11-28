@@ -87,8 +87,10 @@ type WritebackFunc func(token *PipelineToken)
 //	FLUSH:            Emergency stop -- discard speculative instructions
 //	FORWARD_FROM_EX:  Shortcut -- grab value from EX stage output
 //	FORWARD_FROM_MEM: Shortcut -- grab value from MEM stage output
+//	MEMORY_WAIT:      Hold through MEM while a request becomes ready
 //
-// Priority: FLUSH > STALL > FORWARD > NONE
+// Priority is selected by the hazard callback; memory waits and precise
+// faults are additive actions with their own stage-transition rules.
 // (If multiple hazards are detected, the most severe one wins.)
 type HazardAction int
 
@@ -99,6 +101,7 @@ const (
 	HazardStall                              // Stall the pipeline (insert bubble)
 	HazardFlush                              // Flush speculative stages
 	HazardPreciseFault                       // Squash younger tokens and drain an EX fault to WB
+	HazardMemoryWait                         // Hold through MEM while a request becomes ready
 )
 
 // String returns a human-readable name for the hazard action.
@@ -118,6 +121,8 @@ func (a HazardAction) String() string {
 				return rf.Generate(true, false, "FLUSH")
 			case HazardPreciseFault:
 				return rf.Generate(true, false, "PRECISE_FAULT")
+			case HazardMemoryWait:
+				return rf.Generate(true, false, "MEMORY_WAIT")
 			default:
 				return rf.Generate(true, false, "UNKNOWN")
 			}
@@ -164,6 +169,11 @@ type HazardResponse struct {
 	// PreciseFaultStageIndex identifies the execute-stage token carrying the
 	// selected fault. That token and older work advance without a new fetch.
 	PreciseFaultStageIndex int
+
+	// MemoryWaitStageIndex identifies the MEM token whose pending request
+	// requires IF/ID/EX/MEM hold while the already-retired WB slot is cleared.
+	// It is used only when Action == HazardMemoryWait.
+	MemoryWaitStageIndex int
 }
 
 // HazardFunc checks for hazards given the current pipeline stage contents.
@@ -437,6 +447,12 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 			panic("cpu-pipeline: precise fault action must identify a faulted execute-stage token")
 		}
 	}
+	if hazard.Action == HazardMemoryWait {
+		memoryStage := hazard.MemoryWaitStageIndex
+		if memoryStage < 0 || memoryStage >= numStages-1 || p.config.Stages[memoryStage].Category != StageMemory || memoryStage+1 != numStages-1 || p.stages[memoryStage] == nil || p.stages[memoryStage].IsBubble {
+			panic("cpu-pipeline: memory wait action must identify a non-bubble MEM token immediately before WB")
+		}
+	}
 
 	// --- Phase 2: Compute next state ---
 	//
@@ -595,6 +611,22 @@ func (p *Pipeline) stepInternal() PipelineSnapshot {
 		}
 
 		// PC does NOT advance during a stall.
+
+	case HazardMemoryWait:
+		// The MEM request remains attached to its token. Hold every younger
+		// stage and MEM itself; the old WB token was retired at the end of its
+		// entry cycle and must be cleared rather than invoked again.
+		stalled = true
+		p.stats.StallCycles++
+		memoryStage := hazard.MemoryWaitStageIndex
+		for i := 0; i <= memoryStage; i++ {
+			nextStages[i] = p.stages[i]
+		}
+		for i := memoryStage + 1; i < numStages; i++ {
+			nextStages[i] = NewBubble()
+			nextStages[i].StageEntered[p.config.Stages[i].Name] = p.cycle
+		}
+		// PC does NOT advance during a memory wait.
 
 	case HazardPreciseFault:
 		faultStage := hazard.PreciseFaultStageIndex

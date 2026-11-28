@@ -186,6 +186,12 @@ type CoreConfig struct {
 	// MemoryLatency is the access latency for main memory in cycles.
 	// Real DRAM: 50-100+ cycles. Default: 100.
 	MemoryLatency int
+
+	// DataMemoryLatencyCycles configures deterministic flat-RAM service latency
+	// for the explicitly enabled precise word-memory path. Zero selects the
+	// compatibility default of one cycle. The legacy path ignores this field;
+	// it does not make MemoryLatency or cache timing stall the pipeline.
+	DataMemoryLatencyCycles int
 }
 
 // DefaultCoreConfig returns a minimal, sensible configuration for testing.

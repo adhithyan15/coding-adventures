@@ -72,6 +72,88 @@ func TestCoreConstruction(t *testing.T) {
 	}
 }
 
+func TestPreciseMemoryWaitRecordsDetachedRequestEvidence(t *testing.T) {
+	c := makeSimpleCore(t)
+	if err := c.EnablePreciseWordMemoryWithLatency(2); err != nil {
+		t.Fatal(err)
+	}
+	c.memCtrl.WriteWord(128, 41)
+	c.cycle = 5
+	load := cpupipeline.NewToken()
+	load.PC = 4
+	load.Opcode = "lw"
+	load.MemRead = true
+	load.ALUResult = 128
+	load.WriteData = 128
+	c.memoryCallback(load)
+	if load.MemData == 41 || load.WriteData == 41 {
+		t.Fatalf("load result visible before request ready: %+v", load)
+	}
+	events := c.PreciseMemoryRequestEvents()
+	if len(events) != 1 || events[0].Sequence != 1 || events[0].PC != 4 || events[0].IssueCycle != 5 || events[0].Completed {
+		t.Fatalf("issue events=%+v, want one incomplete cycle-5 load", events)
+	}
+	c.cycle = 6
+	response := c.hazardCallback([]*cpupipeline.PipelineToken{nil, nil, nil, load, nil})
+	if response.Action != cpupipeline.HazardMemoryWait || response.MemoryWaitStageIndex != 3 {
+		t.Fatalf("hazard response=%+v, want MEM wait", response)
+	}
+	if load.MemData != 41 || load.WriteData != 41 {
+		t.Fatalf("load response after final service cycle=%+v, want value 41", load)
+	}
+	events = c.PreciseMemoryRequestEvents()
+	if len(events) != 1 || !events[0].Completed || events[0].CompletionCycle != 6 || len(events[0].WaitCycles) != 1 || events[0].WaitCycles[0] != 6 {
+		t.Fatalf("complete events=%+v, want one wait/completion at cycle 6", events)
+	}
+	events[0].WaitCycles[0] = 99
+	if got := c.PreciseMemoryRequestEvents()[0].WaitCycles[0]; got != 6 {
+		t.Fatalf("request-event copy mutated internal trace: got wait cycle %d", got)
+	}
+}
+
+func TestPreciseStoreTimingCompletionDoesNotCommitWithoutWB(t *testing.T) {
+	c := makeSimpleCore(t)
+	if err := c.EnablePreciseWordMemoryWithLatency(1); err != nil {
+		t.Fatal(err)
+	}
+	c.memCtrl.WriteWord(128, 7)
+	c.cycle = 5
+	store := cpupipeline.NewToken()
+	store.PC = 8
+	store.Opcode = "sw"
+	store.MemWrite = true
+	store.ALUResult = 128
+	store.WriteData = 55
+	c.memoryCallback(store)
+	if got := c.memCtrl.ReadWord(128); got != 7 {
+		t.Fatalf("store request changed RAM before WB: %d", got)
+	}
+	events := c.PreciseMemoryRequestEvents()
+	if len(events) != 1 || !events[0].Completed || events[0].CompletionCycle != 5 || events[0].Access != "store" {
+		t.Fatalf("store timing event=%+v, want ready cycle 5", events)
+	}
+	if got := c.PreciseStoreReceipts(); len(got) != 0 {
+		t.Fatalf("store timing completion emitted WB receipts: %+v", got)
+	}
+	c.writebackCallback(store)
+	if got := c.memCtrl.ReadWord(128); got != 55 {
+		t.Fatalf("WB store value=%d, want 55", got)
+	}
+	if got := c.PreciseStoreReceipts(); len(got) != 1 || got[0].Cycle != 5 {
+		t.Fatalf("WB store receipt=%+v, want one cycle-5 commit", got)
+	}
+}
+
+func TestPreciseMemoryLatencyMustBePositive(t *testing.T) {
+	c := makeSimpleCore(t)
+	if err := c.EnablePreciseWordMemoryWithLatency(0); err == nil {
+		t.Fatal("zero explicit precise D-MEM latency was accepted")
+	}
+	if err := c.EnablePreciseWordMemoryWithLatency(-1); err == nil {
+		t.Fatal("negative precise D-MEM latency was accepted")
+	}
+}
+
 // TestSimpleConfigRuns verifies that a core with SimpleConfig runs without error.
 func TestSimpleConfigRuns(t *testing.T) {
 	c := makeSimpleCore(t)

@@ -11,6 +11,8 @@
 - Token snapshots deep-copy typed forwarding records.
 - Hazard responses may name the target decode-stage index; held decode tokens
   drop typed records during stalls so they are resolved against current state.
+- Added an additive memory-wait action that holds through MEM and clears WB
+  without replaying a token that already retired.
 
 ## [0.2.0] - 2026-04-02
 

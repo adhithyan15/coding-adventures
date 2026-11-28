@@ -669,8 +669,20 @@ func NewRiscVCore(config core.CoreConfig, memorySize int) (*core.Core, error) {
 // reports selected data faults as terminal outcomes; it does not enter a
 // privileged trap handler or model MMIO.
 func NewRiscVCoreWithPreciseMemory(config core.CoreConfig, memorySize int) (*core.Core, error) {
+	return NewRiscVCoreWithPreciseMemoryLatency(config, memorySize, config.DataMemoryLatencyCycles)
+}
+
+// NewRiscVCoreWithPreciseMemoryLatency creates an opt-in precise RV32I core
+// with deterministic flat-RAM word-access latency. A zero argument selects
+// the compatibility default of one cycle; negative values are rejected.
+// Latency greater than one adds exactly latency-1 MEM wait cycles per request.
+func NewRiscVCoreWithPreciseMemoryLatency(config core.CoreConfig, memorySize, latencyCycles int) (*core.Core, error) {
 	res, err := StartNew[riscvCoreResult]("riscv-simulator.NewRiscVCoreWithPreciseMemory", riscvCoreResult{},
 		func(op *Operation[riscvCoreResult], rf *ResultFactory[riscvCoreResult]) *OperationResult[riscvCoreResult] {
+			if latencyCycles == 0 {
+				latencyCycles = 1
+			}
+			config.DataMemoryLatencyCycles = latencyCycles
 			c, err := NewRiscVCore(config, memorySize)
 			if err != nil {
 				return rf.Fail(riscvCoreResult{}, err)

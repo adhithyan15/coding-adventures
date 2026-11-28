@@ -9,6 +9,11 @@ All notable changes to the `core` package will be documented in this file.
   accesses, WB-ordered SW commits, and terminal typed data-fault outcomes.
 - Added store receipts and a pending-store-to-load bypass in the opt-in mode;
   existing Core constructors retain MEM-time store behavior.
+- Added opt-in deterministic flat-RAM D-MEM latency for precise word access.
+  Waits hold through MEM, clear the previously retired WB slot, and defer a
+  load result until its typed MEM forwarding is ready; latency one is unchanged.
+- Added detached per-request issue, held-cycle, and timing-ready evidence,
+  distinct from the precise WB store receipt.
 
 ### Fixed
 - Core stage slots now report ALU use at EX, not at both ID and EX, so the

@@ -2,6 +2,7 @@ package cpupipeline
 
 import (
 	"math"
+	"reflect"
 	"testing"
 )
 
@@ -1301,6 +1302,7 @@ func TestHazardActionString(t *testing.T) {
 		{HazardForwardFromMEM, "FORWARD_FROM_MEM"},
 		{HazardStall, "STALL"},
 		{HazardFlush, "FLUSH"},
+		{HazardMemoryWait, "MEMORY_WAIT"},
 		{HazardAction(99), "UNKNOWN"},
 	}
 	for _, tt := range tests {
@@ -1725,5 +1727,88 @@ func TestInstructionCountMatchesCompletions(t *testing.T) {
 	// Should be 4: ADD, ADD, ADD, HALT.
 	if stats.InstructionsCompleted != 4 {
 		t.Errorf("expected 4 completed instructions, got %d", stats.InstructionsCompleted)
+	}
+}
+
+func TestMemoryWaitHoldsMemoryAndClearsAlreadyRetiredWriteback(t *testing.T) {
+	instrs := []int{
+		makeInstruction(opNOP, 0, 0, 0),
+		makeInstruction(opNOP, 0, 0, 0),
+		makeInstruction(opLDR, 1, 0, 0),
+		makeInstruction(opNOP, 0, 0, 0),
+		makeInstruction(opNOP, 0, 0, 0),
+		makeInstruction(opNOP, 0, 0, 0),
+		makeInstruction(opHALT, 0, 0, 0),
+	}
+	memoryCalls := map[int]int{}
+	writebackCalls := map[int]int{}
+	waitCycles := 0
+	p, err := NewPipeline(
+		Classic5Stage(),
+		simpleFetch(instrs),
+		simpleDecode(),
+		simpleExecute(),
+		func(tok *PipelineToken) *PipelineToken {
+			memoryCalls[tok.PC]++
+			return simpleMemory()(tok)
+		},
+		func(tok *PipelineToken) { writebackCalls[tok.PC]++ },
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
+		if stages[3] != nil && !stages[3].IsBubble && stages[3].PC == 8 && waitCycles < 2 {
+			waitCycles++
+			return HazardResponse{Action: HazardMemoryWait, MemoryWaitStageIndex: 3}
+		}
+		return HazardResponse{Action: HazardNone}
+	})
+
+	var held []PipelineSnapshot
+	var release PipelineSnapshot
+	for cycle := 0; cycle < 16 && !p.IsHalted(); cycle++ {
+		snapshot := p.Step()
+		if snapshot.Stalled {
+			if writebackCalls[8] != 0 {
+				t.Fatalf("held PC 8 retired during wait cycle %d", snapshot.Cycle)
+			}
+			held = append(held, snapshot)
+		} else if len(held) == 2 {
+			release = snapshot
+			break
+		}
+	}
+	if len(held) != 2 {
+		t.Fatalf("got %d wait cycles, want exactly 2", len(held))
+	}
+	if held[1].Cycle != held[0].Cycle+1 {
+		t.Fatalf("wait cycles are not contiguous: %d, %d", held[0].Cycle, held[1].Cycle)
+	}
+	for _, stage := range []string{"IF", "ID", "EX", "MEM"} {
+		before, after := held[0].Stages[stage], held[1].Stages[stage]
+		if !reflect.DeepEqual(before, after) {
+			t.Errorf("%s token changed during memory wait: before=%+v after=%+v", stage, before, after)
+		}
+	}
+	for _, snapshot := range held {
+		if wb := snapshot.Stages["WB"]; wb == nil || !wb.IsBubble {
+			t.Errorf("WB=%+v during wait, want bubble after prior retirement", wb)
+		}
+		if snapshot.PC != held[0].PC {
+			t.Errorf("fetch PC changed during wait: %d then %d", held[0].PC, snapshot.PC)
+		}
+	}
+	if got := memoryCalls[8]; got != 1 {
+		t.Errorf("MEM callback ran %d times for held PC 8, want once", got)
+	}
+	if got := writebackCalls[4]; got != 1 {
+		t.Errorf("older PC 4 WB callback ran %d times, want exactly once before wait", got)
+	}
+	if wb := release.Stages["WB"]; wb == nil || wb.IsBubble || wb.PC != 8 {
+		t.Fatalf("release WB=%+v, want held PC 8", wb)
+	}
+	if got := writebackCalls[8]; got != 1 {
+		t.Errorf("held PC 8 WB callback count after release=%d, want exactly one", got)
 	}
 }

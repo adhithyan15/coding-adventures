@@ -100,16 +100,28 @@ type Core struct {
 
 	// preciseWordMemory is an explicit opt-in policy used by the bounded
 	// RISC-V adapter. The default core retains legacy MEM-time effects.
-	preciseWordMemory bool
-	pendingStores     []pendingPreciseStore
-	storeReceipts     []PreciseStoreReceipt
-	preciseFault      *cpupipeline.PreciseFault
+	preciseWordMemory         bool
+	preciseWordMemoryLatency  int
+	pendingStores             []pendingPreciseStore
+	pendingMemory             *pendingPreciseMemoryRequest
+	memoryRequestEvents       []PreciseMemoryRequestEvent
+	nextMemoryRequestSequence uint64
+	storeReceipts             []PreciseStoreReceipt
+	preciseFault              *cpupipeline.PreciseFault
 }
 
 type pendingPreciseStore struct {
 	pc      int
 	address uint32
 	value   uint32
+}
+
+type pendingPreciseMemoryRequest struct {
+	token               *cpupipeline.PipelineToken
+	remainingWaitCycles int
+	loadValue           int
+	isLoad              bool
+	eventIndex          int
 }
 
 // PreciseStoreReceipt records a flat-RAM store when its instruction reaches
@@ -119,6 +131,20 @@ type PreciseStoreReceipt struct {
 	Address uint32
 	Value   uint32
 	Cycle   int
+}
+
+// PreciseMemoryRequestEvent records one dynamic precise D-MEM request. A
+// completed store event means the timing request became ready; the store's
+// architectural write and receipt still occur later at WB.
+type PreciseMemoryRequestEvent struct {
+	Sequence        uint64
+	PC              int
+	Access          string
+	Address         uint32
+	IssueCycle      int
+	WaitCycles      []int
+	Completed       bool
+	CompletionCycle int
 }
 
 type preciseFaultResult struct {
@@ -216,8 +242,23 @@ func NewCore(config CoreConfig, decoder ISADecoder) (*Core, error) {
 // before the first pipeline cycle. The mode is supported only by the classic
 // IF/ID/EX/MEM/WB topology; default Core construction is unchanged.
 func (c *Core) EnablePreciseWordMemory() error {
+	latencyCycles := c.config.DataMemoryLatencyCycles
+	if latencyCycles == 0 {
+		latencyCycles = 1
+	}
+	return c.EnablePreciseWordMemoryWithLatency(latencyCycles)
+}
+
+// EnablePreciseWordMemoryWithLatency opts this core into precise flat-RAM
+// word accesses with a deterministic D-MEM service latency. A latency of one
+// preserves the synchronous MEM-entry behavior; larger values add exactly
+// latency-1 wait cycles. This must be enabled before the first pipeline step.
+func (c *Core) EnablePreciseWordMemoryWithLatency(latencyCycles int) error {
 	_, err := StartNew[struct{}]("core.Core.EnablePreciseWordMemory", struct{}{},
 		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
+			if latencyCycles < 1 {
+				return rf.Fail(struct{}{}, errors.New("precise D-MEM latency must be at least one cycle"))
+			}
 			if c.cycle != 0 || c.pipeline.Stats().TotalCycles != 0 {
 				return rf.Fail(struct{}{}, errors.New("precise word memory must be enabled before stepping the core"))
 			}
@@ -241,6 +282,8 @@ func (c *Core) EnablePreciseWordMemory() error {
 				}
 			}
 			c.preciseWordMemory = true
+			c.preciseWordMemoryLatency = latencyCycles
+			c.config.DataMemoryLatencyCycles = latencyCycles
 			return rf.Generate(true, false, struct{}{})
 		}).GetResult()
 	return err
@@ -269,6 +312,22 @@ func (c *Core) PreciseStoreReceipts() []PreciseStoreReceipt {
 			})
 		}).GetResult()
 	return result.receipts
+}
+
+// PreciseMemoryRequestEvents returns caller-owned request timing evidence in
+// issue order. Wait cycles and completion cycles are observed separately from
+// the precise WB store-commit boundary.
+func (c *Core) PreciseMemoryRequestEvents() []PreciseMemoryRequestEvent {
+	result, _ := StartNew[[]PreciseMemoryRequestEvent]("core.Core.PreciseMemoryRequestEvents", nil,
+		func(op *Operation[[]PreciseMemoryRequestEvent], rf *ResultFactory[[]PreciseMemoryRequestEvent]) *OperationResult[[]PreciseMemoryRequestEvent] {
+			events := make([]PreciseMemoryRequestEvent, len(c.memoryRequestEvents))
+			for index, event := range c.memoryRequestEvents {
+				events[index] = event
+				events[index].WaitCycles = append([]int(nil), event.WaitCycles...)
+			}
+			return rf.Generate(true, false, events)
+		}).GetResult()
+	return result
 }
 
 // buildCacheHierarchy creates the L1I, L1D, and optional L2 caches.
@@ -340,14 +399,18 @@ func (c *Core) memoryCallback(token *cpupipeline.PipelineToken) *cpupipeline.Pip
 			return token
 		}
 		address := uint32(token.ALUResult)
+		loadValue := 0
 		if token.MemRead {
 			c.cacheHierarchy.Read(int(address), false, c.cycle)
 			if value, ok := c.pendingStoreValue(address); ok {
-				token.MemData = int(value)
+				loadValue = int(value)
 			} else {
-				token.MemData = c.memCtrl.ReadWord(int(address))
+				loadValue = c.memCtrl.ReadWord(int(address))
 			}
-			token.WriteData = token.MemData
+			if c.preciseWordMemoryLatency <= 1 {
+				token.MemData = loadValue
+				token.WriteData = token.MemData
+			}
 		} else if token.MemWrite {
 			if len(c.pendingStores) >= 2 {
 				panic("precise store intent queue exceeded classic pipeline bound")
@@ -355,6 +418,34 @@ func (c *Core) memoryCallback(token *cpupipeline.PipelineToken) *cpupipeline.Pip
 			c.pendingStores = append(c.pendingStores, pendingPreciseStore{
 				pc: token.PC, address: address, value: uint32(token.WriteData),
 			})
+		}
+		if (token.MemRead || token.MemWrite) && c.preciseWordMemoryLatency > 1 {
+			if c.pendingMemory != nil {
+				panic("precise D-MEM issued a second request before the first completed")
+			}
+		}
+		if token.MemRead || token.MemWrite {
+			access := "load"
+			if token.MemWrite {
+				access = "store"
+			}
+			c.nextMemoryRequestSequence++
+			event := PreciseMemoryRequestEvent{
+				Sequence: c.nextMemoryRequestSequence, PC: token.PC, Access: access,
+				Address: address, IssueCycle: c.cycle, CompletionCycle: -1,
+			}
+			if c.preciseWordMemoryLatency <= 1 {
+				event.Completed = true
+				event.CompletionCycle = c.cycle
+			}
+			eventIndex := len(c.memoryRequestEvents)
+			c.memoryRequestEvents = append(c.memoryRequestEvents, event)
+			if c.preciseWordMemoryLatency > 1 {
+				c.pendingMemory = &pendingPreciseMemoryRequest{
+					token: token, remainingWaitCycles: c.preciseWordMemoryLatency - 1,
+					loadValue: loadValue, isLoad: token.MemRead, eventIndex: eventIndex,
+				}
+			}
 		}
 		return token
 	}
@@ -457,7 +548,7 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 	}
 
 	var ifTok, idTok, exTok, memTok *cpupipeline.PipelineToken
-	idStageIndex, exStageIndex := -1, -1
+	idStageIndex, exStageIndex, memStageIndex := -1, -1, -1
 	for i, stage := range pipelineCfg.Stages {
 		if i >= numStages {
 			break
@@ -479,8 +570,34 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 		case cpupipeline.StageMemory:
 			if memTok == nil {
 				memTok = tok
+				memStageIndex = i
 			}
 		}
+	}
+	if c.preciseWordMemory && c.pendingMemory != nil {
+		if memTok != c.pendingMemory.token {
+			panic("precise D-MEM pending request is detached from its MEM token")
+		}
+		if c.pendingMemory.remainingWaitCycles > 0 {
+			c.pendingMemory.remainingWaitCycles--
+			event := &c.memoryRequestEvents[c.pendingMemory.eventIndex]
+			event.WaitCycles = append(event.WaitCycles, c.cycle)
+			if c.pendingMemory.remainingWaitCycles == 0 && c.pendingMemory.isLoad {
+				c.pendingMemory.token.MemData = c.pendingMemory.loadValue
+				c.pendingMemory.token.WriteData = c.pendingMemory.loadValue
+			}
+			if c.pendingMemory.remainingWaitCycles == 0 {
+				event.Completed = true
+				event.CompletionCycle = c.cycle
+			}
+			c.stallCount++
+			return cpupipeline.HazardResponse{
+				Action: cpupipeline.HazardMemoryWait, MemoryWaitStageIndex: memStageIndex,
+			}
+		}
+		// Completion was recorded at the end of the final held cycle. Remove
+		// the request before resolving normal hazards or a younger precise fault.
+		c.pendingMemory = nil
 	}
 	if c.preciseWordMemory && exTok != nil && exTok.PreciseFault != nil {
 		return cpupipeline.HazardResponse{

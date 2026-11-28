@@ -26,6 +26,17 @@ the final decode stage in a multi-decode layout. It maps load-use bubbles to
 the configured execute stage so the dependent token stays in decode until its
 operand is ready.
 
+The precise flat-RAM word-memory mode can opt into deterministic D-MEM
+backpressure with `CoreConfig.DataMemoryLatencyCycles` or
+`EnablePreciseWordMemoryWithLatency`. Zero selects one cycle. Latency one
+keeps the existing synchronous MEM-entry behavior; each extra configured cycle
+adds one IF/ID/EX/MEM wait cycle. The first wait clears the already-retired WB
+token without replaying it; later waits keep WB empty. The legacy path ignores
+this setting, and it does not activate cache or `MemoryLatency` timing.
+`PreciseMemoryRequestEvents()` returns copies of per-request issue, held-cycle,
+and ready-cycle observations; it reports timing readiness separately from the
+WB store receipt.
+
 ## How It Fits in the Stack
 
 ```

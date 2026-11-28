@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "go-riscv-dmem-ready-oracle-v1",
+  "title": "RV32I D-MEM independently derived state and timing oracle",
+  "type": "object",
+  "properties": {
+    "schema": {"const": "go-riscv-dmem-ready-oracle-v1"},
+    "input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "cases": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {"$ref": "#/$defs/d05Oracle"},
+        {"$ref": "#/$defs/delayedOracle"},
+        {"$ref": "#/$defs/faultOracle"}
+      ],
+      "items": false
+    }
+  },
+  "required": ["schema", "input_sha256", "cases"],
+  "additionalProperties": false,
+  "$defs": {
+    "safeNonnegative": {"type": "integer", "minimum": 0, "maximum": 9007199254740991},
+    "uint32": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "request": {
+      "type": "object",
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1, "maximum": 32},
+        "pc": {"type": "integer", "minimum": 0, "maximum": 4294967292, "multipleOf": 4},
+        "access": {"enum": ["load", "store"]},
+        "address": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "issue_cycle": {"type": "integer", "minimum": 1, "maximum": 400},
+        "wait_cycles": {
+          "type": "array",
+          "maxItems": 399,
+          "items": {"type": "integer", "minimum": 1, "maximum": 400},
+          "uniqueItems": true
+        },
+        "completed": {"const": true},
+        "ready_cycle": {"type": "integer", "minimum": 1, "maximum": 400}
+      },
+      "required": ["sequence", "pc", "access", "address", "issue_cycle", "wait_cycles", "completed", "ready_cycle"],
+      "additionalProperties": false
+    },
+    "storeReceipt": {
+      "type": "object",
+      "properties": {
+        "pc": {"type": "integer", "minimum": 0, "maximum": 4294967292, "multipleOf": 4},
+        "address": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "value": {"$ref": "#/$defs/uint32"},
+        "commit_cycle": {"type": "integer", "minimum": 1, "maximum": 400}
+      },
+      "required": ["pc", "address", "value", "commit_cycle"],
+      "additionalProperties": false
+    },
+    "selectedFault": {
+      "type": "object",
+      "properties": {
+        "pc": {"type": "integer", "minimum": 0, "maximum": 4294967292, "multipleOf": 4},
+        "raw_instruction": {"$ref": "#/$defs/uint32"},
+        "access": {"const": "load"},
+        "cause": {"const": "load_access_fault"},
+        "address": {"$ref": "#/$defs/uint32"},
+        "width": {"const": 4}
+      },
+      "required": ["pc", "raw_instruction", "access", "cause", "address", "width"],
+      "additionalProperties": false
+    },
+    "stats": {
+      "type": "object",
+      "properties": {
+        "cycles": {"type": "integer", "minimum": 1, "maximum": 400},
+        "instructions": {"type": "integer", "minimum": 0, "maximum": 32},
+        "forwards": {"type": "integer", "minimum": 0, "maximum": 400},
+        "stalls": {"type": "integer", "minimum": 0, "maximum": 400},
+        "flushes": {"type": "integer", "minimum": 0, "maximum": 400},
+        "dmem_wait_cycles": {"type": "integer", "minimum": 0, "maximum": 399}
+      },
+      "required": ["cycles", "instructions", "forwards", "stalls", "flushes", "dmem_wait_cycles"],
+      "additionalProperties": false
+    },
+    "commonOracle": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string"},
+        "request_events": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/request"}},
+        "store_receipts": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/storeReceipt"}},
+        "retired_pcs": {"type": "array", "maxItems": 32, "items": {"type": "integer", "minimum": 0, "maximum": 4294967292, "multipleOf": 4}},
+        "selected_fault": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/selectedFault"}]},
+        "fault_selection_cycle": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 1, "maximum": 400}]},
+        "terminal_cycle": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 1, "maximum": 400}]},
+        "registers": {"type": "array", "minItems": 32, "maxItems": 32, "items": {"$ref": "#/$defs/uint32"}},
+        "ram_words": {"type": "array", "minItems": 64, "maxItems": 64, "items": {"$ref": "#/$defs/uint32"}},
+        "stats": {"$ref": "#/$defs/stats"}
+      },
+      "required": ["id", "request_events", "store_receipts", "retired_pcs", "selected_fault", "fault_selection_cycle", "terminal_cycle", "registers", "ram_words", "stats"]
+    },
+    "d05Oracle": {
+      "allOf": [{"$ref": "#/$defs/commonOracle"}, {"type": "object", "properties": {"id": {"const": "d05-precise-latency-one"}, "request_events": {"minItems": 2, "maxItems": 2}, "store_receipts": {"minItems": 1, "maxItems": 1}, "selected_fault": {"type": "null"}, "fault_selection_cycle": {"type": "null"}, "terminal_cycle": {"type": "null"}}}],
+      "unevaluatedProperties": false
+    },
+    "delayedOracle": {
+      "allOf": [{"$ref": "#/$defs/commonOracle"}, {"type": "object", "properties": {"id": {"const": "delayed-store-load"}, "request_events": {"minItems": 2, "maxItems": 2}, "store_receipts": {"minItems": 1, "maxItems": 1}, "selected_fault": {"type": "null"}, "fault_selection_cycle": {"type": "null"}, "terminal_cycle": {"type": "null"}}}],
+      "unevaluatedProperties": false
+    },
+    "faultOracle": {
+      "allOf": [{"$ref": "#/$defs/commonOracle"}, {"type": "object", "properties": {"id": {"const": "older-store-before-younger-fault"}, "request_events": {"minItems": 1, "maxItems": 1}, "store_receipts": {"minItems": 1, "maxItems": 1}, "selected_fault": {"$ref": "#/$defs/selectedFault"}, "fault_selection_cycle": {"type": "integer", "const": 8}, "terminal_cycle": {"type": "integer", "const": 9}}}],
+      "unevaluatedProperties": false
+    }
+  }
+}

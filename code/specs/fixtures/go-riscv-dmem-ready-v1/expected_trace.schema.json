@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "go-riscv-dmem-ready-trace-v1",
+  "title": "Go D-MEM native pipeline trace projection",
+  "type": "object",
+  "properties": {
+    "schema": {"const": "go-riscv-dmem-ready-trace-v1"},
+    "input_sha256": {"const": "800486ce328d06263a6e8626964c45ec2b50aff1edbdb48c6a09b401c1213356"},
+    "cases": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {"$ref": "#/$defs/legacyReference"},
+        {"$ref": "#/$defs/delayedStoreLoadTrace"},
+        {"$ref": "#/$defs/storeBeforeFaultTrace"}
+      ],
+      "items": false
+    }
+  },
+  "required": ["schema", "input_sha256", "cases"],
+  "additionalProperties": false,
+  "$defs": {
+    "legacyReference": {
+      "type": "object",
+      "properties": {
+        "id": {"const": "d05-precise-latency-one"},
+        "legacy_trace": {
+          "type": "object",
+          "properties": {
+            "fixture": {"const": "go-riscv-d05-v1/expected_trace.json"},
+            "sha256": {"const": "6183d3477816862d3dd504a12310b2e91ded137519485d740e0b5a57e68a93a7"}
+          },
+          "required": ["fixture", "sha256"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["id", "legacy_trace"],
+      "additionalProperties": false
+    },
+    "forward": {
+      "type": "object",
+      "properties": {
+        "operand": {"enum": ["rs1", "rs2"]},
+        "register": {"type": "integer", "minimum": 0, "maximum": 31},
+        "value": {"type": "integer", "minimum": -9007199254740991, "maximum": 9007199254740991},
+        "source_stage": {"enum": ["EX", "MEM"]}
+      },
+      "required": ["operand", "register", "value", "source_stage"],
+      "additionalProperties": false
+    },
+    "fault": {
+      "type": "object",
+      "properties": {
+        "pc": {"type": "integer", "minimum": 0, "maximum": 4294967292, "multipleOf": 4},
+        "raw_instruction": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "access": {"enum": ["load", "store"]},
+        "cause": {"enum": ["load_access_fault", "store_access_fault"]},
+        "address": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "width": {"const": 4}
+      },
+      "required": ["pc", "raw_instruction", "access", "cause", "address", "width"],
+      "additionalProperties": false
+    },
+    "stage": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "properties": {
+            "pc": {"type": "integer", "minimum": 0, "maximum": 4294967292, "multipleOf": 4},
+            "mnemonic": {"type": "string"},
+            "branch_taken": {"type": "boolean"},
+            "forwarded_operands": {"type": "array", "items": {"$ref": "#/$defs/forward"}},
+            "load_result": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+            "fault": {"$ref": "#/$defs/fault"}
+          },
+          "required": ["pc", "mnemonic"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "cycle": {
+      "type": "object",
+      "properties": {
+        "cycle": {"type": "integer", "minimum": 1, "maximum": 400},
+        "pc": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "stages": {
+          "type": "object",
+          "properties": {
+            "IF": {"$ref": "#/$defs/stage"},
+            "ID": {"$ref": "#/$defs/stage"},
+            "EX": {"$ref": "#/$defs/stage"},
+            "MEM": {"$ref": "#/$defs/stage"},
+            "WB": {"$ref": "#/$defs/stage"}
+          },
+          "required": ["IF", "ID", "EX", "MEM", "WB"],
+          "additionalProperties": false
+        },
+        "stalled": {"type": "boolean"},
+        "flushing": {"type": "boolean"}
+      },
+      "required": ["cycle", "pc", "stages", "stalled", "flushing"],
+      "additionalProperties": false
+    },
+    "delayedStoreLoadTrace": {
+      "type": "object",
+      "properties": {
+        "id": {"const": "delayed-store-load"},
+        "trace": {"type": "array", "minItems": 13, "maxItems": 13, "items": {"$ref": "#/$defs/cycle"}}
+      },
+      "required": ["id", "trace"],
+      "additionalProperties": false
+    },
+    "storeBeforeFaultTrace": {
+      "type": "object",
+      "properties": {
+        "id": {"const": "older-store-before-younger-fault"},
+        "trace": {"type": "array", "minItems": 9, "maxItems": 9, "items": {"$ref": "#/$defs/cycle"}}
+      },
+      "required": ["id", "trace"],
+      "additionalProperties": false
+    }
+  }
+}
