@@ -40,34 +40,35 @@ import (
 const version = "0.5.0"
 
 const (
-	defaultTCPTimeout          = 10 * time.Second
-	serviceReadyTimeout        = 10 * time.Second
-	serviceReadyProbeTimeout   = 100 * time.Millisecond
-	maxTCPConnections          = 10000
-	maxTCPConcurrency          = 10000
-	maxTCPRequestsPerConn      = 10000
-	maxTCPFrameBytes           = 16 * 1024 * 1024
-	maxTCPPayloadBytes         = 16 * 1024 * 1024
-	maxRESPDepth               = 64
-	maxImportedSummaryBytes    = int64(64 << 20)
-	maxImportedSummaryRows     = 100_000
-	maxSummaryJSONValues       = 2_000_005
-	maxImportedTrialsBytes     = int64(512 << 20)
-	maxImportedTrialRows       = 2_000_000
-	maxTrialRecordBytes        = 64 * 1024
-	maxComparisonGroups        = 10_000
-	comparisonBootstrapRounds  = 1_000
-	maxComparisonCliffPairs    = uint64(10_000_000)
-	maxComparisonBootstrapWork = uint64(100_000_000)
-	maxTimeoutMS               = int64((1<<63 - 1) / int64(time.Millisecond))
-	respDriver                 = "tcp-resp"
-	respReadMode               = "resp-frame"
-	respModeOneShot            = "one-shot"
-	respModePreconnectThenFire = "preconnect-then-fire"
-	respModePipeline           = "pipeline"
-	respModeIdle               = "idle"
-	respModeHold               = "hold"
-	maxTCPHoldMS               = 10 * 60 * 1000
+	defaultTCPTimeout            = 10 * time.Second
+	serviceReadyTimeout          = 10 * time.Second
+	serviceReadyProbeTimeout     = 100 * time.Millisecond
+	maxTCPConnections            = 10000
+	maxTCPConcurrency            = 10000
+	maxTCPRequestsPerConn        = 10000
+	maxTCPFrameBytes             = 16 * 1024 * 1024
+	maxTCPPayloadBytes           = 16 * 1024 * 1024
+	maxRESPDepth                 = 64
+	maxImportedSummaryBytes      = int64(64 << 20)
+	maxImportedSummaryRows       = 100_000
+	maxSummaryJSONValues         = 2_000_005
+	maxImportedTrialsBytes       = int64(512 << 20)
+	maxImportedTrialRows         = 2_000_000
+	maxTrialRecordBytes          = 64 * 1024
+	maxImportedMeasurementGroups = 10_000
+	maxComparisonGroups          = 10_000
+	comparisonBootstrapRounds    = 1_000
+	maxComparisonCliffPairs      = uint64(10_000_000)
+	maxComparisonBootstrapWork   = uint64(100_000_000)
+	maxTimeoutMS                 = int64((1<<63 - 1) / int64(time.Millisecond))
+	respDriver                   = "tcp-resp"
+	respReadMode                 = "resp-frame"
+	respModeOneShot              = "one-shot"
+	respModePreconnectThenFire   = "preconnect-then-fire"
+	respModePipeline             = "pipeline"
+	respModeIdle                 = "idle"
+	respModeHold                 = "hold"
+	maxTCPHoldMS                 = 10 * 60 * 1000
 )
 
 //go:embed benchmark-tool.json
@@ -920,7 +921,7 @@ func readTrials(path, metric string) (map[string]trialMetricSet, error) {
 	if err := checkImportedSize("trials.jsonl", info.Size(), maxImportedTrialsBytes); err != nil {
 		return nil, err
 	}
-	return readTrialMetrics(file, metric, maxImportedTrialsBytes, maxImportedTrialRows, maxTrialRecordBytes, maxComparisonGroups)
+	return readTrialMetrics(file, metric, maxImportedTrialsBytes, maxImportedTrialRows, maxTrialRecordBytes, maxImportedMeasurementGroups)
 }
 
 func readTrialMetrics(reader io.Reader, metric string, maxBytes int64, maxRows, maxRecordBytes, maxGroups int) (map[string]trialMetricSet, error) {
@@ -994,6 +995,15 @@ func parseTrialRecordWithLimit(data []byte, maxRecordBytes int) (Trial, error) {
 	}
 	if raw, exists := fields["error"]; exists && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
 		return trial, fmt.Errorf("error must be a string when present")
+	}
+	var rawMetrics map[string]json.RawMessage
+	if err := json.Unmarshal(fields["metrics"], &rawMetrics); err != nil {
+		return trial, err
+	}
+	for name, raw := range rawMetrics {
+		if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return trial, fmt.Errorf("metric %q must be a JSON number", name)
+		}
 	}
 	if err := unmarshalClosedJSON(data, &trial); err != nil {
 		return trial, err

@@ -95,6 +95,7 @@ func TestParseTrialRecordClosedUniqueAndComplete(t *testing.T) {
 		{"missing field", []byte(`{"subject":"svc","workload":"ping","trial":1,"phase":"measurement","ok":true}`)},
 		{"null optional error", []byte(`{"subject":"svc","workload":"ping","trial":1,"phase":"measurement","ok":true,"metrics":{},"error":null}`)},
 		{"null metrics", []byte(`{"subject":"svc","workload":"ping","trial":1,"phase":"measurement","ok":true,"metrics":null}`)},
+		{"null metric value", []byte(`{"subject":"svc","workload":"ping","trial":1,"phase":"measurement","ok":true,"metrics":{"elapsed_ms":null}}`)},
 		{"wrong metric type", []byte(`{"subject":"svc","workload":"ping","trial":1,"phase":"measurement","ok":true,"metrics":{"elapsed_ms":"1"}}`)},
 		{"truncated", valid[:len(valid)-1]},
 		{"trailing second value", append(append([]byte(nil), valid...), []byte(` null`)...)},
@@ -134,15 +135,15 @@ func TestReadTrialRowsRejectsOverBoundsWithoutReturningPartialData(t *testing.T)
 	second := trialRecordForTest("svc", 2, "measurement", true, "elapsed_ms", 11)
 	data := append(append(append([]byte(nil), first...), '\n'), second...)
 
-	values, err := readTrialMetrics(bytes.NewReader(data), "elapsed_ms", int64(len(data)), 2, maxTrialRecordBytes, maxComparisonGroups)
+	values, err := readTrialMetrics(bytes.NewReader(data), "elapsed_ms", int64(len(data)), 2, maxTrialRecordBytes, maxImportedMeasurementGroups)
 	if err != nil || len(values["svc/ping"].Values) != 2 {
 		t.Fatalf("rows at maximum: values=%#v err=%v", values, err)
 	}
-	values, err = readTrialMetrics(bytes.NewReader(data), "elapsed_ms", int64(len(data)), 1, maxTrialRecordBytes, maxComparisonGroups)
+	values, err = readTrialMetrics(bytes.NewReader(data), "elapsed_ms", int64(len(data)), 1, maxTrialRecordBytes, maxImportedMeasurementGroups)
 	if err == nil || values != nil {
 		t.Fatalf("row over-bound result = %#v, %v", values, err)
 	}
-	values, err = readTrialMetrics(bytes.NewReader(data), "elapsed_ms", int64(len(data)-1), 2, maxTrialRecordBytes, maxComparisonGroups)
+	values, err = readTrialMetrics(bytes.NewReader(data), "elapsed_ms", int64(len(data)-1), 2, maxTrialRecordBytes, maxImportedMeasurementGroups)
 	if err == nil || values != nil {
 		t.Fatalf("byte over-bound result = %#v, %v", values, err)
 	}
