@@ -295,6 +295,25 @@ enum RepositorySourceInputBoundaryProjection {
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
+              "id": "repository-database-media-nand-block-erase-cuts-fixture-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/go/nand-block-erase-cuts"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/database-media-v1/nand-block-erase-cuts.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Go nand-block-erase-cuts tests read their exact shared DB04d vector from the repository fixtures.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
               "id": "repository-database-media-nand-fixture-inputs",
               "input_origin": "repository",
               "applies_to": {
