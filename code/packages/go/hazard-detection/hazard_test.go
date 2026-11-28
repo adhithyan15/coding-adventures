@@ -118,6 +118,28 @@ func TestDataHazard_MultipleSourceRegsWorstWins(t *testing.T) {
 	if result.Action != ActionForwardFromEX {
 		t.Errorf("expected FORWARD_FROM_EX, got %v", result.Action)
 	}
+	if len(result.ForwardedOperands) != 2 {
+		t.Fatalf("expected both source resolutions, got %#v", result.ForwardedOperands)
+	}
+	if got := result.ForwardedOperands[0]; got.SourceIndex != 0 || got.SourceRegister != 1 || got.Value != 77 || got.SourceStage != "MEM" {
+		t.Errorf("source 1 forwarding mismatch: %#v", got)
+	}
+	if got := result.ForwardedOperands[1]; got.SourceIndex != 1 || got.SourceRegister != 2 || got.Value != 55 || got.SourceStage != "EX" {
+		t.Errorf("source 2 forwarding mismatch: %#v", got)
+	}
+}
+
+func TestDataHazardPreservesExplicitSourcePosition(t *testing.T) {
+	detector := &DataHazardDetector{}
+	id := PipelineSlot{Valid: true, SourceRegs: []int{7}, SourceIndices: []int{1}}
+	ex := PipelineSlot{Valid: true, DestReg: IntPtr(7), DestValue: IntPtr(42)}
+	result := detector.Detect(id, ex, emptySlot())
+	if result.Action != ActionForwardFromEX || len(result.ForwardedOperands) != 1 {
+		t.Fatalf("expected an EX forward, got %#v", result)
+	}
+	if got := result.ForwardedOperands[0]; got.SourceIndex != 1 || got.SourceRegister != 7 || got.Value != 42 {
+		t.Fatalf("explicit rs2 position was lost: %#v", got)
+	}
 }
 
 func TestDataHazard_StallBeatsForward(t *testing.T) {
@@ -128,6 +150,29 @@ func TestDataHazard_StallBeatsForward(t *testing.T) {
 	result := d.Detect(id, ex, mem)
 	if result.Action != ActionStall {
 		t.Errorf("expected STALL, got %v", result.Action)
+	}
+	for _, forwarded := range result.ForwardedOperands {
+		if forwarded.SourceRegister == 1 {
+			t.Fatal("EX load must not fall back to an older MEM write of the same register")
+		}
+	}
+}
+
+func TestHazardUnitHistoryCopiesTypedForwardingRecords(t *testing.T) {
+	unit := NewHazardUnit(2, 1, true)
+	unit.Check(
+		emptySlot(),
+		PipelineSlot{Valid: true, SourceRegs: []int{1}},
+		PipelineSlot{Valid: true, DestReg: IntPtr(1), DestValue: IntPtr(0)},
+		emptySlot(),
+	)
+	history := unit.History()
+	if len(history) != 1 || len(history[0].ForwardedOperands) != 1 {
+		t.Fatalf("expected one recorded typed forward, got %#v", history)
+	}
+	history[0].ForwardedOperands[0].Value = 99
+	if got := unit.History()[0].ForwardedOperands[0].Value; got != 0 {
+		t.Fatalf("history copy changed stored forwarding value to %d", got)
 	}
 }
 

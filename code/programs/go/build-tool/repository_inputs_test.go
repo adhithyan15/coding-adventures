@@ -2080,6 +2080,119 @@ func TestOSArchitectureFixtureRoutesGoAndTypescriptConsumers(t *testing.T) {
 	}
 }
 
+func TestGoRiscvD05FixtureRoutesOnlyItsExactConsumerAndInputs(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/riscv-simulator", Language: "go"},
+		{Name: "go/os-architecture-simulator", Language: "go"},
+		{Name: "ruby/unix_history_simulator", Language: "ruby"},
+		{Name: "rust/wasm-leb128", Language: "rust"},
+	}
+	for _, changed := range goRiscvD05FixturePaths {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		want := map[string]bool{"go/riscv-simulator": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("%s selected %v, err %v; want only %v", changed, got, err, want)
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "go")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("Go-only %s selected %v, err %v; want %v", changed, got, err, want)
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "ruby")
+		if err != nil || len(got) != 0 {
+			t.Errorf("Ruby-only %s selected %v, err %v; want none", changed, got, err)
+		}
+	}
+	for _, unrelated := range []string{
+		"code/specs/fixtures/go-riscv-d05-v1",
+		"code/specs/fixtures/go-riscv-d05-v1/README.md",
+		"code/specs/fixtures/go-riscv-d05-v1/schema.json",
+		goRiscvD05FixtureInputPath + ".bak",
+		goRiscvD05FixtureTracePath + ".bak",
+		goRiscvD05FixtureAdapterPath + ".bak",
+		"code/specs/fixtures/go-riscv-d05-v1/test-adapters/rust/main.go",
+		"code/specs/fixtures/go-riscv-d05-v1/input.json/child",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{unrelated}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Errorf("unrelated path %q selected %v, err %v; want none", unrelated, got, err)
+		}
+	}
+	got, err := repositoryInputConsumersForChange([]string{goRiscvD05FixtureInputPath, "docs/renamed-input.json"}, packages, "all")
+	if want := map[string]bool{"go/riscv-simulator": true}; err != nil || !reflect.DeepEqual(got, want) {
+		t.Errorf("rename away selected %v, err %v; want %v", got, err, want)
+	}
+	if got, err := repositoryInputConsumersForChange([]string{"docs/renamed-input.json"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Errorf("new non-fixture name selected %v, err %v; want none", got, err)
+	}
+	if got := repositoryInputsForPackage("go/riscv-simulator"); !reflect.DeepEqual(got, goRiscvD05FixturePaths) {
+		t.Fatalf("Go RISC-V package hash inputs = %v, want exactly %v", got, goRiscvD05FixturePaths)
+	}
+}
+
+func TestGoRiscvD05RepositoryInputsHashEveryExactFile(t *testing.T) {
+	root := t.TempDir()
+	inputs := repositoryInputsForPackage("go/riscv-simulator")
+	packageRoot := filepath.Join(root, "code", "packages", "go", "riscv-simulator")
+	if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(packageRoot, "simulator.go"), []byte("package simulator\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, input := range inputs {
+		path := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("initial\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "go/riscv-simulator", Language: "go", Path: packageRoot}
+	for _, input := range inputs {
+		path := filepath.Join(root, filepath.FromSlash(input))
+		before, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash before editing %s: %v", input, err)
+		}
+		if err := os.WriteFile(path, []byte("changed\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		after, err := hasher.HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash after editing %s: %v", input, err)
+		}
+		if before == after {
+			t.Errorf("editing declared Go D05 input %s did not change package hash", input)
+		}
+	}
+}
+
+func TestGoRiscvD05BuildFrontsRunTheExternalReplay(t *testing.T) {
+	root := findRepoRoot("")
+	packageRoot := filepath.Join(root, "code", "packages", "go", "riscv-simulator")
+	want := "go run ../../../specs/fixtures/go-riscv-d05-v1/test-adapters/go/main.go"
+	for _, platform := range []string{"linux", "darwin", "windows"} {
+		buildFile := discovery.GetBuildFileForPlatform(packageRoot, platform)
+		if buildFile == "" {
+			t.Fatalf("no Go RISC-V BUILD front for %s", platform)
+		}
+		content, err := os.ReadFile(buildFile)
+		if err != nil {
+			t.Fatalf("read %s build front: %v", platform, err)
+		}
+		found := false
+		for _, line := range strings.Split(string(content), "\n") {
+			if strings.TrimSpace(line) == want {
+				found = true
+			}
+		}
+		if !found {
+			t.Errorf("%s build front %s does not run %q", platform, buildFile, want)
+		}
+	}
+}
+
 func TestOSArchitectureRepositoryInputsHashEveryExactFile(t *testing.T) {
 	root := t.TempDir()
 	inputs := repositoryInputsForPackage("typescript/os-architecture-simulator")

@@ -267,6 +267,7 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 	}
 
 	var ifTok, idTok, exTok, memTok *cpupipeline.PipelineToken
+	idStageIndex := -1
 	for i, stage := range pipelineCfg.Stages {
 		if i >= numStages {
 			break
@@ -279,6 +280,7 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 			}
 		case cpupipeline.StageDecode:
 			idTok = tok
+			idStageIndex = i
 		case cpupipeline.StageExecute:
 			if exTok == nil {
 				exTok = tok
@@ -290,10 +292,16 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 		}
 	}
 
-	ifSlot := tokenToSlot(ifTok)
-	idSlot := tokenToSlot(idTok)
-	exSlot := tokenToSlot(exTok)
-	memSlot := tokenToSlot(memTok)
+	zeroRegister := -1
+	if convention, ok := c.decoder.(interface{ ZeroRegisterIndex() (int, bool) }); ok {
+		if index, enabled := convention.ZeroRegisterIndex(); enabled {
+			zeroRegister = index
+		}
+	}
+	ifSlot := tokenToSlot(ifTok, zeroRegister, cpupipeline.StageFetch)
+	idSlot := tokenToSlot(idTok, zeroRegister, cpupipeline.StageDecode)
+	exSlot := tokenToSlot(exTok, zeroRegister, cpupipeline.StageExecute)
+	memSlot := tokenToSlot(memTok, zeroRegister, cpupipeline.StageMemory)
 
 	result := c.hazardUnit.Check(ifSlot, idSlot, exSlot, memSlot)
 
@@ -304,7 +312,16 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 	switch result.Action {
 	case hazarddetection.ActionStall:
 		response.Action = cpupipeline.HazardStall
-		response.StallStages = result.StallCycles
+		// The hazard detector reports a duration, while the pipeline API uses
+		// StallStages as the bubble insertion index. For a load-use dependency,
+		// hold ID and inject the bubble at the first execute stage.
+		response.StallStages = 1
+		for i, stage := range pipelineCfg.Stages {
+			if stage.Category == cpupipeline.StageExecute {
+				response.StallStages = i
+				break
+			}
+		}
 		c.stallCount++
 
 	case hazarddetection.ActionFlush:
@@ -325,6 +342,10 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 			response.ForwardValue = *result.ForwardedValue
 		}
 		response.ForwardSource = result.ForwardedFrom
+		response.ForwardedOperands = c.typedForwardedOperands(result.ForwardedOperands)
+		if len(response.ForwardedOperands) > 0 {
+			response.ForwardedOperandsStageIndex = &idStageIndex
+		}
 		c.forwardCount++
 
 	case hazarddetection.ActionForwardFromMEM:
@@ -333,6 +354,10 @@ func (c *Core) hazardCallback(stages []*cpupipeline.PipelineToken) cpupipeline.H
 			response.ForwardValue = *result.ForwardedValue
 		}
 		response.ForwardSource = result.ForwardedFrom
+		response.ForwardedOperands = c.typedForwardedOperands(result.ForwardedOperands)
+		if len(response.ForwardedOperands) > 0 {
+			response.ForwardedOperandsStageIndex = &idStageIndex
+		}
 		c.forwardCount++
 	}
 
@@ -355,7 +380,32 @@ func (c *Core) predictCallback(pc int) int {
 }
 
 // tokenToSlot converts a PipelineToken to a hazard-detection PipelineSlot.
-func tokenToSlot(tok *cpupipeline.PipelineToken) hazarddetection.PipelineSlot {
+// typedForwardedOperands opts only decoders that advertise typed source
+// consumption into the new metadata path; generic decoders retain their old
+// scalar-only behavior.
+func (c *Core) typedForwardedOperands(records []hazarddetection.ForwardedOperand) []cpupipeline.ForwardedOperand {
+	if !c.config.Forwarding {
+		return nil
+	}
+	consumer, ok := c.decoder.(interface{ SupportsTypedOperandForwarding() bool })
+	if !ok || !consumer.SupportsTypedOperandForwarding() {
+		return nil
+	}
+	forwarded := make([]cpupipeline.ForwardedOperand, 0, len(records))
+	for _, record := range records {
+		operand := cpupipeline.SourceOperand(record.SourceIndex)
+		if operand != cpupipeline.SourceOperand1 && operand != cpupipeline.SourceOperand2 {
+			continue
+		}
+		forwarded = append(forwarded, cpupipeline.ForwardedOperand{
+			Operand: operand, Register: record.SourceRegister,
+			Value: record.Value, SourceStage: record.SourceStage,
+		})
+	}
+	return forwarded
+}
+
+func tokenToSlot(tok *cpupipeline.PipelineToken, zeroRegister int, stage cpupipeline.StageCategory) hazarddetection.PipelineSlot {
 	if tok == nil || tok.IsBubble {
 		return hazarddetection.PipelineSlot{Valid: false}
 	}
@@ -366,25 +416,26 @@ func tokenToSlot(tok *cpupipeline.PipelineToken) hazarddetection.PipelineSlot {
 		IsBranch: tok.IsBranch,
 		MemRead:  tok.MemRead,
 		MemWrite: tok.MemWrite,
-		UsesALU:  true,
+		// The ALU is used at EX. A decoded token in ID only names its
+		// operation; marking it as a simultaneous ALU user invents a structural
+		// conflict with the older instruction currently executing.
+		UsesALU: stage == cpupipeline.StageExecute,
 	}
 
 	if tok.Rs1 >= 0 {
 		slot.SourceRegs = append(slot.SourceRegs, tok.Rs1)
+		slot.SourceIndices = append(slot.SourceIndices, 0)
 	}
 	if tok.Rs2 >= 0 {
 		slot.SourceRegs = append(slot.SourceRegs, tok.Rs2)
+		slot.SourceIndices = append(slot.SourceIndices, 1)
 	}
 
-	if tok.Rd >= 0 && tok.RegWrite {
+	if tok.Rd >= 0 && tok.Rd != zeroRegister && tok.RegWrite {
 		slot.DestReg = hazarddetection.IntPtr(tok.Rd)
-		if tok.ALUResult != 0 || tok.WriteData != 0 {
-			val := tok.ALUResult
-			if tok.WriteData != 0 {
-				val = tok.WriteData
-			}
-			slot.DestValue = hazarddetection.IntPtr(val)
-		}
+		// The core invokes this callback only for EX/MEM/WB stage contents.
+		// WriteData is the executed result there and may legitimately be zero.
+		slot.DestValue = hazarddetection.IntPtr(tok.WriteData)
 	}
 
 	if tok.IsBranch {

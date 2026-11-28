@@ -166,13 +166,17 @@ var (
 		"code/packages/rust/wasm-leb128/src",
 		"code/packages/rust/wasm-module-parser/src",
 	}
-	osArchitectureProfilesPath      = "code/specs/fixtures/os-architecture-v1/profiles.json"
-	osArchitectureVerifyPath        = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
-	osArchitectureGoConformancePath = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
-	osMachineBoardsPath             = "code/specs/fixtures/os-machine-v1/boards.json"
-	osMachineVerifyPath             = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
-	osMachineRiscvPath              = "code/specs/fixtures/os-machine-v1/riscv.json"
-	osMachineRiscvVerifyPath        = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
+	osArchitectureProfilesPath        = "code/specs/fixtures/os-architecture-v1/profiles.json"
+	osArchitectureVerifyPath          = "code/specs/fixtures/os-architecture-v1/verify_profiles.mjs"
+	osArchitectureGoConformancePath   = "code/specs/fixtures/os-architecture-v1/test-adapters/go/conformance.go"
+	goRiscvD05FixtureInputPath         = "code/specs/fixtures/go-riscv-d05-v1/input.json"
+	goRiscvD05FixtureTracePath         = "code/specs/fixtures/go-riscv-d05-v1/expected_trace.json"
+	goRiscvD05FixtureAdapterPath       = "code/specs/fixtures/go-riscv-d05-v1/test-adapters/go/main.go"
+	goRiscvD05FixturePaths             = []string{goRiscvD05FixtureInputPath, goRiscvD05FixtureTracePath, goRiscvD05FixtureAdapterPath}
+	osMachineBoardsPath               = "code/specs/fixtures/os-machine-v1/boards.json"
+	osMachineVerifyPath               = "code/specs/fixtures/os-machine-v1/verify_boards.mjs"
+	osMachineRiscvPath                = "code/specs/fixtures/os-machine-v1/riscv.json"
+	osMachineRiscvVerifyPath          = "code/specs/fixtures/os-machine-v1/verify_riscv.test.ts"
 	// kilnToolchainPinPaths are the pin sources Kiln's committed
 	// code/kiln/legacy/toolchains.json is checked against by its drift test
 	// (realpolicy_test.go). A toolchain bump that edits only these files must
@@ -398,10 +402,12 @@ var (
 	gameInputFrameV1Paths            = []string{"code/specs/fixtures/game-input-frame-v1"}
 	nandFlashFixturePath             = "code/specs/fixtures/database-media-v1/nand-flash.json"
 	nandPageProgramCutsFixturePath   = "code/specs/fixtures/database-media-v1/nand-page-program-cuts.json"
+	nandBlockEraseCutsFixturePath     = "code/specs/fixtures/database-media-v1/nand-block-erase-cuts.json"
 	hddSimulatorFixturePath          = "code/specs/fixtures/database-media-v1/hdd-simulator.json"
 	hddWriteCrashCutsFixturePath     = "code/specs/fixtures/database-media-v1/hdd-write-crash-cuts.json"
 	nandFlashFixtureInputs           = []string{nandFlashFixturePath}
 	nandPageProgramCutsFixtureInputs = []string{nandPageProgramCutsFixturePath}
+	nandBlockEraseCutsFixtureInputs   = []string{nandBlockEraseCutsFixturePath}
 	hddSimulatorFixtureInputs        = []string{hddSimulatorFixturePath}
 	hddWriteCrashCutsFixtureInputs   = []string{hddWriteCrashCutsFixturePath}
 	typescriptGameInputFrameInputs   = []string{
@@ -639,6 +645,15 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	// HOS-D05-GO4: the Go RISC-V package BUILD replays this exact external
+	// input, captured trace, and public-API adapter. Keep predicate and hash
+	// inputs limited to the three files the adapter reads or is run from.
+	{
+		name: "go/riscv-simulator", language: "go",
+		inputs:  "the captured Go RV32I pipeline input, trace, and external replay adapter",
+		matches: isGoRiscvD05FixtureInput,
+		paths:   goRiscvD05FixturePaths,
+	},
 	// HOS03d: the native Go semantic simulator replays both canonical OS
 	// profiles through its external fixture verifier.
 	{
@@ -1106,6 +1121,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the exact DB04b shared NAND page-program cut vector",
 		matches:  isNANDPageProgramCutsFixture,
 		paths:    nandPageProgramCutsFixtureInputs,
+	},
+	{
+		name:     "go/nand-block-erase-cuts",
+		language: "go",
+		inputs:   "the exact DB04d shared interrupted block-erase vector",
+		matches:  isNANDBlockEraseCutsFixture,
+		paths:    nandBlockEraseCutsFixtureInputs,
 	},
 	{
 		name:     "python/hdd-simulator",
@@ -2087,9 +2109,21 @@ func isGoOSArchitectureFixtureInput(changed string) bool {
 	return changed == osArchitectureProfilesPath || changed == osArchitectureGoConformancePath
 }
 
+func isGoRiscvD05FixtureInput(changed string) bool {
+	for _, path := range goRiscvD05FixturePaths {
+		if changed == path {
+			return true
+		}
+	}
+	return false
+}
+
 // repositoryInputsForPackage returns exact repository-relative files that
 // package tests read and that must participate in the fallback cache key.
 func repositoryInputsForPackage(packageName string) []string {
+	if packageName == "go/riscv-simulator" {
+		return append([]string(nil), goRiscvD05FixturePaths...)
+	}
 	if packageName == "go/os-architecture-simulator" {
 		return []string{osArchitectureProfilesPath, osArchitectureGoConformancePath}
 	}
@@ -2171,6 +2205,8 @@ func repositoryInputsForPackage(packageName string) []string {
 		return nandFlashFixtureInputs
 	case "go/nand-page-program-cuts":
 		return nandPageProgramCutsFixtureInputs
+	case "go/nand-block-erase-cuts":
+		return nandBlockEraseCutsFixtureInputs
 	case "python/hdd-simulator", "typescript/hdd-simulator", "c/hdd-simulator", "go/hdd-simulator":
 		return hddSimulatorFixtureInputs
 	case "go/hdd-write-crash-cuts":
@@ -2875,6 +2911,10 @@ func isNANDFlashFixture(changed string) bool {
 
 func isNANDPageProgramCutsFixture(changed string) bool {
 	return changed == nandPageProgramCutsFixturePath
+}
+
+func isNANDBlockEraseCutsFixture(changed string) bool {
+	return changed == nandBlockEraseCutsFixturePath
 }
 
 func isHDDSimulatorFixture(changed string) bool {

@@ -1,11 +1,12 @@
 package riscvsimulator
 
 import (
+	"reflect"
 	"testing"
 
-	cpu "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-simulator"
-	cpupipeline "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-pipeline"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/core"
+	cpupipeline "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-pipeline"
+	cpu "github.com/adhithyan15/coding-adventures/code/packages/go/cpu-simulator"
 )
 
 // =========================================================================
@@ -72,6 +73,127 @@ func TestNewRiscVCore_RegisterFileConfig(t *testing.T) {
 	}
 }
 
+func TestTypedOperandForwardingMatchesSequentialRV32IOracle(t *testing.T) {
+	// This guest deliberately creates a zero-valued store/load, then branches
+	// on the loaded value. It checks that zero is still a valid forwarded value
+	// rather than being confused with an unavailable value or an address.
+	words := []uint32{
+		EncodeAddi(0, 0, 99),  // writes x0; must never become a producer
+		EncodeAddi(1, 0, 0),   // x1 = 0
+		EncodeAddi(2, 0, 128), // x2 = data address
+		EncodeSw(1, 2, 0),     // rs1 from EX, rs2 from MEM; store 0
+		EncodeAddi(3, 0, 1),   // make the pre-load x3 value nonzero
+		EncodeLw(3, 2, 0),     // load zero from the preceding store
+		EncodeBeq(3, 1, 8),    // load-use stall, then MEM forward; taken
+		EncodeAddi(5, 0, 99),  // wrong path: must not retire
+		EncodeAddi(4, 3, 1),   // target: x4 = 1
+		EncodeEcall(),
+	}
+	program := Assemble(words)
+
+	config := core.SimpleConfig()
+	staged, err := NewRiscVCore(config, 256)
+	if err != nil {
+		t.Fatalf("NewRiscVCore: %v", err)
+	}
+	staged.LoadProgram(program, 0)
+	staged.MemoryController().WriteWord(128, 42)
+
+	sequential := NewRiscVSimulator(256)
+	sequential.CPU.Memory.WriteWord(128, 42)
+	sequentialTrace := sequential.Run(program)
+
+	var snapshots []cpupipeline.PipelineSnapshot
+	for steps := 0; steps < 100 && !staged.IsHalted(); steps++ {
+		snapshots = append(snapshots, staged.Step())
+	}
+	if !staged.IsHalted() {
+		t.Fatal("staged core did not reach its bounded ECALL halt")
+	}
+	if len(sequentialTrace) != 9 {
+		t.Fatalf("sequential oracle executed %d instructions, want 9 after the taken branch", len(sequentialTrace))
+	}
+
+	var retiredPCs []int
+	var gotTwoSourceStoreForward, gotLoadToBranchForward bool
+	stallCycles, flushCycles := 0, 0
+	branchHeldInID := false
+	for _, snapshot := range snapshots {
+		if snapshot.Stalled {
+			stallCycles++
+			if id := snapshot.Stages["ID"]; id != nil && id.PC == 24 {
+				branchHeldInID = true
+			}
+		}
+		if snapshot.Flushing {
+			flushCycles++
+		}
+		if wb := snapshot.Stages["WB"]; wb != nil && !wb.IsBubble {
+			retiredPCs = append(retiredPCs, wb.PC)
+		}
+		if ex := snapshot.Stages["EX"]; ex != nil && !ex.IsBubble {
+			if ex.PC == 12 {
+				gotRs1, gotRs2 := false, false
+				for _, forwarded := range ex.ForwardedOperands {
+					switch forwarded.Operand {
+					case cpupipeline.SourceOperand1:
+						gotRs1 = forwarded.Register == 2 && forwarded.Value == 128 && forwarded.SourceStage == "EX"
+					case cpupipeline.SourceOperand2:
+						gotRs2 = forwarded.Register == 1 && forwarded.Value == 0 && forwarded.SourceStage == "MEM"
+					}
+				}
+				gotTwoSourceStoreForward = gotRs1 && gotRs2
+			}
+			if ex.PC == 24 && ex.BranchTaken {
+				for _, forwarded := range ex.ForwardedOperands {
+					if forwarded.Operand == cpupipeline.SourceOperand1 && forwarded.Register == 3 && forwarded.Value == 0 && forwarded.SourceStage == "MEM" {
+						gotLoadToBranchForward = true
+					}
+				}
+			}
+		}
+	}
+	if !gotTwoSourceStoreForward {
+		t.Fatal("store did not receive independent rs1/rs2 values from EX and MEM")
+	}
+	if !gotLoadToBranchForward {
+		t.Fatal("taken branch did not consume the zero-valued load result from MEM")
+	}
+	if stallCycles != 1 || flushCycles != 1 {
+		t.Fatalf("expected exactly one load-use stall and one taken-branch flush, got stalls=%d flushes=%d", stallCycles, flushCycles)
+	}
+	if !branchHeldInID {
+		t.Fatal("load-use stall did not hold its dependent branch in ID")
+	}
+	wantRetiredPCs := []int{0, 4, 8, 12, 16, 20, 24, 32, 36}
+	if !reflect.DeepEqual(retiredPCs, wantRetiredPCs) {
+		t.Fatalf("retired PC sequence=%v, want %v", retiredPCs, wantRetiredPCs)
+	}
+
+	for register := 0; register < 32; register++ {
+		want := sequential.CPU.Registers.Read(register)
+		if got := staged.ReadRegister(register); uint32(got) != want {
+			t.Errorf("x%d: staged=%#x sequential=%#x", register, got, want)
+		}
+	}
+	if got := staged.ReadRegister(0); got != 0 {
+		t.Errorf("x0 changed to %d", got)
+	}
+	if got := staged.ReadRegister(4); got != 1 {
+		t.Errorf("target instruction computed x4=%d, want 1", got)
+	}
+	if got := staged.ReadRegister(5); got != 0 {
+		t.Errorf("wrong-path instruction retired into x5=%d", got)
+	}
+	for address := 0; address < 256; address += 4 {
+		got := staged.MemoryController().ReadWord(address)
+		want := int(sequential.CPU.Memory.ReadWord(address))
+		if got != want {
+			t.Errorf("memory[%d]: staged=%#x sequential=%#x", address, got, want)
+		}
+	}
+}
+
 // =========================================================================
 // Test: Load and run a small program — add two numbers
 // =========================================================================
@@ -80,11 +202,11 @@ func TestRiscVCore_AddTwoNumbers(t *testing.T) {
 	// Program: compute 10 + 32 = 42
 	// NOP padding between dependent instructions allows pipeline writeback.
 	program := assembleWithHalt(
-		EncodeAddi(1, 0, 10),    // x1 = 10
-		EncodeAddi(2, 0, 32),    // x2 = 32
-		nop, nop,                // let x1, x2 reach WB
-		EncodeAdd(3, 1, 2),      // x3 = x1 + x2 = 42
-		nop, nop, nop, nop,      // let x3 reach WB
+		EncodeAddi(1, 0, 10), // x1 = 10
+		EncodeAddi(2, 0, 32), // x2 = 32
+		nop, nop,             // let x1, x2 reach WB
+		EncodeAdd(3, 1, 2), // x3 = x1 + x2 = 42
+		nop, nop, nop, nop, // let x3 reach WB
 	)
 
 	config := core.SimpleConfig()
@@ -145,12 +267,12 @@ func TestRiscVCore_Subtraction(t *testing.T) {
 
 func TestRiscVCore_BitwiseOperations(t *testing.T) {
 	program := assembleWithHalt(
-		EncodeAddi(1, 0, 0xFF),  // x1 = 255
-		EncodeAddi(2, 0, 0x0F),  // x2 = 15
+		EncodeAddi(1, 0, 0xFF), // x1 = 255
+		EncodeAddi(2, 0, 0x0F), // x2 = 15
 		nop, nop,
-		EncodeAnd(3, 1, 2),       // x3 = 0x0F
-		EncodeOr(4, 1, 2),        // x4 = 0xFF
-		EncodeXor(5, 1, 2),       // x5 = 0xF0
+		EncodeAnd(3, 1, 2), // x3 = 0x0F
+		EncodeOr(4, 1, 2),  // x4 = 0xFF
+		EncodeXor(5, 1, 2), // x5 = 0xF0
 		nop, nop, nop, nop,
 	)
 
@@ -205,11 +327,11 @@ func TestRiscVCore_LUI(t *testing.T) {
 
 func TestRiscVCore_Shifts(t *testing.T) {
 	program := assembleWithHalt(
-		EncodeAddi(1, 0, 1),    // x1 = 1
+		EncodeAddi(1, 0, 1), // x1 = 1
 		nop, nop, nop, nop,
-		EncodeSlli(2, 1, 4),    // x2 = 1 << 4 = 16
+		EncodeSlli(2, 1, 4), // x2 = 1 << 4 = 16
 		nop, nop, nop, nop,
-		EncodeSrli(3, 2, 2),    // x3 = 16 >> 2 = 4
+		EncodeSrli(3, 2, 2), // x3 = 16 >> 2 = 4
 		nop, nop, nop, nop,
 	)
 
@@ -236,9 +358,9 @@ func TestRiscVCore_Shifts(t *testing.T) {
 
 func TestRiscVCore_X0AlwaysZero(t *testing.T) {
 	program := assembleWithHalt(
-		EncodeAddi(0, 0, 999),  // write to x0 — should be discarded
+		EncodeAddi(0, 0, 999), // write to x0 — should be discarded
 		nop, nop, nop, nop,
-		EncodeAddi(1, 0, 7),    // x1 = 0 + 7 = 7
+		EncodeAddi(1, 0, 7), // x1 = 0 + 7 = 7
 		nop, nop, nop, nop,
 	)
 
@@ -398,8 +520,8 @@ func TestRiscVCore_SLT(t *testing.T) {
 		EncodeAddi(1, 0, 5),
 		EncodeAddi(2, 0, 10),
 		nop, nop,
-		EncodeSlt(3, 1, 2),   // 5 < 10 → 1
-		EncodeSlt(4, 2, 1),   // 10 < 5 → 0
+		EncodeSlt(3, 1, 2), // 5 < 10 → 1
+		EncodeSlt(4, 2, 1), // 10 < 5 → 0
 		nop, nop, nop, nop,
 	)
 
@@ -451,12 +573,12 @@ func TestGetField_EmptyMap(t *testing.T) {
 
 func TestRiscVCore_ImmediateArithmetic(t *testing.T) {
 	program := assembleWithHalt(
-		EncodeAddi(1, 0, 0xFF),   // x1 = 0xFF
+		EncodeAddi(1, 0, 0xFF), // x1 = 0xFF
 		nop, nop, nop, nop,
-		EncodeOri(2, 1, 0x100),   // x2 = 0xFF | 0x100 = 0x1FF
+		EncodeOri(2, 1, 0x100), // x2 = 0xFF | 0x100 = 0x1FF
 		nop, nop, nop, nop,
-		EncodeAndi(3, 2, 0x0F0),  // x3 = 0x1FF & 0x0F0 = 0xF0
-		EncodeXori(4, 1, 0x0F),   // x4 = 0xFF ^ 0x0F = 0xF0
+		EncodeAndi(3, 2, 0x0F0), // x3 = 0x1FF & 0x0F0 = 0xF0
+		EncodeXori(4, 1, 0x0F),  // x4 = 0xFF ^ 0x0F = 0xF0
 		nop, nop, nop, nop,
 	)
 
@@ -530,8 +652,8 @@ func TestRiscVCore_SLTI(t *testing.T) {
 	program := assembleWithHalt(
 		EncodeAddi(1, 0, 5),
 		nop, nop, nop, nop,
-		EncodeSlti(2, 1, 10),   // 5 < 10 → 1
-		EncodeSlti(3, 1, 3),    // 5 < 3 → 0
+		EncodeSlti(2, 1, 10), // 5 < 10 → 1
+		EncodeSlti(3, 1, 3),  // 5 < 3 → 0
 		nop, nop, nop, nop,
 	)
 
@@ -560,8 +682,8 @@ func TestRiscVCore_SLTIU(t *testing.T) {
 	program := assembleWithHalt(
 		EncodeAddi(1, 0, 5),
 		nop, nop, nop, nop,
-		EncodeSltiu(2, 1, 10),  // 5 <u 10 → 1
-		EncodeSltiu(3, 1, 3),   // 5 <u 3 → 0
+		EncodeSltiu(2, 1, 10), // 5 <u 10 → 1
+		EncodeSltiu(3, 1, 3),  // 5 <u 3 → 0
 		nop, nop, nop, nop,
 	)
 
@@ -588,7 +710,7 @@ func TestRiscVCore_SLTIU(t *testing.T) {
 
 func TestRiscVCore_AUIPC(t *testing.T) {
 	program := assembleWithHalt(
-		EncodeAuipc(1, 1),  // x1 = PC + (1 << 12) = 0 + 4096 = 4096
+		EncodeAuipc(1, 1), // x1 = PC + (1 << 12) = 0 + 4096 = 4096
 		nop, nop, nop, nop,
 	)
 
@@ -615,9 +737,9 @@ func TestRiscVCore_SRAI(t *testing.T) {
 	// Load a negative number using LUI + ADDI, then arithmetic shift right.
 	// -16 in 32-bit = 0xFFFFFFF0, arithmetic shift right by 2 = 0xFFFFFFFC = -4
 	program := assembleWithHalt(
-		EncodeAddi(1, 0, -16),  // x1 = -16 (0xFFFFFFF0)
+		EncodeAddi(1, 0, -16), // x1 = -16 (0xFFFFFFF0)
 		nop, nop, nop, nop,
-		EncodeSrai(2, 1, 2),    // x2 = -16 >> 2 = -4 (arithmetic)
+		EncodeSrai(2, 1, 2), // x2 = -16 >> 2 = -4 (arithmetic)
 		nop, nop, nop, nop,
 	)
 
@@ -646,12 +768,12 @@ func TestRiscVCore_SRAI(t *testing.T) {
 
 func TestRiscVCore_RTypeShiftsAndCompares(t *testing.T) {
 	program := assembleWithHalt(
-		EncodeAddi(1, 0, 8),    // x1 = 8
-		EncodeAddi(2, 0, 2),    // x2 = 2
+		EncodeAddi(1, 0, 8), // x1 = 8
+		EncodeAddi(2, 0, 2), // x2 = 2
 		nop, nop,
-		EncodeSll(3, 1, 2),     // x3 = 8 << 2 = 32
-		EncodeSrl(4, 1, 2),     // x4 = 8 >> 2 = 2
-		EncodeSltu(5, 2, 1),    // x5 = (2 <u 8) = 1
+		EncodeSll(3, 1, 2),  // x3 = 8 << 2 = 32
+		EncodeSrl(4, 1, 2),  // x4 = 8 >> 2 = 2
+		EncodeSltu(5, 2, 1), // x5 = (2 <u 8) = 1
 		nop, nop, nop, nop,
 	)
 
@@ -683,13 +805,13 @@ func TestRiscVISADecoder_DecodeControlSignals(t *testing.T) {
 	decoder := NewRiscVISADecoder()
 
 	tests := []struct {
-		name      string
-		raw       uint32
-		regWrite  bool
-		memRead   bool
-		memWrite  bool
-		isBranch  bool
-		isHalt    bool
+		name     string
+		raw      uint32
+		regWrite bool
+		memRead  bool
+		memWrite bool
+		isBranch bool
+		isHalt   bool
 	}{
 		{"add", EncodeAdd(3, 1, 2), true, false, false, false, false},
 		{"addi", EncodeAddi(1, 0, 42), true, false, false, false, false},
@@ -770,8 +892,8 @@ func TestRiscVISADecoder_ExecuteDirectly(t *testing.T) {
 	regFile := core.NewRegisterFile(&regCfg)
 
 	// Set up register values for testing
-	regFile.Write(1, 10)  // x1 = 10
-	regFile.Write(2, 3)   // x2 = 3
+	regFile.Write(1, 10) // x1 = 10
+	regFile.Write(2, 3)  // x2 = 3
 
 	tests := []struct {
 		name        string
@@ -781,25 +903,25 @@ func TestRiscVISADecoder_ExecuteDirectly(t *testing.T) {
 		// R-type
 		{"add", EncodeAdd(3, 1, 2), 13},
 		{"sub", EncodeSub(3, 1, 2), 7},
-		{"sll", EncodeSll(3, 1, 2), 80},     // 10 << 3 = 80
-		{"srl", EncodeSrl(3, 1, 2), 1},      // 10 >> 3 = 1
+		{"sll", EncodeSll(3, 1, 2), 80}, // 10 << 3 = 80
+		{"srl", EncodeSrl(3, 1, 2), 1},  // 10 >> 3 = 1
 		{"xor", EncodeXor(3, 1, 2), 10 ^ 3},
 		{"or", EncodeOr(3, 1, 2), 10 | 3},
 		{"and", EncodeAnd(3, 1, 2), 10 & 3},
 
 		// I-type
 		{"addi", EncodeAddi(3, 1, 5), 15},
-		{"slli", EncodeSlli(3, 1, 2), 40},   // 10 << 2 = 40
-		{"srli", EncodeSrli(3, 1, 1), 5},    // 10 >> 1 = 5
+		{"slli", EncodeSlli(3, 1, 2), 40}, // 10 << 2 = 40
+		{"srli", EncodeSrli(3, 1, 1), 5},  // 10 >> 1 = 5
 
 		// Upper immediate
-		{"lui", EncodeLui(3, 1), 4096},       // 1 << 12 = 4096
+		{"lui", EncodeLui(3, 1), 4096}, // 1 << 12 = 4096
 
 		// Loads compute effective address
-		{"lw", EncodeLw(3, 1, 4), 14},        // addr = 10 + 4 = 14
+		{"lw", EncodeLw(3, 1, 4), 14}, // addr = 10 + 4 = 14
 
 		// Stores compute effective address
-		{"sw", EncodeSw(2, 1, 8), 18},        // addr = 10 + 8 = 18
+		{"sw", EncodeSw(2, 1, 8), 18}, // addr = 10 + 8 = 18
 
 		// Branches: beq(10, 3) is not taken
 		{"beq_not_taken", EncodeBeq(1, 2, 100), 4}, // PC+4 since not taken
@@ -876,7 +998,7 @@ func TestRiscVISADecoder_JumpExecution(t *testing.T) {
 	regCfg := core.RegisterFileConfig{Count: 32, Width: 32, ZeroRegister: true}
 	regFile := core.NewRegisterFile(&regCfg)
 
-	regFile.Write(5, 100)  // x5 = 100 (base for jalr)
+	regFile.Write(5, 100) // x5 = 100 (base for jalr)
 
 	// JAL: jump to PC + 20, store PC+4 in rd
 	t.Run("jal", func(t *testing.T) {

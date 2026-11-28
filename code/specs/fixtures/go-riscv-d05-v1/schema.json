@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "go-riscv-d05-pipeline-v1",
+  "title": "Go RV32I classic pipeline input and captured trace",
+  "type": "object",
+  "oneOf": [
+    {
+      "title": "Input",
+      "type": "object",
+      "properties": {
+        "schema": {"const": "go-riscv-d05-pipeline-input-v1"},
+        "id": {"type": "string", "minLength": 1},
+        "ram_bytes": {"type": "integer", "minimum": 4, "multipleOf": 4},
+        "max_cycles": {"type": "integer", "minimum": 1},
+        "program_bytes_hex": {"type": "string", "pattern": "^([0-9a-fA-F]{2})+$"},
+        "initial_memory_words": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "address": {"type": "integer", "minimum": 0, "multipleOf": 4},
+              "value": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+            },
+            "required": ["address", "value"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["schema", "id", "ram_bytes", "max_cycles", "program_bytes_hex", "initial_memory_words"],
+      "additionalProperties": false
+    },
+    {
+      "title": "Captured trace",
+      "type": "object",
+      "properties": {
+        "schema": {"const": "go-riscv-d05-pipeline-trace-v1"},
+        "input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "trace": {"type": "array"},
+        "retired_pcs": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "stats": {"type": "object"},
+        "registers": {"type": "array", "minItems": 32, "maxItems": 32, "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}},
+        "ram_words": {"type": "array", "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}}
+      },
+      "required": ["schema", "input_sha256", "trace", "retired_pcs", "stats", "registers", "ram_words"],
+      "additionalProperties": false
+    }
+  ]
+}

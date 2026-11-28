@@ -1,0 +1,521 @@
+{
+  "schema": "go-riscv-d05-pipeline-trace-v1",
+  "input_sha256": "fcf69bf2c614f0119c10c2b5d8a1b742c2bf9c1e7d847650ee6c09e736930744",
+  "trace": [
+    {
+      "cycle": 1,
+      "stages": {
+        "EX": null,
+        "ID": null,
+        "IF": {
+          "pc": 0,
+          "mnemonic": ""
+        },
+        "MEM": null,
+        "WB": null
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 2,
+      "stages": {
+        "EX": null,
+        "ID": {
+          "pc": 0,
+          "mnemonic": "addi"
+        },
+        "IF": {
+          "pc": 4,
+          "mnemonic": ""
+        },
+        "MEM": null,
+        "WB": null
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 3,
+      "stages": {
+        "EX": {
+          "pc": 0,
+          "mnemonic": "addi"
+        },
+        "ID": {
+          "pc": 4,
+          "mnemonic": "addi"
+        },
+        "IF": {
+          "pc": 8,
+          "mnemonic": ""
+        },
+        "MEM": null,
+        "WB": null
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 4,
+      "stages": {
+        "EX": {
+          "pc": 4,
+          "mnemonic": "addi"
+        },
+        "ID": {
+          "pc": 8,
+          "mnemonic": "addi"
+        },
+        "IF": {
+          "pc": 12,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 0,
+          "mnemonic": "addi"
+        },
+        "WB": null
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 5,
+      "stages": {
+        "EX": {
+          "pc": 8,
+          "mnemonic": "addi"
+        },
+        "ID": {
+          "pc": 12,
+          "mnemonic": "sw"
+        },
+        "IF": {
+          "pc": 16,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 4,
+          "mnemonic": "addi"
+        },
+        "WB": {
+          "pc": 0,
+          "mnemonic": "addi"
+        }
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 6,
+      "stages": {
+        "EX": {
+          "pc": 12,
+          "mnemonic": "sw",
+          "forwarded_operands": [
+            {
+              "operand": "rs1",
+              "register": 2,
+              "value": 128,
+              "source_stage": "EX"
+            },
+            {
+              "operand": "rs2",
+              "register": 1,
+              "value": 0,
+              "source_stage": "MEM"
+            }
+          ]
+        },
+        "ID": {
+          "pc": 16,
+          "mnemonic": "addi"
+        },
+        "IF": {
+          "pc": 20,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 8,
+          "mnemonic": "addi"
+        },
+        "WB": {
+          "pc": 4,
+          "mnemonic": "addi"
+        }
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 7,
+      "stages": {
+        "EX": {
+          "pc": 16,
+          "mnemonic": "addi"
+        },
+        "ID": {
+          "pc": 20,
+          "mnemonic": "lw"
+        },
+        "IF": {
+          "pc": 24,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 12,
+          "mnemonic": "sw"
+        },
+        "WB": {
+          "pc": 8,
+          "mnemonic": "addi"
+        }
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 8,
+      "stages": {
+        "EX": {
+          "pc": 20,
+          "mnemonic": "lw"
+        },
+        "ID": {
+          "pc": 24,
+          "mnemonic": "beq"
+        },
+        "IF": {
+          "pc": 28,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 16,
+          "mnemonic": "addi"
+        },
+        "WB": {
+          "pc": 12,
+          "mnemonic": "sw"
+        }
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 9,
+      "stages": {
+        "EX": null,
+        "ID": {
+          "pc": 24,
+          "mnemonic": "beq"
+        },
+        "IF": {
+          "pc": 28,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 20,
+          "mnemonic": "lw"
+        },
+        "WB": {
+          "pc": 16,
+          "mnemonic": "addi"
+        }
+      },
+      "stalled": true,
+      "flushing": false
+    },
+    {
+      "cycle": 10,
+      "stages": {
+        "EX": {
+          "pc": 24,
+          "mnemonic": "beq",
+          "branch_taken": true,
+          "forwarded_operands": [
+            {
+              "operand": "rs1",
+              "register": 3,
+              "value": 0,
+              "source_stage": "MEM"
+            }
+          ]
+        },
+        "ID": {
+          "pc": 28,
+          "mnemonic": "addi"
+        },
+        "IF": {
+          "pc": 32,
+          "mnemonic": ""
+        },
+        "MEM": null,
+        "WB": {
+          "pc": 20,
+          "mnemonic": "lw"
+        }
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 11,
+      "stages": {
+        "EX": null,
+        "ID": null,
+        "IF": {
+          "pc": 32,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 24,
+          "mnemonic": "beq",
+          "branch_taken": true
+        },
+        "WB": null
+      },
+      "stalled": false,
+      "flushing": true
+    },
+    {
+      "cycle": 12,
+      "stages": {
+        "EX": null,
+        "ID": {
+          "pc": 32,
+          "mnemonic": "addi"
+        },
+        "IF": {
+          "pc": 36,
+          "mnemonic": ""
+        },
+        "MEM": null,
+        "WB": {
+          "pc": 24,
+          "mnemonic": "beq",
+          "branch_taken": true
+        }
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 13,
+      "stages": {
+        "EX": {
+          "pc": 32,
+          "mnemonic": "addi"
+        },
+        "ID": {
+          "pc": 36,
+          "mnemonic": "ecall"
+        },
+        "IF": {
+          "pc": 40,
+          "mnemonic": ""
+        },
+        "MEM": null,
+        "WB": null
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 14,
+      "stages": {
+        "EX": {
+          "pc": 36,
+          "mnemonic": "ecall"
+        },
+        "ID": {
+          "pc": 40,
+          "mnemonic": "UNKNOWN(0x00)"
+        },
+        "IF": {
+          "pc": 44,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 32,
+          "mnemonic": "addi"
+        },
+        "WB": null
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 15,
+      "stages": {
+        "EX": {
+          "pc": 40,
+          "mnemonic": "UNKNOWN(0x00)"
+        },
+        "ID": {
+          "pc": 44,
+          "mnemonic": "UNKNOWN(0x00)"
+        },
+        "IF": {
+          "pc": 48,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 36,
+          "mnemonic": "ecall"
+        },
+        "WB": {
+          "pc": 32,
+          "mnemonic": "addi"
+        }
+      },
+      "stalled": false,
+      "flushing": false
+    },
+    {
+      "cycle": 16,
+      "stages": {
+        "EX": {
+          "pc": 44,
+          "mnemonic": "UNKNOWN(0x00)"
+        },
+        "ID": {
+          "pc": 48,
+          "mnemonic": "UNKNOWN(0x00)"
+        },
+        "IF": {
+          "pc": 52,
+          "mnemonic": ""
+        },
+        "MEM": {
+          "pc": 40,
+          "mnemonic": "UNKNOWN(0x00)"
+        },
+        "WB": {
+          "pc": 36,
+          "mnemonic": "ecall"
+        }
+      },
+      "stalled": false,
+      "flushing": false
+    }
+  ],
+  "retired_pcs": [
+    0,
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    32,
+    36
+  ],
+  "stats": {
+    "cycles": 16,
+    "instructions": 9,
+    "forwards": 2,
+    "stalls": 1,
+    "flushes": 1
+  },
+  "registers": [
+    0,
+    0,
+    128,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "ram_words": [
+    103809043,
+    147,
+    134218003,
+    1122339,
+    1048979,
+    74115,
+    1148003,
+    103809683,
+    1147411,
+    115,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

@@ -2,6 +2,19 @@
 
 All notable changes to the `core` package will be documented in this file.
 
+## [0.3.0] - Unreleased
+
+### Fixed
+- Core stage slots now report ALU use at EX, not at both ID and EX, so the
+  structural detector no longer serializes ordinary adjacent ALU instructions.
+- Load-use stalls insert their bubble at the configured execute stage instead
+  of treating the stall duration as a stage index; the dependent ID token is
+  held until the load result reaches MEM.
+- Forwarding producer values preserve valid zero-valued results, and optional
+  zero-register conventions prevent RISC-V x0 from becoming a producer.
+- Typed forwarding records retain rs1/rs2 positions and target the decode
+  stage selected by the Core hazard check in multi-decode layouts.
+
 ## [0.2.0] - 2026-04-02
 
 ### Changed
