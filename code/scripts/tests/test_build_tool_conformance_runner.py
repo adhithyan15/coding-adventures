@@ -4238,8 +4238,10 @@ class PureDomainValidationTests(unittest.TestCase):
                 "CARGO_MANIFEST_TABLE_UNSUPPORTED",
             ),
             (
-                "target.'cfg(unix)' = { dev-dependencies = { "
-                "compiler = { path = '../compiler' } } }\n",
+                (
+                    "target.'cfg(unix)' = { dev-dependencies = { "
+                    "compiler = { path = '../compiler' } } }\n"
+                ),
                 "CARGO_MANIFEST_TABLE_UNSUPPORTED",
             ),
             (
