@@ -1,0 +1,119 @@
+{
+  "format": "historical-web-html2-paragraphs-v1",
+  "profile": "html2-paragraphs-1995",
+  "references": {
+    "profile_spec": "HWEB06-html2-paragraph-slice.md",
+    "xml_spec": "XML01-xml-parser.md",
+    "xml_1_0": "https://www.w3.org/TR/xml/"
+  },
+  "positive": [
+    {
+      "id": "one-explicit-paragraph",
+      "source": "<P>alpha</P>",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": ["alpha"]}
+      ]
+    },
+    {
+      "id": "omitted-paragraph-end-at-next-start-and-eof",
+      "source": "<P>one<P>two",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": ["one"]},
+        {"tag": "p", "attributes": {}, "children": ["two"]}
+      ]
+    },
+    {
+      "id": "paragraph-ends-before-heading-start",
+      "source": "<P>paragraph<H1>heading</H1>",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": ["paragraph"]},
+        {"tag": "h1", "attributes": {}, "children": ["heading"]}
+      ]
+    },
+    {
+      "id": "case-insensitive-markers-and-explicit-heading-close",
+      "source": "<p>text</p><h1>title</h1>",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": ["text"]},
+        {"tag": "h1", "attributes": {}, "children": ["title"]}
+      ]
+    },
+    {
+      "id": "unicode-text-is-preserved",
+      "source": "<P>café 🛰️</P>",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": ["café 🛰️"]}
+      ]
+    },
+    {
+      "id": "crlf-and-single-pass-entities",
+      "source": "<P>line1\r\nline2 &amp;lt; &lt; &gt; &amp; &unknown;</P>",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": ["line1\nline2 &lt; < > & &unknown;"]}
+      ]
+    },
+    {
+      "id": "empty-paragraph-and-heading",
+      "source": "<P></P><H1></H1>",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": []},
+        {"tag": "h1", "attributes": {}, "children": []}
+      ]
+    },
+    {
+      "id": "ascii-whitespace-outside-blocks-is-discarded",
+      "source": " \t\r\n<P>inside</P>\f\n ",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": ["inside"]}
+      ]
+    },
+    {
+      "id": "explicit-close-then-second-paragraph",
+      "source": "<P>first</P><P>second</P>",
+      "tree": [
+        {"tag": "p", "attributes": {}, "children": ["first"]},
+        {"tag": "p", "attributes": {}, "children": ["second"]}
+      ]
+    }
+  ],
+  "negative": [
+    {"id": "nonspace-outside-block", "source": "outside", "error": "ValueError"},
+    {"id": "unmatched-paragraph-close", "source": "</P>", "error": "ValueError"},
+    {"id": "unmatched-heading-close", "source": "</H1>", "error": "ValueError"},
+    {"id": "unsupported-tag", "source": "<DIV>text</DIV>", "error": "ValueError"},
+    {"id": "paragraph-attributes-unsupported", "source": "<P CLASS=x>x</P>", "error": "ValueError"},
+    {"id": "whitespace-inside-marker-unsupported", "source": "< P>x</P>", "error": "ValueError"},
+    {"id": "comment-unsupported", "source": "<!-- comment -->", "error": "ValueError"},
+    {"id": "nested-markup-unsupported", "source": "<P>x<B>y</B></P>", "error": "ValueError"},
+    {"id": "heading-must-close-before-eof", "source": "<H1>open", "error": "ValueError"},
+    {"id": "heading-cannot-be-implicitly-closed-by-paragraph", "source": "<H1>open<P>next</P>", "error": "ValueError"},
+    {"id": "heading-cannot-nest", "source": "<H1>outer<H1>inner</H1>", "error": "ValueError"},
+    {"id": "non-ascii-whitespace-outside-block", "source": "\u00a0<P>x</P>", "error": "ValueError"}
+  ],
+  "xml_comparison": [
+    {
+      "id": "omitted-paragraph-end-is-not-xml-well-formed",
+      "source": "<P>one<P>two",
+      "xml_well_formed": false,
+      "html2_vector": "omitted-paragraph-end-at-next-start-and-eof"
+    },
+    {
+      "id": "explicit-paragraph-end-is-xml-well-formed",
+      "source": "<P>one</P>",
+      "xml_well_formed": true
+    }
+  ],
+  "historical_comparison": [
+    {
+      "id": "1992-p-is-empty-marker-while-1995-p-contains-text",
+      "source": "<P>word</P>",
+      "html2_tree": [
+        {"tag": "p", "attributes": {}, "children": ["word"]}
+      ],
+      "html_tags_1992_tree": [
+        {"tag": "p", "attributes": {}, "children": []},
+        "word"
+      ]
+    }
+  ]
+}
