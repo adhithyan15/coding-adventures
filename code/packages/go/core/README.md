@@ -19,6 +19,13 @@ Core
 
 The Core itself defines no new micro-architectural behavior. It wires the parts together, like a motherboard connects CPU, RAM, and peripherals. The same Core can run ARM, RISC-V, or any custom ISA by swapping the ISA decoder.
 
+ISA adapters may opt into source-tagged forwarding values carried by pipeline
+tokens. The Core preserves scalar forwarding for existing decoders and maps
+typed values to the decode-stage token selected by the hazard check, including
+the final decode stage in a multi-decode layout. It maps load-use bubbles to
+the configured execute stage so the dependent token stays in decode until its
+operand is ready.
+
 ## How It Fits in the Stack
 
 ```

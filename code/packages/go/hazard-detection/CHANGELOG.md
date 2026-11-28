@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — Unreleased
+
+### Added
+- `HazardResult.ForwardedOperands` records every resolved source register,
+  source-list index, value, and selected EX/MEM producer stage.
+- `HazardUnit.History()` returns independent copies of typed forwarding slices.
+
 ## 0.2.0 — 2026-03-31
 
 ### Changed

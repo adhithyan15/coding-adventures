@@ -560,8 +560,8 @@ func TestStallFreezesEarlierStages(t *testing.T) {
 	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
 		// Only stall once: when LDR is in EX and ADD is in ID.
 		if !stallInjected && len(stages) >= 3 {
-			exTok := stages[2]  // EX stage
-			idTok := stages[1]  // ID stage
+			exTok := stages[2] // EX stage
+			idTok := stages[1] // ID stage
 			if exTok != nil && !exTok.IsBubble && exTok.Opcode == "LDR" &&
 				idTok != nil && !idTok.IsBubble && idTok.Opcode == "ADD" {
 				stallInjected = true
@@ -767,6 +767,155 @@ func TestForwardingApplied(t *testing.T) {
 	}
 	// Note: ALUResult is overwritten by the execute callback.
 	// The ForwardedFrom field is the durable indicator that forwarding occurred.
+}
+
+func TestTypedForwardingOperandsAreCopiedAndPreserveLegacyScalar(t *testing.T) {
+	instrs := make([]int, 10)
+	for i := range instrs {
+		instrs[i] = makeInstruction(opADD, 1, 2, 3)
+	}
+	p := newTestPipeline(instrs, nil)
+	records := []ForwardedOperand{
+		{Operand: SourceOperand1, Register: 1, Value: 17, SourceStage: "MEM"},
+		{Operand: SourceOperand2, Register: 2, Value: 23, SourceStage: "EX"},
+	}
+	checks := 0
+	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
+		checks++
+		if checks == 4 {
+			return HazardResponse{
+				Action: HazardForwardFromEX, ForwardValue: 23, ForwardSource: "EX",
+				ForwardedOperands: records,
+			}
+		}
+		return HazardResponse{Action: HazardNone}
+	})
+	for i := 0; i < 4; i++ {
+		p.Step()
+	}
+	tok := p.StageContents("EX")
+	if tok == nil {
+		t.Fatal("expected forwarded token in EX")
+	}
+	if tok.ForwardedFrom != "EX" {
+		t.Fatalf("legacy scalar forwarding source changed: %q", tok.ForwardedFrom)
+	}
+	if len(tok.ForwardedOperands) != 2 || tok.ForwardedOperands[0].Operand != SourceOperand1 || tok.ForwardedOperands[1].Operand != SourceOperand2 {
+		t.Fatalf("typed operand identity was not preserved: %#v", tok.ForwardedOperands)
+	}
+	records[0].Value = 999
+	if tok.ForwardedOperands[0].Value != 17 {
+		t.Fatal("pipeline token aliases the hazard callback's forwarding slice")
+	}
+	clone := tok.Clone()
+	clone.ForwardedOperands[1].Value = 888
+	if tok.ForwardedOperands[1].Value != 23 {
+		t.Fatal("token clone aliases its typed forwarding slice")
+	}
+}
+
+func TestTypedForwardingMetadataDoesNotOverrideStall(t *testing.T) {
+	instrs := make([]int, 8)
+	for i := range instrs {
+		instrs[i] = makeInstruction(opADD, 1, 2, 3)
+	}
+	p := newTestPipeline(instrs, nil)
+	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
+		if len(stages) > 1 && stages[1] != nil && !stages[1].IsBubble {
+			return HazardResponse{
+				Action:            HazardStall,
+				ForwardedOperands: []ForwardedOperand{{Operand: SourceOperand1, Register: 1, Value: 99, SourceStage: "MEM"}},
+			}
+		}
+		return HazardResponse{Action: HazardNone}
+	})
+	p.Step()
+	p.Step()
+	p.Step()
+	id := p.StageContents("ID")
+	if id == nil || len(id.ForwardedOperands) != 0 {
+		t.Fatalf("stalled decode token acquired speculative forwarding metadata: %#v", id)
+	}
+}
+
+func TestTypedForwardingTargetsSelectedDecodeTokenInMultiDecodePipeline(t *testing.T) {
+	config := PipelineConfig{Stages: []PipelineStage{
+		{Name: "IF", Category: StageFetch},
+		{Name: "ID1", Category: StageDecode},
+		{Name: "ID2", Category: StageDecode},
+		{Name: "EX", Category: StageExecute},
+		{Name: "MEM", Category: StageMemory},
+		{Name: "WB", Category: StageWriteback},
+	}, ExecutionWidth: 1}
+	p, err := NewPipeline(config, simpleFetch(make([]int, 16)), simpleDecode(), simpleExecute(), simpleMemory(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	forwarded := false
+	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
+		if !forwarded && stages[1] != nil && stages[2] != nil && !stages[1].IsBubble && !stages[2].IsBubble {
+			forwarded = true
+			target := 2
+			return HazardResponse{
+				Action: HazardForwardFromMEM, ForwardValue: 77, ForwardSource: "MEM",
+				ForwardedOperands:           []ForwardedOperand{{Operand: SourceOperand2, Register: 9, Value: 77, SourceStage: "MEM"}},
+				ForwardedOperandsStageIndex: &target,
+			}
+		}
+		return HazardResponse{Action: HazardNone}
+	})
+	for i := 0; i < 4; i++ {
+		p.Step()
+	}
+	if !forwarded {
+		t.Fatal("test never presented two distinct decode tokens")
+	}
+	ex := p.StageContents("EX")
+	if ex == nil || ex.PC != 0 || len(ex.ForwardedOperands) != 1 || ex.ForwardedOperands[0].Operand != SourceOperand2 || ex.ForwardedOperands[0].Value != 77 {
+		t.Fatalf("typed forwarding was not attached to selected ID2 token: %#v", ex)
+	}
+	// Legacy scalar behavior remains first-decode-targeted even when the typed
+	// record names a different decode stage.
+	id2 := p.StageContents("ID2")
+	if id2 == nil || id2.PC != 4 || id2.ForwardedFrom != "MEM" {
+		t.Fatalf("legacy scalar forwarding behavior changed: %#v", id2)
+	}
+}
+
+func TestTypedForwardingMetadataClearsWhenDecodeTokenIsHeld(t *testing.T) {
+	config := PipelineConfig{Stages: []PipelineStage{
+		{Name: "IF", Category: StageFetch},
+		{Name: "ID1", Category: StageDecode},
+		{Name: "ID2", Category: StageDecode},
+		{Name: "EX", Category: StageExecute},
+		{Name: "MEM", Category: StageMemory},
+		{Name: "WB", Category: StageWriteback},
+	}, ExecutionWidth: 1}
+	p, err := NewPipeline(config, simpleFetch(make([]int, 16)), simpleDecode(), simpleExecute(), simpleMemory(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	forwarded := false
+	p.SetHazardFunc(func(stages []*PipelineToken) HazardResponse {
+		if !forwarded && stages[1] != nil && !stages[1].IsBubble && stages[1].PC == 0 {
+			forwarded = true
+			target := 1
+			return HazardResponse{Action: HazardForwardFromEX,
+				ForwardedOperands:           []ForwardedOperand{{Operand: SourceOperand1, Register: 1, Value: 5, SourceStage: "EX"}},
+				ForwardedOperandsStageIndex: &target}
+		}
+		if forwarded && stages[2] != nil && !stages[2].IsBubble && stages[2].PC == 0 {
+			return HazardResponse{Action: HazardStall, StallStages: 3}
+		}
+		return HazardResponse{Action: HazardNone}
+	})
+	for i := 0; i < 4; i++ {
+		p.Step()
+	}
+	id2 := p.StageContents("ID2")
+	if id2 == nil || id2.PC != 0 || len(id2.ForwardedOperands) != 0 {
+		t.Fatalf("held decode token retained stale forwarding: %#v", id2)
+	}
 }
 
 // =========================================================================

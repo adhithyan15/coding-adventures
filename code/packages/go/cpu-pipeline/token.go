@@ -316,7 +316,32 @@ type PipelineToken struct {
 	//
 	// Example: "EX" means the value was forwarded from the EX stage.
 	ForwardedFrom string
+
+	// ForwardedOperands carries optional source-specific register values to
+	// an ISA execution callback. The generic pipeline preserves these records
+	// but does not interpret them; an ISA adapter decides how they affect its
+	// operands. Legacy users can continue using ForwardedFrom and ALUResult.
+	ForwardedOperands []ForwardedOperand
 }
+
+// ForwardedOperand identifies one source operand resolved by the hazard unit.
+// SourceOperand1 and SourceOperand2 are positions in the decoded source list;
+// for RV32I they correspond to rs1 and rs2. The source stage identifies the
+// youngest producing pipeline stage selected for that register.
+type ForwardedOperand struct {
+	Operand     SourceOperand
+	Register    int
+	Value       int
+	SourceStage string
+}
+
+// SourceOperand is the zero-based source position of a forwarded value.
+type SourceOperand int
+
+const (
+	SourceOperand1 SourceOperand = iota
+	SourceOperand2
+)
 
 // NewBubble creates a new bubble token.
 //
@@ -393,6 +418,7 @@ func (t *PipelineToken) Clone() *PipelineToken {
 			for k, v := range t.StageEntered {
 				clone.StageEntered[k] = v
 			}
+			clone.ForwardedOperands = append([]ForwardedOperand(nil), t.ForwardedOperands...)
 			return rf.Generate(true, false, &clone)
 		}).GetResult()
 	return result
