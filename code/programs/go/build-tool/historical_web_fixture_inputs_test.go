@@ -24,9 +24,12 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 		{Name: "c/iso-harness", Language: "c"},
 		{Name: "c/test-bootstrap", Language: "c"},
 		{Name: "c/bounded-json", Language: "c"},
+		{Name: "cpp/historical-web", Language: "cpp"},
+		{Name: "cpp/bounded-json", Language: "cpp"},
+		{Name: "cpp/test-bootstrap", Language: "cpp"},
 	}
 	selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "all")
-	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true, "go/historical-web": true, "rust/historical-web": true, "typescript/historical-web": true, "ruby/historical_web": true, "c/historical-web": true}) {
+	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true, "go/historical-web": true, "rust/historical-web": true, "typescript/historical-web": true, "ruby/historical_web": true, "c/historical-web": true, "cpp/historical-web": true}) {
 		t.Fatalf("vector selection = %v, err %v; want all historical-web packages", selected, err)
 	}
 	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "python"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"python/historical-web": true}) {
@@ -122,6 +125,9 @@ func TestHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) {
 	packages[9].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/iso-harness"))
 	packages[10].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/test-bootstrap"))
 	packages[11].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/bounded-json"))
+	packages[12].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/cpp/historical-web"))
+	packages[13].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/cpp/bounded-json"))
+	packages[14].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/cpp/test-bootstrap"))
 	graph, err := buildKilnLegacyGraph(packages, checkout)
 	if err != nil {
 		t.Fatalf("build Kiln graph: %v", err)
