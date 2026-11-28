@@ -2,6 +2,12 @@
 
 All notable changes to `go/b-tree` are documented here.
 
+## [Unreleased]
+
+### Fixed
+- `IsValid()` now rejects malformed key/value pairings, invalid child graphs,
+  keys outside inherited separator bounds, and oversized degree arithmetic.
+
 ## [0.1.0] — 2026-04-11
 
 ### Added
