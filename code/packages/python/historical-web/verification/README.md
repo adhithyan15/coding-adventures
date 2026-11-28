@@ -57,20 +57,19 @@ exhaustive replay has yet been established for Rust.
 ## HWEB08 request-line boundary SAT slice
 
 `sat_http10_request_line.py` uses the repository Go CDCL solver for a bounded
-language miter between HWEB08 and HWEB00. It fixes the common method to GET and
-checks total target lengths 1, 2, and 3. The symbolic target alphabet is `/`
-followed by zero to two ASCII letters, digits, `/`, `.`, `_`, or `-`. Each
-HWEB08 line is constructed canonically as `GET SP target SP HTTP/1.0 CRLF`.
-The strict HWEB00 miter requires the same bytes to have a printable nonspace
-address between `GET SP` and the final CRLF. The internal H10 separator is an
-SP in that would-be H00 address, so no shared-wire acceptance assignment
-exists in the checked domain.
+byte-level miter between HWEB08 and HWEB00. It gives each octet in the complete
+request line eight Boolean variables, fixes the common GET prefix and
+` SP HTTP/1.0 CRLF` suffix, and checks total target lengths 1, 2, and 3. The
+target is `/` followed by zero to two ASCII letters, digits, `/`, `.`, `_`, or
+`-`. The HWEB00 miter constrains the same wire coordinates `wire[4:-2]` as its
+printable nonspace address. The internal H10 separator is an SP in that slice,
+so no shared-wire acceptance assignment exists in the checked domain.
 
 For every bounded target length, a legal HWEB08 line alone is SAT, strict
 HWEB08/HWEB00 shared-wire acceptance is UNSAT, and the negative control that
 relaxes the H00 printable-nonspace guard is SAT. This gives a concrete witness
 that the HWEB00 guard is material. The model fixes GET, excludes targets longer
-than three bytes, and models the language condition rather than either parser's
+than three bytes, and models language conditions rather than either parser's
 scanner implementation. It does not prove scanner/source equivalence. HWEB08
 requires canonical CRLF; HWEB00 independently accepts LF or CRLF.
 

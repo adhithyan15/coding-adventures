@@ -10,10 +10,11 @@ _TARGET_TAIL = tuple(
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789/._-"
 )
 _LENGTHS = (1, 2, 3)  # Total target length, including the leading slash.
+_H10_SUFFIX = b" HTTP/1.0\r\n"
 
 
 class CNF:
-    """Small DIMACS builder for one-hot byte choices and Boolean predicates."""
+    """Small DIMACS builder for bit-level request bytes and predicates."""
 
     def __init__(self) -> None:
         self.variable_count = 0
@@ -26,23 +27,42 @@ class CNF:
     def clause(self, *literals: int) -> None:
         self.clauses.append(tuple(literals))
 
-    def exactly_one(self, variables: tuple[int, ...]) -> None:
-        self.clause(*variables)
-        for left_index, left in enumerate(variables):
-            for right in variables[left_index + 1 :]:
-                self.clause(-left, -right)
-
     def dimacs(self) -> str:
         lines = [f"p cnf {self.variable_count} {len(self.clauses)}"]
         lines.extend(" ".join(map(str, clause)) + " 0" for clause in self.clauses)
         return "\n".join(lines) + "\n"
 
 
-def _request_line_model(target_length: int, *, h00_mode: str) -> CNF:
-    """Encode canonical H10 syntax and optionally require H00 acceptance.
+def _fixed_byte(formula: CNF, bits: tuple[int, ...], value: int) -> None:
+    for bit, variable in enumerate(bits):
+        formula.clause(variable if value & (1 << bit) else -variable)
 
-    `strict` includes HWEB00's printable-nonspace address guard. `relaxed`
-    removes only that guard's no-space lower bound for a negative control.
+
+def _byte_not_value(bits: tuple[int, ...], value: int) -> tuple[int, ...]:
+    """Return a clause false only when `bits` encode exactly `value`."""
+    return tuple(
+        -variable if value & (1 << bit) else variable
+        for bit, variable in enumerate(bits)
+    )
+
+
+def _constrain_byte_range(
+    formula: CNF, bits: tuple[int, ...], lower: int, upper: int
+) -> None:
+    # The high bit clears the entire 0x80..0xff half in one clause. Only
+    # exclude the small forbidden low and DEL ranges byte by byte.
+    formula.clause(-bits[7])
+    for value in range(lower):
+        formula.clause(*_byte_not_value(bits, value))
+    for value in range(upper + 1, 0x80):
+        formula.clause(*_byte_not_value(bits, value))
+
+
+def _request_line_model(target_length: int, *, h00_mode: str) -> CNF:
+    """Encode one shared byte vector and both protocol interpretations.
+
+    `strict` constrains HWEB00's projected address to 0x21..0x7e. `relaxed`
+    changes only the lower bound to 0x20 for the negative control.
     """
     if target_length not in _LENGTHS:
         raise ValueError(f"unsupported bounded target length: {target_length}")
@@ -50,26 +70,34 @@ def _request_line_model(target_length: int, *, h00_mode: str) -> CNF:
         raise ValueError(f"unknown H00 miter mode: {h00_mode}")
 
     formula = CNF()
-    target_choices: list[dict[str, int]] = []
-    for position in range(target_length):
-        alphabet = ("/",) if position == 0 else _TARGET_TAIL
-        choices = {byte: formula.variable() for byte in alphabet}
-        formula.exactly_one(tuple(choices.values()))
-        target_choices.append(choices)
+    prefix = b"GET "
+    wire_length = len(prefix) + target_length + len(_H10_SUFFIX)
+    wire = tuple(
+        tuple(formula.variable() for _ in range(8)) for _ in range(wire_length)
+    )
 
-    # Every assignment constructs one legal H10 line from fixed `GET `, the
-    # symbolic permitted target, fixed SP + `HTTP/1.0`, and canonical CRLF.
+    # A shared vector constructs exact `GET SP target SP HTTP/1.0 CRLF` bytes.
+    # The target starts with '/', then uses only HWEB08's closed tail alphabet.
+    for position, byte in enumerate(prefix):
+        _fixed_byte(formula, wire[position], byte)
+    target_start = len(prefix)
+    _fixed_byte(formula, wire[target_start], ord("/"))
+    target_tail = {ord(byte) for byte in _TARGET_TAIL}
+    for offset in range(1, target_length):
+        bits = wire[target_start + offset]
+        for byte in range(256):
+            if byte not in target_tail:
+                formula.clause(*_byte_not_value(bits, byte))
+    suffix_start = target_start + target_length
+    for offset, byte in enumerate(_H10_SUFFIX):
+        _fixed_byte(formula, wire[suffix_start + offset], byte)
 
     if h00_mode != "absent":
-        h00_accepted = formula.variable()
-        separator_is_space = formula.variable()
-        formula.clause(h00_accepted)
-        formula.clause(separator_is_space)
-        if h00_mode == "strict":
-            # H00 sees the same prefix and final CRLF; target and version
-            # characters are printable and nonspace. Its full address spans
-            # this fixed H10 separator, violating the H00 no-space guard.
-            formula.clause(-h00_accepted, -separator_is_space)
+        # H00's address is the same wire slice after `GET SP` and before the
+        # final CRLF. This includes H10's separator and version token.
+        lower = 0x21 if h00_mode == "strict" else 0x20
+        for bits in wire[len(prefix) : wire_length - 2]:
+            _constrain_byte_range(formula, bits, lower, 0x7e)
 
     return formula
 
