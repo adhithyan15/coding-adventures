@@ -7,7 +7,7 @@ Set-Location $self
 $boot = Join-Path $self '..\test-bootstrap'
 $json = Join-Path $self '..\bounded-json'
 $harness = Join-Path $self '..\iso-harness'
-$env:ISO_INCLUDE = "include $boot\include $boot\tests $json\include $harness\include"
+$env:ISO_INCLUDE = "include $boot\include $boot\src $boot\tests $json\include $harness\include"
 # Windows PowerShell 5 can decode a UTF-8 script incorrectly without a BOM.
 $source = [IO.File]::ReadAllText((Join-Path $harness 'lib\iso-lib.ps1'), [Text.Encoding]::UTF8)
 . ([scriptblock]::Create($source))

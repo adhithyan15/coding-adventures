@@ -12,7 +12,7 @@ if [ ! -f "$HARNESS/lib/iso-lib.sh" ]; then
     exit 1
 fi
 
-ISO_INCLUDE="include $BOOT/include $BOOT/tests $JSON/include $HARNESS/include"
+ISO_INCLUDE="include $BOOT/include $BOOT/src $BOOT/tests $JSON/include $HARNESS/include"
 export ISO_INCLUDE
 if [ "${CI:-}" = "true" ] && [ "$(uname)" = "Linux" ]; then
     ISO_REQUIRE="gcc clang"
