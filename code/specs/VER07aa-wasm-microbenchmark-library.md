@@ -171,10 +171,17 @@ The existing `rust-guest-microbenchmark-consumer` remains a shared consumer
 owned by its package BUILD integration. Its ownership documentation and
 `code/BUILD-EXEMPTIONS` entry must describe each actual owning BUILD and
 assertion; adding a standalone WASM consumer must not silently transfer or
-duplicate ownership. The new installed/external WASM consumer is a separate
-`code/tests/wasm-microbenchmark-consumer` root with its own BUILD. It consumes
-the emitted artifact by path after the WASM package BUILD constructs it; it
-must not link to the Rust crate as a substitute for loading the `.wasm` file.
+duplicate ownership. The new installed/external WASM consumer is the Node
+host at `code/tests/wasm-microbenchmark-consumer/consumer.mjs`. The WASM
+package's Unix and Windows BUILD files invoke it after constructing the
+artifact; it must not link to the Rust crate as a substitute for loading the
+`.wasm` file. The script is not a separately discovered package root and has
+no standalone BUILD. The Go build tool registers this exact script as a
+repository input of `wasm/microbenchmark`, so editing the consumer selects the
+producer's test and changes its package hash without creating an unsupported
+`unknown/*` package identity. The test consumer's capability manifest
+describes the host-side artifact read and success output; those permissions do
+not belong to the pure WASM library.
 That consumer uses the pinned Node runtime's built-in WebAssembly APIs and no
 third-party test framework. It supplies `now_ns` and `run_batch`, loads the
 artifact in a fresh host process, and exercises the public ABI end to end.
