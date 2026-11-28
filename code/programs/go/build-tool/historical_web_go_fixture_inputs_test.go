@@ -20,9 +20,13 @@ func TestGoHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) 
 		{Name: "typescript/test-bootstrap", Language: "typescript"},
 		{Name: "ruby/historical_web", Language: "ruby"},
 		{Name: "ruby/test_bootstrap", Language: "ruby"},
+		{Name: "c/historical-web", Language: "c"},
+		{Name: "c/iso-harness", Language: "c"},
+		{Name: "c/test-bootstrap", Language: "c"},
+		{Name: "c/bounded-json", Language: "c"},
 	}
 	selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "all")
-	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"go/historical-web": true, "python/historical-web": true, "rust/historical-web": true, "typescript/historical-web": true, "ruby/historical_web": true}) {
+	if err != nil || !reflect.DeepEqual(selected, map[string]bool{"go/historical-web": true, "python/historical-web": true, "rust/historical-web": true, "typescript/historical-web": true, "ruby/historical_web": true, "c/historical-web": true}) {
 		t.Fatalf("all-language vector selection = %v, err %v; want all historical-web packages", selected, err)
 	}
 	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "go"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"go/historical-web": true}) {
@@ -39,6 +43,9 @@ func TestGoHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) 
 	}
 	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "ruby"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"ruby/historical_web": true}) {
 		t.Fatalf("Ruby-only vector selection = %v, err %v", selected, err)
+	}
+	if selected, err := repositoryInputConsumersForChange([]string{historicalWebVectorsPath}, packages, "c"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"c/historical-web": true}) {
+		t.Fatalf("C-only vector selection = %v, err %v", selected, err)
 	}
 
 	for _, changed := range []string{
@@ -72,6 +79,10 @@ func TestGoHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) 
 	rubyInputs := repositoryInputsForPackage("ruby/historical_web")
 	if !reflect.DeepEqual(rubyInputs, []string{historicalWebVectorsPath}) {
 		t.Fatalf("Ruby fallback hash inputs = %v; want exactly vectors.json", rubyInputs)
+	}
+	cInputs := repositoryInputsForPackage("c/historical-web")
+	if !reflect.DeepEqual(cInputs, []string{historicalWebVectorsPath}) {
+		t.Fatalf("C fallback hash inputs = %v; want exactly vectors.json", cInputs)
 	}
 	root := t.TempDir()
 	packageRoot := filepath.Join(root, "code", "packages", "go", "historical-web")
@@ -113,13 +124,17 @@ func TestGoHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) 
 	packages[5].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/typescript/test-bootstrap"))
 	packages[6].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/ruby/historical_web"))
 	packages[7].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/ruby/test_bootstrap"))
+	packages[8].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/historical-web"))
+	packages[9].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/iso-harness"))
+	packages[10].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/test-bootstrap"))
+	packages[11].Path = filepath.Join(checkout, filepath.FromSlash("code/packages/c/bounded-json"))
 	graph, err := buildKilnLegacyGraph(packages, checkout)
 	if err != nil {
 		t.Fatalf("build Kiln graph: %v", err)
 	}
-	foundGo, foundRust, foundTypeScript, foundRuby := false, false, false, false
+	foundGo, foundRust, foundTypeScript, foundRuby, foundC := false, false, false, false, false
 	for _, node := range graph.Packages {
-		if node.Name != "go/historical-web" && node.Name != "rust/historical-web" && node.Name != "typescript/historical-web" && node.Name != "ruby/historical_web" {
+		if node.Name != "go/historical-web" && node.Name != "rust/historical-web" && node.Name != "typescript/historical-web" && node.Name != "ruby/historical_web" && node.Name != "c/historical-web" {
 			continue
 		}
 		if !reflect.DeepEqual(node.RepoInputs, []string{historicalWebVectorsPath}) || len(node.RepoInputGlobs) != 0 || node.RepoInputsUnknown {
@@ -131,11 +146,13 @@ func TestGoHistoricalWebVectorsSelectionHashAndKilnInputsAreExact(t *testing.T) 
 			foundRust = true
 		} else if node.Name == "typescript/historical-web" {
 			foundTypeScript = true
-		} else {
+		} else if node.Name == "ruby/historical_web" {
 			foundRuby = true
+		} else {
+			foundC = true
 		}
 	}
-	if !foundGo || !foundRust || !foundTypeScript || !foundRuby {
-		t.Fatalf("Kiln graph missing historical-web nodes: Go=%v Rust=%v TypeScript=%v Ruby=%v", foundGo, foundRust, foundTypeScript, foundRuby)
+	if !foundGo || !foundRust || !foundTypeScript || !foundRuby || !foundC {
+		t.Fatalf("Kiln graph missing historical-web nodes: Go=%v Rust=%v TypeScript=%v Ruby=%v C=%v", foundGo, foundRust, foundTypeScript, foundRuby, foundC)
 	}
 }
